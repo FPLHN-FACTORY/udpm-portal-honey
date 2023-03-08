@@ -1,0 +1,41 @@
+body {
+  background-color: var(--background-color);
+}
+
+header {
+  margin-top: 15px;
+}
+header img {
+  height: 70px;
+}
+
+.menu-header a {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.menu-header a:hover {
+  color: var(--color-orange);
+}
+
+#footer {
+  color: var(--color-text);
+  border-top: 10px solid var(--color-orange);
+  font-size: 13px;
+  padding-top: 60px;
+}
+
+.footer > div > div:nth-child(2) h6 {
+  text-decoration: underline;
+  color: var(--color-orange);
+}
+
+footer img {
+  height: 70px;
+}
+
+:root {
+  --background-color: #282c34;
+  --color-text: #ffffff;
+  --color-orange: #f7941d;
+}
