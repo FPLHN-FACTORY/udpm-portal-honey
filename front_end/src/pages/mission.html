@@ -1,7 +1,7 @@
 <div class="container">
 
 
-    <h4 class="mt-3 fw-bold">Điểm thưởng
+    <h4 class="mt-3 fw-bold">Nhiệm vụ
         <button type="button" style="border: 0px solid #999;background-color: transparent;" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
             <i  class="fa fa-plus-circle " style="color:green"></i></i>
           </button>
@@ -11,15 +11,13 @@
         <tr>
             <th>STT</th>
             <th>Mã</th>
-            <th>Tên sinh viên</th>
-            <th>Điểm thưởng</th>
+            <th>Tên</th>
             <th>Hành động</th>
         </tr>
         <tr>
             <td>1</td>
             <td>M2</td>
-            <td>Hoàng văn tám</td>
-            <td>5000</td>
+            <td>Chạy 2 vòng quanh sân bóng</td>
             <td>
                 <a href="" class="btn btn-warning"><i class="fa fa-pen"></i></a>
                 <a href="" class="btn btn-danger"><i class="fa fa-trash"></i></a>
@@ -27,10 +25,9 @@
         </tr>
 
         <tr>
-            <td>1</td>
-            <td>M4</td>
-            <td>Ttt</td>
-            <td>9500</td>
+          <td>2</td>
+          <td>M3</td>
+          <td>Chạy 99 vòng quanh sân bóng</td>
           <td>
               <a href="" class="btn btn-warning"><i class="fa fa-pen"></i></a>
               <a href="" class="btn btn-danger"><i class="fa fa-trash"></i></a>
@@ -48,40 +45,30 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">Thêm điểm thưởng</h1>
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Thêm nhiệm vụ</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <!-- modal  body -->
           <form method="POST">
             <div class="row">
-              <div class="col-4">
+              <div class="col-2">
                 <label >Mã</label>
               </div>
-              <div class="col-8">
+              <div class="col-10">
                 <input type="text" placeholder="Enter code" class="form-control">
               </div>
             </div>
 
             <br>
             <div class="row">
-              <div class="col-4">
-                <label >Mã sinh viên</label>
+              <div class="col-2">
+                <label >Tên</label>
               </div>
-              <div class="col-8">
-                <input type="text" placeholder="Enter student id" class="form-control">
+              <div class="col-10">
+                <input type="text" placeholder="Enter name" class="form-control">
               </div>
             </div>
-
-            <br>
-            <div class="row">
-                <div class="col-4">
-                  <label >Điểm thưởng</label>
-                </div>
-                <div class="col-8">
-                  <input type="text" placeholder="Enter score" class="form-control">
-                </div>
-              </div>
           </form>
 
 
