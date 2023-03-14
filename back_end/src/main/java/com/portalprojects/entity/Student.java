@@ -20,7 +20,7 @@ public class Student extends PrimaryEntity {
     private String name;
 
     @Column(length = 50)
-    private String major;
+    private String email;
 
     @Column()
     private int semester;

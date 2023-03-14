@@ -19,6 +19,7 @@ public class Gift extends PrimaryEntity {
     @Column(length = 50)
     private String name;
 
-    @Column()
-    private double price;
+    @Column(length = 100)
+    private String note;
+
 }

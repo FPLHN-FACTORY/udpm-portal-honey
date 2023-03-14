@@ -19,4 +19,7 @@ public class Mission extends PrimaryEntity {
 
     @Column(length = 50)
     private String name;
+
+    @Column(length = 50)
+    private String describe;
 }
