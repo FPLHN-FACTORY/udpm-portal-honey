@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository(MissionRepository.NAME)
 public interface MissionRepository extends JpaRepository<Mission,String> {
-
     public static final String NAME = "BaseMissionRepository";
 
 }
