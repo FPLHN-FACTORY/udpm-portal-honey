@@ -116,6 +116,7 @@ public class DBGenerator  implements CommandLineRunner {
         mission1.setDescribeMission("Tìm người yêu");
         mission1.setCode("NV1");
         mission1.setName("Tìm người yêu");
+        mission1.setPointMission(8888);
 
         Mission mission2 = new Mission();
         mission2.setCreatedDate(5600l);
@@ -123,6 +124,7 @@ public class DBGenerator  implements CommandLineRunner {
         mission2.setDescribeMission("Tìm người yêu ");
         mission2.setCode("NV2");
         mission2.setName("Tìm người yêu cho mẹ");
+        mission2.setPointMission(8888);
 
         this.missionRepository.save(mission1);
         this.missionRepository.save(mission2);

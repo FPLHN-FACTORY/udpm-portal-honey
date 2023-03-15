@@ -21,4 +21,7 @@ public class Mission extends PrimaryEntity {
 
     @Column(length = 100,nullable = true)
     private String describeMission;
+
+    @Column
+    private int pointMission ;
 }

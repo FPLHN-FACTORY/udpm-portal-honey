@@ -13,6 +13,6 @@ app.config(function ($routeProvider, $locationProvider) {
       controller: addPointController,
     })
     .otherwise({
-      redirectTo: "/home",
+      redirectTo: "/trang-chu",
     });
 });
