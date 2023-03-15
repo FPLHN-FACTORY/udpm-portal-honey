@@ -1,1 +1,0 @@
-print("mình phẩi chấp nhận để có thể giỏi hơn và thông minh hơn ....hahaha cố lên ")

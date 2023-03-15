@@ -4,7 +4,6 @@ import com.portalprojects.entity.base.PrimaryEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
 
@@ -17,9 +16,9 @@ public class Mission extends PrimaryEntity {
     @Column(length = 10,nullable = false)
     private String code;
 
-    @Column(length = 50)
+    @Column(length = 50,nullable = true)
     private String name;
 
-    @Column(length = 50)
-    private String describe;
+    @Column(length = 100,nullable = true)
+    private String describeMission;
 }

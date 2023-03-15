@@ -23,7 +23,6 @@ public class Student extends PrimaryEntity {
     private String email;
 
     @Column()
-    private int semester;
-
+    private int score;
 
 }

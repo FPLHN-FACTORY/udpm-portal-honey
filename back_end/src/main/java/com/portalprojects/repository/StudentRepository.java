@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 
-@Repository(MissionDetailRepository.NAME)
+@Repository(StudentRepository.NAME)
 public interface StudentRepository extends JpaRepository<Student,String> {
 
     String NAME  = "BaseStudentRepository";

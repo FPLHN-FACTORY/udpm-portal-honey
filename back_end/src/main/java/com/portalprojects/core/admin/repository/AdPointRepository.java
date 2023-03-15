@@ -15,4 +15,6 @@ public interface AdPointRepository extends PointRepository {
       SELECT * FROM point c
      """,nativeQuery = true)
     ArrayList<Point> getAll();
+
+
 }

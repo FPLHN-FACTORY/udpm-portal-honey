@@ -13,9 +13,6 @@ import java.util.Date;
 @Table( name = "point")
 public class Point extends PrimaryEntity {
 
-    @Column(length = 10,nullable = false)
-    private String code;
-
     @Column()
     private int score;
 
