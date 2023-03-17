@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @Getter
 @MappedSuperclass
-//@EntityListeners(AuditEntityListener.class)
 public abstract class AuditEntity {
 
     @Column(updatable = false)

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public interface AdMissionRepository extends com.portalprojects.repository.MissionRepository {
 
     @Query(value = """
-      SELECT * FROM mission c
+      SELECT * FROM mission m
      """,nativeQuery = true)
     ArrayList<Mission> getAll();
 }

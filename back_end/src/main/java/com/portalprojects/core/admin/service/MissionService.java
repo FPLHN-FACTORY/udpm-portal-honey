@@ -1,7 +1,7 @@
 package com.portalprojects.core.admin.service;
 
+import com.portalprojects.core.admin.model.request.AdCreateMissionRequest;
 import com.portalprojects.entity.Mission;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
@@ -9,10 +9,10 @@ import java.util.ArrayList;
 public interface MissionService {
     ArrayList<Mission> getAll();
 
-    Boolean createMission(Mission mission);
+    Boolean createMission(AdCreateMissionRequest adCreateMissionRequest);
 
-    Boolean updateMission(Mission mission,String ma);
+    Boolean updateMission(AdCreateMissionRequest adCreateMissionRequest);
 
-    Boolean deleteMission(String ma);
+    Boolean deleteMission(String id);
 
 }

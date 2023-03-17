@@ -1,6 +1,69 @@
 <div class="container">
-    <div class="row">
-        <!-- tạo hinh uvuông tương ứng  -->
+    <h4 class="mt-3 fw-bold">Quà tặng
+        <button title="Thêm nhiệm vụ" type="button" style="border: 0px solid #999;background-color: transparent;" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <i class="fa fa-plus-circle " style="color:green"></i></i>
+          </button>
+          
+        </h4>
+    <table class="table table-striped mt-3" style="border:1px solid #e3e2e2;border-radius: 20px;">
+        <tr>
+            <th>Mã</th>
+            <th>Tên</th>
+            <th>Điểm</th>
+            <th>Hành động</th>
+        </tr>
+        <tr ng-repeat="student in students">
+          <td>{{ms.code}}</td>
+          <td>{{ms.name}}</td>
+          <td>{{ms.score}}</td>
+          <td>
+              <a title="Sửa nhiệm vụ" href="" class="btn btn-warning"><i class="fa fa-pen"></i></a>
+              <a title="Xóa nhiệm vụ" href="" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+          </td>
+      </tr>
 
+      </table>
+      <!-- modal -->
+
+      <!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Thêm quà tặng</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- modal  body -->
+          <form method="POST">
+            <div class="row">
+              <div class="col-2">
+                <label >Mã</label>
+              </div>
+              <div class="col-10">
+                <input type="text" placeholder="Enter code" class="form-control">
+              </div>
+            </div>
+
+            <br>
+            <div class="row">
+              <div class="col-2">
+                <label >Tên</label>
+              </div>
+              <div class="col-10">
+                <input type="text" placeholder="Enter name" class="form-control">
+              </div>
+            </div>
+          </form>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-primary">Thêm mới</button>
+        </div>
+      </div>
     </div>
+  </div>
+
 </div>
