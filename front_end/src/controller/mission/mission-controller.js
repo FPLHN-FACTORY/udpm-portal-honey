@@ -42,7 +42,6 @@ window.MissionController = function($http,$scope,$location){
       event.preventDefault();
       let pro = $scope.mission[$scope.viTri];
       $http.put(`${"http://localhost:8080/api/admin/mission/update"}/${pro.id}`, $scope.form_mission).then(function (response) {
-        // $scope.mission[$scope.viTri] = response.data;
         alert("Update thành công");
         window.location.reload();
       });

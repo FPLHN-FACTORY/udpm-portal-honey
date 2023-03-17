@@ -22,4 +22,7 @@ public class Gift extends PrimaryEntity {
     @Column(length = 100)
     private String note;
 
+    @Column
+    private int pointGift ;
+
 }

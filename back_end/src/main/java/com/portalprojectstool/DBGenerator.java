@@ -152,6 +152,7 @@ public class DBGenerator  implements CommandLineRunner {
         gift1.setCode("G1");
         gift1.setName("Nhận một cô người yêu xinh vl");
         gift1.setNote("Cac em đạt đủ 2 tỷ điểm sẽ đổi được 1 cô người yêu ");
+        gift1.setPointGift(8888);
         gift1.setCreatedDate(5600l);
         gift1.setLastModifiedDate(5600l);
 
@@ -159,6 +160,7 @@ public class DBGenerator  implements CommandLineRunner {
         gift2.setCode("G2");
         gift2.setName("Nhận lamborghini adventador");
         gift2.setNote("Cac em đạt đủ 2 0 tỷ điểm sẽ đổi được 1 xe thể thao lamborghini ");
+        gift2.setPointGift(8888);
         gift2.setCreatedDate(5600l);
         gift2.setLastModifiedDate(5600l);
 

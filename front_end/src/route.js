@@ -4,7 +4,7 @@ app.config(function ($routeProvider, $locationProvider) {
   $routeProvider
     .when("/trang-chu", {
       templateUrl:"pages/home.html"
-    }).when("/nhiem-vu",{
+    }).when("/mission",{
       templateUrl:"pages/mission.html",
       controller: MissionController,
     }).when("/diem-thuong",{
@@ -12,6 +12,10 @@ app.config(function ($routeProvider, $locationProvider) {
     }).when("/them-diem-thuong",{
       templateUrl:"pages/addPoint.html",
       controller: addPointController,
+    })
+    .when("/gift",{
+      templateUrl:"pages/gift.html",
+      controller: GiftController,
     })
     .otherwise({
       redirectTo: "/trang-chu",

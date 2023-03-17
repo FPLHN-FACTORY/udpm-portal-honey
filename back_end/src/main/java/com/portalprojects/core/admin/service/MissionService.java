@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 
 public interface MissionService {
+
     ArrayList<Mission> getAll();
 
     Boolean createMission(AdCreateMissionRequest adCreateMissionRequest);
