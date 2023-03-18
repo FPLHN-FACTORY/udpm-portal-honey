@@ -1,19 +1,16 @@
-var app = angular.module("myModule", ["ngRoute"]);
+var app = angular.module("myModule", ["ngRoute",'angularUtils.directives.dirPagination']);
 app.config(function ($routeProvider, $locationProvider) {
   $locationProvider.hashPrefix("");
   $routeProvider
     .when("/trang-chu", {
-      templateUrl:"pages/home.html"
+      templateUrl:"pages/home.html",
+      controller: addPointController,
     }).when("/mission",{
       templateUrl:"pages/mission.html",
       controller: MissionController,
     }).when("/diem-thuong",{
       templateUrl:"pages/point.html"
-    }).when("/them-diem-thuong",{
-      templateUrl:"pages/addPoint.html",
-      controller: addPointController,
-    })
-    .when("/gift",{
+    }).when("/gift",{
       templateUrl:"pages/gift.html",
       controller: GiftController,
     })
