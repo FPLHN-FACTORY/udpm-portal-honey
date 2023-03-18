@@ -1,5 +1,7 @@
 window.GiftController = function($http,$scope){
     $scope.gift = [];
+    $scope.currentPage = 1;
+    $scope.pageSize = 5;
     $http.get("http://localhost:8080/api/admin/gift").then(function (response) {
         $scope.gift = response.data.data;
     });
@@ -18,6 +20,12 @@ window.GiftController = function($http,$scope){
       $scope.form_gift.pointGift = $scope.gift[index].pointGift;
       $scope.form_gift.note = $scope.gift[index].note;
     };
+
+    $scope.clearData = function () {
+      $scope.form_gift.name = "";
+      $scope.form_gift.pointGift = "";
+      $scope.form_gift.note = "";
+    }
   
     $scope.add = function (event) {
       event.preventDefault();

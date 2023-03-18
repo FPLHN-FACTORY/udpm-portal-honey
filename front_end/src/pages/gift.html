@@ -12,7 +12,7 @@
           <th>Điểm thưởng</th>
           <th>Hành động</th>
       </tr>
-      <tr ng-repeat="g in gift">
+      <tr dir-paginate="g in gift | itemsPerPage: pageSize" current-page="currentPage" pagination-id="giftPagination">
         <td>{{g.code}}</td>
         <td>{{g.name}}</td>
         <td>{{g.pointGift}}</td>
@@ -21,8 +21,11 @@
             <a title="Xóa quà tặng" href="" class="btn btn-danger" ng-click="delete($event,$index)"><i class="fa fa-trash"></i></a>
         </td>
     </tr>
-
     </table>
+    <div class="text-center" style="width: 200px;margin-left: auto;margin-right: auto;">
+      <dir-pagination-controls boundary-links="true" 
+       template-url="layout/dirPagination.tql.html" pagination-id="giftPagination"></dir-pagination-controls>
+    </div>
     <!-- modal -->
 
     <!-- Modal -->
@@ -87,7 +90,7 @@
   <div class="modal-content">
     <div class="modal-header">
       <h1 class="modal-title fs-5" id="staticBackdropLabel">Sửa quà tặng</h1>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ng-click="clearData()"></button>
     </div>
     <div class="modal-body">
       <!-- modal  body -->
@@ -121,11 +124,10 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
-      <button type="button" class="btn btn-primary"  ng-click="update($event)">Sửa</button>
+      <button type="button" class="btn btn-danger" data-bs-dismiss="modal" ng-click="clearData()">Đóng</button>
+      <button type="button" class="btn btn-primary" ng-click="update($event)">Sửa</button>
     </div>
   </div>
 </div>
 </div>
-
 </div>

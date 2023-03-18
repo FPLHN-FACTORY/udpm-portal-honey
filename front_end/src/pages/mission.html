@@ -12,7 +12,7 @@
             <th>Điểm thưởng</th>
             <th>Hành động</th>
         </tr>
-        <tr ng-repeat="ms in mission">
+        <tr dir-paginate="ms in mission | itemsPerPage: pageSize" current-page="currentPage" pagination-id="missionPagination">
           <td>{{ms.code}}</td>
           <td>{{ms.name}}</td>
           <td>{{ms.pointMission}}</td>
@@ -21,8 +21,12 @@
               <a title="Xóa nhiệm vụ" href="" class="btn btn-danger" ng-click="delete($event,$index)"><i class="fa fa-trash"></i></a>
           </td>
       </tr>
-
       </table>
+
+      <div class="text-center" style="width: 200px;margin-left: auto;margin-right: auto;">
+  <dir-pagination-controls boundary-links="true" 
+   template-url="layout/dirPagination.tql.html" pagination-id="missionPagination"></dir-pagination-controls>
+</div>
       <!-- modal -->
 
       <!-- Modal -->
@@ -55,7 +59,7 @@
             </div>
             <br>
             <div class="row">
-              <div class="col-2">S
+              <div class="col-2">
                 <label >Điểm</label>
               </div>
               <div class="col-10">
@@ -68,7 +72,7 @@
                 <label >Mô tả</label>
               </div>
               <div class="col-10">
-                <textarea type="text" placeholder="Enter note" ng-model="form_mission.note" class="form-control"></textarea>
+                <textarea type="text" placeholder="Enter note" ng-model="form_mission.describeMission" class="form-control"></textarea>
               </div>
             </div>
           </form>
@@ -87,7 +91,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="staticBackdropLabel">Sửa nhiệm vụ</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ng-click="clearData()"></button>
       </div>
       <div class="modal-body">
         <!-- modal  body -->
@@ -106,7 +110,7 @@
               <label >Điểm</label>
             </div>
             <div class="col-10">
-              <input type="number" placeholder="Enter point" ng-model="form_mission.pointGift" class="form-control">
+              <input type="number" placeholder="Enter point" ng-model="form_mission.pointMission" class="form-control">
             </div>
           </div>
           <br>
@@ -115,17 +119,16 @@
               <label >Mô tả</label>
             </div>
             <div class="col-10">
-              <textarea type="text" placeholder="Enter note" ng-model="form_mission.note" class="form-control"></textarea>
+              <textarea type="text" placeholder="Enter note" ng-model="form_mission.describeMission" class="form-control"></textarea>
             </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" ng-click="clearData()">Đóng</button>
         <button type="button" class="btn btn-primary"  ng-click="update($event)">Sửa</button>
       </div>
     </div>
   </div>
 </div>
-
 </div>

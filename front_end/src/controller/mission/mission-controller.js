@@ -1,5 +1,7 @@
-window.MissionController = function($http,$scope,$location){
+window.MissionController = function($http,$scope){
     $scope.mission = [];
+    $scope.currentPage = 1;
+    $scope.pageSize = 5;
     $http.get("http://localhost:8080/api/admin/mission").then(function (response) {
         $scope.mission = response.data.data;
     });
@@ -18,6 +20,12 @@ window.MissionController = function($http,$scope,$location){
       $scope.form_mission.pointMission = $scope.mission[index].pointMission;
       $scope.form_mission.describeMission = $scope.mission[index].describeMission;
     };
+
+    $scope.clearData = function () {
+      $scope.form_mission.name = "";
+      $scope.form_mission.pointMission = "";
+      $scope.form_mission.describeMission = "";
+    }
   
     $scope.add = function (event) {
       event.preventDefault();
