@@ -7,16 +7,16 @@ window.GiftController = function($http,$scope){
     $scope.form_gift = {
       code: "",
       name: "",
-      pointMission: "",
-      describeMission: "",
+      pointGift: "",
+      note: "",
     };
   
     $scope.detail = function (event, index) {
       event.preventDefault();
       $scope.viTri = index;
       $scope.form_gift.name = $scope.gift[index].name;
-      $scope.form_gift.pointMission = $scope.gift[index].pointMission;
-      $scope.form_gift.describeMission = $scope.gift[index].describeMission;
+      $scope.form_gift.pointGift = $scope.gift[index].pointGift;
+      $scope.form_gift.note = $scope.gift[index].note;
     };
   
     $scope.add = function (event) {
