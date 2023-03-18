@@ -1,0 +1,29 @@
+<div class="container">
+    <h4 class="mt-3 fw-bold">Quà tặng
+        <button title="Thêm quà tặng" type="button" style="border: 0px solid #999;background-color: transparent;" data-bs-toggle="modal" data-bs-target="#add">
+            <i class="fa fa-plus-circle " style="color:green"></i></i>
+          </button>
+          
+        </h4>
+    <table class="table table-striped mt-3" style="border:1px solid #e3e2e2;border-radius: 20px;">
+        <tr>
+            <th>Mã</th>
+            <th>Tên</th>
+            <th>Điểm thưởng</th>
+            <th>Hành động</th>
+        </tr>
+        <tr dir-paginate="g in gift | itemsPerPage: pageSize" current-page="currentPage" pagination-id="giftPagination">
+          <td>{{g.code}}</td>
+          <td>{{g.name}}</td>
+          <td>{{g.pointGift}}</td>
+          <td>
+              <a title="Sửa quà tặng" href="" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update" ng-click="detail($event, $index)"><i class="fa fa-pen"></i></a>
+              <a title="Xóa quà tặng" href="" class="btn btn-danger" ng-click="delete($event,$index)"><i class="fa fa-trash"></i></a>
+          </td>
+      </tr>
+      </table>
+      <div class="text-center" style="width: 200px;margin-left: auto;margin-right: auto;">
+        <dir-pagination-controls boundary-links="true" 
+         template-url="layout/dirPagination.tql.html" pagination-id="giftPagination"></dir-pagination-controls>
+      </div>
+  </div>

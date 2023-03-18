@@ -17,8 +17,8 @@
           <td>{{ms.name}}</td>
           <td>{{ms.pointMission}}</td>
           <td>
-              <a title="Sửa nhiệm vụ" href="" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update" ng-click="detail($event, $index)"><i class="fa fa-pen"></i></a>
-              <a title="Xóa nhiệm vụ" href="" class="btn btn-danger" ng-click="delete($event,$index)"><i class="fa fa-trash"></i></a>
+              <a title="Sửa nhiệm vụ" href="#mission/update/{{ms.id}}" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update" ng-click="detail($event, $index)"><i class="fa fa-pen"></i></a>
+              <a title="Xóa nhiệm vụ" href="#mission/delete/{{ms.id}}" class="btn btn-danger" ng-click="delete($event,$index)"><i class="fa fa-trash"></i></a>
           </td>
       </tr>
       </table>

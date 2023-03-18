@@ -8,7 +8,16 @@ app.config(function ($routeProvider, $locationProvider) {
     }).when("/mission",{
       templateUrl:"pages/mission.html",
       controller: MissionController,
-    }).when("/diem-thuong",{
+    })
+    .when("/mission/update/:id",{
+      templateUrl:"pages/mission.html",
+      controller: MissionController,
+    })
+    .when("/mission/delete/:id",{
+      templateUrl:"pages/mission.html",
+      controller: MissionController,
+    })
+    .when("/diem-thuong",{
       templateUrl:"pages/point.html"
     }).when("/gift",{
       templateUrl:"pages/gift.html",
