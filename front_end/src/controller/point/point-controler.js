@@ -18,11 +18,17 @@ window.addPointController = function($scope,$http,$location,$route){
     )
 
     $scope.add = function(){
-        if($scope.score == undefined){
-            alert("Bạn phải chọn 1 nhiệm vụ ")
-        } else{
+        var sum = 0;
+        if($scope.score1 != undefined){
+            sum = Number($scope.score1)
+        }
+        
+        if($scope.score2 != undefined){
+          sum +=Number( $scope.score2);
+        }
+
         $http.post("http://localhost:8080/api/admin/point/add",{
-            score:$scope.score,
+            score:sum,
             note:$scope.note,
             studentId:id
         }).then(
@@ -33,7 +39,7 @@ window.addPointController = function($scope,$http,$location,$route){
             }
            }
         )
-    }
+    
 
     }
 

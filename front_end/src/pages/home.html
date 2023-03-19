@@ -56,17 +56,30 @@
               <form method="POST">
                 <div class="row">
                   <div class="col-3">
-                    <label >Số điểm</label>
+                    <label >Nhiệm vụ</label>
                   </div>
                   <div class="col-9">
-                    
-                    <select  ng-model="score"  id="" class="form-select" >
+                    <select  ng-model="score1"  id="" class="form-select" >
                       <option  ng-repeat="mission in missions" value="{{mission.pointMission}}">{{mission.name + " : " + mission.pointMission +" đ" }} 
                       </option>
-                    
                     </select>
+
+                    <!-- text -->
                   </div>
                 </div>
+                
+
+                <div class="row mt-3">
+                  <div class="col-3 ">
+                    <label style="color:#999" >Số điểm</label>
+                  </div>
+                  <div class="col-9">
+                   <input type="text" style="color:#999;border:1px solid #e2e0e0;display: inline-block;" placeholder="Nhập số điểm được cộng thêm (nếu có)" class="form-control" ng-model="score2">
+
+                    <!-- text -->
+                  </div>
+                </div>
+
 
                 <div class="row mt-3">
                     <div class="col-3">
