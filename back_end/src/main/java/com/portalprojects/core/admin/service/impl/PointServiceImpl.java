@@ -64,4 +64,5 @@ public class PointServiceImpl implements PointService {
         pointRepository.delete(pointRepository.getById(code));
         return true;
     }
+
 }
