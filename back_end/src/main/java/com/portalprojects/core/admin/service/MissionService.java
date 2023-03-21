@@ -10,10 +10,10 @@ public interface MissionService {
 
     ArrayList<Mission> getAll();
 
-    Boolean createMission(AdCreateMissionRequest adCreateMissionRequest);
+    Mission createMission(AdCreateMissionRequest adCreateMissionRequest);
 
-    Boolean updateMission(AdCreateMissionRequest adCreateMissionRequest);
+    Mission updateMission(AdCreateMissionRequest adCreateMissionRequest);
 
-    Boolean deleteMission(String id);
+    Mission deleteMission(String id);
 
 }

@@ -2,101 +2,165 @@
   <div class="row mt-3">
     <h1 class="col-8">Danh sách sinh viên</h1>
     <div class="col-4">
-      <input class="form-control" type="search" ng-model="q" placeholder="Nhập thông tin bạn muốn tìm" aria-label="Search">
+      <input
+        class="form-control"
+        type="search"
+        ng-model="q"
+        placeholder="Nhập thông tin bạn muốn tìm"
+        aria-label="Search"
+      />
     </div>
   </div>
-    <table class="table">
-        <tr>
-            <th>Mã</th>
-            <th>Tên</th>
-            <th>Email</th>
-            <th>Số điểm hiện tại</th>
-        </tr>
+  <table class="table">
+    <tr>
+      <th>Mã</th>
+      <th>Tên</th>
+      <th>Email</th>
+      <th>Số điểm hiện tại</th>
+    </tr>
 
-        <tr dir-paginate="student in students | filter:q | itemsPerPage: pageSize" current-page="currentPage" pagination-id="studentsPagination">
-            <td>{{student.code}}</td>
-            <td>{{student.name}}</td>
-            <td>{{student.email}}</td>
-            <td>
-              <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                  <li class="page-item">
-                    <button ng-click="getId(student.code)"  type="button" class="page-link" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                      -
-                    </button>
-                   </li>
-                  <li class="page-item"><a style="width: 70px;" class="text-dark page-link text-center" >{{student.score}}</a></li>
-                  <li class="page-item">
-                    <button ng-click="getId(student.code)" type="button" class="page-link" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                      +
-                    </button>
-                   </li>
-                </ul>
-              </nav>
-            </td>
-            
-        </tr>
-    </table>
-</div>
+    <tr
+      dir-paginate="student in students | filter:q | itemsPerPage: pageSize"
+      current-page="currentPage"
+      pagination-id="studentsPagination"
+    >
+      <td>{{student.code}}</td>
+      <td>{{student.name}}</td>
+      <td>{{student.email}}</td>
+      <td>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+              <button
+                ng-click="getId(student.code)"
+                type="button"
+                class="page-link"
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"
+              >
+                -
+              </button>
+            </li>
+            <li class="page-item">
+              <a style="width: 70px" class="text-dark page-link text-center"
+                >{{student.score}}</a
+              >
+            </li>
+            <li class="page-item">
+              <button
+                ng-click="getId(student.code)"
+                type="button"
+                class="page-link"
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"
+              >
+                +
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </td>
+    </tr>
+  </table>
+  <div
+    class="text-center"
+    style="width: 400px; margin-left: auto; margin-right: auto"
+  >
+    <dir-pagination-controls
+      boundary-links="true"
+      template-url="layout/dirPagination.tql.html"
+      pagination-id="studentsPagination"
+    ></dir-pagination-controls>
+  </div>
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="staticBackdrop"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">
+            Thêm điểm thưởng
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <!-- modal  body -->
+          <form method="POST">
+            <div class="row">
+              <div class="col-3">
+                <label>Nhiệm vụ</label>
+              </div>
+              <div class="col-9">
+                <select ng-model="score1" id="" class="form-select">
+                  <option
+                    ng-repeat="mission in missions"
+                    value="{{mission.pointMission}}"
+                  >
+                    {{mission.name + " : " + mission.pointMission +" đ" }}
+                  </option>
+                </select>
 
-<div class="text-center" style="width: 400px;margin-left: auto;margin-right: auto;">
-  <dir-pagination-controls boundary-links="true" 
-   template-url="layout/dirPagination.tql.html" pagination-id="studentsPagination"></dir-pagination-controls>
-</div>
-      <!-- Modal -->
-      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="staticBackdropLabel">Thêm điểm thưởng</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <!-- text -->
+              </div>
             </div>
-            <div class="modal-body">
-              <!-- modal  body -->
-              <form method="POST">
-                <div class="row">
-                  <div class="col-3">
-                    <label >Nhiệm vụ</label>
-                  </div>
-                  <div class="col-9">
-                    <select  ng-model="score1"  id="" class="form-select" >
-                      <option  ng-repeat="mission in missions" value="{{mission.pointMission}}">{{mission.name + " : " + mission.pointMission +" đ" }} 
-                      </option>
-                    </select>
 
-                    <!-- text -->
-                  </div>
-                </div>
-                
+            <div class="row mt-3">
+              <div class="col-3">
+                <label style="color: #999">Số điểm</label>
+              </div>
+              <div class="col-9">
+                <input
+                  type="text"
+                  style="
+                    color: #999;
+                    border: 1px solid #e2e0e0;
+                    display: inline-block;
+                  "
+                  placeholder="Nhập số điểm được cộng thêm (nếu có)"
+                  class="form-control"
+                  ng-model="score2"
+                />
 
-                <div class="row mt-3">
-                  <div class="col-3 ">
-                    <label style="color:#999" >Số điểm</label>
-                  </div>
-                  <div class="col-9">
-                   <input type="text" style="color:#999;border:1px solid #e2e0e0;display: inline-block;" placeholder="Nhập số điểm được cộng thêm (nếu có)" class="form-control" ng-model="score2">
-
-                    <!-- text -->
-                  </div>
-                </div>
-
-
-                <div class="row mt-3">
-                    <div class="col-3">
-                      <label >Ghi chú</label>
-                    </div>
-                    <div class="col-9">
-                      <textarea type="text" placeholder="Enter note" ng-model="note" class="form-control"></textarea>
-                    </div>
-                  </div>
-
-              </form>   
+                <!-- text -->
+              </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
-              <button type="button" class="btn btn-primary"  ng-click="add()">Thêm mới</button>
+
+            <div class="row mt-3">
+              <div class="col-3">
+                <label>Ghi chú</label>
+              </div>
+              <div class="col-9">
+                <textarea
+                  type="text"
+                  placeholder="Enter note"
+                  ng-model="note"
+                  class="form-control"
+                ></textarea>
+              </div>
             </div>
-          </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+            Đóng
+          </button>
+          <button type="button" class="btn btn-primary" ng-click="add()">
+            Thêm mới
+          </button>
         </div>
       </div>
     </div>
+  </div>
+</div>

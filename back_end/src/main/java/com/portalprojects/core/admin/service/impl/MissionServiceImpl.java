@@ -22,8 +22,7 @@ public class MissionServiceImpl implements MissionService {
     }
 
     @Override
-    public Boolean createMission(AdCreateMissionRequest adCreateMissionRequest) {
-        try {
+    public Mission createMission(AdCreateMissionRequest adCreateMissionRequest) {
             Mission mission = new Mission();
             mission.setCode(adCreateMissionRequest.getCode());
             mission.setName(adCreateMissionRequest.getName());
@@ -31,33 +30,22 @@ public class MissionServiceImpl implements MissionService {
             mission.setDescribeMission(adCreateMissionRequest.getDescribeMission());
             mission.setCreatedDate(4252342l);
             mission.setLastModifiedDate(4252342l);
-            missionRepository.save(mission);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
+            return missionRepository.save(mission);
     }
 
     @Override
-    public Boolean updateMission(AdCreateMissionRequest adCreateMissionRequest) {
-        try {
+    public Mission updateMission(AdCreateMissionRequest adCreateMissionRequest) {
             Optional<Mission> mission = missionRepository.findById(adCreateMissionRequest.getId());
             mission.get().setName(adCreateMissionRequest.getName());
             mission.get().setPointMission(adCreateMissionRequest.getPointMission());
             mission.get().setDescribeMission(adCreateMissionRequest.getDescribeMission());
-            missionRepository.save(mission.get());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return false;
-        }
-        return true;
+            return missionRepository.save(mission.get());
     }
 
     @Override
-    public Boolean deleteMission(String id) {
+    public Mission deleteMission(String id) {
         Optional<Mission> mission = missionRepository.findById(id);
-        missionRepository.delete(mission.get());
-        return true;
+         missionRepository.delete(mission.get());
+         return mission.get();
     }
 }

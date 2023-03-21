@@ -9,10 +9,10 @@ public interface GiftService {
 
     ArrayList<Gift> getAll();
 
-    Boolean createGift(AdCreateGiftRequest createGiftRequest);
+    Gift createGift(AdCreateGiftRequest createGiftRequest);
 
-    Boolean updateGift(AdCreateGiftRequest createGiftRequest);
+    Gift updateGift(AdCreateGiftRequest createGiftRequest);
 
-    Boolean deleteGift(String id);
+    Gift deleteGift(String id);
 
 }

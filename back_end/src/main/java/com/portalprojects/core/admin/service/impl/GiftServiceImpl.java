@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Optional;
+
 @Service
 
 public class GiftServiceImpl implements GiftService {
@@ -22,42 +23,30 @@ public class GiftServiceImpl implements GiftService {
     }
 
     @Override
-    public Boolean createGift(AdCreateGiftRequest createGiftRequest) {
-        try {
-            Gift gift = new Gift();
-            gift.setCode(createGiftRequest.getCode());
-            gift.setName(createGiftRequest.getName());
-            gift.setPointGift(createGiftRequest.getPointGift());
-            gift.setNote(createGiftRequest.getNote());
-            gift.setCreatedDate(4252342l);
-            gift.setLastModifiedDate(4252342l);
-            giftRepository.save(gift);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
+    public Gift createGift(AdCreateGiftRequest createGiftRequest) {
+        Gift gift = new Gift();
+        gift.setCode(createGiftRequest.getCode());
+        gift.setName(createGiftRequest.getName());
+        gift.setPointGift(createGiftRequest.getPointGift());
+        gift.setNote(createGiftRequest.getNote());
+        gift.setCreatedDate(4252342l);
+        gift.setLastModifiedDate(4252342l);
+        return giftRepository.save(gift);
     }
 
     @Override
-    public Boolean updateGift(AdCreateGiftRequest createGiftRequest) {
-        try {
-            Optional<Gift> gift = giftRepository.findById(createGiftRequest.getId());
-            gift.get().setName(createGiftRequest.getName());
-            gift.get().setPointGift(createGiftRequest.getPointGift());
-            gift.get().setNote(createGiftRequest.getNote());
-            giftRepository.save(gift.get());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return false;
-        }
-        return true;
+    public Gift updateGift(AdCreateGiftRequest createGiftRequest) {
+        Optional<Gift> gift = giftRepository.findById(createGiftRequest.getId());
+        gift.get().setName(createGiftRequest.getName());
+        gift.get().setPointGift(createGiftRequest.getPointGift());
+        gift.get().setNote(createGiftRequest.getNote());
+        return giftRepository.save(gift.get());
     }
 
     @Override
-    public Boolean deleteGift(String id) {
+    public Gift deleteGift(String id) {
         Optional<Gift> gift = giftRepository.findById(id);
         giftRepository.delete(gift.get());
-        return true;
+        return gift.get();
     }
 }
