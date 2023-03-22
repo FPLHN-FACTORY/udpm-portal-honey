@@ -15,6 +15,10 @@ window.MissionController = function ($http, $scope) {
     describeMission: "",
   };
 
+  // $scope.product = $rootScope.viewWatches.filter((detail) => {
+  //   return detail.id == $routeParams.id;
+  // })[0];
+
   $scope.detail = function (event, index) {
     event.preventDefault();
     $scope.viTri = index;
