@@ -4,11 +4,13 @@ import com.portalprojects.entity.base.PrimaryEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name ="student")
 public class Student extends PrimaryEntity {
 

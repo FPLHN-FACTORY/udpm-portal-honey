@@ -4,12 +4,14 @@ import com.portalprojects.entity.base.PrimaryEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table( name = "point")
 public class Point extends PrimaryEntity {
 
