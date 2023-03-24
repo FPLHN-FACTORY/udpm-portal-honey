@@ -29,8 +29,6 @@ public class GiftServiceImpl implements GiftService {
         gift.setName(createGiftRequest.getName());
         gift.setPointGift(createGiftRequest.getPointGift());
         gift.setNote(createGiftRequest.getNote());
-        gift.setCreatedDate(4252342l);
-        gift.setLastModifiedDate(4252342l);
         return giftRepository.save(gift);
     }
 

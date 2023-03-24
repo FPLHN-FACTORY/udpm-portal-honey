@@ -1,20 +1,19 @@
 <div class="container">
   <h4 class="mt-3 fw-bold">
     Nhiệm vụ
-    <button
-      title="Thêm nhiệm vụ"
-      type="button"
-      style="border: 0px solid #999; background-color: transparent"
-      data-bs-toggle="modal"
-      data-bs-target="#add"
-    >
-      <i class="fa fa-plus-circle" style="color: green"></i>
-    </button>
+    <span my-tooltip tooltip-content="Thêm nhiệm vụ">
+      <a
+        href="#mission/add"
+        type="button"
+        style="border: 0px solid #999; background-color: transparent"
+        data-bs-toggle="modal"
+        data-bs-target="#add"
+      >
+        <i class="fa fa-plus-circle" style="color: green"></i>
+      </a>
+    </span>
   </h4>
-  <table
-    class="table table-striped mt-3"
-    style="border: 1px solid #e3e2e2; border-radius: 20px"
-  >
+  <table class="table">
     <tr>
       <th>Mã</th>
       <th>Tên</th>
@@ -30,22 +29,24 @@
       <td>{{ms.name}}</td>
       <td>{{ms.pointMission}}</td>
       <td>
-        <a
-          title="Sửa nhiệm vụ"
-          href="#mission/update/{{ms.id}}"
-          class="btn btn-warning"
-          data-bs-toggle="modal"
-          data-bs-target="#update"
-          ng-click="detail($event, $index)"
-          ><i class="fa fa-pen"></i
-        ></a>
-        <a
-          title="Xóa nhiệm vụ"
-          href="#mission/delete/{{ms.id}}"
-          class="btn btn-danger"
-          ng-click="delete($event,$index)"
-          ><i class="fa fa-trash"></i
-        ></a>
+        <span my-tooltip tooltip-content="Sửa nhiệm vụ">
+          <a
+            href="#mission/update/{{ms.id}}"
+            class="btn btn-warning"
+            data-bs-toggle="modal"
+            data-bs-target="#update"
+            ng-click="detail($event, ms.id)"
+            ><i class="fa fa-pen"></i
+          ></a>
+        </span>
+        <span my-tooltip tooltip-content="Xóa nhiệm vụ">
+          <a
+            href="#mission/delete/{{ms.id}}"
+            class="btn btn-danger"
+            ng-click="delete($event,$index)"
+            ><i class="fa fa-trash"></i
+          ></a>
+        </span>
       </td>
     </tr>
   </table>
@@ -153,7 +154,7 @@
             type="submit"
             class="btn btn-primary"
             data-bs-dismiss="modal"
-            ng-click="add()"
+            ng-click="add($event)"
           >
             Thêm mới
           </button>

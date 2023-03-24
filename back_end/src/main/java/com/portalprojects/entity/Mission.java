@@ -27,4 +27,5 @@ public class Mission extends PrimaryEntity {
 
     @Column
     private int pointMission ;
+
 }

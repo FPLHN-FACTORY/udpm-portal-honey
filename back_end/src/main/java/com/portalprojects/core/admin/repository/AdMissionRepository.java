@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public interface AdMissionRepository extends MissionRepository {
 
     @Query(value = """
-      SELECT * FROM mission m
+      SELECT * FROM mission m ORDER BY m.last_modified_date DESC 
      """,nativeQuery = true)
     ArrayList<Mission> getAll();
 }

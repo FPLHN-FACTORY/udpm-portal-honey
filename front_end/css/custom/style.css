@@ -34,6 +34,12 @@ footer img {
   height: 70px;
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 :root {
   --background-color: #ffffff;
   --color-text: #000000;

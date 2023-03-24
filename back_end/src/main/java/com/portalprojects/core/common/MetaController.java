@@ -1,4 +1,4 @@
-package com.portalprojects.core;
+package com.portalprojects.core.common;
 
 import com.portalprojects.infrastructure.contant.Constants;
 import org.springframework.ui.Model;

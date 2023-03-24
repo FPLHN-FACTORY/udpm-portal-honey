@@ -28,8 +28,6 @@ public class MissionServiceImpl implements MissionService {
             mission.setName(adCreateMissionRequest.getName());
             mission.setPointMission(adCreateMissionRequest.getPointMission());
             mission.setDescribeMission(adCreateMissionRequest.getDescribeMission());
-//            mission.setCreatedDate(4252342l);
-//            mission.setLastModifiedDate(4252342l);
             return missionRepository.save(mission);
     }
 
@@ -48,4 +46,5 @@ public class MissionServiceImpl implements MissionService {
          missionRepository.delete(mission.get());
          return mission.get();
     }
+
 }

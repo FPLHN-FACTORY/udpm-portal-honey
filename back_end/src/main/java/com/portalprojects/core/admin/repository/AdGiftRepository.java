@@ -7,8 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.ArrayList;
 
 public interface AdGiftRepository extends GiftRepository {
+
     @Query(value = """
-      SELECT * FROM gift g
-     """,nativeQuery = true)
+             SELECT * FROM gift g ORDER BY g.last_modified_date DESC 
+            """, nativeQuery = true)
     ArrayList<Gift> getAll();
 }
