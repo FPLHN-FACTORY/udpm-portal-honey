@@ -3,13 +3,12 @@ window.MissionController = function ($http, $scope) {
   $scope.currentPage = 1;
   $scope.pageSize = 5;
   $http
-    .get("http://localhost:8080/api/admin/mission")
+    .get("http://localhost:2508/api/admin/mission")
     .then(function (response) {
       $scope.mission = response.data.data;
     });
 
   $scope.form_mission = {
-    code: "",
     name: "",
     pointMission: "",
     describeMission: "",
@@ -18,7 +17,7 @@ window.MissionController = function ($http, $scope) {
   $scope.detail = function (event, id) {
     event.preventDefault();
     $http
-      .get("http://localhost:8080/api/admin/mission")
+      .get("http://localhost:2508/api/admin/mission")
       .then(function (response) {
         $scope.missionDetail = $scope.mission.filter((detail) => {
           return detail.id == id;
@@ -44,7 +43,7 @@ window.MissionController = function ($http, $scope) {
     } else {
       $http
         .post(
-          "http://localhost:8080/api/admin/mission/create",
+          "http://localhost:2508/api/admin/mission/create",
           $scope.form_mission
         )
         .then(function (response) {
@@ -58,7 +57,7 @@ window.MissionController = function ($http, $scope) {
     event.preventDefault();
     let pro = $scope.mission[index];
     $http
-      .delete(`${"http://localhost:8080/api/admin/mission/delete"}/${pro.id}`)
+      .delete(`${"http://localhost:2508/api/admin/mission/delete"}/${pro.id}`)
       .then(function (response) {
         $scope.mission.splice(index, 1);
         alert("Xóa thành công");
@@ -71,7 +70,7 @@ window.MissionController = function ($http, $scope) {
     let viTri = -1;
     $http
       .put(
-        `${"http://localhost:8080/api/admin/mission/update"}/${id}`,
+        `${"http://localhost:2508/api/admin/mission/update"}/${id}`,
         $scope.form_mission
       )
       .then(function (response) {

@@ -2,12 +2,11 @@ window.GiftController = function ($http, $scope) {
   $scope.gift = [];
   $scope.currentPage = 1;
   $scope.pageSize = 5;
-  $http.get("http://localhost:8080/api/admin/gift").then(function (response) {
+  $http.get("http://localhost:2508/api/admin/gift").then(function (response) {
     $scope.gift = response.data.data;
   });
 
   $scope.form_gift = {
-    code: "",
     name: "",
     pointGift: "",
     note: "",
@@ -16,7 +15,7 @@ window.GiftController = function ($http, $scope) {
   $scope.detail = function (event, id) {
     event.preventDefault();
     $http
-      .get("http://localhost:8080/api/admin/mission")
+      .get("http://localhost:2508/api/admin/mission")
       .then(function (response) {
         $scope.giftDetail = $scope.gift.filter((detail) => {
           return detail.id == id;
@@ -37,7 +36,7 @@ window.GiftController = function ($http, $scope) {
   $scope.add = function (event) {
     event.preventDefault();
     $http
-      .post("http://localhost:8080/api/admin/gift/create", $scope.form_gift)
+      .post("http://localhost:2508/api/admin/gift/create", $scope.form_gift)
       .then(function (response) {
         $scope.gift.push(response.data.data);
         alert("Thêm thành công");
@@ -48,7 +47,7 @@ window.GiftController = function ($http, $scope) {
     event.preventDefault();
     let pro = $scope.gift[index];
     $http
-      .delete(`${"http://localhost:8080/api/admin/gift/delete"}/${pro.id}`)
+      .delete(`${"http://localhost:2508/api/admin/gift/delete"}/${pro.id}`)
       .then(function (response) {
         $scope.gift.splice(index, 1);
         alert("Xóa thành công");
@@ -61,7 +60,7 @@ window.GiftController = function ($http, $scope) {
     let viTri = -1;
     $http
       .put(
-        `${"http://localhost:8080/api/admin/gift/update"}/${id}`,
+        `${"http://localhost:2508/api/admin/gift/update"}/${id}`,
         $scope.form_gift
       )
       .then(function (response) {
