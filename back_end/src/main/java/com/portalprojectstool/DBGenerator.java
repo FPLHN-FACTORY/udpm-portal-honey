@@ -117,6 +117,8 @@ public class DBGenerator  implements CommandLineRunner {
         mission1.setCode("NV1");
         mission1.setName("Tìm người yêu");
         mission1.setPointMission(8888);
+        mission1.setStartDay(new Date());
+        mission1.setFinishDay(new Date());
 
         Mission mission2 = new Mission();
         mission2.setCreatedDate(5600l);
@@ -125,6 +127,8 @@ public class DBGenerator  implements CommandLineRunner {
         mission2.setCode("NV2");
         mission2.setName("Tìm người yêu cho mẹ");
         mission2.setPointMission(8888);
+        mission2.setStartDay(new Date());
+        mission2.setFinishDay(new Date());
 
         this.missionRepository.save(mission1);
         this.missionRepository.save(mission2);
@@ -134,16 +138,12 @@ public class DBGenerator  implements CommandLineRunner {
         missionDetail1.setCreatedDate(5600l);
         missionDetail1.setLastModifiedDate(5600l);
         missionDetail1.setStudentId("SV1");
-        missionDetail1.setStartDay(new Date());
-        missionDetail1.setFinishDay(new Date());
 
         MissionDetail missionDetail2 = new MissionDetail();
         missionDetail2.setMissionId("NV2");
         missionDetail2.setCreatedDate(5600l);
         missionDetail2.setLastModifiedDate(5600l);
         missionDetail2.setStudentId("SV1");
-        missionDetail2.setStartDay(new Date());
-        missionDetail2.setFinishDay(new Date());
 
         this.missionDetailRepository.save(missionDetail1);
         this.missionDetailRepository.save(missionDetail2);
@@ -151,18 +151,18 @@ public class DBGenerator  implements CommandLineRunner {
         Gift gift1 = new Gift();
         gift1.setCode("G1");
         gift1.setName("Nhận một cô người yêu xinh vl");
-        gift1.setNote("Cac em đạt đủ 2 tỷ điểm sẽ đổi được 1 cô người yêu ");
         gift1.setPointGift(8888);
         gift1.setCreatedDate(5600l);
         gift1.setLastModifiedDate(5600l);
+        gift1.setChangeDate(new Date());
 
         Gift gift2 = new Gift();
         gift2.setCode("G2");
         gift2.setName("Nhận lamborghini adventador");
-        gift2.setNote("Cac em đạt đủ 2 0 tỷ điểm sẽ đổi được 1 xe thể thao lamborghini ");
         gift2.setPointGift(8888);
         gift2.setCreatedDate(5600l);
         gift2.setLastModifiedDate(5600l);
+        gift2.setChangeDate(new Date());
 
         this.giftRepository.save(gift1);
         this.giftRepository.save(gift2);
@@ -171,16 +171,13 @@ public class DBGenerator  implements CommandLineRunner {
         giftDetail1.setGiftId("G1");
         giftDetail1.setCreatedDate(5600l);
         giftDetail1.setLastModifiedDate(5600l);
-        giftDetail1.setChangeDate(new Date());
-        giftDetail1.setScorePoint(3000);
         giftDetail1.setStudentId("SV1");
 
         GiftDetail giftDetail2 = new GiftDetail();
         giftDetail2.setGiftId("G2");
         giftDetail2.setCreatedDate(5600l);
         giftDetail2.setLastModifiedDate(5600l);
-        giftDetail2.setChangeDate(new Date());
-        giftDetail2.setScorePoint(3000);
+
         giftDetail2.setStudentId("SV1");
 
         this.giftDetailRepository.save(giftDetail1);

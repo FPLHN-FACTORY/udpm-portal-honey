@@ -21,10 +21,4 @@ public class MissionDetail extends PrimaryEntity {
     @Column(length = 10,nullable = false)
     private String missionId;
 
-    @Column()
-    private Date startDay;
-
-    @Column()
-    private Date finishDay;
-
 }
