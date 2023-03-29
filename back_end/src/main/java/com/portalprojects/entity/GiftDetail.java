@@ -23,10 +23,4 @@ public class GiftDetail extends PrimaryEntity {
     @Column(length = 10)
     private String giftId;
 
-    @Column()
-    private int scorePoint;
-
-    @Column()
-    private Date changeDate;
-
 }

@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Date;
+
 @Entity
 @Getter
 @Setter
@@ -21,10 +23,10 @@ public class Gift extends PrimaryEntity {
     @Column(length = 50)
     private String name;
 
-    @Column(length = 100)
-    private String note;
-
     @Column
     private int pointGift ;
+
+    @Column()
+    private Date changeDate;
 
 }

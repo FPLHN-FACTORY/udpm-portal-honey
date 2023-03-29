@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Date;
+
 @Entity
 @Getter
 @Setter
@@ -27,5 +29,11 @@ public class Mission extends PrimaryEntity {
 
     @Column
     private int pointMission ;
+
+    @Column()
+    private Date startDay;
+
+    @Column()
+    private Date finishDay;
 
 }
