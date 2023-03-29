@@ -14,6 +14,10 @@ app.config(function ($routeProvider, $locationProvider) {
         templateUrl:"pages/sv-mission.html",
         controller: MissionController,
       })
+      .when("/sv-my-mission",{
+        templateUrl:"pages/my_mission.html",
+        controller:MissionController
+      })
     .otherwise({
       redirectTo: "/sv-home",
     });
