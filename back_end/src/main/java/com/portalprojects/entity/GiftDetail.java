@@ -17,10 +17,10 @@ import java.util.Date;
 @Table(name = "gift_detail")
 public class GiftDetail extends PrimaryEntity {
 
-    @Column(length = 10)
+    @Column(length = 50)
     private String studentId;
 
-    @Column(length = 10)
+    @Column(length = 50)
     private String giftId;
 
 }

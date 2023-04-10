@@ -1,0 +1,60 @@
+<h1 class="text-center">Nộp bài tập</h1>
+<br>
+<h4>Nhiệm vụ : Tìm người yêu cho mẹ</h4>
+<h4>Điểm thưởng : 8888</h4>
+<h5 class="text-danger"><i class="fa fa-clock"></i> Hạn nộp : 4 ngày 23 giờ</h5>
+<br>
+<label for="file" class="drop-container">
+  <span class="drop-title">Kéo file của bạn vào đây</span>
+  hoặc
+  <input  type="file" ng-model="file" id="file"  multiple data-max="1">
+  <button class="btn btn-success"  ng-click="upload()">Upload</button>
+  
+</label>
+<br>
+<h1 class="text-center">Danh sách file đã tải lên</h1>
+<br>
+<table class="table">
+
+  <thead>
+    <tr>
+      <th>STT</th>
+    <th>Tên file</th>
+    <th>Ngày tải lên</th>
+    <th>Thao tác</th>
+  </tr>
+  </thead>
+
+  <tbody>
+    <tr
+    dir-paginate="myMission in myMissions | filter:q | itemsPerPage: pageSize"
+    current-page="currentPage"
+    pagination-id="uploadPagination"
+    >
+   <td>{{$index}}</td>
+    <td>{{myMission.docName}}</td>
+    <td>{{myMission.uploadTime | date:"dd/MM/yyyy"}}</td>
+    <td>
+      <a   href="http://localhost:2508/api/admin/mission-detail/download-mission-detail/{{myMission.id}}" class="btn btn-success"><i class="fa fa-file-download"></i></a>
+      <a ng-click="delete($event,$index,myMission.id)" href="#sv-mission-detail/delete/{{myMission.id}}" class="btn btn-danger"><i class="fa fa-trash-alt"></i></a>
+    </td>
+  </tr>
+  </tbody>
+
+</table>
+<div
+    class="text-center"
+    style="width: 400px; margin-left: auto; margin-right: auto"
+  >
+    <dir-pagination-controls
+      boundary-links="true"
+      template-url="layout/dirPagination.tql.html"
+      pagination-id="uploadPagination"
+    ></dir-pagination-controls>
+  </div>
+
+<br>
+<br>
+
+
+

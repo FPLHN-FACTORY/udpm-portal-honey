@@ -41,6 +41,8 @@ window.addPointController = function ($scope, $http, $location, $route) {
       });
   };
 
+
+
   $scope.getId = function (idInTable) {
     id = idInTable;
   };

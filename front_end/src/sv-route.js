@@ -16,9 +16,15 @@ app.config(function ($routeProvider, $locationProvider) {
       })
       .when("/sv-my-mission",{
         templateUrl:"pages/my_mission.html",
-        controller:MissionController
+        controller:MyMissionController
       })
-    .otherwise({
+      .when("/sv-mission-detail",{
+        templateUrl:"pages/mission_detail.html",
+        controller:MissionDetailController
+      }).when("/sv-my-mission/delete/:id",{
+        templateUrl:"pages/mission_detail.html",
+        controller:MissionDetailController
+      }).otherwise({
       redirectTo: "/sv-home",
     });
 });
