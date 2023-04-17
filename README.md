@@ -1,12 +1,13 @@
 # ptpm-portal-honey
 Module Quản lý Điểm thưởng
 * Màn hình Giảng viên
-- [ ] CRUD điểm thưởng
-- [ ] CRUD Đầu điểm
-- [ ] CRUD Quà tặng
-- [ ] Chọn quà cho sinh viên
+- [x] CRUD điểm thưởng
+- [x] CRUD Đầu điểm
+- [x] CRUD Quà tặng
+- [ ] Xác nhận quà tặng cho sinh viên
 * Màn hình Sinh viên
-- [ ] Xem điểm thưởng
-- [ ] Xem đầu điểm
-- [ ] Xem quà tặng
-- [ ] Upload file sản phẩm
+- [x] Xem điểm thưởng
+- [x] Xem đầu điểm
+- [x] Xem quà tặng
+- [x] Upload file sản phẩm
+- [ ] Sinh viên chọn quà
