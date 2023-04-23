@@ -35,6 +35,4 @@ public class MissionDetail extends PrimaryEntity {
 	
 	private int status;
 
-	private int numberOfFiles;
-
 }

@@ -1,5 +1,6 @@
 package com.portalprojects.core.admin.repository;
 
+import com.portalprojects.core.admin.model.response.MyMissionResponse;
 import com.portalprojects.entity.Mission;
 import com.portalprojects.entity.Student;
 import com.portalprojects.repository.MissionRepository;
@@ -23,9 +24,9 @@ public interface AdMissionRepository extends MissionRepository {
     Mission findByCode(@Param("missionId") String missionId);
 
     @Query(value = """
-            SELECT b.* FROM mission_detail a JOIN mission b ON b.id = a.mission_id\s
+            SELECT  b.*,count(*) as count FROM mission_detail a JOIN mission b ON b.id = a.mission_id\s
             JOIN student c ON c.id = a.student_id
-            WHERE   c.code = :studentCode
+            WHERE   c.code = :studentCode GROUP BY c.code
             """,nativeQuery = true)
-    ArrayList<Mission> getAllByStudentCode(@Param("studentCode")String studentCode);
+    ArrayList<MyMissionResponse> getAllByStudentCode(@Param("studentCode")String studentCode);
 }

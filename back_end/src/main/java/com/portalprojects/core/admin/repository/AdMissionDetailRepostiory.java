@@ -2,7 +2,6 @@ package com.portalprojects.core.admin.repository;
 
 import com.portalprojects.entity.MissionDetail;
 import com.portalprojects.repository.MissionDetailRepository;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;

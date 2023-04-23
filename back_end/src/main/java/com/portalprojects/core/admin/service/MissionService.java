@@ -1,6 +1,7 @@
 package com.portalprojects.core.admin.service;
 
 import com.portalprojects.core.admin.model.request.AdCreateMissionRequest;
+import com.portalprojects.core.admin.model.response.MyMissionResponse;
 import com.portalprojects.entity.Mission;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,5 +18,6 @@ public interface MissionService {
 
     Mission deleteMission(String id);
 
-    ArrayList<Mission> getMyMissionByIdStudent(String id);
+    ArrayList<MyMissionResponse> getMyMissionByIdStudent(String id);
+
 }

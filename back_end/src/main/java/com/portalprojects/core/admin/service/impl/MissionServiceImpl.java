@@ -1,6 +1,7 @@
 package com.portalprojects.core.admin.service.impl;
 
 import com.portalprojects.core.admin.model.request.AdCreateMissionRequest;
+import com.portalprojects.core.admin.model.response.MyMissionResponse;
 import com.portalprojects.core.admin.repository.AdMissionDetailRepostiory;
 import com.portalprojects.core.admin.repository.AdMissionRepository;
 import com.portalprojects.core.admin.service.MissionService;
@@ -64,13 +65,14 @@ public class MissionServiceImpl implements MissionService {
 
     @Override
     public Mission deleteMission(String id) {
+
         Optional<Mission> mission = missionRepository.findById(id);
         missionRepository.delete(mission.get());
         return mission.get();
     }
 
     @Override
-    public ArrayList<Mission> getMyMissionByIdStudent(String studentCode) {
+    public ArrayList<MyMissionResponse> getMyMissionByIdStudent(String studentCode) {
         return this.missionRepository.getAllByStudentCode(studentCode);
     }
 }

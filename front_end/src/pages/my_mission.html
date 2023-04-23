@@ -22,14 +22,14 @@
         <td style="font-size: 12px;" class="text-danger"><i class="fa fa-clock"></i> 4 ngày 23 giờ </td>
         <td>
           <span my-tooltip tooltip-content="Sửa nhiệm vụ">
-            <a
+            <a class="text-decoration-none"
               href="#sv-mission-detail"
               
               >
               <i class="fa fa-file-upload"></i>
-            </a>
-            <span class=" text-success text-wrap" style="font-size: 10px;" > Hiện tại chưa có file nào </span>
-           
+            
+            <span class="text-success text-wrap" style="font-size: 10px;" > {{ms.count == 0 ?"Hiện tại chưa có file nào":"Bạn đã tải lên "+ms.count +" file"}} </span>
+          </a>
           </span>
          
         </td>
