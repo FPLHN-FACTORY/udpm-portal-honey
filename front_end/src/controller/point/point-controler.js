@@ -1,5 +1,5 @@
 var id = "";
-window.addPointController = function ($scope, $http, $location, $route) {
+window.addPointController = function ($scope, $http) {
   $scope.students = [];
   $scope.missions = [];
   $scope.currentPage = 1;
@@ -13,7 +13,6 @@ window.addPointController = function ($scope, $http, $location, $route) {
   $http
     .get("http://localhost:2508/api/admin/mission")
     .then(function (responce) {
-      console.log(responce);
       $scope.missions = responce.data.data;
     });
 

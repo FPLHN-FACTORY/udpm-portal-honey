@@ -154,7 +154,6 @@ public class DBGenerator  implements CommandLineRunner {
         gift1.setPointGift(8888);
         gift1.setCreatedDate(5600l);
         gift1.setLastModifiedDate(5600l);
-        gift1.setChangeDate(new Date());
 
         Gift gift2 = new Gift();
         gift2.setCode("G2");
@@ -162,7 +161,6 @@ public class DBGenerator  implements CommandLineRunner {
         gift2.setPointGift(8888);
         gift2.setCreatedDate(5600l);
         gift2.setLastModifiedDate(5600l);
-        gift2.setChangeDate(new Date());
 
         this.giftRepository.save(gift1);
         this.giftRepository.save(gift2);
@@ -172,13 +170,14 @@ public class DBGenerator  implements CommandLineRunner {
         giftDetail1.setCreatedDate(5600l);
         giftDetail1.setLastModifiedDate(5600l);
         giftDetail1.setStudentId("SV1");
+        giftDetail1.setChangeDate(new Date());
 
         GiftDetail giftDetail2 = new GiftDetail();
         giftDetail2.setGiftId("G2");
         giftDetail2.setCreatedDate(5600l);
         giftDetail2.setLastModifiedDate(5600l);
-
         giftDetail2.setStudentId("SV1");
+        giftDetail2.setChangeDate(new Date());
 
         this.giftDetailRepository.save(giftDetail1);
         this.giftDetailRepository.save(giftDetail2);

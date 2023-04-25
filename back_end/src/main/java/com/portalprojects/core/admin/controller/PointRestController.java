@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/admin/point")
+@CrossOrigin(origins = {"*"}, maxAge = 4800, allowCredentials = "false")
 public class PointRestController {
 
     @Autowired
@@ -27,7 +28,6 @@ public class PointRestController {
         return new ResponseObject(pointService.getAll());
     }
 
-    @CrossOrigin(origins = "http://127.0.0.1:5500")
     @PostMapping("/add")
     public ResponseObject createPoint(@RequestBody AdCreatePointRequest adCreatePointRequest) {
         return new ResponseObject(pointService.createPoint(adCreatePointRequest));
