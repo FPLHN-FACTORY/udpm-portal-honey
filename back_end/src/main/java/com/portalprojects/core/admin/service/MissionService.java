@@ -4,11 +4,12 @@ import com.portalprojects.core.admin.model.request.AdCreateMissionRequest;
 import com.portalprojects.entity.Mission;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public interface MissionService {
 
-    ArrayList<Mission> getAll();
+    List<Mission> getAll();
 
     Mission createMission(AdCreateMissionRequest adCreateMissionRequest);
 

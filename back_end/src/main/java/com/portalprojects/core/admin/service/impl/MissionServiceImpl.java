@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,8 +28,8 @@ public class MissionServiceImpl implements MissionService {
     private MissionRepository repository;
 
     @Override
-    public ArrayList<Mission> getAll() {
-        return missionRepository.getAll();
+    public List<Mission> getAll() {
+        return missionRepository.findAll();
     }
 
     @Override

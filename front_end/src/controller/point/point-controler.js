@@ -43,4 +43,9 @@ window.addPointController = function ($scope, $http) {
   $scope.getId = function (idInTable) {
     id = idInTable;
   };
+
+  $scope.gift = [];
+  $http.get("http://localhost:2508/api/admin/gift").then(function (response) {
+    $scope.gift = response.data.data;
+  });
 };

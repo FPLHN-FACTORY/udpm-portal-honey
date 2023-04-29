@@ -10,8 +10,8 @@ import java.util.ArrayList;
 @Repository
 public interface AdMissionRepository extends MissionRepository {
 
-    @Query(value = """
-      SELECT * FROM mission m ORDER BY m.last_modified_date DESC 
-     """,nativeQuery = true)
-    ArrayList<Mission> getAll();
+//    @Query(value = """
+//      SELECT * FROM mission m ORDER BY m.last_modified_date DESC
+//     """,nativeQuery = true)
+//    ArrayList<Mission> getAll();
 }

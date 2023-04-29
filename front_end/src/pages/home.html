@@ -62,9 +62,15 @@
         </nav>
       </td>
       <td>
-        <a href="#" class="btn btn-danger" ng-click=""
-          ><i class="fa fa-gift"></i
-        ></a>
+        <span my-tooltip tooltip-content="Đổi quà">
+          <a
+            href="#"
+            class="btn btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#gift"
+            ><i class="fa fa-gift"></i
+          ></a>
+        </span>
       </td>
     </tr>
   </table>
@@ -164,6 +170,76 @@
           </button>
           <button type="button" class="btn btn-primary" ng-click="add()">
             Thêm mới
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Danh sách quà -->
+  <div
+    class="modal fade"
+    id="gift"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">
+            Danh sách quà tặng
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            ng-click="clearData()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Mã</th>
+                <th>Tên</th>
+                <th>Điểm thưởng</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="g in gift">
+                <td>{{g.code}}</td>
+                <td>{{g.name}}</td>
+                <td>{{g.pointGift}}</td>
+                <td>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="flexCheckDefault"
+                    />
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+            Đóng
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            ng-click="save($event)"
+          >
+            Đổi
           </button>
         </div>
       </div>
