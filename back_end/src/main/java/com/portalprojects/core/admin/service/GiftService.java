@@ -9,6 +9,8 @@ public interface GiftService {
 
     List<Gift> getAll();
 
+    Gift getOne(String id);
+
     Gift createGift(AdCreateGiftRequest createGiftRequest);
 
     Gift updateGift(AdCreateGiftRequest createGiftRequest);

@@ -197,7 +197,7 @@
             class="btn-close"
             data-bs-dismiss="modal"
             aria-label="Close"
-            ng-click="clearData()"
+            ng-click="clearCheckbox()"
           ></button>
         </div>
         <div class="modal-body">
@@ -211,7 +211,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="g in gift">
+              <tr
+                dir-paginate="g in gift | itemsPerPage: pageSize"
+                current-page="currentPage"
+                pagination-id="giftPagination"
+              >
                 <td>{{g.code}}</td>
                 <td>{{g.name}}</td>
                 <td>{{g.pointGift}}</td>
@@ -220,7 +224,8 @@
                     <input
                       class="form-check-input"
                       type="checkbox"
-                      value=""
+                      ng-model="myCheckbox"
+                      ng-click="toggleSelection(g.id, row)"
                       id="flexCheckDefault"
                     />
                   </div>
@@ -230,14 +235,19 @@
           </table>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+          <button
+            type="button"
+            class="btn btn-danger"
+            ng-click="clearCheckbox()"
+            data-bs-dismiss="modal"
+          >
             Đóng
           </button>
           <button
             type="button"
             class="btn btn-primary"
             data-bs-dismiss="modal"
-            ng-click="save($event)"
+            ng-click="check()"
           >
             Đổi
           </button>

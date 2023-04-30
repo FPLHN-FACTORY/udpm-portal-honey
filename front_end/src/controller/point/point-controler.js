@@ -48,4 +48,27 @@ window.addPointController = function ($scope, $http) {
   $http.get("http://localhost:2508/api/admin/gift").then(function (response) {
     $scope.gift = response.data.data;
   });
+
+  $scope.clearCheckbox = function () {
+    $scope.myCheckbox = null;
+  };
+
+  $scope.selectedRows = [];
+  $scope.toggleSelection = function (id, row) {
+    var index = $scope.selectedRows.indexOf(row);
+    if (index > -1) {
+      $scope.selectedRows.splice(index, 1);
+    } else {
+      $http
+        .get("http://localhost:2508/api/admin/gift/" + id)
+        .then(function (response) {
+          // $scope.selectedRows = response.data.data;
+          $scope.selectedRows.push(response.data.data.id);
+        });
+    }
+  };
+
+  $scope.check = function () {
+    console.log($scope.selectedRows);
+  };
 };

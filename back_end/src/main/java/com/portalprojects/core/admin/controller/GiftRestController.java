@@ -27,6 +27,11 @@ public class GiftRestController {
         return new ResponseObject(giftService.getAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseObject getOne(@PathVariable("id") String id) {
+        return new ResponseObject(giftService.getOne(id));
+    }
+
     @PostMapping("/create")
     public ResponseObject create(@RequestBody AdCreateGiftRequest createGiftRequest) {
         return new ResponseObject(giftService.createGift(createGiftRequest));

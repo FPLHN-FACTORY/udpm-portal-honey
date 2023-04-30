@@ -34,6 +34,12 @@ public class GiftServiceImpl implements GiftService {
     }
 
     @Override
+    public Gift getOne(String id) {
+        Optional<Gift>gift = giftRepository.findById(id);
+        return gift.get();
+    }
+
+    @Override
     public Gift createGift(AdCreateGiftRequest createGiftRequest) {
         Gift gift = new Gift();
         String text = "QT";

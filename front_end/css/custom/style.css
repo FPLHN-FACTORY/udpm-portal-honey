@@ -18,6 +18,10 @@ header img {
   color: var(--color-orange);
 }
 
+.modal .modal-dialog {
+  max-width: 80%;
+}
+
 #footer {
   color: var(--color-text);
   border-top: 10px solid var(--color-orange);
