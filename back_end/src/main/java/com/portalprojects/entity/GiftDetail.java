@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Date;
 
 @Entity
 @Getter
@@ -17,13 +16,10 @@ import java.util.Date;
 @Table(name = "gift_detail")
 public class GiftDetail extends PrimaryEntity {
 
-    @Column(length = 10)
+    @Column()
     private String studentId;
 
-    @Column(length = 10)
-    private String giftId;
-
     @Column()
-    private Date changeDate;
+    private String giftId;
 
 }

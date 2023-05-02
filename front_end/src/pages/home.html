@@ -64,6 +64,7 @@
       <td>
         <span my-tooltip tooltip-content="Đổi quà">
           <a
+            ng-click="getId(student.id)"
             href="#"
             class="btn btn-success"
             data-bs-toggle="modal"
@@ -197,7 +198,7 @@
             class="btn-close"
             data-bs-dismiss="modal"
             aria-label="Close"
-            ng-click="clearCheckbox()"
+            ng-click="clearSelection()"
           ></button>
         </div>
         <div class="modal-body">
@@ -207,7 +208,14 @@
                 <th>Mã</th>
                 <th>Tên</th>
                 <th>Điểm thưởng</th>
-                <th>Hành động</th>
+                <th>
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    ng-model="selectAll"
+                    ng-click="toggleAll()"
+                  />
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -224,8 +232,9 @@
                     <input
                       class="form-check-input"
                       type="checkbox"
-                      ng-model="myCheckbox"
-                      ng-click="toggleSelection(g.id, row)"
+                      ng-model="g.selected"
+                      ng-click="toggleSelection(g)"
+                      studentId
                       id="flexCheckDefault"
                     />
                   </div>
@@ -238,7 +247,7 @@
           <button
             type="button"
             class="btn btn-danger"
-            ng-click="clearCheckbox()"
+            ng-click="clearSelection()"
             data-bs-dismiss="modal"
           >
             Đóng
@@ -247,7 +256,7 @@
             type="button"
             class="btn btn-primary"
             data-bs-dismiss="modal"
-            ng-click="check()"
+            ng-click="addHistory($event)"
           >
             Đổi
           </button>

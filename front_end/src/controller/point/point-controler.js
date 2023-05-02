@@ -49,26 +49,48 @@ window.addPointController = function ($scope, $http) {
     $scope.gift = response.data.data;
   });
 
-  $scope.clearCheckbox = function () {
-    $scope.myCheckbox = null;
+  $scope.clearSelection = function () {
+    angular.forEach($scope.gift, function (g) {
+      g.selected = false;
+    });
   };
 
-  $scope.selectedRows = [];
-  $scope.toggleSelection = function (id, row) {
-    var index = $scope.selectedRows.indexOf(row);
-    if (index > -1) {
-      $scope.selectedRows.splice(index, 1);
+  $scope.selectAll = false;
+  $scope.toggleAll = function () {
+    if ($scope.selectAll) {
+      angular.forEach($scope.gift, function (g) {
+        g.selected = false;
+      });
     } else {
-      $http
-        .get("http://localhost:2508/api/admin/gift/" + id)
-        .then(function (response) {
-          // $scope.selectedRows = response.data.data;
-          $scope.selectedRows.push(response.data.data.id);
-        });
+      angular.forEach($scope.gift, function (g) {
+        g.selected = true;
+      });
     }
   };
 
-  $scope.check = function () {
-    console.log($scope.selectedRows);
+  $scope.selectedRows = [];
+  $scope.toggleSelection = function (g) {
+    let index = $scope.selectedRows.indexOf(g.id);
+    if (index > -1) {
+      $scope.selectedRows.splice(index, 1);
+    } else {
+      $scope.selectedRows.push({
+        giftId: g.id,
+        studentId: id,
+      });
+    }
+  };
+
+  $scope.addHistory = function (event) {
+    event.preventDefault();
+    $http
+      .post(
+        "http://localhost:2508/api/admin/gift-history/create",
+        $scope.selectedRows
+      )
+      .then(function (responce) {
+        $scope.selectedRows = [];
+        $scope.clearSelection();
+      });
   };
 };

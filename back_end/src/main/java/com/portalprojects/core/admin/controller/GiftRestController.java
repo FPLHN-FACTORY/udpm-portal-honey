@@ -1,6 +1,7 @@
 package com.portalprojects.core.admin.controller;
 
 import com.portalprojects.core.admin.model.request.AdCreateGiftRequest;
+import com.portalprojects.core.admin.service.GiftDetailService;
 import com.portalprojects.core.admin.service.GiftService;
 import com.portalprojects.core.common.base.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,6 @@ public class GiftRestController {
     @GetMapping("")
     public ResponseObject getAll() {
         return new ResponseObject(giftService.getAll());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseObject getOne(@PathVariable("id") String id) {
-        return new ResponseObject(giftService.getOne(id));
     }
 
     @PostMapping("/create")

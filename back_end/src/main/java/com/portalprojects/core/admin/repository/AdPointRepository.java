@@ -1,6 +1,5 @@
 package com.portalprojects.core.admin.repository;
 
-import com.portalprojects.entity.Mission;
 import com.portalprojects.entity.Point;
 import com.portalprojects.repository.PointRepository;
 import org.springframework.data.jpa.repository.Query;
