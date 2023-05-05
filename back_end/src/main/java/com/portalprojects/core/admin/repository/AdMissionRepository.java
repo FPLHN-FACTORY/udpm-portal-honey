@@ -24,9 +24,11 @@ public interface AdMissionRepository extends MissionRepository {
     Mission findByCode(@Param("missionId") String missionId);
 
     @Query(value = """
-            SELECT  b.*,count(*) as count FROM mission_detail a JOIN mission b ON b.id = a.mission_id\s
-            JOIN student c ON c.id = a.student_id
-            WHERE   c.code = :studentCode GROUP BY c.code
+             SELECT  d.*,count(mission_detail_id) as count,b.status,DateDIFF(d.finish_day, NOW())  as timeRemaining  FROM document a
+             RIGHT JOIN mission_detail b ON b.id = a.mission_detail_id
+             JOIN student c ON c.id = b.student_id
+             RIGHT JOIN mission d ON d.id = b.mission_id
+             WHERE   c.code = :studentCode group by d.id
             """,nativeQuery = true)
     ArrayList<MyMissionResponse> getAllByStudentCode(@Param("studentCode")String studentCode);
 }

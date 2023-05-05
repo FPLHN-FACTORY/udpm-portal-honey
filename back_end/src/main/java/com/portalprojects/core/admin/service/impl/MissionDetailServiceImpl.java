@@ -1,12 +1,18 @@
 package com.portalprojects.core.admin.service.impl;
 
+import com.portalprojects.core.admin.repository.AdDocumentRepository;
 import com.portalprojects.core.admin.repository.AdMissionDetailRepostiory;
 import com.portalprojects.core.admin.repository.AdMissionRepository;
 import com.portalprojects.core.admin.repository.AdStudentRepository;
 import com.portalprojects.core.admin.service.MissionDetailService;
 import com.portalprojects.core.common.base.ResponseObject;
+import com.portalprojects.entity.Document;
+import com.portalprojects.entity.Mission;
 import com.portalprojects.entity.MissionDetail;
+import com.portalprojects.infrastructure.contant.TrangThaiNhiemVu;
 import com.portalprojects.repository.MissionDetailRepository;
+import com.portalprojects.repository.MissionRepository;
+import com.portalprojects.repository.StudentRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -39,22 +45,25 @@ public class MissionDetailServiceImpl implements MissionDetailService {
     @Autowired
     private AdStudentRepository studentRepository;
 
+    @Autowired
+    private AdDocumentRepository documentRepository;
+
     @Override
-    public MissionDetail uploadFile(MultipartFile file) {
-        String idMission = "NV1";
-        String idStudent = "SV1";
+    public Document uploadFile(MultipartFile file,String studentCode,String missionCode) {
+
         try{
-            MissionDetail missionDetail = new MissionDetail();
-            missionDetail.setDocName(file.getOriginalFilename());
-            missionDetail.setSize(file.getSize());
-            missionDetail.setData(file.getBytes());
-            missionDetail.setMissionId(missionRepository.findByCode(idMission).getId());
-            missionDetail.setStudentId(studentRepository.findByCode(idStudent).getId());
-            missionDetail.setUploadTime(new Date());
-            missionDetail.setDocType(file.getContentType());
-            missionDetailRepostiory.save(missionDetail);
-            return missionDetail;
-        } catch (IOException e) {
+            MissionDetail  missionDetail = this.missionDetailRepostiory.getMissionDetailByStudentCodeAndMissionCode(studentCode,missionCode);
+            Document doc = new Document();
+            doc.setDocName(file.getOriginalFilename());
+            doc.setSize(file.getSize());
+            doc.setData(file.getBytes());
+            doc.setMissionDetailId(missionDetail.getId());
+            doc.setUploadTime(new Date());
+            doc.setDocType(file.getContentType());
+            this.documentRepository.save(doc);
+            this.missionDetailRepostiory.updateStatusByMissionDetailId(missionDetail.getId(),TrangThaiNhiemVu.DA_HOAN_THANH);
+            return doc;
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -65,11 +74,12 @@ public class MissionDetailServiceImpl implements MissionDetailService {
     }
 
     @Override
-    public MissionDetail deleteMission(String id) {
-        Optional<MissionDetail> missionDetailOptional = missionDetailRepostiory.findById(id);
-        missionDetailRepostiory.delete(missionDetailOptional.get());
-        return missionDetailOptional.get();
-
+    public Document deleteMission(String id,String studentCode) {
+        Optional<Document> document = documentRepository.findById(id);
+        documentRepository.delete(document.get());
+        if(this.documentRepository.findCountOfDocument(document.get().getMissionDetailId()) == 0)
+           this.missionDetailRepostiory.updateStatusByMissionDetailId(document.get().getMissionDetailId(),TrangThaiNhiemVu.CHUA_HOAN_THANH);
+        return document.get();
     }
 
     @Override
@@ -77,9 +87,16 @@ public class MissionDetailServiceImpl implements MissionDetailService {
         return missionDetailRepostiory.findById(id).get();
     }
 
-    @Override
-    public ArrayList<MissionDetail> getAllByStudentCodeAndMissionCode(String studentCode, String missionCode) {
-        return missionDetailRepostiory.getAllMissionDetailByStudentCodeAndMissionCode(studentCode,missionCode);
-    }
 
+    public void checkTrangThaiNhiemvu(){
+        Thread t1 = new Thread(){
+            @Override
+            public void run() {
+                while(true){
+
+                }
+
+            }
+        };
+    }
 }

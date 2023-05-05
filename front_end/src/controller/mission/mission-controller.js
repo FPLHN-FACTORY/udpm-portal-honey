@@ -25,7 +25,7 @@ window.MissionController = function ($http, $scope) {
         $scope.form_mission.name = $scope.missionDetail.name;
         $scope.form_mission.pointMission = $scope.missionDetail.pointMission;
         $scope.form_mission.describeMission =
-          $scope.missionDetail.describeMission;
+        $scope.missionDetail.describeMission;
         $scope.id = id;
       });
   };
@@ -39,7 +39,7 @@ window.MissionController = function ($http, $scope) {
   $scope.add = function (event) {
     event.preventDefault();
     if ($scope.form_mission.name == "") {
-      alert("Vui lòng nhập tên");
+      alert("Vui lòng nhập tên : ");
     } else {
       $http
         .post(

@@ -18,7 +18,7 @@ app.config(function ($routeProvider, $locationProvider) {
         templateUrl:"pages/my_mission.html",
         controller:MyMissionController
       })
-      .when("/sv-mission-detail",{
+      .when("/sv-mission-detail/:missionCode",{
         templateUrl:"pages/mission_detail.html",
         controller:MissionDetailController
       }).when("/sv-my-mission/delete/:id",{

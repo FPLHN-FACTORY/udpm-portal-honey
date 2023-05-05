@@ -21,18 +21,7 @@ public class MissionDetail extends PrimaryEntity {
 
     @Column(length = 50,nullable = false)
     private String missionId;
-	
-	private String docName;
-	
-	private String docType;
-	
-	private long size;
 
-	@Lob
-	private byte[] data;
-	
-	private Date uploadTime;
-	
 	private int status;
 
 }

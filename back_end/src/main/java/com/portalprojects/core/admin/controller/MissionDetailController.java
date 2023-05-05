@@ -1,9 +1,10 @@
 package com.portalprojects.core.admin.controller;
 
 
+import com.portalprojects.core.admin.repository.AdDocumentRepository;
 import com.portalprojects.core.admin.service.MissionDetailService;
 import com.portalprojects.core.common.base.ResponseObject;
-import com.portalprojects.entity.MissionDetail;
+import com.portalprojects.entity.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -19,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -32,14 +31,17 @@ public class MissionDetailController {
     @Autowired
     private MissionDetailService missionDetailService;
 
+    @Autowired
+    private AdDocumentRepository documentRepository;
+
     @CrossOrigin(origins = "http://127.0.0.1:5500")
     @PostMapping("/uploadFiles")
-    public ResponseObject uploadMulitipleFiles(MultipartHttpServletRequest request){
+    public ResponseObject uploadMulitipleFiles(MultipartHttpServletRequest request,@RequestParam(required=false,name="studentCode") String studentCode, @RequestParam(required=false,name="missionCode")String missionCode){
 
         Iterator itr = request.getFileNames();
 
         MultipartFile file = request.getFile((String) itr.next());
-       return new ResponseObject(missionDetailService.uploadFile(file));
+       return new ResponseObject(missionDetailService.uploadFile(file,studentCode,missionCode));
     }
 
     @CrossOrigin(origins = "http://127.0.0.1:5500")
@@ -49,15 +51,15 @@ public class MissionDetailController {
     }
 
     @CrossOrigin(origins = "http://127.0.0.1:5500")
-    @DeleteMapping("/delete-mission-detail/{id}")
-    public ResponseObject delete(@PathVariable("id") String id) {
-        return new ResponseObject(missionDetailService.deleteMission(id));
+    @DeleteMapping("/delete-mission-detail")
+    public ResponseObject delete(@RequestParam("documentId") String documentId,@RequestParam("studentCode")String studentCode) {
+        return new ResponseObject(missionDetailService.deleteMission(documentId,studentCode));
     }
 
     @CrossOrigin(origins = "http://127.0.0.1:5500")
     @GetMapping("/download-mission-detail/{id}")
     public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String id) throws IOException {
-        MissionDetail doc = this.missionDetailService.findOne(id);
+        Document doc = this.documentRepository.findOne(id);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(doc.getDocType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + doc.getDocName().replace(" ", "_"))
@@ -72,7 +74,8 @@ public class MissionDetailController {
     @CrossOrigin(origins = "http://127.0.0.1:5500")
     @GetMapping("/get-mission-detail")
     public ResponseObject getOne(@RequestParam("studentCode") String studentCode,@RequestParam("missionCode")String missionCode){
-        System.out.println(missionCode);
-        return new ResponseObject(missionDetailService.getAllByStudentCodeAndMissionCode(studentCode, missionCode));
+//        return new ResponseObject(missionDetailService.(studentCode, missionCode))
+//        ;
+        return null;
     }
 }

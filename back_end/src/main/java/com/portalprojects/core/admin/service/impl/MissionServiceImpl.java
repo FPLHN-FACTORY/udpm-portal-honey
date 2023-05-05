@@ -65,7 +65,6 @@ public class MissionServiceImpl implements MissionService {
 
     @Override
     public Mission deleteMission(String id) {
-
         Optional<Mission> mission = missionRepository.findById(id);
         missionRepository.delete(mission.get());
         return mission.get();
@@ -73,6 +72,7 @@ public class MissionServiceImpl implements MissionService {
 
     @Override
     public ArrayList<MyMissionResponse> getMyMissionByIdStudent(String studentCode) {
+
         return this.missionRepository.getAllByStudentCode(studentCode);
     }
 }

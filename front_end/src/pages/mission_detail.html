@@ -12,8 +12,10 @@
   
 </label>
 <br>
+<div ng-if="size == true">
 <h1 class="text-center">Danh sách file đã tải lên</h1>
 <br>
+
 <table class="table">
 
   <thead>
@@ -35,13 +37,17 @@
     <td>{{myMission.docName}}</td>
     <td>{{myMission.uploadTime | date:"dd/MM/yyyy"}}</td>
     <td>
-      <a   href="http://localhost:2508/api/admin/mission-detail/download-mission-detail/{{myMission.id}}" class="btn btn-success"><i class="fa fa-file-download"></i></a>
+      <a href="http://localhost:2508/api/admin/mission-detail/download-mission-detail/{{myMission.id}}" class="btn btn-success"><i class="fa fa-file-download"></i></a>
       <a ng-click="delete($event,$index,myMission.id)" href="#sv-mission-detail/delete/{{myMission.id}}" class="btn btn-danger"><i class="fa fa-trash-alt"></i></a>
     </td>
   </tr>
   </tbody>
 
 </table>
+</div>
+
+<h2 ng-if="size == false" class="text-center">Hiện tại chưa có file nào </h2>
+
 <div
     class="text-center"
     style="width: 400px; margin-left: auto; margin-right: auto"

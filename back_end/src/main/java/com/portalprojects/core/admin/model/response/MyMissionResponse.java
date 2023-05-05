@@ -1,13 +1,17 @@
 package com.portalprojects.core.admin.model.response;
 
 import com.portalprojects.entity.Mission;
+import com.portalprojects.entity.MissionDetail;
 import jakarta.persistence.Column;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.util.Date;
 
-@Projection(types = {Mission.class})
+
+@Projection(types = {Mission.class, MissionDetail.class})
 public interface MyMissionResponse {
 
     @Value("#{target.id}")
@@ -23,7 +27,7 @@ public interface MyMissionResponse {
     String getDescribeMission();
 
     @Value("#{target.point_mission}")
-    int getPointMission();
+    Integer getPointMission();
 
     @Value("#{target.start_day}")
     Date getStartDay();
@@ -32,4 +36,10 @@ public interface MyMissionResponse {
     Date getFinishDay();
 
     Integer getCount();
+
+    @Value("#{target.status}")
+    Integer getStatus();
+
+    Integer getTimeRemaining();
+
 }

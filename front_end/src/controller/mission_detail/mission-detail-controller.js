@@ -1,15 +1,19 @@
 
-window.MissionDetailController = function($scope, $http,$location,$window){
+window.MissionDetailController = function($scope, $http,$routeParams,$window){
 
   $scope.myMissions = [];
   $scope.currentPage = 1;
   $scope.pageSize = 5;
+  $scope.size = false;
+  $scope.missionCode = $routeParams.missionCode;
+  $scope.studentCode = 'SV1';
 
   $http
-  .get("http://localhost:2508/api/admin/mission-detail")
+  .get(
+    `${"http://localhost:2508/api/admin/document/find-all-by-ms-detail-id"}?missionCode=${$scope.missionCode}&studentCode=${$scope.studentCode}`)
   .then(function (response) {
     $scope.myMissions = response.data.data;
-    console.log($scope.myMissions)
+    $scope.size = $scope.myMissions.length > 0 ?true:false;
   });
   // end find all
 
@@ -22,14 +26,17 @@ window.MissionDetailController = function($scope, $http,$location,$window){
       var fd = new FormData();
       fd.append('file',files[0]);
      $http
-     .post("http://localhost:2508/api/admin/mission-detail/uploadFiles",fd,{
+     .post(
+      `${"http://localhost:2508/api/admin/mission-detail/uploadFiles"}?missionCode=${$scope.missionCode}&studentCode=${$scope.studentCode}` ,fd,{
       transformRequest : angular.identity,
       headers : {
           'Content-Type' : undefined
       }})
      .then(function (response) {
+      $window.location.reload()
        alert("upload thành công ...")
        $scope.myMissions.push(response.data.data);
+       
      });
     }
   
@@ -40,19 +47,14 @@ window.MissionDetailController = function($scope, $http,$location,$window){
     event.preventDefault();
     $http
     .delete(
-      `${"http://localhost:2508/api/admin/mission-detail/delete-mission-detail"}/${id}`
+      `${"http://localhost:2508/api/admin/mission-detail/delete-mission-detail"}?documentId=${id}&studentCode=${$scope.studentCode}`
     )
     .then(function (response) {
+      $window.location.reload()
       alert("Xóa thành công ...")
       $scope.myMissions.splice(index, 1);
     });
   }
-
-  // $scope.download = function(event,index,id){
-  //   event.preventDefault();
-  //   window.location.href="google.com";
-  // }
-
 
 }
 

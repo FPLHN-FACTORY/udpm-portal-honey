@@ -1,4 +1,7 @@
 <div class="container">
+ 
+  <div ng-if="flag == true">
+
     <h4 class="mt-3 fw-bold">
       Nhiệm vụ của tôi
      
@@ -19,23 +22,24 @@
         <td>{{ms.code}}</td>
         <td>{{ms.name}}</td>
         <td>{{ms.pointMission}}</td>
-        <td style="font-size: 12px;" class="text-danger"><i class="fa fa-clock"></i> 4 ngày 23 giờ </td>
+        <td style="font-size: 12px;" class="text-danger"><i class="fa fa-clock"></i>  {{ms.timeRemaining >=0? "còn "+ ms.timeRemaining + " ngày nữa" :"Hết hạn"}} </td>
         <td>
           <span my-tooltip tooltip-content="Sửa nhiệm vụ">
             <a class="text-decoration-none"
-              href="#sv-mission-detail"
+              href="#sv-mission-detail/{{ms.code}}"
               
               >
               <i class="fa fa-file-upload"></i>
             
-            <span class="text-success text-wrap" style="font-size: 10px;" > {{ms.count == 0 ?"Hiện tại chưa có file nào":"Bạn đã tải lên "+ms.count +" file"}} </span>
+            <span class="text-success text-wrap"  style="font-size: 10px;" > {{ms.count == 0 ?"Hiện tại chưa có file nào":"Bạn đã tải lên "+ms.count +" file"}} </span>
           </a>
           </span>
          
         </td>
       </tr>
     </table>
-  
+  </div>
+  <h2 ng-if="flag == false" class="text-center">Bạn chưa chọn nhiệm vụ nào</h2>
     <div
       class="text-center"
       style="width: 200px; margin-left: auto; margin-right: auto"

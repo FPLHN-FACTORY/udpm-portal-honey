@@ -1,5 +1,6 @@
 package com.portalprojects.core.admin.service;
 
+import com.portalprojects.entity.Document;
 import com.portalprojects.entity.MissionDetail;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,13 +13,13 @@ import java.util.ArrayList;
 
 
 public interface MissionDetailService {
-    MissionDetail uploadFile(MultipartFile file);
+    Document uploadFile(MultipartFile file,String studentCode, String missionCode);
 
     ArrayList<MissionDetail> findAll();
 
-    MissionDetail deleteMission(String id);
+    Document deleteMission(String id,String studentCode);
 
     MissionDetail findOne(String id);
 
-    ArrayList<MissionDetail> getAllByStudentCodeAndMissionCode(String studentCode, String missionCode);
+//    ArrayList<MissionDetail> getAllByStudentCodeAndMissionCode(String studentCode, String missionCode);
 }

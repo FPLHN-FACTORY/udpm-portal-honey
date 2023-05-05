@@ -49,6 +49,4 @@ public class MissionRestController {
         return new ResponseObject(missionService.deleteMission(id));
     }
 
-
-
 }
