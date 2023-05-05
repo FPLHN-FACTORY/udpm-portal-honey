@@ -1,6 +1,7 @@
 package com.portalprojects.core.admin.controller;
 
 import com.portalprojects.core.admin.model.request.AdCreateMissionRequest;
+import com.portalprojects.core.admin.service.MissionDetailService;
 import com.portalprojects.core.admin.service.MissionService;
 import com.portalprojects.core.common.base.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,19 @@ public class MissionRestController {
     @Autowired
     private MissionService missionService;
 
+    @Autowired
+    private MissionDetailService missionDetailService;
+
     @GetMapping("")
     public ResponseObject getAll() {
         return new ResponseObject(missionService.getAll());
     }
+
+    @GetMapping("/student")
+    public ResponseObject getAllByStudentCode() {
+        return new ResponseObject(missionService.getAllMissionStudent("SV1"));
+    }
+
 
     @GetMapping("/my-mission/{id}")
     public ResponseObject getMyMissionByIdStudent(@PathVariable("id") String id) {
@@ -48,5 +58,15 @@ public class MissionRestController {
     public ResponseObject delete(@PathVariable("id") String id) {
         return new ResponseObject(missionService.deleteMission(id));
     }
+
+    @PutMapping("/add-mission-detail/{id}")
+    public ResponseObject addMissionDetail(@PathVariable("id") String id) {
+        try {
+            return new ResponseObject(this.missionDetailService.addMissionDetail(id));
+        }catch (Exception e){
+            return null;
+        }
+    }
+
 
 }

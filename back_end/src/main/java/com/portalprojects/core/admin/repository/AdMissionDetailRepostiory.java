@@ -14,11 +14,20 @@ import org.springframework.stereotype.Repository;
 public interface AdMissionDetailRepostiory extends MissionDetailRepository {
 
     @Query(value = """
-            SELECT a.* FROM mission_detail a JOIN mission b ON b.id = a.mission_id\s
+            SELECT a.* FROM mission_detail a JOIN mission b ON b.id = a.mission_id 
             JOIN student c ON c.id = a.student_id
             WHERE   c.code = :studentCode AND b.code = :missionCode
             """,nativeQuery = true)
     MissionDetail getMissionDetailByStudentCodeAndMissionCode(@Param("studentCode")String studentCode,@Param("missionCode")String missionCode);
+
+
+    @Query(value = """
+            SELECT a.* FROM mission_detail a JOIN mission b ON b.id = a.mission_id 
+            JOIN student c ON c.id = a.student_id 
+            WHERE   c.id = :studentId AND b.id = :missionId 
+            """,nativeQuery = true)
+    MissionDetail getMissionDetailByStudentIdAndMissionId(@Param("studentId")String studentId,@Param("missionId")String missionId);
+
 
     @Modifying
     @Transactional

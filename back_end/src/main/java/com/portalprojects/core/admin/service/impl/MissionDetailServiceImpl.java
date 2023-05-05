@@ -9,6 +9,7 @@ import com.portalprojects.core.common.base.ResponseObject;
 import com.portalprojects.entity.Document;
 import com.portalprojects.entity.Mission;
 import com.portalprojects.entity.MissionDetail;
+import com.portalprojects.entity.Student;
 import com.portalprojects.infrastructure.contant.TrangThaiNhiemVu;
 import com.portalprojects.repository.MissionDetailRepository;
 import com.portalprojects.repository.MissionRepository;
@@ -49,10 +50,10 @@ public class MissionDetailServiceImpl implements MissionDetailService {
     private AdDocumentRepository documentRepository;
 
     @Override
-    public Document uploadFile(MultipartFile file,String studentCode,String missionCode) {
+    public Document uploadFile(MultipartFile file, String studentCode, String missionCode) {
 
-        try{
-            MissionDetail  missionDetail = this.missionDetailRepostiory.getMissionDetailByStudentCodeAndMissionCode(studentCode,missionCode);
+        try {
+            MissionDetail missionDetail = this.missionDetailRepostiory.getMissionDetailByStudentCodeAndMissionCode(studentCode, missionCode);
             Document doc = new Document();
             doc.setDocName(file.getOriginalFilename());
             doc.setSize(file.getSize());
@@ -61,7 +62,7 @@ public class MissionDetailServiceImpl implements MissionDetailService {
             doc.setUploadTime(new Date());
             doc.setDocType(file.getContentType());
             this.documentRepository.save(doc);
-            this.missionDetailRepostiory.updateStatusByMissionDetailId(missionDetail.getId(),TrangThaiNhiemVu.DA_HOAN_THANH);
+            this.missionDetailRepostiory.updateStatusByMissionDetailId(missionDetail.getId(), TrangThaiNhiemVu.DA_HOAN_THANH);
             return doc;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -74,11 +75,11 @@ public class MissionDetailServiceImpl implements MissionDetailService {
     }
 
     @Override
-    public Document deleteMission(String id,String studentCode) {
+    public Document deleteMission(String id, String studentCode) {
         Optional<Document> document = documentRepository.findById(id);
         documentRepository.delete(document.get());
-        if(this.documentRepository.findCountOfDocument(document.get().getMissionDetailId()) == 0)
-           this.missionDetailRepostiory.updateStatusByMissionDetailId(document.get().getMissionDetailId(),TrangThaiNhiemVu.CHUA_HOAN_THANH);
+        if (this.documentRepository.findCountOfDocument(document.get().getMissionDetailId()) == 0)
+            this.missionDetailRepostiory.updateStatusByMissionDetailId(document.get().getMissionDetailId(), TrangThaiNhiemVu.CHUA_HOAN_THANH);
         return document.get();
     }
 
@@ -87,12 +88,28 @@ public class MissionDetailServiceImpl implements MissionDetailService {
         return missionDetailRepostiory.findById(id).get();
     }
 
+    @Override
+    public MissionDetail addMissionDetail(String missionId) {
+        String studentCode = "SV1";
+        Student student = this.studentRepository.findByCode(studentCode);
+        if (this.missionDetailRepostiory.getMissionDetailByStudentIdAndMissionId(student.getId(), missionId) != null) {
+            return null;
+        } else {
+            MissionDetail missionDetail = new MissionDetail();
+            missionDetail.setMissionId(missionId);
+            missionDetail.setStudentId(student.getId());
+            missionDetail.setStatus(TrangThaiNhiemVu.CHUA_HOAN_THANH);
+            this.missionDetailRepostiory.save(missionDetail);
+            return missionDetail;
+        }
+    }
 
-    public void checkTrangThaiNhiemvu(){
-        Thread t1 = new Thread(){
+
+    public void checkTrangThaiNhiemvu() {
+        Thread t1 = new Thread() {
             @Override
             public void run() {
-                while(true){
+                while (true) {
 
                 }
 

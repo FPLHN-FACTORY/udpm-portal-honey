@@ -13,8 +13,6 @@ window.MyMissionController = function ($scope, $http) {
       $scope.mission = response.data.data;
       $scope.flag = response.data.data.length > 0 ? true : false;
       console.log($scope.mission)
-
-
     });
 
     

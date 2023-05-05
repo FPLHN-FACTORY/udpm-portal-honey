@@ -13,6 +13,8 @@ public interface MissionService {
 
     List<Mission> getAll();
 
+    List<Mission> getAllMissionStudent(String studentCode);
+
     Mission createMission(AdCreateMissionRequest adCreateMissionRequest);
 
     Mission updateMission(AdCreateMissionRequest adCreateMissionRequest);

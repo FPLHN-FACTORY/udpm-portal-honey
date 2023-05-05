@@ -21,5 +21,7 @@ public interface MissionDetailService {
 
     MissionDetail findOne(String id);
 
+    MissionDetail addMissionDetail(String missionId);
+
 //    ArrayList<MissionDetail> getAllByStudentCodeAndMissionCode(String studentCode, String missionCode);
 }

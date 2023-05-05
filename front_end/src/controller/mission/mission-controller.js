@@ -84,4 +84,18 @@ window.MissionController = function ($http, $scope) {
         alert("Update thành công");
       });
   };
+
+  $scope.getMission  = function(id){
+    $http
+    .put(
+      `${"http://localhost:2508/api/admin/mission/add-mission-detail"}/${id}`,
+      $scope.form_mission
+    )
+    .then(function (response) {
+      if(response.data.data == null){
+        alert("Bạn đã nhận nhiệm vụ này rồi")
+      }else
+      alert("Bạn đã nhận nhiệm vụ thành công");
+    });
+  }
 };

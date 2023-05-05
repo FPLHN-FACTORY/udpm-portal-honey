@@ -4,8 +4,10 @@ import com.portalprojects.core.admin.model.request.AdCreateMissionRequest;
 import com.portalprojects.core.admin.model.response.MyMissionResponse;
 import com.portalprojects.core.admin.repository.AdMissionDetailRepostiory;
 import com.portalprojects.core.admin.repository.AdMissionRepository;
+import com.portalprojects.core.admin.repository.AdStudentRepository;
 import com.portalprojects.core.admin.service.MissionService;
 import com.portalprojects.entity.Mission;
+import com.portalprojects.entity.Student;
 import com.portalprojects.repository.MissionRepository;
 import com.portalprojects.util.AutomaticCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +35,18 @@ public class MissionServiceImpl implements MissionService {
     @Autowired
     private AdMissionDetailRepostiory missionDetailRepostiory;
 
+    @Autowired
+    private AdStudentRepository studentRepository;
+
     @Override
     public List<Mission> getAll() {
         return missionRepository.findAll();
+    }
+
+    @Override
+    public List<Mission> getAllMissionStudent(String studentCode) {
+        Student student = this.studentRepository.findByCode(studentCode);
+        return this.missionRepository.getAllByStudentId(student.getId());
     }
 
     @Override
@@ -69,7 +80,7 @@ public class MissionServiceImpl implements MissionService {
 
     @Override
     public ArrayList<MyMissionResponse> getMyMissionByIdStudent(String studentCode) {
-
-        return this.missionRepository.getAllByStudentCode(studentCode);
+        Student student = this.studentRepository.findByCode(studentCode);
+        return this.missionRepository.getAllMyMissionByStudentId(student.getId());
     }
 }

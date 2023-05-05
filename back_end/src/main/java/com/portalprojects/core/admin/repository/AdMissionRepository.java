@@ -19,6 +19,15 @@ public interface AdMissionRepository extends MissionRepository {
     ArrayList<Mission> getAll();
 
     @Query(value = """
+             SELECT * FROM mission
+             WHERE id NOT IN (
+             SELECT mission_id FROM mission_detail
+             where student_id = :studentId
+             )
+            """, nativeQuery = true)
+    ArrayList<Mission> getAllByStudentId(@Param("studentId") String studentId);
+
+    @Query(value = """
              SELECT * FROM mission s WHERE s.code =  :missionId
             """, nativeQuery = true)
     Mission findByCode(@Param("missionId") String missionId);
@@ -28,8 +37,8 @@ public interface AdMissionRepository extends MissionRepository {
              RIGHT JOIN mission_detail b ON b.id = a.mission_detail_id
              JOIN student c ON c.id = b.student_id
              RIGHT JOIN mission d ON d.id = b.mission_id
-             WHERE   c.code = :studentCode group by d.id
-            """,nativeQuery = true)
-    ArrayList<MyMissionResponse> getAllByStudentCode(@Param("studentCode")String studentCode);
+             WHERE   c.id = :studentId group by d.id
+            """, nativeQuery = true)
+    ArrayList<MyMissionResponse> getAllMyMissionByStudentId(@Param("studentId") String studentId);
 
 }

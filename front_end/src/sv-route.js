@@ -12,7 +12,7 @@ app.config(function ($routeProvider, $locationProvider) {
       })
       .when("/sv-mission", {
         templateUrl:"pages/sv-mission.html",
-        controller: MissionController,
+        controller: MissionStudentController,
       })
       .when("/sv-my-mission",{
         templateUrl:"pages/my_mission.html",
