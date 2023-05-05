@@ -39,7 +39,6 @@ public class PointServiceImpl implements PointService {
             point.setCreatedDate(4252342l);
             point.setLastModifiedDate(42522374l);
             pointRepository.save(point);
-
             Student student  = studentRepository.findByCode(adCreatePointRequest.getStudentId());
             student.setScore(student.getScore()+ adCreatePointRequest.getScore());
             studentRepository.deleteById(student.getId());
@@ -64,4 +63,5 @@ public class PointServiceImpl implements PointService {
         pointRepository.delete(pointRepository.getById(code));
         return true;
     }
+
 }

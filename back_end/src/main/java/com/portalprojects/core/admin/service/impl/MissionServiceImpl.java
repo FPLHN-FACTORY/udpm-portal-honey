@@ -1,12 +1,23 @@
 package com.portalprojects.core.admin.service.impl;
 
+import com.portalprojects.core.admin.model.request.AdCreateMissionRequest;
+import com.portalprojects.core.admin.model.response.MyMissionResponse;
+import com.portalprojects.core.admin.repository.AdMissionDetailRepostiory;
 import com.portalprojects.core.admin.repository.AdMissionRepository;
+import com.portalprojects.core.admin.repository.AdStudentRepository;
 import com.portalprojects.core.admin.service.MissionService;
 import com.portalprojects.entity.Mission;
+import com.portalprojects.entity.Student;
+import com.portalprojects.repository.MissionRepository;
+import com.portalprojects.util.AutomaticCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
+
+import java.util.List;
+
+import java.util.Optional;
 
 @Service
 public class MissionServiceImpl implements MissionService {
@@ -14,43 +25,62 @@ public class MissionServiceImpl implements MissionService {
     @Autowired
     private AdMissionRepository missionRepository;
 
+    @Autowired
+    private AutomaticCode automaticCode;
+
+    @Autowired
+    @Qualifier(MissionRepository.NAME)
+    private MissionRepository repository;
+
+    @Autowired
+    private AdMissionDetailRepostiory missionDetailRepostiory;
+
+    @Autowired
+    private AdStudentRepository studentRepository;
+
     @Override
-    public ArrayList<Mission> getAll() {
-        System.out.println(missionRepository.getAll());
-      return missionRepository.getAll();
+    public List<Mission> getAll() {
+        return missionRepository.findAll();
     }
 
     @Override
-    public Boolean createMission(Mission mission) {
-        try {
-            missionRepository.save(mission);
-        }catch (Exception ex){
-            return false;
-        }
-        return true;
+    public List<Mission> getAllMissionStudent(String studentCode) {
+        Student student = this.studentRepository.findByCode(studentCode);
+        return this.missionRepository.getAllByStudentId(student.getId());
     }
 
     @Override
-    public Boolean updateMission(Mission mission, String ma) {
-        try {
-            Mission firtMission = missionRepository.getById(ma);
-            missionRepository.delete(firtMission);
-            missionRepository.save(mission);
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
-        return false;
+    public Mission createMission(AdCreateMissionRequest adCreateMissionRequest) {
+        Mission mission = new Mission();
+        String text = "NV";
+        String nearestCode = repository.getNearestCodeMission();
+        String code = automaticCode.autumaticCode(text, nearestCode);
+        mission.setCode(code);
+        mission.setName(adCreateMissionRequest.getName());
+        mission.setPointMission(adCreateMissionRequest.getPointMission());
+        mission.setDescribeMission(adCreateMissionRequest.getDescribeMission());
+        return missionRepository.save(mission);
     }
 
     @Override
-    public Boolean deleteMission(String ma) {
-        try {
-            Mission firtMission = missionRepository.getById(ma);
-            missionRepository.delete(firtMission);
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
-        return null;
+    public Mission updateMission(AdCreateMissionRequest adCreateMissionRequest) {
+        Optional<Mission> mission = missionRepository.findById(adCreateMissionRequest.getId());
+        mission.get().setName(adCreateMissionRequest.getName());
+        mission.get().setPointMission(adCreateMissionRequest.getPointMission());
+        mission.get().setDescribeMission(adCreateMissionRequest.getDescribeMission());
+        return missionRepository.save(mission.get());
     }
 
+    @Override
+    public Mission deleteMission(String id) {
+        Optional<Mission> mission = missionRepository.findById(id);
+        missionRepository.delete(mission.get());
+        return mission.get();
+    }
+
+    @Override
+    public ArrayList<MyMissionResponse> getMyMissionByIdStudent(String studentCode) {
+        Student student = this.studentRepository.findByCode(studentCode);
+        return this.missionRepository.getAllMyMissionByStudentId(student.getId());
+    }
 }

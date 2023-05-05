@@ -3,25 +3,25 @@ package com.portalprojects.entity;
 import com.portalprojects.entity.base.PrimaryEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "mission_detail")
 public class MissionDetail extends PrimaryEntity {
 
-    @Column(length = 10,nullable = false)
+    @Column(length = 50,nullable = false)
     private String studentId;
 
-    @Column(length = 10,nullable = false)
+    @Column(length = 50,nullable = false)
     private String missionId;
 
-    @Column()
-    private Date startDay;
+	private int status;
 
-    @Column()
-    private Date finishDay;
 }

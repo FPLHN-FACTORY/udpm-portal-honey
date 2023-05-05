@@ -4,11 +4,16 @@ import com.portalprojects.entity.base.PrimaryEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.Data;
+
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Date;
+
 @Entity
-@Data
+@Getter
+@Setter
 @ToString
 @Table(name = "mission")
 public class Mission extends PrimaryEntity {
@@ -21,4 +26,14 @@ public class Mission extends PrimaryEntity {
 
     @Column(length = 100,nullable = true)
     private String describeMission;
+
+    @Column
+    private int pointMission ;
+
+    @Column()
+    private Date startDay;
+
+    @Column()
+    private Date finishDay;
+
 }

@@ -12,16 +12,10 @@ import lombok.Setter;
 @Setter
 @MappedSuperclass
 @EntityListeners(CreatePrimaryEntityListener.class)
-public abstract class PrimaryEntity implements  IsIdentified{
+public abstract class PrimaryEntity extends AuditEntity implements IsIdentified{
 
     @Id
     @Column(length = 50,updatable = false )
     private String id;
-
-    @Column(updatable = false)
-    private Long createdDate;
-
-    @Column
-    private Long lastModifiedDate;
 
 }

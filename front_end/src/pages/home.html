@@ -1,97 +1,267 @@
 <div class="container">
+  <div class="row mt-3">
+    <h1 class="col-8">Danh sách sinh viên</h1>
+    <div class="col-4">
+      <input
+        class="form-control"
+        type="search"
+        ng-model="q"
+        placeholder="Nhập thông tin bạn muốn tìm"
+        aria-label="Search"
+      />
+    </div>
+  </div>
+  <table class="table">
+    <tr>
+      <th>Mã</th>
+      <th>Tên</th>
+      <th>Email</th>
+      <th>Số điểm hiện tại</th>
+      <th>Hành động</th>
+    </tr>
 
-
-    <h4 class="mt-3 fw-bold">Điểm thưởng
-        <button type="button" style="border: 0px solid #999;background-color: transparent;" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-            <i  class="fa fa-plus-circle " style="color:green"></i></i>
-          </button>
-          
-        </h4>
-    <table class="table table-striped mt-3" style="border:1px solid #e3e2e2;border-radius: 20px;">
-        <tr>
-            <th>STT</th>
-            <th>Mã</th>
-            <th>Tên sinh viên</th>
-            <th>Điểm thưởng</th>
-            <th>Hành động</th>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>M2</td>
-            <td>Hoàng văn tám</td>
-            <td>5000</td>
-            <td>
-                <a href="" class="btn btn-warning"><i class="fa fa-pen"></i></a>
-                <a href="" class="btn btn-danger"><i class="fa fa-trash"></i></a>
-            </td>
-        </tr>
-
-        <tr>
-            <td>1</td>
-            <td>M4</td>
-            <td>Ttt</td>
-            <td>9500</td>
-          <td>
-              <a href="" class="btn btn-warning"><i class="fa fa-pen"></i></a>
-              <a href="" class="btn btn-danger"><i class="fa fa-trash"></i></a>
-          </td>
-      </tr>
-
-      </table>
-
-
-
-      <!-- modal -->
-
-      <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <tr
+      dir-paginate="student in students | filter:q | itemsPerPage: pageSize"
+      current-page="currentPage"
+      pagination-id="studentsPagination"
+    >
+      <td>{{student.code}}</td>
+      <td>{{student.name}}</td>
+      <td>{{student.email}}</td>
+      <td>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+              <button
+                ng-click="getId(student.code)"
+                type="button"
+                class="page-link"
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"
+              >
+                -
+              </button>
+            </li>
+            <li class="page-item">
+              <a style="width: 70px" class="text-dark page-link text-center"
+                >{{student.score}}</a
+              >
+            </li>
+            <li class="page-item">
+              <button
+                ng-click="getId(student.code)"
+                type="button"
+                class="page-link"
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"
+              >
+                +
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </td>
+      <td>
+        <span my-tooltip tooltip-content="Đổi quà">
+          <a
+            ng-click="getId(student.id)"
+            href="#"
+            class="btn btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#gift"
+            ><i class="fa fa-gift"></i
+          ></a>
+        </span>
+      </td>
+    </tr>
+  </table>
+  <div
+    class="text-center"
+    style="width: 400px; margin-left: auto; margin-right: auto"
+  >
+    <dir-pagination-controls
+      boundary-links="true"
+      template-url="layout/dirPagination.tql.html"
+      pagination-id="studentsPagination"
+    ></dir-pagination-controls>
+  </div>
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="staticBackdrop"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">Thêm điểm thưởng</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">
+            Thêm điểm thưởng
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
         <div class="modal-body">
           <!-- modal  body -->
           <form method="POST">
             <div class="row">
-              <div class="col-4">
-                <label >Mã</label>
+              <div class="col-3">
+                <label>Nhiệm vụ</label>
               </div>
-              <div class="col-8">
-                <input type="text" placeholder="Enter code" class="form-control">
+              <div class="col-9">
+                <select ng-model="score1" id="" class="form-select">
+                  <option
+                    ng-repeat="mission in missions"
+                    value="{{mission.pointMission}}"
+                  >
+                    {{mission.name + " : " + mission.pointMission +" đ" }}
+                  </option>
+                </select>
+
+                <!-- text -->
               </div>
             </div>
 
-            <br>
-            <div class="row">
-              <div class="col-4">
-                <label >Mã sinh viên</label>
+            <div class="row mt-3">
+              <div class="col-3">
+                <label style="color: #999">Số điểm</label>
               </div>
-              <div class="col-8">
-                <input type="text" placeholder="Enter student id" class="form-control">
+              <div class="col-9">
+                <input
+                  type="text"
+                  style="
+                    color: #999;
+                    border: 1px solid #e2e0e0;
+                    display: inline-block;
+                  "
+                  placeholder="Nhập số điểm được cộng thêm (nếu có)"
+                  class="form-control"
+                  ng-model="score2"
+                />
+
+                <!-- text -->
               </div>
             </div>
 
-            <br>
-            <div class="row">
-                <div class="col-4">
-                  <label >Điểm thưởng</label>
-                </div>
-                <div class="col-8">
-                  <input type="text" placeholder="Enter score" class="form-control">
-                </div>
+            <div class="row mt-3">
+              <div class="col-3">
+                <label>Ghi chú</label>
               </div>
+              <div class="col-9">
+                <textarea
+                  type="text"
+                  placeholder="Enter note"
+                  ng-model="note"
+                  class="form-control"
+                ></textarea>
+              </div>
+            </div>
           </form>
-
-
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
-          <button type="button" class="btn btn-primary">Thêm mới</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+            Đóng
+          </button>
+          <button type="button" class="btn btn-primary" ng-click="add()">
+            Thêm mới
+          </button>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Danh sách quà -->
+  <div
+    class="modal fade"
+    id="gift"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">
+            Danh sách quà tặng
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            ng-click="clearSelection()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Mã</th>
+                <th>Tên</th>
+                <th>Điểm thưởng</th>
+                <th>
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    ng-model="selectAll"
+                    ng-click="toggleAll()"
+                  />
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                dir-paginate="g in gift | itemsPerPage: pageSize"
+                current-page="currentPage"
+                pagination-id="giftPagination"
+              >
+                <td>{{g.code}}</td>
+                <td>{{g.name}}</td>
+                <td>{{g.pointGift}}</td>
+                <td>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      ng-model="g.selected"
+                      ng-click="toggleSelection(g)"
+                      studentId
+                      id="flexCheckDefault"
+                    />
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-danger"
+            ng-click="clearSelection()"
+            data-bs-dismiss="modal"
+          >
+            Đóng
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            ng-click="addHistory($event)"
+          >
+            Đổi
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

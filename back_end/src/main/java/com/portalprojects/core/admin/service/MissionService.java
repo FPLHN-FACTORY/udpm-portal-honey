@@ -1,18 +1,26 @@
 package com.portalprojects.core.admin.service;
 
+import com.portalprojects.core.admin.model.request.AdCreateMissionRequest;
+import com.portalprojects.core.admin.model.response.MyMissionResponse;
 import com.portalprojects.entity.Mission;
-import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public interface MissionService {
-    ArrayList<Mission> getAll();
 
-    Boolean createMission(Mission mission);
+    List<Mission> getAll();
 
-    Boolean updateMission(Mission mission,String ma);
+    List<Mission> getAllMissionStudent(String studentCode);
 
-    Boolean deleteMission(String ma);
+    Mission createMission(AdCreateMissionRequest adCreateMissionRequest);
+
+    Mission updateMission(AdCreateMissionRequest adCreateMissionRequest);
+
+    Mission deleteMission(String id);
+
+    ArrayList<MyMissionResponse> getMyMissionByIdStudent(String id);
 
 }

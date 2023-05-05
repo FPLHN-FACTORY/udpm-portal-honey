@@ -18,6 +18,10 @@ header img {
   color: var(--color-orange);
 }
 
+.modal .modal-dialog {
+  max-width: 80%;
+}
+
 #footer {
   color: var(--color-text);
   border-top: 10px solid var(--color-orange);
@@ -32,6 +36,12 @@ header img {
 
 footer img {
   height: 70px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 :root {

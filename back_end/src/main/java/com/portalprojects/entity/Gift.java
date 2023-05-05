@@ -4,11 +4,15 @@ import com.portalprojects.entity.base.PrimaryEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Date;
+
 @Entity
-@Data
+@Getter
+@Setter
 @ToString
 @Table(name = "gift")
 public class Gift extends PrimaryEntity {
@@ -19,7 +23,7 @@ public class Gift extends PrimaryEntity {
     @Column(length = 50)
     private String name;
 
-    @Column(length = 100)
-    private String note;
+    @Column
+    private int pointGift ;
 
 }
