@@ -6,18 +6,15 @@ import com.portalprojects.core.admin.repository.AdMissionDetailRepostiory;
 import com.portalprojects.core.admin.repository.AdMissionRepository;
 import com.portalprojects.core.admin.service.MissionService;
 import com.portalprojects.entity.Mission;
-import com.portalprojects.entity.MissionDetail;
-import com.portalprojects.repository.MissionDetailRepository;
 import com.portalprojects.repository.MissionRepository;
 import com.portalprojects.util.AutomaticCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
+
+import java.util.List;
+
 import java.util.Optional;
 
 @Service
@@ -37,8 +34,8 @@ public class MissionServiceImpl implements MissionService {
     private AdMissionDetailRepostiory missionDetailRepostiory;
 
     @Override
-    public ArrayList<Mission> getAll() {
-        return missionRepository.getAll();
+    public List<Mission> getAll() {
+        return missionRepository.findAll();
     }
 
     @Override

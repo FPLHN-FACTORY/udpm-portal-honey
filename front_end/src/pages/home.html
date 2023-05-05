@@ -17,6 +17,7 @@
       <th>Tên</th>
       <th>Email</th>
       <th>Số điểm hiện tại</th>
+      <th>Hành động</th>
     </tr>
 
     <tr
@@ -59,6 +60,18 @@
             </li>
           </ul>
         </nav>
+      </td>
+      <td>
+        <span my-tooltip tooltip-content="Đổi quà">
+          <a
+            ng-click="getId(student.id)"
+            href="#"
+            class="btn btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#gift"
+            ><i class="fa fa-gift"></i
+          ></a>
+        </span>
       </td>
     </tr>
   </table>
@@ -158,6 +171,94 @@
           </button>
           <button type="button" class="btn btn-primary" ng-click="add()">
             Thêm mới
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Danh sách quà -->
+  <div
+    class="modal fade"
+    id="gift"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">
+            Danh sách quà tặng
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            ng-click="clearSelection()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Mã</th>
+                <th>Tên</th>
+                <th>Điểm thưởng</th>
+                <th>
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    ng-model="selectAll"
+                    ng-click="toggleAll()"
+                  />
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                dir-paginate="g in gift | itemsPerPage: pageSize"
+                current-page="currentPage"
+                pagination-id="giftPagination"
+              >
+                <td>{{g.code}}</td>
+                <td>{{g.name}}</td>
+                <td>{{g.pointGift}}</td>
+                <td>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      ng-model="g.selected"
+                      ng-click="toggleSelection(g)"
+                      studentId
+                      id="flexCheckDefault"
+                    />
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-danger"
+            ng-click="clearSelection()"
+            data-bs-dismiss="modal"
+          >
+            Đóng
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            ng-click="addHistory($event)"
+          >
+            Đổi
           </button>
         </div>
       </div>

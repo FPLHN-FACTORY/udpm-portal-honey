@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Date;
 
 @Entity
 @Getter
@@ -20,7 +19,8 @@ public class GiftDetail extends PrimaryEntity {
     @Column(length = 50)
     private String studentId;
 
-    @Column(length = 50)
+
+    @Column()
     private String giftId;
 
 }

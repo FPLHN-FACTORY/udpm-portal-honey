@@ -26,7 +26,4 @@ public class Gift extends PrimaryEntity {
     @Column
     private int pointGift ;
 
-    @Column()
-    private Date changeDate;
-
 }

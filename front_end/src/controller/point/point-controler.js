@@ -1,5 +1,5 @@
 var id = "";
-window.addPointController = function ($scope, $http, $location, $route) {
+window.addPointController = function ($scope, $http) {
   $scope.students = [];
   $scope.missions = [];
   $scope.currentPage = 1;
@@ -13,7 +13,6 @@ window.addPointController = function ($scope, $http, $location, $route) {
   $http
     .get("http://localhost:2508/api/admin/mission")
     .then(function (responce) {
-      console.log(responce);
       $scope.missions = responce.data.data;
     });
 
@@ -45,5 +44,55 @@ window.addPointController = function ($scope, $http, $location, $route) {
 
   $scope.getId = function (idInTable) {
     id = idInTable;
+  };
+
+  $scope.gift = [];
+  $http.get("http://localhost:2508/api/admin/gift").then(function (response) {
+    $scope.gift = response.data.data;
+  });
+
+  $scope.clearSelection = function () {
+    angular.forEach($scope.gift, function (g) {
+      g.selected = false;
+    });
+  };
+
+  $scope.selectAll = false;
+  $scope.toggleAll = function () {
+    if ($scope.selectAll) {
+      angular.forEach($scope.gift, function (g) {
+        g.selected = false;
+      });
+    } else {
+      angular.forEach($scope.gift, function (g) {
+        g.selected = true;
+      });
+    }
+  };
+
+  $scope.selectedRows = [];
+  $scope.toggleSelection = function (g) {
+    let index = $scope.selectedRows.indexOf(g.id);
+    if (index > -1) {
+      $scope.selectedRows.splice(index, 1);
+    } else {
+      $scope.selectedRows.push({
+        giftId: g.id,
+        studentId: id,
+      });
+    }
+  };
+
+  $scope.addHistory = function (event) {
+    event.preventDefault();
+    $http
+      .post(
+        "http://localhost:2508/api/admin/gift-history/create",
+        $scope.selectedRows
+      )
+      .then(function (responce) {
+        $scope.selectedRows = [];
+        $scope.clearSelection();
+      });
   };
 };

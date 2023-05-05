@@ -2,9 +2,6 @@ package com.portalprojects.core.admin.model.response;
 
 import com.portalprojects.entity.Mission;
 import com.portalprojects.entity.MissionDetail;
-import jakarta.persistence.Column;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 

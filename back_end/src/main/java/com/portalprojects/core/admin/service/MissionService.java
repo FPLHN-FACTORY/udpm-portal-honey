@@ -6,11 +6,12 @@ import com.portalprojects.entity.Mission;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public interface MissionService {
 
-    ArrayList<Mission> getAll();
+    List<Mission> getAll();
 
     Mission createMission(AdCreateMissionRequest adCreateMissionRequest);
 

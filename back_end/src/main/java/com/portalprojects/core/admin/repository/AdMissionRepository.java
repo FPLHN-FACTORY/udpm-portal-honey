@@ -2,7 +2,6 @@ package com.portalprojects.core.admin.repository;
 
 import com.portalprojects.core.admin.model.response.MyMissionResponse;
 import com.portalprojects.entity.Mission;
-import com.portalprojects.entity.Student;
 import com.portalprojects.repository.MissionRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +11,7 @@ import java.util.ArrayList;
 
 @Repository
 public interface AdMissionRepository extends MissionRepository {
+
 
     @Query(value = """
              SELECT * FROM mission m ORDER BY m.last_modified_date DESC 
@@ -31,4 +31,5 @@ public interface AdMissionRepository extends MissionRepository {
              WHERE   c.code = :studentCode group by d.id
             """,nativeQuery = true)
     ArrayList<MyMissionResponse> getAllByStudentCode(@Param("studentCode")String studentCode);
+
 }
