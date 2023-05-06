@@ -21,17 +21,30 @@
         <td>{{ms.code}}</td>
         <td>{{ms.name}}</td>
         <td>{{ms.pointMission}}</td>
-        <td ng-if="ms.timeRemaining >= 0" style="font-size: 12px;" class="text-success"><i class="fa fa-clock"></i> {{ms.timeRemaining >=0? "còn "+
-          ms.timeRemaining + " ngày nữa" :"Hết hạn"}} </td>
-          <td ng-if="ms.timeRemaining < 0" style="font-size: 12px;" class="text-danger"><i class="fa fa-clock"></i> {{ms.timeRemaining >=0? "còn "+
-            ms.timeRemaining + " ngày nữa" :"Hết hạn"}} </td>
+        <td ng-if="ms.dateRemaining == 0 ? ms.timeRemaining < 0:false" style="font-size: 12px;" class="text-danger"><i class="fa fa-clock"></i> Hết hạn </td>
+
+        <td ng-if="ms.dateRemaining == 0 ? ms.timeRemaining > 0:false" style="font-size: 12px;" class="text-success"><i class="fa fa-clock"></i> 
+           còn 
+            {{ms.hourRemaining }}  giờ
+            {{ ms.minuteRemaining   }} phút 
+            {{ ms.secondRemaining   }} giây nữa
+          </td>
+
+        <td ng-if="ms.dateRemaining > 0" style="font-size: 12px;" class="text-success"><i class="fa fa-clock"></i> {{ms.dateRemaining >=0? "còn "+
+          ms.dateRemaining + " ngày nữa" :"Hết hạn"}} </td>
+
+        <td ng-if="ms.dateRemaining < 0" style="font-size: 12px;" class="text-danger"><i class="fa fa-clock"></i> {{ms.dateRemaining >=0? "còn "+
+            ms.dateRemaining + " ngày nữa" :"Hết hạn"}} </td>
         <td>
           <span my-tooltip tooltip-content="Sửa nhiệm vụ">
-            <div ng-if="ms.timeRemaining < 0">
+
+
+            <div ng-if="ms.dateRemaining < 0 || ms.dateRemaining == 0 ? ms.timeRemaining < 0:false ">
               <span class="text-danger text-wrap" style="font-size: 10px;">Bạn không thể nộp file khi nhiệm vụ đã hết
                 hạn</span>
             </div>
-            <div ng-if="ms.timeRemaining >= 0">
+
+            <div ng-if="ms.dateRemaining > 0 || ms.dateRemaining == 0 ? ms.timeRemaining > 0:false ">
               <a class="text-decoration-none" href="#sv-mission-detail/{{ms.code}}">
                 <i class="fa fa-file-upload"></i>
 

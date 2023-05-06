@@ -104,16 +104,4 @@ public class MissionDetailServiceImpl implements MissionDetailService {
         }
     }
 
-
-    public void checkTrangThaiNhiemvu() {
-        Thread t1 = new Thread() {
-            @Override
-            public void run() {
-                while (true) {
-
-                }
-
-            }
-        };
-    }
 }

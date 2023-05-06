@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface DocumentRepository extends JpaRepository<Document,String> {
     String NAME = "BaseDocumentRepository";
 
+
 }

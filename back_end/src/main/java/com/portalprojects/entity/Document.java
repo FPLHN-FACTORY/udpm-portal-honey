@@ -32,4 +32,28 @@ public class Document extends PrimaryEntity {
     private byte[] data;
 
     private Date uploadTime;
+
+    public String getMissionDetailId() {
+        return missionDetailId;
+    }
+
+    public String getDocName() {
+        return docName;
+    }
+
+    public String getDocType() {
+        return docType;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public Date getUploadTime() {
+        return uploadTime;
+    }
 }

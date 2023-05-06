@@ -1,5 +1,6 @@
 package com.portalprojects.core.admin.service.impl;
 
+import com.portalprojects.core.admin.model.response.DocumentResponce;
 import com.portalprojects.core.admin.repository.AdDocumentRepository;
 import com.portalprojects.core.admin.repository.AdMissionDetailRepostiory;
 import com.portalprojects.core.admin.service.DocumentService;
@@ -21,7 +22,7 @@ public class DocumentServiceImpl implements DocumentService {
     private AdMissionDetailRepostiory missionDetailRepostiory;
 
     @Override
-    public ArrayList<Document> findAllByMissionDetailId(String studentCode,String missionCode) {
+    public ArrayList<DocumentResponce> findAllByMissionDetailId(String studentCode, String missionCode) {
         MissionDetail missionDetail = this.missionDetailRepostiory.getMissionDetailByStudentCodeAndMissionCode(studentCode, missionCode);
         if(missionDetail == null)
             return null;
