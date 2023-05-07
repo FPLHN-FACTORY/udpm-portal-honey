@@ -39,7 +39,6 @@ public class MissionDetailController {
     public ResponseObject uploadMulitipleFiles(MultipartHttpServletRequest request,@RequestParam(required=false,name="studentCode") String studentCode, @RequestParam(required=false,name="missionCode")String missionCode){
 
         Iterator itr = request.getFileNames();
-
         MultipartFile file = request.getFile((String) itr.next());
        return new ResponseObject(missionDetailService.uploadFile(file,studentCode,missionCode));
     }

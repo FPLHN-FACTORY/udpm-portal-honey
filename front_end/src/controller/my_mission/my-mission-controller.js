@@ -23,7 +23,6 @@ window.MyMissionController = function ($scope, $http) {
       .then(function (response) {
         $scope.mission = response.data.data;
         $scope.flag = response.data.data.length > 0 ? true : false;
-
       });
     },1000)
     

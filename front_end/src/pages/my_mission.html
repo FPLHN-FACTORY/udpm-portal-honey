@@ -37,9 +37,13 @@
             ms.dateRemaining + " ngày nữa" :"Hết hạn"}} </td>
         <td>
           <span my-tooltip tooltip-content="Sửa nhiệm vụ">
+            
+            <div ng-if="ms.dateRemaining < 0  ">
+              <span class="text-danger text-wrap" style="font-size: 10px;">Bạn không thể nộp file khi nhiệm vụ đã hết
+                hạn</span>
+            </div>
 
-
-            <div ng-if="ms.dateRemaining < 0 || ms.dateRemaining == 0 ? ms.timeRemaining < 0:false ">
+            <div ng-if="ms.dateRemaining == 0 ? ms.timeRemaining < 0:false  ">
               <span class="text-danger text-wrap" style="font-size: 10px;">Bạn không thể nộp file khi nhiệm vụ đã hết
                 hạn</span>
             </div>
