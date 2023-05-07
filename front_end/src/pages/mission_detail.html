@@ -1,22 +1,22 @@
 <h1 class="text-center">Nộp bài tập</h1>
 <br>
-<h4>Nhiệm vụ : {{nameMission}}</h4>
-<h4>Điểm thưởng : <span class="text-danger">{{pointMission}}</span></h4>
-<h4>Mô tả : {{describeMission}}</h4>
-<h4 ng-if="dateRemaining == 0 ? timeRemaining < 0:false" class="text-danger">Dealine : Hết hạn </h4>
+<h4>Nhiệm vụ : {{mission.name}}</h4>
+<h4>Điểm thưởng : <span class="text-danger">{{mission.pointMission}}</span></h4>
+<h4>Mô tả : {{mission.describeMission}}</h4>
+<h4 ng-if="mission.dateRemaining == 0 ? mission.timeRemaining < 0:false" class="text-danger">Dealine : Hết hạn </h4>
 
-<h4 ng-if="dateRemaining == 0 ? timeRemaining > 0:false" class="text-success">Dealine :
+<h4 ng-if="mission.dateRemaining == 0 ? mission.timeRemaining > 0:false" class="text-success">Dealine :
    còn 
-    {{hourRemaining }}  giờ
-    {{minuteRemaining   }} phút 
-    {{secondRemaining   }} giây nữa
+    {{mission.hourRemaining }}  giờ
+    {{mission.minuteRemaining   }} phút 
+    {{mission.secondRemaining   }} giây nữa
   </h4>
 
-<h4 ng-if="dateRemaining > 0"  class="text-success">Dealine :  {{dateRemaining >=0? "còn "+
-  dateRemaining + " ngày nữa" :"Hết hạn"}} </h4>
+<h4 ng-if="mission.dateRemaining > 0"  class="text-success">Dealine :  {{mission.dateRemaining >=0? "còn "+
+  mission.dateRemaining + " ngày nữa" :"Hết hạn"}} </h4>
 
-<h4 ng-if="dateRemaining < 0"  class="text-danger">Dealine : {{dateRemaining >=0? "còn "+
-    dateRemaining + " ngày nữa" :"Hết hạn"}} </h4>
+<h4 ng-if="mission.dateRemaining < 0"  class="text-danger">Dealine : {{mission.dateRemaining >=0? "còn "+
+  mission.dateRemaining + " ngày nữa" :"Hết hạn"}} </h4>
 
 
 <br>

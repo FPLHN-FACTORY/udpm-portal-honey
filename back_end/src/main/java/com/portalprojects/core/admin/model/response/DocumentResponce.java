@@ -32,21 +32,4 @@ public interface DocumentResponce {
     @Value("#{target.upload_time}")
     Date getUploadTime();
 
-    String getCodeMission();
-
-    String getNameMission();
-
-    String getDescribeMission();
-
-    Integer getPointMission();
-
-    Integer getDateRemaining();
-
-    Integer getTimeRemaining();
-
-    Integer getHourRemaining();
-
-    Integer getMinuteRemaining();
-
-    Integer getSecondRemaining();
 }

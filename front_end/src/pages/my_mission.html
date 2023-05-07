@@ -48,7 +48,7 @@
                 hạn</span>
             </div>
 
-            <div ng-if="ms.dateRemaining > 0 || ms.dateRemaining == 0 ? ms.timeRemaining > 0:false ">
+            <div ng-if="ms.dateRemaining > 0">
               <a class="text-decoration-none" href="#sv-mission-detail/{{ms.code}}">
                 <i class="fa fa-file-upload"></i>
 
@@ -56,6 +56,15 @@
                   nào":"Bạn đã tải lên "+ms.count +" file"}} </span>
               </a>
             </div>
+
+            <div ng-if=" ms.dateRemaining == 0 ? ms.timeRemaining > 0:false ">
+              <a class="text-decoration-none" href="#sv-mission-detail/{{ms.code}}">
+                <i class="fa fa-file-upload"></i>
+                <span class="text-success text-wrap" style="font-size: 10px;"> {{ms.count == 0 ?"Hiện tại chưa có file
+                  nào":"Bạn đã tải lên "+ms.count +" file"}} </span>
+              </a>
+            </div>
+
           </span>
 
         </td>

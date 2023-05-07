@@ -1,30 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Bootstrap demo</title>
-    <link href="../css/plugin/bootstrap.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../css/custom/style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-    <link rel="stylesheet" href="css/index.css">
-  </head>
-  <body ng-app="myApp">
-    <header ng-include="'layout/sv-header.html'"></header>
-    <section ng-view></section>
-    <footer ng-include="'layout/footer.html'"></footer>
-    <script src="../js/plugin/bootstrap.bundle.js"></script> 
-    <script src="../lib/angular.js"></script>    
-    <script src="../lib/angular-route.js"></script>
-    <script src="config/api.js"></script>
-    <script src="controller/mission/mission-controller.js"></script>
-    <script src="controller/mission/mission-student-controller.js"></script>
-    <script src="controller/gift/gift-controller.js"></script>
-    <script src="controller/point/point-controler.js"></script>
-    <script src="controller/my_mission/my-mission-controller.js"></script>
-    <script src="sv-route.js"></script>
-    <script src="config/dirPagination.js"></script>
-    <script src="js/index.js"></script>
-    <script src="controller/mission_detail/mission-detail-controller.js"></script>
-  </body>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bootstrap demo</title>
+  <link href="../css/plugin/bootstrap.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/custom/style.css" />
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css
+   " rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body ng-app="myApp">
+  <header ng-include="'layout/sv-header.html'"></header>
+  <section ng-view></section>
+  <footer ng-include="'layout/footer.html'"></footer>
+  <script src="../js/plugin/bootstrap.bundle.js"></script>
+  <script src="../lib/angular.js"></script>
+  <script src="../lib/angular-route.js"></script>
+  <script src="config/api.js"></script>
+
+  <script src="controller/mission/mission-controller.js"></script>
+  <script src="controller/mission/mission-student-controller.js"></script>
+  <script src="controller/gift/gift-controller.js"></script>
+  <script src="controller/point/point-controler.js"></script>
+  <script src="controller/my_mission/my-mission-controller.js"></script>
+  <script src="sv-route.js"></script>
+  <script src="config/dirPagination.js"></script>
+  <script src="js/index.js"></script>
+  <script src="controller/mission_detail/mission-detail-controller.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
+</body>
+
 </html>

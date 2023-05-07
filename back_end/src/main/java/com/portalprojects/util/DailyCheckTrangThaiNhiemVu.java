@@ -41,7 +41,11 @@ public class DailyCheckTrangThaiNhiemVu {
 
         myMissions.forEach(e->{
             if(e.getStatus() != 2) {
-                if (e.getDateRemaining() == 0) {
+                if(e.getDateRemaining() < 0 ){
+                    MissionDetail missionDetail = this.missionDetailRepostiory.getMissionDetailByStudentIdAndMissionId(student.getId(), e.getId());
+                    this.missionDetailRepostiory.updateStatusByMissionDetailId(missionDetail.getId(), TrangThaiNhiemVu.DA_HET_HAN);
+                }
+                if (e.getDateRemaining() == 0 ) {
                     if (e.getTimeRemaining() < 0) {
                         MissionDetail missionDetail = this.missionDetailRepostiory.getMissionDetailByStudentIdAndMissionId(student.getId(), e.getId());
                         this.missionDetailRepostiory.updateStatusByMissionDetailId(missionDetail.getId(), TrangThaiNhiemVu.DA_HET_HAN);

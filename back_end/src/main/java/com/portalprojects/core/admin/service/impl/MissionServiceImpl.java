@@ -83,4 +83,9 @@ public class MissionServiceImpl implements MissionService {
         Student student = this.studentRepository.findByCode(studentCode);
         return this.missionRepository.getAllMyMissionByStudentId(student.getId());
     }
+
+    @Override
+    public MyMissionResponse getOneMyMissionByMissionCode(String missionCode) {
+        return this.missionRepository.getOneMissionByMissionCode(missionCode);
+    }
 }

@@ -1,5 +1,6 @@
 package com.portalprojects.core.admin.service.impl;
 
+import com.portalprojects.core.admin.model.response.MyMissionResponse;
 import com.portalprojects.core.admin.repository.AdDocumentRepository;
 import com.portalprojects.core.admin.repository.AdMissionDetailRepostiory;
 import com.portalprojects.core.admin.repository.AdMissionRepository;
@@ -54,6 +55,13 @@ public class MissionDetailServiceImpl implements MissionDetailService {
 
         try {
             MissionDetail missionDetail = this.missionDetailRepostiory.getMissionDetailByStudentCodeAndMissionCode(studentCode, missionCode);
+            for (MyMissionResponse e : this.missionRepository.getAllMyMissionByStudentId(missionDetail.getStudentId())) {
+                if (e.getId().equalsIgnoreCase(missionDetail.getMissionId())) {
+                    if (e.getStatus() == 2) {
+                        return null;
+                    }
+                }
+            }
             Document doc = new Document();
             doc.setDocName(file.getOriginalFilename());
             doc.setSize(file.getSize());

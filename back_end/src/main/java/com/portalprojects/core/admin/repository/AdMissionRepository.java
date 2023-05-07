@@ -49,5 +49,22 @@ public interface AdMissionRepository extends MissionRepository {
     ArrayList<MyMissionResponse> getAllMyMissionByStudentId(@Param("studentId") String studentId);
 
 
+    @Query(value = """
+             SELECT  d.*,count(mission_detail_id) as count,b.status,DATEDIFF(d.finish_day, NOW())  as dateRemaining,
+             (HOUR(d.finish_day)- HOUR(NOW())) *60*60 + (MINUTE(d.finish_day)- 
+             MINUTE(NOW()))*60 + (SECOND(d.finish_day)- SECOND(NOW()))  as timeRemaining,
+             HOUR(TIMEDIFF(d.finish_day, NOW())) as hourRemaining,
+             MINUTE(TIMEDIFF(d.finish_day, NOW())) as minuteRemaining,
+             SECOND(TIMEDIFF(d.finish_day, NOW())) as secondRemaining  
+             FROM document a
+             RIGHT JOIN mission_detail b ON b.id = a.mission_detail_id
+             JOIN student c ON c.id = b.student_id
+             RIGHT JOIN mission d ON d.id = b.mission_id
+             WHERE   d.code = :missionCode group by d.id
+            """, nativeQuery = true)
+    MyMissionResponse getOneMissionByMissionCode(@Param("missionCode") String missionCode);
+
+
+
 
 }
