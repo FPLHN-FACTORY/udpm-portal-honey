@@ -2,9 +2,12 @@ package com.portalprojects.core.admin.service.impl;
 
 import com.portalprojects.core.admin.model.request.AdCreateGiftRequest;
 import com.portalprojects.core.admin.repository.AdGiftRepository;
+import com.portalprojects.core.admin.repository.AdStudentRepository;
 import com.portalprojects.core.admin.service.GiftService;
 import com.portalprojects.entity.Gift;
+import com.portalprojects.entity.Student;
 import com.portalprojects.repository.GiftRepository;
+import com.portalprojects.repository.StudentRepository;
 import com.portalprojects.util.AutomaticCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,6 +24,9 @@ public class GiftServiceImpl implements GiftService {
 
     @Autowired
     private AutomaticCode automaticCode;
+
+    @Autowired
+    private AdStudentRepository studentRepository;
 
     @Autowired
     @Qualifier(GiftRepository.NAME)
@@ -56,5 +62,11 @@ public class GiftServiceImpl implements GiftService {
         Optional<Gift> gift = giftRepository.findById(id);
         giftRepository.delete(gift.get());
         return gift.get();
+    }
+
+    @Override
+    public List<Gift> getMyGift(String studentCode) {
+        Student student = this.studentRepository.findByCode(studentCode);
+        return this.giftRepository.getMyGift(student.getId());
     }
 }

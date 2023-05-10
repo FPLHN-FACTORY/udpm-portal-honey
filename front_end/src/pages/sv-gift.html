@@ -1,29 +1,27 @@
 <div class="container">
-  <h4 class="mt-3 fw-bold text-center">Quà tặng</h4>
-  <table class="table">
-    <tr>
-      <th>Mã</th>
-      <th>Tên</th>
-      <th>Điểm thưởng</th>
-    </tr>
-    <tr
-      dir-paginate="g in gift | itemsPerPage: pageSize"
-      current-page="currentPage"
-      pagination-id="giftPagination"
-    >
-      <td>{{g.code}}</td>
-      <td>{{g.name}}</td>
-      <td>{{g.pointGift}}</td>
-    </tr>
-  </table>
-  <div
-    class="text-center"
-    style="width: 200px; margin-left: auto; margin-right: auto"
-  >
-    <dir-pagination-controls
-      boundary-links="true"
-      template-url="layout/dirPagination.tql.html"
-      pagination-id="giftPagination"
-    ></dir-pagination-controls>
+  <h2 class="mt-3 fw-bold text-center">Quà tặng</h2>
+  <div ng-if="size <= 0 ">
+    <br>
+     <h2>Hiện tại bạn chưa nhận quà tặng nào !!!</h2>
+     <br> 
+  </div>
+
+  <div ng-if="size > 0">
+    <table class="table">
+      <tr>
+        <th>Mã</th>
+        <th>Tên</th>
+        <th>Điểm thưởng</th>
+      </tr>
+      <tr dir-paginate="g in gift | itemsPerPage: pageSize" current-page="currentPage" pagination-id="giftPagination">
+        <td>{{g.code}}</td>
+        <td>{{g.name}}</td>
+        <td>{{g.pointGift}}</td>
+      </tr>
+    </table>
+    <div class="text-center" style="width: 200px; margin-left: auto; margin-right: auto">
+      <dir-pagination-controls boundary-links="true" template-url="layout/dirPagination.tql.html"
+        pagination-id="giftPagination"></dir-pagination-controls>
+    </div>
   </div>
 </div>
