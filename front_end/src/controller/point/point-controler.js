@@ -1,4 +1,5 @@
 var id = "";
+var point = "";
 window.addPointController = function ($scope, $http) {
   $scope.students = [];
   $scope.missions = [];
@@ -40,10 +41,9 @@ window.addPointController = function ($scope, $http) {
       });
   };
 
-
-
-  $scope.getId = function (idInTable) {
+  $scope.getId = function (idInTable, score) {
     id = idInTable;
+    point = score;
   };
 
   $scope.gift = [];
@@ -62,12 +62,15 @@ window.addPointController = function ($scope, $http) {
     if ($scope.selectAll) {
       angular.forEach($scope.gift, function (g) {
         g.selected = false;
+        $scope.selectedRows = [];
       });
     } else {
       angular.forEach($scope.gift, function (g) {
         g.selected = true;
+        $scope.toggleSelection(g);
       });
     }
+    console.log($scope.selectedRows);
   };
 
   $scope.selectedRows = [];
@@ -85,6 +88,14 @@ window.addPointController = function ($scope, $http) {
 
   $scope.addHistory = function (event) {
     event.preventDefault();
+    var sum = 0;
+    if (point != undefined) {
+      sum = Number($scope.score);
+    }
+
+    if (point != undefined) {
+      sum += Number($scope.score2);
+    }
     $http
       .post(
         "http://localhost:2508/api/admin/gift-history/create",

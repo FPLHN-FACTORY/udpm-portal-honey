@@ -1,13 +1,14 @@
 <div class="container">
   <h4 class="mt-3 fw-bold text-center">Nhiệm vụ</h4>
-  <br>
-  <h2 ng-if="size == 0 " class="text-center">Hiện tại chưa có nhiệm vụ nào 
-    
-  </h2>
+  <br />
+  <h2 ng-if="size == 0 " class="text-center">Hiện tại chưa có nhiệm vụ nào</h2>
 
   <div ng-if="size > 0">
-    <table class="table">
-      <tr>
+    <table
+      class="table table-bordered m-table d-sm-table m-table--head-bg-primary"
+      style="text-align: center; margin-top: 20px"
+    >
+      <tr class="row-orange">
         <th>Mã</th>
         <th>Tên</th>
         <th>Điểm thưởng</th>
@@ -21,12 +22,16 @@
         <td>{{ms.code}}</td>
         <td>{{ms.name}}</td>
         <td>{{ms.pointMission}}</td>
-        <td style="cursor: pointer;" ng-click="getMission($index)" class="text-success">
+        <td
+          style="cursor: pointer"
+          ng-click="getMission($index)"
+          class="text-success"
+        >
           <i class="fa fa-check-circle"></i> Nhận nhiệm này
         </td>
       </tr>
     </table>
-  
+
     <div
       class="text-center"
       style="width: 200px; margin-left: auto; margin-right: auto"
@@ -38,5 +43,5 @@
       ></dir-pagination-controls>
     </div>
   </div>
- <br>
+  <br />
 </div>

@@ -1,82 +1,97 @@
 <h1 class="text-center">Nộp bài tập</h1>
-<br>
+<br />
 <h4>Nhiệm vụ : {{mission.name}}</h4>
 <h4>Điểm thưởng : <span class="text-danger">{{mission.pointMission}}</span></h4>
 <h4>Mô tả : {{mission.describeMission}}</h4>
-<h4 ng-if="mission.dateRemaining == 0 ? mission.timeRemaining < 0:false" class="text-danger">Dealine : Hết hạn </h4>
+<h4
+  ng-if="mission.dateRemaining == 0 ? mission.timeRemaining < 0:false"
+  class="text-danger"
+>
+  Dealine : Hết hạn
+</h4>
 
-<h4 ng-if="mission.dateRemaining == 0 ? mission.timeRemaining > 0:false" class="text-success">Dealine :
-   còn 
-    {{mission.hourRemaining }}  giờ
-    {{mission.minuteRemaining   }} phút 
-    {{mission.secondRemaining   }} giây nữa
-  </h4>
+<h4
+  ng-if="mission.dateRemaining == 0 ? mission.timeRemaining > 0:false"
+  class="text-success"
+>
+  Dealine : còn {{mission.hourRemaining }} giờ {{mission.minuteRemaining }} phút
+  {{mission.secondRemaining }} giây nữa
+</h4>
 
-<h4 ng-if="mission.dateRemaining > 0"  class="text-success">Dealine :  {{mission.dateRemaining >=0? "còn "+
-  mission.dateRemaining + " ngày nữa" :"Hết hạn"}} </h4>
+<h4 ng-if="mission.dateRemaining > 0" class="text-success">
+  Dealine : {{mission.dateRemaining >=0? "còn "+ mission.dateRemaining + " ngày
+  nữa" :"Hết hạn"}}
+</h4>
 
-<h4 ng-if="mission.dateRemaining < 0"  class="text-danger">Dealine : {{mission.dateRemaining >=0? "còn "+
-  mission.dateRemaining + " ngày nữa" :"Hết hạn"}} </h4>
+<h4 ng-if="mission.dateRemaining < 0" class="text-danger">
+  Dealine : {{mission.dateRemaining >=0? "còn "+ mission.dateRemaining + " ngày
+  nữa" :"Hết hạn"}}
+</h4>
 
-
-<br>
+<br />
 <label for="file" class="drop-container">
   <span class="drop-title">Kéo file của bạn vào đây</span>
   hoặc
-  <input  type="file" ng-model="file" id="file"  multiple data-max="1">
-  <button class="btn btn-success"  ng-click="upload()">Upload</button>
-  
+  <input type="file" ng-model="file" id="file" multiple data-max="1" />
+  <button class="btn btn-success" ng-click="upload()">Upload</button>
 </label>
-<br>
+<br />
 <div ng-if="size == true">
-<h1 class="text-center">Danh sách file đã tải lên</h1>
-<br>
+  <h1 class="text-center">Danh sách file đã tải lên</h1>
+  <br />
 
-<table class="table">
+  <table
+    class="table table-bordered m-table d-sm-table m-table--head-bg-primary"
+    style="text-align: center; margin-top: 20px"
+  >
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Tên file</th>
+        <th>Ngày tải lên</th>
+        <th>Thao tác</th>
+      </tr>
+    </thead>
 
-  <thead>
-    <tr>
-    <th>STT</th>
-    <th>Tên file</th>
-    <th>Ngày tải lên</th>
-    <th>Thao tác</th>
-  </tr>
-  </thead>
-
-  <tbody>
-    <tr
-    dir-paginate="myMission in myMissions | filter:q | itemsPerPage: pageSize"
-    current-page="currentPage"
-    pagination-id="uploadPagination"
-    >
-   <td>{{$index}}</td>
-    <td>{{myMission.docName}}</td>
-    <td>{{myMission.uploadTime | date:"dd/MM/yyyy"}}</td>
-    <td>
-      <a href="http://localhost:2508/api/admin/mission-detail/download-mission-detail/{{myMission.id}}" class="btn btn-success"><i class="fa fa-file-download"></i></a>
-      <a ng-click="delete($event,$index,myMission.id)" href="#sv-mission-detail/delete/{{myMission.id}}" class="btn btn-danger"><i class="fa fa-trash-alt"></i></a>
-    </td>
-  </tr>
-  </tbody>
-
-</table>
+    <tbody>
+      <tr
+        dir-paginate="myMission in myMissions | filter:q | itemsPerPage: pageSize"
+        current-page="currentPage"
+        pagination-id="uploadPagination"
+      >
+        <td>{{$index}}</td>
+        <td>{{myMission.docName}}</td>
+        <td>{{myMission.uploadTime | date:"dd/MM/yyyy"}}</td>
+        <td>
+          <a
+            href="http://localhost:2508/api/admin/mission-detail/download-mission-detail/{{myMission.id}}"
+            class="btn btn-success"
+            ><i class="fa fa-file-download"></i
+          ></a>
+          <a
+            ng-click="delete($event,$index,myMission.id)"
+            href="#sv-mission-detail/delete/{{myMission.id}}"
+            class="btn btn-danger"
+            ><i class="fa fa-trash-alt"></i
+          ></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
-<h2 ng-if="size == false" class="text-center">Hiện tại chưa có file nào </h2>
+<h2 ng-if="size == false" class="text-center">Hiện tại chưa có file nào</h2>
 
 <div
-    class="text-center"
-    style="width: 400px; margin-left: auto; margin-right: auto"
-  >
-    <dir-pagination-controls
-      boundary-links="true"
-      template-url="layout/dirPagination.tql.html"
-      pagination-id="uploadPagination"
-    ></dir-pagination-controls>
-  </div>
+  class="text-center"
+  style="width: 400px; margin-left: auto; margin-right: auto"
+>
+  <dir-pagination-controls
+    boundary-links="true"
+    template-url="layout/dirPagination.tql.html"
+    pagination-id="uploadPagination"
+  ></dir-pagination-controls>
+</div>
 
-<br>
-<br>
-
-
-
+<br />
+<br />
