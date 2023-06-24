@@ -65,23 +65,15 @@
         </nav>
       </td>
       <td>
-        <span my-tooltip tooltip-content="Đổi quà">
-          <a
-            ng-click="getId(student.id, student.score)"
-            href="#"
-            class="btn btn-success"
-            data-bs-toggle="modal"
-            data-bs-target="#gift"
-            ><i class="fa fa-gift"></i
-          ></a>
-        </span>
         <span my-tooltip tooltip-content="Lịch sử đổi quà">
           <a
             href="#"
             class="btn btn-warning"
             data-bs-toggle="modal"
             data-bs-target="#history"
-            ><i class="fa fa-history"></i
+            ng-click="history($event, student.id)"
+          >
+            <i class="fa fa-history"></i
           ></a>
         </span>
       </td>
@@ -189,8 +181,72 @@
     </div>
   </div>
 
-  <!-- Danh sách quà -->
+  <!-- history -->
   <div
+    class="modal fade"
+    id="history"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">
+            Lịch sử đổi quà
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <!-- modal  body -->
+          <form method="POST">
+            <div class="row">
+              <div class="col-2">
+                <label>Tên</label>
+              </div>
+              <div class="col-10">
+                <input
+                  type="text"
+                  placeholder="Enter name"
+                  ng-model="form_mission.name"
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-2">
+                <label>Điểm</label>
+              </div>
+              <div class="col-10">
+                <input
+                  type="number"
+                  placeholder="Enter point"
+                  ng-model="form_mission.pointMission"
+                  class="form-control"
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+            Đóng
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Danh sách quà -->
+  <!-- <div
     class="modal fade"
     id="gift"
     data-bs-backdrop="static"
@@ -279,4 +335,5 @@
       </div>
     </div>
   </div>
+</div> -->
 </div>

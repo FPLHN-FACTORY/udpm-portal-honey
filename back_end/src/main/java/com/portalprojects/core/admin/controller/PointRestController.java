@@ -1,7 +1,7 @@
 package com.portalprojects.core.admin.controller;
 
 
-import com.portalprojects.core.admin.model.request.AdCreatePointRequest;
+import com.portalprojects.core.admin.model.request.AdPointRequest;
 import com.portalprojects.core.admin.service.PointService;
 import com.portalprojects.core.common.base.ResponseObject;
 import com.portalprojects.entity.Point;
@@ -29,7 +29,7 @@ public class PointRestController {
     }
 
     @PostMapping("/add")
-    public ResponseObject createPoint(@RequestBody AdCreatePointRequest adCreatePointRequest) {
+    public ResponseObject createPoint(@RequestBody AdPointRequest adCreatePointRequest) {
         return new ResponseObject(pointService.createPoint(adCreatePointRequest));
     }
 

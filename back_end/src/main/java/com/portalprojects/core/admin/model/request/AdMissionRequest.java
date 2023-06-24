@@ -4,10 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @ToString
-public class AdCreateGiftRequest {
+public class AdMissionRequest {
 
     private String id;
 
@@ -15,8 +17,11 @@ public class AdCreateGiftRequest {
 
     private String name;
 
-    private int pointGift;
+    private int pointMission;
 
-    private String note;
+    private Date startDay;
 
+    private Date finishDay;
+
+    private String describeMission;
 }

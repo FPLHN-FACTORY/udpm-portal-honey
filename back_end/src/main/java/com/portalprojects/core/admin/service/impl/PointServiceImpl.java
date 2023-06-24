@@ -1,13 +1,11 @@
 package com.portalprojects.core.admin.service.impl;
 
-import com.portalprojects.core.admin.model.request.AdCreatePointRequest;
+import com.portalprojects.core.admin.model.request.AdPointRequest;
 import com.portalprojects.core.admin.repository.AdPointRepository;
 import com.portalprojects.core.admin.repository.AdStudentRepository;
 import com.portalprojects.core.admin.service.PointService;
 import com.portalprojects.entity.Point;
 import com.portalprojects.entity.Student;
-import com.portalprojects.repository.PointRepository;
-import com.portalprojects.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,15 +27,13 @@ public class PointServiceImpl implements PointService {
     }
 
     @Override
-    public Boolean createPoint(AdCreatePointRequest adCreatePointRequest) {
+    public Boolean createPoint(AdPointRequest adCreatePointRequest) {
         try {
             Point point = new Point();
             point.setNote(adCreatePointRequest.getNote());
             point.setStudentId(adCreatePointRequest.getStudentId());
             point.setScore(adCreatePointRequest.getScore());
             point.setExpirationDate(new Date());
-            point.setCreatedDate(4252342l);
-            point.setLastModifiedDate(42522374l);
             pointRepository.save(point);
             Student student  = studentRepository.findByCode(adCreatePointRequest.getStudentId());
             student.setScore(student.getScore()+ adCreatePointRequest.getScore());

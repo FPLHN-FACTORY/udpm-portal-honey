@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class AdCreateMissionRequest {
+public class AdGiftRequest {
 
     private String id;
 
@@ -15,7 +15,8 @@ public class AdCreateMissionRequest {
 
     private String name;
 
-    private int pointMission;
+    private int pointGift;
 
-    private String describeMission;
+    private String note;
+
 }

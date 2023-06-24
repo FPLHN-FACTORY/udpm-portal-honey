@@ -166,16 +166,16 @@ public class DBGenerator  implements CommandLineRunner {
         this.giftRepository.save(gift2);
 
         GiftDetail giftDetail1 = new GiftDetail();
-        giftDetail1.setGiftId("QT_1");
+        giftDetail1.setGiftId(gift1.getId());
         giftDetail1.setCreatedDate(5600l);
         giftDetail1.setLastModifiedDate(5600l);
-        giftDetail1.setStudentId("SV_1");
+        giftDetail1.setStudentId(student1.getId());
 
         GiftDetail giftDetail2 = new GiftDetail();
-        giftDetail2.setGiftId("QT_2");
+        giftDetail2.setGiftId(gift2.getId());
         giftDetail2.setCreatedDate(5600l);
         giftDetail2.setLastModifiedDate(5600l);
-        giftDetail2.setStudentId("SV_1");
+        giftDetail2.setStudentId(student2.getId());
 
         this.giftDetailRepository.save(giftDetail1);
         this.giftDetailRepository.save(giftDetail2);

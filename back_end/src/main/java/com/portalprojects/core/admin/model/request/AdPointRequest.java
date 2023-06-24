@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class AdCreatePointRequest {
+public class AdPointRequest {
 
     private int score;
 

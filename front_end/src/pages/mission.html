@@ -64,6 +64,16 @@
             ><i class="fa fa-trash"></i
           ></a>
         </span>
+        <span my-tooltip tooltip-content="Chi tiết nhiệm vụ">
+          <a
+            href="#mission/detail/{{ms.id}}"
+            class="btn btn-info"
+            data-bs-toggle="modal"
+            data-bs-target="#detail"
+            ng-click="detail($event, ms.id)"
+            ><i class="fa fa-eye"></i
+          ></a>
+        </span>
       </td>
     </tr>
   </table>
@@ -129,6 +139,32 @@
                   type="number"
                   placeholder="Enter point"
                   ng-model="form_mission.pointMission"
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-2">
+                <label>Ngày bắt đầu</label>
+              </div>
+              <div class="col-10">
+                <input
+                  type="datetime-local"
+                  ng-model="form_mission.startDay"
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-2">
+                <label>Ngày kết thúc</label>
+              </div>
+              <div class="col-10">
+                <input
+                  type="datetime-local"
+                  ng-model="form_mission.finishDay"
                   class="form-control"
                 />
               </div>
@@ -223,6 +259,32 @@
             <br />
             <div class="row">
               <div class="col-2">
+                <label>Ngày bắt đầu</label>
+              </div>
+              <div class="col-10">
+                <input
+                  type="datetime-local"
+                  ng-model="form_mission.startDay"
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-2">
+                <label>Ngày kết thúc</label>
+              </div>
+              <div class="col-10">
+                <input
+                  type="datetime-local"
+                  ng-model="form_mission.finishDay"
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-2">
                 <label>Mô tả</label>
               </div>
               <div class="col-10">
@@ -254,6 +316,120 @@
             Sửa
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal chi tiet  -->
+<div
+  class="modal fade"
+  id="detail"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">
+          Chi tiết nhiệm vụ
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          ng-click="clearData()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <!-- modal  body -->
+        <form method="PUT">
+          <div class="row">
+            <div class="col-2">
+              <label>Tên</label>
+            </div>
+            <div class="col-10">
+              <input
+                type="text"
+                placeholder="Enter name"
+                ng-model="form_mission.name"
+                class="form-control"
+                disabled
+              />
+            </div>
+          </div>
+          <br />
+          <div class="row">
+            <div class="col-2">
+              <label>Điểm</label>
+            </div>
+            <div class="col-10">
+              <input
+                type="number"
+                placeholder="Enter point"
+                ng-model="form_mission.pointMission"
+                class="form-control"
+                disabled
+              />
+            </div>
+          </div>
+          <br />
+          <div class="row">
+            <div class="col-2">
+              <label>Ngày bắt đầu</label>
+            </div>
+            <div class="col-10">
+              <input
+                type="text"
+                ng-model="form_mission.startDay"
+                class="form-control"
+                disabled
+              />
+            </div>
+          </div>
+          <br />
+          <div class="row">
+            <div class="col-2">
+              <label>Ngày kết thúc</label>
+            </div>
+            <div class="col-10">
+              <input
+                type="text"
+                ng-model="form_mission.finishDay"
+                class="form-control"
+                disabled
+              />
+            </div>
+          </div>
+          <br />
+          <div class="row">
+            <div class="col-2">
+              <label>Mô tả</label>
+            </div>
+            <div class="col-10">
+              <textarea
+                type="text"
+                placeholder="Enter note"
+                ng-model="form_mission.describeMission"
+                class="form-control"
+                disabled
+              ></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-bs-dismiss="modal"
+          ng-click="clearData()"
+        >
+          Đóng
+        </button>
       </div>
     </div>
   </div>

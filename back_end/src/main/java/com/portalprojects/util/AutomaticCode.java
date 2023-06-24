@@ -1,9 +1,6 @@
 package com.portalprojects.util;
 
-import com.portalprojects.repository.MissionRepository;
 import lombok.Synchronized;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component

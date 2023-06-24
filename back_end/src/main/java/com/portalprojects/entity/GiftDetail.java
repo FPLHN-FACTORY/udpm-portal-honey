@@ -19,7 +19,6 @@ public class GiftDetail extends PrimaryEntity {
     @Column(length = 50)
     private String studentId;
 
-
     @Column()
     private String giftId;
 

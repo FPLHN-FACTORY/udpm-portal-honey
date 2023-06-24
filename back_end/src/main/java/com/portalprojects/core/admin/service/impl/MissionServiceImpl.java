@@ -1,8 +1,7 @@
 package com.portalprojects.core.admin.service.impl;
 
-import com.portalprojects.core.admin.model.request.AdCreateMissionRequest;
+import com.portalprojects.core.admin.model.request.AdMissionRequest;
 import com.portalprojects.core.admin.model.response.MyMissionResponse;
-import com.portalprojects.core.admin.repository.AdMissionDetailRepostiory;
 import com.portalprojects.core.admin.repository.AdMissionRepository;
 import com.portalprojects.core.admin.repository.AdStudentRepository;
 import com.portalprojects.core.admin.service.MissionService;
@@ -13,10 +12,9 @@ import com.portalprojects.util.AutomaticCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
-
 import java.util.List;
-
 import java.util.Optional;
 
 @Service
@@ -33,9 +31,6 @@ public class MissionServiceImpl implements MissionService {
     private MissionRepository repository;
 
     @Autowired
-    private AdMissionDetailRepostiory missionDetailRepostiory;
-
-    @Autowired
     private AdStudentRepository studentRepository;
 
     @Override
@@ -50,7 +45,7 @@ public class MissionServiceImpl implements MissionService {
     }
 
     @Override
-    public Mission createMission(AdCreateMissionRequest adCreateMissionRequest) {
+    public Mission createMission(AdMissionRequest adCreateMissionRequest) {
         Mission mission = new Mission();
         String text = "NV";
         String nearestCode = repository.getNearestCodeMission();
@@ -58,15 +53,19 @@ public class MissionServiceImpl implements MissionService {
         mission.setCode(code);
         mission.setName(adCreateMissionRequest.getName());
         mission.setPointMission(adCreateMissionRequest.getPointMission());
+        mission.setStartDay(adCreateMissionRequest.getStartDay());
+        mission.setFinishDay(adCreateMissionRequest.getFinishDay());
         mission.setDescribeMission(adCreateMissionRequest.getDescribeMission());
         return missionRepository.save(mission);
     }
 
     @Override
-    public Mission updateMission(AdCreateMissionRequest adCreateMissionRequest) {
+    public Mission updateMission(AdMissionRequest adCreateMissionRequest) {
         Optional<Mission> mission = missionRepository.findById(adCreateMissionRequest.getId());
         mission.get().setName(adCreateMissionRequest.getName());
         mission.get().setPointMission(adCreateMissionRequest.getPointMission());
+        mission.get().setStartDay(adCreateMissionRequest.getStartDay());
+        mission.get().setFinishDay(adCreateMissionRequest.getFinishDay());
         mission.get().setDescribeMission(adCreateMissionRequest.getDescribeMission());
         return missionRepository.save(mission.get());
     }

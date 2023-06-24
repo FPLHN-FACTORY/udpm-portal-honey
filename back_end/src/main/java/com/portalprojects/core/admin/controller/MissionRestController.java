@@ -1,6 +1,6 @@
 package com.portalprojects.core.admin.controller;
 
-import com.portalprojects.core.admin.model.request.AdCreateMissionRequest;
+import com.portalprojects.core.admin.model.request.AdMissionRequest;
 import com.portalprojects.core.admin.service.MissionDetailService;
 import com.portalprojects.core.admin.service.MissionService;
 import com.portalprojects.core.common.base.ResponseObject;
@@ -43,13 +43,13 @@ public class MissionRestController {
     }
 
     @PostMapping("/create")
-    public ResponseObject create(@RequestBody AdCreateMissionRequest adCreateMissionRequest) {
+    public ResponseObject create(@RequestBody AdMissionRequest adCreateMissionRequest) {
         return new ResponseObject(missionService.createMission(adCreateMissionRequest));
     }
 
     @PutMapping("/update/{id}")
     public ResponseObject update(@PathVariable("id") String id,
-                                 @RequestBody AdCreateMissionRequest adCreateMissionRequest) {
+                                 @RequestBody AdMissionRequest adCreateMissionRequest) {
         adCreateMissionRequest.setId(id);
         return new ResponseObject(missionService.updateMission(adCreateMissionRequest));
     }

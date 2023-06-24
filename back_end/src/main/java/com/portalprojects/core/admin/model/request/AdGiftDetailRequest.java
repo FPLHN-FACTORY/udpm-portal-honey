@@ -16,4 +16,9 @@ public class AdGiftDetailRequest {
     private String giftId;
 
     private Date changeDate;
+
+    private String name;
+
+    private int point;
+
 }

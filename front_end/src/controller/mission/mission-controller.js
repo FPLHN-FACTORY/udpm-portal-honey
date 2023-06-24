@@ -11,6 +11,8 @@ window.MissionController = function ($http, $scope) {
   $scope.form_mission = {
     name: "",
     pointMission: "",
+    startDay: "",
+    finishDay: "",
     describeMission: "",
   };
 
@@ -24,8 +26,12 @@ window.MissionController = function ($http, $scope) {
         })[0];
         $scope.form_mission.name = $scope.missionDetail.name;
         $scope.form_mission.pointMission = $scope.missionDetail.pointMission;
+        $scope.form_mission.startDay = new Date($scope.missionDetail.startDay);
+        $scope.form_mission.finishDay = new Date(
+          $scope.missionDetail.finishDay
+        );
         $scope.form_mission.describeMission =
-        $scope.missionDetail.describeMission;
+          $scope.missionDetail.describeMission;
         $scope.id = id;
       });
   };
@@ -33,24 +39,22 @@ window.MissionController = function ($http, $scope) {
   $scope.clearData = function () {
     $scope.form_mission.name = "";
     $scope.form_mission.pointMission = "";
+    $scope.form_mission.startDay = "";
+    $scope.form_mission.finishDay = "";
     $scope.form_mission.describeMission = "";
   };
 
   $scope.add = function (event) {
     event.preventDefault();
-    if ($scope.form_mission.name == "") {
-      alert("Vui lòng nhập tên : ");
-    } else {
-      $http
-        .post(
-          "http://localhost:2508/api/admin/mission/create",
-          $scope.form_mission
-        )
-        .then(function (response) {
-          $scope.mission.push(response.data.data);
-          alert("Thêm thành công");
-        });
-    }
+    $http
+      .post(
+        "http://localhost:2508/api/admin/mission/create",
+        $scope.form_mission
+      )
+      .then(function (response) {
+        $scope.mission.push(response.data.data);
+        alert("Thêm thành công");
+      });
   };
 
   $scope.delete = function (event, index) {
@@ -85,17 +89,16 @@ window.MissionController = function ($http, $scope) {
       });
   };
 
-  $scope.getMission  = function(id){
+  $scope.getMission = function (id) {
     $http
-    .put(
-      `${"http://localhost:2508/api/admin/mission/add-mission-detail"}/${id}`,
-      $scope.form_mission
-    )
-    .then(function (response) {
-      if(response.data.data == null){
-        alert("Bạn đã nhận nhiệm vụ này rồi")
-      }else
-      alert("Bạn đã nhận nhiệm vụ thành công");
-    });
-  }
+      .put(
+        `${"http://localhost:2508/api/admin/mission/add-mission-detail"}/${id}`,
+        $scope.form_mission
+      )
+      .then(function (response) {
+        if (response.data.data == null) {
+          alert("Bạn đã nhận nhiệm vụ này rồi");
+        } else alert("Bạn đã nhận nhiệm vụ thành công");
+      });
+  };
 };

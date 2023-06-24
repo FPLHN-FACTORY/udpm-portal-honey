@@ -6,9 +6,6 @@ import jakarta.persistence.PreUpdate;
 
 import java.util.Calendar;
 
-/**
- * @author phongtt35
- */
 public class AuditEntityListener {
 
     @PrePersist

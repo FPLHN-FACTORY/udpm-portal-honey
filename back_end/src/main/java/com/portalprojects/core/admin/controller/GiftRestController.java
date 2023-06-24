@@ -1,6 +1,6 @@
 package com.portalprojects.core.admin.controller;
 
-import com.portalprojects.core.admin.model.request.AdCreateGiftRequest;
+import com.portalprojects.core.admin.model.request.AdGiftRequest;
 import com.portalprojects.core.admin.service.GiftService;
 import com.portalprojects.core.common.base.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +33,13 @@ public class GiftRestController {
     }
 
     @PostMapping("/create")
-    public ResponseObject create(@RequestBody AdCreateGiftRequest createGiftRequest) {
+    public ResponseObject create(@RequestBody AdGiftRequest createGiftRequest) {
         return new ResponseObject(giftService.createGift(createGiftRequest));
     }
 
     @PutMapping("/update/{id}")
     public ResponseObject update(@PathVariable("id") String id,
-                                 @RequestBody AdCreateGiftRequest createGiftRequest) {
+                                 @RequestBody AdGiftRequest createGiftRequest) {
         createGiftRequest.setId(id);
         return new ResponseObject(giftService.updateGift(createGiftRequest));
     }
