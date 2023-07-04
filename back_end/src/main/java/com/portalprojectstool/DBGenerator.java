@@ -78,7 +78,7 @@ public class DBGenerator  implements CommandLineRunner {
         student1.setCreatedDate(5600l);
         student1.setLastModifiedDate(5600l);
         student1.setEmail("tamhvph21131@gmail.com");
-        student1.setCode("SV_1");
+        student1.setCode("SV1");
 
         Student student2 = new Student();
         student2.setName("b");
