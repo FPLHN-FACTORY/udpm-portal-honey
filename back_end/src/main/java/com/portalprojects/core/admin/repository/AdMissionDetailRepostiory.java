@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+
 @Repository
 @EnableJpaRepositories
 public interface AdMissionDetailRepostiory extends MissionDetailRepository {
@@ -36,5 +38,14 @@ public interface AdMissionDetailRepostiory extends MissionDetailRepository {
     """,nativeQuery = true)
     void updateStatusByMissionDetailId(@Param("missionDetail")String missionDetailId,@Param("status")int status);
 
+    @Query(value = """
+             SELECT  b.* 
+             FROM document a
+             RIGHT JOIN mission_detail b ON b.id = a.mission_detail_id
+             JOIN student c ON c.id = b.student_id
+             RIGHT JOIN mission d ON d.id = b.mission_id
+             WHERE   c.id = :studentId group by d.id
+            """, nativeQuery = true)
+    ArrayList<MissionDetail> getAllMyMissionDetailByStudentId(@Param("studentId") String studentId);
 
 }

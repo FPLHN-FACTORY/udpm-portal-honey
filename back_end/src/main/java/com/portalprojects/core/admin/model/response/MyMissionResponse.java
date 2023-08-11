@@ -5,6 +5,7 @@ import com.portalprojects.entity.MissionDetail;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
+import java.sql.Time;
 import java.util.Date;
 
 
@@ -37,6 +38,14 @@ public interface MyMissionResponse {
     @Value("#{target.status}")
     Integer getStatus();
 
+    Integer getDateRemaining();
+
     Integer getTimeRemaining();
+
+    Integer getHourRemaining();
+
+    Integer getMinuteRemaining();
+
+    Integer getSecondRemaining();
 
 }

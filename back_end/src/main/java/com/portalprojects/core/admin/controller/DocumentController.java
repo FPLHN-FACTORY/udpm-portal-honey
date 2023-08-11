@@ -18,7 +18,7 @@ public class DocumentController {
     private DocumentService documentService;
 
     @CrossOrigin(origins = "http://127.0.0.1:5500")
-    @GetMapping("/find-all-by-ms-detail-id")
+    @GetMapping("/find-one-by-ms-detail-id")
     public ResponseObject findAllByMissionDetailId(@RequestParam(required=false,name="studentCode") String studentCode, @RequestParam(required=false,name="missionCode")String missionId){
         return new ResponseObject(this.documentService.findAllByMissionDetailId(studentCode,missionId));
     }

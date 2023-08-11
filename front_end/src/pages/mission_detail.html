@@ -1,8 +1,24 @@
 <h1 class="text-center">Nộp bài tập</h1>
 <br>
-<h4>Nhiệm vụ : Tìm người yêu cho mẹ</h4>
-<h4>Điểm thưởng : 8888</h4>
-<h5 class="text-danger"><i class="fa fa-clock"></i> Hạn nộp : 4 ngày 23 giờ</h5>
+<h4>Nhiệm vụ : {{mission.name}}</h4>
+<h4>Điểm thưởng : <span class="text-danger">{{mission.pointMission}}</span></h4>
+<h4>Mô tả : {{mission.describeMission}}</h4>
+<h4 ng-if="mission.dateRemaining == 0 ? mission.timeRemaining < 0:false" class="text-danger">Dealine : Hết hạn </h4>
+
+<h4 ng-if="mission.dateRemaining == 0 ? mission.timeRemaining > 0:false" class="text-success">Dealine :
+   còn 
+    {{mission.hourRemaining }}  giờ
+    {{mission.minuteRemaining   }} phút 
+    {{mission.secondRemaining   }} giây nữa
+  </h4>
+
+<h4 ng-if="mission.dateRemaining > 0"  class="text-success">Dealine :  {{mission.dateRemaining >=0? "còn "+
+  mission.dateRemaining + " ngày nữa" :"Hết hạn"}} </h4>
+
+<h4 ng-if="mission.dateRemaining < 0"  class="text-danger">Dealine : {{mission.dateRemaining >=0? "còn "+
+  mission.dateRemaining + " ngày nữa" :"Hết hạn"}} </h4>
+
+
 <br>
 <label for="file" class="drop-container">
   <span class="drop-title">Kéo file của bạn vào đây</span>

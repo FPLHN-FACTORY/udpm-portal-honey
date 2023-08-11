@@ -8,7 +8,7 @@ app.config(function ($routeProvider, $locationProvider) {
     })
     .when("/sv-gift", {
         templateUrl:"pages/sv-gift.html",
-        controller: GiftController,
+        controller: MyGiftController,
       })
       .when("/sv-mission", {
         templateUrl:"pages/sv-mission.html",

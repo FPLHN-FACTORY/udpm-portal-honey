@@ -68,5 +68,9 @@ public class MissionRestController {
         }
     }
 
+    @GetMapping("/get-one-my-mission/{code}")
+    public ResponseObject getAllByStudentCode(@PathVariable("code")String code) {
+        return new ResponseObject(this.missionService.getOneMyMissionByMissionCode(code));
+    }
 
 }

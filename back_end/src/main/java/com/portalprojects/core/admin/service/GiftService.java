@@ -15,4 +15,6 @@ public interface GiftService {
 
     Gift deleteGift(String id);
 
+    List<Gift> getMyGift(String studentCode);
+
 }

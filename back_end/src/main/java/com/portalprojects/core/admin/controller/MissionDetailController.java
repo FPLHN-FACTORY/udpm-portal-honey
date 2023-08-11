@@ -37,9 +37,7 @@ public class MissionDetailController {
     @CrossOrigin(origins = "http://127.0.0.1:5500")
     @PostMapping("/uploadFiles")
     public ResponseObject uploadMulitipleFiles(MultipartHttpServletRequest request,@RequestParam(required=false,name="studentCode") String studentCode, @RequestParam(required=false,name="missionCode")String missionCode){
-
         Iterator itr = request.getFileNames();
-
         MultipartFile file = request.getFile((String) itr.next());
        return new ResponseObject(missionDetailService.uploadFile(file,studentCode,missionCode));
     }
@@ -71,11 +69,4 @@ public class MissionDetailController {
         return new ResponseObject(missionDetailService.findOne(id));
     }
 
-    @CrossOrigin(origins = "http://127.0.0.1:5500")
-    @GetMapping("/get-mission-detail")
-    public ResponseObject getOne(@RequestParam("studentCode") String studentCode,@RequestParam("missionCode")String missionCode){
-//        return new ResponseObject(missionDetailService.(studentCode, missionCode))
-//        ;
-        return null;
-    }
 }

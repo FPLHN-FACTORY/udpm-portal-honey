@@ -23,4 +23,7 @@ public interface MissionService {
 
     ArrayList<MyMissionResponse> getMyMissionByIdStudent(String id);
 
+
+    MyMissionResponse getOneMyMissionByMissionCode(String missionCode);
+
 }
