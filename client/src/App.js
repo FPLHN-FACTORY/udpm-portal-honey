@@ -1,23 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
-
+import "./assets/styles/main.css";
+import "./assets/styles/responsive.css";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { AppConfig } from "./AppConfig";
+import { Suspense } from "react";
+import NotFound from "./pages/404";
+import NotAuthorized from "./pages/401";
+import AuthGuard from "./guard/AuthGuard";
+import DashboardCensor from "./layout/censor/DashboardCensor";
+import Index from "./pages/censor/category";
+import GlobalLoading from "./components/global-loading/GlobalLoading";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App scroll-smooth md:scroll-auto font-sans">
+      <BrowserRouter basename={AppConfig.routerBase}>
+        <Suspense fallback={<GlobalLoading />}>
+          <Routes>
+            <Route path="*" element={<NotFound />} />
+            <Route path="/layout-guard-roles" element={<NotAuthorized />} />
+            <Route path="/" element={<Navigate replace to="/home" />} />
+            {/* Màn censor */}
+            <Route
+              path="/censor/category"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <Index />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
     </div>
   );
 }
