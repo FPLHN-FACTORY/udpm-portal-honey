@@ -7,7 +7,6 @@ import NotFound from "./pages/404";
 import NotAuthorized from "./pages/401";
 import AuthGuard from "./guard/AuthGuard";
 import DashboardCensor from "./layout/censor/DashboardCensor";
-import Index from "./pages/censor/category";
 import GlobalLoading from "./components/global-loading/GlobalLoading";
 function App() {
   return (
@@ -19,7 +18,7 @@ function App() {
             <Route path="/layout-guard-roles" element={<NotAuthorized />} />
             <Route path="/" element={<Navigate replace to="/home" />} />
             {/* Màn censor */}
-            <Route
+            {/* <Route
               path="/censor/category"
               element={
                 <AuthGuard>
@@ -28,7 +27,7 @@ function App() {
                   </DashboardCensor>
                 </AuthGuard>
               }
-            />
+            /> */}
           </Routes>
         </Suspense>
       </BrowserRouter>
