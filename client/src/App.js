@@ -8,6 +8,10 @@ import NotAuthorized from "./pages/401";
 import AuthGuard from "./guard/AuthGuard";
 import DashboardCensor from "./layout/censor/DashboardCensor";
 import GlobalLoading from "./components/global-loading/GlobalLoading";
+import Index from "./pages/teacher/changepoint/Index";
+import ChangePoint from "./pages/teacher/changepoint/ChangePoint";
+import ApprovalPoint from "./pages/censor/approvalpoint/ApprovalPoint";
+import DashboardAuthUser from "./layout/censor/DashboardCensor";
 function App() {
   return (
     <div className="App scroll-smooth md:scroll-auto font-sans">
@@ -28,6 +32,30 @@ function App() {
                 </AuthGuard>
               }
             /> */}
+
+            <Route
+              path="/censor/approval-point"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <ApprovalPoint />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+
+            {/* Màn teacher */}
+            <Route
+              path="/teacher/change-point"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <Index />
+                    <ChangePoint></ChangePoint>
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
           </Routes>
         </Suspense>
       </BrowserRouter>
