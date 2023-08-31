@@ -7,21 +7,20 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Nationalized;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "student")
-public class Student extends PrimaryEntity {
+@Table(name = "admin")
+public class User extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_CODE)
     private String code;
 
-    @Column(length = EntityProperties.LENGTH_NAME)
+    @Column(length = EntityProperties.LENGTH_NAME, nullable = false)
     private String name;
 
-    @Column(length = EntityProperties.LENGTH_EMAIL)
+    @Column(length = EntityProperties.LENGTH_EMAIL, nullable = false)
     private String email;
 
 }

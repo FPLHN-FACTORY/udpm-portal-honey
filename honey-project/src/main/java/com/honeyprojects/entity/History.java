@@ -9,8 +9,6 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Entity
 @Getter
 @Setter
@@ -32,8 +30,11 @@ public class History extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_ID, nullable = false)
     private String studentId;
 
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    @Column(length = EntityProperties.LENGTH_ID)
     private String teacherId;
+
+    @Column(length = EntityProperties.LENGTH_ID)
+    private String honeyId;
 
     @Column(length = EntityProperties.LENGTH_NOTE)
     private String note;
