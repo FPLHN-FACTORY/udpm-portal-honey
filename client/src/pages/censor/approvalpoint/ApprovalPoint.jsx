@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Space, Table, Tooltip } from "antd";
-import SweetAlert from "../../teacher/changepoint/SweetAlert";
+import SweetAlert from "../../../components/alert/SweetAlert";
 import ModalDetail from "./ModalDetail";
 const openModalDetail = () => {
   <ModalDetail></ModalDetail>;

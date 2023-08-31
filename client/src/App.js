@@ -10,8 +10,8 @@ import DashboardCensor from "./layout/censor/DashboardCensor";
 import GlobalLoading from "./components/global-loading/GlobalLoading";
 import Index from "./pages/teacher/changepoint/Index";
 import ChangePoint from "./pages/teacher/changepoint/ChangePoint";
-import ApprovalPoint from "./pages/censor/approvalpoint/ApprovalPoint";
 import DashboardAuthUser from "./layout/censor/DashboardCensor";
+import SweetAlert from "./components/alert/SweetAlert";
 function App() {
   return (
     <div className="App scroll-smooth md:scroll-auto font-sans">
@@ -38,7 +38,7 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardCensor>
-                    <ApprovalPoint />
+                    <SweetAlert />
                   </DashboardCensor>
                 </AuthGuard>
               }

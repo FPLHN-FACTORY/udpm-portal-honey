@@ -1,7 +1,7 @@
 import React from "react";
 import { Space, Table, Tooltip } from "antd";
 
-import SweetAlert from "./SweetAlert";
+import SweetAlert from "../../../components/alert/SweetAlert";
 const columns = [
   {
     title: "STT",
