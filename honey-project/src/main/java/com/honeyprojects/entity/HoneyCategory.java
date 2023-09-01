@@ -12,7 +12,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "honey_")
+@Table(name = "honey_category")
 public class HoneyCategory extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_ID, nullable = false)
