@@ -9,6 +9,7 @@ import com.honeyprojects.entity.Semester;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.HoneyCategory;
 import com.honeyprojects.entity.UserSemester;
+import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.repository.UserRepositpry;
 import com.honeyprojects.repository.ConversionRepository;
@@ -64,19 +65,19 @@ public class DBGenerator implements CommandLineRunner {
 
         Category category1 = new Category();
         category1.setName("GOLD");
-        category1.setStatus(Status.HOAT_DONG);
+        category1.setCategoryStatus(CategoryStatus.ACTIVE);
         category1.setCode("CT1");
         category1.setId(categoryRepository.save(category1).getId());
 
         Category category2 = new Category();
         category2.setName("SLIVER");
-        category2.setStatus(Status.HOAT_DONG);
+        category2.setCategoryStatus(CategoryStatus.ACTIVE);
         category2.setCode("CT2");
         category2.setId(categoryRepository.save(category2).getId());
 
         Category category3 = new Category();
         category3.setName("BRONZE");
-        category3.setStatus(Status.HOAT_DONG);
+        category3.setCategoryStatus(CategoryStatus.ACTIVE);
         category3.setCode("CT3");
         category3.setId(categoryRepository.save(category3).getId());
 

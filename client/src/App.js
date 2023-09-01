@@ -9,6 +9,8 @@ import AuthGuard from "./guard/AuthGuard";
 import DashboardCensor from "./layout/censor/DashboardCensor";
 import GlobalLoading from "./components/global-loading/GlobalLoading";
 import DashboardAuthUser from "./layout/censor/DashboardCensor";
+import Index from "./pages/censor/category";
+
 function App() {
   return (
     <div className="App scroll-smooth md:scroll-auto font-sans">
@@ -27,7 +29,16 @@ function App() {
                 </AuthGuard>
               }
             />
-
+            <Route
+              path="/censor/category"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <Index />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
             {/* Màn teacher */}
             <Route
               path=""

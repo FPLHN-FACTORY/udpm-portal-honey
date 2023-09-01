@@ -1,6 +1,6 @@
-package com.honeyprojects.core.admin.model.request;
+package com.honeyprojects.core.censor.model.request;
 
-import com.articlesproject.infrastructure.constant.CategoryStatus;
+import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import lombok.Getter;
 import lombok.Setter;
 

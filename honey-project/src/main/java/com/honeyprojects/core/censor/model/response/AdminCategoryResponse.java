@@ -1,4 +1,4 @@
-package com.honeyprojects.core.admin.model.response;
+package com.honeyprojects.core.censor.model.response;
 
 
 import com.honeyprojects.entity.base.IsIdentified;

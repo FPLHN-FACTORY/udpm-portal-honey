@@ -1,4 +1,4 @@
-package com.honeyprojects.core.admin.repository;
+package com.honeyprojects.core.censor.repository;
 
 import com.honeyprojects.repository.HistoryRepository;
 import org.springframework.stereotype.Repository;

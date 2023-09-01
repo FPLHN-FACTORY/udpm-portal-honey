@@ -28,11 +28,6 @@ import approved from "../../assets/images/check.png";
 import refuse from "../../assets/images/cancel.png";
 import evaluate from "../../assets/images/star.png";
 
-import { NotificationAPI } from "../../apis/user/auth/notification/notification.api";
-import {
-  GetNotification,
-  SetNotification,
-} from "../../app/reducers/notification/notification.reducer";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import moment from "moment";
 // const data = [
@@ -79,28 +74,28 @@ function Header({ onSlidebar, onPress, name, subName }) {
   const [countNotification, setCountNotification] = useState(0);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  useEffect(() => {
-    const fetchNotification = async () => {
-      try {
-        const response = await NotificationAPI.fetchNotification();
-        dispatch(SetNotification(response.data.data.data));
-      } catch (error) {}
-    };
+  // useEffect(() => {
+  //   const fetchNotification = async () => {
+  //     try {
+  //       const response = await NotificationAPI.fetchNotification();
+  //       dispatch(SetNotification(response.data.data.data));
+  //     } catch (error) {}
+  //   };
 
-    fetchNotification();
-  }, []);
+  //   fetchNotification();
+  // }, []);
 
-  useEffect(() => {
-    const fetchCountNotification = async () => {
-      try {
-        const response = await NotificationAPI.fetchCountNotification();
-        setCountNotification(response.data);
-      } catch (error) {}
-    };
+  // useEffect(() => {
+  //   const fetchCountNotification = async () => {
+  //     try {
+  //       const response = await NotificationAPI.fetchCountNotification();
+  //       setCountNotification(response.data);
+  //     } catch (error) {}
+  //   };
 
-    fetchCountNotification();
-  }, [dispatch]);
-  const dataNotification = useAppSelector(GetNotification);
+  //   fetchCountNotification();
+  // }, [dispatch]);
+  // const dataNotification = useAppSelector(GetNotification);
   const toggleNotifications = () => {
     setIsOpen(!isOpen);
   };
@@ -116,27 +111,27 @@ function Header({ onSlidebar, onPress, name, subName }) {
     5: refuse,
   };
 
-  const deleteNotification = async (id) => {
-    try {
-      const response = await NotificationAPI.delete(id);
-      if (response.status === 200) {
-        const updatedData = dataNotification.filter((item) => item.id !== id);
-        dispatch(SetNotification(updatedData));
-        const newResponse = await NotificationAPI.fetchNotification();
-        const newData = newResponse.data.data.data;
-        dispatch(SetNotification(newData));
-        const newCount = countNotification - 1;
-        setCountNotification(newCount);
-      }
-    } catch (error) {}
-  };
-  const handleItemClick = (item) => {
-    if (item.type === 5) {
-      navigate(`/my-article/${item.articlesId}`);
-    } else {
-      navigate(`/user/article/${item.articlesId}`);
-    }
-  };
+  // const deleteNotification = async (id) => {
+  //   try {
+  //     const response = await NotificationAPI.delete(id);
+  //     if (response.status === 200) {
+  //       const updatedData = dataNotification.filter((item) => item.id !== id);
+  //       dispatch(SetNotification(updatedData));
+  //       const newResponse = await NotificationAPI.fetchNotification();
+  //       const newData = newResponse.data.data.data;
+  //       dispatch(SetNotification(newData));
+  //       const newCount = countNotification - 1;
+  //       setCountNotification(newCount);
+  //     }
+  //   } catch (error) {}
+  // };
+  // const handleItemClick = (item) => {
+  //   if (item.type === 5) {
+  //     navigate(`/my-article/${item.articlesId}`);
+  //   } else {
+  //     navigate(`/user/article/${item.articlesId}`);
+  //   }
+  // };
 
   return (
     <>
@@ -152,7 +147,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
                   style={{ width: "300px" }}
                   className="header-notifications-dropdown"
                   itemLayout="horizontal"
-                  dataSource={dataNotification}
+                  dataSource={9}
                   renderItem={(item) => (
                     <List.Item
                       className={`notification-item ${
@@ -160,7 +155,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
                       }`}
                       onMouseEnter={() => handleItemHover(item.id)}
                       onMouseLeave={() => handleItemHover(null)}
-                      onClick={() => handleItemClick(item)}
+                      // onClick={() => handleItemClick(item)}
                     >
                       <List.Item.Meta
                         avatar={
@@ -196,7 +191,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
                           </>
                         }
                       />
-                      {hoveredItem === item.id && (
+                      {/* {hoveredItem === item.id && (
                         <Dropdown
                           overlay={
                             <Menu>
@@ -221,7 +216,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
                             icon={<MoreOutlined />}
                           />
                         </Dropdown>
-                      )}
+                      )} */}
                     </List.Item>
                   )}
                 />

@@ -1,6 +1,7 @@
 package com.honeyprojects.entity;
 
 import com.honeyprojects.entity.base.PrimaryEntity;
+import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.EntityProperties;
 import com.honeyprojects.infrastructure.contant.Status;
 import jakarta.persistence.Column;
@@ -21,7 +22,7 @@ public class Category extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
-    private Status status;
+    private CategoryStatus categoryStatus;
 
     private Integer type;
 
