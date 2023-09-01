@@ -1,12 +1,12 @@
-package com.honeyprojects.core.censor.service.impl;
+package com.honeyprojects.core.admin.service.impl;
 
 
-import com.honeyprojects.core.censor.model.request.AdminCategoryRequest;
-import com.honeyprojects.core.censor.model.request.AdminCreateCategoryRequest;
-import com.honeyprojects.core.censor.model.request.AdminUpdateCategoryRequest;
-import com.honeyprojects.core.censor.model.response.AdminCategoryResponse;
-import com.honeyprojects.core.censor.repository.AdminCategoryRepository;
-import com.honeyprojects.core.censor.service.AdminCategoryService;
+import com.honeyprojects.core.admin.model.request.AdminCategoryRequest;
+import com.honeyprojects.core.admin.model.request.AdminCreateCategoryRequest;
+import com.honeyprojects.core.admin.model.request.AdminUpdateCategoryRequest;
+import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
+import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
+import com.honeyprojects.core.admin.service.AdminCategoryService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;

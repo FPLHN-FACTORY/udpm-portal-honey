@@ -1,10 +1,10 @@
-package com.honeyprojects.core.censor.controller;
+package com.honeyprojects.core.admin.controller;
 
 
-import com.honeyprojects.core.censor.model.request.AdminCategoryRequest;
-import com.honeyprojects.core.censor.model.request.AdminCreateCategoryRequest;
-import com.honeyprojects.core.censor.model.request.AdminUpdateCategoryRequest;
-import com.honeyprojects.core.censor.service.AdminCategoryService;
+import com.honeyprojects.core.admin.model.request.AdminCategoryRequest;
+import com.honeyprojects.core.admin.model.request.AdminCreateCategoryRequest;
+import com.honeyprojects.core.admin.model.request.AdminUpdateCategoryRequest;
+import com.honeyprojects.core.admin.service.AdminCategoryService;
 import com.honeyprojects.core.common.base.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;

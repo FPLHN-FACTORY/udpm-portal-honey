@@ -1,7 +1,7 @@
-package com.honeyprojects.core.censor.repository;
+package com.honeyprojects.core.admin.repository;
 
-import com.honeyprojects.core.censor.model.request.AdminCategoryRequest;
-import com.honeyprojects.core.censor.model.response.AdminCategoryResponse;
+import com.honeyprojects.core.admin.model.request.AdminCategoryRequest;
+import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.repository.CategoryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
