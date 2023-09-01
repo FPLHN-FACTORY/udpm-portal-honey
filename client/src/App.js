@@ -8,10 +8,7 @@ import NotAuthorized from "./pages/401";
 import AuthGuard from "./guard/AuthGuard";
 import DashboardCensor from "./layout/censor/DashboardCensor";
 import GlobalLoading from "./components/global-loading/GlobalLoading";
-import Index from "./pages/teacher/changepoint/Index";
-import ChangePoint from "./pages/teacher/changepoint/ChangePoint";
 import DashboardAuthUser from "./layout/censor/DashboardCensor";
-import SweetAlert from "./components/alert/SweetAlert";
 function App() {
   return (
     <div className="App scroll-smooth md:scroll-auto font-sans">
@@ -22,37 +19,21 @@ function App() {
             <Route path="/layout-guard-roles" element={<NotAuthorized />} />
             <Route path="/" element={<Navigate replace to="/home" />} />
             {/* Màn censor */}
-            {/* <Route
-              path="/censor/category"
-              element={
-                <AuthGuard>
-                  <DashboardCensor>
-                    <Index />
-                  </DashboardCensor>
-                </AuthGuard>
-              }
-            /> */}
-
             <Route
-              path="/censor/approval-point"
+              path=""
               element={
                 <AuthGuard>
-                  <DashboardCensor>
-                    <SweetAlert />
-                  </DashboardCensor>
+                  <DashboardCensor></DashboardCensor>
                 </AuthGuard>
               }
             />
 
             {/* Màn teacher */}
             <Route
-              path="/teacher/change-point"
+              path=""
               element={
                 <AuthGuard>
-                  <DashboardAuthUser>
-                    <Index />
-                    <ChangePoint></ChangePoint>
-                  </DashboardAuthUser>
+                  <DashboardAuthUser></DashboardAuthUser>
                 </AuthGuard>
               }
             />
