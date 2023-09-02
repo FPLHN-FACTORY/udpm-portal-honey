@@ -23,4 +23,9 @@ public class Constants {
 
     public static final String REGEX_EMAIL_FPT  = "\\w+@fpt.edu.vn";
 
+    public static final class TYPE_HONEY_HISTORY {
+        public static final String GIFT_HISTORY = "GIFT";
+        public static final String APPROVED_HISTORY = "APPROVED";
+    }
+
 }

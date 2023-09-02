@@ -10,6 +10,7 @@ import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.HoneyCategory;
 import com.honeyprojects.entity.UserSemester;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
+import com.honeyprojects.infrastructure.contant.Constants;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.repository.UserRepositpry;
 import com.honeyprojects.repository.ConversionRepository;
@@ -26,6 +27,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
+import java.util.Date;
 
 @SpringBootApplication
 @EnableJpaRepositories(
@@ -83,24 +86,24 @@ public class DBGenerator implements CommandLineRunner {
 
         HoneyCategory honeyCategory1 = new HoneyCategory();
         honeyCategory1.setCategoryId(category1.getId());
-        honeyCategory1.setStatus(Status.HOAT_DONG);
+        honeyCategory1.setStatus(Status.DA_PHE_DUYET);
         honeyCategory1.setId(honeyCategoryRepository.save(honeyCategory1).getId());
 
         HoneyCategory honeyCategory2 = new HoneyCategory();
         honeyCategory2.setCategoryId(category2.getId());
-        honeyCategory2.setStatus(Status.HOAT_DONG);
+        honeyCategory2.setStatus(Status.DA_PHE_DUYET);
         honeyCategory2.setId(honeyCategoryRepository.save(honeyCategory1).getId());
 
         HoneyCategory honeyCategory3 = new HoneyCategory();
         honeyCategory3.setCategoryId(category3.getId());
-        honeyCategory3.setStatus(Status.HOAT_DONG);
+        honeyCategory3.setStatus(Status.CHO_PHE_DUYET);
         honeyCategory3.setId(honeyCategoryRepository.save(honeyCategory3).getId());
 
         Semester semester = new Semester();
         semester.setCode("SE1");
         semester.setName("Summer 2023");
         semester.setToDate(1687194000000L);
-        semester.setFromDate(1691600400000L);
+        semester.setFromDate(new Date().getTime());
         semester.setId(semesterRepository.save(semester).getId());
 
         User user1 = new User();
@@ -159,13 +162,13 @@ public class DBGenerator implements CommandLineRunner {
         Gift gift1 = new Gift();
         gift1.setCode("G1");
         gift1.setName("Điểm lab");
-        gift1.setStatus(Status.HOAT_DONG);
+        gift1.setStatus(Status.CHO_PHE_DUYET);
         gift1.setId(giftRepository.save(gift1).getId());
 
         Gift gift2 = new Gift();
         gift2.setCode("G2");
         gift2.setName("Điểm thi");
-        gift2.setStatus(Status.HOAT_DONG);
+        gift2.setStatus(Status.CHO_PHE_DUYET);
         gift2.setId(giftRepository.save(gift2).getId());
 
         UserSemester userSemester1 = new UserSemester();
@@ -185,7 +188,7 @@ public class DBGenerator implements CommandLineRunner {
         conversion1.setCode("CV1");
         conversion1.setComponentPoint(100);
         conversion1.setHoney_point(1.0);
-        conversion1.setStatus(Status.HOAT_DONG);
+        conversion1.setStatus(Status.CHO_PHE_DUYET);
         conversion1.setGift_id(gift1.getId());
         conversion1.setId(conversionRepository.save(conversion1).getId());
 
@@ -193,23 +196,27 @@ public class DBGenerator implements CommandLineRunner {
         conversion2.setCode("CV2");
         conversion2.setComponentPoint(100);
         conversion2.setHoney_point(0.1);
-        conversion2.setStatus(Status.HOAT_DONG);
+        conversion2.setStatus(Status.DA_PHE_DUYET);
         conversion2.setGift_id(gift2.getId());
         conversion2.setId(conversionRepository.save(conversion2).getId());
 
         History history1 = new History();
         history1.setNameGift("Điểm lab");
         history1.setHoneyPoint(100);
-        history1.setChangeDate(1689932796276L);
+        history1.setChangeDate(new Date().getTime());
+        history1.setCreatedAt(new Date().getTime());
         history1.setGiftId(gift1.getId());
         history1.setStudentId(category1.getId());
+        history1.setType(Constants.TYPE_HONEY_HISTORY.GIFT_HISTORY);
         history1.setTeacherId(user3.getId());
         history1.setId(historyRepository.save(history1).getId());
 
         History history2 = new History();
         history2.setNameGift("Điểm lab");
         history2.setHoneyPoint(100);
-        history2.setChangeDate(1689932796276L);
+        history2.setChangeDate(new Date().getTime());
+        history2.setCreatedAt(new Date().getTime());
+        history2.setType(Constants.TYPE_HONEY_HISTORY.GIFT_HISTORY);
         history2.setGiftId(gift1.getId());
         history2.setStudentId(user1.getId());
         history2.setTeacherId(user3.getId());
@@ -219,15 +226,19 @@ public class DBGenerator implements CommandLineRunner {
         history3.setNameGift("Điểm thi");
         history3.setHoneyPoint(100);
         history3.setChangeDate(1689932796276L);
+        history2.setCreatedAt(new Date().getTime());
         history3.setGiftId(gift2.getId());
         history3.setStudentId(user2.getId());
         history3.setTeacherId(user3.getId());
+        history3.setType(Constants.TYPE_HONEY_HISTORY.GIFT_HISTORY);
         history3.setId(historyRepository.save(history3).getId());
 
         History history4 = new History();
         history4.setNameGift("Điểm thi");
         history4.setHoneyPoint(100);
         history4.setChangeDate(1689932796276L);
+        history4.setCreatedAt(new Date().getTime());
+        history4.setType(Constants.TYPE_HONEY_HISTORY.APPROVED_HISTORY);
         history4.setGiftId(gift2.getId());
         history4.setStudentId(user1.getId());
         history4.setTeacherId(user3.getId());
@@ -237,6 +248,8 @@ public class DBGenerator implements CommandLineRunner {
         history5.setNameGift("Điểm lab");
         history5.setHoneyPoint(100);
         history5.setChangeDate(1689932796276L);
+        history5.setCreatedAt(new Date().getTime());
+        history5.setType(Constants.TYPE_HONEY_HISTORY.APPROVED_HISTORY);
         history5.setGiftId(gift1.getId());
         history5.setStudentId(user2.getId());
         history5.setTeacherId(user3.getId());
@@ -246,6 +259,8 @@ public class DBGenerator implements CommandLineRunner {
         history6.setNameGift("Điểm thi");
         history6.setHoneyPoint(100);
         history6.setChangeDate(1689932796276L);
+        history6.setCreatedAt(new Date().getTime());
+        history6.setType(Constants.TYPE_HONEY_HISTORY.APPROVED_HISTORY);
         history6.setGiftId(gift2.getId());
         history6.setStudentId(user1.getId());
         history6.setTeacherId(user3.getId());
