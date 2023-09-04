@@ -19,10 +19,7 @@ public class Conversion extends PrimaryEntity {
     private String code;
 
     @Column(nullable = false)
-    private Integer componentPoint;
-
-    @Column(nullable = false)
-    private Double honey_point;
+    private Double ratio;
 
     private Status status;
 
