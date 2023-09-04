@@ -11,8 +11,8 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "admin")
-public class User extends PrimaryEntity {
+@Table(name = "user_api")
+public class UserAPI extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_CODE)
     private String code;
