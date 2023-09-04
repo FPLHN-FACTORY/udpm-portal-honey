@@ -1,6 +1,6 @@
 package com.honeyprojectstool;
 
-import com.honeyprojects.entity.User;
+import com.honeyprojects.entity.UserAPI;
 import com.honeyprojects.entity.Conversion;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.History;
@@ -103,27 +103,27 @@ public class DBGenerator implements CommandLineRunner {
         semester.setFromDate(1691600400000L);
         semester.setId(semesterRepository.save(semester).getId());
 
-        User user1 = new User();
-        user1.setName("Nguyễn Quốc Huy");
-        user1.setEmail("huynq@gmail.com");
-        user1.setCode("TE2");
-        user1.setId(userRepositpry.save(user1).getId());
+        UserAPI userAPI1 = new UserAPI();
+        userAPI1.setName("Nguyễn Quốc Huy");
+        userAPI1.setEmail("huynq@gmail.com");
+        userAPI1.setCode("TE2");
+        userAPI1.setId(userRepositpry.save(userAPI1).getId());
 
-        User user2 = new User();
-        user2.setName("Ngọc Anh");
-        user2.setEmail("ngocanh@gmail.com");
-        user2.setCode("TE1");
-        user2.setId(userRepositpry.save(user2).getId());
+        UserAPI userAPI2 = new UserAPI();
+        userAPI2.setName("Ngọc Anh");
+        userAPI2.setEmail("ngocanh@gmail.com");
+        userAPI2.setCode("TE1");
+        userAPI2.setId(userRepositpry.save(userAPI2).getId());
 
-        User user3 = new User();
-        user1.setName("Nguyễn Anh Dũng");
-        user1.setEmail("dungna29@gmail.com");
-        user1.setCode("TE3");
-        user1.setId(userRepositpry.save(user1).getId());
+        UserAPI userAPI3 = new UserAPI();
+        userAPI1.setName("Nguyễn Anh Dũng");
+        userAPI1.setEmail("dungna29@gmail.com");
+        userAPI1.setCode("TE3");
+        userAPI1.setId(userRepositpry.save(userAPI1).getId());
 
         Honey honey1 = new Honey();
         honey1.setHoneyPoint(1000);
-        honey1.setStudentId(user1.getId());
+        honey1.setStudentId(userAPI1.getId());
         honey1.setUserSemesterId(semester.getId());
         honey1.setHoneyCategoryId(honeyCategory1.getCategoryId());
         honey1.setId(honeyRepository.save(honey1).getId());
@@ -132,26 +132,26 @@ public class DBGenerator implements CommandLineRunner {
         honey2.setHoneyPoint(2000);
         honey2.setUserSemesterId(semester.getId());
         honey2.setHoneyCategoryId(honeyCategory2.getCategoryId());
-        honey2.setStudentId(user2.getId());
+        honey2.setStudentId(userAPI2.getId());
         honey2.setId(honeyRepository.save(honey2).getId());
 
         Honey honey3 = new Honey();
         honey3.setHoneyPoint(1000);
-        honey3.setStudentId(user1.getId());
+        honey3.setStudentId(userAPI1.getId());
         honey3.setUserSemesterId(semester.getId());
         honey3.setHoneyCategoryId(honeyCategory2.getCategoryId());
         honey3.setId(honeyRepository.save(honey3).getId());
 
         Honey honey4 = new Honey();
         honey4.setHoneyPoint(1000);
-        honey4.setStudentId(user2.getId());
+        honey4.setStudentId(userAPI2.getId());
         honey4.setUserSemesterId(semester.getId());
         honey4.setHoneyCategoryId(honeyCategory1.getCategoryId());
         honey4.setId(honeyRepository.save(honey4).getId());
 
         Honey honey5 = new Honey();
         honey5.setHoneyPoint(100);
-        honey5.setStudentId(user2.getId());
+        honey5.setStudentId(userAPI2.getId());
         honey5.setUserSemesterId(semester.getId());
         honey5.setHoneyCategoryId(honeyCategory3.getCategoryId());
         honey5.setId(honeyRepository.save(honey5).getId());
@@ -170,13 +170,13 @@ public class DBGenerator implements CommandLineRunner {
 
         UserSemester userSemester1 = new UserSemester();
         userSemester1.setSemesterId(semester.getId());
-        userSemester1.setStudentId(user1.getId());
+        userSemester1.setStudentId(userAPI1.getId());
         userSemester1.setTotalHoney(2000);
         userSemester1.setId(userSemesterRepository.save(userSemester1).getId());
 
         UserSemester userSemester2 = new UserSemester();
         userSemester2.setSemesterId(semester.getId());
-        userSemester2.setStudentId(user2.getId());
+        userSemester2.setStudentId(userAPI2.getId());
         userSemester2.setTotalHoney(3100);
         userSemester2.setId(userSemesterRepository.save(userSemester2).getId());
 
@@ -201,7 +201,7 @@ public class DBGenerator implements CommandLineRunner {
         history1.setChangeDate(1689932796276L);
         history1.setGiftId(gift1.getId());
         history1.setStudentId(category1.getId());
-        history1.setTeacherId(user3.getId());
+        history1.setTeacherId(userAPI3.getId());
         history1.setId(historyRepository.save(history1).getId());
 
         History history2 = new History();
@@ -209,8 +209,8 @@ public class DBGenerator implements CommandLineRunner {
         history2.setHoneyPoint(100);
         history2.setChangeDate(1689932796276L);
         history2.setGiftId(gift1.getId());
-        history2.setStudentId(user1.getId());
-        history2.setTeacherId(user3.getId());
+        history2.setStudentId(userAPI1.getId());
+        history2.setTeacherId(userAPI3.getId());
         history2.setId(historyRepository.save(history2).getId());
 
         History history3 = new History();
@@ -218,8 +218,8 @@ public class DBGenerator implements CommandLineRunner {
         history3.setHoneyPoint(100);
         history3.setChangeDate(1689932796276L);
         history3.setGiftId(gift2.getId());
-        history3.setStudentId(user2.getId());
-        history3.setTeacherId(user3.getId());
+        history3.setStudentId(userAPI2.getId());
+        history3.setTeacherId(userAPI3.getId());
         history3.setId(historyRepository.save(history3).getId());
 
         History history4 = new History();
@@ -227,8 +227,8 @@ public class DBGenerator implements CommandLineRunner {
         history4.setHoneyPoint(100);
         history4.setChangeDate(1689932796276L);
         history4.setGiftId(gift2.getId());
-        history4.setStudentId(user1.getId());
-        history4.setTeacherId(user3.getId());
+        history4.setStudentId(userAPI1.getId());
+        history4.setTeacherId(userAPI3.getId());
         history4.setId(historyRepository.save(history4).getId());
 
         History history5 = new History();
@@ -236,8 +236,8 @@ public class DBGenerator implements CommandLineRunner {
         history5.setHoneyPoint(100);
         history5.setChangeDate(1689932796276L);
         history5.setGiftId(gift1.getId());
-        history5.setStudentId(user2.getId());
-        history5.setTeacherId(user3.getId());
+        history5.setStudentId(userAPI2.getId());
+        history5.setTeacherId(userAPI3.getId());
         history5.setId(historyRepository.save(history5).getId());
 
         History history6 = new History();
@@ -245,8 +245,8 @@ public class DBGenerator implements CommandLineRunner {
         history6.setHoneyPoint(100);
         history6.setChangeDate(1689932796276L);
         history6.setGiftId(gift2.getId());
-        history6.setStudentId(user1.getId());
-        history6.setTeacherId(user3.getId());
+        history6.setStudentId(userAPI1.getId());
+        history6.setTeacherId(userAPI3.getId());
         history6.setId(historyRepository.save(history6).getId());
 
     }
