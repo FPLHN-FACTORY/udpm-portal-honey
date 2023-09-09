@@ -10,6 +10,8 @@ import DashboardCensor from "./layout/censor/DashboardCensor";
 import GlobalLoading from "./components/global-loading/GlobalLoading";
 import DashboardAuthUser from "./layout/censor/DashboardCensor";
 import Index from "./pages/censor/category";
+import AddPoint from "./pages/teacher/addpoint/AddPoint";
+import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
 
 function App() {
   return (
@@ -41,10 +43,22 @@ function App() {
             />
             {/* Màn teacher */}
             <Route
-              path=""
+              path="/teacher/add-point"
               element={
                 <AuthGuard>
-                  <DashboardAuthUser></DashboardAuthUser>
+                  <DashboardAuthUser>
+                    <AddPoint />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/teacher/add-point/history"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <HistoryAddPoint />
+                  </DashboardAuthUser>
                 </AuthGuard>
               }
             />
