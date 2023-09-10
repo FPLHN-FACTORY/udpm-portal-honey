@@ -1,0 +1,95 @@
+.request-manager .ant-btn {
+    line-height: normal;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 7%);
+}
+
+.request-manager .py-25 {
+    padding: 25px 0px;
+}
+
+.request-manager .mt-10 {
+    margin-top: 10px;
+}
+
+.request-manager .mb-10 {
+    margin-bottom: 10px;
+}
+
+.request-manager .p-0 {
+    padding: 0 !important;
+}
+
+.request-manager .pl-5 {
+    padding-left: 5px;
+}
+
+.request-manager .m-0 {
+    margin: 0 !important;
+}
+
+.request-manager .mx-10 {
+    margin: 0px 10px;
+}
+
+.request-manager .search-input {
+    min-width: 30%;
+}
+
+.request-manager .search-button {
+    background-color: #EEB30D;
+    margin-bottom: 24px;
+}
+
+.request-manager>.ant-card>.ant-card-body {
+    padding-bottom: 0;
+}
+
+.request-manager .search-button:hover {
+    background-color: #EEB30D !important;
+}
+
+.request-manager .import-button {
+    background-color: #24923e;
+    margin-bottom: 24px;
+}
+
+.request-manager .import-button:hover {
+    background-color: #2db34c !important;
+}
+
+.request-manager .select-category .ant-segmented-item-selected {
+    background-color: #EEB30D;
+    color: rgb(255, 255, 255);
+}
+
+.request-manager .select-category .ant-segmented-item {
+    transition: #EEB30D 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.request-manager .select-category .ant-segmented-thumb {
+    background-color: #EEB30D;
+}
+
+.request-manager .content-card .ant-card-body {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.request-manager .content-card .ant-card-body {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.request-manager .ant-table-thead>tr>th,
+.request-manager .ant-table-thead>tr>td {
+    background-color: #EEB30D;
+    color: #fff;
+}
+
+.request-manager .ant-btn svg {
+    margin: 0;
+}
+
+.request-manager-detail .ant-descriptions-header {
+    margin-bottom: 0;
+}
