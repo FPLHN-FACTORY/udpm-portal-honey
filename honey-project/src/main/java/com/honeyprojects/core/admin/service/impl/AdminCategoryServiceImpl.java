@@ -10,11 +10,14 @@ import com.honeyprojects.core.admin.service.AdminCategoryService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
+import com.honeyprojects.infrastructure.contant.Message;
+import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +47,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     }
 
     @Override
+    @Transactional
     public Category addCategory(AdminCreateCategoryRequest request) {
         Random random = new Random();
         int number = random.nextInt(10000);
@@ -57,6 +61,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     }
 
     @Override
+    @Transactional
     public Category updateCategory(AdminUpdateCategoryRequest request, String id) {
         Optional<Category> categoryOptional = adminCategoryRepository.findById(id);
         categoryOptional.get().setName(request.getName());
@@ -65,6 +70,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     }
 
     @Override
+    @Transactional
     public void deleteCategory(String id) {
         Optional<Category> categoryOptional = adminCategoryRepository.findById(id);
         adminCategoryRepository.delete(categoryOptional.get());
@@ -73,10 +79,14 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     @Override
     public Category getOne(String id) {
         Optional<Category> categoryOptional = adminCategoryRepository.findById(id);
+        if(!categoryOptional.isPresent()){
+            throw new RestApiException(Message.SUCCESS);
+        }
         return categoryOptional.get();
     }
 
     @Override
+    @Transactional
     public Category updateCategoryByCategory(AdminUpdateCategoryRequest request, String id) {
         Optional<Category> categoryOptional = adminCategoryRepository.findById(id);
         categoryOptional.get().setCategoryStatus(CategoryStatus.INACTIVE);
