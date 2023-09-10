@@ -24,6 +24,8 @@ public class History extends PrimaryEntity {
     @Column(nullable = false)
     private Long changeDate;
 
+    private Long createdAt;
+
     @Column(length = EntityProperties.LENGTH_ID, nullable = false)
     private String giftId;
 
@@ -40,5 +42,7 @@ public class History extends PrimaryEntity {
     private String note;
 
     private Status status;
+
+    private String type;
 
 }
