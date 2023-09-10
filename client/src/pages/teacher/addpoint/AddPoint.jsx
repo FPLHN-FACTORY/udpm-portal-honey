@@ -21,8 +21,6 @@ import {
 } from "../../../app/reducers/category/category.reducer";
 import { AddPointAPI } from "../../../apis/teacher/add-point/add-point.api";
 
-const teacherId = "b4f33d90-fac9-4e87-bbb8-613945cd270c";
-
 export default function AddPoint() {
   const dispatch = useAppDispatch();
   const listCategory = useAppSelector(GetCategory);
@@ -44,16 +42,20 @@ export default function AddPoint() {
     getHoney(student.id, categorySelected);
   }, [categorySelected, student, formSearch]);
 
-  const onFinishSearch = (values) => {
-    const codeStudent = { codeStudent: values.codeStudent.trim() };
-    AddPointAPI.getStudent(codeStudent).then((response) => {
+  const onFinishSearch = (value) => {
+    AddPointAPI.getUserAPiByCode(value.code.trim()).then((response) => {
       if (response.data.success) {
-        setStudent(response.data.data);
+        setStudent({
+          ...response.data.data,
+          khoa: "17.3",
+          phone: "0987654321",
+        });
+        getHoney(response.data.data.id, categorySelected);
       } else {
         setStudent({});
         formSearch.setFields([
           {
-            name: "codeStudent",
+            name: "code",
             errors: ["Không tìm thấy thông tin sinh viên!"],
           },
         ]);
@@ -65,7 +67,6 @@ export default function AddPoint() {
     addPoint({
       ...values,
       honeyId: honeyStudent.id,
-      teacherId: teacherId,
       studentId: student.id,
       categoryId: categorySelected,
     });
@@ -89,13 +90,16 @@ export default function AddPoint() {
   };
 
   const getHoney = (studentId, categoryId) => {
-    AddPointAPI.getHoney(studentId, categoryId).then((response) => {
-      if (response.data.success) {
-        setHoneyStudent(response.data.data);
-      } else {
-        setHoneyStudent({ point: studentId && 0 });
-      }
-    });
+    AddPointAPI.getHoney(studentId, categoryId)
+      .then((response) => {
+        if (response.data.success) {
+          console.log(response.data);
+          setHoneyStudent(response.data.data);
+        } else {
+          setHoneyStudent({ point: 0 });
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -109,7 +113,7 @@ export default function AddPoint() {
             Search
           </Button>
           <Form.Item
-            name="codeStudent"
+            name="code"
             rules={[
               {
                 required: true,

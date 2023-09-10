@@ -1,9 +1,9 @@
-package com.honeyprojects.core.teacher.model.response;
+package com.honeyprojects.core.admin.model.response;
 
 import com.honeyprojects.entity.base.IsIdentified;
 import org.springframework.beans.factory.annotation.Value;
 
-public interface TeacherAddHoneyHistoryResponse extends IsIdentified {
+public interface CensorAddHoneyRequestResponse extends IsIdentified {
 
     String getStt();
 

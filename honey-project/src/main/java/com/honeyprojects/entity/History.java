@@ -4,6 +4,7 @@ import com.honeyprojects.entity.base.PrimaryEntity;
 import com.honeyprojects.infrastructure.contant.EntityProperties;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.TypeHistory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -44,6 +45,6 @@ public class History extends PrimaryEntity {
 
     private HoneyStatus status;
 
-    private String type;
+    private TypeHistory type;
 
 }

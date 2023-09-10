@@ -17,12 +17,20 @@ import {
   GetHistory,
   SetHistory,
 } from "../../../app/reducers/history/history.reducer";
-import { AddPointAPI } from "../../../apis/teacher/add-point/add-point.api";
 import {
   GetCategory,
   SetCategory,
 } from "../../../app/reducers/category/category.reducer";
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  CheckCircleFilled,
+  CloseCircleFilled,
+  EyeFilled,
+  SearchOutlined,
+} from "@ant-design/icons";
+import TabsRequest from "./TabsRequest";
+import { CategoryAPI } from "../../../apis/censor/category/category.api";
+import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
+import { Link } from "react-router-dom";
 import moment from "moment";
 
 const statusHistory = (status) => {
@@ -40,7 +48,7 @@ const statusHistory = (status) => {
   }
 };
 
-export default function HistoryAddPoint() {
+export default function RequestAddPoint() {
   const dispatch = useAppDispatch();
   const columns = [
     {
@@ -83,34 +91,36 @@ export default function HistoryAddPoint() {
       dataIndex: "acction",
       key: "acction",
       render: (values) => (
-        <div style={{ textAlign: "center" }}>
-          <Button
-            onClick={() =>
-              changeStatus(values.idHistory, values.status === 2 ? 3 : 2)
-            }
-            disabled={values.status === 1}
-            type="primary"
-            danger={values.status !== 2}
-            style={{
-              color: values.status === 1 ? "" : "#fff",
-              height: "30px",
-            }}>
-            {values.status === 2 ? "Gửi lại" : "Hủy"}
-          </Button>
+        <div style={{ fontSize: "19px", textAlign: "center", color: "green" }}>
+          {values.status !== 1 && values.status !== 2 && (
+            <CheckCircleFilled
+              onClick={() => changeStatus(values.idHistory, 1)}
+            />
+          )}
+
+          {values.status !== 1 && values.status !== 2 && (
+            <CloseCircleFilled
+              style={{ fontSize: "19px", margin: "0px 10px", color: "red" }}
+              onClick={() => changeStatus(values.idHistory, 2)}
+            />
+          )}
+          <Link to={"/censor/request-manager/detail/" + values.idHistory}>
+            <EyeFilled style={{ fontSize: "20px", color: "#3498db" }} />
+          </Link>
         </div>
       ),
     },
   ];
 
   const [totalPage, setTotalPage] = useState(1);
-  const [filter, setFilter] = useState({ page: 0 });
+  const [filter, setFilter] = useState({ page: 0, status: 0 });
 
   useEffect(() => {
     fetchData(dispatch, filter);
   }, [dispatch, filter]);
 
   const fetchData = (dispatch, filter) => {
-    AddPointAPI.getCategory()
+    CategoryAPI.fetchAllCategory()
       .then((response) => {
         dispatch(SetCategory(response.data.data));
       })
@@ -120,11 +130,13 @@ export default function HistoryAddPoint() {
       .finally(() => {
         const fetchData = async (filter) => {
           try {
-            const response = await AddPointAPI.getHistory(filter);
+            const response = await RequestManagerAPI.getAddPoint(filter);
             const listHistory = await Promise.all(
               response.data.data.map(async (data) => {
                 try {
-                  const user = await AddPointAPI.getUserAPiById(data.studentId);
+                  const user = await RequestManagerAPI.getUserAPiById(
+                    data.studentId
+                  );
                   return {
                     ...data,
                     nameStudent: user.data.data.name,
@@ -166,7 +178,7 @@ export default function HistoryAddPoint() {
         status: value.status,
       });
     } else {
-      AddPointAPI.getUserAPiByCode(value.code.trim())
+      RequestManagerAPI.getUserAPiByCode(value.code.trim())
         .then((result) => {
           if (result.data.success) {
             setFilter({
@@ -184,25 +196,30 @@ export default function HistoryAddPoint() {
   };
 
   const changeStatus = (idHistory, status) => {
-    AddPointAPI.changeStatus(idHistory, status)
+    RequestManagerAPI.changeStatus(idHistory, status)
       .then((response) => {
         if (response.data.success) {
           fetchData(dispatch, filter);
+          if (status === 1) message.success("Đã xác nhận yêu cầu cộng điểm!");
           if (status === 2) message.error("Hủy yêu cầu thành công!");
-          if (status === 3) message.success("Gửi lại yêu cầu thành công!");
         }
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        message.error(error);
+      })
+      .finally(() => {});
   };
 
   return (
-    <div className="add-point">
+    <div className="request-manager">
+      <TabsRequest selectIndex={1} />
       <Card className="mb-2 py-1">
         <Form onFinish={onFinishSearch}>
           <Space size={"large"}>
             <Form.Item name="code" className="search-input">
               <Input
                 style={{ width: "300px" }}
+                name="code"
                 size="small"
                 placeholder="Nhập mã sinh viên cần tìm"
                 prefix={<SearchOutlined />}
@@ -229,6 +246,7 @@ export default function HistoryAddPoint() {
                 style={{ width: "150px" }}
                 size="large"
                 placeholder="Trạng thái"
+                defaultValue={0}
                 options={[
                   { value: null, label: "Tất cả" },
                   ...[0, 1, 2, 3].map((value) => {
@@ -249,7 +267,7 @@ export default function HistoryAddPoint() {
           </Space>
         </Form>
       </Card>
-      <Card title="Lịch sử cộng điểm">
+      <Card title="Yêu cầu cộng điểm">
         <Table
           columns={columns}
           dataSource={data}

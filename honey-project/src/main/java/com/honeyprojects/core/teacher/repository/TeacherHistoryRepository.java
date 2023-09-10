@@ -13,17 +13,15 @@ import org.springframework.stereotype.Repository;
 public interface TeacherHistoryRepository extends HistoryRepository {
 
     @Query(value = """
-        SELECT ROW_NUMBER() over (ORDER BY c.created_date desc ) as stt, h.id, us.code as mssv, us.name as nameStudent, h.note,
-        c.name as nameCategory, h.honey_point, h.created_date, h.status
+        SELECT ROW_NUMBER() over (ORDER BY c.created_date desc ) as stt, h.id, h.note,
+        c.name as nameCategory, h.honey_point, h.created_date, h.status, h.student_id
         FROM history h
-        LEFT JOIN user_api us ON h.student_id = us.id
         LEFT JOIN honey ho ON h.honey_id = ho.id
         LEFT JOIN category c ON c.id = ho.honey_category_id
-        WHERE (:#{#searchParams.textSearch} IS NULL OR us.code LIKE CONCAT('%', :#{#searchParams.textSearch}, '%') 
-        OR us.name LIKE CONCAT('%', :#{#searchParams.textSearch}, '%'))
-        AND (:#{#searchParams.status} IS NULL OR h.status = :#{#searchParams.status})
+        WHERE (:#{#searchParams.status} IS NULL OR h.status = :#{#searchParams.status})
         AND (:#{#searchParams.idCategory} IS NULL OR c.id = :#{#searchParams.idCategory})
-        AND h.type = 0
+        AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent})
+        AND h.type = 0 AND h.teacher_id = :#{#searchParams.idTeacher}
         """, nativeQuery = true)
     Page<TeacherAddHoneyHistoryResponse> getHistory(@Param("searchParams") TeacherSearchHistoryRequest searchParams,
                                                     Pageable pageable);

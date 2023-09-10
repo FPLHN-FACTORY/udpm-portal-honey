@@ -31,7 +31,4 @@ public class TeacherAddPointRequest {
     @Length(max = 36)
     private String categoryId;
 
-    @NotBlank
-    @Length(max = 36)
-    private String teacherId;
 }

@@ -12,6 +12,9 @@ import DashboardAuthUser from "./layout/censor/DashboardCensor";
 import Index from "./pages/censor/category";
 import AddPoint from "./pages/teacher/addpoint/AddPoint";
 import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
+import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
+import RequestManager from "./pages/censor/requestmanager/RequestManager";
+import RequestManagerDetail from "./pages/censor/requestmanager/RequestManagerDetail";
 
 function App() {
   return (
@@ -41,7 +44,45 @@ function App() {
                 </AuthGuard>
               }
             />
+            <Route
+              path="/censor/request-manager/add-point"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <RequestAddPoint />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/request-manager"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <RequestManager />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/request-manager/detail/:id"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <RequestManagerDetail />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
             {/* Màn teacher */}
+            <Route
+              path=""
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser></DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
             <Route
               path="/teacher/add-point"
               element={

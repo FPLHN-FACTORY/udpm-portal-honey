@@ -1,9 +1,9 @@
 import { request } from "../../../helper/request.helper";
 
-export class AddPointAPI {
-  static COMPONENT_NAME = "teacher/add-point";
+export class RequestManagerAPI {
+  static COMPONENT_NAME = "censor/request-manager";
 
-  //UserAPI
+  //UserAPi
   static getUserAPiByCode = (code) => {
     return request({
       method: "GET",
@@ -11,6 +11,7 @@ export class AddPointAPI {
       params: { code: code },
     });
   };
+
   static getUserAPiById = (id) => {
     return request({
       method: "GET",
@@ -24,17 +25,11 @@ export class AddPointAPI {
       url: `/${this.COMPONENT_NAME}/category`,
     });
   };
-  static getHoney = (studentId, categoryId) => {
+
+  static getAddPoint = (filter) => {
     return request({
       method: "GET",
-      url: `/${this.COMPONENT_NAME}/get-honey`,
-      params: { studentId, categoryId },
-    });
-  };
-  static getHistory = (filter) => {
-    return request({
-      method: "GET",
-      url: `/${this.COMPONENT_NAME}/get-history`,
+      url: `/${this.COMPONENT_NAME}/add-point`,
       params: filter,
     });
   };
@@ -45,11 +40,11 @@ export class AddPointAPI {
       data: { idHistory, status },
     });
   };
-  static addPoint = (dataAddPoint) => {
+
+  static detailRequest = (idRequest) => {
     return request({
-      method: "POST",
-      url: `/${this.COMPONENT_NAME}`,
-      data: dataAddPoint,
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/request-manager/${idRequest}`,
     });
   };
 }

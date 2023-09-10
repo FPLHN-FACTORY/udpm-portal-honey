@@ -17,6 +17,5 @@ public interface TeacherHoneyRepository extends HoneyRepository {
             and h.honey_category_id = :#{#getPointRequest.categoryId}
             AND :dateNow BETWEEN s.from_date AND s.to_date
             """, nativeQuery = true)
-    TeacherPointResponse getPoint(TeacherGetPointRequest getPointRequest,
-                                  @Param("dateNow") Long dateNow);
+    TeacherPointResponse getPoint(TeacherGetPointRequest getPointRequest, @Param("dateNow") Long dateNow);
 }
