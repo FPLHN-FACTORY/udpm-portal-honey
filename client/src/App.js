@@ -12,6 +12,12 @@ import DashboardAuthUser from "./layout/censor/DashboardCensor";
 import Index from "./pages/censor/category";
 import IndexGift from "./pages/censor/gift/indexGift";
 import ConversionHome from "./pages/censor/convertion/convertionHome";
+import AddPoint from "./pages/teacher/addpoint/AddPoint";
+import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
+import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
+import RequestManager from "./pages/censor/requestmanager/RequestManager";
+import RequestManagerDetail from "./pages/censor/requestmanager/RequestManagerDetail";
+
 
 function App() {
   return (
@@ -47,6 +53,13 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <ConversionHome />
+
+              path="/censor/request-manager/add-point"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <RequestAddPoint />
+
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -57,6 +70,22 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <IndexGift />
+
+              path="/censor/request-manager"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <RequestManager />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/request-manager/detail/:id"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <RequestManagerDetail />
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -67,6 +96,26 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardAuthUser></DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/teacher/add-point"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <AddPoint />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/teacher/add-point/history"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <HistoryAddPoint />
+                  </DashboardAuthUser>
                 </AuthGuard>
               }
             />

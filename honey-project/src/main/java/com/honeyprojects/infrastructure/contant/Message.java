@@ -1,14 +1,16 @@
 package com.honeyprojects.infrastructure.contant;
 
+import com.honeyprojects.util.PropertiesReader;
+
 public enum Message {
 
-    SUCCESS("Success");
+    SUCCESS("Success"),
 
 
-//    ERROR_UNKNOWN("Error Unknown"),
+// viết các lỗi ở đây
 
 
-//    CHUYEN_NGANH_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.CHUYEN_NGANH_NOT_EXIST)),
+    CATEGORY_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.CATEGORY_NOT_EXIST));
 
     private String message;
 
