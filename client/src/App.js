@@ -10,14 +10,13 @@ import DashboardCensor from "./layout/censor/DashboardCensor";
 import GlobalLoading from "./components/global-loading/GlobalLoading";
 import DashboardAuthUser from "./layout/censor/DashboardCensor";
 import Index from "./pages/censor/category";
-<<<<<<<<< Temporary merge branch 1
 import AddPoint from "./pages/teacher/addpoint/AddPoint";
 import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
 import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
 import RequestManager from "./pages/censor/requestmanager/RequestManager";
 import RequestManagerDetail from "./pages/censor/requestmanager/RequestManagerDetail";
-import IndexGift from "./pages/censor/gift/indexGift";
 import ConversionHome from "./pages/censor/convertion/convertionHome";
+import IndexGift from "./pages/censor/gift/indexGift";
 
 function App() {
   return (
@@ -48,18 +47,11 @@ function App() {
               }
             />
             <Route
-              path="/censor/convertion"
+              path="/censor/conversion"
               element={
                 <AuthGuard>
                   <DashboardCensor>
                     <ConversionHome />
-
-              path="/censor/request-manager/add-point"
-              element={
-                <AuthGuard>
-                  <DashboardCensor>
-                    <RequestAddPoint />
-
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -70,7 +62,21 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <IndexGift />
-
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/request-manager/add-point"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <RequestAddPoint />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
               path="/censor/request-manager"
               element={
                 <AuthGuard>
@@ -86,26 +92,6 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <RequestManagerDetail />
-                  </DashboardCensor>
-                </AuthGuard>
-              }
-            />
-<Route
-              path="/censor/convertion"
-              element={
-                <AuthGuard>
-                  <DashboardCensor>
-                    <ConversionHome />
-                  </DashboardCensor>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/censor/gift"
-              element={
-                <AuthGuard>
-                  <DashboardCensor>
-                    <IndexGift />
                   </DashboardCensor>
                 </AuthGuard>
               }
