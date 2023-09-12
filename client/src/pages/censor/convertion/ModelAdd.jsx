@@ -113,9 +113,6 @@ const ModalAddConversion = () => {
           }}
           autoComplete="off"
         >
-          {/* <Form.Item label="Mã" name="code">
-            <Input />
-          </Form.Item> */}
           <div>
             <span
               className="text-xl"
@@ -166,7 +163,6 @@ const ModalAddConversion = () => {
               Điểm
             </span>
           </div>
-
           <div style={{ marginTop: "20px" }}>
             <span
               className="text-xl"

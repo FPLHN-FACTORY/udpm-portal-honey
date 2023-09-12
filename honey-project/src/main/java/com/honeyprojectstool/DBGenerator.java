@@ -99,8 +99,8 @@ public class DBGenerator implements CommandLineRunner {
         Semester semester = new Semester();
         semester.setCode("SE1");
         semester.setName("Summer 2023");
-        semester.setToDate(1687194000000L);
-        semester.setFromDate(1691600400000L);
+        semester.setToDate(2007194000000L);
+        semester.setFromDate(1681600400000L);
         semester.setId(semesterRepository.save(semester).getId());
 
         UserAPI userAPI1 = new UserAPI();

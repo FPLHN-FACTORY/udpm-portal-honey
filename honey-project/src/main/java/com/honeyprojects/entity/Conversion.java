@@ -26,7 +26,7 @@ public class Conversion extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_ID, nullable = false)
     private String gift_id;
 
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    @Column(length = EntityProperties.LENGTH_ID)
     private String category_id;
 
 }
