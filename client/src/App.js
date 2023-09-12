@@ -10,8 +10,8 @@ import DashboardCensor from "./layout/censor/DashboardCensor";
 import GlobalLoading from "./components/global-loading/GlobalLoading";
 import DashboardAuthUser from "./layout/censor/DashboardCensor";
 import Index from "./pages/censor/category";
-import Home from "./pages/censor/convertion/home";
 import IndexGift from "./pages/censor/gift/indexGift";
+import ConversionHome from "./pages/censor/convertion/convertionHome";
 
 function App() {
   return (
@@ -46,7 +46,7 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardCensor>
-                    <Home />
+                    <ConversionHome />
                   </DashboardCensor>
                 </AuthGuard>
               }

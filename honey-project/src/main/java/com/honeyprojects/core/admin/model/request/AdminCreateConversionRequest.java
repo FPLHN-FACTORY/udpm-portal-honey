@@ -23,4 +23,6 @@ public class AdminCreateConversionRequest {
 
     private String giftId;
 
+    private String categoryId;
+
 }
