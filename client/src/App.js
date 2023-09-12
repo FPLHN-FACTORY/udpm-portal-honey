@@ -10,6 +10,7 @@ import DashboardCensor from "./layout/censor/DashboardCensor";
 import GlobalLoading from "./components/global-loading/GlobalLoading";
 import DashboardAuthUser from "./layout/censor/DashboardCensor";
 import Index from "./pages/censor/category";
+<<<<<<<<< Temporary merge branch 1
 import AddPoint from "./pages/teacher/addpoint/AddPoint";
 import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
 import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
@@ -47,16 +48,29 @@ function App() {
               }
             />
             <Route
+              path="/censor/convertion"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <ConversionHome />
+
               path="/censor/request-manager/add-point"
               element={
                 <AuthGuard>
                   <DashboardCensor>
                     <RequestAddPoint />
+
                   </DashboardCensor>
                 </AuthGuard>
               }
             />
             <Route
+              path="/censor/gift"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <IndexGift />
+
               path="/censor/request-manager"
               element={
                 <AuthGuard>
