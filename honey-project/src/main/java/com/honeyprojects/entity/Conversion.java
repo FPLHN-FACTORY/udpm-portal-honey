@@ -15,7 +15,7 @@ import lombok.Setter;
 @Table(name = "conversion")
 public class Conversion extends PrimaryEntity {
 
-    @Column(length = EntityProperties.LENGTH_CODE, nullable = false)
+    @Column(nullable = false)
     private String code;
 
     @Column(nullable = false)
