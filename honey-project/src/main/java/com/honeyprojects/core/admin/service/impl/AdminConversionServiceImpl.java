@@ -31,8 +31,8 @@ public class AdminConversionServiceImpl implements AdminConversionService {
         Conversion conversion = new Conversion();
         conversion.setCode(request.getCode());
         conversion.setRatio(request.getRatio());
-        conversion.setGift_id(request.getGiftId());
-        conversion.setCategory_id(request.getCategoryId());
+        conversion.setGiftId(request.getGiftId());
+        conversion.setCategoryId(request.getCategoryId());
         return adConversionRepository.save(conversion);
     }
 
@@ -60,8 +60,8 @@ public class AdminConversionServiceImpl implements AdminConversionService {
         if(getOne != null){
                 getOne.setCode(request.getCode());
                 getOne.setRatio(request.getRatio());
-                getOne.setGift_id(request.getGiftId());
-                getOne.setCategory_id(request.getCategoryId());
+                getOne.setGiftId(request.getGiftId());
+                getOne.setCategoryId(request.getCategoryId());
                 return adConversionRepository.save(getOne);
         }else {
           return null;

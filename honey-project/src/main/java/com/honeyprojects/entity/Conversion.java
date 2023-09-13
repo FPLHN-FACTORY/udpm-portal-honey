@@ -15,7 +15,7 @@ import lombok.Setter;
 @Table(name = "conversion")
 public class Conversion extends PrimaryEntity {
 
-
+    @Column(nullable = false)
     private String code;
 
     @Column(nullable = false)
@@ -24,9 +24,9 @@ public class Conversion extends PrimaryEntity {
     private Status status;
 
     @Column(length = EntityProperties.LENGTH_ID, nullable = false)
-    private String gift_id;
+    private String giftId;
 
     @Column(length = EntityProperties.LENGTH_ID)
-    private String category_id;
+    private String categoryId;
 
 }
