@@ -48,22 +48,26 @@ const ModalAddConversion = () => {
       Math.random() * 100000
     )}`;
 
-    try {
-      const dataToSend = {
-        ratio: ratio,
-        code: code,
-        giftId: selectGift,
-        categoryId: selectCategory,
-      };
+    const dataToSend = {
+      ratio: ratio,
+      code: code,
+      giftId: selectGift,
+      categoryId: selectCategory,
+    };
 
-      await ConversionAPI.add(dataToSend);
-      message.success("Add thành công");
-      handleCancel(false);
-      console.log("tỉ số và mã đã được lưu vào db");
-    } catch (error) {
-      message.error("add thất bại");
-      console.log("lỗi khi lưu tỉ số và mã", error);
-    }
+    await ConversionAPI.add(dataToSend)
+      .then(() => {
+        message.success("Add thành công");
+        handleCancel(false);
+        console.log("tỉ số và mã đã được lưu vào db");
+      })
+      .catch((error) => {
+        if (error.message && error.message.data && error.message.data.message) {
+          message.error(error.response.data.message);
+        } else {
+          message.error("Lỗi");
+        }
+      });
   };
 
   const [form] = Form.useForm();
