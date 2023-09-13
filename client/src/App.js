@@ -15,6 +15,7 @@ import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
 import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
 import RequestManager from "./pages/censor/requestmanager/RequestManager";
 import RequestManagerDetail from "./pages/censor/requestmanager/RequestManagerDetail";
+import Semester from "./pages/censor/semester";
 
 function App() {
   return (
@@ -40,6 +41,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <Index />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/semester"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <Semester />
                   </DashboardCensor>
                 </AuthGuard>
               }
