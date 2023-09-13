@@ -1,5 +1,6 @@
 package com.honeyprojects.core.admin.controller;
 
+import com.honeyprojects.core.admin.model.request.AdminSearchSemesterRequest;
 import com.honeyprojects.core.admin.model.request.AdminSemesterRequest;
 import com.honeyprojects.core.admin.service.AdminSemesterService;
 import com.honeyprojects.core.common.base.ResponseObject;
@@ -22,7 +23,7 @@ public class AdminSemesterController {
     private AdminSemesterService adminSemesterService;
 
     @GetMapping("")
-    public ResponseObject getAllSemesterByAdmin(AdminSemesterRequest request) {
+    public ResponseObject getAllSemesterByAdmin(AdminSearchSemesterRequest request) {
         return new ResponseObject(adminSemesterService.getAllSemesterByAdmin(request));
     }
 
@@ -46,7 +47,7 @@ public class AdminSemesterController {
         return new ResponseObject(adminSemesterService.addSemester(request));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseObject updateSemester(@RequestBody @Valid AdminSemesterRequest request, @PathVariable("id") String id) {
         return new ResponseObject(adminSemesterService.updateSemester(request, id));
     }

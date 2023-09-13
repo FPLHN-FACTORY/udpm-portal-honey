@@ -1,5 +1,6 @@
 package com.honeyprojects.core.admin.service;
 
+import com.honeyprojects.core.admin.model.request.AdminSearchSemesterRequest;
 import com.honeyprojects.core.admin.model.request.AdminSemesterRequest;
 import com.honeyprojects.core.admin.model.response.AdminSemesterResponse;
 import com.honeyprojects.core.common.base.PageableObject;
@@ -11,7 +12,7 @@ public interface AdminSemesterService {
 
     List<AdminSemesterResponse> getAllListSemester();
 
-    PageableObject<AdminSemesterResponse> getAllSemesterByAdmin(AdminSemesterRequest request);
+    PageableObject<AdminSemesterResponse> getAllSemesterByAdmin(AdminSearchSemesterRequest request);
 
     Semester getOne(String id);
 

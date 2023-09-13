@@ -1,5 +1,6 @@
 package com.honeyprojects.core.admin.service.impl;
 
+import com.honeyprojects.core.admin.model.request.AdminSearchSemesterRequest;
 import com.honeyprojects.core.admin.model.request.AdminSemesterRequest;
 import com.honeyprojects.core.admin.model.response.AdminSemesterResponse;
 import com.honeyprojects.core.admin.repository.AdSemesterRepository;
@@ -26,11 +27,12 @@ public class AdminSemesterServiceImpl implements AdminSemesterService {
     }
 
     @Override
-    public PageableObject<AdminSemesterResponse> getAllSemesterByAdmin(AdminSemesterRequest request) {
+    public PageableObject<AdminSemesterResponse> getAllSemesterByAdmin(AdminSearchSemesterRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<AdminSemesterResponse> res = adSemesterRepository.getAllSemesterByAdmin(pageable);
+        Page<AdminSemesterResponse> res = adSemesterRepository.getAllSemesterByAdmin(pageable, request);
         return new PageableObject<>(res);
     }
+
 
     @Override
     public Semester getOne(String id) {
