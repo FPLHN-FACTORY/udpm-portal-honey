@@ -185,14 +185,14 @@ public class DBGenerator implements CommandLineRunner {
         conversion1.setCode("CV1");
         conversion1.setRatio(Double.valueOf(100));
         conversion1.setStatus(Status.HOAT_DONG);
-        conversion1.setGift_id(gift1.getId());
+        conversion1.setGiftId(gift1.getId());
         conversion1.setId(conversionRepository.save(conversion1).getId());
 
         Conversion conversion2 = new Conversion();
         conversion2.setCode("CV2");
         conversion2.setRatio(Double.valueOf(200));
         conversion2.setStatus(Status.HOAT_DONG);
-        conversion2.setGift_id(gift2.getId());
+        conversion2.setGiftId(gift2.getId());
         conversion2.setId(conversionRepository.save(conversion2).getId());
 
         History history1 = new History();
