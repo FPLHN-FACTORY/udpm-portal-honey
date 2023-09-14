@@ -16,6 +16,8 @@ import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
 import RequestManager from "./pages/censor/requestmanager/RequestManager";
 import RequestManagerDetail from "./pages/censor/requestmanager/RequestManagerDetail";
 import Semester from "./pages/censor/semester";
+import ConversionHome from "./pages/censor/convertion/convertionHome";
+import IndexGift from "./pages/censor/gift/indexGift";
 
 function App() {
   return (
@@ -51,6 +53,26 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <Semester />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/conversion"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <ConversionHome />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/gift"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <IndexGift />
                   </DashboardCensor>
                 </AuthGuard>
               }

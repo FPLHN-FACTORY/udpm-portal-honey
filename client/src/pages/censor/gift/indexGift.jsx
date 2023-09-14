@@ -1,55 +1,29 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { Button, Pagination, Space, Table, Card, Input, Tooltip } from "antd";
-import {
-  PlusOutlined,
-  EditOutlined,
-  FormOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
-import { useEffect, useState } from "react";
-import { CategoryAPI } from "../../../apis/censor/category/category.api";
-import {
-  GetCategory,
-  SetCategory,
-} from "../../../app/reducers/category/category.reducer";
-import ModalThem from "./ModalAdd";
-import ModalDetail from "./ModalDetail";
-import "./index.css";
+import { Card, Input, Pagination, Space, Table, Tooltip } from "antd";
+import React, { useEffect, useState } from "react";
+import { Button } from "antd";
+import { GiftAPI } from "../../../apis/censor/gift/gift.api";
+import { EditOutlined, FormOutlined, PlusOutlined } from "@ant-design/icons";
+import ModalDetailGift from "./ModalDetailGift";
+import ModalThem from "../category/ModalAdd";
 
-export default function Index() {
+export default function IndexGift() {
   const [showModal, setShowModal] = useState(false);
-  const [detailCategory, setDetailCategory] = useState();
-  const dispatch = useAppDispatch();
+  const [listGift, setListGift] = useState([]);
+  const [detailGift, setDetailGift] = useState();
   const [current, setCurrent] = useState(1);
   const [search, setSearch] = useState("");
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    CategoryAPI.fetchAll().then((response) => {
-      console.log("====================================");
-      console.log(response);
-      console.log("====================================");
-      dispatch(SetCategory(response.data.data.data));
-      setTotal(response.data.data.totalPages);
-    });
-  }, [dispatch]);
-
-  useEffect(() => {
     fetchData();
-  }, [current]);
+  }, []);
 
   const fetchData = () => {
-    CategoryAPI.fetchAll({
-      search: search,
-      page: current - 1,
-    }).then((response) => {
-      dispatch(SetCategory(response.data.data.data));
-      setTotal(response.data.data.totalPages);
+    GiftAPI.fetchAllGift().then((response) => {
+      setListGift(response.data.data);
+      setTotal(response.data.totalPages);
     });
   };
-
-  const data = useAppSelector(GetCategory);
 
   const columns = [
     {
@@ -65,7 +39,7 @@ export default function Index() {
       render: (text) => <span>{text}</span>,
     },
     {
-      title: "Tên thể loại",
+      title: "Tên phần quà",
       dataIndex: "name",
       key: "name",
     },
@@ -74,20 +48,19 @@ export default function Index() {
       key: "action",
       render: (_, record) => (
         <Space size="small">
-          <Tooltip title="Cập nhập">
+          {/* <Tooltip title="Cập nhập">
             <Button
               className="update-button"
               onClick={() => {
-                setDetailCategory(record);
+                setDetailGift(record);
                 setShowModal(true);
                 console.log(record);
               }}
             >
               <EditOutlined className="icon" />
             </Button>
-          </Tooltip>
-
-          <ModalDetail category={record} icon={<FormOutlined />} />
+          </Tooltip> */}
+          <ModalDetailGift gift={record} icon={<FormOutlined />} />
         </Space>
       ),
     },
@@ -99,33 +72,32 @@ export default function Index() {
         <ModalThem
           modalOpen={showModal}
           setModalOpen={setShowModal}
-          category={detailCategory}
-          SetCategory={setDetailCategory}
+          gift={detailGift}
+          setGift={setDetailGift}
         />
       )}
-
       <Card className="mb-2">
-        <h1 className="text-xl">Tìm kiếm thể loại bài viết</h1>
         <form class="flex items-center">
           <div class="relative w-full mr-6">
             <Input
-              style={{ borderRadius: "30px" }}
+              style={{ borderRadius: "10px", width: "40%" }}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Tìm kiếm tên hoặc mã..."
             />
+            <button
+              type="button"
+              className="search-button1"
+              // icon={<SearchOutlined />}
+              // onClick={() => {
+              //   setCurrent(1);
+              //   fetchData();
+              // }}
+              style={{ borderRadius: "10px", marginLeft: "20px" }}
+            >
+              Tìm kiếm
+            </button>
           </div>
-          <button
-            type="button"
-            className="search-button1"
-            icon={<SearchOutlined />}
-            onClick={() => {
-              setCurrent(1);
-              fetchData();
-            }}
-          >
-            Tìm kiếm
-          </button>
         </form>
       </Card>
 
@@ -134,16 +106,16 @@ export default function Index() {
           <div className="flex flex-row-reverse">
             <div>
               <span>
-                <Tooltip title="Thêm thể loại">
+                <Tooltip title="Thêm quà">
                   <button
                     className="add-button1"
-                    onClick={() => {
-                      setShowModal(true);
-                      setDetailCategory(null);
-                    }}
+                    // onClick={() => {
+                    //   setShowModal(true);
+                    //   setDetailGift(null);
+                    // }}
                   >
                     <PlusOutlined className="mr-1" />
-                    Thêm thể loại
+                    Thêm quà
                   </button>
                 </Tooltip>
               </span>
@@ -154,7 +126,7 @@ export default function Index() {
         <div className="mt-5">
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={listGift}
             rowKey="id"
             pagination={false}
           />
