@@ -16,8 +16,8 @@ public class TeacherGetPointRequest {
     @Length(max = 36)
     String studentId;
 
-
     @NotBlank
     @Length(max = 36)
     String categoryId;
+
 }

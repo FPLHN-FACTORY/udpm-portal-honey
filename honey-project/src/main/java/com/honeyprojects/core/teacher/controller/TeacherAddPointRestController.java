@@ -33,7 +33,6 @@ public class TeacherAddPointRestController {
         return new ResponseObject(addPointService.getCategory());
     }
 
-
     @GetMapping("/get-honey")
     public ResponseObject getPointStudent(@Valid TeacherGetPointRequest getPointRequest) {
         return new ResponseObject(addPointService.getPointStudent(getPointRequest));

@@ -16,6 +16,7 @@ import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
 import RequestManager from "./pages/censor/requestmanager/RequestManager";
 import RequestManagerDetail from "./pages/censor/requestmanager/RequestManagerDetail";
 import Semester from "./pages/censor/semester";
+import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
 
 function App() {
   return (
@@ -91,6 +92,16 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardAuthUser></DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/teacher/convertion-honey"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <ConvertionHoney />
+                  </DashboardAuthUser>
                 </AuthGuard>
               }
             />

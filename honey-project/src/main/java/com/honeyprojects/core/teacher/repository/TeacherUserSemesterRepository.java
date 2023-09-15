@@ -12,4 +12,5 @@ public interface TeacherUserSemesterRepository extends UserSemesterRepository {
             "u.student_id = :idStudent and" +
             " :dateNow between s.from_date and s.to_date", nativeQuery = true)
     String getUsByStudent(String idStudent, Long dateNow);
+
 }
