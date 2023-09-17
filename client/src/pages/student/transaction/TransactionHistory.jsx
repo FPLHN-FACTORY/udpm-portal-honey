@@ -6,7 +6,6 @@ import {
   Pagination,
   Select,
   Space,
-  Spin,
   Table,
   Tag,
   message,
@@ -25,13 +24,15 @@ import {
 } from "../../../app/reducers/category/category.reducer";
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
+import { TransactionApi } from "../../../apis/student/transaction/transactionApi.api";
+import localization from "moment/locale/vi";
 
 const statusHistory = (status) => {
   switch (status) {
     case 0:
       return <Tag color="geekblue">Chờ phê duyệt</Tag>; // Màu xanh dương
     case 1:
-      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
+      return <Tag color="green">Hoàn thành</Tag>; // Màu xanh lá cây
     case 2:
       return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
     case 3:
@@ -41,7 +42,7 @@ const statusHistory = (status) => {
   }
 };
 
-export default function HistoryAddPoint() {
+export default function TransactionHistory() {
   const dispatch = useAppDispatch();
   const columns = [
     {
@@ -50,12 +51,12 @@ export default function HistoryAddPoint() {
       key: "stt",
     },
     {
-      title: "Mã SV",
+      title: "Mã người nhận",
       dataIndex: "mssv",
       key: "mssv",
     },
     {
-      title: "Tên sinh viên",
+      title: "Tên người nhận",
       dataIndex: "nameStudent",
       key: "nameStudent",
     },
@@ -70,9 +71,9 @@ export default function HistoryAddPoint() {
       key: "honeyPoint",
     },
     {
-      title: "Ngày tạo",
-      dataIndex: "createdDate",
-      key: "createdDate",
+      title: "Thời gian",
+      dataIndex: "changeDate",
+      key: "changeDate",
     },
     {
       title: "Trạng thái",
@@ -86,9 +87,11 @@ export default function HistoryAddPoint() {
       render: (values) => (
         <div style={{ textAlign: "center" }}>
           <Button
-            onClick={() =>
-              changeStatus(values.idHistory, values.status === 2 ? 3 : 2)
-            }
+            onClick={() => {
+              if (values.status !== 1) {
+                changeStatus(values.idHistory, values.status === 2 ? 3 : 2);
+              }
+            }}
             disabled={values.status === 1}
             type="primary"
             danger={values.status !== 2}
@@ -106,15 +109,12 @@ export default function HistoryAddPoint() {
   const [totalPage, setTotalPage] = useState(1);
   const [filter, setFilter] = useState({ page: 0 });
 
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     fetchData(dispatch, filter);
   }, [dispatch, filter]);
 
   const fetchData = (dispatch, filter) => {
-    setLoading(true);
-    AddPointAPI.getCategory()
+    TransactionApi.getCategory()
       .then((response) => {
         dispatch(SetCategory(response.data.data));
       })
@@ -124,7 +124,7 @@ export default function HistoryAddPoint() {
       .finally(() => {
         const fetchData = async (filter) => {
           try {
-            const response = await AddPointAPI.getHistory(filter);
+            const response = await TransactionApi.getHistory(filter);
             const listHistory = await Promise.all(
               response.data.data.map(async (data) => {
                 try {
@@ -148,7 +148,6 @@ export default function HistoryAddPoint() {
         };
         fetchData(filter);
       });
-    setLoading(false);
   };
 
   const data = useAppSelector(GetHistory).map((data) => {
@@ -156,14 +155,16 @@ export default function HistoryAddPoint() {
       ...data,
       key: data.id,
       status: statusHistory(data.status),
-      createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
+      changeDate:
+        data.changeDate === null
+          ? "Cần xác nhận"
+          : moment(data.changeDate).format("HH:mm dddd DD-MM-YYYY"),
       acction: { idHistory: data.id, status: data.status },
     };
   });
   const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
-    setLoading(true);
     if (value.code === undefined || value.code.trim().length === 0) {
       setFilter({
         ...filter,
@@ -187,12 +188,10 @@ export default function HistoryAddPoint() {
         })
         .catch((error) => console.error(error));
     }
-    setLoading(false);
   };
 
   const changeStatus = (idHistory, status) => {
-    setLoading(true);
-    AddPointAPI.changeStatus(idHistory, status)
+    TransactionApi.changeStatus(idHistory, status)
       .then((response) => {
         if (response.data.success) {
           fetchData(dispatch, filter);
@@ -200,94 +199,90 @@ export default function HistoryAddPoint() {
           if (status === 3) message.success("Gửi lại yêu cầu thành công!");
         }
       })
-      .catch((error) => console.error(error))
-      .finally(() => {
-        setLoading(false);
-      });
+      .catch((error) => console.error(error));
   };
 
   return (
-    <Spin spinning={loading}>
-      <div className="add-point">
-        <Card className="mb-2 py-1">
-          <Form onFinish={onFinishSearch}>
-            <Space size={"large"}>
-              <Form.Item name="code" className="search-input">
-                <Input
-                  style={{ width: "300px" }}
-                  size="small"
-                  placeholder="Nhập mã sinh viên cần tìm"
-                  prefix={<SearchOutlined />}
-                />
-              </Form.Item>
-              <Form.Item name={"idCategory"}>
-                <Select
-                  style={{ width: "150px" }}
-                  size="large"
-                  placeholder="Loại điểm"
-                  options={[
-                    { value: null, label: "Tất cả" },
-                    ...listCategory.map((category) => {
-                      return {
-                        value: category.id,
-                        label: category.name,
-                      };
-                    }),
-                  ]}
-                />
-              </Form.Item>
-              <Form.Item name={"status"}>
-                <Select
-                  style={{ width: "150px" }}
-                  size="large"
-                  placeholder="Trạng thái"
-                  options={[
-                    { value: null, label: "Tất cả" },
-                    ...[0, 1, 2, 3].map((value) => {
-                      return {
-                        value: value,
-                        label: statusHistory(value),
-                      };
-                    }),
-                  ]}
-                />
-              </Form.Item>
-              <Button
-                htmlType="submit"
-                type="primary"
-                className="mr-10 search-button">
-                Lọc
-              </Button>
-            </Space>
-          </Form>
-        </Card>
-        <Card title="Lịch sử cộng điểm">
-          <Table
-            columns={columns}
-            dataSource={data}
-            rowKey="key"
-            pagination={false}
-            expandable={{
-              expandedRowRender: (record) => (
-                <p>
-                  <b style={{ color: "#EEB30D" }}>Lý do cộng: </b>
-                  {record.note}
-                </p>
-              ),
+    <div className="add-point">
+      <Card className="mb-2 py-1">
+        <Form onFinish={onFinishSearch}>
+          <Space size={"large"}>
+            <Form.Item name="code" className="search-input">
+              <Input
+                style={{ width: "300px" }}
+                size="small"
+                placeholder="Nhập mã sinh viên cần tìm"
+                prefix={<SearchOutlined />}
+              />
+            </Form.Item>
+            <Form.Item name={"idCategory"}>
+              <Select
+                style={{ width: "170px" }}
+                size="large"
+                placeholder="Loại điểm"
+                options={[
+                  { value: null, label: "Tất cả" },
+                  ...listCategory.map((category) => {
+                    return {
+                      value: category.id,
+                      label: category.name,
+                    };
+                  }),
+                ]}
+              />
+            </Form.Item>
+            <Form.Item name={"status"}>
+              <Select
+                style={{ width: "170px" }}
+                size="large"
+                placeholder="Trạng thái"
+                options={[
+                  { value: null, label: "Tất cả" },
+                  ...[0, 1, 2, 3].map((value) => {
+                    return {
+                      value: value,
+                      label: statusHistory(value),
+                    };
+                  }),
+                ]}
+              />
+            </Form.Item>
+
+            <Button
+              htmlType="submit"
+              type="primary"
+              className="mr-10 search-button">
+              Lọc
+            </Button>
+          </Space>
+        </Form>
+      </Card>
+      <Card title="Lịch sử giao dịch">
+        <Table
+          columns={columns}
+          dataSource={data}
+          rowKey="key"
+          pagination={false}
+          expandable={{
+            expandedRowRender: (record) => (
+              <p>
+                <b style={{ color: "#EEB30D" }}>Nội dung: </b>
+                {record.note}
+              </p>
+            ),
+          }}
+        />
+        <div className="mt-10 text-center mb-10">
+          <Pagination
+            simple
+            current={filter.page + 1}
+            onChange={(page) => {
+              setFilter({ ...filter, page: page - 1 });
             }}
+            total={totalPage * 10}
           />
-          <div className="mt-10 text-center mb-10">
-            <Pagination
-              simple
-              current={filter.page + 1}
-              onChange={(page) => {
-                setFilter({ ...filter, page: page - 1 });
-              }}
-              total={totalPage * 10}
-            />
-          </div>
-        </Card>
-      </div>
-    </Spin>
+        </div>
+      </Card>
+    </div>
   );
 }

@@ -6,6 +6,7 @@ import {
   Pagination,
   Select,
   Space,
+  Spin,
   Table,
   Tag,
   message,
@@ -32,6 +33,7 @@ import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import { type } from "@testing-library/user-event/dist/type";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -49,6 +51,7 @@ const statusHistory = (status) => {
 };
 
 export default function RequestAddPoint() {
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const columns = [
     {
@@ -114,12 +117,14 @@ export default function RequestAddPoint() {
 
   const [totalPage, setTotalPage] = useState(1);
   const [filter, setFilter] = useState({ page: 0, status: 0 });
+  const [type, setType] = useState();
 
   useEffect(() => {
     fetchData(dispatch, filter);
   }, [dispatch, filter]);
 
   const fetchData = (dispatch, filter) => {
+    setLoading(true);
     CategoryAPI.fetchAllCategory()
       .then((response) => {
         dispatch(SetCategory(response.data.data));
@@ -156,6 +161,7 @@ export default function RequestAddPoint() {
         };
         fetchData(filter);
       });
+    setLoading(false);
   };
 
   const data = useAppSelector(GetHistory).map((data) => {
@@ -170,6 +176,7 @@ export default function RequestAddPoint() {
   const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
+    setLoading(true);
     if (value.code === undefined || value.code.trim().length === 0) {
       setFilter({
         ...filter,
@@ -193,106 +200,113 @@ export default function RequestAddPoint() {
         })
         .catch((error) => console.error(error));
     }
+    setLoading(false);
   };
 
   const changeStatus = (idHistory, status) => {
+    setLoading(true);
     RequestManagerAPI.changeStatus(idHistory, status)
       .then((response) => {
+        console.log(response.data);
         if (response.data.success) {
           fetchData(dispatch, filter);
           if (status === 1) message.success("Đã xác nhận yêu cầu cộng điểm!");
           if (status === 2) message.error("Hủy yêu cầu thành công!");
+          setType(response.data.data.type);
         }
       })
       .catch((error) => {
         message.error(error);
       })
-      .finally(() => {});
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
-    <div className="request-manager">
-      <TabsRequest selectIndex={1} />
-      <Card className="mb-2 py-1">
-        <Form onFinish={onFinishSearch}>
-          <Space size={"large"}>
-            <Form.Item name="code" className="search-input">
-              <Input
-                style={{ width: "300px" }}
-                name="code"
-                size="small"
-                placeholder="Nhập mã sinh viên cần tìm"
-                prefix={<SearchOutlined />}
-              />
-            </Form.Item>
-            <Form.Item name={"idCategory"}>
-              <Select
-                style={{ width: "150px" }}
-                size="large"
-                placeholder="Loại điểm"
-                options={[
-                  { value: null, label: "Tất cả" },
-                  ...listCategory.map((category) => {
-                    return {
-                      value: category.id,
-                      label: category.name,
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
-            <Form.Item name={"status"}>
-              <Select
-                style={{ width: "150px" }}
-                size="large"
-                placeholder="Trạng thái"
-                defaultValue={0}
-                options={[
-                  { value: null, label: "Tất cả" },
-                  ...[0, 1, 2, 3].map((value) => {
-                    return {
-                      value: value,
-                      label: statusHistory(value),
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
-            <Button
-              htmlType="submit"
-              type="primary"
-              className="mr-10 search-button">
-              Lọc
-            </Button>
-          </Space>
-        </Form>
-      </Card>
-      <Card title="Yêu cầu cộng điểm">
-        <Table
-          columns={columns}
-          dataSource={data}
-          rowKey="key"
-          pagination={false}
-          expandable={{
-            expandedRowRender: (record) => (
-              <p>
-                <b style={{ color: "#EEB30D" }}>Lý do cộng: </b>
-                {record.note}
-              </p>
-            ),
-          }}
-        />
-        <div className="mt-10 text-center mb-10">
-          <Pagination
-            simple
-            current={filter.page + 1}
-            onChange={(page) => {
-              setFilter({ ...filter, page: page - 1 });
+    <Spin spinning={loading}>
+      <div className="request-manager">
+        <TabsRequest selectIndex={1} type={type} />
+        <Card className="mb-2 py-1">
+          <Form onFinish={onFinishSearch}>
+            <Space size={"large"}>
+              <Form.Item name="code" className="search-input">
+                <Input
+                  style={{ width: "300px" }}
+                  name="code"
+                  size="small"
+                  placeholder="Nhập mã sinh viên cần tìm"
+                  prefix={<SearchOutlined />}
+                />
+              </Form.Item>
+              <Form.Item name={"idCategory"}>
+                <Select
+                  style={{ width: "150px" }}
+                  size="large"
+                  placeholder="Loại điểm"
+                  options={[
+                    { value: null, label: "Tất cả" },
+                    ...listCategory.map((category) => {
+                      return {
+                        value: category.id,
+                        label: category.name,
+                      };
+                    }),
+                  ]}
+                />
+              </Form.Item>
+              <Form.Item name={"status"} initialValue={0}>
+                <Select
+                  style={{ width: "150px" }}
+                  size="large"
+                  placeholder="Trạng thái"
+                  options={[
+                    { value: null, label: "Tất cả" },
+                    ...[0, 1, 2, 3].map((value) => {
+                      return {
+                        value: value,
+                        label: statusHistory(value),
+                      };
+                    }),
+                  ]}
+                />
+              </Form.Item>
+              <Button
+                htmlType="submit"
+                type="primary"
+                className="mr-10 search-button">
+                Lọc
+              </Button>
+            </Space>
+          </Form>
+        </Card>
+        <Card title="Yêu cầu cộng điểm">
+          <Table
+            columns={columns}
+            dataSource={data}
+            rowKey="key"
+            pagination={false}
+            expandable={{
+              expandedRowRender: (record) => (
+                <p>
+                  <b style={{ color: "#EEB30D" }}>Lý do cộng: </b>
+                  {record.note}
+                </p>
+              ),
             }}
-            total={totalPage * 10}
           />
-        </div>
-      </Card>
-    </div>
+          <div className="mt-10 text-center mb-10">
+            <Pagination
+              simple
+              current={filter.page + 1}
+              onChange={(page) => {
+                setFilter({ ...filter, page: page - 1 });
+              }}
+              total={totalPage * 10}
+            />
+          </div>
+        </Card>
+      </div>
+    </Spin>
   );
 }

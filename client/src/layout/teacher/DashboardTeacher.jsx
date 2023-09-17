@@ -9,23 +9,20 @@
   =========================================================
   * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-import logo from "../../../src/assets/images/logo/logo-udpm-3.png";
+import logo from "../../assets/images/logo/logo-udpm-3.png";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Layout, Drawer, Row, Menu, Col } from "antd";
-import Header from "../../components/teacher/Header";
-import Footer from "../../components/teacher/Footer";
-import Draw from "../../components/teacher/Draw";
+import Header from "../../components/user/auth/Header";
 import {
-  EditOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-
+  PlusCircleFilled,
 } from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
 const { Header: AntHeader, Content } = Layout;
 
-function DashboardAuthUser({ children }) {
+function DashboardTeacher({ children }) {
   const [visible, setVisible] = useState(false);
   const openDrawer = () => setVisible(!visible);
   const [count, setCount] = useState(250);
@@ -49,11 +46,13 @@ function DashboardAuthUser({ children }) {
     };
   }
   const items = [
-    getItem(
-      <Link to="/user/create-article">Nothing</Link>,
-      "1",
-      <EditOutlined />
-    ),
+    getItem("Cộng mật ong", "0", <PlusCircleFilled />, [
+      getItem(<Link to={"/teacher/add-point"}>Tạo yêu cầu</Link>, "1"),
+      getItem(
+        <Link to={"/teacher/add-point/history"}>Lịch sử yêu cầu</Link>,
+        "2"
+      ),
+    ]),
   ];
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
@@ -63,9 +62,9 @@ function DashboardAuthUser({ children }) {
     <Layout
       className={`layout-dashboard ${
         pathname === "profile" ? "layout-profile" : ""
-      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
-    >
+      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}>
       <Drawer
+        id="drawer_ui"
         title={false}
         placement={"left"}
         closable={false}
@@ -73,55 +72,72 @@ function DashboardAuthUser({ children }) {
         open={visible}
         key={"left"}
         width={250}
+        style={{ background: "#fff", overflowX: "hidden" }}
         className={`drawer-sidebar ${
           pathname === "rtl" ? "drawer-sidebar-rtl" : ""
-        } `}
-      >
+        } `}>
         <Layout
-          className={`layout-dashboard ${
+          id="layout_drawer"
+          style={{ background: "#fff", overflowX: "hidden" }}
+          className={` bg-white layout-dashboard ${
             pathname === "rtl" ? "layout-dashboard-rtl" : ""
-          }`}
-        >
-          <Draw />
-        </Layout>
-      </Drawer>
-      <Sider
-        trigger={null}
-        collapsible
-        collapsed={collapsed}
-        className={`sider-primary ant-layout-sider-primary`}
-        style={{ background: "transparent", overflowX: "hidden" }}
-      >
-        <Row className="flex justify-between pb-8">
-          {!collapsed && (
+          }`}>
+          <Row className="flex justify-center align-middle  mt-5 pb-8">
             <div className="brand text-center">
               <Link to="/" className="active">
                 <img
                   src={logo}
                   style={{
-                    width: "140px",
                     height: "80px",
-                    marginLeft: "17px",
-                    marginTop: "-20px",
                   }}
                   alt="Logo"
                 />
               </Link>
             </div>
-          )}
-        </Row>
+          </Row>
+          <Menu mode="inline" items={items} onClick={openDrawer} />
+        </Layout>
+      </Drawer>
+      <div className="bg-white">
+        <Sider
+          id="sildebar_ui"
+          trigger={null}
+          collapsible
+          collapsed={collapsed}
+          width={250}
+          className={`sider-primary ant-layout-sider-primary`}
+          style={{ background: "#fff", overflowX: "hidden" }}>
+          <Row className="flex justify-center align-middle  mt-5 pb-8">
+            {!collapsed && (
+              <div className="brand text-center">
+                <Link to="/" className="active">
+                  <img
+                    src={logo}
+                    style={{
+                      height: "80px",
+                    }}
+                    alt="Logo"
+                  />
+                </Link>
+              </div>
+            )}
+          </Row>
 
-        <Menu mode="inline" items={items} />
-      </Sider>
-      <Layout>
+          <Menu mode="inline" items={items} />
+        </Sider>
+      </div>
+      <Layout className="pb-14">
         <AntHeader className={`${fixed ? "ant-header-fixed" : ""}`}>
           <Row className="flex justify-between">
-            <Col xs={1}>
-              <button className="buttonSlider" onClick={toggleCollapse}>
+            <Col span={2} className="flex justify-between items-center">
+              <button className="buttonSlider desktop" onClick={toggleCollapse}>
+                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              </button>
+              <button className="buttonSlider mobile" onClick={openDrawer}>
                 {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               </button>
             </Col>
-            <Col xs={23}>
+            <Col span={22}>
               <Header
                 onPress={openDrawer}
                 onSlidebar={onSlidebar}
@@ -133,9 +149,8 @@ function DashboardAuthUser({ children }) {
           </Row>
         </AntHeader>
         <Content className="content-ant">{children}</Content>
-        <Footer />
       </Layout>
     </Layout>
   );
 }
-export default DashboardAuthUser;
+export default DashboardTeacher;
