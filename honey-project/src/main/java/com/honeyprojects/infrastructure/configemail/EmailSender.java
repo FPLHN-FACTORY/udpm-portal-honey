@@ -37,12 +37,12 @@ public class EmailSender {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.toString());
-//            ClassPathResource resource = new ClassPathResource(MailConstant.LOGO_PATH);
+            ClassPathResource resource = new ClassPathResource(MailConstant.LOGO_PATH);
             mimeMessageHelper.setFrom(sender);
             mimeMessageHelper.setBcc(recipients);
             mimeMessageHelper.setText(msgBody, true);
             mimeMessageHelper.setSubject(subject);
-//            mimeMessageHelper.addInline("logoImage", resource);
+            mimeMessageHelper.addInline("logoImage", resource);
             javaMailSender.send(mimeMessage);
         } catch (Exception e) {
             log.error("ERROR WHILE SENDING MAIL: {}", e.getMessage());
