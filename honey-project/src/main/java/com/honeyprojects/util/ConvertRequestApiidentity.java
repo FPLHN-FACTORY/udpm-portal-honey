@@ -88,4 +88,20 @@ public class ConvertRequestApiidentity {
         SimpleResponse response = responseEntity.getBody();
         return response;
     }
+
+//    public SimpleResponse handleCallApiGetUserByEmail(String email) {
+//        String apiUrl = ApiConstants.API_GET_USER_BY_ID;
+//        HttpHeaders headers = new HttpHeaders();
+//        String authorizationToken = "Bearer " + honeySession.getToken();
+//        headers.set("Authorization", authorizationToken);
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+//        ResponseEntity<SimpleResponse> responseEntity =
+//                restTemplate.exchange(apiUrl + "/" + idUSer, HttpMethod.GET, httpEntity,
+//                        new ParameterizedTypeReference<SimpleResponse>() {
+//                        });
+//
+//        SimpleResponse response = responseEntity.getBody();
+//        return response;
+//    }
 }

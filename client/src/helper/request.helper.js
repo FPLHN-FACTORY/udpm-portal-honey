@@ -21,7 +21,7 @@ export const request = axios.create({
 
 request.interceptors.request.use((config) => {
   const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFkNTY2MDkyLWIyZGQtNDljNi1iMWMxLTA4ZGJiNzQzZGQ3ZCIsIm5hbWUiOiJQaMO5bmcgVmnhu4d0IEjDuW5nIFAgSCAyIDUgOSAyIDkiLCJlbWFpbCI6Imh1bmdwdnBoMjU5MjlAZnB0LmVkdS52biIsInVzZXJOYW1lIjoiaHVuZ3B2cGgyNTkyOSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NJMjM0RjZsOUREQUM3UUFQTnpsSE9Ob0hRQzVJTWhQSlRNZjk2VHdINVFTQT1zOTYtYyIsImlkVHJhaW5pbmdGYWNpbGl0eSI6Ijc5NmE0ZmE0LThhYWItNDJjNC05ZjM1LTg3MGJiMDAwNWFmMSIsImxvY2FsSG9zdCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODg4OCIsInJvbGUiOiJBRE1JTiIsInJvbGVOYW1lcyI6IlF14bqjbiB0cuG7iyB2acOqbiIsIm5iZiI6MTY5NTAyMDEyMSwiZXhwIjoxNjk3NjEyMTIxLCJpYXQiOjE2OTUwMjAxMjEsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjQ5MDUzIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDkwNTMifQ.ODk7g4y006BZjE8G5MY2HTooXyldi948YeyAKJgwC7A";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM0Y2YyMWY0LWYzZTAtNDkwZS1iMWNjLTA4ZGJiNzQzZGQ3ZCIsIm5hbWUiOiJUcmlldSBWYW4gVHVvbmcgUEggMiA2IDEgNCA5IiwiZW1haWwiOiJ0dW9uZ3R2cGgyNjE0OUBmcHQuZWR1LnZuIiwidXNlck5hbWUiOiJ0dW9uZ3R2cGgyNjE0OSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NMU0hTd1cxb3B2ZVRzTjI4RGdHS0pLSWNYekpsY3hJd090c0VfbGZsZjk4SXc9czk2LWMiLCJpZFRyYWluaW5nRmFjaWxpdHkiOiI3OTZhNGZhNC04YWFiLTQyYzQtOWYzNS04NzBiYjAwMDVhZjEiLCJsb2NhbEhvc3QiOiJodHRwOi8vbG9jYWxob3N0Ojg4ODgiLCJyb2xlIjoiQURNSU4iLCJyb2xlTmFtZXMiOiJRdeG6o24gdHLhu4sgdmnDqm4iLCJuYmYiOjE2OTUwMzA5NjksImV4cCI6MTc2ODY0Mzc2OSwiaWF0IjoxNjk1MDMwOTY5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0OTA1MyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjQ5MDUzIn0.Zxmp3Ax5QVp2PK3b5BNfhcgs7c9bbWCYGF6R0QExd5s";
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -31,15 +31,16 @@ request.interceptors.request.use((config) => {
 request.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.log(error);
     if (
       error.response &&
       (error.response.status === 401 || error.response.status === 403)
     ) {
       window.location.href = "/not-authorization";
     }
-    if (error.response && error.response.status === 404) {
-      window.location.href = "/not-found";
-    }
+    // if (error.response && error.response.status === 404) {
+    //   window.location.href = "/not-found";
+    // }
     throw error;
   }
 );

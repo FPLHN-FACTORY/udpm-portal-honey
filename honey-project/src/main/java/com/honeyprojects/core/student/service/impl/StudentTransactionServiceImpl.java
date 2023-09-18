@@ -1,8 +1,8 @@
 package com.honeyprojects.core.student.service.impl;
 
-import com.honeyprojects.core.admin.model.response.CensorUserApiResponse;
 import com.honeyprojects.core.admin.repository.CensorUserAPIRepository;
 import com.honeyprojects.core.common.base.PageableObject;
+import com.honeyprojects.core.common.base.UdomHoney;
 import com.honeyprojects.core.student.model.request.StudentChangeStatusHistoryRequest;
 import com.honeyprojects.core.student.model.request.StudentSearchHistoryRequest;
 import com.honeyprojects.core.student.model.request.StudentTransactionRequest;
@@ -53,10 +53,6 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
     @Autowired
     private CensorUserAPIRepository userRepository;
 
-    private CensorUserApiResponse fakeUserLogin() {
-        return userRepository.getUserApiByCode("te1", Calendar.getInstance().getTimeInMillis());
-    }
-
     @Autowired
     private StudentCategoryRepository categoryRepository;
     @Autowired
@@ -68,19 +64,22 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
     @Autowired
     private EmailSender emailSender;
 
+    @Autowired
+    private UdomHoney udomHoney;
+
 
     @Override
     public List<StudentCategoryResponse> getCategory(String recipientId) {
-        if (Objects.equals(recipientId, fakeUserLogin().getId())) {
+        if (Objects.equals(recipientId, udomHoney.getIdUser())) {
             throw new RestApiException(Message.MA_NGUOI_NHAN_KHONG_HOP_LE);
         }
-        return categoryRepository.getCategoryByIdUser(fakeUserLogin().getId());
+        return categoryRepository.getCategoryByIdUser(udomHoney.getIdUser());
     }
 
     @Override
     public StudentHoneyResponse getHoney(String categoryId) {
         Long dateNow = Calendar.getInstance().getTimeInMillis();
-        return honeyRepository.getPoint(categoryId, fakeUserLogin().getId(), dateNow);
+        return honeyRepository.getPoint(categoryId, udomHoney.getIdUser(), dateNow);
     }
 
     @Override
@@ -97,15 +96,15 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
             PublicKey keyPublic = RSAEncryption.getPublicKeyFromString(publicKey);
             String encryptedCode = RSAEncryption.encrypt(codeVerify, keyPublic);
             Verification verification = vericationRepository
-                    .findByStudentId(fakeUserLogin().getId()).orElse(new Verification());
+                    .findByStudentId(udomHoney.getIdUser()).orElse(new Verification());
             verification.setCode(encryptedCode);
-            verification.setStudentId(fakeUserLogin().getId());
+            verification.setStudentId(udomHoney.getIdUser());
             verification.setExpiryTime(dateVerify);
             vericationRepository.save(verification);
         } catch (Exception e) {
             return null;
         }
-        String[] toMail = {fakeUserLogin().getEmail()};
+        String[] toMail = {udomHoney.getEmail()};
         Runnable emailTask = () -> emailSender.sendEmail(toMail, "Xác nhận giao dịch",
                 "Mã xác nhận của bạn là",
                 "<h1 style='text-align: center'>" + codeVerify + "</h1>");
@@ -113,7 +112,7 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         executorService.execute(emailTask);
         executorService.shutdown();
-        return fakeUserLogin().getEmail();
+        return udomHoney.getEmail();
     }
 
     @Override
@@ -122,7 +121,7 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
         try {
             PrivateKey keyPrivate = RSAEncryption.getPrivateKeyFromString(privateKey);
             Verification verification = vericationRepository
-                    .findByStudentId(fakeUserLogin().getId())
+                    .findByStudentId(udomHoney.getIdUser())
                     .orElseThrow(() -> new RestApiException(Message.VERIFICATION_NOT_EXIST));
             String codeDeCrypt = RSAEncryption.decrypt(verification.getCode(), keyPrivate);
             return codeDeCrypt.equals(code) && now <= verification.getExpiryTime();
@@ -197,7 +196,8 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
     @Override
     public PageableObject<StudentHistoryResponse> getHistory(StudentSearchHistoryRequest historyRequest) {
         Pageable pageable = PageRequest.of(historyRequest.getPage(), historyRequest.getSize());
-        historyRequest.setIdUserLogin(fakeUserLogin().getId());
+        historyRequest.setIdUserLogin(udomHoney.getIdUser());
+        System.out.println(udomHoney.getIdUser() + " aaaaaaaaaaaaa");
         return new PageableObject<>(historyRepository.getHistory(historyRequest, pageable));
     }
 }
