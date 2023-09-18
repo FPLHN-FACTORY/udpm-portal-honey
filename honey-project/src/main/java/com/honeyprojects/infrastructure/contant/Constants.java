@@ -27,5 +27,6 @@ public class Constants {
         public static final String GIFT_HISTORY = "GIFT";
         public static final String APPROVED_HISTORY = "APPROVED";
     }
+    public static String TOKEN = "token";
 
 }
