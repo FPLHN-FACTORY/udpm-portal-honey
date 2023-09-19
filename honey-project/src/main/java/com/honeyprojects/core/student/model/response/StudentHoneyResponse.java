@@ -7,5 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 public interface StudentHoneyResponse extends IsIdentified {
 
     @Value("#{target.honey_point}")
+
+    Integer getPoint();
+
     Integer getHoney();
+
 }

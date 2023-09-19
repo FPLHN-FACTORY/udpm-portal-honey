@@ -6,7 +6,6 @@ import {
   Pagination,
   Select,
   Space,
-  Spin,
   Table,
   Tag,
   message,
@@ -95,7 +94,8 @@ export default function HistoryAddPoint() {
             style={{
               color: values.status === 1 ? "" : "#fff",
               height: "30px",
-            }}>
+            }}
+          >
             {values.status === 2 ? "Gửi lại" : "Hủy"}
           </Button>
         </div>
@@ -106,14 +106,11 @@ export default function HistoryAddPoint() {
   const [totalPage, setTotalPage] = useState(1);
   const [filter, setFilter] = useState({ page: 0 });
 
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     fetchData(dispatch, filter);
   }, [dispatch, filter]);
 
   const fetchData = (dispatch, filter) => {
-    setLoading(true);
     AddPointAPI.getCategory()
       .then((response) => {
         dispatch(SetCategory(response.data.data));
@@ -148,7 +145,6 @@ export default function HistoryAddPoint() {
         };
         fetchData(filter);
       });
-    setLoading(false);
   };
 
   const data = useAppSelector(GetHistory).map((data) => {
@@ -163,7 +159,6 @@ export default function HistoryAddPoint() {
   const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
-    setLoading(true);
     if (value.code === undefined || value.code.trim().length === 0) {
       setFilter({
         ...filter,
@@ -187,11 +182,9 @@ export default function HistoryAddPoint() {
         })
         .catch((error) => console.error(error));
     }
-    setLoading(false);
   };
 
   const changeStatus = (idHistory, status) => {
-    setLoading(true);
     AddPointAPI.changeStatus(idHistory, status)
       .then((response) => {
         if (response.data.success) {
@@ -200,94 +193,90 @@ export default function HistoryAddPoint() {
           if (status === 3) message.success("Gửi lại yêu cầu thành công!");
         }
       })
-      .catch((error) => console.error(error))
-      .finally(() => {
-        setLoading(false);
-      });
+      .catch((error) => console.error(error));
   };
 
   return (
-    <Spin spinning={loading}>
-      <div className="add-point">
-        <Card className="mb-2 py-1">
-          <Form onFinish={onFinishSearch}>
-            <Space size={"large"}>
-              <Form.Item name="code" className="search-input">
-                <Input
-                  style={{ width: "300px" }}
-                  size="small"
-                  placeholder="Nhập mã sinh viên cần tìm"
-                  prefix={<SearchOutlined />}
-                />
-              </Form.Item>
-              <Form.Item name={"idCategory"}>
-                <Select
-                  style={{ width: "150px" }}
-                  size="large"
-                  placeholder="Loại điểm"
-                  options={[
-                    { value: null, label: "Tất cả" },
-                    ...listCategory.map((category) => {
-                      return {
-                        value: category.id,
-                        label: category.name,
-                      };
-                    }),
-                  ]}
-                />
-              </Form.Item>
-              <Form.Item name={"status"}>
-                <Select
-                  style={{ width: "150px" }}
-                  size="large"
-                  placeholder="Trạng thái"
-                  options={[
-                    { value: null, label: "Tất cả" },
-                    ...[0, 1, 2, 3].map((value) => {
-                      return {
-                        value: value,
-                        label: statusHistory(value),
-                      };
-                    }),
-                  ]}
-                />
-              </Form.Item>
-              <Button
-                htmlType="submit"
-                type="primary"
-                className="mr-10 search-button">
-                Lọc
-              </Button>
-            </Space>
-          </Form>
-        </Card>
-        <Card title="Lịch sử cộng điểm">
-          <Table
-            columns={columns}
-            dataSource={data}
-            rowKey="key"
-            pagination={false}
-            expandable={{
-              expandedRowRender: (record) => (
-                <p>
-                  <b style={{ color: "#EEB30D" }}>Lý do cộng: </b>
-                  {record.note}
-                </p>
-              ),
+    <div className="add-point">
+      <Card className="mb-2 py-1">
+        <Form onFinish={onFinishSearch}>
+          <Space size={"large"}>
+            <Form.Item name="code" className="search-input">
+              <Input
+                style={{ width: "300px" }}
+                size="small"
+                placeholder="Nhập mã sinh viên cần tìm"
+                prefix={<SearchOutlined />}
+              />
+            </Form.Item>
+            <Form.Item name={"idCategory"}>
+              <Select
+                style={{ width: "150px" }}
+                size="large"
+                placeholder="Loại điểm"
+                options={[
+                  { value: null, label: "Tất cả" },
+                  ...listCategory.map((category) => {
+                    return {
+                      value: category.id,
+                      label: category.name,
+                    };
+                  }),
+                ]}
+              />
+            </Form.Item>
+            <Form.Item name={"status"}>
+              <Select
+                style={{ width: "150px" }}
+                size="large"
+                placeholder="Trạng thái"
+                options={[
+                  { value: null, label: "Tất cả" },
+                  ...[0, 1, 2, 3].map((value) => {
+                    return {
+                      value: value,
+                      label: statusHistory(value),
+                    };
+                  }),
+                ]}
+              />
+            </Form.Item>
+            <Button
+              htmlType="submit"
+              type="primary"
+              className="mr-10 search-button"
+            >
+              Lọc
+            </Button>
+          </Space>
+        </Form>
+      </Card>
+      <Card title="Lịch sử cộng điểm">
+        <Table
+          columns={columns}
+          dataSource={data}
+          rowKey="key"
+          pagination={false}
+          expandable={{
+            expandedRowRender: (record) => (
+              <p>
+                <b style={{ color: "#EEB30D" }}>Lý do cộng: </b>
+                {record.note}
+              </p>
+            ),
+          }}
+        />
+        <div className="mt-10 text-center mb-10">
+          <Pagination
+            simple
+            current={filter.page + 1}
+            onChange={(page) => {
+              setFilter({ ...filter, page: page - 1 });
             }}
+            total={totalPage * 10}
           />
-          <div className="mt-10 text-center mb-10">
-            <Pagination
-              simple
-              current={filter.page + 1}
-              onChange={(page) => {
-                setFilter({ ...filter, page: page - 1 });
-              }}
-              total={totalPage * 10}
-            />
-          </div>
-        </Card>
-      </div>
-    </Spin>
+        </div>
+      </Card>
+    </div>
   );
 }
