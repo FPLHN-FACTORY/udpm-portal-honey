@@ -30,6 +30,6 @@ public interface CensorDetailRequestResponse extends IsIdentified {
     @Value("#{target.student_id}")
     String getStudentId();
 
-    @Value("#{target.teacher_id}")
-    String getTeacherId();
+    @Value("#{target.nguoiGui}")
+    String getNguoiGui();
 }

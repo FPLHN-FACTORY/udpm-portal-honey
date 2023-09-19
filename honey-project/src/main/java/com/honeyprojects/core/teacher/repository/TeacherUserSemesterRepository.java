@@ -1,6 +1,5 @@
 package com.honeyprojects.core.teacher.repository;
 
-import com.honeyprojects.entity.base.IsIdentified;
 import com.honeyprojects.repository.UserSemesterRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

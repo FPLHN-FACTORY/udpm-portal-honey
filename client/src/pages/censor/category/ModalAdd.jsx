@@ -16,7 +16,7 @@ const ModalThem = (props) => {
   const [form] = Form.useForm();
 
   form.setFieldsValue(category);
-  
+
   const dispatch = useAppDispatch();
   form.setFieldsValue(category);
   const onFinish = () => {
@@ -24,6 +24,7 @@ const ModalThem = (props) => {
       .validateFields()
       .then((formValues) => {
         if (category === null) {
+          console.log(formValues);
           CategoryAPI.create(formValues)
             .then((result) => {
               dispatch(AddCategory(result.data.data));

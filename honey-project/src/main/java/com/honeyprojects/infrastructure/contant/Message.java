@@ -8,10 +8,13 @@ public enum Message {
 
 
 // viết các lỗi ở đây
+    MA_NGUOI_NHAN_KHONG_HOP_LE("Người giao dịch không hợp lệ"),
 
+    HONEY_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.HONEY_NOT_EXIST)),
 
+    VERIFICATION_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.VERIFICATION_NOT_EXIST)),
+    HISTORY_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.VERIFICATION_NOT_EXIST)),
     CATEGORY_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.CATEGORY_NOT_EXIST));
-
     private String message;
 
     Message(String message) {

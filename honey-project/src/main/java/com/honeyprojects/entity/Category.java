@@ -3,7 +3,7 @@ package com.honeyprojects.entity;
 import com.honeyprojects.entity.base.PrimaryEntity;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.EntityProperties;
-import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.TypeCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -24,6 +24,6 @@ public class Category extends PrimaryEntity {
 
     private CategoryStatus categoryStatus;
 
-    private Integer type;
+    private TypeCategory type;
 
 }

@@ -42,7 +42,6 @@ public interface AdminCategoryRepository extends CategoryRepository {
             """, nativeQuery = true)
     Page<AdminCategoryResponse> getAllCategoryByAdmin(Pageable pageable, @Param("request") AdminCategoryRequest request);
 
-
     @Query(value = """
             SELECT c.id, c.name, c.code, c.last_modified_date FROM category c
             ORDER BY c.last_modified_date DESC

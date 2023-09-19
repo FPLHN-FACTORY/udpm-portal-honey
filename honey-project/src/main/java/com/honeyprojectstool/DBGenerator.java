@@ -11,6 +11,7 @@ import com.honeyprojects.entity.HoneyCategory;
 import com.honeyprojects.entity.UserSemester;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.TypeCategory;
 import com.honeyprojects.repository.UserRepositpry;
 import com.honeyprojects.repository.ConversionRepository;
 import com.honeyprojects.repository.GiftRepository;
@@ -67,18 +68,21 @@ public class DBGenerator implements CommandLineRunner {
         category1.setName("GOLD");
         category1.setCategoryStatus(CategoryStatus.ACTIVE);
         category1.setCode("CT1");
+        category1.setType(TypeCategory.ACCEPT);
         category1.setId(categoryRepository.save(category1).getId());
 
         Category category2 = new Category();
         category2.setName("SLIVER");
         category2.setCategoryStatus(CategoryStatus.ACTIVE);
         category2.setCode("CT2");
+        category2.setType(TypeCategory.ACCEPT);
         category2.setId(categoryRepository.save(category2).getId());
 
         Category category3 = new Category();
         category3.setName("BRONZE");
         category3.setCategoryStatus(CategoryStatus.ACTIVE);
         category3.setCode("CT3");
+        category3.setType(TypeCategory.FREE);
         category3.setId(categoryRepository.save(category3).getId());
 
         HoneyCategory honeyCategory1 = new HoneyCategory();

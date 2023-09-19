@@ -4,6 +4,7 @@ import com.honeyprojects.core.admin.model.request.CensorChangeStatusRequest;
 import com.honeyprojects.core.admin.model.request.CensorSearchHistoryRequest;
 import com.honeyprojects.core.admin.model.response.CensorAddHoneyRequestResponse;
 import com.honeyprojects.core.admin.model.response.CensorDetailRequestResponse;
+import com.honeyprojects.core.admin.model.response.CensorTransactionRequestResponse;
 import com.honeyprojects.core.admin.model.response.CensorUserApiResponse;
 import com.honeyprojects.core.admin.repository.AdHoneyRepository;
 import com.honeyprojects.core.admin.repository.CensorHistoryRepository;
@@ -13,10 +14,14 @@ import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.Message;
+import com.honeyprojects.infrastructure.contant.TypeHistory;
+import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 
@@ -30,32 +35,73 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
     private AdHoneyRepository honeyRepository;
 
     @Override
+    @Transactional
     public History changeStatus(CensorChangeStatusRequest changeReq) {
-        History history = historyRepository.findById(changeReq.getIdHistory()).get();
+        Long dateNow = Calendar.getInstance().getTimeInMillis();
+        History history = historyRepository.findById(changeReq.getIdHistory()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
         history.setStatus(HoneyStatus.values()[changeReq.getStatus()]);
-        if (changeReq.getStatus() == 1) {
-            Long dateNow = Calendar.getInstance().getTimeInMillis();
-            Honey honey = honeyRepository.findById(history.getHoneyId()).get();
-            System.out.println(honey.getHoneyPoint());
+        if (changeReq.getStatus() == 1 && history.getType().equals(TypeHistory.CONG_DIEM)) {
+            Honey honey = honeyRepository.findById(history.getHoneyId()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
             honey.setHoneyPoint(honey.getHoneyPoint() + history.getHoneyPoint());
 
-            System.out.println(honey.getHoneyPoint());
             honeyRepository.save(honey);
             history.setChangeDate(dateNow);
+        } else if (changeReq.getStatus() == 1 && history.getType().equals(TypeHistory.GIAO_DICH)) {
+            //lay ra honey cua nguoi gui
+            Honey honey = honeyRepository.findById(history.getHoneyId())
+                    .orElseThrow(() -> new RestApiException(Message.HONEY_NOT_EXIST));
+            //tru honey cua nguoi gui
+            honey.setHoneyPoint(honey.getHoneyPoint() - history.getHoneyPoint());
+
+            //lay ra honey cua nguoi nhan
+            Honey honeyNhan = honeyRepository.getPoint(history.getStudentId(),
+                    honey.getHoneyCategoryId(), honey.getUserSemesterId());
+            honeyRepository.save(honey);
+            //kiem tra neu honey nguoi nhan khong ton tai se tao moi
+            if (honeyNhan == null) {
+                honeyNhan = new Honey();
+                honeyNhan.setHoneyPoint(0);
+                honeyNhan.setHoneyCategoryId(honey.getHoneyCategoryId());
+                honeyNhan.setStudentId(history.getStudentId());
+                honeyNhan.setUserSemesterId(honey.getUserSemesterId());
+            }
+            //cong them honey cho nguoi nhan
+            honeyNhan.setHoneyPoint(honeyNhan.getHoneyPoint() + history.getHoneyPoint());
+            honeyRepository.save(honeyNhan);
+
+            history.setChangeDate(dateNow);
         }
-        ;
         return historyRepository.save(history);
     }
 
     @Override
-    public PageableObject<CensorAddHoneyRequestResponse> getHistory(CensorSearchHistoryRequest historyRequest) {
+    public PageableObject<CensorAddHoneyRequestResponse> getHistoryAddPoint(CensorSearchHistoryRequest historyRequest) {
         Pageable pageable = PageRequest.of(historyRequest.getPage(), historyRequest.getSize());
         return new PageableObject<>(historyRepository.getHistoryAddPoint(historyRequest, pageable));
     }
 
     @Override
+    public PageableObject<CensorTransactionRequestResponse> getHistoryTransaction(CensorSearchHistoryRequest historyRequest) {
+        Pageable pageable = PageRequest.of(historyRequest.getPage(), historyRequest.getSize());
+        return new PageableObject<>(historyRepository.getHistoryTransaction(historyRequest, pageable));
+    }
+
+    @Override
     public CensorDetailRequestResponse getRequest(String idRequest) {
-        return historyRepository.getAddPointRequest(idRequest);
+        History history = historyRepository.findById(idRequest).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
+        if (history.getType().equals(TypeHistory.CONG_DIEM)) {
+            return historyRepository.getAddPointRequest(idRequest);
+        } else if (history.getType().equals(TypeHistory.GIAO_DICH)) {
+            return historyRepository.getTransactionRequest(idRequest);
+        }
+        return null;
+    }
+
+    @Override
+    public Integer countRequest(Integer type) {
+        TypeHistory honeyStatus = null;
+        if (type != null) honeyStatus = TypeHistory.values()[type];
+        return historyRepository.getCountRequest(honeyStatus);
     }
 
     //UserApi

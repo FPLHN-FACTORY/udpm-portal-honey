@@ -20,6 +20,7 @@ import com.honeyprojects.entity.Honey;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -71,9 +72,12 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     }
 
     @Override
+    @Transactional
     public History addPoint(TeacherAddPointRequest addPointRequest) {
-        Long dateNow = Calendar.getInstance().getTimeInMillis();
+        //fake teacher login
         String idTeacher = userRepository.findAll().get(0).getId();
+
+        Long dateNow = Calendar.getInstance().getTimeInMillis();
 
         History history = new History();
         history.setStatus(HoneyStatus.CHO_PHE_DUYET);
