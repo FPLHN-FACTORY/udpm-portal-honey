@@ -46,6 +46,7 @@ export default function ConversionHome() {
       title: "Tỉ lệ",
       dataIndex: "ratio",
       key: "ratio",
+      render: (text) => <span>{`${text} / 0.25`}</span>,
     },
     {
       title: () => <div>Action</div>,
@@ -84,7 +85,10 @@ export default function ConversionHome() {
               <div>
                 <span>
                   <Tooltip title="Thêm quà">
-                    <ModalAddConversion icon={<EyeOutlined />} />
+                    <ModalAddConversion
+                      fetchData={fetchData}
+                      icon={<EyeOutlined />}
+                    />
                   </Tooltip>
                 </span>
               </div>
