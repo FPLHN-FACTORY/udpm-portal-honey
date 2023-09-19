@@ -120,158 +120,6 @@ export default function AddPoint() {
   };
 
   return (
-
-    <div className="add-point">
-      <Card className="mb-2 py-1">
-        <Form form={formSearch} className="d-flex" onFinish={onFinishSearch}>
-          <Button
-            htmlType="submit"
-            type="primary"
-            className="mr-10 search-button"
-          >
-            Search
-          </Button>
-          <Form.Item
-            name="code"
-            rules={[
-              {
-                required: true,
-                whitespace: true,
-                message: "Vui lòng nhập mã sinh viên",
-              },
-            ]}
-            className="search-input"
-          >
-            <Input
-              size="small"
-              placeholder="Nhập mã sinh viên cần tìm"
-              prefix={<SearchOutlined />}
-            />
-          </Form.Item>
-
-          <Button className="ml-auto import-button" type="primary">
-            Import excel
-          </Button>
-        </Form>
-      </Card>
-      {Object.keys(student).length > 0 ? (
-        <Card
-          className="content-card"
-          title="Thông tin sinh viên"
-          extra={
-            <Segmented
-              className="font-bold select-category"
-              onChange={setCategorySelected}
-              value={categorySelected}
-              options={listCategory.map((category) => ({
-                label: category.name,
-                value: category.id,
-              }))}
-            />
-          }
-        >
-          <Row className="mx-10">
-            <Col
-              className="py-25"
-              span={12}
-              style={{ borderRight: "1px solid #F0F0F0" }}
-            >
-              <Row className="font-semibold">
-                <Col span={12}>
-                  <div>
-                    MSSV: <Tag>{student.code}</Tag>
-                  </div>
-                  <div className="m-25">
-                    Họ và tên: <Tag>{student.name}</Tag>
-                  </div>
-                  <div>
-                    Email: <Tag>{student.email}</Tag>
-                  </div>
-                </Col>
-                <Col span={12}>
-                  <div>
-                    Số điểm: <Tag>{honeyStudent.point}</Tag>
-                  </div>
-                  <div className="m-25">
-                    Khóa: <Tag>{student.khoa}</Tag>
-                  </div>
-                  <div>
-                    Số điện thoại: <Tag>{student.phone}</Tag>
-                  </div>
-                </Col>
-              </Row>
-            </Col>
-            <Col className="py-25" span={12} style={{ paddingLeft: "25px" }}>
-              <Form form={formAddPoint} onFinish={onFinishAdd}>
-                <Row>
-                  <Col span={8} className=" font-semibold">
-                    <div>Số điểm:</div>
-                  </Col>
-                  <Col span={16}>
-                    <Form.Item
-                      name="honeyPoint"
-                      rules={[
-                        {
-                          type: "number",
-                          min: 1,
-                          required: true,
-                          message: "Số điểm phải là số và lớn hơn 0",
-                        },
-                        {
-                          type: "number",
-                          max: 999999,
-                          message: "Số điểm phải nhỏ hơn 1.000.000",
-                        },
-                      ]}
-                    >
-                      <InputNumber style={{ width: "100%" }} />
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={8} className=" font-semibold">
-                    <div>Lý do:</div>
-                  </Col>
-                  <Col span={16}>
-                    <Form.Item
-                      name="note"
-                      rules={[
-                        {
-                          required: true,
-                          pattern: /^\s*(\S\s*){5,}$/,
-                          message: "Lý do cộng phải trên 5 ký tự",
-                        },
-                        {
-                          max: 100,
-                          message: "Lý do không được vượt quá 100 ký tự",
-                        },
-                      ]}
-                    >
-                      <Input.TextArea style={{ width: "100%" }} />
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <div className="text-right">
-                  <Button
-                    htmlType="submit"
-                    className="search-button"
-                    type="primary"
-                  >
-                    Send
-                    <SendOutlined className="m-0 pl-5" />
-                  </Button>
-                </div>
-              </Form>
-            </Col>
-          </Row>
-        </Card>
-      ) : (
-        <Card>
-          <Empty />
-        </Card>
-      )}
-    </div>
-
     <Spin spinning={loading}>
       <div className="add-point">
         <Card className="mb-2 py-1">
@@ -279,7 +127,8 @@ export default function AddPoint() {
             <Button
               htmlType="submit"
               type="primary"
-              className="mr-10 search-button">
+              className="mr-10 search-button"
+            >
               Search
             </Button>
             <Form.Item
@@ -291,7 +140,8 @@ export default function AddPoint() {
                   message: "Vui lòng nhập mã sinh viên",
                 },
               ]}
-              className="search-input">
+              className="search-input"
+            >
               <Input
                 size="small"
                 placeholder="Nhập mã sinh viên cần tìm"
@@ -318,12 +168,14 @@ export default function AddPoint() {
                   value: category.id,
                 }))}
               />
-            }>
+            }
+          >
             <Row className="mx-10">
               <Col
                 className="py-25"
                 span={12}
-                style={{ borderRight: "1px solid #F0F0F0" }}>
+                style={{ borderRight: "1px solid #F0F0F0" }}
+              >
                 <Row className="font-semibold">
                   <Col span={12}>
                     <div>
@@ -370,7 +222,8 @@ export default function AddPoint() {
                             max: 999999,
                             message: "Số điểm phải nhỏ hơn 1.000.000",
                           },
-                        ]}>
+                        ]}
+                      >
                         <InputNumber style={{ width: "100%" }} />
                       </Form.Item>
                     </Col>
@@ -392,7 +245,8 @@ export default function AddPoint() {
                             max: 100,
                             message: "Lý do không được vượt quá 100 ký tự",
                           },
-                        ]}>
+                        ]}
+                      >
                         <Input.TextArea style={{ width: "100%" }} />
                       </Form.Item>
                     </Col>
@@ -401,7 +255,8 @@ export default function AddPoint() {
                     <Button
                       htmlType="submit"
                       className="search-button"
-                      type="primary">
+                      type="primary"
+                    >
                       Send
                       <SendOutlined className="m-0 pl-5" />
                     </Button>
@@ -417,6 +272,5 @@ export default function AddPoint() {
         )}
       </div>
     </Spin>
-
   );
 }
