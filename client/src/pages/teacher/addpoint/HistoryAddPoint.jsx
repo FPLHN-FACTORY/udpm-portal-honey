@@ -94,7 +94,8 @@ export default function HistoryAddPoint() {
             style={{
               color: values.status === 1 ? "" : "#fff",
               height: "30px",
-            }}>
+            }}
+          >
             {values.status === 2 ? "Gửi lại" : "Hủy"}
           </Button>
         </div>
@@ -243,7 +244,8 @@ export default function HistoryAddPoint() {
             <Button
               htmlType="submit"
               type="primary"
-              className="mr-10 search-button">
+              className="mr-10 search-button"
+            >
               Lọc
             </Button>
           </Space>

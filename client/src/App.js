@@ -17,6 +17,8 @@ import RequestManager from "./pages/censor/requestmanager/RequestManager";
 import RequestManagerDetail from "./pages/censor/requestmanager/RequestManagerDetail";
 import ConversionHome from "./pages/censor/convertion/convertionHome";
 import IndexGift from "./pages/censor/gift/indexGift";
+import AddRequestConversion from "./pages/student/RequestConversion/AddRequestConversion";
+import AddRequestConversionHistory from "./pages/student/RequestConversion/AddRequestConversionHistory";
 
 function App() {
   return (
@@ -98,10 +100,22 @@ function App() {
             />
             {/* Màn teacher */}
             <Route
-              path=""
+              path="/student/create-conversion"
               element={
                 <AuthGuard>
-                  <DashboardAuthUser></DashboardAuthUser>
+                  <DashboardAuthUser>
+                    <AddRequestConversion />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/create-conversion/history"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <AddRequestConversionHistory />
+                  </DashboardAuthUser>
                 </AuthGuard>
               }
             />

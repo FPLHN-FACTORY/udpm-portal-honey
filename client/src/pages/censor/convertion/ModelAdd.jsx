@@ -42,7 +42,13 @@ const ModalAddConversion = () => {
   };
 
   const handleConversation = async () => {
-    const ratio = parseFloat(selectPointCategory) / parseFloat(selectPointGift);
+    if (!selectCategory || !pointCategory || !selectGift || !pointGift) {
+      message.error("không được để trống");
+      return;
+    }
+
+    // const ratio = parseFloat(selectPointCategory) / parseFloat(selectPointGift);
+    const ratio = parseFloat(selectPointCategory);
 
     const code = `${fillName.nameCate}/${fillName.nameGift}${parseInt(
       Math.random() * 100000
@@ -65,7 +71,7 @@ const ModalAddConversion = () => {
         if (error.message && error.message.data && error.message.data.message) {
           message.error(error.response.data.message);
         } else {
-          message.error("Lỗi");
+          message.error("lỗi");
         }
       });
   };
@@ -180,8 +186,6 @@ const ModalAddConversion = () => {
               {" "}
               Gift:
             </span>
-            {/* <span>{categories.code}</span>
-            <span>{categories.ratio}</span> */}
             <Select
               showSearch
               placeholder=""
@@ -261,7 +265,6 @@ const ModalAddConversion = () => {
                   }}
                 >
                   {fillName.nameCate}/{fillName.nameGift}
-                  {/* {conversionCode} */}
                 </span>
               </div>
             )}
