@@ -20,7 +20,7 @@ public class EmailSender {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    @Value("${spring.mail.username}")
+    @Value("${spring.mail.userName}")
     private String sender;
 
     @Async
