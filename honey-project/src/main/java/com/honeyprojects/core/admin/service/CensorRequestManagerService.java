@@ -7,6 +7,7 @@ import com.honeyprojects.core.admin.model.response.CensorDetailRequestResponse;
 import com.honeyprojects.core.admin.model.response.CensorTransactionRequestResponse;
 import com.honeyprojects.core.admin.model.response.CensorUserApiResponse;
 import com.honeyprojects.core.common.base.PageableObject;
+import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.entity.History;
 
 public interface CensorRequestManagerService {
@@ -18,11 +19,8 @@ public interface CensorRequestManagerService {
     PageableObject<CensorTransactionRequestResponse> getHistoryTransaction(
             CensorSearchHistoryRequest historyRequest);
 
-    //UserAPi
-
-    CensorUserApiResponse getUserApiByCode(String code);
-
-    CensorUserApiResponse getUserApiById(String id);
+    SimpleResponse searchUser(String username);
+    SimpleResponse getUserById(String id);
 
     CensorDetailRequestResponse getRequest(String idRequest);
 

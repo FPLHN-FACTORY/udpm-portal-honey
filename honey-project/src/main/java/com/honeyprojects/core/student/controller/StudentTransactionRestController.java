@@ -56,4 +56,13 @@ public class StudentTransactionRestController {
     public PageableObject<StudentHistoryResponse> getHistory(StudentSearchHistoryRequest historyRequest) {
         return transactionService.getHistory(historyRequest);
     }
+
+    @GetMapping("/search-student")
+    public ResponseObject searchStudent(String username) {
+        return new ResponseObject(transactionService.searchUser(username));
+    }
+    @GetMapping("/get-student")
+    public ResponseObject getStudent(String id) {
+        return new ResponseObject(transactionService.getUserById(id));
+    }
 }

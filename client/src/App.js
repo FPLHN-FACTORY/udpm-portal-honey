@@ -18,6 +18,8 @@ import RequestManagerDetail from "./pages/censor/requestmanager/RequestManagerDe
 import Semester from "./pages/censor/semester";
 import ConversionHome from "./pages/censor/convertion/convertionHome";
 import IndexGift from "./pages/censor/gift/indexGift";
+import AddRequestConversion from "./pages/student/RequestConversion/AddRequestConversion";
+import AddRequestConversionHistory from "./pages/student/RequestConversion/AddRequestConversionHistory";
 import TransactionPage from "./pages/student/transaction/TransactionPage";
 import TransactionHistory from "./pages/student/transaction/TransactionHistory";
 import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction";
@@ -123,10 +125,22 @@ function App() {
             />
             {/* Màn teacher */}
             <Route
-              path=""
+              path="/student/create-conversion"
               element={
                 <AuthGuard>
-                  <DashboardAuthUser></DashboardAuthUser>
+                  <DashboardAuthUser>
+                    <AddRequestConversion />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/create-conversion/history"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <AddRequestConversionHistory />
+                  </DashboardAuthUser>
                 </AuthGuard>
               }
             />

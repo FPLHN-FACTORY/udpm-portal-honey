@@ -43,7 +43,7 @@ export default function CreateTransaction({ setData, setCurrent, setLoading }) {
 
   const onSearchStudent = (value) => {
     setLoading(true);
-    RequestManagerAPI.getUserAPiByCode(value.code)
+    TransactionApi.searchStudent(value.code)
       .then((result) => {
         if (result.data.success) {
           TransactionApi.getCategory(result.data.data.id)
@@ -166,9 +166,9 @@ export default function CreateTransaction({ setData, setCurrent, setLoading }) {
                 <Col span={12}>
                   <Descriptions title="Thông tin người nhận" column={1}>
                     <Descriptions.Item
-                      label="Mã SV"
+                      label="User name"
                       style={{ paddingBottom: "16px" }}>
-                      <Tag>{student.code}</Tag>
+                      <Tag>{student.userName}</Tag>
                     </Descriptions.Item>
                     <Descriptions.Item label="Họ và tên">
                       <Tag>{student.name}</Tag>
@@ -196,7 +196,7 @@ export default function CreateTransaction({ setData, setCurrent, setLoading }) {
                         fontWeight: "bold",
                         color: "white",
                       }}>
-                      {honeyStudent.honey} điểm
+                      {honeyStudent.point} điểm
                     </Tag>
                   </Col>
                 </Row>

@@ -60,9 +60,9 @@ export default function RequestAddPoint() {
       key: "stt",
     },
     {
-      title: "Mã SV",
-      dataIndex: "mssv",
-      key: "mssv",
+      title: "User name",
+      dataIndex: "userName",
+      key: "userName",
     },
     {
       title: "Tên sinh viên",
@@ -124,6 +124,7 @@ export default function RequestAddPoint() {
   }, [dispatch, filter]);
 
   const fetchData = (dispatch, filter) => {
+    dispatch(SetHistory([]));
     setLoading(true);
     CategoryAPI.fetchAllCategory()
       .then((response) => {
@@ -133,6 +134,7 @@ export default function RequestAddPoint() {
         message.error(error);
       })
       .finally(() => {
+        setLoading(true);
         const fetchData = async (filter) => {
           try {
             const response = await RequestManagerAPI.getAddPoint(filter);
@@ -145,7 +147,7 @@ export default function RequestAddPoint() {
                   return {
                     ...data,
                     nameStudent: user.data.data.name,
-                    mssv: user.data.data.code,
+                    userName: user.data.data.userName,
                   };
                 } catch (error) {
                   console.error(error);
@@ -153,6 +155,7 @@ export default function RequestAddPoint() {
                 }
               })
             );
+            setLoading(false);
             dispatch(SetHistory(listHistory));
             setTotalPage(response.data.totalPages);
           } catch (error) {
@@ -161,7 +164,6 @@ export default function RequestAddPoint() {
         };
         fetchData(filter);
       });
-    setLoading(false);
   };
 
   const data = useAppSelector(GetHistory).map((data) => {
@@ -177,7 +179,7 @@ export default function RequestAddPoint() {
 
   const onFinishSearch = (value) => {
     setLoading(true);
-    if (value.code === undefined || value.code.trim().length === 0) {
+    if (value.userName === undefined || value.userName.trim().length === 0) {
       setFilter({
         ...filter,
         idStudent: null,
@@ -185,7 +187,7 @@ export default function RequestAddPoint() {
         status: value.status,
       });
     } else {
-      RequestManagerAPI.getUserAPiByCode(value.code.trim())
+      RequestManagerAPI.getUserAPiByCode(value.userName.trim())
         .then((result) => {
           if (result.data.success) {
             setFilter({
@@ -195,7 +197,7 @@ export default function RequestAddPoint() {
               status: value.status,
             });
           } else {
-            message.error("Mã sinh viên không chính xác!");
+            message.error("User name sinh viên không chính xác!");
           }
         })
         .catch((error) => console.error(error));
@@ -230,12 +232,12 @@ export default function RequestAddPoint() {
         <Card className="mb-2 py-1">
           <Form onFinish={onFinishSearch}>
             <Space size={"large"}>
-              <Form.Item name="code" className="search-input">
+              <Form.Item name="userName" className="search-input">
                 <Input
                   style={{ width: "300px" }}
-                  name="code"
+                  name="userName"
                   size="small"
-                  placeholder="Nhập mã sinh viên cần tìm"
+                  placeholder="Nhập user name sinh viên cần tìm"
                   prefix={<SearchOutlined />}
                 />
               </Form.Item>

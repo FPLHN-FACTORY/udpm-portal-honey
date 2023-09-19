@@ -156,8 +156,8 @@ export default function RequestManagerDetail() {
             </Descriptions>
             <hr />
             <Descriptions title="Thông tin sinh viên">
-              <Descriptions.Item label="Mã SV">
-                {student.code}
+              <Descriptions.Item label="User name">
+                {student.userName}
               </Descriptions.Item>
               <Descriptions.Item label="Họ & tên">
                 {student.name}
@@ -168,8 +168,8 @@ export default function RequestManagerDetail() {
             </Descriptions>
             <hr />
             <Descriptions title="Thông tin người gửi">
-              <Descriptions.Item label="Mã người gửi">
-                {teacher.code}
+              <Descriptions.Item label="User name người gửi">
+                {teacher.userName}
               </Descriptions.Item>
               <Descriptions.Item label="Họ & tên">
                 {teacher.name}

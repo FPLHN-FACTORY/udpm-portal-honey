@@ -44,12 +44,12 @@ public class CensorRequestManagerRestController {
 
     //UserAPi
     @GetMapping("/user-api")
-    public ResponseObject getUserApiByCode(String code) {
-        return new ResponseObject(requestManagerService.getUserApiByCode(code));
+    public ResponseObject getUserApiByCode(String username) {
+        return new ResponseObject(requestManagerService.searchUser(username));
     }
     @GetMapping("/user-api/{id}")
     public ResponseObject getUserApiById(@PathVariable String id) {
-        return new ResponseObject(requestManagerService.getUserApiById(id));
+        return new ResponseObject(requestManagerService.getUserById(id));
     }
 
     @GetMapping("/count-request")

@@ -2,6 +2,7 @@ package com.honeyprojects.core.teacher.service;
 
 import com.honeyprojects.core.admin.model.response.CensorUserApiResponse;
 import com.honeyprojects.core.common.base.PageableObject;
+import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.teacher.model.request.TeacherAddPointRequest;
 import com.honeyprojects.core.teacher.model.request.TeacherChangeStatusRequest;
 import com.honeyprojects.core.teacher.model.request.TeacherGetPointRequest;
@@ -24,4 +25,7 @@ public interface TeacherAddPointService {
     History changeStatus( TeacherChangeStatusRequest changeStatusRequest);
 
     History addPoint(TeacherAddPointRequest addPointRequest);
+
+    SimpleResponse searchUser(String username);
+    SimpleResponse getUserById(String id);
 }
