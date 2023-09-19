@@ -108,22 +108,22 @@ public class DBGenerator implements CommandLineRunner {
         semester.setId(semesterRepository.save(semester).getId());
 
         UserAPI userAPI1 = new UserAPI();
-        userAPI1.setName("Nguyễn Quốc Huy");
-        userAPI1.setEmail("huynq@gmail.com");
-        userAPI1.setCode("TE2");
-        userAPI1.setId(userRepositpry.save(userAPI1).getId());
+        userAPI1.setName("Triệu Văn Tưởng");
+        userAPI1.setEmail("tuongtvph26149@fpt.edu.vn");
+        userAPI1.setCode("tuongtvph26149");
+        userAPI1.setId("C4CF21F4-F3E0-490E-B1CC-08DBB743DD7D".toLowerCase());
 
         UserAPI userAPI2 = new UserAPI();
-        userAPI2.setName("Ngọc Anh");
-        userAPI2.setEmail("ngocanh@gmail.com");
-        userAPI2.setCode("TE1");
-        userAPI2.setId(userRepositpry.save(userAPI2).getId());
+        userAPI2.setName("Nguyễn Quốc Huy");
+        userAPI2.setEmail("huynqph26772@fpt.edu.vn");
+        userAPI2.setCode("huynqph26772");
+        userAPI2.setId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92".toLowerCase());
 
         UserAPI userAPI3 = new UserAPI();
-        userAPI1.setName("Nguyễn Anh Dũng");
-        userAPI1.setEmail("dungna29@gmail.com");
-        userAPI1.setCode("TE3");
-        userAPI1.setId(userRepositpry.save(userAPI1).getId());
+        userAPI1.setName("Nguyễn Thúy Hằng");
+        userAPI1.setEmail("hangnt169@fpt.edu.vn");
+        userAPI1.setCode("hangnt169");
+        userAPI1.setId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4".toLowerCase());
 
         Honey honey1 = new Honey();
         honey1.setHoneyPoint(1000);
