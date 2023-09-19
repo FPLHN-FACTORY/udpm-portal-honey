@@ -3,6 +3,7 @@ package com.honeyprojects.core.student.service.impl;
 import com.honeyprojects.core.admin.repository.CensorUserAPIRepository;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.UdomHoney;
+import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.student.model.request.StudentChangeStatusHistoryRequest;
 import com.honeyprojects.core.student.model.request.StudentSearchHistoryRequest;
 import com.honeyprojects.core.student.model.request.StudentTransactionRequest;
@@ -22,6 +23,7 @@ import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.Message;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
+import com.honeyprojects.util.ConvertRequestApiidentity;
 import com.honeyprojects.util.RSAEncryption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,9 +65,10 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
     private StudentVericationRepository vericationRepository;
     @Autowired
     private EmailSender emailSender;
-
     @Autowired
     private UdomHoney udomHoney;
+    @Autowired
+    private ConvertRequestApiidentity requestApiidentity;
 
 
     @Override
@@ -169,7 +172,7 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
                 honeyNhan.setStudentId(transactionRequest.getIdStudent());
                 honeyNhan.setUserSemesterId(honey.getUserSemesterId());
             } else {
-                honeyNhan.setHoneyPoint(honeyResponse.getHoney());
+                honeyNhan.setHoneyPoint(honeyResponse.getPoint());
                 honeyNhan.setHoneyCategoryId(transactionRequest.getIdCategory());
                 honeyNhan.setStudentId(transactionRequest.getIdStudent());
                 honeyNhan.setUserSemesterId(honey.getUserSemesterId());
@@ -197,7 +200,17 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
     public PageableObject<StudentHistoryResponse> getHistory(StudentSearchHistoryRequest historyRequest) {
         Pageable pageable = PageRequest.of(historyRequest.getPage(), historyRequest.getSize());
         historyRequest.setIdUserLogin(udomHoney.getIdUser());
-        System.out.println(udomHoney.getIdUser() + " aaaaaaaaaaaaa");
         return new PageableObject<>(historyRepository.getHistory(historyRequest, pageable));
+    }
+
+    @Override
+    public SimpleResponse searchUser(String username) {
+        String email = username + "@fpt.edu.vn";
+        return requestApiidentity.handleCallApiGetUserByEmail(email);
+    }
+
+    @Override
+    public SimpleResponse getUserById(String id) {
+        return requestApiidentity.handleCallApiGetUserById(id);
     }
 }

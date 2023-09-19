@@ -124,6 +124,7 @@ export default function RequestTransaction() {
   }, [dispatch, filter]);
 
   const fetchData = (dispatch, filter) => {
+    dispatch(SetHistory([]));
     setLoading(true);
     CategoryAPI.fetchAllCategory()
       .then((response) => {
@@ -134,6 +135,7 @@ export default function RequestTransaction() {
       })
       .finally(() => {
         const fetchData = async (filter) => {
+          setLoading(true);
           try {
             const response = await RequestManagerAPI.getTransaction(filter);
             const listHistory = await Promise.all(
@@ -147,8 +149,8 @@ export default function RequestTransaction() {
                   );
                   return {
                     ...data,
-                    nguoiNhan: `${userNhan.data.data.code} - ${userNhan.data.data.name}`,
-                    nguoiGui: `${userSend.data.data.code} - ${userSend.data.data.name}`,
+                    nguoiNhan: userNhan.data.data.userName,
+                    nguoiGui: userSend.data.data.userName,
                   };
                 } catch (error) {
                   console.error(error);
@@ -156,6 +158,7 @@ export default function RequestTransaction() {
                 }
               })
             );
+            setLoading(false);
             dispatch(SetHistory(listHistory));
             setTotalPage(response.data.totalPages);
           } catch (error) {
@@ -164,7 +167,6 @@ export default function RequestTransaction() {
         };
         fetchData(filter);
       });
-    setLoading(false);
   };
 
   const data = useAppSelector(GetHistory).map((data) => {
@@ -180,7 +182,7 @@ export default function RequestTransaction() {
 
   const onFinishSearch = (value) => {
     setLoading(true);
-    if (value.code === undefined || value.code.trim().length === 0) {
+    if (value.userName === undefined || value.userName.trim().length === 0) {
       setFilter({
         ...filter,
         idStudent: null,
@@ -188,7 +190,7 @@ export default function RequestTransaction() {
         status: value.status,
       });
     } else {
-      RequestManagerAPI.getUserAPiByCode(value.code.trim())
+      RequestManagerAPI.getUserAPiByCode(value.userName.trim())
         .then((result) => {
           if (result.data.success) {
             setFilter({
@@ -198,7 +200,7 @@ export default function RequestTransaction() {
               status: value.status,
             });
           } else {
-            message.error("Mã sinh viên không chính xác!");
+            message.error("User name sinh viên không chính xác!");
           }
         })
         .catch((error) => console.error(error));
@@ -232,12 +234,12 @@ export default function RequestTransaction() {
         <Card className="mb-2 py-1">
           <Form onFinish={onFinishSearch}>
             <Space size={"large"}>
-              <Form.Item name="code" className="search-input">
+              <Form.Item name="userName" className="search-input">
                 <Input
                   style={{ width: "300px" }}
-                  name="code"
+                  name="userName"
                   size="small"
-                  placeholder="Nhập mã sinh viên cần tìm"
+                  placeholder="Nhập User name sinh viên cần tìm"
                   prefix={<SearchOutlined />}
                 />
               </Form.Item>

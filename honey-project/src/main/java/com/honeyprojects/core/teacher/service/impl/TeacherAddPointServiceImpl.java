@@ -1,8 +1,9 @@
 package com.honeyprojects.core.teacher.service.impl;
 
-import com.honeyprojects.core.admin.model.response.CensorUserApiResponse;
 import com.honeyprojects.core.admin.repository.CensorUserAPIRepository;
 import com.honeyprojects.core.common.base.PageableObject;
+import com.honeyprojects.core.common.base.UdomHoney;
+import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.teacher.model.request.TeacherAddPointRequest;
 import com.honeyprojects.core.teacher.model.request.TeacherChangeStatusRequest;
 import com.honeyprojects.core.teacher.model.request.TeacherGetPointRequest;
@@ -13,13 +14,14 @@ import com.honeyprojects.core.teacher.model.response.TeacherPointResponse;
 import com.honeyprojects.core.teacher.repository.TeacherCategoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHoneyRepository;
-import com.honeyprojects.core.teacher.repository.TeacherUserSemesterRepository;
+import com.honeyprojects.core.teacher.repository.TeacherSemesterRepository;
 import com.honeyprojects.core.teacher.service.TeacherAddPointService;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
+import com.honeyprojects.util.ConvertRequestApiidentity;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -39,9 +41,11 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     @Autowired
     private TeacherHistoryRepository historyRepository;
     @Autowired
-    private TeacherUserSemesterRepository usRepository;
+    private TeacherSemesterRepository usRepository;
     @Autowired
-    private CensorUserAPIRepository userRepository;
+    private UdomHoney udomHoney;
+    @Autowired
+    private ConvertRequestApiidentity requestApiidentity;
 
 
 
@@ -59,7 +63,7 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     @Override
     public PageableObject<TeacherAddHoneyHistoryResponse> getHistory(TeacherSearchHistoryRequest historyRequest) {
         Pageable pageable = PageRequest.of(historyRequest.getPage(), historyRequest.getSize());
-        String idTeacher = userRepository.findAll().get(0).getId();
+        String idTeacher = udomHoney.getIdUser();
         historyRequest.setIdTeacher(idTeacher);
         return new PageableObject<>(historyRepository.getHistory(historyRequest, pageable));
     }
@@ -75,7 +79,7 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     @Transactional
     public History addPoint(TeacherAddPointRequest addPointRequest) {
         //fake teacher login
-        String idTeacher = userRepository.findAll().get(0).getId();
+        String idTeacher = udomHoney.getIdUser();
 
         Long dateNow = Calendar.getInstance().getTimeInMillis();
 
@@ -87,7 +91,7 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
         history.setType(TypeHistory.CONG_DIEM);
         history.setCreatedAt(dateNow);
         if (addPointRequest.getHoneyId() == null) {
-            String idUs = usRepository.getUsByStudent(addPointRequest.getStudentId(), dateNow);
+            String idUs = usRepository.getUsByStudent(dateNow);
             if (idUs == null) return null;
             Honey honey = new Honey();
             honey.setStatus(Status.HOAT_DONG);
@@ -102,5 +106,16 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
         }
         history.setStudentId(addPointRequest.getStudentId());
         return historyRepository.save(history);
+    }
+
+    @Override
+    public SimpleResponse searchUser(String username) {
+        String email = username + "@fpt.edu.vn";
+        return requestApiidentity.handleCallApiGetUserByEmail(email);
+    }
+
+    @Override
+    public SimpleResponse getUserById(String id) {
+        return requestApiidentity.handleCallApiGetUserById(id);
     }
 }

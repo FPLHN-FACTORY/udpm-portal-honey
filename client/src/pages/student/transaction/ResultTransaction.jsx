@@ -22,7 +22,7 @@ export default function ResultTransaction({ data }) {
       navigate("/student/transaction");
     }
   }, [navigate, seconds]);
-  
+
   return (
     <Fragment>
       <div>
@@ -90,10 +90,10 @@ export default function ResultTransaction({ data }) {
                 <hr />
               </Col>
               <Col span={12}>
-                <span>Mã người nhận</span>
+                <span>User name</span>
               </Col>
               <Col span={12} style={{ textAlign: "end" }}>
-                <span style={{ fontWeight: 500 }}>{data.student.code}</span>
+                <span style={{ fontWeight: 500 }}>{data.student.userName}</span>
               </Col>
               <Col span={24}>
                 <hr />

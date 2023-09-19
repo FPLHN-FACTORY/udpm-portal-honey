@@ -28,7 +28,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws IOException, ServletException {
         String jwtToken = extractJwtToken(request);
-        System.out.println(jwtToken);
         HttpSession session = request.getSession();
         session.setAttribute(Constants.TOKEN, jwtToken);
         if (jwtToken != null) {

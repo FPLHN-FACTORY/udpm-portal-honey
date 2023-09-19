@@ -120,10 +120,10 @@ public class DBGenerator implements CommandLineRunner {
         userAPI2.setId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92".toLowerCase());
 
         UserAPI userAPI3 = new UserAPI();
-        userAPI1.setName("Nguyễn Thúy Hằng");
-        userAPI1.setEmail("hangnt169@fpt.edu.vn");
-        userAPI1.setCode("hangnt169");
-        userAPI1.setId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4".toLowerCase());
+        userAPI3.setName("Nguyễn Thúy Hằng");
+        userAPI3.setEmail("hangnt169@fpt.edu.vn");
+        userAPI3.setCode("hangnt169");
+        userAPI3.setId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4".toLowerCase());
 
         Honey honey1 = new Honey();
         honey1.setHoneyPoint(1000);
@@ -155,7 +155,7 @@ public class DBGenerator implements CommandLineRunner {
 
         Honey honey5 = new Honey();
         honey5.setHoneyPoint(100);
-        honey5.setStudentId(userAPI2.getId());
+        honey5.setStudentId(userAPI3.getId());
         honey5.setUserSemesterId(semester.getId());
         honey5.setHoneyCategoryId(honeyCategory3.getCategoryId());
         honey5.setId(honeyRepository.save(honey5).getId());

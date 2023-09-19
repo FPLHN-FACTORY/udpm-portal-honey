@@ -49,9 +49,9 @@ export default function HistoryAddPoint() {
       key: "stt",
     },
     {
-      title: "Mã SV",
-      dataIndex: "mssv",
-      key: "mssv",
+      title: "User name",
+      dataIndex: "userName",
+      key: "userName",
     },
     {
       title: "Tên sinh viên",
@@ -94,8 +94,7 @@ export default function HistoryAddPoint() {
             style={{
               color: values.status === 1 ? "" : "#fff",
               height: "30px",
-            }}
-          >
+            }}>
             {values.status === 2 ? "Gửi lại" : "Hủy"}
           </Button>
         </div>
@@ -125,11 +124,11 @@ export default function HistoryAddPoint() {
             const listHistory = await Promise.all(
               response.data.data.map(async (data) => {
                 try {
-                  const user = await AddPointAPI.getUserAPiById(data.studentId);
+                  const user = await AddPointAPI.getStudent(data.studentId);
                   return {
                     ...data,
                     nameStudent: user.data.data.name,
-                    mssv: user.data.data.code,
+                    userName: user.data.data.userName,
                   };
                 } catch (error) {
                   console.error(error);
@@ -159,7 +158,7 @@ export default function HistoryAddPoint() {
   const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
-    if (value.code === undefined || value.code.trim().length === 0) {
+    if (value.userName === undefined || value.userName.trim().length === 0) {
       setFilter({
         ...filter,
         idStudent: null,
@@ -167,7 +166,7 @@ export default function HistoryAddPoint() {
         status: value.status,
       });
     } else {
-      AddPointAPI.getUserAPiByCode(value.code.trim())
+      AddPointAPI.searchStudent(value.userName.trim())
         .then((result) => {
           if (result.data.success) {
             setFilter({
@@ -201,7 +200,7 @@ export default function HistoryAddPoint() {
       <Card className="mb-2 py-1">
         <Form onFinish={onFinishSearch}>
           <Space size={"large"}>
-            <Form.Item name="code" className="search-input">
+            <Form.Item name="userName" className="search-input">
               <Input
                 style={{ width: "300px" }}
                 size="small"
@@ -244,8 +243,7 @@ export default function HistoryAddPoint() {
             <Button
               htmlType="submit"
               type="primary"
-              className="mr-10 search-button"
-            >
+              className="mr-10 search-button">
               Lọc
             </Button>
           </Space>

@@ -46,19 +46,11 @@ export default function AddPoint() {
       });
   }, [dispatch]);
 
-  useEffect(() => {
-    getHoney(student.id, categorySelected);
-  }, [categorySelected, student, formSearch]);
-
   const onFinishSearch = (value) => {
     setLoading(true);
-    AddPointAPI.getUserAPiByCode(value.code.trim()).then((response) => {
+    AddPointAPI.searchStudent(value.code.trim()).then((response) => {
       if (response.data.success) {
-        setStudent({
-          ...response.data.data,
-          khoa: "17.3",
-          phone: "0987654321",
-        });
+        setStudent(response.data.data);
         getHoney(response.data.data.id, categorySelected);
       } else {
         setStudent({});
@@ -127,8 +119,7 @@ export default function AddPoint() {
             <Button
               htmlType="submit"
               type="primary"
-              className="mr-10 search-button"
-            >
+              className="mr-10 search-button">
               Search
             </Button>
             <Form.Item
@@ -140,8 +131,7 @@ export default function AddPoint() {
                   message: "Vui lòng nhập mã sinh viên",
                 },
               ]}
-              className="search-input"
-            >
+              className="search-input">
               <Input
                 size="small"
                 placeholder="Nhập mã sinh viên cần tìm"
@@ -161,42 +151,41 @@ export default function AddPoint() {
             extra={
               <Segmented
                 className="font-bold select-category"
-                onChange={setCategorySelected}
+                onChange={(value) => {
+                  setCategorySelected(value);
+                  getHoney(student.id, value);
+                }}
                 value={categorySelected}
                 options={listCategory.map((category) => ({
                   label: category.name,
                   value: category.id,
                 }))}
               />
-            }
-          >
+            }>
             <Row className="mx-10">
               <Col
                 className="py-25"
                 span={12}
-                style={{ borderRight: "1px solid #F0F0F0" }}
-              >
+                style={{ borderRight: "1px solid #F0F0F0" }}>
                 <Row className="font-semibold">
-                  <Col span={12}>
+                  <Col span={24}>
                     <div>
-                      MSSV: <Tag>{student.code}</Tag>
+                      User name:{" "}
+                      <Tag style={{ fontSize: "14px" }}>{student.userName}</Tag>
                     </div>
-                    <div className="m-25">
-                      Họ và tên: <Tag>{student.name}</Tag>
+                    <div className="mt-25">
+                      Họ và tên:{" "}
+                      <Tag style={{ fontSize: "14px" }}>{student.name}</Tag>
                     </div>
-                    <div>
-                      Email: <Tag>{student.email}</Tag>
+                    <div className="mt-25">
+                      Email:{" "}
+                      <Tag style={{ fontSize: "14px" }}>{student.email}</Tag>
                     </div>
-                  </Col>
-                  <Col span={12}>
-                    <div>
-                      Số điểm: <Tag>{honeyStudent.point}</Tag>
-                    </div>
-                    <div className="m-25">
-                      Khóa: <Tag>{student.khoa}</Tag>
-                    </div>
-                    <div>
-                      Số điện thoại: <Tag>{student.phone}</Tag>
+                    <div className="mt-25">
+                      Số điểm:{" "}
+                      <Tag style={{ fontSize: "14px" }}>
+                        {honeyStudent.point}
+                      </Tag>
                     </div>
                   </Col>
                 </Row>
@@ -222,8 +211,7 @@ export default function AddPoint() {
                             max: 999999,
                             message: "Số điểm phải nhỏ hơn 1.000.000",
                           },
-                        ]}
-                      >
+                        ]}>
                         <InputNumber style={{ width: "100%" }} />
                       </Form.Item>
                     </Col>
@@ -245,8 +233,7 @@ export default function AddPoint() {
                             max: 100,
                             message: "Lý do không được vượt quá 100 ký tự",
                           },
-                        ]}
-                      >
+                        ]}>
                         <Input.TextArea style={{ width: "100%" }} />
                       </Form.Item>
                     </Col>
@@ -255,8 +242,7 @@ export default function AddPoint() {
                     <Button
                       htmlType="submit"
                       className="search-button"
-                      type="primary"
-                    >
+                      type="primary">
                       Send
                       <SendOutlined className="m-0 pl-5" />
                     </Button>

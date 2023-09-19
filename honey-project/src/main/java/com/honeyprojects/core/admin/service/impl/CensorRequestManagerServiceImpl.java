@@ -11,12 +11,14 @@ import com.honeyprojects.core.admin.repository.CensorHistoryRepository;
 import com.honeyprojects.core.admin.repository.CensorUserAPIRepository;
 import com.honeyprojects.core.admin.service.CensorRequestManagerService;
 import com.honeyprojects.core.common.base.PageableObject;
+import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.Message;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
+import com.honeyprojects.util.ConvertRequestApiidentity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +35,9 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
 
     @Autowired
     private AdHoneyRepository honeyRepository;
+
+    @Autowired
+    private ConvertRequestApiidentity requestApiidentity;
 
     @Override
     @Transactional
@@ -109,16 +114,16 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
     @Autowired
     private CensorUserAPIRepository userAPIRepository;
 
+
     @Override
-    public CensorUserApiResponse getUserApiByCode(String code) {
-        Long dateNow = Calendar.getInstance().getTimeInMillis();
-        return userAPIRepository.getUserApiByCode(code, dateNow);
+    public SimpleResponse searchUser(String username) {
+        String email = username + "@fpt.edu.vn";
+        return requestApiidentity.handleCallApiGetUserByEmail(email);
     }
 
     @Override
-    public CensorUserApiResponse getUserApiById(String id) {
-        Long dateNow = Calendar.getInstance().getTimeInMillis();
-        return userAPIRepository.getUserApiById(id, dateNow);
+    public SimpleResponse getUserById(String id) {
+        return requestApiidentity.handleCallApiGetUserById(id);
     }
 
 

@@ -10,6 +10,20 @@ export class TransactionApi {
       params: { recipientId },
     });
   };
+  static searchStudent = (username) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/search-student`,
+      params: { username },
+    });
+  };
+  static getStudent = (id) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/get-student`,
+      params: { id },
+    });
+  };
   static getHoney = (categoryId) => {
     return request({
       method: "GET",
