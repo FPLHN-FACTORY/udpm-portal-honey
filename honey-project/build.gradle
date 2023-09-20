@@ -26,14 +26,22 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    // https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc
-    implementation group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '12.4.0.jre11'
+    runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.0.2'
+    implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '8.0.0.Final'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '1.2.0.RELEASE'
-    implementation 'com.sun.mail:jakarta.mail:1.6.7'
+    implementation group: 'jakarta.mail', name: 'jakarta.mail-api', version: '2.1.1'
+    implementation 'org.eclipse.angus:jakarta.mail:1.0.0'
     implementation group: 'log4j', name: 'log4j', version: '1.2.17'
+    //
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    implementation 'com.nimbusds:nimbus-jose-jwt:9.0'
 }
 
 tasks.named('test') {

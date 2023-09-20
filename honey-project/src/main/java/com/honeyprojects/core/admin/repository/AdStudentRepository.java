@@ -1,9 +1,9 @@
 package com.honeyprojects.core.admin.repository;
 
-import com.honeyprojects.repository.StudentRepository;
+import com.honeyprojects.repository.CategoryRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AdStudentRepository extends StudentRepository {
+public interface AdStudentRepository extends CategoryRepository {
 
 }
