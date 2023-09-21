@@ -53,7 +53,6 @@ public class TeacherAddPointRestController {
         return new ResponseObject(addPointService.addPoint(addPointRequest));
     }
 
-
     //UserAPi
     @Autowired
     private CensorRequestManagerService requestManagerService;

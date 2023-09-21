@@ -18,6 +18,7 @@ import RequestManagerDetail from "./pages/censor/requestmanager/RequestManagerDe
 import Semester from "./pages/censor/semester";
 import ConversionHome from "./pages/censor/convertion/convertionHome";
 import IndexGift from "./pages/censor/gift/indexGift";
+import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
 
 function App() {
   return (
@@ -132,6 +133,16 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     <HistoryAddPoint />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/teacher/convertion-honey"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <ConvertionHoney />
                   </DashboardAuthUser>
                 </AuthGuard>
               }

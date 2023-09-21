@@ -172,12 +172,14 @@ public class DBGenerator implements CommandLineRunner {
         userSemester1.setSemesterId(semester.getId());
         userSemester1.setStudentId(userAPI1.getId());
         userSemester1.setTotalHoney(2000);
+        userSemester1.setCategoryId(category1.getId());
         userSemester1.setId(userSemesterRepository.save(userSemester1).getId());
 
         UserSemester userSemester2 = new UserSemester();
         userSemester2.setSemesterId(semester.getId());
         userSemester2.setStudentId(userAPI2.getId());
         userSemester2.setTotalHoney(3100);
+        userSemester2.setCategoryId(category2.getId());
         userSemester2.setId(userSemesterRepository.save(userSemester2).getId());
 
 

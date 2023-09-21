@@ -74,7 +74,6 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     public History addPoint(TeacherAddPointRequest addPointRequest) {
         Long dateNow = Calendar.getInstance().getTimeInMillis();
         String idTeacher = userRepository.findAll().get(0).getId();
-
         History history = new History();
         history.setStatus(HoneyStatus.CHO_PHE_DUYET);
         history.setTeacherId(idTeacher);
@@ -99,4 +98,5 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
         history.setStudentId(addPointRequest.getStudentId());
         return historyRepository.save(history);
     }
+
 }
