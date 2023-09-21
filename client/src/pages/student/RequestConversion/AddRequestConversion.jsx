@@ -62,9 +62,12 @@ export default function AddRequestConversion(props) {
   }, [categoryType, listConversion]);
 
   useEffect(() => {
-    fechUserApi();
     fechCategory();
     fechGift();
+  }, []);
+
+  useEffect(() => {
+    fechUserApiById();
   }, []);
 
   const getpointGift = parseInt(inputNumberValue) * 0.25;
@@ -73,29 +76,28 @@ export default function AddRequestConversion(props) {
     setCategoryType(value);
     const data = {
       categoryId: value,
-      studentId: fillUserApi[0].id,
+      studentId: fillUserApi.idUser,
     };
     getPoint(data);
-    console.log(data.categoryId);
-    console.log(data.studentId);
   };
 
   const getPoint = (data) => {
     ResquestConversion.getPointHoney(data)
       .then((response) => {
-        setFillPoint(response.data.data);
+        setFillPoint(response.data.data ? response.data.data : 0);
         console.log("Điểm từ API:", response.data.data);
       })
       .catch((error) => console.log(error));
   };
 
-  const fechUserApi = () => {
-    ResquestConversion.getUserAPi().then((response) => {
+  const fechUserApiById = () => {
+    ResquestConversion.getUserAPiByid().then((response) => {
       setFillUserApi({
         ...response.data.data,
         khoa: "17.3",
         phone: "0763104018",
       });
+      console.log(response.data.data.idUser);
     });
   };
 
@@ -149,12 +151,15 @@ export default function AddRequestConversion(props) {
     ) {
       message.error("Bạn không đủ điểm để đổi quà trong ranh này.");
       return;
+    } else if (inputNumberValue <= 0) {
+      message.error("gói quà phải >= 0");
+      return;
     }
 
     console.log("Tên quà đã chọn:", selectedGiftName);
     const dataToAdd = {
-      studentId: fillUserApi[0].id,
       honeyId: fillPoint.id,
+      studentId: fillUserApi.idUser,
       honeyPoint:
         parseInt(selectedConversion ? selectedConversion.ratio : 0) *
         parseInt(inputNumberValue),
@@ -255,13 +260,13 @@ export default function AddRequestConversion(props) {
                 <>
                   <Col span={12}>
                     <div>
-                      MSSV: <Tag>{fillUserApi[0].code}</Tag>
+                      MSSV: <Tag>{fillUserApi.name}</Tag>
                     </div>
                     <div className="m-25">
-                      Họ và tên: <Tag>{fillUserApi[0].name}</Tag>
+                      Họ và tên: <Tag>{fillUserApi.userName}</Tag>
                     </div>
                     <div>
-                      Email: <Tag>{fillUserApi[0].email}</Tag>
+                      Email: <Tag>{fillUserApi.email}</Tag>
                     </div>
                   </Col>
 

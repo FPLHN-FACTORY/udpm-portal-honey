@@ -31,20 +31,11 @@ const statusHistory = (status) => {
 
 export default function AddRequestConversionHistory() {
   const [getHistory, setGetHistory] = useState([]);
-  const [studentInfo, setStudentInfo] = useState({});
   const [fillCategory, setFillCategory] = useState([]);
   const [totalPages, setTotalPages] = useState([]);
   const [filter, setFilter] = useState({ page: 0 });
 
   const fechData = (filter) => {
-    try {
-      ResquestConversion.getUserAPi().then((response) => {
-        setStudentInfo(response.data.data[0]);
-      });
-    } catch (error) {
-      console.error("Lỗi khi gọi API", error);
-    }
-
     ResquestConversion.getHistory(filter).then((response) => {
       setGetHistory(response.data.data);
       setTotalPages(response.data.totalPages);
@@ -85,18 +76,7 @@ export default function AddRequestConversionHistory() {
       key: "stt",
       render: (text, record, index) => index + 1,
     },
-    {
-      title: "Mã Sinh viên",
-      dataIndex: "code",
-      key: "code",
-      render: (text) => <span>{studentInfo.code}</span>,
-    },
-    {
-      title: "Tên sinh viên",
-      dataIndex: "name",
-      key: "name",
-      render: (text) => <span>{studentInfo.name}</span>,
-    },
+
     {
       title: "Loại điểm",
       dataIndex: "nameCategory",
@@ -119,30 +99,30 @@ export default function AddRequestConversionHistory() {
       key: "createdDate",
       render: (text) => <span>{moment(text).format("DD/MM/YYYY")}</span>,
     },
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => (
-        <Tag color={status === 0 ? "geekblue" : "default"}>
-          {status === 0 ? "Chờ phê duyệt" : "Không xác định"}
-        </Tag>
-      ),
-    },
-    {
-      title: () => <div>Action</div>,
-      key: "action",
-      render: (_, record) => (
-        <Space size="small">
-          <Button
-            type="primary"
-            onClick={() => deleteRequestConversion(record.id)}
-          >
-            hủy
-          </Button>
-        </Space>
-      ),
-    },
+    // {
+    //   title: "Trạng thái",
+    //   dataIndex: "status",
+    //   key: "status",
+    //   render: (status) => (
+    //     <Tag color={status === 0 ? "geekblue" : "default"}>
+    //       {status === 0 ? "Chờ phê duyệt" : "Không xác định"}
+    //     </Tag>
+    //   ),
+    // },
+    // {
+    //   title: () => <div>Action</div>,
+    //   key: "action",
+    //   render: (_, record) => (
+    //     <Space size="small">
+    //       <Button
+    //         type="primary"
+    //         onClick={() => deleteRequestConversion(record.id)}
+    //       >
+    //         hủy
+    //       </Button>
+    //     </Space>
+    //   ),
+    // },
   ];
 
   return (
