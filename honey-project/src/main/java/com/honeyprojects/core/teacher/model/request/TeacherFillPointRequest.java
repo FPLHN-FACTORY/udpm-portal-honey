@@ -6,15 +6,14 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
-
 @Getter
 @Setter
 @ToString
-public class TeacherGetPointRequest {
+public class TeacherFillPointRequest {
 
     @NotBlank
     @Length(max = 36)
-    String studentId;
+    String code;
 
     @NotBlank
     @Length(max = 36)

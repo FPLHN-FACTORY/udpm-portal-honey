@@ -26,5 +26,4 @@ public interface TeacherHistoryRepository extends HistoryRepository {
     Page<TeacherAddHoneyHistoryResponse> getHistory(@Param("searchParams") TeacherSearchHistoryRequest searchParams,
                                                     Pageable pageable);
 
-
 }

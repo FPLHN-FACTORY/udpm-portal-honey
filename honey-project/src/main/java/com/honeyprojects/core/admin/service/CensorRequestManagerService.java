@@ -25,4 +25,5 @@ public interface CensorRequestManagerService {
     CensorDetailRequestResponse getRequest(String idRequest);
 
     Integer countRequest(Integer type);
+
 }
