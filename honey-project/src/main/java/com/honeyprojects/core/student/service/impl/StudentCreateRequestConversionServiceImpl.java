@@ -1,6 +1,7 @@
 package com.honeyprojects.core.student.service.impl;
 
 import com.honeyprojects.core.common.base.PageableObject;
+import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.student.model.repuest.StudentCreateRequestConversionRequest;
 import com.honeyprojects.core.student.model.repuest.StudentFilterHistoryRequest;
 import com.honeyprojects.core.student.model.response.StudentCreateResquestConversionResponse;
@@ -12,6 +13,7 @@ import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
+import com.honeyprojects.util.ConvertRequestApiidentity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +31,9 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
 
     @Autowired
     private StudentUserSemesterRepository userSemesterRepository;
+
+    @Autowired
+    private ConvertRequestApiidentity convertRequestApiidentity;
     @Override
     public History addRequestConversion(StudentCreateRequestConversionRequest createRequest) {
         // Lấy thông tin Honey hiện tại của sinh viên
@@ -73,6 +78,11 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
     @Override
     public void deleteRequestById(String id) {
         studentCreateRequestConversionRepository.deleteById(id);
+    }
+
+    @Override
+    public SimpleResponse getUserById(String id) {
+        return convertRequestApiidentity.handleCallApiGetUserById(id);
     }
 
 }
