@@ -11,14 +11,6 @@ export class ConvertionHoneyAPI {
     });
   };
 
-  static getUserAPiByCode = (code) => {
-    return request({
-      method: "GET",
-      url: `/${this.COMPONENT_NAME}/user-api`,
-      params: { code: code },
-    });
-  };
-
   static getHoney = (studentId, categoryId) => {
     return request({
       method: "GET",

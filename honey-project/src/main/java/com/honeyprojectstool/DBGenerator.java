@@ -11,6 +11,7 @@ import com.honeyprojects.entity.HoneyCategory;
 import com.honeyprojects.entity.UserSemester;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.TypeCategory;
 import com.honeyprojects.repository.UserRepositpry;
 import com.honeyprojects.repository.ConversionRepository;
 import com.honeyprojects.repository.GiftRepository;
@@ -67,18 +68,21 @@ public class DBGenerator implements CommandLineRunner {
         category1.setName("GOLD");
         category1.setCategoryStatus(CategoryStatus.ACTIVE);
         category1.setCode("CT1");
+        category1.setType(TypeCategory.ACCEPT);
         category1.setId(categoryRepository.save(category1).getId());
 
         Category category2 = new Category();
         category2.setName("SLIVER");
         category2.setCategoryStatus(CategoryStatus.ACTIVE);
         category2.setCode("CT2");
+        category2.setType(TypeCategory.ACCEPT);
         category2.setId(categoryRepository.save(category2).getId());
 
         Category category3 = new Category();
         category3.setName("BRONZE");
         category3.setCategoryStatus(CategoryStatus.ACTIVE);
         category3.setCode("CT3");
+        category3.setType(TypeCategory.FREE);
         category3.setId(categoryRepository.save(category3).getId());
 
         HoneyCategory honeyCategory1 = new HoneyCategory();
@@ -104,22 +108,22 @@ public class DBGenerator implements CommandLineRunner {
         semester.setId(semesterRepository.save(semester).getId());
 
         UserAPI userAPI1 = new UserAPI();
-        userAPI1.setName("Nguyễn Quốc Huy");
-        userAPI1.setEmail("huynq@gmail.com");
-        userAPI1.setCode("TE2");
-        userAPI1.setId(userRepositpry.save(userAPI1).getId());
+        userAPI1.setName("Triệu Văn Tưởng");
+        userAPI1.setEmail("tuongtvph26149@fpt.edu.vn");
+        userAPI1.setCode("tuongtvph26149");
+        userAPI1.setId("C4CF21F4-F3E0-490E-B1CC-08DBB743DD7D".toLowerCase());
 
         UserAPI userAPI2 = new UserAPI();
-        userAPI2.setName("Ngọc Anh");
-        userAPI2.setEmail("ngocanh@gmail.com");
-        userAPI2.setCode("TE1");
-        userAPI2.setId(userRepositpry.save(userAPI2).getId());
+        userAPI2.setName("Nguyễn Quốc Huy");
+        userAPI2.setEmail("huynqph26772@fpt.edu.vn");
+        userAPI2.setCode("huynqph26772");
+        userAPI2.setId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92".toLowerCase());
 
         UserAPI userAPI3 = new UserAPI();
-        userAPI1.setName("Nguyễn Anh Dũng");
-        userAPI1.setEmail("dungna29@gmail.com");
-        userAPI1.setCode("TE3");
-        userAPI1.setId(userRepositpry.save(userAPI1).getId());
+        userAPI3.setName("Nguyễn Thúy Hằng");
+        userAPI3.setEmail("hangnt169@fpt.edu.vn");
+        userAPI3.setCode("hangnt169");
+        userAPI3.setId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4".toLowerCase());
 
         Honey honey1 = new Honey();
         honey1.setHoneyPoint(1000);
@@ -151,7 +155,7 @@ public class DBGenerator implements CommandLineRunner {
 
         Honey honey5 = new Honey();
         honey5.setHoneyPoint(100);
-        honey5.setStudentId(userAPI2.getId());
+        honey5.setStudentId(userAPI3.getId());
         honey5.setUserSemesterId(semester.getId());
         honey5.setHoneyCategoryId(honeyCategory3.getCategoryId());
         honey5.setId(honeyRepository.save(honey5).getId());

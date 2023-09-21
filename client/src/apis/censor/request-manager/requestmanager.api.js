@@ -33,6 +33,14 @@ export class RequestManagerAPI {
       params: filter,
     });
   };
+
+  static getTransaction = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/transaction`,
+      params: filter,
+    });
+  };
   static changeStatus = (idHistory, status) => {
     return request({
       method: "PUT",
@@ -45,6 +53,14 @@ export class RequestManagerAPI {
     return request({
       method: "GET",
       url: `/${this.COMPONENT_NAME}/request-manager/${idRequest}`,
+    });
+  };
+
+  static conuntRequest = (type) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/count-request`,
+      params: { type: type },
     });
   };
 }

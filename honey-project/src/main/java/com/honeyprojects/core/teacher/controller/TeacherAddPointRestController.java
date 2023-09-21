@@ -33,6 +33,7 @@ public class TeacherAddPointRestController {
         return new ResponseObject(addPointService.getCategory());
     }
 
+
     @GetMapping("/get-honey")
     public ResponseObject getPointStudent(@Valid TeacherGetPointRequest getPointRequest) {
         return new ResponseObject(addPointService.getPointStudent(getPointRequest));
@@ -53,16 +54,14 @@ public class TeacherAddPointRestController {
         return new ResponseObject(addPointService.addPoint(addPointRequest));
     }
 
-    //UserAPi
-    @Autowired
-    private CensorRequestManagerService requestManagerService;
 
-    @GetMapping("/user-api")
-    public ResponseObject getUserApiByCode(String code) {
-        return new ResponseObject(requestManagerService.getUserApiByCode(code));
+
+    @GetMapping("/search-student")
+    public ResponseObject searchStudent(String username) {
+        return new ResponseObject(addPointService.searchUser(username));
     }
-    @GetMapping("/user-api/{id}")
-    public ResponseObject getUserApiById(@PathVariable String id) {
-        return new ResponseObject(requestManagerService.getUserApiById(id));
+    @GetMapping("/get-student")
+    public ResponseObject getStudent(String id) {
+        return new ResponseObject(addPointService.getUserById(id));
     }
 }

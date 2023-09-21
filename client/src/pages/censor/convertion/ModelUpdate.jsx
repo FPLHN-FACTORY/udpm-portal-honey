@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { ConversionAPI } from "../../../apis/censor/conversion/conversion.api";
-const ModalUpdateConversion = (props) => {
+const ModalUpdateConversion = (props, fetchData) => {
   const { conversion } = props;
   const [fillCategory, setFillCategory] = useState([]);
   const [fillGift, setFillGift] = useState([]);
@@ -55,6 +55,11 @@ const ModalUpdateConversion = (props) => {
   };
 
   const handleConversationUpdate = async () => {
+    if (!selectCategory || !pointCategory || !selectGift || !pointGift) {
+      message.error("không được để trống");
+      return;
+    }
+
     const ratio = parseFloat(selectPointCategory) / parseFloat(selectPointGift);
 
     const code = `${fillName.nameCate}/${fillName.nameGift}${parseInt(
@@ -72,13 +77,12 @@ const ModalUpdateConversion = (props) => {
       .then(() => {
         message.success("Update thành công");
         handleCancel(false);
-        console.log("tỉ số và mã đã được lưu vào db");
       })
       .catch((error) => {
         if (error.message && error.message.data && error.message.data.message) {
           message.error(error.response.data.message);
         } else {
-          message.error("Lỗi");
+          message.error("lỗi");
         }
       });
   };
@@ -202,7 +206,7 @@ const ModalUpdateConversion = (props) => {
                 marginLeft: "20px",
               }}
               placeholder=""
-              defaultValue={1}
+              defaultValue={0.25}
               onChange={(e) => setPoinGift(e.target.value)}
               onBlur={handleGiftBlur}
             />
@@ -217,7 +221,7 @@ const ModalUpdateConversion = (props) => {
               Điểm
             </span>
           </div>
-          <form style={{ paddingLeft: "80px" }}>
+          {/* <form style={{ paddingLeft: "80px" }}>
             <div style={{ marginTop: "50px" }}>
               <div style={{ display: "block", marginBottom: "50px" }}>
                 <span style={{ fontSize: "18px", marginRight: "100px" }}>
@@ -259,10 +263,10 @@ const ModalUpdateConversion = (props) => {
                 >
                   {fillName.nameCate}/{fillName.nameGift}
                   {/* {conversionCode} */}
-                </span>
+          {/* </span>
               </div>
-            )}
-          </form>
+            )} */}
+          {/* </form> */}
           <Form.Item
             wrapperCol={{
               offset: 8,

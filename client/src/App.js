@@ -8,7 +8,7 @@ import NotAuthorized from "./pages/401";
 import AuthGuard from "./guard/AuthGuard";
 import DashboardCensor from "./layout/censor/DashboardCensor";
 import GlobalLoading from "./components/global-loading/GlobalLoading";
-import DashboardAuthUser from "./layout/censor/DashboardCensor";
+import DashboardAuthUser from "./layout/student/auth/DashboardAuthUser";
 import Index from "./pages/censor/category";
 import AddPoint from "./pages/teacher/addpoint/AddPoint";
 import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
@@ -19,6 +19,12 @@ import Semester from "./pages/censor/semester";
 import ConversionHome from "./pages/censor/convertion/convertionHome";
 import IndexGift from "./pages/censor/gift/indexGift";
 import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
+import AddRequestConversion from "./pages/student/RequestConversion/AddRequestConversion";
+import AddRequestConversionHistory from "./pages/student/RequestConversion/AddRequestConversionHistory";
+import TransactionPage from "./pages/student/transaction/TransactionPage";
+import TransactionHistory from "./pages/student/transaction/TransactionHistory";
+import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction";
+import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 
 function App() {
   return (
@@ -79,6 +85,16 @@ function App() {
               }
             />
             <Route
+              path="/censor/request-manager"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <RequestManager />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
               path="/censor/request-manager/add-point"
               element={
                 <AuthGuard>
@@ -89,11 +105,11 @@ function App() {
               }
             />
             <Route
-              path="/censor/request-manager"
+              path="/censor/request-manager/transaction"
               element={
                 <AuthGuard>
                   <DashboardCensor>
-                    <RequestManager />
+                    <RequestTransaction />
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -110,10 +126,22 @@ function App() {
             />
             {/* Màn teacher */}
             <Route
-              path=""
+              path="/student/create-conversion"
               element={
                 <AuthGuard>
-                  <DashboardAuthUser></DashboardAuthUser>
+                  <DashboardAuthUser>
+                    <AddRequestConversion />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/create-conversion/history"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <AddRequestConversionHistory />
+                  </DashboardAuthUser>
                 </AuthGuard>
               }
             />
@@ -121,9 +149,9 @@ function App() {
               path="/teacher/add-point"
               element={
                 <AuthGuard>
-                  <DashboardAuthUser>
+                  <DashboardTeacher>
                     <AddPoint />
-                  </DashboardAuthUser>
+                  </DashboardTeacher>
                 </AuthGuard>
               }
             />
@@ -131,8 +159,29 @@ function App() {
               path="/teacher/add-point/history"
               element={
                 <AuthGuard>
-                  <DashboardAuthUser>
+                  <DashboardTeacher>
                     <HistoryAddPoint />
+                  </DashboardTeacher>
+                </AuthGuard>
+              }
+            />
+            {/* Màn sinh viên */}
+            <Route
+              path="/student/transaction/create"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <TransactionPage />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/transaction"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <TransactionHistory />
                   </DashboardAuthUser>
                 </AuthGuard>
               }

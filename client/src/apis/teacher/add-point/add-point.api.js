@@ -3,18 +3,18 @@ import { request } from "../../../helper/request.helper";
 export class AddPointAPI {
   static COMPONENT_NAME = "teacher/add-point";
 
-  //UserAPI
-  static getUserAPiByCode = (code) => {
+  static searchStudent = (username) => {
     return request({
       method: "GET",
-      url: `/${this.COMPONENT_NAME}/user-api`,
-      params: { code: code },
+      url: `/${this.COMPONENT_NAME}/search-student`,
+      params: { username },
     });
   };
-  static getUserAPiById = (id) => {
+  static getStudent = (id) => {
     return request({
       method: "GET",
-      url: `/${this.COMPONENT_NAME}/user-api/${id}`,
+      url: `/${this.COMPONENT_NAME}/get-student`,
+      params: { id },
     });
   };
 

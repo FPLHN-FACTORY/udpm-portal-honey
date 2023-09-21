@@ -2,6 +2,7 @@ package com.honeyprojects.core.teacher.controller;
 
 import com.honeyprojects.core.admin.service.CensorRequestManagerService;
 import com.honeyprojects.core.common.base.ResponseObject;
+import com.honeyprojects.core.common.base.UdomHoney;
 import com.honeyprojects.core.teacher.model.request.TeacherConvertionHoneyRequest;
 import com.honeyprojects.core.teacher.model.request.TeacherGetPointRequest;
 import com.honeyprojects.core.teacher.service.TeacherAddPointService;
@@ -23,13 +24,6 @@ public class TeacherConvertionHoneyController {
     private TeacherConvertionHoneyService teacherConvertionHoneyService;
     @Autowired
     private TeacherAddPointService teacherAddPointService;
-    @Autowired
-    private CensorRequestManagerService requestManagerService;
-
-    @GetMapping("/user-api")
-    public ResponseObject getUserApiByCode(String code) {
-        return new ResponseObject(requestManagerService.getUserApiByCode(code));
-    }
 
     @GetMapping("/get-honey")
     public ResponseObject getPointStudent(@Valid TeacherGetPointRequest getPointRequest) {

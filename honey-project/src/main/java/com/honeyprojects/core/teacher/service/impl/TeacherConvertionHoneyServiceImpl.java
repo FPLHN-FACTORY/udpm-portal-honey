@@ -1,10 +1,11 @@
 package com.honeyprojects.core.teacher.service.impl;
 
 import com.honeyprojects.core.admin.model.response.AdminConversionResponse;
-import com.honeyprojects.core.admin.repository.CensorUserAPIRepository;
 import com.honeyprojects.core.common.base.PageableObject;
+import com.honeyprojects.core.common.base.UdomHoney;
 import com.honeyprojects.core.teacher.model.request.TeacherConvertionHoneyRequest;
 import com.honeyprojects.core.teacher.repository.TeacherGetHoneyRepository;
+import com.honeyprojects.core.teacher.repository.TeacherGiftRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherShowConvertionRepository;
 import com.honeyprojects.core.teacher.repository.TeacherUserSemesterRepository;
@@ -15,8 +16,10 @@ import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.PaginationConstant;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
+import com.honeyprojects.repository.GiftRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,11 +38,14 @@ public class TeacherConvertionHoneyServiceImpl implements TeacherConvertionHoney
     @Autowired
     private TeacherUserSemesterRepository usRepository;
     @Autowired
-    private CensorUserAPIRepository userRepository;
+    private UdomHoney udomHoney;
     @Autowired
     private TeacherGetHoneyRepository honeyRepository;
     @Autowired
     private TeacherShowConvertionRepository showConvertionRepository;
+    @Autowired
+    private TeacherGiftRepository giftRepository;
+
 
     @Override
     @Transactional
@@ -58,7 +64,7 @@ public class TeacherConvertionHoneyServiceImpl implements TeacherConvertionHoney
             int deductedPoints = convertionHoneyRequest.getHoneyPoint();
             honey.setHoneyPoint(honey.getHoneyPoint() - deductedPoints);
         }
-        String idTeacher = userRepository.findAll().get(0).getId();
+        String idTeacher = udomHoney.getIdUser();
         History history = new History();
         history.setStatus(HoneyStatus.DA_PHE_DUYET);
         history.setHoneyId(honeyRepository.save(honey).getId());
@@ -66,6 +72,7 @@ public class TeacherConvertionHoneyServiceImpl implements TeacherConvertionHoney
         history.setHoneyPoint(convertionHoneyRequest.getHoneyPoint());
         history.setType(TypeHistory.DOI_QUA);
         history.setGiftId(convertionHoneyRequest.getGiftId());
+        history.setNameGift(giftRepository.findById(convertionHoneyRequest.getGiftId()).get().getName());
         history.setCreatedAt(dateNow);
         history.setHoneyId(honey.getId());
         history.setStudentId(convertionHoneyRequest.getStudentId());

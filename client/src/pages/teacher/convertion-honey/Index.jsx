@@ -48,6 +48,7 @@ export default function ConvertionHoney() {
   const [honeyStudent, setHoneyStudent] = useState({ honey: 0 });
   const [giftOptions, setGiftOptions] = useState([]);
   const [categorySelected, setCategorySelected] = useState();
+  const [loading, setLoading] = useState(false);
   const [formSearch] = Form.useForm();
   const [formAddPoint] = Form.useForm();
 
@@ -71,13 +72,10 @@ export default function ConvertionHoney() {
   }, [categorySelected]);
 
   const onFinishSearch = (value) => {
-    AddPointAPI.getUserAPiByCode(value.code.trim()).then((response) => {
+    setLoading(true);
+    AddPointAPI.searchStudent(value.code.trim()).then((response) => {
       if (response.data.success) {
-        setStudent({
-          ...response.data.data,
-          khoa: "17.3",
-          phone: "0987654321",
-        });
+        setStudent(response.data.data);
         getHoney(response.data.data.id, categorySelected);
       } else {
         setStudent({});
@@ -89,6 +87,7 @@ export default function ConvertionHoney() {
         ]);
       }
     });
+    setLoading(false);
   };
 
   const getHoney = (studentId, categoryId) => {
@@ -221,14 +220,15 @@ export default function ConvertionHoney() {
               {
                 required: true,
                 whitespace: true,
-                message: "Vui lòng nhập mã sinh viên",
+                message: "Vui lòng nhập user name sinh viên",
               },
             ]}
             className="search-input"
           >
             <Input
               size="small"
-              placeholder="Nhập mã sinh viên..."
+              placeholder="Nhập user name sinh viên..."
+              style={{ width: "250px" }}
               prefix={<SearchOutlined />}
             />
           </Form.Item>
@@ -262,24 +262,18 @@ export default function ConvertionHoney() {
             <Row className="font-semibold">
               <Col span={12}>
                 <div>
-                  MSSV: <Tag>{student.code}</Tag>
+                  User name: <Tag>{student.userName}</Tag>
                 </div>
                 <div className="m-25">
                   Họ và tên: <Tag>{student.name}</Tag>
                 </div>
-                <div>
-                  Email: <Tag>{student.email}</Tag>
-                </div>
               </Col>
               <Col span={12}>
                 <div>
-                  Số điểm: <Tag>{honeyStudent.point}</Tag>
+                  Email: <Tag>{student.email}</Tag>
                 </div>
                 <div className="m-25">
-                  Khóa: <Tag>{student.khoa}</Tag>
-                </div>
-                <div>
-                  Số điện thoại: <Tag>{student.phone}</Tag>
+                  Số điểm: <Tag>{honeyStudent.point}</Tag>
                 </div>
               </Col>
             </Row>
@@ -303,7 +297,7 @@ export default function ConvertionHoney() {
                   </div>
                   <div
                     style={{
-                      marginTop: "40px",
+                      marginTop: "30px",
                       marginLeft: "7px",
                     }}
                   >
@@ -325,10 +319,14 @@ export default function ConvertionHoney() {
                     <InputNumber
                       min={0}
                       value={quantityGift}
-                      placeholder="Quà..."
+                      placeholder="Quà"
                       onChange={(value) => setQuantityGift(value)}
+                      style={{
+                        width: "65px",
+                        marginRight: "10px",
+                      }}
                     />
-                    <span style={{ marginLeft: "5px" }}>gói</span>
+                    <span style={{ fontSize: "14px" }}>gói</span>{" "}
                   </div>
                   <div style={{ marginTop: "25px" }}>
                     <Tag>{quantityGift * 0.25}</Tag> điểm

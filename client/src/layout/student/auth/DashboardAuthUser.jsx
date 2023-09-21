@@ -16,8 +16,10 @@ import { Layout, Drawer, Row, Menu, Col } from "antd";
 import Header from "../../../components/user/auth/Header";
 import {
   EditOutlined,
+  MailOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  TransactionOutlined,
 } from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
 const { Header: AntHeader, Content } = Layout;
@@ -46,11 +48,13 @@ function DashboardAuthUser({ children }) {
     };
   }
   const items = [
-    getItem(
-      <Link to="/user/create-article">Nothing</Link>,
-      "1",
-      <EditOutlined />
-    )
+    getItem("Giao dịch điểm", "0", <TransactionOutlined />, [
+      getItem(
+        <Link to={"/student/transaction/create"}>Tạo giao dịch</Link>,
+        "1"
+      ),
+      getItem(<Link to={"/student/transaction"}>Lịch sử giao dịch</Link>, "2"),
+    ]),
   ];
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
@@ -60,8 +64,7 @@ function DashboardAuthUser({ children }) {
     <Layout
       className={`layout-dashboard ${
         pathname === "profile" ? "layout-profile" : ""
-      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
-    >
+      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}>
       <Drawer
         id="drawer_ui"
         title={false}
@@ -74,15 +77,14 @@ function DashboardAuthUser({ children }) {
         style={{ background: "#fff", overflowX: "hidden" }}
         className={`drawer-sidebar ${
           pathname === "rtl" ? "drawer-sidebar-rtl" : ""
-        } `}
-      >
-        <Layout id="layout_drawer"
-        style={{ background: "#fff", overflowX: "hidden" }}
+        } `}>
+        <Layout
+          id="layout_drawer"
+          style={{ background: "#fff", overflowX: "hidden" }}
           className={` bg-white layout-dashboard ${
             pathname === "rtl" ? "layout-dashboard-rtl" : ""
-          }`}
-        >
-        <Row className="flex justify-center align-middle  mt-5 pb-8">
+          }`}>
+          <Row className="flex justify-center align-middle  mt-5 pb-8">
             <div className="brand text-center">
               <Link to="/" className="active">
                 <img
@@ -94,38 +96,37 @@ function DashboardAuthUser({ children }) {
                 />
               </Link>
             </div>
-        </Row>
-        <Menu mode="inline" items={items} onClick={openDrawer} />
+          </Row>
+          <Menu mode="inline" items={items} onClick={openDrawer} />
         </Layout>
       </Drawer>
       <div className="bg-white">
-      <Sider
-        id="sildebar_ui"
-        trigger={null}
-        collapsible
-        collapsed={collapsed}
-        width={250}
-        className={`sider-primary ant-layout-sider-primary`}
-        style={{ background: "#fff", overflowX: "hidden" }}
-      >
-        <Row className="flex justify-center align-middle  mt-5 pb-8">
-          {!collapsed && (
-            <div className="brand text-center">
-              <Link to="/" className="active">
-                <img
-                  src={logo}
-                  style={{
-                    height: "80px",
-                  }}
-                  alt="Logo"
-                />
-              </Link>
-            </div>
-          )}
-        </Row>
+        <Sider
+          id="sildebar_ui"
+          trigger={null}
+          collapsible
+          collapsed={collapsed}
+          width={250}
+          className={`sider-primary ant-layout-sider-primary`}
+          style={{ background: "#fff", overflowX: "hidden" }}>
+          <Row className="flex justify-center align-middle  mt-5 pb-8">
+            {!collapsed && (
+              <div className="brand text-center">
+                <Link to="/" className="active">
+                  <img
+                    src={logo}
+                    style={{
+                      height: "80px",
+                    }}
+                    alt="Logo"
+                  />
+                </Link>
+              </div>
+            )}
+          </Row>
 
-        <Menu mode="inline" items={items} />
-      </Sider>
+          <Menu mode="inline" items={items} />
+        </Sider>
       </div>
       <Layout className="pb-14">
         <AntHeader className={`${fixed ? "ant-header-fixed" : ""}`}>
