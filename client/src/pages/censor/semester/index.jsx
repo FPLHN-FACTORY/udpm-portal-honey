@@ -122,7 +122,7 @@ export default function Semester() {
   ];
 
   return (
-    <>
+    <div className="admin-semeter">
       {showModal && (
         <ModalAdd
           modalOpen={showModal}
@@ -198,6 +198,6 @@ export default function Semester() {
           />
         </div>
       </Card>
-    </>
+    </div>
   );
 }

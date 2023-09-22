@@ -1,4 +1,4 @@
-.search-button1 {
+.admin-semeter .search-button1 {
   margin-top: 10px;
   width: 100px;
   height: 40px;
@@ -26,14 +26,14 @@
   touch-action: manipulation;
 }
 
-.search-button1:hover,
-.search-button1:focus {
+.admin-semeter .search-button1:hover,
+.admin-semeter .search-button1:focus {
   background-color: rgb(245 158 11);
   border-color: rgb(245 158 11);
   color: #000000;
 }
 
-.add-button1 {
+.admin-semeter .add-button1 {
   background-color: #537fe7;
   border: 0 solid #dbdbdb;
   margin-bottom: 10px;
@@ -59,14 +59,14 @@
   touch-action: manipulation;
 }
 
-.add-button1:hover,
-.add-button1:focus {
+.admin-semeter .add-button1:hover,
+.admin-semeter .add-button1:focus {
   background-color: rgb(245 158 11);
   border-color: rgb(245 158 11);
   color: #000000;
 }
 
-.submit-button {
+.admin-semeter .submit-button {
   background-color: #000000;
   border: 0 solid #dbdbdb;
   border-radius: 5px;
@@ -91,14 +91,14 @@
   touch-action: manipulation;
 }
 
-.submit-button:hover,
-.submit-button:focus {
+.admin-semeter .submit-button:hover,
+.admin-semeter .submit-button:focus {
   background-color: rgb(245 158 11);
   border-color: rgb(245 158 11);
   color: #000000;
 }
 
-.update-button {
+.admin-semeter .update-button {
   padding: 1px 0.7rem;
   background-color: #ed7e1f;
   border: 0 solid #dbdbdb;
@@ -118,21 +118,21 @@
   touch-action: manipulation;
 }
 
-.update-button:hover,
-.update-button:focus {
+.admin-semeter .update-button:hover,
+.admin-semeter .update-button:focus {
   background-color: rgb(245 158 11);
   border-color: rgb(245 158 11);
   color: #000000;
 }
 
-.update-button .icon {
+.admin-semeter .update-button .icon {
   font-size: 15px;
 }
-.update-button:hover .icon {
+.admin-semeter .update-button:hover .icon {
   color: black;
 }
 
-.detail-button {
+.admin-semeter .detail-button {
   padding: 1px 0.7rem;
   background-color: #63ab15;
   border: 0 solid #dbdbdb;
@@ -151,40 +151,40 @@
   -webkit-user-select: none;
   touch-action: manipulation;
 }
-.detail-button:hover,
-.detail-button:focus {
+.admin-semeter .detail-button:hover,
+.admin-semeter .detail-button:focus {
   background-color: rgb(245 158 11);
   border-color: rgb(245 158 11);
   color: #000000;
 }
 
-.detail-button .icon {
+.admin-semeter .detail-button .icon {
   font-size: 15px;
 }
-.detail-button:hover .icon {
+.admin-semeter .detail-button:hover .icon {
   color: black;
 }
 /*
 */
-.ant-modal-title {
+/* .ant-modal-title {
   font-size: 35px;
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center;
-}
+} */
 
-.ant-form-item-label {
+.admin-semeter .ant-form-item-label {
   font-size: 15px;
   font-weight: normal;
   color: #333;
   margin-bottom: 8px;
 }
 
-.ant-form-item-control {
+.admin-semeter .ant-form-item-control {
   margin-top: 16px;
 }
 
-.submit-button {
+.admin-semeter .submit-button {
   background-color: #1890ff;
   color: #fff;
   border: none;
@@ -194,49 +194,49 @@
   font-weight: bold;
 }
 
-.submit-button:hover {
+.admin-semeter .submit-button:hover {
   background-color: #096dd9;
 }
 
-.ant-input[type="date"] {
+.admin-semeter .ant-input[type="date"] {
   padding: 10px;
   width: 100%;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-.ant-input[type="date"]:focus {
+.admin-semeter .ant-input[type="date"]:focus {
   border-color: #1890ff;
   box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
 
-.ant-form-item {
+.admin-semeter .ant-form-item {
   margin-bottom: 20px;
 }
 
-.button-container {
+.admin-semeter .button-container {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
 }
 
-.button-container button {
+.admin-semeter .button-container button {
   flex: 1;
   margin: 0 8px;
 }
 
-.submit-button-ok {
+.admin-semeter .submit-button-ok {
   background-color: #52c41a;
 }
 
-.submit-button-ok:hover {
+.admin-semeter .submit-button-ok:hover {
   background-color: #389e0d;
 }
 
-.submit-button-cancel {
+.admin-semeter .submit-button-cancel {
   margin-right: 10px;
 }
 
-.submit-button-ok {
+.admin-semeter .submit-button-ok {
   margin-left: 10px;
 }

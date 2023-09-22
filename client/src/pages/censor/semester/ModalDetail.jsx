@@ -24,7 +24,7 @@ const ModalDetail = (props) => {
   };
 
   return (
-    <>
+    <div className="admin-semeter">
       <Tooltip title="Chi tiết">
         <Button
           className="detail-button"
@@ -53,7 +53,7 @@ const ModalDetail = (props) => {
               <label className="ant-form-item-label">Tên</label>
               <div className="ant-form-item-control">
                 <Input
-                  value={ itemName}
+                  value={itemName}
                   onChange={(e) => setItemName(e.target.value)}
                 />
               </div>
@@ -95,7 +95,7 @@ const ModalDetail = (props) => {
           </div>
         </div>
       </Modal>
-    </>
+    </div>
   );
 };
 
