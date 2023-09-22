@@ -21,6 +21,7 @@ import {
   SearchOutlined,
   SendOutlined,
   PlusCircleOutlined,
+  FormOutlined,
 } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
@@ -31,6 +32,7 @@ import { AddPointAPI } from "../../../apis/teacher/add-point/add-point.api";
 import { ConvertionHoneyAPI } from "../../../apis/teacher/convertion-honey/convertion-honey.api";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
+import ModalDetailConversion from "../../student/RequestConversion/ModalDetail";
 
 export default function ConvertionHoney() {
   const dispatch = useAppDispatch();
@@ -202,6 +204,7 @@ export default function ConvertionHoney() {
               <PlusCircleOutlined />
             </Button>
           </Tooltip>
+          <ModalDetailConversion conversion={record} icon={<FormOutlined />} />
         </Space>
       ),
     },
