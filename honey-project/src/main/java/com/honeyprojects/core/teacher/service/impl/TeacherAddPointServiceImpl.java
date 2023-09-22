@@ -69,6 +69,14 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     }
 
     @Override
+    public PageableObject<TeacherAddHoneyHistoryResponse> getListRequest(TeacherSearchHistoryRequest historyRequest) {
+        Pageable pageable = PageRequest.of(historyRequest.getPage(), historyRequest.getSize());
+        String idTeacher = udomHoney.getIdUser();
+        historyRequest.setIdTeacher(idTeacher);
+        return new PageableObject<>(historyRepository.getListRequest(historyRequest, pageable));
+    }
+
+    @Override
     public History changeStatus(TeacherChangeStatusRequest changeReq) {
         History history = historyRepository.findById(changeReq.getIdHistory()).get();
         history.setStatus(HoneyStatus.values()[changeReq.getStatus()]);
