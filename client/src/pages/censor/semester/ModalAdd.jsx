@@ -78,44 +78,52 @@ const ModalAdd = (props) => {
   };
 
   return (
-    <>
-      <Modal title="Kỳ học" open={modalOpen} onCancel={onCancel} footer={null}>
+    <div>
+      <Modal
+        className="admin-semeter"
+        title="Kỳ học"
+        open={modalOpen}
+        onCancel={onCancel}
+        footer={null}
+      >
         <hr className="border-0 bg-gray-300 mt-3 mb-6" />
         <div
           style={{
             maxWidth: 600,
           }}
         >
-          <div className="ant-form ant-form-horizontal">
-            <div className="ant-form-item">
-              <label className="ant-form-item-label">Tên</label>
-              <div className="ant-form-item-control">
-                <Input
-                  value={itemName}
-                  onChange={(e) => setItemName(e.target.value)}
-                />
+          <div className="item-custom">
+            <div className="ant-form ant-form-horizontal">
+              <div className="ant-form-item">
+                <label className="ant-form-item-label">Tên</label>
+                <div className="ant-form-item-control">
+                  <Input
+                    value={itemName}
+                    onChange={(e) => setItemName(e.target.value)}
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="ant-form-item">
-              <label className="ant-form-item-label">Ngày bắt đầu</label>
-              <div className="ant-form-item-control">
-                <Input
-                  type="date"
-                  value={toDate}
-                  onChange={(e) => setToDate(e.target.value)}
-                />
+              <div className="ant-form-item">
+                <label className="ant-form-item-label">Ngày bắt đầu</label>
+                <div className="ant-form-item-control">
+                  <Input
+                    type="date"
+                    value={toDate}
+                    onChange={(e) => setToDate(e.target.value)}
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="ant-form-item">
-              <label className="ant-form-item-label">Ngày kết thúc</label>
-              <div className="ant-form-item-control">
-                <Input
-                  type="date"
-                  value={fromDate}
-                  onChange={(e) => setFromDate(e.target.value)}
-                />
+              <div className="ant-form-item">
+                <label className="ant-form-item-label">Ngày kết thúc</label>
+                <div className="ant-form-item-control">
+                  <Input
+                    type="date"
+                    value={fromDate}
+                    onChange={(e) => setFromDate(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
 
@@ -138,7 +146,7 @@ const ModalAdd = (props) => {
           </div>
         </div>
       </Modal>
-    </>
+    </div>
   );
 };
 

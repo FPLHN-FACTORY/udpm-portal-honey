@@ -15,6 +15,7 @@ import {
   Segmented,
   message,
   InputNumber,
+  Empty,
 } from "antd";
 import {
   SearchOutlined,
@@ -69,6 +70,8 @@ export default function ConvertionHoney() {
 
   useEffect(() => {
     fetchData(categorySelected);
+    setSelectedGiftId(null);
+    setSelectedCategoryId(null);
   }, [categorySelected]);
 
   const onFinishSearch = (value) => {
@@ -93,6 +96,7 @@ export default function ConvertionHoney() {
   const getHoney = (studentId, categoryId) => {
     AddPointAPI.getHoney(studentId, categoryId)
       .then((response) => {
+        console.log(response.data.data);
         if (response.data.success) {
           setHoneyStudent(response.data.data);
         } else {
@@ -228,7 +232,7 @@ export default function ConvertionHoney() {
             <Input
               size="small"
               placeholder="Nhập user name sinh viên..."
-              style={{ width: "250px" }}
+              style={{ width: "250px", marginTop: "20px" }}
               prefix={<SearchOutlined />}
             />
           </Form.Item>
@@ -238,137 +242,153 @@ export default function ConvertionHoney() {
           </Button>
         </Form>
       </Card>
-      <Card
-        className="content-card"
-        title="Thông tin sinh viên"
-        extra={
-          <Segmented
-            className="font-bold select-category"
-            onChange={setCategorySelected}
-            value={categorySelected}
-            options={listCategory.map((category) => ({
-              label: category.name,
-              value: category.id,
-            }))}
-          />
-        }
-      >
-        <Row className="mx-10">
-          <Col
-            className="py-25"
-            span={12}
-            style={{ borderRight: "1px solid #F0F0F0" }}
+      {Object.keys(student).length > 0 ? (
+        <div>
+          <Card
+            className="content-card"
+            title="Thông tin sinh viên"
+            extra={
+              <Segmented
+                className="font-bold select-category"
+                onChange={setCategorySelected}
+                value={categorySelected}
+                options={listCategory.map((category) => ({
+                  label: category.name,
+                  value: category.id,
+                }))}
+              />
+            }
           >
-            <Row className="font-semibold">
-              <Col span={12}>
-                <div>
-                  User name: <Tag>{student.userName}</Tag>
-                </div>
-                <div className="m-25">
-                  Họ và tên: <Tag>{student.name}</Tag>
-                </div>
+            <Row className="mx-10">
+              <Col
+                className="py-25"
+                span={12}
+                style={{ borderRight: "1px solid #F0F0F0" }}
+              >
+                <Row className="font-semibold">
+                  <Col span={12}>
+                    <div>
+                      User name: <Tag>{student.userName}</Tag>
+                    </div>
+                    <div className="m-25">
+                      Họ và tên: <Tag>{student.name}</Tag>
+                    </div>
+                  </Col>
+                  <Col span={12}>
+                    <div>
+                      Email: <Tag>{student.email}</Tag>
+                    </div>
+                    <div className="m-25">
+                      Số điểm: <Tag>{honeyStudent.point}</Tag>
+                    </div>
+                  </Col>
+                </Row>
               </Col>
-              <Col span={12}>
-                <div>
-                  Email: <Tag>{student.email}</Tag>
-                </div>
-                <div className="m-25">
-                  Số điểm: <Tag>{honeyStudent.point}</Tag>
-                </div>
+              <Col className="py-25" span={12} style={{ paddingLeft: "25px" }}>
+                <Form form={formAddPoint}>
+                  <Row>
+                    <Col span={14} className=" font-semibold">
+                      <div>
+                        Loại điểm:{" "}
+                        <Select
+                          disabled
+                          showSearch
+                          optionFilterProp="children"
+                          style={{ width: "33%", marginLeft: "20px" }}
+                          size="small"
+                          options={categoryOptions}
+                          value={selectedCategoryId}
+                          onChange={(value) => setSelectedCategoryId(value)}
+                        />
+                      </div>
+                      <div
+                        style={{
+                          marginTop: "30px",
+                          marginLeft: "7px",
+                        }}
+                      >
+                        Loại quà:
+                        <Select
+                          disabled
+                          showSearch
+                          optionFilterProp="children"
+                          style={{ width: "33%", marginLeft: "20px" }}
+                          size="small"
+                          options={giftOptions}
+                          onChange={(value) => setSelectedGiftId(value)}
+                          value={selectedGiftId}
+                        />
+                      </div>
+                    </Col>
+                    <Col span={4} className=" font-semibold">
+                      <div
+                        style={{ display: "inline-flex", alignItems: "center" }}
+                      >
+                        <InputNumber
+                          min={0}
+                          max={10}
+                          value={quantityGift}
+                          placeholder="Quà"
+                          onChange={(value) => setQuantityGift(value)}
+                          style={{
+                            width: "65px",
+                            marginRight: "10px",
+                          }}
+                        />
+                        <span style={{ fontSize: "14px" }}>gói</span>{" "}
+                      </div>
+                      <div style={{ marginTop: "25px" }}>
+                        <Tag>{quantityGift * 0.25}</Tag> điểm
+                      </div>
+                    </Col>
+                  </Row>
+                  <div className="text-right">
+                    <Button
+                      htmlType="submit"
+                      className="search-button"
+                      onClick={handleAddConvertion}
+                      type="dashed"
+                    >
+                      Send
+                      <SendOutlined className="m-0 pl-5" />
+                    </Button>
+                  </div>
+                </Form>
               </Col>
             </Row>
-          </Col>
-          <Col className="py-25" span={12} style={{ paddingLeft: "25px" }}>
-            <Form form={formAddPoint}>
-              <Row>
-                <Col span={14} className=" font-semibold">
-                  <div>
-                    Loại điểm:{" "}
-                    <Select
-                      disabled
-                      showSearch
-                      optionFilterProp="children"
-                      style={{ width: "33%", marginLeft: "20px" }}
-                      size="small"
-                      options={categoryOptions}
-                      value={selectedCategoryId}
-                      onChange={(value) => setSelectedCategoryId(value)}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      marginTop: "30px",
-                      marginLeft: "7px",
-                    }}
-                  >
-                    Loại quà:
-                    <Select
-                      disabled
-                      showSearch
-                      optionFilterProp="children"
-                      style={{ width: "33%", marginLeft: "20px" }}
-                      size="small"
-                      options={giftOptions}
-                      value={selectedGiftId}
-                      onChange={(value) => setSelectedGiftId(value)}
-                    />
-                  </div>
-                </Col>
-                <Col span={4} className=" font-semibold">
-                  <div style={{ display: "inline-flex", alignItems: "center" }}>
-                    <InputNumber
-                      min={0}
-                      value={quantityGift}
-                      placeholder="Quà"
-                      onChange={(value) => setQuantityGift(value)}
-                      style={{
-                        width: "65px",
-                        marginRight: "10px",
-                      }}
-                    />
-                    <span style={{ fontSize: "14px" }}>gói</span>{" "}
-                  </div>
-                  <div style={{ marginTop: "25px" }}>
-                    <Tag>{quantityGift * 0.25}</Tag> điểm
-                  </div>
-                </Col>
-              </Row>
-              <div className="text-right">
-                <Button
-                  htmlType="submit"
-                  className="search-button"
-                  onClick={handleAddConvertion}
-                  type="dashed"
-                >
-                  Send
-                  <SendOutlined className="m-0 pl-5" />
-                </Button>
-              </div>
-            </Form>
-          </Col>
-        </Row>
-      </Card>
-      <Card style={{ marginTop: "20px" }}>
-        <div className="mt-5">
-          <Table
-            columns={columns}
-            dataSource={listConversion}
-            rowKey="id"
-            pagination={false}
-          />
-        </div>
-        <div className="mt-5 text-center">
-          <Pagination
-            simple
-            current={filter.page + 1}
-            onChange={(page) => {
-              setFilter({ ...filter, page: page - 1 });
-            }}
-            total={totalPages * 10}
+          </Card>
+
+          <Card
             style={{ marginTop: "20px" }}
-          />
+            className="content-card"
+            title="Hình thức quy đổi"
+          >
+            <div className="mt-5">
+              <Table
+                columns={columns}
+                dataSource={listConversion}
+                rowKey="id"
+                pagination={false}
+              />
+            </div>
+            <div className="mt-5 text-center">
+              <Pagination
+                simple
+                current={filter.page + 1}
+                onChange={(page) => {
+                  setFilter({ ...filter, page: page - 1 });
+                }}
+                total={totalPages * 10}
+                style={{ marginTop: "20px" }}
+              />
+            </div>
+          </Card>
         </div>
-      </Card>
+      ) : (
+        <Card>
+          <Empty />
+        </Card>
+      )}
     </>
   );
 }
