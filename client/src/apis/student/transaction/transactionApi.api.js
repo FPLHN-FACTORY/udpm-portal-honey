@@ -65,4 +65,10 @@ export class TransactionApi {
       data: { idHistory, status },
     });
   };
+  static getUserLogin = () => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/get-user-login`,
+    });
+  };
 }

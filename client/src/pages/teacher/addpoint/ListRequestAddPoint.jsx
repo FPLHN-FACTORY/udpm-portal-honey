@@ -83,12 +83,14 @@ export default function HistoryAddPoint() {
       render: (values) => (
         <div style={{ textAlign: "center" }}>
           <Button
-            onClick={() => changeStatus(values.idHistory, 2)}
-            disabled={values.status !== 0}
+            onClick={() =>
+              changeStatus(values.idHistory, values.status === 2 ? 3 : 2)
+            }
+            disabled={values.status === 1}
             type="primary"
             danger={values.status !== 2}
             style={{
-              color: values.status !== 0 ? "" : "#fff",
+              color: values.status === 1 ? "" : "#fff",
               height: "30px",
             }}>
             Hủy
@@ -116,7 +118,7 @@ export default function HistoryAddPoint() {
       .finally(() => {
         const fetchData = async (filter) => {
           try {
-            const response = await AddPointAPI.getHistory(filter);
+            const response = await AddPointAPI.getListRequest(filter);
             const listHistory = await Promise.all(
               response.data.data.map(async (data) => {
                 try {

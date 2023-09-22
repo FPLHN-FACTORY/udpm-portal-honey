@@ -1,6 +1,5 @@
 package com.honeyprojects.core.teacher.controller;
 
-import com.honeyprojects.core.admin.service.CensorRequestManagerService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.ResponseObject;
 import com.honeyprojects.core.teacher.model.request.TeacherAddPointRequest;
@@ -11,14 +10,11 @@ import com.honeyprojects.core.teacher.model.response.TeacherAddHoneyHistoryRespo
 import com.honeyprojects.core.teacher.service.TeacherAddPointService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -42,6 +38,11 @@ public class TeacherAddPointRestController {
     @GetMapping("/get-history")
     public PageableObject<TeacherAddHoneyHistoryResponse> getHistory(TeacherSearchHistoryRequest historyRequest) {
         return addPointService.getHistory(historyRequest);
+    }
+
+    @GetMapping("/get-list-request")
+    public PageableObject<TeacherAddHoneyHistoryResponse> getListRequest(TeacherSearchHistoryRequest historyRequest) {
+        return addPointService.getListRequest(historyRequest);
     }
 
     @PutMapping("/change-status")

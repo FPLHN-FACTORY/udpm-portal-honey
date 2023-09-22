@@ -38,6 +38,13 @@ export class AddPointAPI {
       params: filter,
     });
   };
+  static getListRequest = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/get-list-request`,
+      params: filter,
+    });
+  };
   static changeStatus = (idHistory, status) => {
     return request({
       method: "PUT",
