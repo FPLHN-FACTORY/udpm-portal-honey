@@ -22,4 +22,8 @@ public class UserSemester extends PrimaryEntity {
 
     @Column(nullable = false)
     private Integer totalHoney;
+
+    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    private String categoryId;
+
 }

@@ -34,6 +34,4 @@ public interface AdConversionRepository extends ConversionRepository {
             """, nativeQuery = true)
     Page<AdminConversionResponse> SearchByName(Pageable pageable, @Param("textSearch") String textSearch);
 
-
-
 }

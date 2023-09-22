@@ -18,5 +18,4 @@ public interface AdminConversionResponse extends IsIdentified {
     @Value("#{target.category_id}")
     String getCategoryId();
 
-
 }

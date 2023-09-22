@@ -8,4 +8,5 @@ public interface TeacherCategoryResponse extends IsIdentified {
 
     @Value("#{target.name}")
     String getName();
+
 }

@@ -12,6 +12,7 @@ import DashboardAuthUser from "./layout/student/auth/DashboardAuthUser";
 import Index from "./pages/censor/category";
 import AddPoint from "./pages/teacher/addpoint/AddPoint";
 import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
+import ListRequestAddPoint from "./pages/teacher/addpoint/ListRequestAddPoint";
 import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
 import RequestManager from "./pages/censor/requestmanager/RequestManager";
 import RequestManagerDetail from "./pages/censor/requestmanager/RequestManagerDetail";
@@ -160,6 +161,16 @@ function App() {
                 <AuthGuard>
                   <DashboardTeacher>
                     <HistoryAddPoint />
+                  </DashboardTeacher>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/teacher/add-point/list-request"
+              element={
+                <AuthGuard>
+                  <DashboardTeacher>
+                    <ListRequestAddPoint />
                   </DashboardTeacher>
                 </AuthGuard>
               }

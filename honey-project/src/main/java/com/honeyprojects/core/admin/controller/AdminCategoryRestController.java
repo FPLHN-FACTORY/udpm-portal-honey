@@ -62,5 +62,4 @@ public class AdminCategoryRestController {
         adminCategoryService.deleteCategory(id);
     }
 
-
 }

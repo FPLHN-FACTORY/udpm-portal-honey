@@ -11,6 +11,13 @@ export class ResquestConversion {
     });
   };
 
+  static getUserAPiByid = () => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/user-api`,
+    });
+  };
+
   static getPointHoney = (filter) => {
     return request({
       method: "GET",
