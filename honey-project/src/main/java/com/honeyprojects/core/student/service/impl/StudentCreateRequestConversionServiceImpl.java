@@ -40,11 +40,13 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
         Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(createRequest.getStudentId(), createRequest.getCategoryId());
 
         if (honey == null) {
+            String idUs = userSemesterRepository.getSemesterByStudent(createRequest.getStudentId());
+            if (idUs == null) return null;
             // Nếu Honey chưa tồn tại, tạo mới
             honey = new Honey();
             honey.setStudentId(createRequest.getStudentId());
             honey.setHoneyCategoryId(createRequest.getCategoryId());
-            honey.setUserSemesterId("7a162139-5358-45a0-9718-9a0b15fa54e0");
+            honey.setUserSemesterId(idUs);
             honey.setHoneyPoint(createRequest.getHoneyPoint());
             honey = honeyRepository.save(honey);
         } else {
