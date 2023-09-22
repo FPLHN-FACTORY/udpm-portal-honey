@@ -12,6 +12,14 @@
     font-weight: 500;
 }
 
+.create-transaction .ant-card-body {
+    padding-top: 0;
+}
+
+.create-transaction .card-history .ant-card-body {
+    padding: 0;
+}
+
 .create-transaction .ant-steps-item-finish .ant-steps-item-icon .ant-steps-icon {
     color: white;
     font-weight: bold;
@@ -64,6 +72,7 @@
     padding: 0 !important;
 }
 
+
 .create-transaction .pl-5 {
     padding-left: 5px;
 }
@@ -74,6 +83,10 @@
 
 .create-transaction .mx-10 {
     margin: 0px 10px;
+}
+
+.create-transaction .my-15 {
+    margin: 15px 0px;
 }
 
 .create-transaction .search-button {
@@ -143,7 +156,7 @@
     margin: 0;
 }
 
-.ant-row>.ant-col>hr {
+.create-transaction .ant-row>.ant-col>hr {
     border: none;
     height: 0.1px;
     background: #cfcfcf;

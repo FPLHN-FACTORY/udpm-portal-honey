@@ -22,7 +22,4 @@ public interface StudentHistoryResponse extends IsIdentified {
     @Value("#{target.change_date}")
     Long getChangeDate();
 
-    @Value("#{target.status}")
-    Integer getStatus();
-
 }
