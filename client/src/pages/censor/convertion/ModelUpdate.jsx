@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { ConversionAPI } from "../../../apis/censor/conversion/conversion.api";
-const ModalUpdateConversion = (props, fetchData) => {
+const ModalUpdateConversion = (props) => {
   const { conversion } = props;
   const [fillCategory, setFillCategory] = useState([]);
   const [fillGift, setFillGift] = useState([]);
