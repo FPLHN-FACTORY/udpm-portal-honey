@@ -55,6 +55,11 @@ function DashboardAuthUser({ children }) {
       ),
       getItem(<Link to={"/student/transaction"}>Lịch sử giao dịch</Link>, "2"),
     ]),
+    getItem(
+      <Link to={"/student/profile"}>Hồ sơ</Link>,
+      "1",
+      <TransactionOutlined />
+    ),
   ];
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
@@ -64,7 +69,8 @@ function DashboardAuthUser({ children }) {
     <Layout
       className={`layout-dashboard ${
         pathname === "profile" ? "layout-profile" : ""
-      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}>
+      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
+    >
       <Drawer
         id="drawer_ui"
         title={false}
@@ -77,13 +83,15 @@ function DashboardAuthUser({ children }) {
         style={{ background: "#fff", overflowX: "hidden" }}
         className={`drawer-sidebar ${
           pathname === "rtl" ? "drawer-sidebar-rtl" : ""
-        } `}>
+        } `}
+      >
         <Layout
           id="layout_drawer"
           style={{ background: "#fff", overflowX: "hidden" }}
           className={` bg-white layout-dashboard ${
             pathname === "rtl" ? "layout-dashboard-rtl" : ""
-          }`}>
+          }`}
+        >
           <Row className="flex justify-center align-middle  mt-5 pb-8">
             <div className="brand text-center">
               <Link to="/" className="active">
@@ -108,7 +116,8 @@ function DashboardAuthUser({ children }) {
           collapsed={collapsed}
           width={250}
           className={`sider-primary ant-layout-sider-primary`}
-          style={{ background: "#fff", overflowX: "hidden" }}>
+          style={{ background: "#fff", overflowX: "hidden" }}
+        >
           <Row className="flex justify-center align-middle  mt-5 pb-8">
             {!collapsed && (
               <div className="brand text-center">
