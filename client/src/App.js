@@ -157,6 +157,16 @@ function App() {
               }
             />
             <Route
+              path="/teacher/add-point/history"
+              element={
+                <AuthGuard>
+                  <DashboardTeacher>
+                    <HistoryAddPoint />
+                  </DashboardTeacher>
+                </AuthGuard>
+              }
+            />
+            <Route
               path="/teacher/add-point/list-request"
               element={
                 <AuthGuard>
@@ -173,16 +183,6 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     <TransactionPage />
-                  </DashboardAuthUser>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/student/transaction"
-              element={
-                <AuthGuard>
-                  <DashboardAuthUser>
-                    <TransactionHistory />
                   </DashboardAuthUser>
                 </AuthGuard>
               }
