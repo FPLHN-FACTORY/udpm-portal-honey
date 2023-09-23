@@ -18,6 +18,8 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   PlusCircleFilled,
+  RetweetOutlined,
+  TransactionOutlined,
 } from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
 const { Header: AntHeader, Content } = Layout;
@@ -55,6 +57,12 @@ function DashboardTeacher({ children }) {
         "3"
       ),
     ]),
+
+    getItem(
+      <Link to={"/teacher/convertion-honey"}>Đổi điểm</Link>,
+      "10",
+      <RetweetOutlined style={{ marginLeft: "5px" }} />
+    ),
   ];
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
@@ -65,8 +73,7 @@ function DashboardTeacher({ children }) {
       id="authe"
       className={`layout-dashboard ${
         pathname === "profile" ? "layout-profile" : ""
-      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
-    >
+      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}>
       <Drawer
         id="drawer_ui"
         title={false}
@@ -79,15 +86,13 @@ function DashboardTeacher({ children }) {
         style={{ background: "#fff", overflowX: "hidden" }}
         className={`drawer-sidebar ${
           pathname === "rtl" ? "drawer-sidebar-rtl" : ""
-        } `}
-      >
+        } `}>
         <Layout
           id="layout_drawer"
           style={{ background: "#fff", overflowX: "hidden" }}
           className={` bg-white layout-dashboard ${
             pathname === "rtl" ? "layout-dashboard-rtl" : ""
-          }`}
-        >
+          }`}>
           <Row className="flex justify-center align-middle mt-5 pb-8">
             <div className="brand text-center">
               <Link to="/" className="active">
@@ -118,8 +123,7 @@ function DashboardTeacher({ children }) {
             left: 0,
             zIndex: 999,
             height: "100%",
-          }}
-        >
+          }}>
           <Row
             className="flex justify-center align-middle  mt-5 pb-8"
             style={{ height: "80px" }}
@@ -153,22 +157,12 @@ function DashboardTeacher({ children }) {
                 <Col span={12} className="flex items-center">
                   <button
                     className="buttonSlider desktop"
-                    onClick={toggleCollapse}
-                  >
+                    onClick={toggleCollapse}>
                     {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                   </button>
                   <button className="buttonSlider mobile" onClick={openDrawer}>
                     {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                   </button>
-                  <h1
-                    style={{
-                      marginLeft: "20px",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      maxWidth: "200px",
-                    }}
-                  ></h1>
                 </Col>
               </Row>
             </Col>
@@ -190,15 +184,13 @@ function DashboardTeacher({ children }) {
         {collapsed ? (
           <Content
             className="content-ant"
-            style={{ paddingLeft: "4%", marginTop: "7%" }}
-          >
+            style={{ paddingLeft: "6%", marginTop: "7%" }}>
             {children}
           </Content>
         ) : (
           <Content
             className="content-ant"
-            style={{ paddingLeft: "16%", marginTop: "9%" }}
-          >
+            style={{ paddingLeft: "19%", marginTop: "9%" }}>
             {children}
           </Content>
         )}
