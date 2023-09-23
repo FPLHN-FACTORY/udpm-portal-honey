@@ -2,7 +2,7 @@ package com.honeyprojects.core.student.service.impl;
 
 import com.honeyprojects.core.admin.repository.CensorUserAPIRepository;
 import com.honeyprojects.core.common.base.PageableObject;
-import com.honeyprojects.core.common.base.UdomHoney;
+import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.student.model.request.StudentChangeStatusHistoryRequest;
 import com.honeyprojects.core.student.model.request.StudentSearchHistoryRequest;
@@ -66,23 +66,23 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
     @Autowired
     private EmailSender emailSender;
     @Autowired
-    private UdomHoney udomHoney;
+    private UdpmHoney udpmHoney;
     @Autowired
     private ConvertRequestApiidentity requestApiidentity;
 
 
     @Override
     public List<StudentCategoryResponse> getCategory(String recipientId) {
-        if (Objects.equals(recipientId, udomHoney.getIdUser())) {
+        if (Objects.equals(recipientId, udpmHoney.getIdUser())) {
             throw new RestApiException(Message.MA_NGUOI_NHAN_KHONG_HOP_LE);
         }
-        return categoryRepository.getCategoryByIdUser(udomHoney.getIdUser());
+        return categoryRepository.getCategoryByIdUser(udpmHoney.getIdUser());
     }
 
     @Override
     public StudentHoneyResponse getHoney(String categoryId) {
         Long dateNow = Calendar.getInstance().getTimeInMillis();
-        return honeyRepository.getPoint(categoryId, udomHoney.getIdUser(), dateNow);
+        return honeyRepository.getPoint(categoryId, udpmHoney.getIdUser(), dateNow);
     }
 
     @Override
@@ -99,15 +99,15 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
             PublicKey keyPublic = RSAEncryption.getPublicKeyFromString(publicKey);
             String encryptedCode = RSAEncryption.encrypt(codeVerify, keyPublic);
             Verification verification = vericationRepository
-                    .findByStudentId(udomHoney.getIdUser()).orElse(new Verification());
+                    .findByStudentId(udpmHoney.getIdUser()).orElse(new Verification());
             verification.setCode(encryptedCode);
-            verification.setStudentId(udomHoney.getIdUser());
+            verification.setStudentId(udpmHoney.getIdUser());
             verification.setExpiryTime(dateVerify);
             vericationRepository.save(verification);
         } catch (Exception e) {
             return null;
         }
-        String[] toMail = {udomHoney.getEmail()};
+        String[] toMail = {udpmHoney.getEmail()};
         Runnable emailTask = () -> emailSender.sendEmail(toMail, "Xác nhận giao dịch",
                 "Mã xác nhận của bạn là",
                 "<h1 style='text-align: center'>" + codeVerify + "</h1>");
@@ -115,7 +115,7 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         executorService.execute(emailTask);
         executorService.shutdown();
-        return udomHoney.getEmail();
+        return udpmHoney.getEmail();
     }
 
     @Override
@@ -124,7 +124,7 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
         try {
             PrivateKey keyPrivate = RSAEncryption.getPrivateKeyFromString(privateKey);
             Verification verification = vericationRepository
-                    .findByStudentId(udomHoney.getIdUser())
+                    .findByStudentId(udpmHoney.getIdUser())
                     .orElseThrow(() -> new RestApiException(Message.VERIFICATION_NOT_EXIST));
             String codeDeCrypt = RSAEncryption.decrypt(verification.getCode(), keyPrivate);
             return codeDeCrypt.equals(code) && now <= verification.getExpiryTime();
@@ -199,7 +199,7 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
     @Override
     public PageableObject<StudentHistoryResponse> getHistory(StudentSearchHistoryRequest historyRequest) {
         Pageable pageable = PageRequest.of(historyRequest.getPage(), historyRequest.getSize());
-        historyRequest.setIdUserLogin(udomHoney.getIdUser());
+        historyRequest.setIdUserLogin(udpmHoney.getIdUser());
         return new PageableObject<>(historyRepository.getHistory(historyRequest, pageable));
     }
 
@@ -216,6 +216,6 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
 
     @Override
     public String getUserLogin() {
-        return udomHoney.getIdUser();
+        return udpmHoney.getIdUser();
     }
 }

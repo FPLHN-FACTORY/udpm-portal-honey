@@ -1,6 +1,6 @@
 package com.honeyprojects.core.common.base;
 
-public interface UdomHoney {
+public interface UdpmHoney {
 
     String getIdUser();
 
