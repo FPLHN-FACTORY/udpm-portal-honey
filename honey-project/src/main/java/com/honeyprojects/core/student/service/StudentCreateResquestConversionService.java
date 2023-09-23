@@ -1,6 +1,7 @@
 package com.honeyprojects.core.student.service;
 
 import com.honeyprojects.core.common.base.PageableObject;
+import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.student.model.repuest.StudentCreateRequestConversionRequest;
 import com.honeyprojects.core.student.model.repuest.StudentFilterHistoryRequest;
 import com.honeyprojects.core.student.model.response.StudentCreateResquestConversionResponse;
@@ -14,7 +15,7 @@ public interface StudentCreateResquestConversionService {
 
     void deleteRequestById(String id);
 
-
+    SimpleResponse getUserById(String id);
 
 
 }

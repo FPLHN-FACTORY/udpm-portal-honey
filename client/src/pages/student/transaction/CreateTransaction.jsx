@@ -239,7 +239,7 @@ export default function CreateTransaction({ setData, setCurrent, setLoading }) {
                         {
                           type: "number",
                           max: parseInt(honeyStudent.honey),
-                          message: `Số điểm phải nhỏ hơn ${honeyStudent.honey}`,
+                          message: `Số điểm phải nhỏ hơn ${honeyStudent.point}`,
                         },
                       ]}>
                       <InputNumber
@@ -257,7 +257,7 @@ export default function CreateTransaction({ setData, setCurrent, setLoading }) {
                   </Col>
                   <Col span={16}>
                     <Form.Item
-                      initialValue={"Chuyển điểm"}
+                      initialValue={`Chuyển điểm ${student.name}`}
                       name="note"
                       rules={[
                         {

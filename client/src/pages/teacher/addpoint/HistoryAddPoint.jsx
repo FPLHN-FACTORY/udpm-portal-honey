@@ -33,8 +33,6 @@ const statusHistory = (status) => {
       return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
     case 2:
       return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
-    case 3:
-      return <Tag color="cyan">Gửi lại yêu cầu</Tag>; // Màu xanh dương nhạt
     default:
       return <Tag>Không xác định</Tag>;
   }
@@ -85,17 +83,15 @@ export default function HistoryAddPoint() {
       render: (values) => (
         <div style={{ textAlign: "center" }}>
           <Button
-            onClick={() =>
-              changeStatus(values.idHistory, values.status === 2 ? 3 : 2)
-            }
-            disabled={values.status === 1}
+            onClick={() => changeStatus(values.idHistory, 2)}
+            disabled={values.status !== 0}
             type="primary"
             danger={values.status !== 2}
             style={{
-              color: values.status === 1 ? "" : "#fff",
+              color: values.status !== 0 ? "" : "#fff",
               height: "30px",
             }}>
-            {values.status === 2 ? "Gửi lại" : "Hủy"}
+            Hủy
           </Button>
         </div>
       ),
@@ -189,7 +185,6 @@ export default function HistoryAddPoint() {
         if (response.data.success) {
           fetchData(dispatch, filter);
           if (status === 2) message.error("Hủy yêu cầu thành công!");
-          if (status === 3) message.success("Gửi lại yêu cầu thành công!");
         }
       })
       .catch((error) => console.error(error));
@@ -219,22 +214,6 @@ export default function HistoryAddPoint() {
                     return {
                       value: category.id,
                       label: category.name,
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
-            <Form.Item name={"status"}>
-              <Select
-                style={{ width: "150px" }}
-                size="large"
-                placeholder="Trạng thái"
-                options={[
-                  { value: null, label: "Tất cả" },
-                  ...[0, 1, 2, 3].map((value) => {
-                    return {
-                      value: value,
-                      label: statusHistory(value),
                     };
                   }),
                 ]}

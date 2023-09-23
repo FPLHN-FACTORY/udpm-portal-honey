@@ -213,4 +213,9 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
     public SimpleResponse getUserById(String id) {
         return requestApiidentity.handleCallApiGetUserById(id);
     }
+
+    @Override
+    public String getUserLogin() {
+        return udomHoney.getIdUser();
+    }
 }

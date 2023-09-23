@@ -151,7 +151,7 @@ export default function Semester() {
               setCurrent(1);
               fetchData();
             }}
-          >
+          > 
             Tìm kiếm
           </button>
         </form>

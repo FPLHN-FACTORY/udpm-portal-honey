@@ -2,6 +2,7 @@ package com.honeyprojects.core.student.controller;
 
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.ResponseObject;
+import com.honeyprojects.core.common.base.UdomHoney;
 import com.honeyprojects.core.student.model.repuest.StudentCreateRequestConversionRequest;
 import com.honeyprojects.core.student.model.repuest.StudentFilterHistoryRequest;
 import com.honeyprojects.core.student.model.repuest.StudentHoneyRequest;
@@ -23,6 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class StudentCreateRequestController {
 
     @Autowired
+    private UdomHoney udomHoney;
+
+    @Autowired
     private StudentUserApiService studentUserApiService;
 
     @Autowired
@@ -31,14 +35,15 @@ public class StudentCreateRequestController {
     @Autowired
     private StudentCreateResquestConversionService createRequest;
 
+
     @GetMapping("/user-api")
     public ResponseObject getUserApi(){
-        return new ResponseObject(studentUserApiService.getUserApi());
+        return new ResponseObject(udomHoney);
     }
 
     @GetMapping("/honey-point")
     public ResponseObject getPointHoney(StudentHoneyRequest honeyRequest){
-        System.out.println(honeyRequest);
+        System.out.println("-------get point -------" +honeyRequest);
         return new ResponseObject( studentHoneyService.getPoint(honeyRequest));
     }
 
