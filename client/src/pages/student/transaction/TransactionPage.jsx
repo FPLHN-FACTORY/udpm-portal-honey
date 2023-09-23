@@ -38,6 +38,7 @@ export default function TransactionPage() {
         <Card title="Giao dịch điểm">
           {current !== 2 && (
             <Steps
+              className="mt-25"
               current={current}
               items={[
                 {

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   Row,
   Col,
-  Breadcrumb,
   Badge,
   Dropdown,
   Button,
@@ -20,7 +19,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import avtar from "../../../assets/images/team-2.jpg";
 import tym from "../../../assets/images/38064371 (2).jpg";
 import comment from "../../../assets/images/38064371 (3).jpg";
@@ -141,8 +140,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
   return (
     <>
       <Row gutter={[24, 0]}>
-        <Col span={6}>
-        </Col>
+        <Col span={6}></Col>
         <Col span={18} className="header-control">
           {/* chuông */}
           <Badge size="small" count={countNotification}>

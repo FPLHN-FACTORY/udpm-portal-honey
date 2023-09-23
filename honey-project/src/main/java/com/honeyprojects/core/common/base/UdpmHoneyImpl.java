@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UdpmHoneyImpl implements UdomHoney {
+public class UdpmHoneyImpl implements UdpmHoney {
 
     @Autowired
     private HttpSession httpSession;
