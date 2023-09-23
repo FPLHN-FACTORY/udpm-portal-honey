@@ -13,6 +13,7 @@ import "./index.css";
 import { ProfileApi } from "../../../apis/student/profile/profileApi.api";
 import { GetUser, SetUser } from "../../../app/reducers/users/users.reducer";
 import { GetHoney, SetHoney } from "../../../app/reducers/honey/honey.reducer";
+import TransactionHistory from "../transaction/TransactionHistory";
 
 const rankingData = [
   { img: hang1, rank: 1, title: "Bạn đạt hạng 1" },
@@ -53,8 +54,7 @@ const items = [
                             marginTop: -15,
                             fontWeight: 450,
                             fontSize: 15,
-                          }}
-                        >
+                          }}>
                           {coin.points} điểm
                         </p>
                       </Col>
@@ -125,7 +125,7 @@ const items = [
   {
     key: "2",
     label: "Lịch sử giao dịch",
-    children: "Content of Tab Pane 2",
+    children: <TransactionHistory />,
   },
 ];
 const MyProfile = memo(() => {
