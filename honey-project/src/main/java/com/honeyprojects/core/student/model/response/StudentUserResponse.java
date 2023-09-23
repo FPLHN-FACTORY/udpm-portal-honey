@@ -2,12 +2,12 @@ package com.honeyprojects.core.student.model.response;
 
 import com.honeyprojects.entity.base.IsIdentified;
 
-public interface StudentUserApiResponse extends IsIdentified {
+public interface StudentUserResponse extends IsIdentified {
 
     String getName();
 
-    String getCode();
-
     String getEmail();
+
+    String getUserName();
 
 }

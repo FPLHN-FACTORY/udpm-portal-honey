@@ -2,7 +2,7 @@ package com.honeyprojects.core.teacher.service.impl;
 
 import com.honeyprojects.core.admin.model.response.AdminConversionResponse;
 import com.honeyprojects.core.common.base.PageableObject;
-import com.honeyprojects.core.common.base.UdomHoney;
+import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.teacher.model.request.TeacherConvertionHoneyRequest;
 import com.honeyprojects.core.teacher.repository.TeacherGetHoneyRepository;
 import com.honeyprojects.core.teacher.repository.TeacherGiftRepository;
@@ -38,7 +38,7 @@ public class TeacherConvertionHoneyServiceImpl implements TeacherConvertionHoney
     @Autowired
     private TeacherUserSemesterRepository usRepository;
     @Autowired
-    private UdomHoney udomHoney;
+    private UdpmHoney udpmHoney;
     @Autowired
     private TeacherGetHoneyRepository honeyRepository;
     @Autowired
@@ -63,7 +63,7 @@ public class TeacherConvertionHoneyServiceImpl implements TeacherConvertionHoney
             int deductedPoints = convertionHoneyRequest.getHoneyPoint();
             honey.setHoneyPoint(honey.getHoneyPoint() - deductedPoints);
         }
-        String idTeacher = udomHoney.getIdUser();
+        String idTeacher = udpmHoney.getIdUser();
         History history = new History();
         history.setStatus(HoneyStatus.DA_PHE_DUYET);
         history.setHoneyId(honeyRepository.save(honey).getId());

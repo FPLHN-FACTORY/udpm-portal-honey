@@ -1,6 +1,6 @@
 package com.honeyprojects.core.student.repository;
 
-import com.honeyprojects.core.student.model.repuest.StudentFilterHistoryRequest;
+import com.honeyprojects.core.student.model.request.StudentFilterHistoryRequest;
 import com.honeyprojects.core.student.model.response.StudentCreateResquestConversionResponse;
 import com.honeyprojects.repository.HistoryRepository;
 import org.springframework.data.domain.Page;

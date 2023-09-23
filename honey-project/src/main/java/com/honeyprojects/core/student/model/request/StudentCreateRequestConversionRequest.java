@@ -1,4 +1,4 @@
-package com.honeyprojects.core.student.model.repuest;
+package com.honeyprojects.core.student.model.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

@@ -163,7 +163,7 @@ export default function CreateTransaction({ setData, setCurrent, setLoading }) {
               className="p-25"
               style={{ borderRight: "1px solid #F0F0F0" }}>
               <Row className="font-semibold">
-                <Col span={12}>
+                <Col span={24}>
                   <Descriptions title="Thông tin người nhận" column={1}>
                     <Descriptions.Item
                       label="User name"
@@ -238,13 +238,13 @@ export default function CreateTransaction({ setData, setCurrent, setLoading }) {
                         },
                         {
                           type: "number",
-                          max: parseInt(honeyStudent.honey),
+                          max: parseInt(honeyStudent.point),
                           message: `Số điểm phải nhỏ hơn ${honeyStudent.point}`,
                         },
                       ]}>
                       <InputNumber
                         onChange={(value) => {
-                          setPercent((value / honeyStudent.honey) * 100);
+                          setPercent((value / honeyStudent.point) * 100);
                         }}
                         style={{ width: "100%" }}
                       />

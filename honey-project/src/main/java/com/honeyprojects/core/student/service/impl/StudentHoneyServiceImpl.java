@@ -1,6 +1,6 @@
 package com.honeyprojects.core.student.service.impl;
 
-import com.honeyprojects.core.student.model.repuest.StudentHoneyRequest;
+import com.honeyprojects.core.student.model.request.StudentHoneyRequest;
 import com.honeyprojects.core.student.model.response.StudentHoneyResponse;
 import com.honeyprojects.core.student.repository.StudentHoneyRepository;
 import com.honeyprojects.core.student.service.StudentHoneyService;
