@@ -177,7 +177,7 @@ const ModalDetailConversion = (props) => {
               {" "}
               Điểm
             </span>
-            <h3 style={{ color: "red" }}>
+            <h3 style={{ color: "red", textAlign: "center" }}>
               # Đổi {conversion.ratio} mật{" "}
               {getCategoryNameById(conversion.categoryId)} sẽ đổi được 0.25 điểm{" "}
               {getGiftNameById(conversion.giftId)}
