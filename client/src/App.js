@@ -24,6 +24,7 @@ import TransactionPage from "./pages/student/transaction/TransactionPage";
 import TransactionHistory from "./pages/student/transaction/TransactionHistory";
 import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction";
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
+import ViewProfile from "./pages/student/myProfile/ViewProfile";
 
 function App() {
   return (
@@ -181,6 +182,16 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     <TransactionHistory />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/profile"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <ViewProfile />
                   </DashboardAuthUser>
                 </AuthGuard>
               }

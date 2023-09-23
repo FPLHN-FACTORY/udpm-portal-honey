@@ -1,8 +1,7 @@
 package com.honeyprojects.core.teacher.service.impl;
 
-import com.honeyprojects.core.admin.repository.CensorUserAPIRepository;
 import com.honeyprojects.core.common.base.PageableObject;
-import com.honeyprojects.core.common.base.UdomHoney;
+import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.teacher.model.request.TeacherAddPointRequest;
 import com.honeyprojects.core.teacher.model.request.TeacherChangeStatusRequest;
@@ -43,7 +42,7 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     @Autowired
     private TeacherSemesterRepository usRepository;
     @Autowired
-    private UdomHoney udomHoney;
+    private UdpmHoney udpmHoney;
     @Autowired
     private ConvertRequestApiidentity requestApiidentity;
 
@@ -63,7 +62,7 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     @Override
     public PageableObject<TeacherAddHoneyHistoryResponse> getHistory(TeacherSearchHistoryRequest historyRequest) {
         Pageable pageable = PageRequest.of(historyRequest.getPage(), historyRequest.getSize());
-        String idTeacher = udomHoney.getIdUser();
+        String idTeacher = udpmHoney.getIdUser();
         historyRequest.setIdTeacher(idTeacher);
         return new PageableObject<>(historyRepository.getHistory(historyRequest, pageable));
     }
@@ -79,7 +78,7 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     @Transactional
     public History addPoint(TeacherAddPointRequest addPointRequest) {
         //fake teacher login
-        String idTeacher = udomHoney.getIdUser();
+        String idTeacher = udpmHoney.getIdUser();
 
         Long dateNow = Calendar.getInstance().getTimeInMillis();
 
