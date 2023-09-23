@@ -16,8 +16,11 @@ import { Layout, Drawer, Row, Menu, Col } from "antd";
 import Header from "../../components/censor/Header";
 import {
   EditOutlined,
+  GiftOutlined,
+  GoldOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  PercentageOutlined,
   PullRequestOutlined,
 } from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
@@ -44,10 +47,17 @@ function DashboardAuthUser({ children }) {
     };
   }
   const items = [
-    getItem(<Link to="/censor/category">Nothing</Link>, "1", <EditOutlined />),
+    getItem(<Link to="/censor/category">Thể loại</Link>, "1", <GoldOutlined />),
+    getItem(
+      <Link to="/censor/conversion">Quy đổi</Link>,
+      "2",
+      <PercentageOutlined />
+    ),
+    getItem(<Link to="/censor/semester">Kỳ học</Link>, "3", <EditOutlined />),
+    getItem(<Link to="/censor/gift">Gói quà</Link>, "4", <GiftOutlined />),
     getItem(
       <Link to="/censor/request-manager">Quản lý yêu cầu</Link>,
-      "2",
+      "5",
       <PullRequestOutlined />
     ),
   ];
@@ -60,8 +70,7 @@ function DashboardAuthUser({ children }) {
       id="authe"
       className={`layout-dashboard ${
         pathname === "profile" ? "layout-profile" : ""
-      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
-    >
+      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}>
       <Drawer
         id="drawer_ui"
         title={false}
@@ -74,15 +83,13 @@ function DashboardAuthUser({ children }) {
         style={{ background: "#fff", overflowX: "hidden" }}
         className={`drawer-sidebar ${
           pathname === "rtl" ? "drawer-sidebar-rtl" : ""
-        } `}
-      >
+        } `}>
         <Layout
           id="layout_drawer"
           style={{ background: "#fff", overflowX: "hidden" }}
           className={` bg-white layout-dashboard ${
             pathname === "rtl" ? "layout-dashboard-rtl" : ""
-          }`}
-        >
+          }`}>
           <Row className="flex justify-center align-middle mt-5 pb-8">
             <div className="brand text-center">
               <Link to="/" className="active">
@@ -107,76 +114,82 @@ function DashboardAuthUser({ children }) {
           collapsed={collapsed}
           width={250}
           className={`sider-primary ant-layout-sider-primary`}
-          style={{ background: "#fff", position: "fixed", left: 0, zIndex:999, height: "100%"}}
-        >
-          <Row className="flex justify-center align-middle  mt-5 pb-8" style={{height: "80px"}}/>
+          style={{
+            background: "#fff",
+            position: "fixed",
+            left: 0,
+            zIndex: 999,
+            height: "100%",
+          }}>
+          <Row
+            className="flex justify-center align-middle  mt-5 pb-8"
+            style={{ height: "80px" }}
+          />
 
           <Menu mode="inline" items={items} />
         </Sider>
       </div>
       <Layout className="pb-14">
-        <AntHeader style={{zIndex: 1000 , position: "fixed", width: "100%"}}>
+        <AntHeader style={{ zIndex: 1000, position: "fixed", width: "100%" }}>
           <Row>
             <Col span={8}>
               <Row>
                 {!collapsed ? (
                   <Col span={12}>
-                  <div className="brand text-center">
-                  <Link to="/" className="active">
-                    <img
-                      src={logo}
-                      style={{
-                        height: "60px",
-                      }}
-                      alt="Logo"
-                    />
-                  </Link>
-                </div>
+                    <div className="brand text-center">
+                      <Link to="/" className="active">
+                        <img
+                          src={logo}
+                          style={{
+                            height: "60px",
+                          }}
+                          alt="Logo"
+                        />
+                      </Link>
+                    </div>
                   </Col>
-                ):(
+                ) : (
                   <Col span={4}></Col>
                 )}
                 <Col span={12} className="flex items-center">
-                <button className="buttonSlider desktop" onClick={toggleCollapse}>
-                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined/>}
-              </button>
-              <button className="buttonSlider mobile" onClick={openDrawer}>
-                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined/>}
-              </button>
-                <h1
-                  style={{
-                    marginLeft: "20px",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    maxWidth: "200px",
-                  }}
-                >
-                </h1>
+                  <button
+                    className="buttonSlider desktop"
+                    onClick={toggleCollapse}>
+                    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                  </button>
+                  <button className="buttonSlider mobile" onClick={openDrawer}>
+                    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                  </button>
                 </Col>
               </Row>
             </Col>
             <Col span={16}>
-                <Row>
-                <Col span={15} >
-            
-            </Col>
-              <Col span={9}>
-              <Header
-                onPress={openDrawer}
-                onSlidebar={onSlidebar}
-                name={pathname}
-                subName={pathname}
-              />
-              </Col>
-                </Row>
+              <Row>
+                <Col span={15}></Col>
+                <Col span={9}>
+                  <Header
+                    onPress={openDrawer}
+                    onSlidebar={onSlidebar}
+                    name={pathname}
+                    subName={pathname}
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
         </AntHeader>
         {collapsed ? (
-          <Content className="content-ant" style={{paddingLeft: "4%",  marginTop: "7%"}} >{children}</Content>
-        ):(
-          <Content className="content-ant" style={{paddingLeft: "16%",  marginTop: "9%"}} >{children}</Content>
+          <Content
+            className="content-ant"
+            style={{ paddingLeft: "6%", marginTop: "7%" }}>
+            {children}
+          </Content>
+        ) : (
+          <Content
+            className="content-ant"
+            style={{ paddingLeft: "19%", marginTop: "9%" }}>
+            {children}
+          </Content>
         )}
       </Layout>
     </Layout>

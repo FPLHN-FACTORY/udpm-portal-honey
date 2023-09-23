@@ -15,6 +15,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Layout, Drawer, Row, Menu, Col } from "antd";
 import Header from "../../../components/user/auth/Header";
 import {
+  GiftOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   ProfileOutlined,
@@ -45,19 +46,22 @@ function DashboardAuthUser({ children }) {
   }
   const items = [
     getItem(
-      <Link to={"/student/transaction/create"}>
-        <TransactionOutlined style={{ fontSize: 20 }} />
-        <span style={{ marginLeft: 15, marginRight: 15 }}>Tạo giao dịch</span>
-      </Link>,
-      "0"
+      <Link to={"/student/profile"}>Hồ sơ</Link>,
+      "1",
+      <ProfileOutlined />
     ),
     getItem(
-      <Link to={"/student/profile"}>
-        <ProfileOutlined style={{ fontSize: 20 }} />
-        <span style={{ marginLeft: 15, marginRight: 15 }}>Hồ sơ</span>
-      </Link>,
-      "1"
+      <Link to={"/student/transaction/create"}>Tạo giao dịch</Link>,
+      "0",
+      <TransactionOutlined />
     ),
+    getItem("Đổi quà", "3", <GiftOutlined />, [
+      getItem(<Link to={"/student/create-conversion"}>Tạo yêu cầu</Link>, "1"),
+      getItem(
+        <Link to={"/student/create-conversion/history"}>Lịch sử đổi</Link>,
+        "2"
+      ),
+    ]),
   ];
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
@@ -158,14 +162,6 @@ function DashboardAuthUser({ children }) {
                   <button className="buttonSlider mobile" onClick={openDrawer}>
                     {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                   </button>
-                  <h1
-                    style={{
-                      marginLeft: "20px",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      maxWidth: "200px",
-                    }}></h1>
                 </Col>
               </Row>
             </Col>
@@ -187,13 +183,13 @@ function DashboardAuthUser({ children }) {
         {collapsed ? (
           <Content
             className="content-ant"
-            style={{ paddingLeft: "4%", marginTop: "7%" }}>
+            style={{ paddingLeft: "6%", marginTop: "7%" }}>
             {children}
           </Content>
         ) : (
           <Content
             className="content-ant"
-            style={{ paddingLeft: "16%", marginTop: "9%" }}>
+            style={{ paddingLeft: "19%", marginTop: "9%" }}>
             {children}
           </Content>
         )}
