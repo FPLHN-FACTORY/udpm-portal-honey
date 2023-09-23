@@ -15,10 +15,9 @@ import { Link, useLocation } from "react-router-dom";
 import { Layout, Drawer, Row, Menu, Col } from "antd";
 import Header from "../../../components/user/auth/Header";
 import {
-  EditOutlined,
-  MailOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  ProfileOutlined,
   TransactionOutlined,
 } from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
@@ -32,9 +31,6 @@ function DashboardAuthUser({ children }) {
     if (count === 70) setCount(250);
     else setCount(70);
   };
-  const [fixed, setFixed] = useState(false);
-
-  const handleFixedNavbar = (type) => setFixed(type);
 
   let { pathname } = useLocation();
   pathname = pathname.replace("/", "");
@@ -55,6 +51,13 @@ function DashboardAuthUser({ children }) {
       ),
       getItem(<Link to={"/student/transaction"}>Lịch sử giao dịch</Link>, "2"),
     ]),
+    getItem(
+      <Link to={"/student/profile"}>
+        <ProfileOutlined style={{ fontSize: 20 }} />
+        <span style={{ marginLeft: 15, marginRight: 15 }}>Hồ sơ</span>
+      </Link>,
+      "3"
+    ),
   ];
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
@@ -88,7 +91,7 @@ function DashboardAuthUser({ children }) {
             pathname === "rtl" ? "layout-dashboard-rtl" : ""
           }`}
         >
-          <Row className="flex justify-center align-middle  mt-5 pb-8">
+          <Row className="flex justify-center align-middle mt-5 pb-8">
             <div className="brand text-center">
               <Link to="/" className="active">
                 <img
@@ -171,37 +174,6 @@ function DashboardAuthUser({ children }) {
                   ></h1>
                 </Col>
               </Row>
-          style={{ background: "#fff", overflowX: "hidden" }}
-        >
-          <Row className="flex justify-center align-middle  mt-5 pb-8">
-            {!collapsed && (
-              <div className="brand text-center">
-                <Link to="/" className="active">
-                  <img
-                    src={logo}
-                    style={{
-                      height: "80px",
-                    }}
-                    alt="Logo"
-                  />
-                </Link>
-              </div>
-            )}
-          </Row>
-
-          <Menu mode="inline" items={items} />
-        </Sider>
-      </div>
-      <Layout className="pb-14">
-        <AntHeader className={`${fixed ? "ant-header-fixed" : ""}`}>
-          <Row className="flex justify-between">
-            <Col span={2} className="flex justify-between items-center">
-              <button className="buttonSlider desktop" onClick={toggleCollapse}>
-                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              </button>
-              <button className="buttonSlider mobile" onClick={openDrawer}>
-                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              </button>
             </Col>
             <Col span={16}>
               <Row>

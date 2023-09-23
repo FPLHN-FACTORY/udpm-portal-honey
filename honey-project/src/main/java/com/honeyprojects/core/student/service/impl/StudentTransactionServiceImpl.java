@@ -216,6 +216,6 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
 
     @Override
     public String getUserLogin() {
-        return udomHoney.getIdUser();
+        return udpmHoney.getIdUser();
     }
 }

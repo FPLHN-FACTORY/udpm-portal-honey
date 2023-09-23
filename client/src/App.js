@@ -25,7 +25,7 @@ import TransactionPage from "./pages/student/transaction/TransactionPage";
 import TransactionHistory from "./pages/student/transaction/TransactionHistory";
 import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction";
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
-import ViewProfile from "./pages/student/myProfile/ViewProfile";
+import MyProfile from "./pages/student/profile/MyProfile";
 
 function App() {
   return (
@@ -202,7 +202,7 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
-                    <ViewProfile />
+                    <MyProfile />
                   </DashboardAuthUser>
                 </AuthGuard>
               }

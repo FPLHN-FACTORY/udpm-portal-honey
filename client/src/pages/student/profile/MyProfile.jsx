@@ -1,6 +1,7 @@
 import { Avatar, Button, Card, Col, Row, Select, Tabs } from "antd";
-import React, { memo } from "react";
-import { CameraOutlined, UserOutlined } from "@ant-design/icons";
+import React, { memo, useEffect } from "react";
+import { UserOutlined } from "@ant-design/icons";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import coinGold from "../../../../src/assets/images/dollar.png";
 import coinCopper from "../../../../src/assets/images/copper.png";
 import coinSliver from "../../../../src/assets/images/sliver.png";
@@ -8,6 +9,10 @@ import hang1 from "../../../../src/assets/images/gold-medal.png";
 import hang2 from "../../../../src/assets/images/silver-medal.png";
 import hang3 from "../../../../src/assets/images/bronze-medal.png";
 import hang4 from "../../../../src/assets/images/medal.png";
+import "./index.css";
+import { ProfileApi } from "../../../apis/student/profile/profileApi.api";
+import { GetUser, SetUser } from "../../../app/reducers/users/users.reducer";
+import { GetHoney, SetHoney } from "../../../app/reducers/honey/honey.reducer";
 
 const rankingData = [
   { img: hang1, rank: 1, title: "Bạn đạt hạng 1" },
@@ -124,6 +129,28 @@ const items = [
   },
 ];
 const MyProfile = memo(() => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    getProfile();
+    getHoneyProfile();
+  }, []);
+
+  const getProfile = () => {
+    return ProfileApi.getUserLogin().then((response) => {
+      dispatch(SetUser(response.data.data));
+    });
+  };
+
+  const getHoneyProfile = () => {
+    return ProfileApi.getHoneyUser().then((response) => {
+      dispatch(SetHoney(response.data.data));
+    });
+  };
+
+  const data = useAppSelector(GetUser);
+  const dataHoney = useAppSelector(GetHoney);
+
   return (
     <div>
       <Card>
@@ -131,10 +158,8 @@ const MyProfile = memo(() => {
         <div>
           <Row>
             <Col span={18} xs={24} sm={24} md={20}>
-              <p style={{ fontSize: 40, marginTop: -5 }}>
-                Nguyễn Văn A - AnhDTN
-              </p>
-              <p style={{ fontSize: 20, marginTop: -30 }}>Kì học : 7</p>
+              <p style={{ fontSize: 40, marginTop: -5 }}>{data.name}</p>
+              <p className="user-name">{data.userName}</p>
             </Col>
             <Col span={6} xs={24} sm={24} md={4}>
               <Avatar
@@ -142,18 +167,6 @@ const MyProfile = memo(() => {
                 icon={<UserOutlined />}
                 style={{
                   backgroundColor: "#87d068",
-                }}
-              />
-
-              <Button
-                type="primary"
-                shape="circle"
-                icon={<CameraOutlined />}
-                style={{
-                  height: 33,
-                  position: "absolute",
-                  marginLeft: -30,
-                  marginTop: 15,
                 }}
               />
             </Col>

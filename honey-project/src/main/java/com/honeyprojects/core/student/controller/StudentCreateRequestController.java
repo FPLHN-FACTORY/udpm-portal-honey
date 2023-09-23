@@ -2,13 +2,12 @@ package com.honeyprojects.core.student.controller;
 
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.ResponseObject;
-import com.honeyprojects.core.common.base.UdomHoney;
-import com.honeyprojects.core.student.model.repuest.StudentCreateRequestConversionRequest;
-import com.honeyprojects.core.student.model.repuest.StudentFilterHistoryRequest;
-import com.honeyprojects.core.student.model.repuest.StudentHoneyRequest;
+import com.honeyprojects.core.common.base.UdpmHoney;
+import com.honeyprojects.core.student.model.request.StudentCreateRequestConversionRequest;
+import com.honeyprojects.core.student.model.request.StudentFilterHistoryRequest;
+import com.honeyprojects.core.student.model.request.StudentHoneyRequest;
 import com.honeyprojects.core.student.model.response.StudentCreateResquestConversionResponse;
 import com.honeyprojects.core.student.service.StudentCreateResquestConversionService;
-import com.honeyprojects.core.student.service.StudentUserApiService;
 import com.honeyprojects.core.student.service.impl.StudentHoneyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,10 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class StudentCreateRequestController {
 
     @Autowired
-    private UdomHoney udomHoney;
-
-    @Autowired
-    private StudentUserApiService studentUserApiService;
+    private UdpmHoney udpmHoney;
 
     @Autowired
     private StudentHoneyServiceImpl studentHoneyService;
@@ -38,7 +34,7 @@ public class StudentCreateRequestController {
 
     @GetMapping("/user-api")
     public ResponseObject getUserApi(){
-        return new ResponseObject(udomHoney);
+        return new ResponseObject(udpmHoney);
     }
 
     @GetMapping("/honey-point")
