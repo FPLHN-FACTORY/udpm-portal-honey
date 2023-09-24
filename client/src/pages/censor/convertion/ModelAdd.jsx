@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { ConversionAPI } from "../../../apis/censor/conversion/conversion.api";
-const ModalAddConversion = () => {
+import { useAppDispatch } from "../../../app/hooks";
+import { AddConversion } from "../../../app/reducers/conversion/conversion.reducer";
+
+const ModalAddConversion = ({ loadData }) => {
+  const dispatch = useAppDispatch();
   const [fillCategory, setFillCategory] = useState([]);
   const [fillGift, setFillGift] = useState([]);
   const [selectCategory, setSelectCategory] = useState("");
@@ -45,6 +49,12 @@ const ModalAddConversion = () => {
     if (!selectCategory || !pointCategory || !selectGift || !pointGift) {
       message.error("không được để trống");
       return;
+    } else if (pointCategory < 0) {
+      message.error("Điểm phải dương");
+      return;
+    } else if (parseFloat(pointGift) !== 0.25) {
+      message.error("Quà mặc định phải là 0.25");
+      return;
     }
 
     // const ratio = parseFloat(selectPointCategory) / parseFloat(selectPointGift);
@@ -62,16 +72,16 @@ const ModalAddConversion = () => {
     };
 
     await ConversionAPI.add(dataToSend)
-      .then(() => {
+      .then((result) => {
+        dispatch(AddConversion(result.data.data));
         message.success("Add thành công");
         handleCancel(false);
-        console.log("tỉ số và mã đã được lưu vào db");
+        loadData();
       })
       .catch((error) => {
         if (error.message && error.message.data && error.message.data.message) {
           message.error(error.response.data.message);
         } else {
-          message.error("lỗi");
         }
       });
   };

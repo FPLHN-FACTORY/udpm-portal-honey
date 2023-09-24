@@ -27,14 +27,6 @@ export class GiftAPI {
     });
   };
 
-  static delete = (data, id) => {
-    return request({
-      method: "PUT",
-      url: `/${this.COMPONENT_NAME}/delete/${id}`,
-      data: data,
-    });
-  };
-
   static detail = (data, id) => {
     return request({
       method: "GET",

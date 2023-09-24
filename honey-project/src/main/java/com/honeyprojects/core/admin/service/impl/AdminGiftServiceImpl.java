@@ -14,24 +14,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
 public class AdminGiftServiceImpl implements AdminGiftService {
 
-    @Autowired
-    private AdGiftRepository adGiftRepository;
+  @Autowired
+  private AdGiftRepository adGiftRepository;
 
 
     @Override
     public PageableObject<AdminGiftResponse> getAllCategoryByAdmin(AdminGiftRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<AdminGiftResponse> pageRes = adGiftRepository.getAllGiftByAdmin(pageable, request);
-        return new PageableObject<>(pageRes);
+        Page<AdminGiftResponse> pageRes = adGiftRepository.getAllGiftByAdmin(pageable,request);
+        return null;
     }
 
     @Override
@@ -40,19 +38,27 @@ public class AdminGiftServiceImpl implements AdminGiftService {
     }
 
     @Override
-    @Transactional
     public Gift addGift(AdminCreateGiftRequest request) {
-        Gift gift = request.dtoToEntity(new Gift());
-        return adGiftRepository.save(gift);
+//        Random random = new Random();
+//        int number = random.nextInt(1000);
+//        String code = String.format("G%04d",number);
+        Gift g = new Gift();
+        g.setCode(request.getCode());
+        g.setName(request.getName());
+        g.setStatus(Status.HOAT_DONG);
+        adGiftRepository.save(g);
+
+        return g;
     }
 
     @Override
-    @Transactional
     public Gift updateGift(AdminUpdateGiftRequest request, String id) {
-        Optional<Gift> optional = adGiftRepository.findById(id);
-        optional.get().setStatus(Status.HOAT_DONG);
-        optional.get().setName(request.getName());
-        return adGiftRepository.save(optional.get());
+        Gift getOne = adGiftRepository.findById(id).orElse(null);
+
+//        getOne.setStatus(Status.KHONG_HOAT_DONG);
+
+
+        return adGiftRepository.save(getOne);
     }
 
     @Override
@@ -61,15 +67,7 @@ public class AdminGiftServiceImpl implements AdminGiftService {
     }
 
     @Override
-    @Transactional
     public void deleteById(String id) {
         adGiftRepository.deleteById(id);
-    }
-
-    public Gift updateStatusGift(AdminUpdateGiftRequest request, String id) {
-        Optional<Gift> optional = adGiftRepository.findById(id);
-        optional.get().setStatus(Status.KHONG_HOAT_DONG);
-        optional.get().setName(request.getName());
-        return adGiftRepository.save(optional.get());
     }
 }

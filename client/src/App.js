@@ -22,9 +22,10 @@ import IndexGift from "./pages/censor/gift/indexGift";
 import AddRequestConversion from "./pages/student/RequestConversion/AddRequestConversion";
 import AddRequestConversionHistory from "./pages/student/RequestConversion/AddRequestConversionHistory";
 import TransactionPage from "./pages/student/transaction/TransactionPage";
-import TransactionHistory from "./pages/student/transaction/TransactionHistory";
 import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction";
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
+import MyProfile from "./pages/student/profile/MyProfile";
+import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
 
 function App() {
   return (
@@ -126,26 +127,6 @@ function App() {
             />
             {/* Màn teacher */}
             <Route
-              path="/student/create-conversion"
-              element={
-                <AuthGuard>
-                  <DashboardAuthUser>
-                    <AddRequestConversion />
-                  </DashboardAuthUser>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/student/create-conversion/history"
-              element={
-                <AuthGuard>
-                  <DashboardAuthUser>
-                    <AddRequestConversionHistory />
-                  </DashboardAuthUser>
-                </AuthGuard>
-              }
-            />
-            <Route
               path="/teacher/add-point"
               element={
                 <AuthGuard>
@@ -175,7 +156,37 @@ function App() {
                 </AuthGuard>
               }
             />
+            <Route
+              path="/teacher/convertion-honey"
+              element={
+                <AuthGuard>
+                  <DashboardTeacher>
+                    <ConvertionHoney />
+                  </DashboardTeacher>
+                </AuthGuard>
+              }
+            />
             {/* Màn sinh viên */}
+            <Route
+              path="/student/create-conversion/history"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <AddRequestConversionHistory />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/create-conversion"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <AddRequestConversion />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
             <Route
               path="/student/transaction/create"
               element={
@@ -187,11 +198,11 @@ function App() {
               }
             />
             <Route
-              path="/student/transaction"
+              path="/student/profile"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
-                    <TransactionHistory />
+                    <MyProfile />
                   </DashboardAuthUser>
                 </AuthGuard>
               }

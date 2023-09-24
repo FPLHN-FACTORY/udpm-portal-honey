@@ -2,41 +2,28 @@ import { Card, Input, Pagination, Space, Table, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import { Button } from "antd";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
-import { EditOutlined, FormOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { EditOutlined, FormOutlined, PlusOutlined } from "@ant-design/icons";
 import ModalDetailGift from "./ModalDetailGift";
-import ModalAma from "./ModalAddGift";
-import ModalDelete from "./deleteGift";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import {
-  GetGift,
-  SetGift,
-} from "../../../app/reducers/gift/gift.reducer";
+import ModalThem from "../category/ModalAdd";
 
 export default function IndexGift() {
   const [showModal, setShowModal] = useState(false);
+  const [listGift, setListGift] = useState([]);
   const [detailGift, setDetailGift] = useState();
   const [current, setCurrent] = useState(1);
   const [search, setSearch] = useState("");
   const [total, setTotal] = useState(0);
-  const dispatch = useAppDispatch();
-
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = () => {
-    GiftAPI.fetchAll({
-      search: search,
-      page: current - 1,
-    }).then((response) => {
-      dispatch(SetGift(response.data.data.data));
-      setTotal(response.data.data.totalPages);
-      
+    GiftAPI.fetchAllGift().then((response) => {
+      setListGift(response.data.data);
+      setTotal(response.data.totalPages);
     });
   };
-
-  const data = useAppSelector(GetGift);
 
   const columns = [
     {
@@ -61,7 +48,7 @@ export default function IndexGift() {
       key: "action",
       render: (_, record) => (
         <Space size="small">
-          <Tooltip title="Cập nhập">
+          {/* <Tooltip title="Cập nhập">
             <Button
               className="update-button"
               onClick={() => {
@@ -72,9 +59,8 @@ export default function IndexGift() {
             >
               <EditOutlined className="icon" />
             </Button>
-          </Tooltip>
+          </Tooltip> */}
           <ModalDetailGift gift={record} icon={<FormOutlined />} />
-          <ModalDelete gift={record} icon={<FormOutlined />} />
         </Space>
       ),
     },
@@ -83,13 +69,12 @@ export default function IndexGift() {
   return (
     <>
       {showModal && (
-        <ModalAma
+        <ModalThem
           modalOpen={showModal}
           setModalOpen={setShowModal}
           gift={detailGift}
           setGift={setDetailGift}
         />
-        
       )}
       <Card className="mb-2">
         <form class="flex items-center">
@@ -103,11 +88,11 @@ export default function IndexGift() {
             <button
               type="button"
               className="search-button1"
-              icon={<SearchOutlined />}
-              onClick={() => {
-                setCurrent(1);
-                fetchData();
-              }}
+              // icon={<SearchOutlined />}
+              // onClick={() => {
+              //   setCurrent(1);
+              //   fetchData();
+              // }}
               style={{ borderRadius: "10px", marginLeft: "20px" }}
             >
               Tìm kiếm
@@ -124,10 +109,10 @@ export default function IndexGift() {
                 <Tooltip title="Thêm quà">
                   <button
                     className="add-button1"
-                  onClick={() => {
-                    setShowModal(true);
-                    setDetailGift(null);
-                  }}
+                    // onClick={() => {
+                    //   setShowModal(true);
+                    //   setDetailGift(null);
+                    // }}
                   >
                     <PlusOutlined className="mr-1" />
                     Thêm quà
@@ -141,7 +126,7 @@ export default function IndexGift() {
         <div className="mt-5">
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={listGift}
             rowKey="id"
             pagination={false}
           />
@@ -153,7 +138,7 @@ export default function IndexGift() {
             onChange={(value) => {
               setCurrent(value);
             }}
-           total={total * 10}
+            total={total * 10}
           />
         </div>
       </Card>
