@@ -65,4 +65,9 @@ public class StudentTransactionRestController {
     public ResponseObject getStudent(String id) {
         return new ResponseObject(transactionService.getUserById(id));
     }
+
+    @GetMapping("/get-user-login")
+    public String getUserLogin() {
+        return transactionService.getUserLogin();
+    }
 }

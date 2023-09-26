@@ -79,12 +79,14 @@ export default function AddRequestConversion(props) {
       studentId: fillUserApi.idUser,
     };
     getPoint(data);
+    setSelectedConversion(null);
+    setInputNumberValue("");
   };
 
   const getPoint = (data) => {
     ResquestConversion.getPointHoney(data)
       .then((response) => {
-        setFillPoint(response.data.data ? response.data.data : 0);
+        setFillPoint(response.data.data ? response.data.data : "0");
         console.log("Điểm từ API:", response.data.data);
       })
       .catch((error) => console.log(error));
@@ -185,6 +187,17 @@ export default function AddRequestConversion(props) {
       });
   };
 
+  const getCategoryNameById = (categoryId) => {
+    const category = fillCategory.find((item) => item.id === categoryId);
+    return category ? category.name : "";
+  };
+
+  // Function to get the name of the Gift based on its ID
+  const getGiftNameById = (giftId) => {
+    const gift = fillGift.find((item) => item.id === giftId);
+    return gift ? gift.name : "";
+  };
+
   const columns = [
     {
       title: "STT",
@@ -202,7 +215,14 @@ export default function AddRequestConversion(props) {
       title: "Tỉ lệ",
       dataIndex: "ratio",
       key: "ratio",
-      render: (text) => <span> {`${parseInt(text)} / 0.25`}</span>,
+      render: (text, record) => (
+        <span>
+          {" "}
+          {` ${parseInt(text)} điểm ${getCategoryNameById(
+            record.categoryId
+          )} đổi được 0.25 điểm ${getGiftNameById(record.giftId)}`}{" "}
+        </span>
+      ),
     },
     {
       title: () => <div>Action</div>,
@@ -272,7 +292,8 @@ export default function AddRequestConversion(props) {
 
                   <Col span={12}>
                     <div>
-                      Số điểm: <Tag>{fillPoint.point}</Tag>
+                      Số điểm:{" "}
+                      <Tag>{fillPoint.point ? fillPoint.point : 0}</Tag>
                     </div>
                     <div className="m-25">
                       Khóa: <Tag>{fillUserApi.khoa}</Tag>
@@ -294,6 +315,7 @@ export default function AddRequestConversion(props) {
                   <div>
                     Loại điểm:{" "}
                     <Select
+                      disabled
                       showSearch
                       placeholder="Cayegory"
                       optionFilterProp="children"
@@ -320,6 +342,7 @@ export default function AddRequestConversion(props) {
                   >
                     Loại quà:
                     <Select
+                      disabled
                       showSearch
                       placeholder="Gift"
                       optionFilterProp="children"
@@ -353,7 +376,7 @@ export default function AddRequestConversion(props) {
                     </div>
                   </div>
                   <div style={{ marginTop: "40px" }}>
-                    <Tag>{getpointGift ? getpointGift : ""}</Tag> điểm
+                    <Tag>{getpointGift ? getpointGift : 0}</Tag> điểm
                   </div>
                 </Col>
               </Row>

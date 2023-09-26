@@ -39,6 +39,16 @@ const ModalDetailConversion = (props) => {
       setFillGift(response.data.data);
     });
   };
+  const getCategoryNameById = (categoryId) => {
+    const category = fillCategory.find((item) => item.id === categoryId);
+    return category ? category.name : "";
+  };
+
+  // Function to get the name of the Gift based on its ID
+  const getGiftNameById = (giftId) => {
+    const gift = fillGift.find((item) => item.id === giftId);
+    return gift ? gift.name : "";
+  };
   return (
     <>
       <Tooltip title="Chi tiết">
@@ -167,6 +177,11 @@ const ModalDetailConversion = (props) => {
               {" "}
               Điểm
             </span>
+            <h3 style={{ color: "red" }}>
+              # Đổi {conversion.ratio} mật{" "}
+              {getCategoryNameById(conversion.categoryId)} sẽ đổi được 0.25 điểm{" "}
+              {getGiftNameById(conversion.giftId)}
+            </h3>
           </div>
           <Form.Item
             wrapperCol={{

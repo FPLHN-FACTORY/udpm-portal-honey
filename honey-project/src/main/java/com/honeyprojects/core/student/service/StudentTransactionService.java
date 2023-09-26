@@ -30,4 +30,6 @@ public interface StudentTransactionService {
 
     SimpleResponse searchUser(String username);
     SimpleResponse getUserById(String id);
+
+    String getUserLogin();
 }

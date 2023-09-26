@@ -20,9 +20,13 @@ const ModalDetailConversion = (props) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+  console.log(fillName.nameCate);
 
   form.setFieldsValue(conversion);
 
+  console.log(fillCategory.name);
+
+  const getId = conversion.categoryId;
   useEffect(() => {
     fechCategory();
     fechGift();
@@ -38,6 +42,16 @@ const ModalDetailConversion = (props) => {
     GiftAPI.fetchAllGift().then((response) => {
       setFillGift(response.data.data);
     });
+  };
+  const getCategoryNameById = (categoryId) => {
+    const category = fillCategory.find((item) => item.id === categoryId);
+    return category ? category.name : "";
+  };
+
+  // Function to get the name of the Gift based on its ID
+  const getGiftNameById = (giftId) => {
+    const gift = fillGift.find((item) => item.id === giftId);
+    return gift ? gift.name : "";
   };
   return (
     <>
@@ -86,6 +100,7 @@ const ModalDetailConversion = (props) => {
             </span>
             <Select
               showSearch
+              disabled
               placeholder="Category"
               optionFilterProp="children"
               style={{ width: "33%", marginRight: "20px" }}
@@ -119,7 +134,6 @@ const ModalDetailConversion = (props) => {
               Điểm
             </span>
           </div>
-
           <div style={{ marginTop: "20px" }}>
             <span
               className="text-xl"
@@ -135,6 +149,7 @@ const ModalDetailConversion = (props) => {
             </span>
             <Select
               showSearch
+              disabled
               placeholder="Gift"
               optionFilterProp="children"
               style={{ width: "33%", marginRight: "20px" }}
@@ -168,6 +183,12 @@ const ModalDetailConversion = (props) => {
               Điểm
             </span>
           </div>
+          <h3 style={{ color: "red", textAlign: "center" }}>
+            # Đổi {conversion.ratio} mật{" "}
+            {getCategoryNameById(conversion.categoryId)} sẽ đổi được 0.25 điểm{" "}
+            {getGiftNameById(conversion.giftId)}
+          </h3>
+
           <Form.Item
             wrapperCol={{
               offset: 8,
