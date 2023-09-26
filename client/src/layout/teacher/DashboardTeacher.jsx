@@ -18,6 +18,8 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   PlusCircleFilled,
+  RetweetOutlined,
+  TransactionOutlined,
 } from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
 const { Header: AntHeader, Content } = Layout;
@@ -30,9 +32,6 @@ function DashboardTeacher({ children }) {
     if (count === 70) setCount(250);
     else setCount(70);
   };
-  const [fixed, setFixed] = useState(false);
-
-  const handleFixedNavbar = (type) => setFixed(type);
 
   let { pathname } = useLocation();
   pathname = pathname.replace("/", "");
@@ -49,10 +48,21 @@ function DashboardTeacher({ children }) {
     getItem("Cộng mật ong", "0", <PlusCircleFilled />, [
       getItem(<Link to={"/teacher/add-point"}>Tạo yêu cầu</Link>, "1"),
       getItem(
-        <Link to={"/teacher/add-point/history"}>Lịch sử yêu cầu</Link>,
+        <Link to={"/teacher/add-point/list-request"}>Danh sách yêu cầu</Link>,
         "2"
       ),
+
+      getItem(
+        <Link to={"/teacher/add-point/history"}>Lịch sử yêu cầu</Link>,
+        "3"
+      ),
     ]),
+
+    getItem(
+      <Link to={"/teacher/convertion-honey"}>Đổi điểm</Link>,
+      "10",
+      <RetweetOutlined style={{ marginLeft: "5px" }} />
+    ),
   ];
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
@@ -60,6 +70,7 @@ function DashboardTeacher({ children }) {
 
   return (
     <Layout
+      id="authe"
       className={`layout-dashboard ${
         pathname === "profile" ? "layout-profile" : ""
       } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}>
@@ -82,7 +93,7 @@ function DashboardTeacher({ children }) {
           className={` bg-white layout-dashboard ${
             pathname === "rtl" ? "layout-dashboard-rtl" : ""
           }`}>
-          <Row className="flex justify-center align-middle  mt-5 pb-8">
+          <Row className="flex justify-center align-middle mt-5 pb-8">
             <div className="brand text-center">
               <Link to="/" className="active">
                 <img
@@ -106,49 +117,83 @@ function DashboardTeacher({ children }) {
           collapsed={collapsed}
           width={250}
           className={`sider-primary ant-layout-sider-primary`}
-          style={{ background: "#fff", overflowX: "hidden" }}>
-          <Row className="flex justify-center align-middle  mt-5 pb-8">
-            {!collapsed && (
-              <div className="brand text-center">
-                <Link to="/" className="active">
-                  <img
-                    src={logo}
-                    style={{
-                      height: "80px",
-                    }}
-                    alt="Logo"
-                  />
-                </Link>
-              </div>
-            )}
-          </Row>
+          style={{
+            background: "#fff",
+            position: "fixed",
+            left: 0,
+            zIndex: 999,
+            height: "100%",
+          }}>
+          <Row
+            className="flex justify-center align-middle  mt-5 pb-8"
+            style={{ height: "80px" }}
+          />
 
           <Menu mode="inline" items={items} />
         </Sider>
       </div>
       <Layout className="pb-14">
-        <AntHeader className={`${fixed ? "ant-header-fixed" : ""}`}>
-          <Row className="flex justify-between">
-            <Col span={2} className="flex justify-between items-center">
-              <button className="buttonSlider desktop" onClick={toggleCollapse}>
-                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              </button>
-              <button className="buttonSlider mobile" onClick={openDrawer}>
-                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              </button>
+        <AntHeader style={{ zIndex: 1000, position: "fixed", width: "100%" }}>
+          <Row>
+            <Col span={8}>
+              <Row>
+                {!collapsed ? (
+                  <Col span={12}>
+                    <div className="brand text-center">
+                      <Link to="/" className="active">
+                        <img
+                          src={logo}
+                          style={{
+                            height: "60px",
+                          }}
+                          alt="Logo"
+                        />
+                      </Link>
+                    </div>
+                  </Col>
+                ) : (
+                  <Col span={4}></Col>
+                )}
+                <Col span={12} className="flex items-center">
+                  <button
+                    className="buttonSlider desktop"
+                    onClick={toggleCollapse}>
+                    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                  </button>
+                  <button className="buttonSlider mobile" onClick={openDrawer}>
+                    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                  </button>
+                </Col>
+              </Row>
             </Col>
-            <Col span={22}>
-              <Header
-                onPress={openDrawer}
-                onSlidebar={onSlidebar}
-                name={pathname}
-                subName={pathname}
-                handleFixedNavbar={handleFixedNavbar}
-              />
+            <Col span={16}>
+              <Row>
+                <Col span={15}></Col>
+                <Col span={9}>
+                  <Header
+                    onPress={openDrawer}
+                    onSlidebar={onSlidebar}
+                    name={pathname}
+                    subName={pathname}
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
         </AntHeader>
-        <Content className="content-ant">{children}</Content>
+        {collapsed ? (
+          <Content
+            className="content-ant"
+            style={{ paddingLeft: "6%", marginTop: "7%" }}>
+            {children}
+          </Content>
+        ) : (
+          <Content
+            className="content-ant"
+            style={{ paddingLeft: "19%", marginTop: "9%" }}>
+            {children}
+          </Content>
+        )}
       </Layout>
     </Layout>
   );

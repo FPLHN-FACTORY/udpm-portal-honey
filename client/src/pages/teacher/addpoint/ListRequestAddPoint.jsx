@@ -230,7 +230,7 @@ export default function HistoryAddPoint() {
           </Space>
         </Form>
       </Card>
-      <Card title="Lịch sử cộng điểm">
+      <Card title="Danh sách yêu cầu">
         <Table
           columns={columns}
           dataSource={data}

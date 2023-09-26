@@ -27,12 +27,18 @@ import moment from "moment";
 
 const statusHistory = (status) => {
   switch (status) {
-    case 0:
-      return <Tag color="geekblue">Chờ phê duyệt</Tag>; // Màu xanh dương
     case 1:
-      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
+      return (
+        <Tag style={{ width: "80px", textAlign: "center" }} color="green">
+          Đã phê duyệt
+        </Tag>
+      ); // Màu xanh lá cây
     case 2:
-      return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
+      return (
+        <Tag style={{ width: "80px", textAlign: "center" }} color="volcano">
+          Đã hủy
+        </Tag>
+      ); // Màu đỏ
     default:
       return <Tag>Không xác định</Tag>;
   }
@@ -45,11 +51,6 @@ export default function HistoryAddPoint() {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
-    },
-    {
-      title: "User name",
-      dataIndex: "userName",
-      key: "userName",
     },
     {
       title: "Tên sinh viên",
@@ -72,29 +73,14 @@ export default function HistoryAddPoint() {
       key: "createdDate",
     },
     {
+      title: "Lý do",
+      dataIndex: "note",
+      key: "note",
+    },
+    {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-    },
-    {
-      title: "Hành động",
-      dataIndex: "acction",
-      key: "acction",
-      render: (values) => (
-        <div style={{ textAlign: "center" }}>
-          <Button
-            onClick={() => changeStatus(values.idHistory, 2)}
-            disabled={values.status !== 0}
-            type="primary"
-            danger={values.status !== 2}
-            style={{
-              color: values.status !== 0 ? "" : "#fff",
-              height: "30px",
-            }}>
-            Hủy
-          </Button>
-        </div>
-      ),
     },
   ];
 
@@ -179,17 +165,6 @@ export default function HistoryAddPoint() {
     }
   };
 
-  const changeStatus = (idHistory, status) => {
-    AddPointAPI.changeStatus(idHistory, status)
-      .then((response) => {
-        if (response.data.success) {
-          fetchData(dispatch, filter);
-          if (status === 2) message.error("Hủy yêu cầu thành công!");
-        }
-      })
-      .catch((error) => console.error(error));
-  };
-
   return (
     <div className="add-point">
       <Card className="mb-2 py-1">
@@ -234,14 +209,6 @@ export default function HistoryAddPoint() {
           dataSource={data}
           rowKey="key"
           pagination={false}
-          expandable={{
-            expandedRowRender: (record) => (
-              <p>
-                <b style={{ color: "#EEB30D" }}>Lý do cộng: </b>
-                {record.note}
-              </p>
-            ),
-          }}
         />
         <div className="mt-10 text-center mb-10">
           <Pagination

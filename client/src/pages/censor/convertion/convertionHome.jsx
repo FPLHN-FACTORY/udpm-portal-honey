@@ -6,12 +6,18 @@ import ModalDetailConversion from "./ModalDetail";
 import ModalAddConversion from "./ModelAdd";
 import ModalUpdateConversion from "./ModelUpdate";
 import "./Home.css";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import {
+  GetConversion,
+  SetConversion,
+} from "../../../app/reducers/conversion/conversion.reducer";
 
 export default function ConversionHome() {
   const [listConversion, setListConversion] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [searchByName, setSearchByName] = useState("");
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     fetchData(currentPage - 1, searchByName);
@@ -24,10 +30,13 @@ export default function ConversionHome() {
 
   const fetchData = (currentPage, searchByName) => {
     ConversionAPI.searchByName(currentPage, searchByName).then((response) => {
+      dispatch(SetConversion(response.data.data.content));
       setListConversion(response.data.data.content);
       setTotalPages(response.data.data.totalPages);
     });
   };
+
+  const data = useAppSelector(GetConversion);
 
   const columns = [
     {
@@ -86,7 +95,7 @@ export default function ConversionHome() {
                 <span>
                   <Tooltip title="Thêm quà">
                     <ModalAddConversion
-                      fetchData={fetchData}
+                      // loadData={fetchData(currentPage, searchByName)}
                       icon={<EyeOutlined />}
                     />
                   </Tooltip>
@@ -101,7 +110,7 @@ export default function ConversionHome() {
         <div className="mt-5">
           <Table
             columns={columns}
-            dataSource={listConversion}
+            dataSource={data}
             rowKey="id"
             pagination={false}
           />

@@ -1,4 +1,4 @@
-package com.honeyprojects.core.student.model.repuest;
+package com.honeyprojects.core.student.model.request;
 
 import com.honeyprojects.core.common.base.PageableRequest;
 import lombok.Getter;
