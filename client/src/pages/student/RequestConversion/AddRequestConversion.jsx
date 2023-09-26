@@ -80,7 +80,7 @@ export default function AddRequestConversion(props) {
     };
     getPoint(data);
     setSelectedConversion(null);
-    setInputNumberValue("");
+    setInputNumberValue("0");
   };
 
   const getPoint = (data) => {
@@ -142,6 +142,17 @@ export default function AddRequestConversion(props) {
       : undefined;
     const selectedGift = fillGift.find((gift) => gift.id === selectedGiftId);
     const selectedGiftName = selectedGift ? selectedGift.name : "";
+
+    if (!categoryType) {
+      message.error("Vui lòng chọn loại điểm");
+      return;
+    }
+
+    // Check if selectedConversion is empty
+    if (!selectedConversion) {
+      message.error("Vui lòng chọn một mục trong danh sách chọn");
+      return;
+    }
 
     if (!fillCategory || !fillGift || !inputNumberValue) {
       message.error("bạn phải điền đầu đủ thông tin");
@@ -293,7 +304,9 @@ export default function AddRequestConversion(props) {
                   <Col span={12}>
                     <div>
                       Số điểm:{" "}
-                      <Tag>{fillPoint.point ? fillPoint.point : 0}</Tag>
+                      <Tag>
+                        {fillPoint.point ? fillPoint.point : parseInt(0)}
+                      </Tag>
                     </div>
                     <div className="m-25">
                       Khóa: <Tag>{fillUserApi.khoa}</Tag>

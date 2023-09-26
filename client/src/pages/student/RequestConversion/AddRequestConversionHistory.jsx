@@ -89,9 +89,10 @@ export default function AddRequestConversionHistory() {
       key: "nameGift",
     },
     {
-      title: "Tỉ lệ",
+      title: "Quà đổi được",
       dataIndex: "honeyPoint",
       key: "honeyPoint",
+      render: (text) => <span>{`${text} điểm`}</span>,
     },
     {
       title: "Ngày tạo",

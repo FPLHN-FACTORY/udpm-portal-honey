@@ -15,6 +15,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Layout, Drawer, Row, Menu, Col } from "antd";
 import Header from "../../../components/user/auth/Header";
 import {
+  GiftOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   ProfileOutlined,
@@ -45,19 +46,22 @@ function DashboardAuthUser({ children }) {
   }
   const items = [
     getItem(
-      <Link to={"/student/transaction/create"}>
-        <TransactionOutlined style={{ fontSize: 20 }} />
-        <span style={{ marginLeft: 15, marginRight: 15 }}>Tạo giao dịch</span>
-      </Link>,
-      "0"
+      <Link to={"/student/profile"}>Hồ sơ</Link>,
+      "1",
+      <ProfileOutlined />
     ),
     getItem(
-      <Link to={"/student/profile"}>
-        <ProfileOutlined style={{ fontSize: 20 }} />
-        <span style={{ marginLeft: 15, marginRight: 15 }}>Hồ sơ</span>
-      </Link>,
-      "1"
+      <Link to={"/student/transaction/create"}>Tạo giao dịch</Link>,
+      "0",
+      <TransactionOutlined />
     ),
+    getItem("Đổi quà", "3", <GiftOutlined />, [
+      getItem(<Link to={"/student/create-conversion"}>Tạo yêu cầu</Link>, "1"),
+      getItem(
+        <Link to={"/student/create-conversion/history"}>Lịch sử đổi</Link>,
+        "2"
+      ),
+    ]),
   ];
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
@@ -68,8 +72,7 @@ function DashboardAuthUser({ children }) {
       id="authe"
       className={`layout-dashboard ${
         pathname === "profile" ? "layout-profile" : ""
-      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
-    >
+      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}>
       <Drawer
         id="drawer_ui"
         title={false}
@@ -82,15 +85,13 @@ function DashboardAuthUser({ children }) {
         style={{ background: "#fff", overflowX: "hidden" }}
         className={`drawer-sidebar ${
           pathname === "rtl" ? "drawer-sidebar-rtl" : ""
-        } `}
-      >
+        } `}>
         <Layout
           id="layout_drawer"
           style={{ background: "#fff", overflowX: "hidden" }}
           className={` bg-white layout-dashboard ${
             pathname === "rtl" ? "layout-dashboard-rtl" : ""
-          }`}
-        >
+          }`}>
           <Row className="flex justify-center align-middle mt-5 pb-8">
             <div className="brand text-center">
               <Link to="/" className="active">
@@ -121,8 +122,7 @@ function DashboardAuthUser({ children }) {
             left: 0,
             zIndex: 999,
             height: "100%",
-          }}
-        >
+          }}>
           <Row
             className="flex justify-center align-middle  mt-5 pb-8"
             style={{ height: "80px" }}
@@ -156,22 +156,12 @@ function DashboardAuthUser({ children }) {
                 <Col span={12} className="flex items-center">
                   <button
                     className="buttonSlider desktop"
-                    onClick={toggleCollapse}
-                  >
+                    onClick={toggleCollapse}>
                     {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                   </button>
                   <button className="buttonSlider mobile" onClick={openDrawer}>
                     {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                   </button>
-                  <h1
-                    style={{
-                      marginLeft: "20px",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      maxWidth: "200px",
-                    }}
-                  ></h1>
                 </Col>
               </Row>
             </Col>
@@ -193,15 +183,13 @@ function DashboardAuthUser({ children }) {
         {collapsed ? (
           <Content
             className="content-ant"
-            style={{ paddingLeft: "4%", marginTop: "7%" }}
-          >
+            style={{ paddingLeft: "6%", marginTop: "7%" }}>
             {children}
           </Content>
         ) : (
           <Content
             className="content-ant"
-            style={{ paddingLeft: "250px", marginTop: "120px" }}
-          >
+            style={{ paddingLeft: "19%", marginTop: "9%" }}>
             {children}
           </Content>
         )}

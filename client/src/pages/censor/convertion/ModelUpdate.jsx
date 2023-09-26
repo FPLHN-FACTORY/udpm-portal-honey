@@ -1,9 +1,20 @@
 import { EditOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal, Select, Tooltip, message } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Modal,
+  Result,
+  Select,
+  Tooltip,
+  message,
+} from "antd";
 import { useEffect, useState } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { ConversionAPI } from "../../../apis/censor/conversion/conversion.api";
+import { useAppDispatch } from "../../../app/hooks";
+import { UpdateConversion } from "../../../app/reducers/conversion/conversion.reducer";
 const ModalUpdateConversion = (props) => {
   const { conversion } = props;
   const [fillCategory, setFillCategory] = useState([]);
@@ -15,6 +26,7 @@ const ModalUpdateConversion = (props) => {
   const [selectPointCategory, setSelectPoinCategory] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
   const [selectGift, setSelectGift] = useState("");
+  const dispatch = useAppDispatch();
 
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -74,8 +86,10 @@ const ModalUpdateConversion = (props) => {
     };
 
     await ConversionAPI.update(dataToSend, conversion.id)
-      .then(() => {
+      .then((result) => {
+        dispatch(UpdateConversion(result.data.data));
         message.success("Update thành công");
+        console.log(ratio + "---" + code + "");
         handleCancel(false);
       })
       .catch((error) => {
