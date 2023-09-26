@@ -126,5 +126,4 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
         return requestApiidentity.handleCallApiGetUserById(id);
     }
 
-
 }

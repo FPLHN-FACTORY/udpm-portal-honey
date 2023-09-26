@@ -53,4 +53,5 @@ public class AdminGiftRestController {
     public void deleteGift(@PathVariable("id") String id){
      adminGiftService.deleteById(id);
     }
+
 }

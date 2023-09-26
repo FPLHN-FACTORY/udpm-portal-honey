@@ -9,4 +9,5 @@ import lombok.Setter;
 public class AdminGiftRequest extends PageableRequest {
 
     private String search;
+
 }

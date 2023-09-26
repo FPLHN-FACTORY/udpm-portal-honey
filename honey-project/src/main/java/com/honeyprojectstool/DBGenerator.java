@@ -12,6 +12,7 @@ import com.honeyprojects.entity.UserSemester;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeCategory;
+import com.honeyprojects.infrastructure.contant.TypeGift;
 import com.honeyprojects.repository.UserRepositpry;
 import com.honeyprojects.repository.ConversionRepository;
 import com.honeyprojects.repository.GiftRepository;
@@ -60,7 +61,6 @@ public class DBGenerator implements CommandLineRunner {
 
     @Autowired
     private UserRepositpry userRepositpry;
-
 
     public void run(String... args) throws Exception{
 
@@ -164,12 +164,14 @@ public class DBGenerator implements CommandLineRunner {
         gift1.setCode("G1");
         gift1.setName("Điểm lab");
         gift1.setStatus(Status.HOAT_DONG);
+        gift1.setType(1);
         gift1.setId(giftRepository.save(gift1).getId());
 
         Gift gift2 = new Gift();
         gift2.setCode("G2");
         gift2.setName("Điểm thi");
         gift2.setStatus(Status.HOAT_DONG);
+        gift2.setType(1);
         gift2.setId(giftRepository.save(gift2).getId());
 
         UserSemester userSemester1 = new UserSemester();
