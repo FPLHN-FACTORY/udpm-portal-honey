@@ -12,20 +12,17 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "honey")
-public class Honey extends PrimaryEntity {
+@Table(name = "chest")
+public class Chest extends PrimaryEntity {
+
+    @Column(length = EntityProperties.LENGTH_CODE)
+    private String name;
 
     @Column(nullable = false)
-    private Integer honeyPoint;
-
-    @Column(length = EntityProperties.LENGTH_NOTE)
-    private String reason;
+    private Double percent;
 
     @Column(length = EntityProperties.LENGTH_ID, nullable = false)
-    private String honeyCategoryId;
-
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
-    private String studentId;
+    private String idGift;
 
     private Status status;
 

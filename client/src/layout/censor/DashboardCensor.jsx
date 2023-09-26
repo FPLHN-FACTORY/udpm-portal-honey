@@ -107,76 +107,95 @@ function DashboardAuthUser({ children }) {
           collapsed={collapsed}
           width={250}
           className={`sider-primary ant-layout-sider-primary`}
-          style={{ background: "#fff", position: "fixed", left: 0, zIndex:999, height: "100%"}}
+          style={{
+            background: "#fff",
+            position: "fixed",
+            left: 0,
+            zIndex: 999,
+            height: "100%",
+          }}
         >
-          <Row className="flex justify-center align-middle  mt-5 pb-8" style={{height: "80px"}}/>
+          <Row
+            className="flex justify-center align-middle  mt-5 pb-8"
+            style={{ height: "80px" }}
+          />
 
           <Menu mode="inline" items={items} />
         </Sider>
       </div>
       <Layout className="pb-14">
-        <AntHeader style={{zIndex: 1000 , position: "fixed", width: "100%"}}>
+        <AntHeader style={{ zIndex: 1000, position: "fixed", width: "100%" }}>
           <Row>
             <Col span={8}>
               <Row>
                 {!collapsed ? (
                   <Col span={12}>
-                  <div className="brand text-center">
-                  <Link to="/" className="active">
-                    <img
-                      src={logo}
-                      style={{
-                        height: "60px",
-                      }}
-                      alt="Logo"
-                    />
-                  </Link>
-                </div>
+                    <div className="brand text-center">
+                      <Link to="/" className="active">
+                        <img
+                          src={logo}
+                          style={{
+                            height: "60px",
+                          }}
+                          alt="Logo"
+                        />
+                      </Link>
+                    </div>
                   </Col>
-                ):(
+                ) : (
                   <Col span={4}></Col>
                 )}
                 <Col span={12} className="flex items-center">
-                <button className="buttonSlider desktop" onClick={toggleCollapse}>
-                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined/>}
-              </button>
-              <button className="buttonSlider mobile" onClick={openDrawer}>
-                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined/>}
-              </button>
-                <h1
-                  style={{
-                    marginLeft: "20px",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    maxWidth: "200px",
-                  }}
-                >
-                </h1>
+                  <button
+                    className="buttonSlider desktop"
+                    onClick={toggleCollapse}
+                  >
+                    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                  </button>
+                  <button className="buttonSlider mobile" onClick={openDrawer}>
+                    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                  </button>
+                  <h1
+                    style={{
+                      marginLeft: "20px",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      maxWidth: "200px",
+                    }}
+                  ></h1>
                 </Col>
               </Row>
             </Col>
             <Col span={16}>
-                <Row>
-                <Col span={15} >
-            
-            </Col>
-              <Col span={9}>
-              <Header
-                onPress={openDrawer}
-                onSlidebar={onSlidebar}
-                name={pathname}
-                subName={pathname}
-              />
-              </Col>
-                </Row>
+              <Row>
+                <Col span={15}></Col>
+                <Col span={9}>
+                  <Header
+                    onPress={openDrawer}
+                    onSlidebar={onSlidebar}
+                    name={pathname}
+                    subName={pathname}
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
         </AntHeader>
         {collapsed ? (
-          <Content className="content-ant" style={{paddingLeft: "4%",  marginTop: "7%"}} >{children}</Content>
-        ):(
-          <Content className="content-ant" style={{paddingLeft: "16%",  marginTop: "9%"}} >{children}</Content>
+          <Content
+            className="content-ant"
+            style={{ paddingLeft: "4%", marginTop: "7%" }}
+          >
+            {children}
+          </Content>
+        ) : (
+          <Content
+            className="content-ant"
+            style={{ paddingLeft: "250px", marginTop: "120px" }}
+          >
+            {children}
+          </Content>
         )}
       </Layout>
     </Layout>

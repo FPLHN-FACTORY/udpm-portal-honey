@@ -12,21 +12,16 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "honey")
-public class Honey extends PrimaryEntity {
+@Table(name = "club")
+public class Club extends PrimaryEntity {
 
     @Column(nullable = false)
-    private Integer honeyPoint;
+    private String code;
 
-    @Column(length = EntityProperties.LENGTH_NOTE)
-    private String reason;
+    @Column(nullable = false, length = EntityProperties.LENGTH_NAME)
+    private Double name;
 
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
-    private String honeyCategoryId;
-
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
-    private String studentId;
-
+    @Column(nullable = false)
     private Status status;
 
 }

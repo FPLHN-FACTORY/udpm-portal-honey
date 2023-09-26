@@ -197,7 +197,7 @@ function DashboardTeacher({ children }) {
         ) : (
           <Content
             className="content-ant"
-            style={{ paddingLeft: "16%", marginTop: "9%" }}
+            style={{ paddingLeft: "250px", marginTop: "120px" }}
           >
             {children}
           </Content>
