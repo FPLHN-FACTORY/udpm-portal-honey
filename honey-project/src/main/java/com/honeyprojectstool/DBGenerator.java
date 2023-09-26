@@ -1,26 +1,27 @@
 package com.honeyprojectstool;
 
-import com.honeyprojects.entity.UserAPI;
+import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Conversion;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.entity.Semester;
-import com.honeyprojects.entity.Category;
-import com.honeyprojects.entity.HoneyCategory;
+import com.honeyprojects.entity.UserAPI;
 import com.honeyprojects.entity.UserSemester;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeCategory;
 import com.honeyprojects.infrastructure.contant.TypeGift;
 import com.honeyprojects.repository.UserRepositpry;
+
+import com.honeyprojects.repository.CategoryRepository;
+
 import com.honeyprojects.repository.ConversionRepository;
 import com.honeyprojects.repository.GiftRepository;
 import com.honeyprojects.repository.HistoryRepository;
 import com.honeyprojects.repository.HoneyRepository;
 import com.honeyprojects.repository.SemesterRepository;
-import com.honeyprojects.repository.CategoryRepository;
-import com.honeyprojects.repository.HoneyCategoryRepository;
+import com.honeyprojects.repository.UserRepositpry;
 import com.honeyprojects.repository.UserSemesterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -48,9 +49,6 @@ public class DBGenerator implements CommandLineRunner {
     private HistoryRepository historyRepository;
 
     @Autowired
-    private HoneyCategoryRepository honeyCategoryRepository;
-
-    @Autowired
     private SemesterRepository semesterRepository;
 
     @Autowired
@@ -62,7 +60,7 @@ public class DBGenerator implements CommandLineRunner {
     @Autowired
     private UserRepositpry userRepositpry;
 
-    public void run(String... args) throws Exception{
+    public void run(String... args) throws Exception {
 
         Category category1 = new Category();
         category1.setName("GOLD");
@@ -84,21 +82,6 @@ public class DBGenerator implements CommandLineRunner {
         category3.setCode("CT3");
         category3.setType(TypeCategory.FREE);
         category3.setId(categoryRepository.save(category3).getId());
-
-        HoneyCategory honeyCategory1 = new HoneyCategory();
-        honeyCategory1.setCategoryId(category1.getId());
-        honeyCategory1.setStatus(Status.HOAT_DONG);
-        honeyCategory1.setId(honeyCategoryRepository.save(honeyCategory1).getId());
-
-        HoneyCategory honeyCategory2 = new HoneyCategory();
-        honeyCategory2.setCategoryId(category2.getId());
-        honeyCategory2.setStatus(Status.HOAT_DONG);
-        honeyCategory2.setId(honeyCategoryRepository.save(honeyCategory1).getId());
-
-        HoneyCategory honeyCategory3 = new HoneyCategory();
-        honeyCategory3.setCategoryId(category3.getId());
-        honeyCategory3.setStatus(Status.HOAT_DONG);
-        honeyCategory3.setId(honeyCategoryRepository.save(honeyCategory3).getId());
 
         Semester semester = new Semester();
         semester.setCode("SE1");
@@ -129,13 +112,13 @@ public class DBGenerator implements CommandLineRunner {
         honey1.setHoneyPoint(1000);
         honey1.setStudentId(userAPI1.getId());
         honey1.setUserSemesterId(semester.getId());
-        honey1.setHoneyCategoryId(honeyCategory1.getCategoryId());
+        honey1.setHoneyCategoryId(category1.getId());
         honey1.setId(honeyRepository.save(honey1).getId());
 
         Honey honey2 = new Honey();
         honey2.setHoneyPoint(2000);
         honey2.setUserSemesterId(semester.getId());
-        honey2.setHoneyCategoryId(honeyCategory2.getCategoryId());
+        honey2.setHoneyCategoryId(category2.getId());
         honey2.setStudentId(userAPI2.getId());
         honey2.setId(honeyRepository.save(honey2).getId());
 
@@ -143,21 +126,21 @@ public class DBGenerator implements CommandLineRunner {
         honey3.setHoneyPoint(1000);
         honey3.setStudentId(userAPI1.getId());
         honey3.setUserSemesterId(semester.getId());
-        honey3.setHoneyCategoryId(honeyCategory2.getCategoryId());
+        honey3.setHoneyCategoryId(category3.getId());
         honey3.setId(honeyRepository.save(honey3).getId());
 
         Honey honey4 = new Honey();
         honey4.setHoneyPoint(1000);
         honey4.setStudentId(userAPI2.getId());
         honey4.setUserSemesterId(semester.getId());
-        honey4.setHoneyCategoryId(honeyCategory1.getCategoryId());
+        honey4.setHoneyCategoryId(category1.getId());
         honey4.setId(honeyRepository.save(honey4).getId());
 
         Honey honey5 = new Honey();
         honey5.setHoneyPoint(100);
         honey5.setStudentId(userAPI3.getId());
         honey5.setUserSemesterId(semester.getId());
-        honey5.setHoneyCategoryId(honeyCategory3.getCategoryId());
+        honey5.setHoneyCategoryId(category2.getId());
         honey5.setId(honeyRepository.save(honey5).getId());
 
         Gift gift1 = new Gift();
@@ -263,5 +246,4 @@ public class DBGenerator implements CommandLineRunner {
         ConfigurableApplicationContext ctx = SpringApplication.run(DBGenerator.class);
         ctx.close();
     }
-
 }

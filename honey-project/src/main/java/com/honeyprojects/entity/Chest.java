@@ -19,6 +19,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Chest extends PrimaryEntity {
 
+    @Column(length = EntityProperties.LENGTH_CODE)
+    private String name;
+
     @Column(nullable = false)
     private Double percent;
 
@@ -26,7 +29,5 @@ public class Chest extends PrimaryEntity {
     private String idGift;
 
     private Status status;
-
-    private Integer type;
 
 }
