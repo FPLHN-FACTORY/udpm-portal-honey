@@ -5,6 +5,7 @@ import com.honeyprojects.core.admin.model.request.AdminGiftRequest;
 import com.honeyprojects.core.admin.model.request.AdminUpdateGiftRequest;
 import com.honeyprojects.core.admin.service.AdminGiftService;
 import com.honeyprojects.core.common.base.ResponseObject;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,17 +41,22 @@ public class AdminGiftRestController {
     }
 
     @PostMapping("")
-    public ResponseObject addGift( @RequestBody AdminCreateGiftRequest request){
+    public ResponseObject addGift(@Valid @RequestBody AdminCreateGiftRequest request){
         return new ResponseObject(adminGiftService.addGift(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseObject updateGift( @RequestBody AdminUpdateGiftRequest request, @PathVariable("id") String id){
+    public ResponseObject updateGift(@Valid @RequestBody AdminUpdateGiftRequest request, @PathVariable("id") String id){
         return new ResponseObject(adminGiftService.updateGift(request,id));
+    }
+
+    @PutMapping("/delete/{id}")
+    public ResponseObject updateStatusGift(@RequestBody AdminUpdateGiftRequest request, @PathVariable("id") String id){
+        return new ResponseObject(adminGiftService.updateStatusGift(request,id));
     }
 
     @DeleteMapping("/{id}")
     public void deleteGift(@PathVariable("id") String id){
-     adminGiftService.deleteById(id);
+        adminGiftService.deleteById(id);
     }
 }
