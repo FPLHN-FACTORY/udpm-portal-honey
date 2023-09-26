@@ -15,13 +15,11 @@ import lombok.Setter;
 @Table(name = "club")
 public class Club extends PrimaryEntity {
 
-    @Column(nullable = false)
     private String code;
 
     @Column(nullable = false, length = EntityProperties.LENGTH_NAME)
     private Double name;
 
-    @Column(nullable = false)
     private Status status;
 
 }

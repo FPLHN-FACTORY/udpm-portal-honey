@@ -20,7 +20,6 @@ public class History extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_NAME)
     private String nameGift;
 
-    @Column(nullable = false)
     private Integer honeyPoint;
 
     private Long changeDate;

@@ -21,7 +21,6 @@ public class Archive extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_ID, nullable = false)
     private String studentId;
 
-    @Column(nullable = false)
     private Status status;
 
 }

@@ -20,7 +20,6 @@ public class UserSemester extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_ID, nullable = false)
     private String semesterId;
 
-    @Column(nullable = false)
     private Integer totalHoney;
 
     @Column(length = EntityProperties.LENGTH_ID, nullable = false)

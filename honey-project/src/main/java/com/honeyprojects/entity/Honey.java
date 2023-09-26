@@ -22,6 +22,9 @@ public class Honey extends PrimaryEntity {
     private String reason;
 
     @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    private String userSemesterId;
+
+    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
     private String honeyCategoryId;
 
     @Column(length = EntityProperties.LENGTH_ID, nullable = false)
