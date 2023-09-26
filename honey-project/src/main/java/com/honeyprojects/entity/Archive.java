@@ -12,19 +12,15 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "conversion")
-public class Conversion extends PrimaryEntity {
-
-    private String code;
-
-    private Double ratio;
-
-    private Status status;
+@Table(name = "archive")
+public class Archive extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_ID, nullable = false)
-    private String giftId;
+    private String clubId;
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String categoryId;
+    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    private String studentId;
+
+    private Status status;
 
 }
