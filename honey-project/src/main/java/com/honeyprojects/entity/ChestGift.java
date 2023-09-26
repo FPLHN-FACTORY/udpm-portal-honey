@@ -11,16 +11,13 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "user_api")
-public class UserAPI extends PrimaryEntity {
+@Table(name = "chest_gift")
+public class ChestGift extends PrimaryEntity {
 
-    @Column(length = EntityProperties.LENGTH_CODE)
-    private String code;
+    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    private String chestId;
 
-    @Column(length = EntityProperties.LENGTH_NAME)
-    private String name;
-
-    @Column(length = EntityProperties.LENGTH_EMAIL)
-    private String email;
+    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    private String giftId;
 
 }

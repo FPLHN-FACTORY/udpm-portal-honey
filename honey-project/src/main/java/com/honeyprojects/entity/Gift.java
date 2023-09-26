@@ -3,6 +3,7 @@ package com.honeyprojects.entity;
 import com.honeyprojects.entity.base.PrimaryEntity;
 import com.honeyprojects.infrastructure.contant.EntityProperties;
 import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.TypeGift;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -25,7 +26,14 @@ public class Gift extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
-    @Column(nullable = false)
     private Status status;
+
+    private TypeGift type;
+
+    private Long toDate;
+
+    private Long fromDate;
+
+    private Byte image;
 
 }
