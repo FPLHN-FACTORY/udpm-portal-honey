@@ -26,6 +26,8 @@ import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
 import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
+import DialogTransaction from "./pages/student/transaction/DialogTransaction";
+import TestDialog from "./pages/student/transaction/TestDialog";
 
 function App() {
   return (
@@ -173,6 +175,16 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     <AddRequestConversionHistory />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <TestDialog />
                   </DashboardAuthUser>
                 </AuthGuard>
               }
