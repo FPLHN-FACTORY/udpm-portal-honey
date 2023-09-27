@@ -64,9 +64,10 @@ function DashboardAuthUser({ children }) {
         "7"
       ),
     ]),
+    getItem(<Link to="/censor/club">Club</Link>, "8", <GiftOutlined />),
     getItem(
       <Link to="/censor/request-manager">Quản lý yêu cầu</Link>,
-      "8",
+      "9",
       <PullRequestOutlined />
     ),
   ];

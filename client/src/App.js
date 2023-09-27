@@ -14,6 +14,7 @@ import AddPoint from "./pages/teacher/addpoint/AddPoint";
 import AddPointCensor from "./pages/censor/addPoin/AddPoint";
 import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
 import HistoryAddPointCensor from "./pages/censor/addPoin/HistoryAddPoint";
+import Club from "./pages/censor/club/indexClub";
 import ListRequestAddPoint from "./pages/teacher/addpoint/ListRequestAddPoint";
 import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
 import RequestManager from "./pages/censor/requestmanager/RequestManager";
@@ -103,6 +104,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <HistoryAddPointCensor />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+             <Route
+              path="/censor/club"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                  <Club />
                   </DashboardCensor>
                 </AuthGuard>
               }
