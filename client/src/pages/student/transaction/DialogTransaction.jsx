@@ -1,15 +1,73 @@
-import { Button, Card, Col, Row } from "antd";
-import React from "react";
+import { Button, Card, Col, Row, message } from "antd";
+import React, { useEffect, useState } from "react";
 import "./DialogTransaction.css";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 
-const DialogTransaction = ({ setCLose }) => {
+var stompClient = null;
+const DialogTransaction = ({ setClose, idTransaction, open }) => {
   const chessSquares = Array.from({ length: 48 }, (_, i) => i);
   const chessSquares2 = Array.from({ length: 12 }, (_, i) => i);
+  const [chest, setChest] = useState([]);
+  const [chestTo, setChestTo] = useState({
+    id: null,
+    name: null,
+    listItem: [],
+    honey: 0,
+    lock: false,
+  });
+  const [chestFrom, setChestFrom] = useState({
+    id: null,
+    listItem: [],
+    honey: 0,
+    lock: false,
+  });
+
+  const socket = new SockJS("http://localhost:2508/ws-honey-end-point");
+  stompClient = Stomp.over(socket);
+
+  useEffect(() => {
+    if (open) {
+      window.addEventListener("beforeunload", () => {
+        stompClient.send(`/user/transaction/${idTransaction}/accept`, {}, "");
+      });
+
+      socket.onclose = () => {
+        setClose(false);
+        message.error("Mất kết nối đến WebSocket");
+      };
+
+      // stompClient.debug = () => {};
+
+      stompClient.connect({}, () => {
+        stompClient.subscribe(
+          `/user/transaction/${idTransaction}/accept`,
+          (result) => {
+            if (result.body === "") {
+              setClose(false);
+            }
+          }
+        );
+        stompClient.send(
+          `/user/transaction/${idTransaction}/accept`,
+          {},
+          idTransaction
+        );
+      });
+      return () => {
+        stompClient.disconnect();
+      };
+    }
+  }, [idTransaction, open]);
+
+  function cancelTransaction() {
+    stompClient.send(`/user/transaction/${idTransaction}/accept`, {}, "");
+  }
 
   return (
     <div className="dialog-transaction" style={{ minWidth: "800px" }}>
       <Card>
-        <Button className="close-button" onClick={() => setCLose(false)}>
+        <Button className="close-button" onClick={() => cancelTransaction()}>
           X
         </Button>
         <div className="bar-transaction" />
