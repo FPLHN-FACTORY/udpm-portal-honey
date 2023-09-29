@@ -18,6 +18,7 @@ import {
   EditOutlined,
   GiftOutlined,
   GoldOutlined,
+  PlusCircleFilled,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   PercentageOutlined,
@@ -55,9 +56,18 @@ function DashboardAuthUser({ children }) {
     ),
     getItem(<Link to="/censor/semester">Kỳ học</Link>, "3", <EditOutlined />),
     getItem(<Link to="/censor/gift">Gói quà</Link>, "4", <GiftOutlined />),
+    // getItem( <Link to="/censor/add-point">Cộng mật ong</Link>,"5" ,<PlusCircleFilled />),
+    getItem("Cộng mật ong", "5", <PlusCircleFilled />, [
+      getItem(<Link to={"/censor/add-point"}>Cộng mật ong</Link>, "6"),
+      getItem(
+        <Link to={"/censor/add-point/history"}>Lịch sử</Link>,
+        "7"
+      ),
+    ]),
+    getItem(<Link to="/censor/club">Club</Link>, "8", <GiftOutlined />),
     getItem(
       <Link to="/censor/request-manager">Quản lý yêu cầu</Link>,
-      "5",
+      "9",
       <PullRequestOutlined />
     ),
   ];
