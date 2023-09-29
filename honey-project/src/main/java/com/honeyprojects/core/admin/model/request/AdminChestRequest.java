@@ -7,5 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AdminChestRequest extends PageableRequest {
+
     private String search;
+
 }

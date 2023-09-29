@@ -2,7 +2,6 @@ package com.honeyprojects.entity;
 
 import com.honeyprojects.entity.base.PrimaryEntity;
 import com.honeyprojects.infrastructure.contant.EntityProperties;
-import com.honeyprojects.infrastructure.contant.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -12,15 +11,13 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "chest")
-public class Chest extends PrimaryEntity {
+@Table(name = "chest_gift")
+public class ChestGift extends PrimaryEntity {
 
-    @Column(length = EntityProperties.LENGTH_CODE)
-    private String name;
+    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    private String chestId;
 
-    @Column(nullable = false)
-    private Double percent;
-
-    private Status status;
+    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    private String giftId;
 
 }

@@ -9,6 +9,7 @@ import studentSemestertReducer from "./reducers/student-semester/student-semeste
 import usersReducer from "./reducers/users/users.reducer";
 import loaddingReducer from "./reducers/loading/loading.reducer";
 import categoryReducer from "./reducers/category/category.reducer";
+import chestReducer from "./reducers/chest/chest.reducer";
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     studentSemestert: studentSemestertReducer,
     loadding: loaddingReducer,
     category: categoryReducer,
+    chest: chestReducer,
   },
 });
 

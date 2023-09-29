@@ -2,7 +2,6 @@ package com.honeyprojects.core.admin.service.impl;
 
 import com.honeyprojects.core.admin.model.request.AdminChestRequest;
 import com.honeyprojects.core.admin.model.request.AdminCreateChestRequest;
-import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminChestReponse;
 import com.honeyprojects.core.admin.repository.AdChestRepository;
 import com.honeyprojects.core.admin.service.AdminChestService;
@@ -35,7 +34,6 @@ public class AdminChestServiceImpl implements AdminChestService {
     public Chest addChest(AdminCreateChestRequest request) {
         Chest chest = new Chest();
         chest.setName(request.getName());
-        chest.setIdGift(request.getGiftId());
         chest.setPercent(request.getPercent());
         return chestRepository.save(chest);
     }
@@ -51,8 +49,10 @@ public class AdminChestServiceImpl implements AdminChestService {
     @Transactional
     public Chest updateChest(AdminCreateChestRequest request, String id) {
         Chest chest = chestRepository.findById(id).get();
-        if (chest!= null) {
-
+        if (chest != null) {
+            chest.setPercent(request.getPercent());
+            chest.setName(request.getName());
+            return chestRepository.save(chest);
         } else {
             return null;
         }

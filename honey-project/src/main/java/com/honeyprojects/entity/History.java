@@ -23,7 +23,6 @@ public class History extends PrimaryEntity {
     @Column(nullable = false)
     private Integer honeyPoint;
 
-    @Column
     private Long changeDate;
 
     private Long createdAt;

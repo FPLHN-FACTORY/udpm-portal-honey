@@ -1,7 +1,7 @@
 import { request } from "../../../helper/request.helper";
 
-export class GiftAPI {
-  static COMPONENT_NAME = "censor/gift";
+export class ChestAPI {
+  static COMPONENT_NAME = "censor/chest";
 
   static fetchAll = (filter) => {
     return request({
@@ -27,26 +27,10 @@ export class GiftAPI {
     });
   };
 
-  static delete = (data, id) => {
+  static delete = (id) => {
     return request({
-      method: "PUT",
-      url: `/${this.COMPONENT_NAME}/delete/${id}`,
-      data: data,
-    });
-  };
-
-  static detail = (data, id) => {
-    return request({
-      method: "GET",
-      url: `/${this.COMPONENT_NAME}/get-one/${id}`,
-      data: data,
-    });
-  };
-  static fetchAllGift = (filter) => {
-    return request({
-      method: "GET",
-      url: `/${this.COMPONENT_NAME}/list-gift`,
-      params: filter,
+      method: "DELETE",
+      url: `/${this.COMPONENT_NAME}/${id}`,
     });
   };
 }

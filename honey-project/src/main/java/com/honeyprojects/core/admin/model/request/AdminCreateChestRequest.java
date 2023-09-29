@@ -16,7 +16,4 @@ public class AdminCreateChestRequest extends PageableRequest {
     @NotNull
     private Double percent;
 
-    @NotBlank
-    private String giftId;
-
 }

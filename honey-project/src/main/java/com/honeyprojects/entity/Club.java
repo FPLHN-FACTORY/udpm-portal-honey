@@ -12,15 +12,16 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "chest")
-public class Chest extends PrimaryEntity {
+@Table(name = "club")
+public class Club extends PrimaryEntity {
 
-    @Column(length = EntityProperties.LENGTH_CODE)
+    @Column(nullable = false)
+    private String code;
+
+    @Column(nullable = false, length = EntityProperties.LENGTH_NAME)
     private String name;
 
     @Column(nullable = false)
-    private Double percent;
-
     private Status status;
 
 }

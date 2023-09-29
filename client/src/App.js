@@ -26,6 +26,7 @@ import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
 import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
+import ChestGift from "./pages/censor/chest-gift/ChestGift";
 
 function App() {
   return (
@@ -121,6 +122,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <RequestManagerDetail />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/chest"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <ChestGift />
                   </DashboardCensor>
                 </AuthGuard>
               }

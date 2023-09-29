@@ -4,9 +4,9 @@ import com.honeyprojects.entity.base.PrimaryEntity;
 import com.honeyprojects.infrastructure.contant.EntityProperties;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.StatusGift;
+import com.honeyprojects.infrastructure.contant.TypeGift;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,15 +27,14 @@ public class Gift extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
-    @Column(nullable = false)
-    private Status status;
+    private StatusGift status;
 
-    @Lob
+    private TypeGift type;
+
+    private Long toDate;
+
+    private Long fromDate;
+
     private Byte image;
-
-    @Column(nullable = false)
-    private Integer type;
-
-    private StatusGift statusGift;
 
 }
