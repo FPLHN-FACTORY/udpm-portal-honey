@@ -5,9 +5,9 @@ import {
   UpdateCategory,
   AddCategory,
 } from "../../../app/reducers/category/category.reducer";
-import "./index.css";
+// import "./index1.css";
 import { useEffect } from "react";
-const ModalThem = (props) => {
+const ModalAddCategory = (props) => {
   const onFinishFailed = () => {
     message.error("Error");
   };
@@ -90,9 +90,9 @@ const ModalThem = (props) => {
           }}
           autoComplete="off"
         >
-          {/* <Form.Item label="Mã" name="code">
+          <Form.Item label="Mã" name="code">
             <Input disabled />
-          </Form.Item> */}
+          </Form.Item>
 
           <Form.Item
             label="Tên"
@@ -117,7 +117,7 @@ const ModalThem = (props) => {
           </Form.Item>
           <Form.Item
             label="Phê duyệt"
-            name="status"
+            name="type"
             rules={[
               {
                 required: true,
@@ -130,18 +130,13 @@ const ModalThem = (props) => {
               <Radio value={0}>Không phê duyệt</Radio>
             </Radio.Group>
           </Form.Item>
-
           <Form.Item
             wrapperCol={{
               offset: 8,
               span: 16,
             }}
           >
-            <button
-              style={{ marginRight: "20px" }}
-              onClick={onCancel}
-              className="submit-button"
-            >
+            <button onClick={onCancel} className="submit-button">
               Đóng
             </button>
             <button htmlType="submit" className="submit-button ml-2">
@@ -154,4 +149,4 @@ const ModalThem = (props) => {
   );
 };
 
-export default ModalThem;
+export default ModalAddCategory;

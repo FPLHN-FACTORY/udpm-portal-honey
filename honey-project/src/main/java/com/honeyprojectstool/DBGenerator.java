@@ -57,21 +57,19 @@ public class DBGenerator implements CommandLineRunner {
 
         Category category1 = new Category();
         category1.setName("GOLD");
-        category1.setCategoryStatus(CategoryStatus.ACTIVE);
+//        category1.setCategoryStatus(CategoryStatus.ACTIVE);
         category1.setCode("CT1");
         category1.setType(TypeCategory.ACCEPT);
         category1.setId(categoryRepository.save(category1).getId());
 
         Category category2 = new Category();
         category2.setName("SLIVER");
-        category2.setCategoryStatus(CategoryStatus.ACTIVE);
         category2.setCode("CT2");
         category2.setType(TypeCategory.ACCEPT);
         category2.setId(categoryRepository.save(category2).getId());
 
         Category category3 = new Category();
         category3.setName("BRONZE");
-        category3.setCategoryStatus(CategoryStatus.ACTIVE);
         category3.setCode("CT3");
         category3.setType(TypeCategory.FREE);
         category3.setId(categoryRepository.save(category3).getId());
@@ -139,13 +137,11 @@ public class DBGenerator implements CommandLineRunner {
         Gift gift1 = new Gift();
         gift1.setCode("G1");
         gift1.setName("Điểm lab");
-        gift1.setStatus(Status.HOAT_DONG);
         gift1.setId(giftRepository.save(gift1).getId());
 
         Gift gift2 = new Gift();
         gift2.setCode("G2");
         gift2.setName("Điểm thi");
-        gift2.setStatus(Status.HOAT_DONG);
         gift2.setId(giftRepository.save(gift2).getId());
 
         UserSemester userSemester1 = new UserSemester();

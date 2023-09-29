@@ -1,48 +1,47 @@
 import { Form, Input, Modal, Radio, message } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
-import { CategoryAPI } from "../../../apis/censor/category/category.api";
-import {
-  UpdateCategory,
-  AddCategory,
-} from "../../../app/reducers/category/category.reducer";
-import "./index.css";
-import { useEffect } from "react";
-const ModalThem = (props) => {
+import { GiftAPI } from "../../../apis/censor/gift/gift.api";
+import { UpdateGift, AddGift } from "../../../app/reducers/gift/gift.reducer";
+
+const ModalAddGift = (props) => {
   const onFinishFailed = () => {
     message.error("Error");
   };
 
-  const { modalOpen, setModalOpen, category, onSave } = props;
+  const { modalOpen, setModalOpen, gift, onSave } = props;
   const [form] = Form.useForm();
-  form.setFieldsValue(category);
 
+  form.setFieldsValue(gift);
   const dispatch = useAppDispatch();
-  form.setFieldsValue(category);
+  form.setFieldsValue(gift);
   const onFinish = () => {
     form
       .validateFields()
       .then((formValues) => {
-        if (category === null) {
+        console.log(formValues);
+        if (gift === null) {
           console.log(formValues);
-          CategoryAPI.create(formValues)
+          GiftAPI.create(formValues)
             .then((result) => {
-              dispatch(AddCategory(result.data.data));
+              console.log(result);
+              dispatch(AddGift(result.data.data));
               message.success("Thành công!");
               setModalOpen(false);
               form.resetFields();
-              const newCategory = {
+              const newGift = {
                 id: result.data.data.id,
                 name: result.data.data.name,
               };
-              onSave && onSave(newCategory);
+              onSave && onSave(newGift);
             })
             .catch((err) => {
               message.error("Lỗi: " + err.message);
             });
         } else {
-          CategoryAPI.update(formValues, category.id)
+          console.log(gift.id);
+          GiftAPI.update(formValues, gift.id)
             .then((response) => {
-              dispatch(UpdateCategory(response.data.data));
+              dispatch(UpdateGift(response.data.data));
               message.success("Thành công!");
               setModalOpen(false);
               form.resetFields();
@@ -90,9 +89,9 @@ const ModalThem = (props) => {
           }}
           autoComplete="off"
         >
-          {/* <Form.Item label="Mã" name="code">
+          <Form.Item label="Mã" name="code">
             <Input disabled />
-          </Form.Item> */}
+          </Form.Item>
 
           <Form.Item
             label="Tên"
@@ -100,16 +99,16 @@ const ModalThem = (props) => {
             rules={[
               {
                 required: true,
-                message: "Tên bài viết không để trống",
+                message: "Tên Quà không để trống",
               },
               {
                 pattern:
                   /^[a-zA-Z0-9\sÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+$/,
-                message: "Tên bài viết không bao gồm các ký tự đặc biệt",
+                message: "Tên Quà không bao gồm các ký tự đặc biệt",
               },
               {
                 min: 4,
-                message: "Tên bài viết phải tối thiểu 4 kí tự",
+                message: "Tên Quà phải tối thiểu 4 kí tự",
               },
             ]}
           >
@@ -117,7 +116,7 @@ const ModalThem = (props) => {
           </Form.Item>
           <Form.Item
             label="Phê duyệt"
-            name="status"
+            name="type"
             rules={[
               {
                 required: true,
@@ -130,18 +129,13 @@ const ModalThem = (props) => {
               <Radio value={0}>Không phê duyệt</Radio>
             </Radio.Group>
           </Form.Item>
-
           <Form.Item
             wrapperCol={{
               offset: 8,
               span: 16,
             }}
           >
-            <button
-              style={{ marginRight: "20px" }}
-              onClick={onCancel}
-              className="submit-button"
-            >
+            <button onClick={onCancel} className="submit-button">
               Đóng
             </button>
             <button htmlType="submit" className="submit-button ml-2">
@@ -154,4 +148,4 @@ const ModalThem = (props) => {
   );
 };
 
-export default ModalThem;
+export default ModalAddGift;

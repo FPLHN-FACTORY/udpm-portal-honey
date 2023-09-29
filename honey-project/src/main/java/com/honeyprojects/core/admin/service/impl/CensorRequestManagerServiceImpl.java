@@ -80,6 +80,21 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
     }
 
     @Override
+    public History changeStatusConversion(CensorChangeStatusRequest request) {
+        Long dateNow = Calendar.getInstance().getTimeInMillis();
+        History history = historyRepository.findById(request.getIdHistory()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
+        history.setStatus(HoneyStatus.values()[request.getStatus()]);
+        if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && history.getType().equals(TypeHistory.DOI_QUA)) {
+            Honey honey = honeyRepository.findById(history.getHoneyId()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
+            honey.setHoneyPoint(honey.getHoneyPoint() - history.getHoneyPoint());
+
+            honeyRepository.save(honey);
+            history.setChangeDate(dateNow);
+        }
+        return historyRepository.save(history);
+    }
+
+    @Override
     public PageableObject<CensorAddHoneyRequestResponse> getHistoryAddPoint(CensorSearchHistoryRequest historyRequest) {
         Pageable pageable = PageRequest.of(historyRequest.getPage(), historyRequest.getSize());
         return new PageableObject<>(historyRepository.getHistoryAddPoint(historyRequest, pageable));

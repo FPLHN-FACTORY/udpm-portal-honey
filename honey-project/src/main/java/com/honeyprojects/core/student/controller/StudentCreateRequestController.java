@@ -1,5 +1,6 @@
 package com.honeyprojects.core.student.controller;
 
+import com.honeyprojects.core.admin.service.AdminCategoryService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.ResponseObject;
 import com.honeyprojects.core.common.base.UdpmHoney;
@@ -30,6 +31,14 @@ public class StudentCreateRequestController {
 
     @Autowired
     private StudentCreateResquestConversionService createRequest;
+
+    @Autowired
+    private AdminCategoryService adminCategoryService;
+
+    @GetMapping("/list-category")
+    public ResponseObject getAllListCategory() {
+        return new ResponseObject(adminCategoryService.getAllListCategory());
+    }
 
 
     @GetMapping("/user-api")

@@ -1,8 +1,7 @@
 package com.honeyprojects.infrastructure.contant;
 
-public enum TypeGift {
+public enum StatusGift {
 
     FREE,
-
     ACCEPT
 }

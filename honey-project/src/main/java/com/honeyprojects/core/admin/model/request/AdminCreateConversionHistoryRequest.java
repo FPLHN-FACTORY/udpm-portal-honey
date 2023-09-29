@@ -4,8 +4,10 @@ import com.honeyprojects.core.common.base.PageableRequest;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
-public class AdminSearchConversionRequest extends PageableRequest {
-    private String textSearch;
+@Setter
+public class AdminCreateConversionHistoryRequest extends PageableRequest {
+    private String status;
+
+    private String idCategory;
 }

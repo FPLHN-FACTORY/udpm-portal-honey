@@ -3,6 +3,8 @@ package com.honeyprojects.core.admin.model.request;
 import com.honeyprojects.core.common.base.PageableRequest;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.StatusGift;
+import com.honeyprojects.infrastructure.contant.TypeGift;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -20,6 +22,10 @@ public class AdminCreateGiftRequest extends PageableRequest {
     @Size(min = 0, max = 250)
     private String name;
 
+    private TypeGift type;
+
+    private StatusGift status;
+
     public Gift dtoToEntity(Gift gift) {
         // ramdom code
         Random random = new Random();
@@ -28,7 +34,11 @@ public class AdminCreateGiftRequest extends PageableRequest {
 
         gift.setCode(code);
         gift.setName(this.getName());
-        gift.setStatus(Status.HOAT_DONG);
+        if(this.getStatus().equals(StatusGift.ACCEPT)){
+            gift.setStatus(StatusGift.ACCEPT);
+        }else {
+            gift.setStatus(StatusGift.FREE);
+        }
         return gift;
     }
 }

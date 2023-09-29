@@ -50,7 +50,7 @@ public class AdminGiftServiceImpl implements AdminGiftService {
     @Transactional
     public Gift updateGift(AdminUpdateGiftRequest request, String id) {
         Optional<Gift> optional = adGiftRepository.findById(id);
-        optional.get().setStatus(Status.HOAT_DONG);
+//        optional.get().setStatus(Status.HOAT_DONG);
         optional.get().setName(request.getName());
         return adGiftRepository.save(optional.get());
     }
@@ -68,8 +68,8 @@ public class AdminGiftServiceImpl implements AdminGiftService {
 
     public Gift updateStatusGift(AdminUpdateGiftRequest request, String id) {
         Optional<Gift> optional = adGiftRepository.findById(id);
-        optional.get().setStatus(Status.KHONG_HOAT_DONG);
-        optional.get().setName( optional.get().getName());
+//        optional.get().setStatus(Status.KHONG_HOAT_DONG);
+        optional.get().setName(request.getName());
         return adGiftRepository.save(optional.get());
     }
 }

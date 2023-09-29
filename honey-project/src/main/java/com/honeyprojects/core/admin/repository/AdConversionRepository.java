@@ -23,6 +23,7 @@ public interface AdConversionRepository extends ConversionRepository {
 
     @Query(value = """
             SELECT c.id, c.code, c.ratio,c.gift_id,c.category_id, c.last_modified_date FROM conversion c
+            where (:#{#request.textSearch} IS NULL OR c.code like %:#{#request.textSearch}%)
             ORDER BY c.last_modified_date DESC
             """, nativeQuery = true)
     Page<AdminConversionResponse> getPageListResponse(Pageable pageable,

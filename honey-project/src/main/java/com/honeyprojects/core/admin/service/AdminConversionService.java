@@ -1,6 +1,6 @@
 package com.honeyprojects.core.admin.service;
 
-import com.honeyprojects.core.admin.model.request.AdminCreateConversionRequest;
+import com.honeyprojects.core.admin.model.request.AdminConversionRequest;
 import com.honeyprojects.core.admin.model.request.AdminSearchConversionRequest;
 import com.honeyprojects.core.admin.model.response.AdminConversionResponse;
 import com.honeyprojects.core.common.base.PageableObject;
@@ -12,7 +12,7 @@ import java.util.List;
 public interface AdminConversionService {
 
     List<AdminConversionResponse> getAllConversion();
-    Conversion addConversion(AdminCreateConversionRequest request);
+    Conversion addConversion(AdminConversionRequest request);
 
     Conversion getOneConversion(String id);
 
@@ -20,6 +20,6 @@ public interface AdminConversionService {
 
     PageableObject<AdminConversionResponse> getPage(AdminSearchConversionRequest request);
 
-   Conversion updateConversion(AdminCreateConversionRequest request, String id);
+   Conversion updateConversion(AdminConversionRequest request, String id);
 
 }

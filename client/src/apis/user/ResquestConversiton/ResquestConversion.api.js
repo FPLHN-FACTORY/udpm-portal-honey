@@ -18,6 +18,13 @@ export class ResquestConversion {
     });
   };
 
+  static fetchAllCategory = () => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/list-category`,
+    });
+  };
+
   static getPointHoney = (filter) => {
     return request({
       method: "GET",
