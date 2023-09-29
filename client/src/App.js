@@ -26,6 +26,7 @@ import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
 import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
+import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
 
 function App() {
   return (
@@ -51,6 +52,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <Index />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/request-conversion/history"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <RequestConversionHistory />
                   </DashboardCensor>
                 </AuthGuard>
               }

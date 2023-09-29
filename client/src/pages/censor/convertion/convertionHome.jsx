@@ -14,24 +14,19 @@ import {
 
 export default function ConversionHome() {
   const [listConversion, setListConversion] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [searchByName, setSearchByName] = useState("");
+  const [filter, setFilter] = useState({
+    page: 1,
+    size: 5,
+    textSearch: "",
+  });
   const dispatch = useAppDispatch();
-
   useEffect(() => {
-    fetchData(currentPage - 1, searchByName);
-  }, [currentPage, searchByName]);
-
-  const handleOnChangePage = (page) => {
-    fetchData(page - 1, searchByName);
-    setCurrentPage(page);
-  };
-
-  const fetchData = (currentPage, searchByName) => {
-    ConversionAPI.searchByName(currentPage, searchByName).then((response) => {
-      dispatch(SetConversion(response.data.data.content));
-      setListConversion(response.data.data.content);
+    fetchDataConversion(filter);
+  }, [filter]);
+  const fetchDataConversion = (filter) => {
+    ConversionAPI.fetchAllPage(filter).then((response) => {
+      dispatch(SetConversion(response.data.data.data));
       setTotalPages(response.data.data.totalPages);
     });
   };
@@ -81,8 +76,10 @@ export default function ConversionHome() {
           <div class="relative w-full mr-6">
             <Input
               style={{ borderRadius: "10px", width: "40%" }}
-              value={searchByName}
-              onChange={(e) => setSearchByName(e.target.value)}
+              // value={searchByName}
+              onChange={(e) => {
+                setFilter({ ...filter, textSearch: e.target.value });
+              }}
               placeholder="Tìm kiếm tên hoặc mã..."
             />
           </div>
@@ -93,11 +90,8 @@ export default function ConversionHome() {
             >
               <div>
                 <span>
-                  <Tooltip title="Thêm quà">
-                    <ModalAddConversion
-                      // loadData={fetchData(currentPage, searchByName)}
-                      icon={<EyeOutlined />}
-                    />
+                  <Tooltip>
+                    <ModalAddConversion icon={<EyeOutlined />} />
                   </Tooltip>
                 </span>
               </div>
@@ -118,8 +112,10 @@ export default function ConversionHome() {
         <div className="mt-5 text-center">
           <Pagination
             simple
-            current={currentPage}
-            onChange={handleOnChangePage}
+            current={filter.page}
+            onChange={(page) => {
+              setFilter({ ...filter, page: page });
+            }}
             total={totalPages * 10}
           />
         </div>

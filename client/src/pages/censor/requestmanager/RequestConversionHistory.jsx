@@ -13,6 +13,8 @@ import React, { useEffect, useState } from "react";
 import { ResquestConversion } from "../../../apis/user/ResquestConversiton/ResquestConversion.api";
 import moment from "moment";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
+import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
+import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -29,14 +31,30 @@ const statusHistory = (status) => {
   }
 };
 
-export default function AddRequestConversionHistory() {
+export default function RequestConversionHistory() {
   const [getHistory, setGetHistory] = useState([]);
   const [fillCategory, setFillCategory] = useState([]);
   const [totalPages, setTotalPages] = useState([]);
   const [filter, setFilter] = useState({ page: 0 });
+  const [fillUserApi, setFillUserApi] = useState([]);
+
+  const fechUserApiById = () => {
+    ResquestConversion.getUserAPiByid().then((response) => {
+      setFillUserApi({
+        ...response.data.data,
+        khoa: "17.3",
+        phone: "0763104018",
+      });
+      console.log(response.data.data.idUser);
+    });
+  };
+
+  useEffect(() => {
+    fechUserApiById();
+  }, []);
 
   const fechData = (filter) => {
-    ResquestConversion.getHistory(filter).then((response) => {
+    RequestManagerAPI.getHistoryConversion(filter).then((response) => {
       setGetHistory(response.data.data);
       setTotalPages(response.data.totalPages);
     });
@@ -69,12 +87,33 @@ export default function AddRequestConversionHistory() {
     }
   };
 
+  const changeStatusConversion = (idHistory, status) => {
+    RequestManagerAPI.changeStatusConversion(idHistory, status)
+      .then((response) => {
+        if (response.data.success) {
+          if (status === 1) message.success("Đã xác nhận yêu cầu cộng điểm!");
+          if (status === 2) message.error("Hủy yêu cầu thành công!");
+        }
+        // message.success("Phê duyệt thành công");
+        fechData();
+      })
+      .catch((error) => {
+        message.error(error);
+      });
+  };
+
   const columns = [
     {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
       render: (text, record, index) => index + 1,
+    },
+    {
+      title: "Tên sinh viên",
+      dataIndex: "studentId", // Thay userId bằng trường dữ liệu người dùng bạn muốn hiển thị
+      key: "studentId",
+      render: (text) => <span>{`${fillUserApi.name}`}</span>,
     },
 
     {
@@ -100,6 +139,7 @@ export default function AddRequestConversionHistory() {
       key: "createdDate",
       render: (text) => <span>{moment(text).format("DD/MM/YYYY")}</span>,
     },
+
     {
       title: "Trạng thái",
       dataIndex: "status",
@@ -126,22 +166,31 @@ export default function AddRequestConversionHistory() {
         </Tag>
       ),
     },
-    // {
-    //   title: () => <div>Action</div>,
-    //   key: "action",
-    //   render: (_, record) => (
-    //     <Space size="small">
-    //       <Button
-    //         type="primary"
-    //         onClick={() => deleteRequestConversion(record.id)}
-    //       >
-    //         hủy
-    //       </Button>
-    //     </Space>
-    //   ),
-    // },
+    {
+      title: () => <div>Hành động</div>,
+      key: "action",
+      render: (_, values) => (
+        <Space size="small">
+          <div
+            style={{ fontSize: "19px", textAlign: "center", color: "green" }}
+          >
+            {values.status !== 1 && values.status !== 2 && (
+              <CheckCircleFilled
+                onClick={() => changeStatusConversion(values.id, 1)}
+              />
+            )}
+            {values.status !== 1 && values.status !== 2 && (
+              <CloseCircleFilled
+                style={{ fontSize: "19px", margin: "0px 10px", color: "red" }}
+                onClick={() => changeStatusConversion(values.id, 2)}
+              />
+            )}
+          </div>
+        </Space>
+      ),
+    },
   ];
-
+  console.log(fillUserApi.name);
   return (
     <>
       <Card className="mb-2 py-1">
