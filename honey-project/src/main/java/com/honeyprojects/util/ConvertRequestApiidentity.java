@@ -31,7 +31,7 @@ public class ConvertRequestApiidentity {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-
+        System.out.println(honeySession.getToken());
         String authorizationToken = "Bearer " + honeySession.getToken();
         headers.set("Authorization", authorizationToken);
 
