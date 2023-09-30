@@ -32,9 +32,6 @@ import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
 import GiftStudent from "./pages/teacher/giftstudent/GiftStudent";
 import StArchive from "./pages/student/archive/StArchive";
 import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
-import Club from "./pages/censor/club/indexClub";
-import AddPointCensor from "./pages/censor/addPoin/AddPoint";
-import HistoryAddPointCensor from "./pages/censor/addPoin/HistoryAddPoint";
 import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
 
 function App() {
