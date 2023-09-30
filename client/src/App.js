@@ -33,6 +33,7 @@ import GiftStudent from "./pages/teacher/giftstudent/GiftStudent";
 import StArchive from "./pages/student/archive/StArchive";
 import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
 import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
+import ChestGift from "./pages/censor/chest-gift/ChestGift";
 
 function App() {
   return (
@@ -168,6 +169,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <RequestManagerDetail />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/chest"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <ChestGift />
                   </DashboardCensor>
                 </AuthGuard>
               }

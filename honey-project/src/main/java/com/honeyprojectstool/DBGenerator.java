@@ -14,7 +14,14 @@ import com.honeyprojects.entity.Semester;
 import com.honeyprojects.entity.UserAPI;
 import com.honeyprojects.entity.UserSemester;
 import com.honeyprojects.infrastructure.contant.*;
+import com.honeyprojects.infrastructure.contant.CategoryStatus;
+import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.TypeCategory;
+import com.honeyprojects.infrastructure.contant.TypeGift;
+import com.honeyprojects.repository.UserRepositpry;
+
 import com.honeyprojects.repository.CategoryRepository;
+
 import com.honeyprojects.repository.ConversionRepository;
 import com.honeyprojects.repository.GiftRepository;
 import com.honeyprojects.repository.HistoryRepository;
@@ -55,6 +62,9 @@ public class DBGenerator implements CommandLineRunner {
 
     @Autowired
     private ConversionRepository conversionRepository;
+
+    @Autowired
+    private UserRepositpry userRepositpry;
 
     @Autowired
     private ClubRepository clubRepository;
@@ -262,5 +272,4 @@ public class DBGenerator implements CommandLineRunner {
         ConfigurableApplicationContext ctx = SpringApplication.run(DBGenerator.class);
         ctx.close();
     }
-
 }

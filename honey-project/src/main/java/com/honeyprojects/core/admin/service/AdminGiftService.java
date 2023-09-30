@@ -10,6 +10,7 @@ import com.honeyprojects.entity.Gift;
 import java.util.List;
 
 public interface AdminGiftService {
+
     PageableObject<AdminGiftResponse> getAllCategoryByAdmin(AdminGiftRequest request);
 
     List<AdminGiftResponse> getAllListGift();
