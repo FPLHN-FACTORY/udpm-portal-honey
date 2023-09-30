@@ -1,24 +1,10 @@
 package com.honeyprojectstool;
 
-import com.honeyprojects.entity.Category;
-import com.honeyprojects.entity.Conversion;
-import com.honeyprojects.entity.Gift;
-import com.honeyprojects.entity.History;
-import com.honeyprojects.entity.Honey;
-import com.honeyprojects.entity.Semester;
-import com.honeyprojects.entity.UserAPI;
-import com.honeyprojects.entity.UserSemester;
+import com.honeyprojects.entity.*;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeCategory;
-import com.honeyprojects.repository.CategoryRepository;
-import com.honeyprojects.repository.ConversionRepository;
-import com.honeyprojects.repository.GiftRepository;
-import com.honeyprojects.repository.HistoryRepository;
-import com.honeyprojects.repository.HoneyRepository;
-import com.honeyprojects.repository.SemesterRepository;
-import com.honeyprojects.repository.UserRepositpry;
-import com.honeyprojects.repository.UserSemesterRepository;
+import com.honeyprojects.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -52,6 +38,9 @@ public class DBGenerator implements CommandLineRunner {
 
     @Autowired
     private ConversionRepository conversionRepository;
+
+    @Autowired
+    private ClubRepository clubRepository;
 
     public void run(String... args) throws Exception {
 
@@ -144,6 +133,11 @@ public class DBGenerator implements CommandLineRunner {
         gift2.setName("Điểm thi");
         gift2.setId(giftRepository.save(gift2).getId());
 
+        Gift gift3 = new Gift();
+        gift3.setCode("G3");
+        gift3.setName("Bộ công cụ");
+        gift3.setId(giftRepository.save(gift3).getId());
+
         UserSemester userSemester1 = new UserSemester();
         userSemester1.setSemesterId(semester.getId());
         userSemester1.setStudentId(userAPI1.getId());
@@ -226,6 +220,12 @@ public class DBGenerator implements CommandLineRunner {
         history6.setStudentId(userAPI1.getId());
         history6.setTeacherId(userAPI3.getId());
         history6.setId(historyRepository.save(history6).getId());
+
+        Club club1 = new Club();
+        club1.setCode("CLB2");
+        club1.setName("Bóng đá");
+        club1.setStatus(Status.HOAT_DONG);
+        club1.setId(clubRepository.save(club1).getId());
 
     }
 
