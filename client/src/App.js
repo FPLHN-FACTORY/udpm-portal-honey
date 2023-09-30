@@ -11,10 +11,7 @@ import GlobalLoading from "./components/global-loading/GlobalLoading";
 import DashboardAuthUser from "./layout/student/auth/DashboardAuthUser";
 import Index from "./pages/censor/category";
 import AddPoint from "./pages/teacher/addpoint/AddPoint";
-import AddPointCensor from "./pages/censor/addPoin/AddPoint";
 import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
-import HistoryAddPointCensor from "./pages/censor/addPoin/HistoryAddPoint";
-import Club from "./pages/censor/club/indexClub";
 import ListRequestAddPoint from "./pages/teacher/addpoint/ListRequestAddPoint";
 import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
 import RequestManager from "./pages/censor/requestmanager/RequestManager";
@@ -29,6 +26,10 @@ import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
 import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
+import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
+import Club from "./pages/censor/club/indexClub";
+import AddPointCensor from "./pages/censor/addPoin/AddPoint";
+import HistoryAddPointCensor from "./pages/censor/addPoin/HistoryAddPoint";
 import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
 
 function App() {
@@ -99,7 +100,7 @@ function App() {
                 </AuthGuard>
               }
             />
-             <Route
+            <Route
               path="/censor/add-point"
               element={
                 <AuthGuard>
@@ -109,7 +110,7 @@ function App() {
                 </AuthGuard>
               }
             />
-             <Route
+            <Route
               path="/censor/add-point/history"
               element={
                 <AuthGuard>
@@ -119,12 +120,12 @@ function App() {
                 </AuthGuard>
               }
             />
-             <Route
+            <Route
               path="/censor/club"
               element={
                 <AuthGuard>
                   <DashboardCensor>
-                  <Club />
+                    <Club />
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -165,6 +166,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <RequestManagerDetail />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/request-manager/random-add-point"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <RandomAddPoint />
                   </DashboardCensor>
                 </AuthGuard>
               }

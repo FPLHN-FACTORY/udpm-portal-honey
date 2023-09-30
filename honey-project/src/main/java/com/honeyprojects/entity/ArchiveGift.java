@@ -14,10 +14,13 @@ import lombok.Setter;
 @Table(name = "archive_gift")
 public class ArchiveGift extends PrimaryEntity {
 
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    @Column(length = EntityProperties.LENGTH_ID)
     private String archiveId;
 
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    @Column(length = EntityProperties.LENGTH_ID)
     private String giftId;
+
+    @Column(length = EntityProperties.LENGTH_ID)
+    private String chestId;
 
 }

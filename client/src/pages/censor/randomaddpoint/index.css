@@ -1,0 +1,18 @@
+.button-css {
+  background-color: #1c315e !important;
+  color: white !important;
+  border: 0 solid #dbdbdb !important;
+  border-radius: 1.5rem !important;
+  width: 120px !important;
+  height: 40px;
+}
+
+.button-css:hover {
+  background-color: #ffcc00 !important;
+  color: black !important;
+}
+
+.error {
+  color: red !important;
+  font-size: 12px !important;
+}
