@@ -2,6 +2,7 @@ package com.honeyprojects.core.teacher.service.impl;
 
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.teacher.model.response.TeacherGiftStudentResponse;
+import com.honeyprojects.core.teacher.repository.TeacherArchiveGiftRepository;
 import com.honeyprojects.core.teacher.repository.TeacherClubRepository;
 import com.honeyprojects.core.teacher.repository.TeacherGiftRepository;
 import com.honeyprojects.core.teacher.service.TeacherExcelStudentGiftService;
@@ -38,7 +39,7 @@ public class TeacherExcelStudentGiftServiceImpl implements TeacherExcelStudentGi
     private TeacherGiftRepository teacherGiftRepository;
 
     @Autowired
-    private ArchiveGiftRepository archiveGiftRepository;
+    private TeacherArchiveGiftRepository archiveGiftRepository;
 
     @Autowired
     private ArchiveRepository archiveRepository;
@@ -136,7 +137,7 @@ public class TeacherExcelStudentGiftServiceImpl implements TeacherExcelStudentGi
                 archive.setClubId(idClub);
                 archiveRepository.save(archive);
                 System.out.println(archive);
-                Gift gift = teacherGiftRepository.getIdClubByCode("G3");
+                Gift gift = teacherGiftRepository.getIdClubByCode("G4");
                 Gift newGift = new Gift();
                 newGift.setCode("G" + (teacherGiftRepository.findAll().size()+1));
                 newGift.setName(gift.getName());

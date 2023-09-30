@@ -1,5 +1,7 @@
 package com.honeyprojects.infrastructure.contant;
 
 public enum TypeGift {
-    DUNG_CU
+    QUA_TANG, //0
+    VAT_PHAM, //1
+    DUNG_CU //2
 }
