@@ -24,6 +24,4 @@ public class Category extends PrimaryEntity {
 
     private CategoryStatus categoryStatus;
 
-    private TypeCategory type;
-
 }

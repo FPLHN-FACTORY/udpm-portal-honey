@@ -28,7 +28,7 @@ public interface AdminCategoryRepository extends CategoryRepository {
             OR ( :#{#request.search} IS NULL
                     OR :#{#request.search} LIKE '' 
                     OR ca.name LIKE %:#{#request.search}% ) )
-            AND ca.category_status = 0
+           
             """, countQuery = """
             SELECT ROW_NUMBER() OVER(ORDER BY ca.created_date DESC) AS stt, ca.id, ca.code, ca.name, ca.last_modified_date
             FROM category ca
@@ -38,7 +38,7 @@ public interface AdminCategoryRepository extends CategoryRepository {
             OR ( :#{#request.search} IS NULL
                     OR :#{#request.search} LIKE '' 
                     OR ca.name LIKE %:#{#request.search}% ) )
-            AND ca.category_status = 0
+            
             """, nativeQuery = true)
     Page<AdminCategoryResponse> getAllCategoryByAdmin(Pageable pageable, @Param("request") AdminCategoryRequest request);
 

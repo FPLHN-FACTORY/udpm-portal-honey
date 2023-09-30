@@ -1,4 +1,4 @@
-import { Form, Input, Modal, message } from "antd";
+import { Form, Input, Modal, Radio, message } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import {
@@ -14,7 +14,6 @@ const ModalThem = (props) => {
 
   const { modalOpen, setModalOpen, category, onSave } = props;
   const [form] = Form.useForm();
-
   form.setFieldsValue(category);
 
   const dispatch = useAppDispatch();
@@ -91,9 +90,9 @@ const ModalThem = (props) => {
           }}
           autoComplete="off"
         >
-          <Form.Item label="Mã" name="code">
+          {/* <Form.Item label="Mã" name="code">
             <Input disabled />
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item
             label="Tên"
@@ -116,6 +115,21 @@ const ModalThem = (props) => {
           >
             <Input />
           </Form.Item>
+          <Form.Item
+            label="Phê duyệt"
+            name="status"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn tùy chọn phê duyệt",
+              },
+            ]}
+          >
+            <Radio.Group>
+              <Radio value={1}>Cần phê duyệt</Radio>
+              <Radio value={0}>Không phê duyệt</Radio>
+            </Radio.Group>
+          </Form.Item>
 
           <Form.Item
             wrapperCol={{
@@ -123,7 +137,11 @@ const ModalThem = (props) => {
               span: 16,
             }}
           >
-            <button onClick={onCancel} className="submit-button">
+            <button
+              style={{ marginRight: "20px" }}
+              onClick={onCancel}
+              className="submit-button"
+            >
               Đóng
             </button>
             <button htmlType="submit" className="submit-button ml-2">

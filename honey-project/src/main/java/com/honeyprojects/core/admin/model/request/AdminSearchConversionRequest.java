@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 @Getter
 public class AdminSearchConversionRequest extends PageableRequest {
-
+    private String textSearch;
 }

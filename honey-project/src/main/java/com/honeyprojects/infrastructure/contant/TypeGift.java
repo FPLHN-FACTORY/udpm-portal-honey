@@ -1,6 +1,7 @@
 package com.honeyprojects.infrastructure.contant;
 
 public enum TypeGift {
-    FREE,
-    ACCEPT
+    QUA_TANG, //0
+    VAT_PHAM, //1
+    DUNG_CU //2
 }

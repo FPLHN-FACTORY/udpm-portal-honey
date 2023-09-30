@@ -2,15 +2,17 @@ import { Card, Input, Pagination, Space, Table, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import { Button } from "antd";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
-import { EditOutlined, FormOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  FormOutlined,
+  PlusOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import ModalDetailGift from "./ModalDetailGift";
 import ModalAma from "./ModalAddGift";
 import ModalDelete from "./deleteGift";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import {
-  GetGift,
-  SetGift,
-} from "../../../app/reducers/gift/gift.reducer";
+import { GetGift, SetGift } from "../../../app/reducers/gift/gift.reducer";
 
 export default function IndexGift() {
   const [showModal, setShowModal] = useState(false);
@@ -19,7 +21,6 @@ export default function IndexGift() {
   const [search, setSearch] = useState("");
   const [total, setTotal] = useState(0);
   const dispatch = useAppDispatch();
-
 
   useEffect(() => {
     fetchData();
@@ -32,7 +33,6 @@ export default function IndexGift() {
     }).then((response) => {
       dispatch(SetGift(response.data.data.data));
       setTotal(response.data.data.totalPages);
-      
     });
   };
 
@@ -89,7 +89,6 @@ export default function IndexGift() {
           gift={detailGift}
           setGift={setDetailGift}
         />
-        
       )}
       <Card className="mb-2">
         <form class="flex items-center">
@@ -124,10 +123,11 @@ export default function IndexGift() {
                 <Tooltip title="Thêm quà">
                   <button
                     className="add-button1"
-                  onClick={() => {
-                    setShowModal(true);
-                    setDetailGift(null);
-                  }}
+                    onClick={() => {
+                      setShowModal(true);
+                      setDetailGift(null);
+                    }}
+                    style={{ marginBottom: "20px" }}
                   >
                     <PlusOutlined className="mr-1" />
                     Thêm quà
@@ -153,7 +153,7 @@ export default function IndexGift() {
             onChange={(value) => {
               setCurrent(value);
             }}
-           total={total * 10}
+            total={total * 10}
           />
         </div>
       </Card>

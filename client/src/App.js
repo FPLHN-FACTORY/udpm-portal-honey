@@ -12,6 +12,9 @@ import DashboardAuthUser from "./layout/student/auth/DashboardAuthUser";
 import Index from "./pages/censor/category";
 import AddPoint from "./pages/teacher/addpoint/AddPoint";
 import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
+import AddPointCensor from "./pages/censor/addPoin/AddPoint";
+import HistoryAddPointCensor from "./pages/censor/addPoin/HistoryAddPoint";
+import Club from "./pages/censor/club/indexClub";
 import ListRequestAddPoint from "./pages/teacher/addpoint/ListRequestAddPoint";
 import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
 import RequestManager from "./pages/censor/requestmanager/RequestManager";
@@ -26,6 +29,10 @@ import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
 import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
+import GiftStudent from "./pages/teacher/giftstudent/GiftStudent";
+import StArchive from "./pages/student/archive/StArchive";
+import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
+import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
 import ChestGift from "./pages/censor/chest-gift/ChestGift";
 
 function App() {
@@ -57,6 +64,16 @@ function App() {
               }
             />
             <Route
+              path="/censor/request-conversion/history"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <RequestConversionHistory />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
               path="/censor/semester"
               element={
                 <AuthGuard>
@@ -82,6 +99,36 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <IndexGift />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/add-point"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <AddPointCensor />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/add-point/history"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <HistoryAddPointCensor />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/club"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <Club />
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -136,6 +183,16 @@ function App() {
                 </AuthGuard>
               }
             />
+            <Route
+              path="/censor/request-manager/random-add-point"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <RandomAddPoint />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
             {/* Màn teacher */}
             <Route
               path="/teacher/add-point"
@@ -177,6 +234,16 @@ function App() {
                 </AuthGuard>
               }
             />
+            <Route
+              path="/teacher/list-students"
+              element={
+                <AuthGuard>
+                  <DashboardTeacher>
+                    <GiftStudent />
+                  </DashboardTeacher>
+                </AuthGuard>
+              }
+            />
             {/* Màn sinh viên */}
             <Route
               path="/student/create-conversion/history"
@@ -214,6 +281,16 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     <MyProfile />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/archive"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <StArchive />
                   </DashboardAuthUser>
                 </AuthGuard>
               }

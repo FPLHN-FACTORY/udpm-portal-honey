@@ -13,6 +13,9 @@ import com.honeyprojects.entity.History;
 public interface CensorRequestManagerService {
     History changeStatus(CensorChangeStatusRequest changeStatusRequest);
 
+    History changeStatusConversion(CensorChangeStatusRequest changeStatusRequest);
+
+
     PageableObject<CensorAddHoneyRequestResponse> getHistoryAddPoint(
             CensorSearchHistoryRequest historyRequest);
 

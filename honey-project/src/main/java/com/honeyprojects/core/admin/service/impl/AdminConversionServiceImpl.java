@@ -1,6 +1,6 @@
 package com.honeyprojects.core.admin.service.impl;
 
-import com.honeyprojects.core.admin.model.request.AdminCreateConversionRequest;
+import com.honeyprojects.core.admin.model.request.AdminConversionRequest;
 import com.honeyprojects.core.admin.model.request.AdminSearchConversionRequest;
 import com.honeyprojects.core.admin.model.response.AdminConversionResponse;
 import com.honeyprojects.core.admin.repository.AdConversionRepository;
@@ -21,14 +21,17 @@ public class AdminConversionServiceImpl implements AdminConversionService {
 
     @Autowired
     AdConversionRepository adConversionRepository;
+
+
     @Override
     public List<AdminConversionResponse> getAllConversion() {
         return adConversionRepository.getAllListResponse();
     }
 
+
     @Override
     @Transactional
-    public Conversion addConversion(AdminCreateConversionRequest request) {
+    public Conversion addConversion(AdminConversionRequest request) {
 
         Conversion conversion = new Conversion();
         conversion.setCode(request.getCode());
@@ -51,14 +54,13 @@ public class AdminConversionServiceImpl implements AdminConversionService {
 
     @Override
     public PageableObject<AdminConversionResponse> getPage(AdminSearchConversionRequest request) {
-        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<AdminConversionResponse>res = adConversionRepository.getPageListResponse(pageable , request);
-        return new PageableObject<>(res);
+        Pageable pageable = PageRequest.of(request.getPage() -1, request.getSize());
+        return new PageableObject<>(adConversionRepository.getPageListResponse(pageable,request));
     }
 
     @Override
     @Transactional
-    public Conversion updateConversion(AdminCreateConversionRequest request, String id) {
+    public Conversion updateConversion(AdminConversionRequest request, String id) {
         Conversion getOne = adConversionRepository.findById(id).orElse(null);
         if(getOne != null){
                 getOne.setCode(request.getCode());

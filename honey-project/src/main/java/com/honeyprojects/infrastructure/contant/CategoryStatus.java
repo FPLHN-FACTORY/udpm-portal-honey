@@ -1,6 +1,10 @@
 package com.honeyprojects.infrastructure.contant;
 
 public enum CategoryStatus {
-    ACTIVE,
-    INACTIVE
+//    ACTIVE,
+//    INACTIVE,
+
+    FREE,
+
+    ACCEPT
 }

@@ -105,7 +105,7 @@ export default function Index() {
       )}
 
       <Card className="mb-2">
-        <h1 className="text-xl">Tìm kiếm thể loại bài viết</h1>
+        <h1 className="text-xl">Tìm kiếm thể loại</h1>
         <form class="flex items-center">
           <div class="relative w-full mr-6">
             <Input
@@ -123,6 +123,7 @@ export default function Index() {
               setCurrent(1);
               fetchData();
             }}
+            style={{ marginTop: "20px" }}
           >
             Tìm kiếm
           </button>
@@ -141,6 +142,7 @@ export default function Index() {
                       setShowModal(true);
                       setDetailCategory(null);
                     }}
+                    style={{ marginBottom: "20px" }}
                   >
                     <PlusOutlined className="mr-1" />
                     Thêm thể loại

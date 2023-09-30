@@ -41,4 +41,8 @@ public interface AdSemesterRepository extends SemesterRepository {
     )
     Page<AdminSemesterResponse> getAllSemesterByAdmin(Pageable pageable, @Param("request") AdminSearchSemesterRequest request);
 
+    @Query(value = "SELECT s.id FROM semester s WHERE :dateNow BETWEEN s.from_date AND s.to_date", nativeQuery = true)
+    String getUsByStudent(@Param("dateNow") Long dateNow);
+
+
 }

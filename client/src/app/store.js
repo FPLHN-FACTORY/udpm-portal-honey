@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import giftReducer from "./reducers/gift/gift.reducer";
+import clubReducer from "./reducers/club/club.reducer";
 import conversionReducer from "./reducers/conversion/conversion.reducer";
 import honeyReducer from "./reducers/honey/honey.reducer";
 import semesterReducer from "./reducers/semester/semester.reducer";
@@ -24,6 +25,7 @@ export const store = configureStore({
     loadding: loaddingReducer,
     category: categoryReducer,
     chest: chestReducer,
+    club: clubReducer,
   },
 });
 

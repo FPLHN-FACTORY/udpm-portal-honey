@@ -15,10 +15,8 @@ import lombok.Setter;
 @Table(name = "conversion")
 public class Conversion extends PrimaryEntity {
 
-    @Column(nullable = false)
     private String code;
 
-    @Column(nullable = false)
     private Double ratio;
 
     private Status status;

@@ -17,10 +17,10 @@ public class UserAPI extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_CODE)
     private String code;
 
-    @Column(length = EntityProperties.LENGTH_NAME, nullable = false)
+    @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
-    @Column(length = EntityProperties.LENGTH_EMAIL, nullable = false)
+    @Column(length = EntityProperties.LENGTH_EMAIL)
     private String email;
 
 }

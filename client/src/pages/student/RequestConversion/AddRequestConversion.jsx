@@ -1,6 +1,7 @@
 import {
   FormOutlined,
   PlusCircleOutlined,
+  QuestionCircleOutlined,
   SendOutlined,
 } from "@ant-design/icons";
 
@@ -10,7 +11,9 @@ import {
   Col,
   Form,
   Input,
+  Modal,
   Pagination,
+  Popconfirm,
   Row,
   Segmented,
   Select,
@@ -23,17 +26,25 @@ import {
 import React, { useEffect, useState } from "react";
 import { ConversionAPI } from "../../../apis/censor/conversion/conversion.api";
 import ModalDetailConversion from "../../student/RequestConversion/ModalDetail";
-import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { ResquestConversion } from "../../../apis/user/ResquestConversiton/ResquestConversion.api";
 import { useNavigate } from "react-router-dom";
+import "./RequestConversion.css";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import {
+  GetConversion,
+  SetConversion,
+} from "../../../app/reducers/conversion/conversion.reducer";
 
 export default function AddRequestConversion(props) {
   const requestConversion = props;
   const [listConversion, setListConversion] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [searchByName, setSearchByName] = useState("");
+  const [filter, setFilter] = useState({
+    page: 1,
+    size: 5,
+    textSearch: "",
+  });
   const [fillCategory, setFillCategory] = useState([]);
   const [fillGift, setFillGift] = useState([]);
   const [selectedConversion, setSelectedConversion] = useState(null);
@@ -43,10 +54,17 @@ export default function AddRequestConversion(props) {
   const [inputNumberValue, setInputNumberValue] = useState(0);
   const [filteredConversions, setFilteredConversions] = useState([]);
 
+  const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
+  const [cardBackgroundColor, setCardBackgroundColor] = useState("#F8DA95");
+  const [selectedGiftName, setSelectedGiftName] = useState("");
+
   const [form] = Form.useForm();
   form.setFieldsValue(requestConversion);
 
   let navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
+  const data = useAppSelector(GetConversion);
 
   useEffect(() => {
     if (categoryType) {
@@ -104,8 +122,8 @@ export default function AddRequestConversion(props) {
   };
 
   const fechCategory = () => {
-    CategoryAPI.fetchAll().then((response) => {
-      setFillCategory(response.data.data.data);
+    ResquestConversion.fetchAllCategory().then((response) => {
+      setFillCategory(response.data.data);
     });
   };
 
@@ -115,28 +133,43 @@ export default function AddRequestConversion(props) {
     });
   };
 
-  const handleAddToComboBox = (record) => {
-    setSelectedConversion(record);
+  const handleAddToComboBox = (conversion, index) => {
+    setSelectedConversion(conversion);
+    if (selectedCardIndex === index) {
+      setSelectedCardIndex(-1);
+      setCardBackgroundColor("#F8DA95"); // Đặt lại màu nền mặc định
+    } else {
+      setSelectedConversion(conversion);
+      setSelectedCardIndex(index);
+      setCardBackgroundColor("#CCCC99");
+      const selectedGiftId = conversion.giftId;
+      const selectedGift = fillGift.find((gift) => gift.id === selectedGiftId);
+      setSelectedGiftName(selectedGift ? selectedGift.name : ""); // Set the selected gift name
+    }
   };
 
   useEffect(() => {
-    fetchData(currentPage - 1, searchByName);
-  }, [currentPage, searchByName]);
+    fetchData(filter);
+  }, [filter]);
 
-  const handleOnChangePage = (page) => {
-    fetchData(page - 1, searchByName);
-    setCurrentPage(page);
-  };
-
-  const fetchData = (currentPage, searchByName) => {
-    ConversionAPI.searchByName(currentPage, searchByName).then((response) => {
-      setListConversion(response.data.data.content);
+  const fetchData = (filter) => {
+    ConversionAPI.fetchAllPage(filter).then((response) => {
+      dispatch(SetConversion(response.data.data.data));
       setTotalPages(response.data.data.totalPages);
     });
   };
 
+  useEffect(() => {
+    fetchDataConversion();
+  }, []);
+  const fetchDataConversion = () => {
+    ConversionAPI.fetchAllConversion().then((response) => {
+      setListConversion(response.data.data);
+    });
+  };
+
   const onSubmitCreate = () => {
-    //lấy  name gift theo id
+    // lấy  name gift theo id
     const selectedGiftId = selectedConversion
       ? selectedConversion.giftId
       : undefined;
@@ -148,34 +181,20 @@ export default function AddRequestConversion(props) {
       return;
     }
 
-    // Check if selectedConversion is empty
     if (!selectedConversion) {
       message.error("Vui lòng chọn một mục trong danh sách chọn");
       return;
-    }
-
-    if (!fillCategory || !fillGift || !inputNumberValue) {
-      message.error("bạn phải điền đầu đủ thông tin");
-      return;
     } else if (
-      (selectedConversion ? selectedConversion.ratio : 0) *
-        parseInt(inputNumberValue) >
-      fillPoint.point
+      (selectedConversion ? selectedConversion.ratio : 0) > fillPoint.point
     ) {
       message.error("Bạn không đủ điểm để đổi quà trong ranh này.");
       return;
-    } else if (inputNumberValue <= 0) {
-      message.error("gói quà phải >= 0");
-      return;
     }
-
     console.log("Tên quà đã chọn:", selectedGiftName);
     const dataToAdd = {
       honeyId: fillPoint.id,
       studentId: fillUserApi.idUser,
-      honeyPoint:
-        parseInt(selectedConversion ? selectedConversion.ratio : 0) *
-        parseInt(inputNumberValue),
+      honeyPoint: parseInt(selectedConversion ? selectedConversion.ratio : 0),
       giftId: selectedConversion ? selectedConversion.giftId : 0,
       nameGift: selectedGiftName,
       categoryId: selectedConversion ? selectedConversion.categoryId : 0,
@@ -209,222 +228,226 @@ export default function AddRequestConversion(props) {
     return gift ? gift.name : "";
   };
 
-  const columns = [
-    {
-      title: "STT",
-      dataIndex: "stt",
-      key: "stt",
-      render: (text, record, index) => index + 1,
-    },
-    {
-      title: "Mã",
-      dataIndex: "code",
-      key: "code",
-      render: (text) => <span>{text}</span>,
-    },
-    {
-      title: "Tỉ lệ",
-      dataIndex: "ratio",
-      key: "ratio",
-      render: (text, record) => (
-        <span>
-          {" "}
-          {` ${parseInt(text)} điểm ${getCategoryNameById(
-            record.categoryId
-          )} đổi được 0.25 điểm ${getGiftNameById(record.giftId)}`}{" "}
-        </span>
-      ),
-    },
-    {
-      title: () => <div>Action</div>,
-      key: "action",
-      render: (_, record, index) => (
-        <Space size="small">
-          <ModalDetailConversion conversion={record} icon={<FormOutlined />} />
-          <Tooltip title="Chọn">
-            <Button onClick={() => handleAddToComboBox(record, index)}>
-              <PlusCircleOutlined />
-            </Button>
-          </Tooltip>
-        </Space>
-      ),
-    },
-  ];
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   return (
     <>
-      <Card className="mb-2">
-        <form class="flex items-center">
-          <div class="relative w-full mr-6">
-            <Input
-              style={{ borderRadius: "10px", width: "40%" }}
-              onChange={(e) => setSearchByName(e.target.value)}
-              placeholder="Tìm kiếm tên hoặc mã..."
-            />
-          </div>
-        </form>
-      </Card>
-      <Card
-        className="content-card"
-        title="Thông tin sinh viên"
-        // extra={<Segmented className="font-bold select-category" />}
-        extra={
-          <Segmented
-            className="font-bold select-category"
-            onChange={(value) => onchageCtae(value)}
-            value={categoryType}
-            options={fillCategory.map((category) => ({
-              label: category.name,
-              value: category.id,
-            }))}
-          />
-        }
+      {/* <Button type="primary" onClick={showModal}>
+          Quy đổi quà
+        </Button> */}
+      <Modal
+        style={{
+          border: "5px solid #A55600",
+          height: "538px",
+          borderRadius: "12px",
+        }}
+        width={780}
+        height={600}
+        className="modelConversion"
+        // title="Phần thưởng tự chọn "
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={null}
       >
-        <Row className="mx-10">
-          <Col
-            className="py-25"
-            span={12}
-            style={{ borderRight: "1px solid #F0F0F0" }}
+        <p style={{ fontSize: "20px", fontWeight: "700", color: "#A55600" }}>
+          <img
+            src={require("../../../assets/images/honey.png")}
+            alt="Gift"
+            height={30}
+            width={30}
+          />
+          Phần thưởng tự chọn
+          <img
+            src={require("../../../assets/images/honey.png")}
+            alt="Gift"
+            height={30}
+            width={30}
+          />
+        </p>
+        <Card
+          title={
+            <Tag className="point">
+              {fillPoint.point ? fillPoint.point : parseInt(0)}
+            </Tag>
+          }
+          style={{ marginTop: "20px", backgroundColor: "#ECBB5E" }}
+          className="cardAll"
+          extra={
+            <Segmented
+              className="font-bold select-category"
+              onChange={(value) => onchageCtae(value)}
+              value={categoryType}
+              options={fillCategory.map((category) => ({
+                label: category.name,
+                value: category.id,
+              }))}
+            />
+          }
+        >
+          <Card style={{ background: "#00BFFF", height: "30px" }}></Card>
+          <Card
+            style={{ background: "#F8DA95", height: "290px" }}
+            className="cardGift"
           >
-            <Row className="font-semibold">
-              {Object.keys(fillUserApi).length > 0 ? (
-                <>
-                  <Col span={12}>
-                    <div>
-                      MSSV: <Tag>{fillUserApi.name}</Tag>
-                    </div>
-                    <div className="m-25">
-                      Họ và tên: <Tag>{fillUserApi.userName}</Tag>
-                    </div>
-                    <div>
-                      Email: <Tag>{fillUserApi.email}</Tag>
-                    </div>
-                  </Col>
+            <Row justify="start">
+              {filteredConversions.map((conversion, index) => (
+                <Col
+                  span={1.5}
+                  className="colGift"
+                  style={{
+                    marginRight: "10px",
 
-                  <Col span={12}>
-                    <div>
-                      Số điểm:{" "}
-                      <Tag>
-                        {fillPoint.point ? fillPoint.point : parseInt(0)}
-                      </Tag>
-                    </div>
-                    <div className="m-25">
-                      Khóa: <Tag>{fillUserApi.khoa}</Tag>
-                    </div>
-                    <div>
-                      Số điện thoại: <Tag>{fillUserApi.phone}</Tag>
-                    </div>
-                  </Col>
-                </>
-              ) : (
-                <div>Không có sv</div>
-              )}
-            </Row>
-          </Col>
-          <Col className="py-25" span={12} style={{ paddingLeft: "25px" }}>
-            <Form>
-              <Row>
-                <Col span={14} className=" font-semibold">
-                  <div>
-                    Loại điểm:{" "}
-                    <Select
-                      disabled
-                      showSearch
-                      placeholder="Cayegory"
-                      optionFilterProp="children"
-                      style={{ width: "33%", marginLeft: "20px" }}
-                      size="small"
-                      value={
-                        selectedConversion
-                          ? selectedConversion.categoryId
-                          : undefined
-                      }
-                      // onChange={(value, label) => {
-                      //   setFillName({ ...fillName, nameGift: label.label });
-                      // }}
-                      options={fillCategory.map((item) => {
-                        return { label: item.name, value: item.id };
-                      })}
+                    marginBottom: "10px",
+                  }}
+                >
+                  <div className="gift">
+                    <img
+                      src={require("../../../assets/images/gift.png")}
+                      alt="Gift"
+                      style={{ marginLeft: "2px" }}
+                      height={30}
+                      width={30}
                     />
                   </div>
-                  <div
-                    style={{
-                      marginTop: "40px",
-                      marginLeft: "7px",
+                </Col>
+              ))}
+            </Row>
+          </Card>
+        </Card>
+        <div style={{ textAlign: "center" }}>
+          <Button
+            className="btnXacNhan"
+            style={{ marginTop: "20px" }}
+            onClick={handleOk}
+          >
+            XÁC NHẬN
+          </Button>
+        </div>
+      </Modal>
+      <Card style={{ marginTop: "20px" }} className="cartAllConversion">
+        <p style={{ fontSize: "20px", fontWeight: "700", color: "#A55600" }}>
+          <img
+            src={require("../../../assets/images/honey.png")}
+            alt="Gift"
+            height={30}
+            width={30}
+          />
+          Phần quà tự chọn
+          <img
+            src={require("../../../assets/images/honey.png")}
+            alt="Gift"
+            height={30}
+            width={30}
+          />
+        </p>
+        <Card
+          title={
+            <Tag className="point">
+              {fillPoint.point ? fillPoint.point : parseInt(0)}
+            </Tag>
+          }
+          style={{ marginTop: "20px", backgroundColor: "#ECBB5E" }}
+          className="cardAll"
+          extra={
+            <Segmented
+              style={{
+                border: "3px solid #5C2400",
+                backgroundColor: "#DC8C72",
+                color: "black",
+              }}
+              className="font-bold select-category"
+              onChange={(value) => onchageCtae(value)}
+              value={categoryType}
+              options={fillCategory.map((category) => ({
+                label: category.name,
+                value: category.id,
+              }))}
+            />
+          }
+        >
+          <Card style={{ background: "#00BFFF", height: "30px" }}></Card>
+          <Card
+            style={{ background: "#F8DA95", height: "300px" }}
+            className="cardGift"
+          >
+            <Row justify="start">
+              {filteredConversions.map((conversion, index) => (
+                <Col
+                  span={1.5}
+                  className="colGift"
+                  style={{
+                    marginRight: "10px",
+
+                    marginBottom: "10px",
+                  }}
+                >
+                  <Tooltip
+                    title={`${parseInt(conversion.ratio)} mật 
+                    ${getCategoryNameById(
+                      conversion.categoryId
+                    )} để đổi 0.25 ${getGiftNameById(conversion.giftId)} `}
+                    overlayStyle={{
+                      color: "orange",
+                      background: "gold !important",
                     }}
                   >
-                    Loại quà:
-                    <Select
-                      disabled
-                      showSearch
-                      placeholder="Gift"
-                      optionFilterProp="children"
-                      style={{ width: "33%", marginLeft: "20px" }}
-                      size="small"
-                      value={
-                        selectedConversion
-                          ? selectedConversion.giftId
-                          : undefined
-                      }
-                      // onChange={(value, label) => {
-                      //   setFillName({ ...fillName, nameGift: label.label });
-                      // }}
-                      options={fillGift.map((item) => {
-                        return { label: item.name, value: item.id };
-                      })}
-                    />
-                  </div>
-                </Col>
+                    <div
+                      className="gift"
+                      onClick={() => handleAddToComboBox(conversion, index)}
+                      style={{
+                        backgroundColor:
+                          selectedCardIndex === index
+                            ? cardBackgroundColor
+                            : "",
 
-                <Col span={4} className=" font-semibold">
-                  <div>
-                    <div>
-                      <Input
-                        size="small"
-                        style={{ height: "25px", width: "40px" }}
-                        defaultValue={inputNumberValue}
-                        onChange={(e) => setInputNumberValue(e.target.value)}
+                        boxShadow:
+                          selectedCardIndex === index
+                            ? "0px 0px 10px gold"
+                            : "",
+                      }}
+                    >
+                      <img
+                        src={require("../../../assets/images/gift.png")}
+                        alt="Gift"
+                        style={{ marginLeft: "75px", display: "block" }}
+                        height={40}
+                        width={40}
                       />
-                      Gói quà
-                    </div>
-                  </div>
-                  <div style={{ marginTop: "40px" }}>
-                    <Tag>{getpointGift ? getpointGift : 0}</Tag> điểm
-                  </div>
-                </Col>
-              </Row>
+                      <span
+                        style={{ fontWeight: "1000", color: "rgb(165, 86, 0)" }}
+                      >
+                        {" "}
+                        {getGiftNameById(conversion.giftId)}
+                      </span>
 
-              <div className="text-right">
-                <Button
-                  htmlType="submit"
-                  className="search-button"
-                  type="dashed"
-                  onClick={onSubmitCreate}
-                >
-                  Send
-                  <SendOutlined className="m-0 pl-5" />
-                </Button>
-              </div>
-            </Form>
-          </Col>
-        </Row>
-      </Card>
-      <Card style={{ marginTop: "20px" }}>
-        <div className="mt-5">
-          <Table
-            columns={columns}
-            dataSource={filteredConversions}
-            rowKey="id"
-            pagination={false}
-          />
-        </div>
-        <div className="mt-5 text-center">
-          <Pagination
-            simple
-            current={currentPage}
-            onChange={handleOnChangePage}
-            total={totalPages * 10}
-          />
+                      {/* {parseInt(conversion.ratio)} */}
+                    </div>
+                  </Tooltip>
+                </Col>
+              ))}
+            </Row>
+          </Card>
+        </Card>
+        <div style={{ textAlign: "center" }}>
+          <Button
+            className="btnXacNhan"
+            style={{ marginTop: "20px" }}
+            onClick={onSubmitCreate}
+          >
+            XÁC NHẬN
+          </Button>
         </div>
       </Card>
     </>

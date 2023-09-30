@@ -11,6 +11,7 @@ import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Message;
+import com.honeyprojects.infrastructure.contant.TypeCategory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -55,7 +56,12 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
         Category ca = new Category();
         ca.setCode(code);
         ca.setName(request.getName());
-        ca.setCategoryStatus(CategoryStatus.ACTIVE);
+//        ca.setCategoryStatus(CategoryStatus.ACTIVE);
+        if(request.getStatus().equals(CategoryStatus.ACCEPT)){
+            ca.setCategoryStatus(CategoryStatus.ACCEPT);
+        }else {
+            ca.setCategoryStatus(CategoryStatus.FREE);
+        }
         adminCategoryRepository.save(ca);
         return ca;
     }
@@ -89,7 +95,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     @Transactional
     public Category updateCategoryByCategory(AdminUpdateCategoryRequest request, String id) {
         Optional<Category> categoryOptional = adminCategoryRepository.findById(id);
-        categoryOptional.get().setCategoryStatus(CategoryStatus.INACTIVE);
+//        categoryOptional.get().setCategoryStatus(CategoryStatus.INACTIVE);
         adminCategoryRepository.save(categoryOptional.get());
         return categoryOptional.get();
     }

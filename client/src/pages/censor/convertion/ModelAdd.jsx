@@ -1,14 +1,21 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, Select, Tooltip, message } from "antd";
 import { useEffect, useState } from "react";
-import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { ConversionAPI } from "../../../apis/censor/conversion/conversion.api";
 import { useAppDispatch } from "../../../app/hooks";
 import { AddConversion } from "../../../app/reducers/conversion/conversion.reducer";
+import ModalAddCategory from "./ModalAddCategory";
+import ModalAddGift from "./ModalAddGift";
 
 const ModalAddConversion = ({ loadData }) => {
   const dispatch = useAppDispatch();
+  const [showModal1, setShowModal] = useState(false);
+  const [detailCategory, setDetailCategory] = useState();
+
+  const [showModalGift, setShowModalGift] = useState(false);
+  const [detailGift, setDetailGift] = useState();
+
   const [fillCategory, setFillCategory] = useState([]);
   const [fillGift, setFillGift] = useState([]);
   const [selectCategory, setSelectCategory] = useState("");
@@ -26,8 +33,8 @@ const ModalAddConversion = ({ loadData }) => {
   }, []);
 
   const fechCategory = () => {
-    CategoryAPI.fetchAll().then((response) => {
-      setFillCategory(response.data.data.data);
+    ConversionAPI.fetchAllCategory().then((response) => {
+      setFillCategory(response.data.data);
     });
   };
 
@@ -99,6 +106,20 @@ const ModalAddConversion = ({ loadData }) => {
   };
   return (
     <>
+      <ModalAddCategory
+        modalOpen={showModal1}
+        setModalOpen={setShowModal}
+        category={detailCategory}
+        SetCategory={setDetailCategory}
+      />
+
+      <ModalAddGift
+        modalOpen={showModalGift}
+        setModalOpen={setShowModalGift}
+        gift={detailGift}
+        setGift={setDetailGift}
+      />
+
       <Tooltip title="Add">
         <Button
           className="add-button"
@@ -134,105 +155,144 @@ const ModalAddConversion = ({ loadData }) => {
           autoComplete="off"
         >
           <div>
-            <span
-              className="text-xl"
-              style={{
-                fontWeight: "bold",
-                fontSize: "15px",
-                marginRight: "10px",
-              }}
-            >
-              {" "}
-              Category:
-            </span>
-            <Select
-              showSearch
-              placeholder=""
-              optionFilterProp="children"
-              style={{ width: "33%", marginRight: "20px" }}
-              size="large"
-              value={selectCategory}
-              onChange={(value, label) => {
-                setSelectCategory(value);
-                setFillName({ ...fillName, nameCate: label.label });
-              }}
-              options={fillCategory.map((item) => {
-                return { label: item.name, value: item.id };
-              })}
-            />
-            =
-            <Input
-              style={{
-                borderRadius: "10px",
-                width: "32%",
-                marginLeft: "20px",
-              }}
-              placeholder=""
-              value={pointCategory}
-              onChange={(e) => setPoinCategory(e.target.value)}
-              onBlur={handleCategoryBlur}
-            />
-            <span
-              className="text-xl"
-              style={{
-                fontWeight: "bold",
-                fontSize: "15px",
-              }}
-            >
-              {" "}
-              Điểm
-            </span>
-          </div>
-          <div style={{ marginTop: "20px" }}>
-            <span
-              className="text-xl"
-              style={{
-                fontWeight: "bold",
-                fontSize: "15px",
-                marginRight: "10px",
-                marginLeft: "36px",
-              }}
-            >
-              {" "}
-              Gift:
-            </span>
-            <Select
-              showSearch
-              placeholder=""
-              optionFilterProp="children"
-              style={{ width: "33%", marginRight: "20px" }}
-              size="large"
-              value={selectGift}
-              onChange={(value, label) => {
-                setSelectGift(value);
-                setFillName({ ...fillName, nameGift: label.label });
-              }}
-              options={fillGift.map((item) => {
-                return { label: item.name, value: item.id };
-              })}
-            />
-            =
-            <Input
-              style={{
-                borderRadius: "10px",
-                width: "32%",
-                marginLeft: "20px",
-              }}
-              placeholder=""
-              value={pointGift}
-              onChange={(e) => setPoinGift(e.target.value)}
-              onBlur={handleGiftBlur}
-            />
-            <span
-              className="text-xl"
-              style={{
-                fontWeight: "bold",
-                fontSize: "15px",
-              }}
-            >
-              {" "}
-              Điểm
-            </span>
+            <div style={{ marginTop: "20px" }}>
+              <div>
+                <div className="flex flex-row-reverse">
+                  <div>
+                    <Tooltip title="Thêm thể loại">
+                      <button
+                        onClick={() => {
+                          setShowModal(true);
+                          setDetailCategory(null);
+                        }}
+                        style={{ border: "none", background: "none" }}
+                      >
+                        <PlusOutlined className="mr-1" />
+                      </button>
+                    </Tooltip>
+                  </div>
+                </div>
+              </div>
+              <span
+                className="text-xl"
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "15px",
+                  marginRight: "10px",
+                }}
+              >
+                {" "}
+                Category:
+              </span>
+              <Select
+                showSearch
+                placeholder=""
+                optionFilterProp="children"
+                style={{ width: "33%", marginRight: "20px" }}
+                size="large"
+                value={selectCategory}
+                onChange={(value, label) => {
+                  setSelectCategory(value);
+                  setFillName({ ...fillName, nameCate: label.label });
+                }}
+                options={fillCategory.map((item) => {
+                  return { label: item.name, value: item.id };
+                })}
+              />
+              =
+              <Input
+                style={{
+                  borderRadius: "10px",
+                  width: "32%",
+                  marginLeft: "20px",
+                }}
+                placeholder=""
+                value={pointCategory}
+                onChange={(e) => setPoinCategory(e.target.value)}
+                onBlur={handleCategoryBlur}
+              />
+              <span
+                className="text-xl"
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "15px",
+                }}
+              >
+                {" "}
+                Điểm
+              </span>
+            </div>
+
+            <div>
+              <div>
+                <div className="flex flex-row-reverse">
+                  <div>
+                    <span>
+                      <Tooltip title="Thêm quà">
+                        <button
+                          onClick={() => {
+                            setShowModal(true);
+                            setDetailGift(null);
+                          }}
+                          style={{ border: "none", background: "none" }}
+                        >
+                          <PlusOutlined className="mr-1" />
+                        </button>
+                      </Tooltip>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <span
+                className="text-xl"
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "15px",
+                  marginRight: "10px",
+                  marginLeft: "36px",
+                }}
+              >
+                {" "}
+                Gift:
+              </span>
+              <Select
+                showSearch
+                placeholder=""
+                optionFilterProp="children"
+                style={{ width: "33%", marginRight: "20px" }}
+                size="large"
+                value={selectGift}
+                onChange={(value, label) => {
+                  setSelectGift(value);
+                  setFillName({ ...fillName, nameGift: label.label });
+                }}
+                options={fillGift.map((item) => {
+                  return { label: item.name, value: item.id };
+                })}
+              />
+              =
+              <Input
+                style={{
+                  borderRadius: "10px",
+                  width: "32%",
+                  marginLeft: "20px",
+                }}
+                placeholder=""
+                value={pointGift}
+                onChange={(e) => setPoinGift(e.target.value)}
+                onBlur={handleGiftBlur}
+              />
+              <span
+                className="text-xl"
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "15px",
+                }}
+              >
+                {" "}
+                Điểm
+              </span>
+            </div>
           </div>
           <form style={{ paddingLeft: "80px" }}>
             <div style={{ marginTop: "50px" }}>
@@ -279,6 +339,7 @@ const ModalAddConversion = ({ loadData }) => {
               </div>
             )}
           </form>
+
           <Form.Item
             wrapperCol={{
               offset: 8,
