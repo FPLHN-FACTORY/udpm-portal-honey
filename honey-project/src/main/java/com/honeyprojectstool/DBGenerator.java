@@ -1,5 +1,10 @@
 package com.honeyprojectstool;
 
+import com.honeyprojects.entity.*;
+import com.honeyprojects.infrastructure.contant.CategoryStatus;
+import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.TypeCategory;
+import com.honeyprojects.repository.*;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Conversion;
 import com.honeyprojects.entity.Gift;
@@ -50,6 +55,9 @@ public class DBGenerator implements CommandLineRunner {
 
     @Autowired
     private ConversionRepository conversionRepository;
+
+    @Autowired
+    private ClubRepository clubRepository;
 
     public void run(String... args) throws Exception {
 
@@ -156,7 +164,7 @@ public class DBGenerator implements CommandLineRunner {
         gift4.setCode("G4");
         gift4.setName("Bộ dụng cụ");
         gift4.setStatus(StatusGift.ACCEPT);
-        gift4.setType(TypeGift.BO_DUNG_CU);
+        gift4.setType(TypeGift.DUNG_CU);
         gift4.setId(giftRepository.save(gift4).getId());
 
         UserSemester userSemester1 = new UserSemester();
@@ -241,6 +249,12 @@ public class DBGenerator implements CommandLineRunner {
         history6.setStudentId(userAPI1.getId());
         history6.setTeacherId(userAPI3.getId());
         history6.setId(historyRepository.save(history6).getId());
+
+        Club club1 = new Club();
+        club1.setCode("CLB2");
+        club1.setName("Bóng đá");
+        club1.setStatus(Status.HOAT_DONG);
+        club1.setId(clubRepository.save(club1).getId());
 
     }
 
