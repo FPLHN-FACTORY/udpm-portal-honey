@@ -5,14 +5,24 @@ import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.student.model.request.StudentCreateRequestConversionRequest;
 import com.honeyprojects.core.student.model.request.StudentFilterHistoryRequest;
 import com.honeyprojects.core.student.model.response.StudentCreateResquestConversionResponse;
+import com.honeyprojects.core.student.repository.StudentCategoryRepository;
 import com.honeyprojects.core.student.repository.StudentCreateRequestConversionRepository;
+import com.honeyprojects.core.student.repository.StudentGiftRepository;
 import com.honeyprojects.core.student.repository.StudentHoneyRepository;
 import com.honeyprojects.core.student.repository.StudentUserSemesterRepository;
 import com.honeyprojects.core.student.service.StudentCreateResquestConversionService;
+import com.honeyprojects.entity.Category;
+import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Honey;
+import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.StatusGift;
+import com.honeyprojects.infrastructure.contant.TypeCategory;
+import com.honeyprojects.infrastructure.contant.TypeGift;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
+import com.honeyprojects.repository.CategoryRepository;
+import com.honeyprojects.repository.GiftRepository;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -34,11 +44,22 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
 
     @Autowired
     private ConvertRequestApiidentity convertRequestApiidentity;
+
+    @Autowired
+    private StudentCategoryRepository categoryRepository;
+
+    @Autowired
+    private StudentGiftRepository giftRepository;
+
+
     @Override
     public History addRequestConversion(StudentCreateRequestConversionRequest createRequest) {
-        // Lấy thông tin Honey hiện tại của sinh viên
-        Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(createRequest.getStudentId(), createRequest.getCategoryId());
+        Category category = categoryRepository.findById(createRequest.getCategoryId()).orElse(null);
+        Gift gift = giftRepository.findById(createRequest.getGiftId()).orElse(null);
 
+
+        Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(createRequest.getStudentId(), createRequest.getCategoryId());
+        History history = new History();
         if (honey == null) {
             String idUs = userSemesterRepository.getSemesterByStudent(createRequest.getStudentId());
             if (idUs == null) return null;
@@ -50,18 +71,24 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
             honey.setHoneyPoint(createRequest.getHoneyPoint());
             honey = honeyRepository.save(honey);
         } else {
-            // Trừ điểm quy đổi từ Honey hiện tại
-            int deductedPoints = createRequest.getHoneyPoint();
-            honey.setHoneyPoint(honey.getHoneyPoint() - deductedPoints);
-            honey = honeyRepository.save(honey);
+            if (category.getCategoryStatus().equals(CategoryStatus.ACCEPT) || gift.getStatus().equals(StatusGift.ACCEPT)) {
+                history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+                history.setType(TypeHistory.DOI_QUA);
+            }
+            if(category.getCategoryStatus().equals(CategoryStatus.FREE) && gift.getStatus().equals(StatusGift.FREE)){
+                history.setStatus(HoneyStatus.DA_PHE_DUYET);
+                history.setType(TypeHistory.DOI_QUA);
+
+                int deductedPoints = createRequest.getHoneyPoint();
+                honey.setHoneyPoint(honey.getHoneyPoint() - deductedPoints);
+                honey = honeyRepository.save(honey);
+            }
         }
+
 
         // Tiếp tục với việc thêm yêu cầu vào bảng History
         Long dateNow = Calendar.getInstance().getTimeInMillis();
-        History history = new History();
         history.setCreatedAt(dateNow);
-        history.setStatus(HoneyStatus.CHO_PHE_DUYET);
-        history.setType(TypeHistory.DOI_QUA);
         history.setHoneyPoint(createRequest.getHoneyPoint());
         history.setStudentId(createRequest.getStudentId());
         history.setGiftId(createRequest.getGiftId());
@@ -69,6 +96,8 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
         history.setNameGift(createRequest.getNameGift());
 
         return studentCreateRequestConversionRepository.save(history);
+
+
     }
 
     @Override

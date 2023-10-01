@@ -12,6 +12,14 @@ export class RequestManagerAPI {
     });
   };
 
+  static getHistoryConversion = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/history-request-conversion`,
+      params: filter,
+    });
+  };
+
   static getUserAPiById = (id) => {
     return request({
       method: "GET",
@@ -45,6 +53,14 @@ export class RequestManagerAPI {
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/change-status`,
+      data: { idHistory, status },
+    });
+  };
+
+  static changeStatusConversion = (idHistory, status) => {
+    return request({
+      method: "PUT",
+      url: `/${this.COMPONENT_NAME}/change-status-conversion`,
       data: { idHistory, status },
     });
   };

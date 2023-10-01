@@ -21,9 +21,6 @@ public class Chest extends PrimaryEntity {
     @Column(nullable = false)
     private Double percent;
 
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
-    private String idGift;
-
     private Status status;
 
 }

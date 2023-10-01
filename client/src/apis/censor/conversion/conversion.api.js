@@ -3,11 +3,17 @@ import { request } from "../../../helper/request.helper";
 export class ConversionAPI {
   static COMPONENT_NAME = "censor/conversion";
 
-  static fetchAllConversion = (filter) => {
+  static fetchAllConversion = () => {
     return request({
       method: "GET",
       url: `/${this.COMPONENT_NAME}/list-conversion`,
-      params: filter,
+    });
+  };
+
+  static fetchAllCategory = () => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/list-category`,
     });
   };
 

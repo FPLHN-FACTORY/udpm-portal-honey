@@ -1,5 +1,10 @@
 package com.honeyprojectstool;
 
+import com.honeyprojects.entity.*;
+import com.honeyprojects.infrastructure.contant.CategoryStatus;
+import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.TypeCategory;
+import com.honeyprojects.repository.*;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Conversion;
 import com.honeyprojects.entity.Gift;
@@ -8,10 +13,15 @@ import com.honeyprojects.entity.Honey;
 import com.honeyprojects.entity.Semester;
 import com.honeyprojects.entity.UserAPI;
 import com.honeyprojects.entity.UserSemester;
+import com.honeyprojects.infrastructure.contant.*;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeCategory;
+import com.honeyprojects.infrastructure.contant.TypeGift;
+import com.honeyprojects.repository.UserRepositpry;
+
 import com.honeyprojects.repository.CategoryRepository;
+
 import com.honeyprojects.repository.ConversionRepository;
 import com.honeyprojects.repository.GiftRepository;
 import com.honeyprojects.repository.HistoryRepository;
@@ -53,27 +63,30 @@ public class DBGenerator implements CommandLineRunner {
     @Autowired
     private ConversionRepository conversionRepository;
 
+    @Autowired
+    private UserRepositpry userRepositpry;
+
+    @Autowired
+    private ClubRepository clubRepository;
+
     public void run(String... args) throws Exception {
 
         Category category1 = new Category();
         category1.setName("GOLD");
-        category1.setCategoryStatus(CategoryStatus.ACTIVE);
+        category1.setCategoryStatus(CategoryStatus.ACCEPT);
         category1.setCode("CT1");
-        category1.setType(TypeCategory.ACCEPT);
         category1.setId(categoryRepository.save(category1).getId());
 
         Category category2 = new Category();
         category2.setName("SLIVER");
-        category2.setCategoryStatus(CategoryStatus.ACTIVE);
+        category2.setCategoryStatus(CategoryStatus.ACCEPT);
         category2.setCode("CT2");
-        category2.setType(TypeCategory.ACCEPT);
         category2.setId(categoryRepository.save(category2).getId());
 
         Category category3 = new Category();
         category3.setName("BRONZE");
-        category3.setCategoryStatus(CategoryStatus.ACTIVE);
+        category3.setCategoryStatus(CategoryStatus.FREE);
         category3.setCode("CT3");
-        category3.setType(TypeCategory.FREE);
         category3.setId(categoryRepository.save(category3).getId());
 
         Semester semester = new Semester();
@@ -139,14 +152,30 @@ public class DBGenerator implements CommandLineRunner {
         Gift gift1 = new Gift();
         gift1.setCode("G1");
         gift1.setName("Điểm lab");
-        gift1.setStatus(Status.HOAT_DONG);
+        gift1.setStatus(StatusGift.FREE);
+        gift1.setType(TypeGift.QUA_TANG);
         gift1.setId(giftRepository.save(gift1).getId());
 
         Gift gift2 = new Gift();
         gift2.setCode("G2");
         gift2.setName("Điểm thi");
-        gift2.setStatus(Status.HOAT_DONG);
+        gift2.setStatus(StatusGift.FREE);
+        gift2.setType(TypeGift.QUA_TANG);
         gift2.setId(giftRepository.save(gift2).getId());
+
+        Gift gift3 = new Gift();
+        gift3.setCode("G3");
+        gift3.setName("Tinh hoa lam");
+        gift3.setStatus(StatusGift.ACCEPT);
+        gift3.setType(TypeGift.VAT_PHAM);
+        gift3.setId(giftRepository.save(gift3).getId());
+
+        Gift gift4 = new Gift();
+        gift4.setCode("G4");
+        gift4.setName("Bộ dụng cụ");
+        gift4.setStatus(StatusGift.ACCEPT);
+        gift4.setType(TypeGift.DUNG_CU);
+        gift4.setId(giftRepository.save(gift4).getId());
 
         UserSemester userSemester1 = new UserSemester();
         userSemester1.setSemesterId(semester.getId());
@@ -231,11 +260,16 @@ public class DBGenerator implements CommandLineRunner {
         history6.setTeacherId(userAPI3.getId());
         history6.setId(historyRepository.save(history6).getId());
 
+        Club club1 = new Club();
+        club1.setCode("CLB2");
+        club1.setName("Bóng đá");
+        club1.setStatus(Status.HOAT_DONG);
+        club1.setId(clubRepository.save(club1).getId());
+
     }
 
     public static void main(String[] args) {
         ConfigurableApplicationContext ctx = SpringApplication.run(DBGenerator.class);
         ctx.close();
     }
-
 }

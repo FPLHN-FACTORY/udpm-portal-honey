@@ -1,5 +1,5 @@
 import { FormOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal, Tooltip } from "antd";
+import { Button, Form, Input, Modal, Radio, Tooltip } from "antd";
 import { useState } from "react";
 const ModalDetailGift = (props) => {
   const { gift } = props;
@@ -57,7 +57,21 @@ const ModalDetailGift = (props) => {
           <Form.Item label="Tên" name="name">
             <Input />
           </Form.Item>
-
+          <Form.Item
+            label="Phê duyệt"
+            name="status"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn tùy chọn phê duyệt",
+              },
+            ]}
+          >
+            <Radio.Group>
+              <Radio value={1}>Cần phê duyệt</Radio>
+              <Radio value={0}>Không phê duyệt</Radio>
+            </Radio.Group>
+          </Form.Item>
           <Form.Item
             wrapperCol={{
               offset: 8,

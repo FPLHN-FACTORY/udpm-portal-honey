@@ -1,9 +1,13 @@
 package com.honeyprojects.core.admin.controller;
 
+import com.honeyprojects.core.admin.model.request.AdminConversionRequest;
+import com.honeyprojects.core.admin.model.request.AdminCreateConversionHistoryRequest;
 import com.honeyprojects.core.admin.model.request.CensorChangeStatusRequest;
 import com.honeyprojects.core.admin.model.request.CensorSearchHistoryRequest;
+import com.honeyprojects.core.admin.model.response.AdminRequestConversionHistoryResponse;
 import com.honeyprojects.core.admin.model.response.CensorAddHoneyRequestResponse;
 import com.honeyprojects.core.admin.model.response.CensorTransactionRequestResponse;
+import com.honeyprojects.core.admin.service.AdminRequestConversionService;
 import com.honeyprojects.core.admin.service.CensorRequestManagerService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.ResponseObject;
@@ -22,9 +26,17 @@ public class CensorRequestManagerRestController {
     @Autowired
     private CensorRequestManagerService requestManagerService;
 
+    @Autowired
+    private AdminRequestConversionService requestConversionService;
+
     @GetMapping("/add-point")
     public PageableObject<CensorAddHoneyRequestResponse> getHistoryAddPoint(CensorSearchHistoryRequest historyRequest) {
         return requestManagerService.getHistoryAddPoint(historyRequest);
+    }
+
+        @GetMapping("/history-request-conversion")
+    public PageableObject<AdminRequestConversionHistoryResponse> getHistoryRequestConversion(AdminCreateConversionHistoryRequest historyRequest) {
+        return requestConversionService.getHistoryConversionAdmin(historyRequest);
     }
 
     @GetMapping("/transaction")
@@ -41,6 +53,12 @@ public class CensorRequestManagerRestController {
     public ResponseObject changeStatus(@RequestBody CensorChangeStatusRequest changeStatusRequest) {
         return new ResponseObject(requestManagerService.changeStatus(changeStatusRequest));
     }
+
+    @PutMapping("/change-status-conversion")
+    public ResponseObject changeStatusConversion(@RequestBody CensorChangeStatusRequest request) {
+        return new ResponseObject(requestManagerService.changeStatusConversion(request));
+    }
+
 
     //UserAPi
     @GetMapping("/user-api")

@@ -89,10 +89,10 @@ export default function AddRequestConversionHistory() {
       key: "nameGift",
     },
     {
-      title: "Quà đổi được",
+      title: "Điểm trừ",
       dataIndex: "honeyPoint",
       key: "honeyPoint",
-      render: (text) => <span>{`${text} điểm`}</span>,
+      render: (text) => <span>{`-${text} điểm`}</span>,
     },
     {
       title: "Ngày tạo",
@@ -100,16 +100,32 @@ export default function AddRequestConversionHistory() {
       key: "createdDate",
       render: (text) => <span>{moment(text).format("DD/MM/YYYY")}</span>,
     },
-    // {
-    //   title: "Trạng thái",
-    //   dataIndex: "status",
-    //   key: "status",
-    //   render: (status) => (
-    //     <Tag color={status === 0 ? "geekblue" : "default"}>
-    //       {status === 0 ? "Chờ phê duyệt" : "Không xác định"}
-    //     </Tag>
-    //   ),
-    // },
+    {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => (
+        <Tag
+          color={
+            status === 0
+              ? "geekblue"
+              : status === 1
+              ? "green"
+              : status === 2
+              ? "volcano"
+              : "default"
+          }
+        >
+          {status === 0
+            ? "Chờ phê duyệt"
+            : status === 1
+            ? "Đã phê duyệt"
+            : status === 2
+            ? "Đã hủy"
+            : "Không sác định"}
+        </Tag>
+      ),
+    },
     // {
     //   title: () => <div>Action</div>,
     //   key: "action",

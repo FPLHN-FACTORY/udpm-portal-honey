@@ -18,7 +18,7 @@ public class Club extends PrimaryEntity {
     private String code;
 
     @Column(nullable = false, length = EntityProperties.LENGTH_NAME)
-    private Double name;
+    private String name;
 
     private Status status;
 

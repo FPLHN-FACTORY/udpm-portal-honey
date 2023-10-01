@@ -3,6 +3,7 @@ package com.honeyprojects.entity;
 import com.honeyprojects.entity.base.PrimaryEntity;
 import com.honeyprojects.infrastructure.contant.EntityProperties;
 import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TypeGift;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +27,7 @@ public class Gift extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
-    private Status status;
+    private StatusGift status;
 
     private TypeGift type;
 
