@@ -23,15 +23,13 @@ import {
   TransactionOutlined,
 } from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
-import SockJS from "sockjs-client";
-import { Stomp } from "@stomp/stompjs";
 import { ProfileApi } from "../../../apis/student/profile/profileApi.api";
 import "./index.css";
 import DialogTransaction from "../../../pages/student/transaction/DialogTransaction";
+import { getStompClient } from "../../../helper/stomp-client/config";
 
 const { Header: AntHeader, Content } = Layout;
 
-var stompClient = null;
 function DashboardAuthUser({ children }) {
   const [visible, setVisible] = useState(false);
   const openDrawer = () => setVisible(!visible);
@@ -75,25 +73,14 @@ function DashboardAuthUser({ children }) {
     setCollapsed(!collapsed);
   };
 
-  function playSound() {
-    const audio = new Audio(soundTransaction);
-    audio.play();
-  }
-
   const [idTransaction, setIdTransaction] = useState();
   useEffect(() => {
-    ProfileApi.getUserLogin().then((response) => {
-      const socket = new SockJS("http://localhost:2508/ws-honey-end-point");
-      stompClient = Stomp.over(socket);
-
-      // stompClient.debug = () => {};
-
-      stompClient.connect({}, () => {
-        stompClient.subscribe(
+    getStompClient().connect({}, () => {
+      ProfileApi.getUserLogin().then((response) => {
+        getStompClient().subscribe(
           `/user/${response.data.data.idUser}/transaction`,
           (result) => {
             if (!open) {
-              playSound();
               const transactionReq = JSON.parse(result.body);
               message.warning({
                 content: (
@@ -129,7 +116,7 @@ function DashboardAuthUser({ children }) {
       });
     });
     return () => {
-      stompClient.disconnect();
+      getStompClient().disconnect();
     };
   }, []);
 
