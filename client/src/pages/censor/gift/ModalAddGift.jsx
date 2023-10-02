@@ -3,7 +3,7 @@ import { useAppDispatch } from "../../../app/hooks";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { UpdateGift, AddGift } from "../../../app/reducers/gift/gift.reducer";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 const ModalThem = (props) => {
   const onFinishFailed = () => {
     message.error("Error");
@@ -11,7 +11,13 @@ const ModalThem = (props) => {
 
   const { modalOpen, setModalOpen, gift, onSave } = props;
   const [form] = Form.useForm();
+  const [image, setImage] = useState([]);
 
+  const handleFileInputChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setImage(selectedFile);
+    // console.log("Selected file:", selectedFile);
+  };
   form.setFieldsValue(gift);
   const dispatch = useAppDispatch();
   form.setFieldsValue(gift);
@@ -19,12 +25,9 @@ const ModalThem = (props) => {
     form
       .validateFields()
       .then((formValues) => {
-        console.log(formValues);
         if (gift === null) {
-          console.log(formValues);
-          GiftAPI.create(formValues)
+          GiftAPI.create({ ...formValues, image: image })
             .then((result) => {
-              console.log(result);
               dispatch(AddGift(result.data.data));
               message.success("Thành công!");
               setModalOpen(false);
@@ -40,7 +43,7 @@ const ModalThem = (props) => {
             });
         } else {
           console.log(gift.id);
-          GiftAPI.update(formValues, gift.id)
+          GiftAPI.update({ ...formValues, image: image, gift: gift.id })
             .then((response) => {
               dispatch(UpdateGift(response.data.data));
               message.success("Thành công!");
@@ -90,9 +93,17 @@ const ModalThem = (props) => {
           }}
           autoComplete="off"
         >
-          {/* <Form.Item label="Mã" name="code">
-            <Input disabled />
-          </Form.Item> */}
+          <Form.Item label="Ảnh" name="image">
+            <Input
+              hidden
+              id="image"
+              type="file"
+              name="image"
+              accept="image/*"
+              onChange={(event) => handleFileInputChange(event)}
+            />
+            <label htmlFor="image"></label>
+          </Form.Item>
 
           <Form.Item
             label="Tên"

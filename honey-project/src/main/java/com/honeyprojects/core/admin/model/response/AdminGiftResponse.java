@@ -16,4 +16,6 @@ public interface AdminGiftResponse extends IsIdentified {
     @Value("#{target.name}")
     String getName();
 
+    @Value("#{target.image}")
+    String getImage();
 }

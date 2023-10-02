@@ -15,7 +15,8 @@ import java.util.List;
 public interface AdGiftRepository extends GiftRepository {
 
     @Query(value = """
-            SELECT ROW_NUMBER() OVER(ORDER BY g.created_date DESC) AS stt, g.id, g.code, g.name, g.last_modified_date, g.image, g.type
+            SELECT ROW_NUMBER() OVER(ORDER BY g.created_date DESC) AS stt, g.id, g.code, g.name,
+            g.last_modified_date, g.image
             FROM gift g
              WHERE ( ( :#{#request.search} IS NULL
                       OR :#{#request.search} LIKE '' 
@@ -38,9 +39,10 @@ public interface AdGiftRepository extends GiftRepository {
     Page<AdminGiftResponse> getAllGiftByAdmin(Pageable pageable, @Param("request") AdminGiftRequest request);
 
     @Query(value = """
-            SELECT g.id, g.name, g.code, g.last_modified_date FROM gift g
+            SELECT g.id, g.name, g.code, g.last_modified_date, g.image FROM gift g
             ORDER BY g.last_modified_date DESC
             """, nativeQuery = true)
     List<AdminGiftResponse> getAllListResponse();
+
 
 }
