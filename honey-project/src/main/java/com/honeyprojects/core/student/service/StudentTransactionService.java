@@ -32,4 +32,6 @@ public interface StudentTransactionService {
     SimpleResponse getUserById(String id);
 
     String getUserLogin();
+
+    Boolean sendTransaction(String username, String idTransaction);
 }

@@ -89,3 +89,8 @@
 .add-point .ant-btn svg {
     margin: 0;
 }
+
+.ant-modal-header,
+.ant-modal-footer {
+    display: none;
+}

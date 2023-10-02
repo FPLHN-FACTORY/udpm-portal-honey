@@ -10,9 +10,10 @@
   * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 import logo from "../../../assets/images/logo/logo-udpm-3.png";
-import { useState } from "react";
+import soundTransaction from "../../../assets/sounds/transaction-notification.mp3";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Layout, Drawer, Row, Menu, Col } from "antd";
+import { Layout, Drawer, Row, Menu, Col, message, Modal } from "antd";
 import Header from "../../../components/user/auth/Header";
 import {
   GiftOutlined,
@@ -22,6 +23,11 @@ import {
   TransactionOutlined,
 } from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
+import { ProfileApi } from "../../../apis/student/profile/profileApi.api";
+import "./index.css";
+import DialogTransaction from "../../../pages/student/transaction/DialogTransaction";
+import { getStompClient } from "../../../helper/stomp-client/config";
+
 const { Header: AntHeader, Content } = Layout;
 
 function DashboardAuthUser({ children }) {
@@ -67,12 +73,74 @@ function DashboardAuthUser({ children }) {
     setCollapsed(!collapsed);
   };
 
+  const [idTransaction, setIdTransaction] = useState();
+  useEffect(() => {
+    getStompClient().connect({}, () => {
+      ProfileApi.getUserLogin().then((response) => {
+        getStompClient().subscribe(
+          `/user/${response.data.data.idUser}/transaction`,
+          (result) => {
+            if (!open) {
+              const transactionReq = JSON.parse(result.body);
+              message.warning({
+                content: (
+                  <span className="message-request-transaction">
+                    Yêu cầu giao dịch
+                    <br />
+                    <b>{transactionReq.formUser}</b>
+                    <div>
+                      <button
+                        className="tu-choi"
+                        onClick={() => {
+                          message.destroy(transactionReq.idTransaction);
+                        }}>
+                        Từ chối
+                      </button>
+                      <button
+                        className="chap-nhan"
+                        onClick={() => {
+                          message.destroy();
+                          onsubmitTransaction(transactionReq.idTransaction);
+                        }}>
+                        Chấp nhận
+                      </button>
+                    </div>
+                  </span>
+                ),
+                duration: 10,
+                key: transactionReq.idTransaction,
+              });
+            }
+          }
+        );
+      });
+    });
+    return () => {
+      getStompClient().disconnect();
+    };
+  }, []);
+
+  function onsubmitTransaction(idTransaction) {
+    setIdTransaction(idTransaction);
+    message.destroy(idTransaction);
+    setOpen(true);
+  }
+
+  const [open, setOpen] = useState(false);
+
   return (
     <Layout
       id="authe"
       className={`layout-dashboard ${
         pathname === "profile" ? "layout-profile" : ""
       } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}>
+      <Modal centered open={open} onOk={null} onCancel={null} width={900}>
+        <DialogTransaction
+          open={open}
+          idTransaction={idTransaction}
+          setClose={setOpen}
+        />
+      </Modal>
       <Drawer
         id="drawer_ui"
         title={false}

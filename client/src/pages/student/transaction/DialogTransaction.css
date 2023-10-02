@@ -1,0 +1,213 @@
+.dialog-transaction .ant-card-body {
+    padding: 0;
+    background-image: url("../../../assets/images/bar-transaction.png");
+}
+
+.ant-btn:hover {
+    background-color: #d39e0c !important;
+    color: white !important;
+}
+
+.ant-btn {
+    border-style: outset;
+    border-color: white !important;
+}
+
+.ant-card-body {
+    border-radius: 5px !important;
+    background-repeat: repeat;
+}
+
+.ant-card {
+    border-radius: 10px !important;
+}
+
+.chess-square {
+    border-radius: 5px;
+    border-style: ridge;
+    background: #464239;
+    height: 55px;
+    margin: 3px;
+}
+
+.chess-square:hover {
+    cursor: pointer;
+    background: #eeb20d52;
+}
+
+.close-button {
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    background-image: url("../../../assets/images/bar.jpg");
+    float: right;
+    border-radius: 50%;
+    margin-right: -10px;
+    margin-top: -10px;
+}
+
+.row-chest {
+    overflow: auto;
+    scrollbar-width: 0px;
+    -ms-overflow-style: none;
+    padding-left: 10px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.my-10 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.text-title {
+    color: #504438;
+    font-size: 15px;
+    line-height: 30px;
+}
+
+.row-content {
+    padding-top: 0px;
+    padding-right: 15px;
+    padding-bottom: 5px;
+    padding-left: 15px;
+
+}
+
+.chest-transaction {
+    border-right: 2px solid #837463;
+    padding-right: 10px;
+
+}
+
+.row-chest::-webkit-scrollbar {
+    width: 0px;
+}
+
+.ant-row {
+    width: 100%;
+}
+
+.bar-transaction {
+    background-image: url("../../../assets/images/bar.jpg");
+    border-radius: 5px;
+    border-bottom-left-radius: 0px;
+    height: 25px;
+}
+
+.item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+
+.button-khoa {
+    border: 3px ridge !important;
+    width: 130px;
+    color: white;
+    background-color: #696B68;
+    margin-right: 5px;
+}
+
+.button-xac-nhan {
+    border: 3px ridge !important;
+    width: 130px;
+    color: white;
+    margin-left: 10px;
+    margin-right: -10px;
+    background-color: #50873E;
+}
+
+.img-item {
+    padding: 5px;
+    width: 35px;
+    height: 35px;
+}
+
+.col-title-balo {
+    padding-left: 14px;
+    margin-bottom: 5px;
+    text-align: center;
+    line-height: 30px;
+}
+
+.col-title {
+    border-right: 2px solid #837463;
+    padding-right: 10px;
+    padding-left: 14px;
+    text-align: center;
+}
+
+.title-balo {
+    font-weight: 800;
+    color: #504438;
+    font-size: 20px;
+    display: inline-block;
+    vertical-align: middle;
+
+}
+
+.img-balo {
+    vertical-align: middle;
+    margin-right: 10px;
+    margin-top: -10px;
+    filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.7));
+
+}
+
+.button-khoa:hover {
+    background-color: #535352 !important;
+}
+
+.button-xac-nhan:hover {
+    background-color: #457436 !important;
+}
+
+.tag-backgroup {
+    padding: 0px 15px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.11);
+}
+
+.input-honey {
+    border: 2px ridge;
+    background-color: #464239;
+    height: 30px;
+    color: white;
+    text-align: center;
+    font-weight: 600;
+}
+
+.input-honey:focus {
+    outline: none;
+}
+
+.honey-balo {
+    margin-top: -5px;
+    display: inline-block;
+    vertical-align: middle;
+    height: 35px;
+    margin-right: 5px;
+    filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.7));
+}
+
+.div-button {
+    margin: 10px;
+    text-align: center;
+    margin-top: 13px;
+}
+
+.ant-modal-content {
+    padding: 0px !important;
+    background-color: none !important;
+}
+
+.ant-card-bordered {
+    border: 2px ridge;
+}
+
+.ant-modal-close {
+    display: none;
+}
