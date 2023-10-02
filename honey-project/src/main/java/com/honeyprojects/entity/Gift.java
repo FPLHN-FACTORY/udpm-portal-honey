@@ -7,6 +7,7 @@ import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TypeGift;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,6 +36,8 @@ public class Gift extends PrimaryEntity {
 
     private Long fromDate;
 
-    private Byte image;
+    @Lob // Đánh dấu trường 'image' là kiểu dữ liệu lớn
+    @Column(name = "image", columnDefinition = "LONGBLOB") // Sử dụng kiểu dữ liệu LONGBLOB cho cơ sở dữ liệu MySQL
+    private byte[] image;
 
 }
