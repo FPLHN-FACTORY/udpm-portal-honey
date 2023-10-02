@@ -5,6 +5,7 @@ const ModalDetailGift = (props) => {
   const { gift } = props;
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [image, setImage] = useState([]);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -13,6 +14,11 @@ const ModalDetailGift = (props) => {
   };
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+  const handleFileInputChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setImage(selectedFile);
+    // console.log("Selected file:", selectedFile);
   };
   form.setFieldsValue(gift);
   return (
@@ -50,6 +56,17 @@ const ModalDetailGift = (props) => {
           }}
           autoComplete="off"
         >
+          {/* <Form.Item label="Ảnh" name="image">
+            <Input
+              hidden
+              id="image"
+              type="file"
+              // value={image}
+              name="image"
+              accept="image/*"
+              onChange={(event) => handleFileInputChange(event)}
+            />
+          </Form.Item> */}
           <Form.Item label="Mã" name="code">
             <Input />
           </Form.Item>
