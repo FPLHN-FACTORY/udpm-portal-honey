@@ -21,25 +21,16 @@ export default function IndexGift() {
   const [search, setSearch] = useState("");
   const [total, setTotal] = useState(0);
   const dispatch = useAppDispatch();
-  const [showModalDetail, setShowModalDetail] = useState(false);
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  const typeMapping = {
-    0: "Quà tặng",
-    1: "Vật phẩm nâng cấp",
-    2: "Dụng cụ",
-  };
-
   const fetchData = () => {
     GiftAPI.fetchAll({
       search: search,
       page: current - 1,
-      size: 5,
     }).then((response) => {
-      console.log(response.data.data);
       dispatch(SetGift(response.data.data.data));
       setTotal(response.data.data.totalPages);
     });
@@ -59,12 +50,15 @@ export default function IndexGift() {
       dataIndex: "image",
       key: "image",
       render: (image) => {
-        const byteArray = image ? image.split(",").map(Number) : [];
+        const byteArray = image.split(",").map(Number);
 
+        // Chuyển đổi mảng byte thành chuỗi Base64
         const base64ImageData = btoa(
           String.fromCharCode.apply(null, new Uint8Array(byteArray))
         );
+        console.log(base64ImageData);
 
+        // Tạo URL hình ảnh từ chuỗi Base64
         const imageUrl = `data:image/jpeg;base64,${base64ImageData}`;
 
         return (
@@ -88,29 +82,6 @@ export default function IndexGift() {
       key: "name",
     },
     {
-      title: "Số lượng",
-      dataIndex: "quantity",
-      key: "quantity",
-      render: (quantity) => (quantity !== null ? quantity : "vô hạn"),
-    },
-    {
-      title: "Kiểu",
-      dataIndex: "type",
-      key: "type",
-      render: (type) => {
-        switch (type) {
-          case 0:
-            return "Quà tặng";
-          case 1:
-            return "Vật phẩm nâng cấp";
-          case 2:
-            return "Dụng cụ";
-          default:
-            return "Không xác định";
-        }
-      },
-    },
-    {
       title: () => <div>Action</div>,
       key: "action",
       render: (_, record) => (
@@ -120,12 +91,14 @@ export default function IndexGift() {
               className="update-button"
               onClick={() => {
                 setDetailGift(record);
-                setShowModalDetail(true);
+                setShowModal(true);
+                console.log(record);
               }}
             >
               <EditOutlined className="icon" />
             </Button>
           </Tooltip>
+          <ModalDetailGift gift={record} icon={<FormOutlined />} />
           <ModalDelete gift={record} icon={<FormOutlined />} />
         </Space>
       ),
@@ -140,16 +113,6 @@ export default function IndexGift() {
           setModalOpen={setShowModal}
           gift={detailGift}
           setGift={setDetailGift}
-        />
-      )}
-      {showModalDetail && ( // Kiểm tra showModalDetail
-        <ModalDetailGift
-          gift={detailGift}
-          visible={showModalDetail}
-          onCancel={() => setShowModalDetail(false)}
-          onUpdate={() => {
-            setShowModalDetail(false);
-          }}
         />
       )}
       <Card className="mb-2">

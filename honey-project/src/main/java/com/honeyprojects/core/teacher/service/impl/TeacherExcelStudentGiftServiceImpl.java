@@ -1,7 +1,6 @@
 package com.honeyprojects.core.teacher.service.impl;
 
 import com.honeyprojects.core.common.response.SimpleResponse;
-import com.honeyprojects.core.teacher.model.response.TeacherExcelMessageResponse;
 import com.honeyprojects.core.teacher.model.response.TeacherGiftStudentResponse;
 import com.honeyprojects.core.teacher.repository.TeacherArchiveGiftRepository;
 import com.honeyprojects.core.teacher.repository.TeacherClubRepository;
@@ -101,8 +100,7 @@ public class TeacherExcelStudentGiftServiceImpl implements TeacherExcelStudentGi
     }
 
     @Override
-    public TeacherExcelMessageResponse importFromExcel(MultipartFile file) {
-        TeacherExcelMessageResponse teacherExcelMessageResponse = new TeacherExcelMessageResponse();
+    public Boolean importFromExcel(MultipartFile file) {
         List<TeacherGiftStudentResponse> dataList = new ArrayList<>();
 
 
@@ -115,11 +113,6 @@ public class TeacherExcelStudentGiftServiceImpl implements TeacherExcelStudentGi
             if (rowIterator.hasNext()) {
                 rowIterator.next();
             }
-            if (!rowIterator.hasNext()) {
-                teacherExcelMessageResponse.setMessage("File excel trống, vui lòng export lại excel để sử dụng import !");
-                teacherExcelMessageResponse.setStatus(false);
-                return teacherExcelMessageResponse;
-            }
 
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
@@ -131,6 +124,8 @@ public class TeacherExcelStudentGiftServiceImpl implements TeacherExcelStudentGi
                 response.setClub(row.getCell(4).getStringCellValue());
 
                 dataList.add(response);
+                System.out.println("====================");
+                System.out.println(dataList);
             }
             for (TeacherGiftStudentResponse response : dataList) {
 
@@ -144,7 +139,7 @@ public class TeacherExcelStudentGiftServiceImpl implements TeacherExcelStudentGi
                 System.out.println(archive);
                 Gift gift = teacherGiftRepository.getIdClubByCode("G4");
                 Gift newGift = new Gift();
-                newGift.setCode("G" + (teacherGiftRepository.findAll().size() + 1));
+                newGift.setCode("G" + (teacherGiftRepository.findAll().size()+1));
                 newGift.setName(gift.getName());
                 newGift.setStatus(StatusGift.HOAT_DONG);
                 newGift.setType(TypeGift.DUNG_CU);
@@ -164,16 +159,12 @@ public class TeacherExcelStudentGiftServiceImpl implements TeacherExcelStudentGi
                 archiveGift.setGiftId(newGift.getId());
                 archiveGiftRepository.save(archiveGift);
             }
-            teacherExcelMessageResponse.setMessage("Import điểm thành công !");
-            teacherExcelMessageResponse.setStatus(true);
-            return teacherExcelMessageResponse;
+            return true;
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        teacherExcelMessageResponse.setMessage("Import điểm thất bại.");
-        teacherExcelMessageResponse.setStatus(false);
-        return teacherExcelMessageResponse;
+        return false;
     }
 
     @Scheduled(cron = "0 0 0 * * ?")

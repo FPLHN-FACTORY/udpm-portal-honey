@@ -32,14 +32,12 @@ public class Gift extends PrimaryEntity {
 
     private TypeGift type;
 
-    private Integer quantity;
-
     private Long toDate;
 
     private Long fromDate;
 
-    @Lob
-    @Column(name = "image", columnDefinition = "LONGBLOB")
+    @Lob // Đánh dấu trường 'image' là kiểu dữ liệu lớn
+    @Column(name = "image", columnDefinition = "LONGBLOB") // Sử dụng kiểu dữ liệu LONGBLOB cho cơ sở dữ liệu MySQL
     private byte[] image;
 
 }
