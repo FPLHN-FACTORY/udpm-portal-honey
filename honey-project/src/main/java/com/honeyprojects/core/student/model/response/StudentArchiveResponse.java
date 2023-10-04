@@ -4,6 +4,10 @@ import com.honeyprojects.entity.base.IsIdentified;
 import org.springframework.beans.factory.annotation.Value;
 
 public interface StudentArchiveResponse extends IsIdentified {
+
+    @Value("#{target.stt}")
+    String getStt();
+
     @Value("#{target.code}")
     String getCode();
 
@@ -13,11 +17,11 @@ public interface StudentArchiveResponse extends IsIdentified {
     @Value("#{target.status}")
     String getStatus();
 
-    @Value("#{target.type}")
-    String getType();
-
     @Value("#{target.to_date}")
     String getToDate();
+
+    @Value("#{target.type}")
+    String getType();
 
     @Value("#{target.from_date}")
     String getFromDate();
