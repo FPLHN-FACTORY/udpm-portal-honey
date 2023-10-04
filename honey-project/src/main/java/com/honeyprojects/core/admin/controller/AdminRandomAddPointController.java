@@ -33,23 +33,34 @@ public class AdminRandomAddPointController {
         return new ResponseObject(adRandomAddPointService.createRandomItem(adminRandomPointRequest));
     }
 
-    @GetMapping("/get/gift-by-type")
-    public ResponseObject getGiftByType(@RequestParam("typeNumber") Integer typeNumber) {
-        return new ResponseObject(adRandomAddPointService.getGiftByType(typeNumber));
-    }
-
-    @PostMapping("create/export")
+    @PostMapping("/create/export")
     public ResponseObject createExportRandomPoint() {
         return new ResponseObject(adRandomAddPointService.exportExcel());
     }
 
-    @PostMapping("create/import")
+    @PostMapping("/create/import")
     public ResponseObject createImportRandomPoint(@RequestParam("file") MultipartFile file) {
         return new ResponseObject(adRandomAddPointService.importExcel(file));
     }
 
-    @GetMapping("/get-all-type-gift")
-    public ResponseObject getAllTypeGift() {
-        return new ResponseObject(adRandomAddPointService.getAllTypeGift());
+    @GetMapping("/get-all-chest")
+    public ResponseObject getAllChest() {
+        return new ResponseObject(adRandomAddPointService.getAllChest());
     }
+
+    @GetMapping("/get-all-gift-by-chest/{idChest}")
+    public ResponseObject getAllGiftByChest(@PathVariable String idChest) {
+        return new ResponseObject(adRandomAddPointService.getAllGiftByChest(idChest));
+    }
+
+    @GetMapping("/get-chest-by-id/{idChest}")
+    public ResponseObject getChestById(@PathVariable String idChest) {
+        return new ResponseObject(adRandomAddPointService.getChestById(idChest));
+    }
+
+    @DeleteMapping("/delete/chest-gift")
+    public ResponseObject deleteChestGift(@RequestParam("idChest") String idChest, @RequestParam("idGift") String idGift) {
+        return new ResponseObject(adRandomAddPointService.deleteChestGidt(idChest, idGift));
+    }
+
 }

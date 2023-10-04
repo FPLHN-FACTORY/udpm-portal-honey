@@ -1,8 +1,8 @@
 package com.honeyprojects.core.admin.repository;
 
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
-import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
-import com.honeyprojects.entity.Archive;
+import com.honeyprojects.core.admin.model.response.AdminChestGiftResponse;
+import com.honeyprojects.core.admin.model.response.AdminChestReponse;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.repository.HoneyRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +21,12 @@ public interface AdRandomAddPointRepository extends HoneyRepository {
     List<AdminCategoryResponse> getAllCategory();
 
     @Query(value = """
+            SELECT DISTINCT student_id
+            FROM honey
+            """, nativeQuery = true)
+    List<String> getAllIdStudentInHoney();
+
+    @Query(value = """
             SELECT *
             FROM honey
             WHERE student_id = :#{#idStudent} and honey_category_id = :#{#idCategory}
@@ -28,30 +34,66 @@ public interface AdRandomAddPointRepository extends HoneyRepository {
     Optional<Honey> getHoneyByIdStudent(String idStudent, String idCategory);
 
     @Query(value = """
-            SELECT c.id, c.name, c.code
-            FROM category c WHERE c.name = :#{#nameCategory}
+            select row_number() OVER(ORDER BY created_date DESC) as stt, id, name, percent
+            from chest
             """, nativeQuery = true)
-    AdminCategoryResponse getCategoryByName(String nameCategory);
+    List<AdminChestReponse> getAllChest();
 
     @Query(value = """
-            SELECT DISTINCT type
-            FROM gift
-            ORDER BY type ASC 
+            select  row_number()  OVER(ORDER BY c.created_date DESC) as stt, g.id, g.name, g.code, g.from_date, g.to_date
+            from chest c
+            join chest_gift cg on c.id = cg.chest_id
+            join gift g on g.id = cg.gift_id
+            where c.id = :#{#idchest}
             """, nativeQuery = true)
-    List<Integer> getAllTypeGift();
+    List<AdminChestGiftResponse> getAllGiftByChest(String idchest);
 
     @Query(value = """
-            SELECT *
-            FROM gift
-            WHERE type = :#{#typeNumber}
-            ORDER BY type ASC 
+            select row_number()  OVER(ORDER BY created_date DESC) as stt, id, percent, name
+            from chest
+            where id = :#{#idChest}
             """, nativeQuery = true)
-    List<AdminGiftResponse> getGiftByType(Integer typeNumber);
+    AdminChestReponse getChestById(String idChest);
 
     @Query(value = """
-            SELECT DISTINCT *
-            FROM archive
-            WHERE student_id = :#{#idStudent}
+            select id
+            from chest_gift
+            where chest_id = :#{#idChest} and gift_id = :#{#idGift}
             """, nativeQuery = true)
-    Archive getArchiveByIdStudent(String idStudent);
+    String getOptionalChestGift(String idChest, String idGift);
+
+    @Query(value = """
+            select id
+            from archive
+            where student_id = :#{#idStudent}
+            """,nativeQuery = true)
+    String getArchiveByIdStudent(String idStudent);
+
+//    @Query(value = """
+//            SELECT c.id, c.name, c.code
+//            FROM category c WHERE c.name = :#{#nameCategory}
+//            """, nativeQuery = true)
+//    AdminCategoryResponse getCategoryByName(String nameCategory);
+
+//    @Query(value = """
+//            SELECT DISTINCT type
+//            FROM gift
+//            ORDER BY type ASC
+//            """, nativeQuery = true)
+//    List<Integer> getAllTypeGift();
+
+//    @Query(value = """
+//            SELECT *
+//            FROM gift
+//            WHERE type = :#{#typeNumber}
+//            ORDER BY type ASC
+//            """, nativeQuery = true)
+//    List<AdminGiftResponse> getGiftByType(Integer typeNumber);
+
+//    @Query(value = """
+//            SELECT DISTINCT *
+//            FROM archive
+//            WHERE student_id = :#{#idStudent}
+//            """, nativeQuery = true)
+//    Archive getArchiveByIdStudent(String idStudent);
 }
