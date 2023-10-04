@@ -21,6 +21,7 @@ import {
   SetCategory,
 } from "../../../app/reducers/category/category.reducer";
 import { AddPointAPI } from "../../../apis/teacher/add-point/add-point.api";
+import {AddPointExcelAPI} from '../../../apis/teacher/add-point/add-point-excel.api';
 
 export default function AddPoint() {
   const dispatch = useAppDispatch();
@@ -111,6 +112,19 @@ export default function AddPoint() {
       });
   };
 
+  const handleOnchangeImport = (event) => {
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
+
+    AddPointExcelAPI.importExcel(formData)
+      .then((response) => {
+        message.success("Import thành công!");
+       console.log(response.data.data)
+      })
+      .catch((error) => {
+        message.error("Lỗi khi import Excel.");
+      });
+  };
   return (
     <Spin spinning={loading}>
       <div className="add-point">
@@ -140,10 +154,15 @@ export default function AddPoint() {
                 prefix={<SearchOutlined />}
               />
             </Form.Item>
-
-            <Button className="ml-auto import-button" type="primary">
+            <label className="import-button" type="primary">
               Import excel
-            </Button>
+              <input
+                type="file"
+                accept=".xlsx, .xls"
+                onChange={handleOnchangeImport}
+                style={{ display: "none" }}
+              />
+            </label>
           </Form>
         </Card>
         {Object.keys(student).length > 0 ? (
