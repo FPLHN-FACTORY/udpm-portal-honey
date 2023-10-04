@@ -1,11 +1,11 @@
 import { Button, Card, Col, Row, message } from "antd";
 import React, { useEffect, useState } from "react";
 import "./DialogTransaction.css";
-import SockJS from "sockjs-client";
-import { Stomp } from "@stomp/stompjs";
+import { GetUser } from "../../../app/reducers/users/users.reducer";
+import { useAppSelector } from "../../../app/hooks";
+import { getStompClient } from "../../../helper/stomp-client/config";
 
-var stompClient = null;
-const DialogTransaction = ({ setClose, idTransaction, open }) => {
+const DialogTransaction = ({ setClose, transaction, open }) => {
   const chessSquares = Array.from({ length: 48 }, (_, i) => i);
   const chessSquares2 = Array.from({ length: 12 }, (_, i) => i);
   const [chest, setChest] = useState([]);
@@ -22,46 +22,43 @@ const DialogTransaction = ({ setClose, idTransaction, open }) => {
     honey: 0,
     lock: false,
   });
+  const data = useAppSelector(GetUser);
 
-  const socket = new SockJS("http://localhost:2508/ws-honey-end-point");
-  stompClient = Stomp.over(socket);
+  window.addEventListener("beforeunload", () => {
+    getStompClient().send(
+      `/user/transaction/${transaction.idTransaction}/accept`,
+      {},
+      ""
+    );
+  });
 
   useEffect(() => {
     if (open) {
-      window.addEventListener("beforeunload", () => {
-        stompClient.send(`/user/transaction/${idTransaction}/accept`, {}, "");
-      });
-
-      socket.onclose = () => {
-        setClose(false);
-        message.error("Mất kết nối đến WebSocket");
-      };
-
-      // stompClient.debug = () => {};
-
-      stompClient.connect({}, () => {
-        stompClient.subscribe(
-          `/user/transaction/${idTransaction}/accept`,
-          (result) => {
-            if (result.body === "") {
-              setClose(false);
-            }
+      getStompClient().subscribe(
+        `/user/transaction/${transaction.idTransaction}/accept`,
+        (result) => {
+          if (result.body === "") {
+            setClose(false);
           }
-        );
-        stompClient.send(
-          `/user/transaction/${idTransaction}/accept`,
-          {},
-          idTransaction
-        );
-      });
-      return () => {
-        stompClient.disconnect();
-      };
+        }
+      );
+      getStompClient().send(
+        `/user/transaction/${transaction.idTransaction}/accept`,
+        {},
+        JSON.stringify({
+          ...transaction,
+          formUser: data.name,
+        })
+      );
     }
-  }, [idTransaction, open]);
+  }, [transaction, open]);
 
   function cancelTransaction() {
-    stompClient.send(`/user/transaction/${idTransaction}/accept`, {}, "");
+    getStompClient().send(
+      `/user/transaction/${transaction.idTransaction}/accept`,
+      {},
+      ""
+    );
   }
 
   return (
@@ -77,7 +74,7 @@ const DialogTransaction = ({ setClose, idTransaction, open }) => {
           }}>
           <Col span={12} className="col-title">
             <div className="tag-backgroup">
-              <b className="text-title">Triệu Văn Tưởng</b>
+              <b className="text-title">{transaction.formUser}</b>
             </div>
           </Col>
           <Col span={12} className="col-title-balo">
