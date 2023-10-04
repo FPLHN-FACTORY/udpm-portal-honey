@@ -10,6 +10,7 @@ import com.honeyprojects.core.student.model.request.StudentTransactionRequest;
 import com.honeyprojects.core.student.model.response.StudentCategoryResponse;
 import com.honeyprojects.core.student.model.response.StudentHistoryResponse;
 import com.honeyprojects.core.student.model.response.StudentHoneyResponse;
+import com.honeyprojects.core.student.model.response.TransactionResponse;
 import com.honeyprojects.core.student.repository.StudentCategoryRepository;
 import com.honeyprojects.core.student.repository.StudentHistoryRepository;
 import com.honeyprojects.core.student.repository.StudentHoneyRepository;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,6 +71,8 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
     private UdpmHoney udpmHoney;
     @Autowired
     private ConvertRequestApiidentity requestApiidentity;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
 
     @Override
@@ -217,5 +221,20 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
     @Override
     public String getUserLogin() {
         return udpmHoney.getIdUser();
+    }
+
+    @Override
+    public Boolean sendTransaction(String userName, String idTransaction) {
+        try {
+            SimpleResponse user = searchUser(userName);
+            messagingTemplate.convertAndSend(
+                    "/user/" + user.getId() + "/transaction",
+                    new TransactionResponse(idTransaction, udpmHoney.getName())
+            );
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

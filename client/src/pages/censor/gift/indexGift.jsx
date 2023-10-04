@@ -46,6 +46,31 @@ export default function IndexGift() {
       render: (text, record, index) => index + 1,
     },
     {
+      title: "Ảnh",
+      dataIndex: "image",
+      key: "image",
+      render: (image) => {
+        const byteArray = image.split(",").map(Number);
+
+        // Chuyển đổi mảng byte thành chuỗi Base64
+        const base64ImageData = btoa(
+          String.fromCharCode.apply(null, new Uint8Array(byteArray))
+        );
+        console.log(base64ImageData);
+
+        // Tạo URL hình ảnh từ chuỗi Base64
+        const imageUrl = `data:image/jpeg;base64,${base64ImageData}`;
+
+        return (
+          <img
+            src={imageUrl}
+            style={{ width: "40px", height: "40px" }}
+            alt="Hình ảnh"
+          />
+        );
+      },
+    },
+    {
       title: "Mã",
       dataIndex: "code",
       key: "code",

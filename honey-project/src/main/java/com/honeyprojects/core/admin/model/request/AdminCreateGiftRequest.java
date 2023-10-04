@@ -9,7 +9,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Random;
 
 @Getter
@@ -26,7 +29,9 @@ public class AdminCreateGiftRequest extends PageableRequest {
 
     private StatusGift status;
 
-    public Gift dtoToEntity(Gift gift) {
+    private MultipartFile image;
+
+    public Gift dtoToEntity(Gift gift) throws IOException {
         // ramdom code
         Random random = new Random();
         int number = random.nextInt(1000);
@@ -39,6 +44,10 @@ public class AdminCreateGiftRequest extends PageableRequest {
         }else {
             gift.setStatus(StatusGift.FREE);
         }
+
+        byte[] image = this.getImage().getBytes();
+        gift.setImage(image);
+
         return gift;
     }
 }

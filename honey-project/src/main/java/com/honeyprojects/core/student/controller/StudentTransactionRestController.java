@@ -70,4 +70,9 @@ public class StudentTransactionRestController {
     public String getUserLogin() {
         return transactionService.getUserLogin();
     }
+
+    @GetMapping("/send")
+    public ResponseObject sendTransaction(String userName, String idTransaction) {
+        return new ResponseObject(transactionService.sendTransaction(userName, idTransaction));
+    }
 }

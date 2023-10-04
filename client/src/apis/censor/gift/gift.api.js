@@ -12,18 +12,29 @@ export class GiftAPI {
   };
 
   static create = (data) => {
+    const formData = new FormData();
+    formData.append("code", data.code);
+    formData.append("name", data.name);
+    formData.append("image", data.image);
+    formData.append("status", "FREE");
+
     return request({
       method: "POST",
       url: `/${this.COMPONENT_NAME}`,
-      data: data,
+      data: formData,
     });
   };
 
   static update = (data, id) => {
+    const formData = new FormData();
+    formData.append("code", data.code);
+    formData.append("name", data.name);
+    formData.append("image", data.image);
+    formData.append("status", "FREE");
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/${id}`,
-      data: data,
+      data: formData,
     });
   };
 

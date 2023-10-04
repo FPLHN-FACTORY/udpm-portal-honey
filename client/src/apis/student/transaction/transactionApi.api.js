@@ -71,4 +71,11 @@ export class TransactionApi {
       url: `/${this.COMPONENT_NAME}/get-user-login`,
     });
   };
+  static sendTransaction = (params) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/send`,
+      params: params,
+    });
+  };
 }
