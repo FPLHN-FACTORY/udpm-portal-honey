@@ -16,7 +16,9 @@ export class GiftAPI {
     formData.append("code", data.code);
     formData.append("name", data.name);
     formData.append("image", data.image);
+    formData.append("quantity", data.quantity);
     formData.append("status", "FREE");
+    formData.append("type", data.type);
 
     return request({
       method: "POST",
@@ -30,7 +32,13 @@ export class GiftAPI {
     formData.append("code", data.code);
     formData.append("name", data.name);
     formData.append("image", data.image);
+    if (!isNaN(data.quantity) || data.quantity === null) {
+      formData.append("quantity", data.quantity);
+    } else {
+      formData.append("quantity", "");
+    }
     formData.append("status", "FREE");
+    formData.append("type", data.type);
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/${id}`,

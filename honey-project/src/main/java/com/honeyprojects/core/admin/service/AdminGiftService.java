@@ -19,7 +19,7 @@ public interface AdminGiftService {
 
     Gift addGift(AdminCreateGiftRequest request) throws IOException;
 
-    Gift updateGift(AdminUpdateGiftRequest request,String id);
+    Gift updateGift(AdminUpdateGiftRequest request,String id) throws IOException;
 
     Gift getOne(String id);
 

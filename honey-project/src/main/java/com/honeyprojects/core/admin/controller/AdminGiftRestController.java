@@ -51,7 +51,7 @@ public class AdminGiftRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseObject updateGift(@Valid @RequestBody AdminUpdateGiftRequest request, @PathVariable("id") String id){
+    public ResponseObject updateGift(@Valid @ModelAttribute AdminUpdateGiftRequest request, @PathVariable("id") String id) throws IOException {
         return new ResponseObject(adminGiftService.updateGift(request,id));
     }
 

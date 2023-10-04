@@ -25,28 +25,29 @@ public class AdminCreateGiftRequest extends PageableRequest {
     @Size(min = 0, max = 250)
     private String name;
 
-    private TypeGift type;
+    private Integer type;
 
     private StatusGift status;
+
+    private Integer quantity;
 
     private MultipartFile image;
 
     public Gift dtoToEntity(Gift gift) throws IOException {
-        // ramdom code
         Random random = new Random();
         int number = random.nextInt(1000);
-        String code = String.format("G%04d",number);
+        String code = String.format("G%04d", number);
 
         gift.setCode(code);
         gift.setName(this.getName());
-        if(this.getStatus().equals(StatusGift.ACCEPT)){
-            gift.setStatus(StatusGift.ACCEPT);
-        }else {
-            gift.setStatus(StatusGift.FREE);
+        gift.setStatus(this.getStatus());
+        if (this.getType() != null) {
+            gift.setType(TypeGift.values()[this.getType()]);
         }
-
-        byte[] image = this.getImage().getBytes();
-        gift.setImage(image);
+        if (this.getImage() != null) {
+            byte[] imageBytes = this.getImage().getBytes();
+            gift.setImage(imageBytes);
+        }
 
         return gift;
     }
