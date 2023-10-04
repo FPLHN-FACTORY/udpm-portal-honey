@@ -34,6 +34,7 @@ import StArchive from "./pages/student/archive/StArchive";
 import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
 import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
 import ChestGift from "./pages/censor/chest-gift/ChestGift";
+import AuctionMangement from "./pages/censor/auction-management/AuctionManagement";
 
 function App() {
   return (
@@ -292,6 +293,16 @@ function App() {
                   <DashboardAuthUser>
                     <StArchive />
                   </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/auction-management"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <AuctionMangement />
+                  </DashboardCensor>
                 </AuthGuard>
               }
             />
