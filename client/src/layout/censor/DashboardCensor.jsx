@@ -12,20 +12,25 @@
 import logo from "../../assets/images/logo/logo-udpm-3.png";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Layout, Drawer, Row, Menu, Col } from "antd";
+import { Layout, Drawer, Row, Menu, Col, AutoComplete } from "antd";
 import Header from "../../components/censor/Header";
 import {
-  EditOutlined,
-  GiftOutlined,
-  GoldOutlined,
-  PlusCircleFilled,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  PercentageOutlined,
-  PoundCircleOutlined,
-  PullRequestOutlined,
 } from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCodePullRequest,
+  faCommentsDollar,
+  faGift,
+  faKaaba,
+  faMoneyBillTransfer,
+  faPenRuler,
+  faPeopleRoof,
+  faPlusCircle,
+  faScaleUnbalanced,
+} from "@fortawesome/free-solid-svg-icons";
 const { Header: AntHeader, Content } = Layout;
 
 function DashboardAuthUser({ children }) {
@@ -49,34 +54,52 @@ function DashboardAuthUser({ children }) {
     };
   }
   const items = [
-    getItem(<Link to="/censor/category">Thể loại</Link>, "1", <GoldOutlined />),
+    getItem(
+      <Link to="/censor/category">Thể loại</Link>,
+      "1",
+      <FontAwesomeIcon icon={faKaaba} />
+    ),
     getItem(
       <Link to="/censor/conversion">Quy đổi</Link>,
       "2",
-      <PercentageOutlined />
+      <FontAwesomeIcon icon={faMoneyBillTransfer} />
     ),
-    getItem(<Link to="/censor/semester">Kỳ học</Link>, "3", <EditOutlined />),
-    getItem(<Link to="/censor/gift">Gói quà</Link>, "4", <GiftOutlined />),
+    getItem(
+      <Link to="/censor/semester">Kỳ học</Link>,
+      "3",
+      <FontAwesomeIcon icon={faPenRuler} />
+    ),
+    getItem(
+      <Link to="/censor/gift">Gói quà</Link>,
+      "4",
+      <FontAwesomeIcon icon={faGift} />
+    ),
     // getItem( <Link to="/censor/add-point">Cộng mật ong</Link>,"5" ,<PlusCircleFilled />),
-    getItem("Cộng mật ong", "5", <PlusCircleFilled />, [
+    getItem("Cộng mật ong", "5", <FontAwesomeIcon icon={faPlusCircle} />, [
       getItem(<Link to={"/censor/add-point"}>Cộng mật ong</Link>, "6"),
-      getItem(
-        <Link to={"/censor/add-point/history"}>Lịch sử</Link>,
-        "7"
-      ),
+      getItem(<Link to={"/censor/add-point/history"}>Lịch sử</Link>, "7"),
     ]),
-    getItem(<Link to="/censor/club">Club</Link>, "8", <GiftOutlined />),
+    getItem(
+      <Link to="/censor/club">Club</Link>,
+      "8",
+      <FontAwesomeIcon icon={faPeopleRoof} />
+    ),
     getItem(
       <Link to="/censor/request-manager">Quản lý yêu cầu</Link>,
       "9",
-      <PullRequestOutlined />
+      <FontAwesomeIcon icon={faCodePullRequest} />
     ),
     getItem(
       <Link to="/censor/request-manager/random-add-point">
         Tặng điểm sinh viên
       </Link>,
       "6",
-      <PoundCircleOutlined />
+      <FontAwesomeIcon icon={faCommentsDollar} />
+    ),
+    getItem(
+      <Link to="/censor/auction-management">Quản lý phiên đấu giá</Link>,
+      "7",
+      <FontAwesomeIcon icon={faScaleUnbalanced} />
     ),
   ];
   const toggleCollapse = () => {

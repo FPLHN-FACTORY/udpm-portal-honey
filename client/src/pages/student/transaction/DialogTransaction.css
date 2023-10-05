@@ -3,26 +3,26 @@
     background-image: url("../../../assets/images/bar-transaction.png");
 }
 
-.ant-btn:hover {
+.dialog-transaction .ant-btn:hover {
     background-color: #d39e0c !important;
     color: white !important;
 }
 
-.ant-btn {
+.dialog-transaction .ant-btn {
     border-style: outset;
     border-color: white !important;
 }
 
-.ant-card-body {
+.dialog-transaction .ant-card-body {
     border-radius: 5px !important;
     background-repeat: repeat;
 }
 
-.ant-card {
+.dialog-transaction .ant-card {
     border-radius: 10px !important;
 }
 
-.chess-square {
+.dialog-transaction .chess-square {
     border-radius: 5px;
     border-style: ridge;
     background: #464239;
@@ -30,12 +30,12 @@
     margin: 3px;
 }
 
-.chess-square:hover {
+.dialog-transaction .chess-square:hover {
     cursor: pointer;
     background: #eeb20d52;
 }
 
-.close-button {
+.dialog-transaction .close-button {
     color: white;
     font-size: 16px;
     font-weight: bold;
@@ -46,7 +46,7 @@
     margin-top: -10px;
 }
 
-.row-chest {
+.dialog-transaction .row-chest {
     overflow: auto;
     scrollbar-width: 0px;
     -ms-overflow-style: none;
@@ -55,18 +55,18 @@
     overflow-y: auto;
 }
 
-.my-10 {
+.dialog-transaction .my-10 {
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.text-title {
+.dialog-transaction .text-title {
     color: #504438;
     font-size: 15px;
     line-height: 30px;
 }
 
-.row-content {
+.dialog-transaction .row-content {
     padding-top: 0px;
     padding-right: 15px;
     padding-bottom: 5px;
@@ -74,28 +74,28 @@
 
 }
 
-.chest-transaction {
+.dialog-transaction .chest-transaction {
     border-right: 2px solid #837463;
     padding-right: 10px;
 
 }
 
-.row-chest::-webkit-scrollbar {
+.dialog-transaction .row-chest::-webkit-scrollbar {
     width: 0px;
 }
 
-.ant-row {
+.dialog-transaction .ant-row {
     width: 100%;
 }
 
-.bar-transaction {
+.dialog-transaction .bar-transaction {
     background-image: url("../../../assets/images/bar.jpg");
     border-radius: 5px;
     border-bottom-left-radius: 0px;
     height: 25px;
 }
 
-.item {
+.dialog-transaction .item {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -103,7 +103,7 @@
 }
 
 
-.button-khoa {
+.dialog-transaction .button-khoa {
     border: 3px ridge !important;
     width: 130px;
     color: white;
@@ -111,7 +111,7 @@
     margin-right: 5px;
 }
 
-.button-xac-nhan {
+.dialog-transaction .button-xac-nhan {
     border: 3px ridge !important;
     width: 130px;
     color: white;
@@ -120,27 +120,27 @@
     background-color: #50873E;
 }
 
-.img-item {
+.dialog-transaction .img-item {
     padding: 5px;
     width: 35px;
     height: 35px;
 }
 
-.col-title-balo {
+.dialog-transaction .col-title-balo {
     padding-left: 14px;
     margin-bottom: 5px;
     text-align: center;
     line-height: 30px;
 }
 
-.col-title {
+.dialog-transaction .col-title {
     border-right: 2px solid #837463;
     padding-right: 10px;
     padding-left: 14px;
     text-align: center;
 }
 
-.title-balo {
+.dialog-transaction .title-balo {
     font-weight: 800;
     color: #504438;
     font-size: 20px;
@@ -149,7 +149,7 @@
 
 }
 
-.img-balo {
+.dialog-transaction .img-balo {
     vertical-align: middle;
     margin-right: 10px;
     margin-top: -10px;
@@ -157,15 +157,15 @@
 
 }
 
-.button-khoa:hover {
+.dialog-transaction .button-khoa:hover {
     background-color: #535352 !important;
 }
 
-.button-xac-nhan:hover {
+.dialog-transaction .button-xac-nhan:hover {
     background-color: #457436 !important;
 }
 
-.tag-backgroup {
+.dialog-transaction .tag-backgroup {
     padding: 0px 15px;
     border-radius: 5px;
     background-color: rgba(0, 0, 0, 0.11);
@@ -180,11 +180,11 @@
     font-weight: 600;
 }
 
-.input-honey:focus {
+.dialog-transaction .input-honey:focus {
     outline: none;
 }
 
-.honey-balo {
+.dialog-transaction .honey-balo {
     margin-top: -5px;
     display: inline-block;
     vertical-align: middle;
@@ -193,21 +193,21 @@
     filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.7));
 }
 
-.div-button {
+.dialog-transaction .div-button {
     margin: 10px;
     text-align: center;
     margin-top: 13px;
 }
 
-.ant-modal-content {
+.dialog-transaction .ant-modal-content {
     padding: 0px !important;
     background-color: none !important;
 }
 
-.ant-card-bordered {
+.dialog-transaction .ant-card-bordered {
     border: 2px ridge;
 }
 
-.ant-modal-close {
+.dialog-transaction .ant-modal-close {
     display: none;
 }

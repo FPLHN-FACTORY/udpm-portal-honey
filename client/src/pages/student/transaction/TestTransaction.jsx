@@ -5,9 +5,10 @@ import "./DialogTransaction.css";
 import { v4 as uuidv4 } from "uuid";
 import { TransactionApi } from "../../../apis/student/transaction/transactionApi.api";
 import { getStompClient } from "../../../helper/stomp-client/config";
+
 const TestTransaction = () => {
   const [open, setOpen] = useState(false);
-  const [idTransaction, setIdTransaction] = useState();
+  const [transaction, setTransaction] = useState();
 
   const requestTransaction = (value) => {
     const idTransaction = uuidv4();
@@ -22,7 +23,7 @@ const TestTransaction = () => {
         const subscription = getStompClient().subscribe(
           `/user/transaction/${idTransaction}/accept`,
           (result) => {
-            setIdTransaction(result.body);
+            setTransaction(JSON.parse(result.body));
             setOpen(true);
             subscription.unsubscribe();
           }
@@ -43,7 +44,7 @@ const TestTransaction = () => {
       <Modal centered open={open} onOk={null} onCancel={null} width={900}>
         <DialogTransaction
           open={open}
-          idTransaction={idTransaction}
+          transaction={transaction}
           setClose={setOpen}
         />
       </Modal>

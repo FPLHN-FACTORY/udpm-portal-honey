@@ -54,10 +54,32 @@ export class RandomAddPointAPI {
     });
   };
 
-  static fetchAllTypeGift = () => {
+  static getAllChest = () => {
     return request({
       method: "GET",
-      url: `/${this.COMPONENT_NAME}/get-all-type-gift`,
+      url: `/${this.COMPONENT_NAME}/get-all-chest`,
+    });
+  };
+
+  static getAllGiftByChest = (idChest) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/get-all-gift-by-chest/${idChest}`,
+    });
+  };
+
+  static getChestById = (idChest) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/get-chest-by-id/${idChest}`,
+    });
+  };
+
+  static deleteChestGift = (idChest, idGift) => {
+    return request({
+      method: "DELETE",
+      url: `/${this.COMPONENT_NAME}/delete/chest-gift`,
+      params: { idChest, idGift },
     });
   };
 }
