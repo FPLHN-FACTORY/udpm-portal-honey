@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class StudentArchiveFilterRequest extends PageableRequest {
+
     private String status;
 
     private String idStudent;
