@@ -3,16 +3,13 @@ import { Button, Modal, Table, Tooltip, message } from "antd";
 import { ChestGiftAPI } from "../../../apis/censor/chest-gift/chest-gift.api";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import {
-  SetChestGift,
-  GetChestGift,
-} from "../../../app/reducers/chest-gift/chest-gift.reducer";
+import { GetGift, SetGift } from "../../../app/reducers/gift/gift.reducer";
 const ModalAddGiftToChest = (props) => {
   const { chest } = props;
   const [modalOpen, setModalOpen] = useState(false);
+  const [dataGifts, setDataGifts] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const dispatch = useAppDispatch();
-
   const columns = [
     {
       title: "Code",
@@ -31,7 +28,10 @@ const ModalAddGiftToChest = (props) => {
 
   const fetchData = () => {
     ChestGiftAPI.getGiftNotJoinChest(chest.id).then((response) => {
-      dispatch(SetChestGift(response.data.data));
+      setDataGifts(response.data.data);
+      console.log("///////////");
+      console.log(response.data.data);
+      dispatch(SetGift(response.data.data));
     });
   };
 
@@ -39,8 +39,6 @@ const ModalAddGiftToChest = (props) => {
     setSelectedRowKeys([]);
     setModalOpen(false);
   };
-
-  const dataGifts = useAppSelector(GetChestGift);
 
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
@@ -59,10 +57,9 @@ const ModalAddGiftToChest = (props) => {
     }).then(() => {
       fetchData();
       message.success("Thêm thành công.");
-      handleCancel();
     });
   };
-
+  const data = useAppSelector(GetGift);
   return (
     <>
       <Tooltip title="Thêm vật phẩm">
@@ -83,7 +80,7 @@ const ModalAddGiftToChest = (props) => {
         <Table
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={dataGifts}
+          dataSource={data}
           rowKey="id"
         />
       </Modal>

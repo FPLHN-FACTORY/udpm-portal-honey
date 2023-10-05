@@ -5,6 +5,7 @@ import com.honeyprojects.core.admin.model.response.AdminChestGiftResponse;
 import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
 import com.honeyprojects.core.admin.repository.AdChestGiftRepository;
 import com.honeyprojects.core.admin.repository.AdChestRepository;
+import com.honeyprojects.core.admin.repository.AdGiftRepository;
 import com.honeyprojects.core.admin.service.AdminChestGiftService;
 import com.honeyprojects.entity.Chest;
 import com.honeyprojects.entity.ChestGift;
@@ -24,6 +25,9 @@ public class AdminChestGiftServiceImpl implements AdminChestGiftService {
     private AdChestGiftRepository chestGiftRepository;
     @Autowired
     private AdChestRepository chestRepository;
+
+    @Autowired
+    private AdGiftRepository adGiftRepository;
 //
 //    @Override
 //    public ChestGift addChestGift(AdminCreateChestGiftRequest request) {
@@ -96,11 +100,12 @@ public class AdminChestGiftServiceImpl implements AdminChestGiftService {
 
     @Override
     @Transactional
-    public void deleteGiftInChest(AdminCreateChestGiftRequest request) {
+    public List<Gift> deleteGiftInChest(AdminCreateChestGiftRequest request) {
         List<ChestGift> listChestGift = chestGiftRepository.getChestGiftsByChestId(request.getChestId());
         List<String> listRequest = request.getListGift();
+        List<Gift> listGiftReturn = new ArrayList<>();
         if (listChestGift.size() == 0 && listRequest.size() == 0) {
-            return;
+            return null;
         }
         List<ChestGift> listDelete = new ArrayList<>();
         listChestGift.forEach(item -> {
@@ -110,6 +115,15 @@ public class AdminChestGiftServiceImpl implements AdminChestGiftService {
                 }
             });
         });
+        List<Gift> listGift = adGiftRepository.findAll();
+        listGift.forEach(gift -> {
+            listDelete.forEach(giftRe -> {
+                if (giftRe.getGiftId().equals(gift.getId())) {
+                    listGiftReturn.add(gift);
+                }
+            });
+        });
         chestGiftRepository.deleteAll(listDelete);
+        return listGiftReturn;
     }
 }

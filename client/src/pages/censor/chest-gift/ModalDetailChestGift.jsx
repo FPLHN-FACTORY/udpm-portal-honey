@@ -3,9 +3,15 @@ import { Button, Modal, Table, Tooltip, message } from "antd";
 import { ChestGiftAPI } from "../../../apis/censor/chest-gift/chest-gift.api";
 import { EyeOutlined } from "@ant-design/icons";
 import moment from "moment";
+import {
+  SetChestGift,
+  GetChestGift,
+} from "../../../app/reducers/chest-gift/chest-gift.reducer";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { PushGift } from "../../../app/reducers/gift/gift.reducer";
 const ModalDetail = (props) => {
   const { chest } = props;
-  const [dataChest, setDataChest] = useState([]);
+  const dispatch = useAppDispatch();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -35,7 +41,7 @@ const ModalDetail = (props) => {
 
   useEffect(() => {
     fetchData();
-  }, [chest.id]);
+  }, [chest.id, dispatch]);
 
   const fetchData = async () => {
     ChestGiftAPI.getChestGift(chest.id).then((response) => {
@@ -44,9 +50,11 @@ const ModalDetail = (props) => {
         toDate: moment(item.toDate).format("DD/MM/YYYY"),
         fromDate: moment(item.fromDate).format("DD/MM/YYYY"),
       }));
-      setDataChest(formattedData);
+      dispatch(SetChestGift(formattedData));
     });
   };
+
+  const dataChest = useAppSelector(GetChestGift);
 
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
@@ -67,6 +75,7 @@ const ModalDetail = (props) => {
         chestId: chest.id,
         listGift: selectedRowKeys,
       }).then((response) => {
+        dispatch(PushGift(response.data.data));
         fetchData();
         setSelectedRowKeys([]);
         message.success("Xóa thành công.");

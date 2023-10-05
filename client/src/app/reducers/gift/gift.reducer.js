@@ -38,6 +38,18 @@ export const GiftSlice = createSlice({
       state = action.payload;
       return state;
     },
+    PushGift: (state, action) => {
+      const data = action.payload;
+      // let newGift = {
+      //   id: data.id,
+      //   code: data.code,
+      //   name: data.name,
+      //   image: data.image,
+      //   stt: data.stt,
+      // };
+      state = [...data, ...state];
+      return state;
+    },
     FindByIdGift: (state, action) => {
       const index = state.findIndex((el) => el.id === action.payload.id);
       if (index > -1) {
@@ -50,6 +62,7 @@ export const GiftSlice = createSlice({
 export const GetGift = (state) => state.gift;
 export const {
   AddGift,
+  PushGift,
   UpdateGift,
   DeleteGift,
   SetGift,

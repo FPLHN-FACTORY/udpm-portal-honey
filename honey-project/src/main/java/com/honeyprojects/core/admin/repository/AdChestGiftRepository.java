@@ -27,7 +27,7 @@ public interface AdChestGiftRepository extends ChestGiftRepository {
     List<ChestGift> getChestGiftsByChestId(String chestId);
 
     @Query(value = """
-            SELECT  g.id, g.code, g.name
+            SELECT  g.id, g.code, g.name, g.image
             FROM gift g
             LEFT JOIN chest_gift cg ON cg.gift_id = g.id AND cg.chest_id = :idChest
             WHERE cg.id IS NULL

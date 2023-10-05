@@ -20,11 +20,6 @@ public class AdminChestGiftRestController {
     @Autowired
     private AdminChestGiftService chestGiftService;
 
-//    @PostMapping()
-//    public ResponseObject addChestGift(@RequestBody AdminCreateChestGiftRequest request) {
-//        return new ResponseObject(chestGiftService.addChestGift(request));
-//    }
-
     @DeleteMapping("/delete/{id}")
     public void deleteChestGift(@PathVariable("id") String chestId) {
         chestGiftService.deleteChestGift(chestId);
@@ -46,8 +41,8 @@ public class AdminChestGiftRestController {
     }
 
     @DeleteMapping("/delete-gift")
-    public void deleteGiftInChest(@RequestBody AdminCreateChestGiftRequest request) {
-        chestGiftService.deleteGiftInChest(request);
+    public ResponseObject deleteGiftInChest(@RequestBody AdminCreateChestGiftRequest request) {
+        return new ResponseObject(chestGiftService.deleteGiftInChest(request));
     }
 
 }

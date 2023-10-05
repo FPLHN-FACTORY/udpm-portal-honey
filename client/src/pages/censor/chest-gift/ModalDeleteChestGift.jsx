@@ -15,7 +15,7 @@ const DeleteChest = (props) => {
     });
   };
 
-  const deleteColor = () => {
+  const deleteChestGift = () => {
     ChestGiftAPI.deleteChest(chest.id).then(
       (response) => {
         fetchData();
@@ -27,7 +27,7 @@ const DeleteChest = (props) => {
     );
   };
   const confirm = (e) => {
-    deleteColor();
+    deleteChestGift();
   };
   const cancel = (e) => {
     message.error("Click on No");

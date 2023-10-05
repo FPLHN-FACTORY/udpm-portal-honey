@@ -6,6 +6,7 @@ import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
 import com.honeyprojects.entity.Gift;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AdminChestGiftService {
 
@@ -20,5 +21,5 @@ public interface AdminChestGiftService {
 
     List<AdminGiftResponse> findGiftNotJoinChest(String idChest);
 
-    void deleteGiftInChest(AdminCreateChestGiftRequest request);
+    List<Gift> deleteGiftInChest(AdminCreateChestGiftRequest request);
 }
