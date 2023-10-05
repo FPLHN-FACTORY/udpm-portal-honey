@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class TransactionResponse {
-    String idTransaction;
-    String formUser;
+    private String idTransaction;
+    private String formUser;
 }
