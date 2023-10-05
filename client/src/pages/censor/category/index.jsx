@@ -27,9 +27,6 @@ export default function Index() {
 
   useEffect(() => {
     CategoryAPI.fetchAll().then((response) => {
-      console.log("====================================");
-      console.log(response);
-      console.log("====================================");
       dispatch(SetCategory(response.data.data.data));
       setTotal(response.data.data.totalPages);
     });

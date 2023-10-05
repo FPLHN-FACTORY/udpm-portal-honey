@@ -5,12 +5,19 @@ import com.honeyprojects.core.admin.model.response.AdminClubResponse;
 import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Club;
+import com.honeyprojects.entity.ClubGift;
 import com.honeyprojects.entity.Gift;
 
 import java.util.List;
 
 public interface AdminClubService {
     PageableObject<AdminClubResponse> getAllCategoryByAdmin(AdminClubRequest request);
+
+    PageableObject<AdminGiftResponse> findGiftInClub(AdminGiftRequest request);
+
+    PageableObject<AdminGiftResponse> findGiftNotInClub(AdminGiftRequest request);
+
+    Boolean addGiftClub(AdminCreateClubGiftRequest request);
 
     List<AdminClubResponse> getAllListGift();
 

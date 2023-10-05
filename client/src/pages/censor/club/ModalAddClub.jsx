@@ -1,12 +1,8 @@
-import { Form, Input, Modal, message } from "antd";
+import { Form, Input, Modal, message, Button } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
-import { ClubAPI } from '../../../apis/censor/club/club.api';
-import {
-  UpdateClub,
-  AddClub,
-} from "../../../app/reducers/club/club.reducer";
+import { ClubAPI } from "../../../apis/censor/club/club.api";
+import { UpdateClub, AddClub } from "../../../app/reducers/club/club.reducer";
 
-import { useEffect } from "react";
 const ModalThem = (props) => {
   const onFinishFailed = () => {
     message.error("Error");
@@ -24,10 +20,8 @@ const ModalThem = (props) => {
       .then((formValues) => {
         console.log(formValues);
         if (club === null) {
-          console.log(formValues);
           ClubAPI.create(formValues)
             .then((result) => {
-              console.log(result);
               dispatch(AddClub(result.data.data));
               message.success("Thành công!");
               setModalOpen(false);
@@ -68,7 +62,7 @@ const ModalThem = (props) => {
   return (
     <>
       <Modal
-        title="Thể loại bài viết"
+        title="Thêm câu lạc bộ"
         open={modalOpen}
         onCancel={onCancel}
         footer={null}
@@ -93,27 +87,23 @@ const ModalThem = (props) => {
           }}
           autoComplete="off"
         >
-          <Form.Item label="Mã" name="code">
-            <Input disabled />
-          </Form.Item>
-
           <Form.Item
             label="Tên"
             name="name"
             rules={[
               {
                 required: true,
-                message: "Tên Quà không để trống",
+                message: "Tên CLB không để trống",
               },
-              {
-                pattern:
-                  /^[a-zA-Z0-9\sÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+$/,
-                message: "Tên Quà không bao gồm các ký tự đặc biệt",
-              },
-              {
-                min: 4,
-                message: "Tên Quà phải tối thiểu 4 kí tự",
-              },
+              // {
+              //   pattern:
+              //     /^[a-zA-Z0-9\sÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+$/,
+              //   message: "Tên Quà không bao gồm các ký tự đặc biệt",
+              // },
+              // {
+              //   min: 4,
+              //   message: "Tên CLB phải tối thiểu 4 kí tự",
+              // },
             ]}
           >
             <Input />
@@ -125,12 +115,16 @@ const ModalThem = (props) => {
               span: 16,
             }}
           >
-            <button onClick={onCancel} className="submit-button">
+            <Button onClick={onCancel} className="submit-button">
               Đóng
-            </button>
-            <button htmlType="submit" className="submit-button ml-2">
+            </Button>
+            <Button
+              htmlType="submit"
+              className="submit-button"
+              style={{ marginLeft: 10 }}
+            >
               OK
-            </button>
+            </Button>
           </Form.Item>
         </Form>
       </Modal>

@@ -11,10 +11,11 @@ import GlobalLoading from "./components/global-loading/GlobalLoading";
 import DashboardAuthUser from "./layout/student/auth/DashboardAuthUser";
 import Index from "./pages/censor/category";
 import AddPoint from "./pages/teacher/addpoint/AddPoint";
-import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
 import AddPointCensor from "./pages/censor/addPoin/AddPoint";
+import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
 import HistoryAddPointCensor from "./pages/censor/addPoin/HistoryAddPoint";
-import Club from "./pages/censor/club/indexClub";
+import Club from "./pages/censor/club/Club";
+import DetailClub from "./pages/censor/club/DetailGiftClub";
 import ListRequestAddPoint from "./pages/teacher/addpoint/ListRequestAddPoint";
 import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
 import RequestManager from "./pages/censor/requestmanager/RequestManager";
@@ -29,6 +30,7 @@ import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
 import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
+import Archive from "./pages/student/archive/Archive";
 import GiftStudent from "./pages/teacher/giftstudent/GiftStudent";
 import StArchive from "./pages/student/archive/StArchive";
 import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
@@ -112,7 +114,7 @@ function App() {
                 </AuthGuard>
               }
             />
-            <Route
+             <Route
               path="/censor/add-point"
               element={
                 <AuthGuard>
@@ -122,7 +124,7 @@ function App() {
                 </AuthGuard>
               }
             />
-            <Route
+             <Route
               path="/censor/add-point/history"
               element={
                 <AuthGuard>
@@ -138,6 +140,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <Club />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/club/:id"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <DetailClub />
                   </DashboardCensor>
                 </AuthGuard>
               }

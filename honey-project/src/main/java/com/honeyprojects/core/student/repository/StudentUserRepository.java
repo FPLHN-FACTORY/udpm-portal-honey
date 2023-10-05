@@ -1,15 +1,14 @@
 package com.honeyprojects.core.student.repository;
 
 import com.honeyprojects.core.student.model.response.StudentMyHoneyResponse;
-import com.honeyprojects.core.student.model.response.StudentUserResponse;
-import com.honeyprojects.repository.UserRepositpry;
+import com.honeyprojects.repository.HoneyRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface StudentUserRepository extends UserRepositpry {
+public interface StudentUserRepository extends HoneyRepository {
 
     @Query(value = """
             SELECT h.honey_point, c.name

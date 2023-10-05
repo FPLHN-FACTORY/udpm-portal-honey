@@ -88,8 +88,6 @@ public class TeacherExcelAddPointServiceImpl implements TeacherExcelAddPointServ
                 response.setNote(note);
 
                 dataList.add(response);
-                //    System.out.println("====================");
-                //  dataList.forEach(s -> System.out.println(s.toString()));
             }
 
             for (TeacherAddPoinExcelResponse response : dataList) {

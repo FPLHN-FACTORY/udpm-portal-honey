@@ -1,91 +1,91 @@
 .add-point .ant-btn {
-    line-height: normal;
-    box-shadow: 0 2px 4px rgb(0 0 0 / 7%);
+  line-height: normal;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 7%);
 }
 
 .add-point .py-25 {
-    padding: 25px 0px;
+  padding: 25px 0px;
 }
 
 .add-point .mt-10 {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .add-point .mb-10 {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .add-point .p-0 {
-    padding: 0 !important;
+  padding: 0 !important;
 }
 
 .add-point .pl-5 {
-    padding-left: 5px;
+  padding-left: 5px;
 }
 
 .add-point .m-0 {
-    margin: 0 !important;
+  margin: 0 !important;
 }
 
 .add-point .mx-10 {
-    margin: 0px 10px;
+  margin: 0px 10px;
 }
 
 .add-point .search-input {
-    min-width: 30%;
+  min-width: 30%;
 }
 
 .add-point .search-button {
-    background-color: #EEB30D;
-    margin-bottom: 24px;
+  background-color: #eeb30d;
+  margin-bottom: 24px;
 }
 
-.add-point>.ant-card>.ant-card-body {
-    padding-bottom: 0;
+.add-point > .ant-card > .ant-card-body {
+  padding-bottom: 0;
 }
 
 .add-point .search-button:hover {
-    background-color: #EEB30D !important;
+  background-color: #eeb30d !important;
 }
 
 .add-point .import-button {
-    background-color: #24923e;
-    margin-bottom: 24px;
+  background-color: #24923e;
+  margin-bottom: 24px;
 }
 
 .add-point .import-button:hover {
-    background-color: #2db34c !important;
+  background-color: #2db34c !important;
 }
 
 .add-point .select-category .ant-segmented-item-selected {
-    background-color: #EEB30D;
-    color: rgb(255, 255, 255);
+  background-color: #eeb30d;
+  color: rgb(255, 255, 255);
 }
 
 .add-point .select-category .ant-segmented-item {
-    transition: #EEB30D 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: #eeb30d 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
 .add-point .select-category .ant-segmented-thumb {
-    background-color: #EEB30D;
+  background-color: #eeb30d;
 }
 
 .add-point .content-card .ant-card-body {
-    padding-top: 0;
-    padding-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .add-point .content-card .ant-card-body {
-    padding-top: 0;
-    padding-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
-.add-point .ant-table-thead>tr>th,
-.add-point .ant-table-thead>tr>td {
-    background-color: #EEB30D;
-    color: #fff;
+.add-point .ant-table-thead > tr > th,
+.add-point .ant-table-thead > tr > td {
+  background-color: #eeb30d;
+  color: #fff;
 }
 
 .add-point .ant-btn svg {
-    margin: 0;
+  margin: 0;
 }

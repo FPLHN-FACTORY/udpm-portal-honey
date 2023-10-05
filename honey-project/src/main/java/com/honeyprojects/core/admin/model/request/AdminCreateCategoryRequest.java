@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class AdminCreateCategoryRequest extends PageableRequest {
 
-    @NotBlank(message = "Tên đéo được để trống")
+    @NotBlank(message = "Tên không được để trống")
     @Size(min = 0, max = 250)
     private String name;
 
