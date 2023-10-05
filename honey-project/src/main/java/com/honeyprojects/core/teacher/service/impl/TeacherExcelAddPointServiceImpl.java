@@ -101,7 +101,7 @@ public class TeacherExcelAddPointServiceImpl implements TeacherExcelAddPointServ
                 getPointRequest.setCategoryId(category.getId());
                 Long dateNow = Calendar.getInstance().getTimeInMillis();
                 TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest, dateNow);
-                //   System.out.println("====================");
+                //     System.out.println("====================");
 
                 History history = new History();
                 history.setStatus(HoneyStatus.CHO_PHE_DUYET);
