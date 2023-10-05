@@ -94,11 +94,11 @@ public class TeacherExcelAddPointServiceImpl implements TeacherExcelAddPointServ
 
             for (TeacherAddPoinExcelResponse response : dataList) {
                 SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(response.getEmail());
-                Category category = categoryRepository.getCategoryByName(response.getCategoryName());
+//                Category category = categoryRepository.getCategoryByName(response.getCategoryName());
 
                 TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
                 getPointRequest.setStudentId(simpleResponse.getId());
-                getPointRequest.setCategoryId(category.getId());
+//                getPointRequest.setCategoryId(category.getId());
                 Long dateNow = Calendar.getInstance().getTimeInMillis();
                 TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest, dateNow);
                 System.out.println("====================");
@@ -117,7 +117,7 @@ public class TeacherExcelAddPointServiceImpl implements TeacherExcelAddPointServ
                     honey.setStatus(Status.HOAT_DONG);
                     honey.setHoneyPoint(0);
                     honey.setStudentId(simpleResponse.getId());
-                    honey.setHoneyCategoryId(category.getId());
+//                    honey.setHoneyCategoryId(category.getId());
                     honey.setUserSemesterId(idUs);
                     history.setHoneyId(honeyRepository.save(honey).getId());
                 } else {
