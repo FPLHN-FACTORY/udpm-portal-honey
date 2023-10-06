@@ -34,6 +34,16 @@
     cursor: pointer;
     border: none;
     transition: filter 0.3s;
+    margin-left: 9px;
+}
+
+.main-ui-student .btn-dau-gia {
+    background: url("../../../assets/images/ui-student/btn-dau-gia.png") no-repeat;
+    width: 300px;
+    height: 115px;
+    cursor: pointer;
+    border: none;
+    transition: filter 0.3s;
 }
 
 .main-ui-student .btn-student:hover {
@@ -49,8 +59,8 @@
 
 .main-ui-student .outer-hexagon {
     position: relative;
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     background-color: #CB820A;
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 }
@@ -59,11 +69,34 @@
     position: absolute;
     top: 3px;
     left: 3px;
-    width: 54px;
-    height: 54px;
+    width: 74px;
+    height: 74px;
     background-color: #ffffff;
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 }
+
+.main-ui-student .container {
+    align-items: center;
+    display: flex;
+}
+
+.main-ui-student .tag-name {
+    position: absolute;
+    width: 170px !important;
+    height: 40px !important;
+    border: 3.5px solid #cb820a;
+    background-color: #ffffff;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    justify-content: center;
+    border-left: none;
+    margin-left: 80px;
+
+    color: #cb820a;
+    font-size: 17px;
+    font-weight: 1000;
+}
+
 
 
 
@@ -77,4 +110,42 @@
 
 .main-ui-student .ant-layout {
     background: none !important;
+}
+
+.main-ui-student .btn-balo {
+    background: url("../../../assets/images/ui-student/btn-balo.png") no-repeat;
+}
+
+.main-ui-student .btn-dap-do {
+    background: url("../../../assets/images/ui-student/btn-dap-do.png") no-repeat;
+}
+
+.main-ui-student .btn-giao-dich {
+    background: url("../../../assets/images/ui-student/btn-giao-dich.png") no-repeat;
+}
+
+.main-ui-student .btn-cai-dat {
+    background: url("../../../assets/images/ui-student/btn-setting.png") no-repeat;
+}
+
+.main-ui-student .btn-hom-thu {
+    background: url("../../../assets/images/ui-student/btn-hom-thu.png") no-repeat;
+}
+
+.main-ui-student .btn-am-thanh {
+    background: url("../../../assets/images/ui-student/btn-music.png") no-repeat;
+}
+
+.main-ui-student .btn-tat-am-thanh {
+    background: url("../../../assets/images/ui-student/btn-mute-music.png") no-repeat;
+}
+
+.main-ui-student .btn-icon {
+    width: 70px;
+    height: 75px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    display: block;
+    background-size: 70px;
 }
