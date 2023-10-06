@@ -9,4 +9,11 @@ export class AddPointExcelAPI {
       data: file,
     });
   };
+
+  static exportExcel = () => {
+    return request({
+      method: "POST",
+      url: `${this.COMPONENT_NAME}/export-excel`,
+    });
+  };
 }

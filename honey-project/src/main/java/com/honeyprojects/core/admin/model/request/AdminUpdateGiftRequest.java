@@ -33,6 +33,10 @@ public class AdminUpdateGiftRequest {
 
    private MultipartFile image;
 
+   private String honeyCategoryId;
+
+   private Integer honey;
+
    public Gift dtoToEntity(Gift gift) throws IOException {
       gift.setCode(this.getCode());
       gift.setName(this.getName());
@@ -49,6 +53,8 @@ public class AdminUpdateGiftRequest {
          byte[] imageBytes = this.getImage().getBytes();
          gift.setImage(imageBytes);
       }
+      gift.setHoneyCategoryId(this.getHoneyCategoryId());
+      gift.setHoney(this.getHoney());
 
       return gift;
    }

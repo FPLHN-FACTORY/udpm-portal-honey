@@ -14,14 +14,19 @@ import {
   Tag,
   message,
 } from "antd";
-import { SearchOutlined, SendOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  SendOutlined,
+  VerticalAlignBottomOutlined,
+} from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
   GetCategory,
   SetCategory,
 } from "../../../app/reducers/category/category.reducer";
 import { AddPointAPI } from "../../../apis/teacher/add-point/add-point.api";
-import {AddPointExcelAPI} from '../../../apis/teacher/add-point/add-point-excel.api';
+// import { AddPointExcelAPI } from "../../../apis/teacher/add-point/add-point-excel.api";
+import ModalImportExcel from "./ModalImportExcel";
 
 export default function AddPoint() {
   const dispatch = useAppDispatch();
@@ -31,6 +36,9 @@ export default function AddPoint() {
   const [categorySelected, setCategorySelected] = useState();
 
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const [nameFile, setNameFile] = useState("");
 
   const [formSearch] = Form.useForm();
   const [formAddPoint] = Form.useForm();
@@ -112,19 +120,6 @@ export default function AddPoint() {
       });
   };
 
-  const handleOnchangeImport = (event) => {
-    const formData = new FormData();
-    formData.append("file", event.target.files[0]);
-
-    AddPointExcelAPI.importExcel(formData)
-      .then((response) => {
-        message.success("Import thành công!");
-       console.log(response.data.data)
-      })
-      .catch((error) => {
-        message.error("Lỗi khi import Excel.");
-      });
-  };
   return (
     <Spin spinning={loading}>
       <div className="add-point">
@@ -154,15 +149,29 @@ export default function AddPoint() {
                 prefix={<SearchOutlined />}
               />
             </Form.Item>
-            <label className="import-button" type="primary">
-              Import excel
-              <input
-                type="file"
-                accept=".xlsx, .xls"
-                onChange={handleOnchangeImport}
-                style={{ display: "none" }}
-              />
-            </label>
+            <Form.Item>
+              <Button
+                className="button-css"
+                htmlFor="file-input"
+                style={{
+                  marginLeft: "8px",
+                  padding: "10px",
+                }}
+                onClick={() => setOpen(true)}
+              >
+                <VerticalAlignBottomOutlined />
+                Import Excel
+              </Button>
+              {open && (
+                <ModalImportExcel
+                  open={open}
+                  setOpen={setOpen}
+                  setLoading={setLoading}
+                  nameFile={nameFile}
+                  setNameFile={setNameFile}
+                />
+              )}
+            </Form.Item>
           </Form>
         </Card>
         {Object.keys(student).length > 0 ? (

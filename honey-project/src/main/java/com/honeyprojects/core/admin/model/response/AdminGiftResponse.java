@@ -25,6 +25,12 @@ public interface AdminGiftResponse extends IsIdentified {
     @Value("#{target.type}")
     Integer getType();
 
+    @Value("#{target.honey}")
+    Integer getHoney();
+
+    @Value("#{target.honey_category_id}")
+    String getHoneyCategoryId();
+
     @Value("#{target.image}")
     String getImage();
 }

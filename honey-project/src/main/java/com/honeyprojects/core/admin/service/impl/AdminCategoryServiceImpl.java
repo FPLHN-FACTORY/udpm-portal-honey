@@ -10,6 +10,7 @@ import com.honeyprojects.core.admin.service.AdminCategoryService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
+import com.honeyprojects.infrastructure.contant.CategoryTransaction;
 import com.honeyprojects.infrastructure.contant.Message;
 import com.honeyprojects.infrastructure.contant.TypeCategory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
@@ -55,9 +56,13 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
         String code = String.format("CA%04d", number);
         Category ca = new Category();
         ca.setCode(code);
-        ca.setName(request.getName());
-//        ca.setCategoryStatus(CategoryStatus.ACTIVE);
-        if(request.getStatus().equals(CategoryStatus.ACCEPT)){
+        ca.setName(request.getName());;
+        if (request.getTransactionRights().equals(CategoryTransaction.FREE)){
+            ca.setTransactionRights(CategoryTransaction.FREE);
+        }else {
+            ca.setTransactionRights(CategoryTransaction.LIMIT);
+        }
+        if(request.getCategoryStatus().equals(CategoryStatus.ACCEPT)){
             ca.setCategoryStatus(CategoryStatus.ACCEPT);
         }else {
             ca.setCategoryStatus(CategoryStatus.FREE);

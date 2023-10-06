@@ -1,7 +1,16 @@
-import { Card, Input, Pagination, Space, Table, Tooltip } from "antd";
+import {
+  Card,
+  Input,
+  Modal,
+  Pagination,
+  Space,
+  Table,
+  Tooltip,
+  message,
+} from "antd";
 import React, { useEffect, useState } from "react";
-import { Button } from "antd";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
+import { DeleteOutlined } from "@ant-design/icons";
 import {
   EditOutlined,
   FormOutlined,
@@ -18,6 +27,7 @@ export default function IndexGift() {
   const [showModal, setShowModal] = useState(false);
   const [detailGift, setDetailGift] = useState();
   const [current, setCurrent] = useState(1);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [search, setSearch] = useState("");
   const [total, setTotal] = useState(0);
   const dispatch = useAppDispatch();
@@ -25,24 +35,30 @@ export default function IndexGift() {
 
   useEffect(() => {
     fetchData();
-  }, []);
-
-  const typeMapping = {
-    0: "Quà tặng",
-    1: "Vật phẩm nâng cấp",
-    2: "Dụng cụ",
-  };
+  }, [current]);
 
   const fetchData = () => {
     GiftAPI.fetchAll({
       search: search,
       page: current - 1,
-      size: 5,
     }).then((response) => {
-      console.log(response.data.data);
       dispatch(SetGift(response.data.data.data));
       setTotal(response.data.data.totalPages);
     });
+  };
+
+  const DeleteGift = (id) => {
+    GiftAPI.delete(id)
+      .then(() => {
+        fetchData();
+        message.success("Xóa quà thành công!");
+      })
+      .catch((error) => {
+        message.error("Lỗi xóa quà: " + error.message);
+      })
+      .finally(() => {
+        setConfirmDelete(false);
+      });
   };
 
   const data = useAppSelector(GetGift);
@@ -111,12 +127,17 @@ export default function IndexGift() {
       },
     },
     {
+      title: "Điểm",
+      dataIndex: "honey",
+      key: "honey",
+    },
+    {
       title: () => <div>Action</div>,
       key: "action",
       render: (_, record) => (
         <Space size="small">
           <Tooltip title="Cập nhập">
-            <Button
+            <button
               className="update-button"
               onClick={() => {
                 setDetailGift(record);
@@ -124,9 +145,18 @@ export default function IndexGift() {
               }}
             >
               <EditOutlined className="icon" />
-            </Button>
+            </button>
           </Tooltip>
-          <ModalDelete gift={record} icon={<FormOutlined />} />
+          <Tooltip title="Xóa">
+            <button
+              onClick={() => {
+                setDetailGift(record);
+                setConfirmDelete(true);
+              }}
+            >
+              <DeleteOutlined className="icon" />
+            </button>
+          </Tooltip>
         </Space>
       ),
     },
@@ -142,7 +172,7 @@ export default function IndexGift() {
           setGift={setDetailGift}
         />
       )}
-      {showModalDetail && ( // Kiểm tra showModalDetail
+      {showModalDetail && (
         <ModalDetailGift
           gift={detailGift}
           visible={showModalDetail}
@@ -152,6 +182,20 @@ export default function IndexGift() {
           }}
         />
       )}
+      <Modal
+        title="Xác nhận xóa"
+        visible={confirmDelete}
+        onOk={() => {
+          if (detailGift) {
+            DeleteGift(detailGift.id);
+          }
+        }}
+        onCancel={() => setConfirmDelete(false)}
+        okText="Xóa"
+        cancelText="Hủy"
+      >
+        Bạn có chắc chắn muốn xóa quà này?
+      </Modal>
       <Card className="mb-2">
         <form class="flex items-center">
           <div class="relative w-full mr-6">
@@ -214,8 +258,9 @@ export default function IndexGift() {
             current={current}
             onChange={(value) => {
               setCurrent(value);
+              fetchData();
             }}
-            total={total * 10}
+            total={total}
           />
         </div>
       </Card>
