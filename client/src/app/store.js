@@ -11,6 +11,7 @@ import usersReducer from "./reducers/users/users.reducer";
 import loaddingReducer from "./reducers/loading/loading.reducer";
 import categoryReducer from "./reducers/category/category.reducer";
 import chestReducer from "./reducers/chest/chest.reducer";
+import auctionReducer from "./reducers/auction/auction.reducer";
 
 export const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ export const store = configureStore({
     category: categoryReducer,
     chest: chestReducer,
     club: clubReducer,
+    auction: auctionReducer,
   },
 });
 
