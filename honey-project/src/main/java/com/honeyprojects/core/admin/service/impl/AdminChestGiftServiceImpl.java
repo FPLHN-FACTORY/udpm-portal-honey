@@ -2,7 +2,7 @@ package com.honeyprojects.core.admin.service.impl;
 
 import com.honeyprojects.core.admin.model.request.AdminCreateChestGiftRequest;
 import com.honeyprojects.core.admin.model.response.AdminChestGiftResponse;
-import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
+import com.honeyprojects.core.admin.model.response.AdminGetGiftResponse;
 import com.honeyprojects.core.admin.repository.AdChestGiftRepository;
 import com.honeyprojects.core.admin.repository.AdChestRepository;
 import com.honeyprojects.core.admin.repository.AdGiftRepository;
@@ -25,17 +25,8 @@ public class AdminChestGiftServiceImpl implements AdminChestGiftService {
     private AdChestGiftRepository chestGiftRepository;
     @Autowired
     private AdChestRepository chestRepository;
-
     @Autowired
     private AdGiftRepository adGiftRepository;
-//
-//    @Override
-//    public ChestGift addChestGift(AdminCreateChestGiftRequest request) {
-//        ChestGift chestGift = new ChestGift();
-//        chestGift.setChestId(request.getChestId());
-//        chestGift.setGiftId(request.getGiftId());
-//        return chestGiftRepository.save(chestGift);
-//    }
 
     @Override
     @Transactional
@@ -47,19 +38,6 @@ public class AdminChestGiftServiceImpl implements AdminChestGiftService {
     }
 
 
-//    @Override
-//    @Transactional
-//    public List<ChestGift> saveAllChestGift(List<AdminCreateChestGiftRequest> chestGiftRequests) {
-//        List<ChestGift> chestGiftList = new ArrayList<>();
-//        for (AdminCreateChestGiftRequest request : chestGiftRequests) {
-//            ChestGift chestGift = new ChestGift();
-//            chestGift.setGiftId(request.getGiftId());
-//            chestGift.setChestId(request.getChestId());
-//            chestGiftList.add(chestGift);
-//        }
-//        return chestGiftRepository.saveAll(chestGiftList);
-//    }
-
     @Override
     public List<AdminChestGiftResponse> getChestGift(String chestId) {
         return chestGiftRepository.getChestGift(chestId);
@@ -67,7 +45,7 @@ public class AdminChestGiftServiceImpl implements AdminChestGiftService {
 
     @Override
     @Transactional
-    public void addGiftsToChest(AdminCreateChestGiftRequest request) {
+    public List<ChestGift> addGiftsToChest(AdminCreateChestGiftRequest request) {
         Optional<Chest> chest = chestRepository.findById(request.getChestId());
         if (chest.isPresent()) {
             List<ChestGift> listNew = new ArrayList<>();
@@ -76,25 +54,15 @@ public class AdminChestGiftServiceImpl implements AdminChestGiftService {
                 chestGift.setChestId(chest.get().getId());
                 chestGift.setGiftId(giftId);
                 listNew.add(chestGift);
-//                } else {
-//                    listChestGift.forEach(item -> {
-//                        if (item.getChestId().equals(request.getChestId()) && !item.getGiftId().equals(giftId)) {
-//                            ChestGift chestGift = new ChestGift();
-//                            chestGift.setChestId(chest.get().getId());
-//                            chestGift.setGiftId(giftId);
-//                            listNew.add(chestGift);
-//                        }else{
-//
-//                        }
-//                    });
-//                }
             }
             chestGiftRepository.saveAll(listNew);
+            return listNew;
         }
+        return null;
     }
 
     @Override
-    public List<AdminGiftResponse> findGiftNotJoinChest(String idChest) {
+    public List<AdminGetGiftResponse> findGiftNotJoinChest(String idChest) {
         return chestGiftRepository.findGiftNotJoinChest(idChest);
     }
 
@@ -125,5 +93,11 @@ public class AdminChestGiftServiceImpl implements AdminChestGiftService {
         });
         chestGiftRepository.deleteAll(listDelete);
         return listGiftReturn;
+    }
+
+    @Override
+    public List<ChestGift> createChestGift(AdminCreateChestGiftRequest request) {
+
+        return null;
     }
 }

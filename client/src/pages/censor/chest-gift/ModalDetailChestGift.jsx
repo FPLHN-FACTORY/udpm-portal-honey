@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Modal, Table, Tooltip, message } from "antd";
 import { ChestGiftAPI } from "../../../apis/censor/chest-gift/chest-gift.api";
 import { EyeOutlined } from "@ant-design/icons";
@@ -39,10 +39,6 @@ const ModalDetail = (props) => {
     },
   ];
 
-  useEffect(() => {
-    fetchData();
-  }, [chest.id, dispatch]);
-
   const fetchData = async () => {
     ChestGiftAPI.getChestGift(chest.id).then((response) => {
       const formattedData = response.data.data.map((item) => ({
@@ -50,6 +46,7 @@ const ModalDetail = (props) => {
         toDate: moment(item.toDate).format("DD/MM/YYYY"),
         fromDate: moment(item.fromDate).format("DD/MM/YYYY"),
       }));
+      console.log(formattedData);
       dispatch(SetChestGift(formattedData));
     });
   };
@@ -68,6 +65,11 @@ const ModalDetail = (props) => {
   };
 
   const hasSelected = selectedRowKeys.length > 0;
+
+  const handleOnClick = () => {
+    setModalVisible(true);
+    fetchData();
+  };
 
   const handleDeleteSelected = async () => {
     try {
@@ -92,7 +94,7 @@ const ModalDetail = (props) => {
         <Button
           className="detail-button"
           style={{ padding: "1px 0.7rem" }}
-          onClick={() => setModalVisible(true)}
+          onClick={() => handleOnClick()}
         >
           <EyeOutlined className="icon" />
         </Button>

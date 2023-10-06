@@ -31,8 +31,8 @@ public class AdminChestGiftRestController {
     }
 
     @PostMapping("/add-gift")
-    public void addGiftsToChest(@RequestBody AdminCreateChestGiftRequest request) {
-        chestGiftService.addGiftsToChest(request);
+    public ResponseObject addGiftsToChest(@RequestBody AdminCreateChestGiftRequest request) {
+        return new ResponseObject(chestGiftService.addGiftsToChest(request));
     }
 
     @GetMapping("/list-gift")

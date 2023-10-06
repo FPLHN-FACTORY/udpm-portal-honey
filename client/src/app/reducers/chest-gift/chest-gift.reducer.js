@@ -7,7 +7,7 @@ export const ChestGiftSlice = createSlice({
   initialState,
   reducers: {
     AddChestGift: (state, action) => {
-      state.push(action.payload);
+      state.push(...action.payload);
       return state;
     },
     PutChestGift: (state, action) => {

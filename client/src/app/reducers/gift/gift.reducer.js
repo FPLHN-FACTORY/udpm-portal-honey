@@ -40,13 +40,6 @@ export const GiftSlice = createSlice({
     },
     PushGift: (state, action) => {
       const data = action.payload;
-      // let newGift = {
-      //   id: data.id,
-      //   code: data.code,
-      //   name: data.name,
-      //   image: data.image,
-      //   stt: data.stt,
-      // };
       state = [...data, ...state];
       return state;
     },

@@ -96,7 +96,16 @@ const ModalAdd = (props) => {
                     max="100"
                     step="0.1"
                     value={percent}
-                    onChange={(e) => setPercent(e.target.value)}
+                    onChange={(e) => {
+                      const newValue = parseFloat(e.target.value);
+                      if (!isNaN(newValue) && newValue > 0 && newValue <= 100) {
+                        setPercent(newValue);
+                      } else {
+                        message.error(
+                          "Tỉ lệ phải nằm trong khoảng từ 0 đến 100."
+                        );
+                      }
+                    }}
                   />
                 </div>
               </div>
