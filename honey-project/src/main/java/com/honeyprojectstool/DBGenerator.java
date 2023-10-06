@@ -1,25 +1,11 @@
 package com.honeyprojectstool;
 
+import com.honeyprojects.entity.*;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Status;
-import com.honeyprojects.entity.Category;
-import com.honeyprojects.entity.Club;
-import com.honeyprojects.entity.Conversion;
-import com.honeyprojects.entity.Gift;
-import com.honeyprojects.entity.History;
-import com.honeyprojects.entity.Honey;
-import com.honeyprojects.entity.Semester;
-import com.honeyprojects.entity.UserSemester;
 import com.honeyprojects.infrastructure.contant.*;
 import com.honeyprojects.infrastructure.contant.TypeGift;
-import com.honeyprojects.repository.CategoryRepository;
-import com.honeyprojects.repository.ClubRepository;
-import com.honeyprojects.repository.ConversionRepository;
-import com.honeyprojects.repository.GiftRepository;
-import com.honeyprojects.repository.HistoryRepository;
-import com.honeyprojects.repository.HoneyRepository;
-import com.honeyprojects.repository.SemesterRepository;
-import com.honeyprojects.repository.UserSemesterRepository;
+import com.honeyprojects.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -129,7 +115,7 @@ public class DBGenerator implements CommandLineRunner {
 
         Honey honey5 = new Honey();
         honey5.setHoneyPoint(100);
-        honey5.setStudentId(userAPI3.getId());
+        honey5.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
         honey5.setUserSemesterId(semester.getId());
         honey5.setHoneyCategoryId(category2.getId());
         honey5.setId(honeyRepository.save(honey5).getId());
