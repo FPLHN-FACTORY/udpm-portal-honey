@@ -21,7 +21,6 @@ public class StudentProfileServiceImpl implements StudentProfileService {
     @Override
     public List<StudentMyHoneyResponse> getHoneyByUser() {
         String userId = udpmHoney.getIdUser();
-        System.out.println(userId);
         return studentUserRepository.getHoney(userId);
     }
 }

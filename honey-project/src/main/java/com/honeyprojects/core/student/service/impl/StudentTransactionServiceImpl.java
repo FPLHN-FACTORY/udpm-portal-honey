@@ -1,6 +1,5 @@
 package com.honeyprojects.core.student.service.impl;
 
-import com.honeyprojects.core.admin.repository.CensorUserAPIRepository;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
@@ -52,10 +51,6 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
 
     @Value("${rsa.private-key}")
     private String privateKey;
-
-    //fake user login
-    @Autowired
-    private CensorUserAPIRepository userRepository;
 
     @Autowired
     private StudentCategoryRepository categoryRepository;

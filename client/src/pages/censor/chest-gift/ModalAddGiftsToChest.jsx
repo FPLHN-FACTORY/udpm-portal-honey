@@ -43,7 +43,6 @@ const ModalAddGiftToChest = (props) => {
   const dataGifts = useAppSelector(GetChestGift);
 
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {

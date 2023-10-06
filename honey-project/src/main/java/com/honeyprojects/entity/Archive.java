@@ -15,10 +15,10 @@ import lombok.Setter;
 @Table(name = "archive")
 public class Archive extends PrimaryEntity {
 
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    @Column(length = EntityProperties.LENGTH_ID)
     private String clubId;
 
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    @Column(length = EntityProperties.LENGTH_ID)
     private String studentId;
 
     private Status status;

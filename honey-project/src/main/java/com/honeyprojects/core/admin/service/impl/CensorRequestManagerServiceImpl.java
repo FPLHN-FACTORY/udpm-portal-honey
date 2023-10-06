@@ -5,10 +5,8 @@ import com.honeyprojects.core.admin.model.request.CensorSearchHistoryRequest;
 import com.honeyprojects.core.admin.model.response.CensorAddHoneyRequestResponse;
 import com.honeyprojects.core.admin.model.response.CensorDetailRequestResponse;
 import com.honeyprojects.core.admin.model.response.CensorTransactionRequestResponse;
-import com.honeyprojects.core.admin.model.response.CensorUserApiResponse;
 import com.honeyprojects.core.admin.repository.AdHoneyRepository;
 import com.honeyprojects.core.admin.repository.CensorHistoryRepository;
-import com.honeyprojects.core.admin.repository.CensorUserAPIRepository;
 import com.honeyprojects.core.admin.service.CensorRequestManagerService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.response.SimpleResponse;
@@ -123,11 +121,6 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
         if (type != null) honeyStatus = TypeHistory.values()[type];
         return historyRepository.getCountRequest(honeyStatus);
     }
-
-    //UserApi
-
-    @Autowired
-    private CensorUserAPIRepository userAPIRepository;
 
 
     @Override
