@@ -115,7 +115,7 @@ public class DBGenerator implements CommandLineRunner {
 
         Honey honey5 = new Honey();
         honey5.setHoneyPoint(100);
-        honey5.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
+        honey5.setStudentId("C4CF21F4-F3E0-490E-B1CC-08DBB743DD7D");
         honey5.setUserSemesterId(semester.getId());
         honey5.setHoneyCategoryId(category2.getId());
         honey5.setId(honeyRepository.save(honey5).getId());

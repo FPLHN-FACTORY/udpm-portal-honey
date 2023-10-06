@@ -10,7 +10,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import ModalAddClub from "./ModalAddClub";
-import ModalDelete from "./DeleteClub";
+import ModalDelete from "./DeleteConfirm";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GetClub, SetClub } from "../../../app/reducers/club/club.reducer";
 import { Link } from "react-router-dom";
