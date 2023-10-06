@@ -1,33 +1,24 @@
 package com.honeyprojectstool;
 
-import com.honeyprojects.entity.*;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Status;
-import com.honeyprojects.infrastructure.contant.TypeCategory;
-import com.honeyprojects.repository.*;
 import com.honeyprojects.entity.Category;
+import com.honeyprojects.entity.Club;
 import com.honeyprojects.entity.Conversion;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.entity.Semester;
-import com.honeyprojects.entity.UserAPI;
 import com.honeyprojects.entity.UserSemester;
 import com.honeyprojects.infrastructure.contant.*;
-import com.honeyprojects.infrastructure.contant.CategoryStatus;
-import com.honeyprojects.infrastructure.contant.Status;
-import com.honeyprojects.infrastructure.contant.TypeCategory;
 import com.honeyprojects.infrastructure.contant.TypeGift;
-import com.honeyprojects.repository.UserRepositpry;
-
 import com.honeyprojects.repository.CategoryRepository;
-
+import com.honeyprojects.repository.ClubRepository;
 import com.honeyprojects.repository.ConversionRepository;
 import com.honeyprojects.repository.GiftRepository;
 import com.honeyprojects.repository.HistoryRepository;
 import com.honeyprojects.repository.HoneyRepository;
 import com.honeyprojects.repository.SemesterRepository;
-import com.honeyprojects.repository.UserRepositpry;
 import com.honeyprojects.repository.UserSemesterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -64,12 +55,16 @@ public class DBGenerator implements CommandLineRunner {
     private ConversionRepository conversionRepository;
 
     @Autowired
-    private UserRepositpry userRepositpry;
-
-    @Autowired
     private ClubRepository clubRepository;
 
+
     public void run(String... args) throws Exception {
+
+        Club club = new Club();
+        club.setCode("CLB1");
+        club.setName("Bee SuperHero");
+        club.setStatus(Status.HOAT_DONG);
+        club.setId(clubRepository.save(club).getId());
 
         Category category1 = new Category();
         category1.setName("GOLD");
@@ -99,27 +94,9 @@ public class DBGenerator implements CommandLineRunner {
         semester.setFromDate(1681600400000L);
         semester.setId(semesterRepository.save(semester).getId());
 
-        UserAPI userAPI1 = new UserAPI();
-        userAPI1.setName("Triệu Văn Tưởng");
-        userAPI1.setEmail("tuongtvph26149@fpt.edu.vn");
-        userAPI1.setCode("tuongtvph26149");
-        userAPI1.setId("C4CF21F4-F3E0-490E-B1CC-08DBB743DD7D".toLowerCase());
-
-        UserAPI userAPI2 = new UserAPI();
-        userAPI2.setName("Nguyễn Quốc Huy");
-        userAPI2.setEmail("huynqph26772@fpt.edu.vn");
-        userAPI2.setCode("huynqph26772");
-        userAPI2.setId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92".toLowerCase());
-
-        UserAPI userAPI3 = new UserAPI();
-        userAPI3.setName("Nguyễn Thúy Hằng");
-        userAPI3.setEmail("hangnt169@fpt.edu.vn");
-        userAPI3.setCode("hangnt169");
-        userAPI3.setId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4".toLowerCase());
-
         Honey honey1 = new Honey();
         honey1.setHoneyPoint(1000);
-        honey1.setStudentId(userAPI1.getId());
+        honey1.setStudentId("C4CF21F4-F3E0-490E-B1CC-08DBB743DD7D");
         honey1.setUserSemesterId(semester.getId());
         honey1.setHoneyCategoryId(category1.getId());
         honey1.setId(honeyRepository.save(honey1).getId());
@@ -128,26 +105,26 @@ public class DBGenerator implements CommandLineRunner {
         honey2.setHoneyPoint(2000);
         honey2.setUserSemesterId(semester.getId());
         honey2.setHoneyCategoryId(category2.getId());
-        honey2.setStudentId(userAPI2.getId());
+        honey2.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
         honey2.setId(honeyRepository.save(honey2).getId());
 
         Honey honey3 = new Honey();
         honey3.setHoneyPoint(1000);
-        honey3.setStudentId(userAPI1.getId());
+        honey3.setStudentId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
         honey3.setUserSemesterId(semester.getId());
         honey3.setHoneyCategoryId(category3.getId());
         honey3.setId(honeyRepository.save(honey3).getId());
 
         Honey honey4 = new Honey();
         honey4.setHoneyPoint(1000);
-        honey4.setStudentId(userAPI2.getId());
+        honey4.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
         honey4.setUserSemesterId(semester.getId());
         honey4.setHoneyCategoryId(category1.getId());
         honey4.setId(honeyRepository.save(honey4).getId());
 
         Honey honey5 = new Honey();
         honey5.setHoneyPoint(100);
-        honey5.setStudentId(userAPI3.getId());
+        honey5.setStudentId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
         honey5.setUserSemesterId(semester.getId());
         honey5.setHoneyCategoryId(category2.getId());
         honey5.setId(honeyRepository.save(honey5).getId());
@@ -184,16 +161,37 @@ public class DBGenerator implements CommandLineRunner {
         gift4.setId(giftRepository.save(gift4).getId());
 //        gift4.setNote("Nguyễn Thúy Hằng lớp IT17326 môn font-end ");
 
+        Gift gift5 = new Gift();
+        gift5.setCode("G5");
+        gift5.setName("Vô cực kiếm");
+        gift5.setStatus(StatusGift.ACCEPT);
+        gift5.setType(TypeGift.VAT_PHAM);
+        gift5.setId(giftRepository.save(gift4).getId());
+
+        Gift gift6 = new Gift();
+        gift6.setCode("G6");
+        gift6.setName("Diệt khổng lồ");
+        gift6.setStatus(StatusGift.ACCEPT);
+        gift6.setType(TypeGift.VAT_PHAM);
+        gift6.setId(giftRepository.save(gift6).getId());
+
+        Gift gift7 = new Gift();
+        gift7.setCode("G7");
+        gift7.setName("Cung xanh");
+        gift7.setStatus(StatusGift.ACCEPT);
+        gift7.setType(TypeGift.VAT_PHAM);
+        gift7.setId(giftRepository.save(gift7).getId());
+
         UserSemester userSemester1 = new UserSemester();
         userSemester1.setSemesterId(semester.getId());
-        userSemester1.setStudentId(userAPI1.getId());
+        userSemester1.setStudentId("C4CF21F4-F3E0-490E-B1CC-08DBB743DD7D");
         userSemester1.setTotalHoney(2000);
         userSemester1.setCategoryId(category1.getId());
         userSemester1.setId(userSemesterRepository.save(userSemester1).getId());
 
         UserSemester userSemester2 = new UserSemester();
         userSemester2.setSemesterId(semester.getId());
-        userSemester2.setStudentId(userAPI2.getId());
+        userSemester2.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
         userSemester2.setTotalHoney(3100);
         userSemester2.setCategoryId(category2.getId());
         userSemester2.setId(userSemesterRepository.save(userSemester2).getId());
@@ -219,7 +217,7 @@ public class DBGenerator implements CommandLineRunner {
         history1.setChangeDate(1689932796276L);
         history1.setGiftId(gift1.getId());
         history1.setStudentId(category1.getId());
-        history1.setTeacherId(userAPI3.getId());
+        history1.setTeacherId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
         history1.setId(historyRepository.save(history1).getId());
 
         History history2 = new History();
@@ -227,8 +225,8 @@ public class DBGenerator implements CommandLineRunner {
         history2.setHoneyPoint(100);
         history2.setChangeDate(1689932796276L);
         history2.setGiftId(gift1.getId());
-        history2.setStudentId(userAPI1.getId());
-        history2.setTeacherId(userAPI3.getId());
+        history2.setStudentId("C4CF21F4-F3E0-490E-B1CC-08DBB743DD7D");
+        history2.setTeacherId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
         history2.setId(historyRepository.save(history2).getId());
 
         History history3 = new History();
@@ -236,8 +234,8 @@ public class DBGenerator implements CommandLineRunner {
         history3.setHoneyPoint(100);
         history3.setChangeDate(1689932796276L);
         history3.setGiftId(gift2.getId());
-        history3.setStudentId(userAPI2.getId());
-        history3.setTeacherId(userAPI3.getId());
+        history3.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
+        history3.setTeacherId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
         history3.setId(historyRepository.save(history3).getId());
 
         History history4 = new History();
@@ -245,8 +243,8 @@ public class DBGenerator implements CommandLineRunner {
         history4.setHoneyPoint(100);
         history4.setChangeDate(1689932796276L);
         history4.setGiftId(gift2.getId());
-        history4.setStudentId(userAPI1.getId());
-        history4.setTeacherId(userAPI3.getId());
+        history4.setStudentId("C4CF21F4-F3E0-490E-B1CC-08DBB743DD7D");
+        history4.setTeacherId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
         history4.setId(historyRepository.save(history4).getId());
 
         History history5 = new History();
@@ -254,8 +252,8 @@ public class DBGenerator implements CommandLineRunner {
         history5.setHoneyPoint(100);
         history5.setChangeDate(1689932796276L);
         history5.setGiftId(gift1.getId());
-        history5.setStudentId(userAPI2.getId());
-        history5.setTeacherId(userAPI3.getId());
+        history5.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
+        history5.setTeacherId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
         history5.setId(historyRepository.save(history5).getId());
 
         History history6 = new History();
@@ -263,8 +261,8 @@ public class DBGenerator implements CommandLineRunner {
         history6.setHoneyPoint(100);
         history6.setChangeDate(1689932796276L);
         history6.setGiftId(gift2.getId());
-        history6.setStudentId(userAPI1.getId());
-        history6.setTeacherId(userAPI3.getId());
+        history6.setStudentId("C4CF21F4-F3E0-490E-B1CC-08DBB743DD7D");
+        history6.setTeacherId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
         history6.setId(historyRepository.save(history6).getId());
 
         Club club1 = new Club();
@@ -273,10 +271,17 @@ public class DBGenerator implements CommandLineRunner {
         club1.setStatus(Status.HOAT_DONG);
         club1.setId(clubRepository.save(club1).getId());
 
+        Club club2 = new Club();
+        club2.setCode("CLB3");
+        club2.setName("Bee Bee");
+        club2.setStatus(Status.HOAT_DONG);
+        club2.setId(clubRepository.save(club2).getId());
+
     }
 
     public static void main(String[] args) {
         ConfigurableApplicationContext ctx = SpringApplication.run(DBGenerator.class);
         ctx.close();
     }
+
 }

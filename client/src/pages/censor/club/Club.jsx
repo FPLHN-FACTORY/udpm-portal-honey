@@ -1,17 +1,19 @@
 import { Card, Input, Pagination, Space, Table, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import { Button } from "antd";
-import { ClubAPI } from '../../../apis/censor/club/club.api';
+import { ClubAPI } from "../../../apis/censor/club/club.api";
 
-import { EditOutlined, FormOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import ModalDetailClub from "./ModalDetailClub";
-import ModalAddClub from "./ModalAddClub";
-import ModalDelete from "./deleteClub";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
-  GetClub,
-  SetClub,
-} from "../../../app/reducers/club/club.reducer";
+  EditOutlined,
+  FormOutlined,
+  PlusOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import ModalAddClub from "./ModalAddClub";
+import ModalDelete from "./DeleteClub";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { GetClub, SetClub } from "../../../app/reducers/club/club.reducer";
+import { Link } from "react-router-dom";
 
 export default function IndexClub() {
   const [showModal, setShowModal] = useState(false);
@@ -21,19 +23,17 @@ export default function IndexClub() {
   const [total, setTotal] = useState(0);
   const dispatch = useAppDispatch();
 
-
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = () => {
     ClubAPI.fetchAll({
-      search: search,
+      search: search.trim(),
       page: current - 1,
     }).then((response) => {
       dispatch(SetClub(response.data.data.data));
       setTotal(response.data.data.totalPages);
-      
     });
   };
 
@@ -44,16 +44,14 @@ export default function IndexClub() {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
-      render: (text, record, index) => index + 1,
     },
     {
       title: "Mã",
       dataIndex: "code",
       key: "code",
-      render: (text) => <span>{text}</span>,
     },
     {
-      title: "Tên phần quà",
+      title: "Tên CLB",
       dataIndex: "name",
       key: "name",
     },
@@ -68,13 +66,18 @@ export default function IndexClub() {
               onClick={() => {
                 setDetailClub(record);
                 setShowModal(true);
-                // console.log(record);
               }}
             >
               <EditOutlined className="icon" />
             </Button>
           </Tooltip>
-          <ModalDetailClub club={record} icon={<FormOutlined />} />
+          <Tooltip title="Chi tiết">
+            <Link to={`/censor/club/${record.id}`}>
+              <Button className="detail-button">
+                <FormOutlined className="icon" />
+              </Button>
+            </Link>
+          </Tooltip>
           <ModalDelete club={record} icon={<FormOutlined />} />
         </Space>
       ),
@@ -90,7 +93,6 @@ export default function IndexClub() {
           club={detailClub}
           setclub={setDetailClub}
         />
-        
       )}
       <Card className="mb-2">
         <form class="flex items-center">
@@ -99,7 +101,7 @@ export default function IndexClub() {
               style={{ borderRadius: "10px", width: "40%" }}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Tìm kiếm tên hoặc mã..."
+              placeholder="Tìm kiếm tên hoặc mã"
             />
             <button
               type="button"
@@ -124,14 +126,14 @@ export default function IndexClub() {
               <span>
                 <Tooltip title="Thêm quà">
                   <button
-                    className="add-button1"
-                  onClick={() => {
-                    setShowModal(true);
-                    setDetailClub(null);
-                  }}
+                    className="add-button1 mb-2"
+                    onClick={() => {
+                      setShowModal(true);
+                      setDetailClub(null);
+                    }}
                   >
                     <PlusOutlined className="mr-1" />
-                    Thêm quà
+                    Thêm CLB
                   </button>
                 </Tooltip>
               </span>
@@ -154,7 +156,7 @@ export default function IndexClub() {
             onChange={(value) => {
               setCurrent(value);
             }}
-           total={total * 10}
+            total={total * 10}
           />
         </div>
       </Card>

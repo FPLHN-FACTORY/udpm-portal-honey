@@ -11,6 +11,22 @@ export class ClubAPI {
     });
   };
 
+  static fetchGitInClub = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/gift`,
+      params: filter,
+    });
+  };
+
+  static fetchGitNotInClub = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/gift-not-in-club`,
+      params: filter,
+    });
+  };
+
   static create = (data) => {
     return request({
       method: "POST",
@@ -18,6 +34,15 @@ export class ClubAPI {
       data: data,
     });
   };
+
+  static createGiftClub = (data) => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}/create/gift-club`,
+      data: data,
+    });
+  };
+
 
   static update = (data, id) => {
     return request({
@@ -35,13 +60,13 @@ export class ClubAPI {
     });
   };
 
-  static detail = (data, id) => {
+  static detail = (id) => {
     return request({
       method: "GET",
-      url: `/${this.COMPONENT_NAME}/get-one/${id}`,
-      data: data,
+      url: `/${this.COMPONENT_NAME}/${id}`,
     });
   };
+
   static fetchAllClub = (filter) => {
     return request({
       method: "GET",

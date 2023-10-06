@@ -14,10 +14,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Layout, Drawer, Row, Menu, Col, AutoComplete } from "antd";
 import Header from "../../components/censor/Header";
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-} from "@ant-design/icons";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -64,11 +61,11 @@ function DashboardAuthUser({ children }) {
       "2",
       <FontAwesomeIcon icon={faMoneyBillTransfer} />
     ),
-    getItem(
-      <Link to="/censor/semester">Kỳ học</Link>,
-      "3",
-      <FontAwesomeIcon icon={faPenRuler} />
-    ),
+    // getItem(
+    //   <Link to="/censor/semester">Kỳ học</Link>,
+    //   "3",
+    //   <FontAwesomeIcon icon={faPenRuler} />
+    // ),
     getItem(
       <Link to="/censor/gift">Gói quà</Link>,
       "4",

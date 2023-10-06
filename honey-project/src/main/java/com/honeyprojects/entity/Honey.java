@@ -24,10 +24,10 @@ public class Honey extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_ID)
     private String userSemesterId;
 
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    @Column(length = EntityProperties.LENGTH_ID)
     private String honeyCategoryId;
 
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    @Column(length = EntityProperties.LENGTH_ID)
     private String studentId;
 
     private Status status;

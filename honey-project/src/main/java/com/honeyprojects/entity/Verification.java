@@ -14,7 +14,7 @@ import lombok.Setter;
 @Table(name = "verification")
 public class Verification extends PrimaryEntity {
 
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    @Column(length = EntityProperties.LENGTH_ID)
     private String studentId;
 
     private String code;

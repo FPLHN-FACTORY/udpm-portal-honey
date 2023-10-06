@@ -14,15 +14,15 @@ import lombok.Setter;
 @Table(name = "user_semester")
 public class UserSemester extends PrimaryEntity {
 
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    @Column(length = EntityProperties.LENGTH_ID)
     private String studentId;
 
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    @Column(length = EntityProperties.LENGTH_ID)
     private String semesterId;
 
     private Integer totalHoney;
 
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    @Column(length = EntityProperties.LENGTH_ID)
     private String categoryId;
 
 }
