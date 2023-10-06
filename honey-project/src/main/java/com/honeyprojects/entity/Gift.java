@@ -43,6 +43,8 @@ public class Gift extends PrimaryEntity {
 
     private Integer honey;
 
+    private String note;
+
     @Lob
     @Column(name = "image", columnDefinition = "LONGBLOB")
     private byte[] image;
