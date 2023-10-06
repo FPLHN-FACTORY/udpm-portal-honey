@@ -67,12 +67,6 @@ export default function ChestGift() {
       render: (text) => <span>{text}</span>,
     },
     {
-      title: "Tỉ lệ",
-      dataIndex: "percent",
-      key: "percent",
-      render: (text) => <span>{text} %</span>,
-    },
-    {
       title: () => <div>Action</div>,
       key: "action",
       render: (_, record) => (
