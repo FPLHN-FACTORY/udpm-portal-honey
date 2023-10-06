@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Modal, Table, Tooltip, message } from "antd";
 import { ChestGiftAPI } from "../../../apis/censor/chest-gift/chest-gift.api";
 import { EyeOutlined } from "@ant-design/icons";
 import moment from "moment";
+import {
+  SetChestGift,
+  GetChestGift,
+} from "../../../app/reducers/chest-gift/chest-gift.reducer";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { PushGift } from "../../../app/reducers/gift/gift.reducer";
 const ModalDetail = (props) => {
   const { chest } = props;
-  const [dataChest, setDataChest] = useState([]);
+  const dispatch = useAppDispatch();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -33,10 +39,6 @@ const ModalDetail = (props) => {
     },
   ];
 
-  useEffect(() => {
-    fetchData();
-  }, [chest.id]);
-
   const fetchData = async () => {
     ChestGiftAPI.getChestGift(chest.id).then((response) => {
       const formattedData = response.data.data.map((item) => ({
@@ -44,9 +46,12 @@ const ModalDetail = (props) => {
         toDate: moment(item.toDate).format("DD/MM/YYYY"),
         fromDate: moment(item.fromDate).format("DD/MM/YYYY"),
       }));
-      setDataChest(formattedData);
+      console.log(formattedData);
+      dispatch(SetChestGift(formattedData));
     });
   };
+
+  const dataChest = useAppSelector(GetChestGift);
 
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
@@ -61,12 +66,18 @@ const ModalDetail = (props) => {
 
   const hasSelected = selectedRowKeys.length > 0;
 
+  const handleOnClick = () => {
+    setModalVisible(true);
+    fetchData();
+  };
+
   const handleDeleteSelected = async () => {
     try {
       ChestGiftAPI.deleteGift({
         chestId: chest.id,
         listGift: selectedRowKeys,
       }).then((response) => {
+        dispatch(PushGift(response.data.data));
         fetchData();
         setSelectedRowKeys([]);
         message.success("Xóa thành công.");
@@ -83,7 +94,7 @@ const ModalDetail = (props) => {
         <Button
           className="detail-button"
           style={{ padding: "1px 0.7rem" }}
-          onClick={() => setModalVisible(true)}
+          onClick={() => handleOnClick()}
         >
           <EyeOutlined className="icon" />
         </Button>

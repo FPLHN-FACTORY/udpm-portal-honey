@@ -34,7 +34,6 @@ public class AdminChestServiceImpl implements AdminChestService {
     public Chest addChest(AdminCreateChestRequest request) {
         Chest chest = new Chest();
         chest.setName(request.getName());
-        chest.setPercent(request.getPercent());
         return chestRepository.save(chest);
     }
 
@@ -50,7 +49,6 @@ public class AdminChestServiceImpl implements AdminChestService {
     public Chest updateChest(AdminCreateChestRequest request, String id) {
         Chest chest = chestRepository.findById(id).get();
         if (chest != null) {
-            chest.setPercent(request.getPercent());
             chest.setName(request.getName());
             return chestRepository.save(chest);
         } else {

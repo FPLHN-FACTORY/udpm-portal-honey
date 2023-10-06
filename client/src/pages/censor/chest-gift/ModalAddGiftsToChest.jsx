@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Modal, Table, Tooltip, message } from "antd";
 import { ChestGiftAPI } from "../../../apis/censor/chest-gift/chest-gift.api";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import {
-  SetChestGift,
-  GetChestGift,
-} from "../../../app/reducers/chest-gift/chest-gift.reducer";
+import { GetGift, SetGift } from "../../../app/reducers/gift/gift.reducer";
+import { AddChestGift } from "../../../app/reducers/chest-gift/chest-gift.reducer";
 const ModalAddGiftToChest = (props) => {
   const { chest } = props;
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const dispatch = useAppDispatch();
-
   const columns = [
     {
       title: "Code",
@@ -25,13 +22,9 @@ const ModalAddGiftToChest = (props) => {
     },
   ];
 
-  useEffect(() => {
-    fetchData();
-  }, [chest.id]);
-
   const fetchData = () => {
     ChestGiftAPI.getGiftNotJoinChest(chest.id).then((response) => {
-      dispatch(SetChestGift(response.data.data));
+      dispatch(SetGift(response.data.data));
     });
   };
 
@@ -39,9 +32,6 @@ const ModalAddGiftToChest = (props) => {
     setSelectedRowKeys([]);
     setModalOpen(false);
   };
-
-  const dataGifts = useAppSelector(GetChestGift);
-
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
@@ -51,24 +41,33 @@ const ModalAddGiftToChest = (props) => {
     type: "checkbox",
   };
 
+  const handleOnclick = () => {
+    setModalOpen(true);
+    fetchData();
+  };
+
   const handleOk = () => {
     ChestGiftAPI.addGiftToChest({
       chestId: chest.id,
       listGift: selectedRowKeys,
-    }).then(() => {
-      fetchData();
-      message.success("Thêm thành công.");
-      handleCancel();
-    });
+    })
+      .then((response) => {
+        dispatch(AddChestGift(response.config.data));
+        fetchData();
+        message.success("Thêm thành công.");
+      })
+      .catch((error) => {
+        message.error("Thêm không thành công.");
+      });
   };
-
+  const data = useAppSelector(GetGift);
   return (
     <>
       <Tooltip title="Thêm vật phẩm">
         <Button
           className="add-button1"
           style={{ padding: "1px 0.7rem" }}
-          onClick={() => setModalOpen(true)}
+          onClick={() => handleOnclick()}
         >
           <PlusCircleOutlined className="icon" />
         </Button>
@@ -82,7 +81,7 @@ const ModalAddGiftToChest = (props) => {
         <Table
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={dataGifts}
+          dataSource={data}
           rowKey="id"
         />
       </Modal>
