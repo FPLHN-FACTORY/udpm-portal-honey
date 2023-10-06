@@ -41,14 +41,14 @@ export default function RandomAddPoint() {
   const [chest, setChest] = useState({ id: "", name: "", percent: "" });
   const [errorMinPoint, setErrorMinPoint] = useState("");
   const [errorMaxPoint, setErrorMaxPoint] = useState("");
-  const [errorNumberStudent, setErrorNumberStudent] = useState("");
+  // const [errorNumberStudent, setErrorNumberStudent] = useState("");
   const [errorListCategory, setErrorListCategory] = useState("");
   const [errorChestId, setErrorChestId] = useState("");
   const [errorListItem, setErrorListItem] = useState("");
   const [dataRandomPoint, setDataRandomPoint] = useState({
     minPoint: null,
     maxPoint: null,
-    numberStudent: null,
+    // numberStudent: null,
     listCategoryPoint: [],
     listStudentPoint: [],
   });
@@ -189,7 +189,7 @@ export default function RandomAddPoint() {
     const errors = {
       minPoint: "",
       maxPoint: "",
-      numberStudent: "",
+      // numberStudent: "",
       listCategoryPoint: "",
     };
 
@@ -209,11 +209,11 @@ export default function RandomAddPoint() {
       errors.minPoint = "Số mật tối thiếu phải nhỏ hơn số mật tối đa";
     }
 
-    if (dataRandomPoint.numberStudent === null) {
-      errors.numberStudent = "Không được để trống số lượng";
-    } else if (dataRandomPoint.numberStudent < 1) {
-      errors.numberStudent = "Số lượng phải > 0";
-    }
+    // if (dataRandomPoint.numberStudent === null) {
+    //   errors.numberStudent = "Không được để trống số lượng";
+    // } else if (dataRandomPoint.numberStudent < 1) {
+    //   errors.numberStudent = "Số lượng phải > 0";
+    // }
 
     if (dataRandomPoint.listCategoryPoint.length < 1) {
       errors.listCategoryPoint = "Không được để trống thể loại";
@@ -227,7 +227,7 @@ export default function RandomAddPoint() {
 
     setErrorMinPoint(errors.minPoint);
     setErrorMaxPoint(errors.maxPoint);
-    setErrorNumberStudent(errors.numberStudent);
+    // setErrorNumberStudent(errors.numberStudent);
     setErrorListCategory(errors.listCategoryPoint);
 
     return check;
@@ -245,7 +245,7 @@ export default function RandomAddPoint() {
           setDataRandomPoint({
             minPoint: null,
             maxPoint: null,
-            numberStudent: null,
+            // numberStudent: null,
             listCategoryPoint: [],
             listStudentPoint: [],
           });
@@ -278,7 +278,7 @@ export default function RandomAddPoint() {
           setDataRandomPoint({
             minPoint: null,
             maxPoint: null,
-            numberStudent: null,
+            // numberStudent: null,
             listCategoryPoint: [],
             listStudentPoint: [],
           });
@@ -379,7 +379,7 @@ export default function RandomAddPoint() {
                 <span className="error">{errorListCategory}</span>
               </Card>
             </Col>
-            <Col span={6}>
+            {/* <Col span={6}>
               <Card title="Số lượng" style={{ borderTop: "5px solid #1c315e" }}>
                 <Input
                   style={{ width: "100%" }}
@@ -395,8 +395,8 @@ export default function RandomAddPoint() {
                 />
                 <span className="error">{errorNumberStudent}</span>
               </Card>
-            </Col>
-            <Col span={12}>
+            </Col> */}
+            <Col span={10}>
               <Card
                 title="Khoảng mật ong"
                 style={{ borderTop: "5px solid #1c315e" }}
@@ -408,37 +408,53 @@ export default function RandomAddPoint() {
                   }}
                 >
                   <span>Từ</span>
-                  <div>
-                    <Input
-                      style={{ width: "100%" }}
-                      type="number"
-                      min={0}
-                      defaultValue={dataRandomPoint.minPoint}
-                      onChange={(e) =>
-                        setDataRandomPoint({
-                          ...dataRandomPoint,
-                          minPoint: Number(e.target.value),
-                        })
-                      }
-                    />
-                    <span className="error">{errorMinPoint}</span>
-                  </div>
+                  <Space
+                    style={{
+                      justifyContent: "space_between",
+                      display: "flex",
+                      float: "left",
+                    }}
+                  >
+                    <div>
+                      <Input
+                        style={{ width: "100%" }}
+                        type="number"
+                        min={0}
+                        defaultValue={dataRandomPoint.minPoint}
+                        onChange={(e) =>
+                          setDataRandomPoint({
+                            ...dataRandomPoint,
+                            minPoint: Number(e.target.value),
+                          })
+                        }
+                      />
+                      <span className="error">{errorMinPoint}</span>
+                    </div>
+                  </Space>
                   <span>Đến</span>
-                  <div>
-                    <Input
-                      type="number"
-                      style={{ width: "100%" }}
-                      min={0}
-                      defaultValue={dataRandomPoint.maxPoint}
-                      onChange={(e) =>
-                        setDataRandomPoint({
-                          ...dataRandomPoint,
-                          maxPoint: Number(e.target.value),
-                        })
-                      }
-                    />
-                    <span className="error">{errorMaxPoint}</span>
-                  </div>
+                  <Space
+                    style={{
+                      justifyContent: "space_between",
+                      display: "flex",
+                      float: "left",
+                    }}
+                  >
+                    <div>
+                      <Input
+                        type="number"
+                        style={{ width: "100%" }}
+                        min={0}
+                        defaultValue={dataRandomPoint.maxPoint}
+                        onChange={(e) =>
+                          setDataRandomPoint({
+                            ...dataRandomPoint,
+                            maxPoint: Number(e.target.value),
+                          })
+                        }
+                      />
+                      <span className="error">{errorMaxPoint}</span>
+                    </div>
+                  </Space>
                 </Space>
               </Card>
             </Col>

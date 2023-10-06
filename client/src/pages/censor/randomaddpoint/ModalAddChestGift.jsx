@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ChestGiftAPI } from "../../../apis/censor/chest-gift/chest-gift.api";
 import { Button, Modal, Table, Tooltip, message } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { AddChestGift } from "../../../app/reducers/chest-gift/chest-gift.reducer";
+import { GetGift, SetGift } from "../../../app/reducers/gift/gift.reducer";
 
 export default function ModalAddChestGift(props) {
   const { chest } = props;
+  const dispatch = useAppDispatch();
   const [modalOpen, setModalOpen] = useState(false);
-  const [dataGifts, setDataGifts] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const columns = [
@@ -21,17 +24,19 @@ export default function ModalAddChestGift(props) {
     },
   ];
 
-  useEffect(() => {
-    fetchData();
-  }, [chest.id]);
-
   const fetchData = () => {
     ChestGiftAPI.getGiftNotJoinChest(chest.id).then((response) => {
-      setDataGifts(response.data.data);
+      dispatch(SetGift(response.data.data));
     });
   };
 
+  const handleOnclick = () => {
+    setModalOpen(true);
+    fetchData();
+  };
+
   const handleCancel = () => {
+    setSelectedRowKeys([]);
     setModalOpen(false);
   };
 
@@ -49,19 +54,24 @@ export default function ModalAddChestGift(props) {
     ChestGiftAPI.addGiftToChest({
       chestId: chest.id,
       listGift: selectedRowKeys,
-    }).then(() => {
-      fetchData();
-      message.success("Thêm thành công.");
-    });
+    })
+      .then((response) => {
+        dispatch(AddChestGift(response.config.data));
+        fetchData();
+        message.success("Thêm thành công.");
+      })
+      .catch(() => {
+        message.error("Thêm không thành công.");
+      });
   };
-
+  const data = useAppSelector(GetGift);
   return (
     <>
       <Tooltip title="Thêm vật phẩm">
         <Button
           className="add-button1"
           style={{ padding: "1px 0.7rem" }}
-          onClick={() => setModalOpen(true)}
+          onClick={() => handleOnclick()}
         >
           <PlusCircleOutlined className="icon" />
         </Button>
@@ -75,7 +85,7 @@ export default function ModalAddChestGift(props) {
         <Table
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={dataGifts}
+          dataSource={data}
           rowKey="id"
         />
       </Modal>
