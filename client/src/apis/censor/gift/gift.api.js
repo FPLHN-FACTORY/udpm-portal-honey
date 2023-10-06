@@ -16,9 +16,13 @@ export class GiftAPI {
     formData.append("code", data.code);
     formData.append("name", data.name);
     formData.append("image", data.image);
-    formData.append("quantity", data.quantity);
+    if (!isNaN(data.quantity) && data.quantity !== null) {
+      formData.append("quantity", data.quantity);
+    }
     formData.append("status", "FREE");
     formData.append("type", data.type);
+    formData.append("honeyCategoryId", data.honeyCategoryId);
+    formData.append("honey", data.honey);
 
     return request({
       method: "POST",
@@ -32,13 +36,13 @@ export class GiftAPI {
     formData.append("code", data.code);
     formData.append("name", data.name);
     formData.append("image", data.image);
-    if (!isNaN(data.quantity) || data.quantity === null) {
+    if (!isNaN(data.quantity) && data.quantity !== null) {
       formData.append("quantity", data.quantity);
-    } else {
-      formData.append("quantity", "");
     }
     formData.append("status", "FREE");
     formData.append("type", data.type);
+    formData.append("honeyCategoryId", data.honeyCategoryId);
+    formData.append("honey", data.honey);
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/${id}`,
@@ -46,11 +50,10 @@ export class GiftAPI {
     });
   };
 
-  static delete = (data, id) => {
+  static delete = (id) => {
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/delete/${id}`,
-      data: data,
     });
   };
 

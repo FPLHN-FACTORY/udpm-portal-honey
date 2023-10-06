@@ -56,8 +56,8 @@ public class AdminGiftRestController {
     }
 
     @PutMapping("/delete/{id}")
-    public ResponseObject updateStatusGift(@RequestBody AdminUpdateGiftRequest request, @PathVariable("id") String id){
-        return new ResponseObject(adminGiftService.updateStatusGift(request,id));
+    public ResponseObject updateStatusGift(@PathVariable("id") String id){
+        return new ResponseObject(adminGiftService.updateStatusGift(id));
     }
 
     @DeleteMapping("/{id}")

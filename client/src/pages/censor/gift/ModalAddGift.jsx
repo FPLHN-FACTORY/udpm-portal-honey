@@ -3,6 +3,7 @@ import { useAppDispatch } from "../../../app/hooks";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { AddGift } from "../../../app/reducers/gift/gift.reducer";
 import { useState, useEffect } from "react";
+import { CategoryAPI } from "../../../apis/censor/category/category.api";
 
 const ModalThem = (props) => {
   const onFinishFailed = () => {
@@ -13,7 +14,8 @@ const ModalThem = (props) => {
   const [form] = Form.useForm();
   const { Option } = Select;
   const [image, setImage] = useState([]);
-  const [quantityValue, setQuantityValue] = useState(0); // Số lượng mặc định là 0
+  const [quantityValue, setQuantityValue] = useState(null);
+  const [listCategory, setListCategory] = useState([]);
 
   const handleFileInputChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -25,6 +27,7 @@ const ModalThem = (props) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    fetchCategory();
     if (gift && gift.quantity !== null) {
       setQuantityValue(1);
     } else {
@@ -33,13 +36,26 @@ const ModalThem = (props) => {
     }
   }, [gift]);
 
+  const fetchCategory = () => {
+    CategoryAPI.fetchAllCategory().then((response) => {
+      setListCategory(response.data.data);
+    });
+  };
+
   const onFinish = () => {
     form
       .validateFields()
       .then((formValues) => {
-        console.log(formValues);
-        const quantity = quantityValue === 1 ? formValues.quantityLimit : "";
+        let quantity = null;
 
+        if (quantityValue === 1) {
+          quantity = parseInt(formValues.quantityLimit, 10);
+        }
+
+        if (isNaN(quantity) && quantityValue === 1) {
+          message.error("Vui lòng nhập số lượng giới hạn hợp lệ.");
+          return;
+        }
         GiftAPI.create({ ...formValues, image: image, quantity: quantity })
           .then((result) => {
             dispatch(AddGift(result.data.data));
@@ -53,6 +69,8 @@ const ModalThem = (props) => {
               image: image,
               quantity: quantity,
               type: result.data.data.type,
+              honey: result.data.data.honey,
+              honeyCategoryId: result.data.data.honeyCategoryId,
             };
             onSave && onSave(newGift);
           })
@@ -76,6 +94,7 @@ const ModalThem = (props) => {
       visible={modalOpen}
       onCancel={onCancel}
       footer={null}
+      width={1000}
     >
       <hr className="border-0 bg-gray-300 mt-3 mb-6" />
       <Form
@@ -170,6 +189,36 @@ const ModalThem = (props) => {
             <Option value={1}>Vật phẩm nâng cấp</Option>
             <Option value={2}>Dụng cụ</Option>
           </Select>
+        </Form.Item>
+        <Form.Item
+          label="cấp bậc"
+          name="honeyCategoryId"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng chọn cấp",
+            },
+          ]}
+        >
+          <Select placeholder="Chọn cấp bậc">
+            {listCategory.map((category) => (
+              <Option key={category.id} value={category.id}>
+                {category.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          label="Số điểm"
+          name="honey"
+          rules={[
+            {
+              required: true,
+              message: "Điểm Quà không để trống",
+            },
+          ]}
+        >
+          <Input />
         </Form.Item>
         <Form.Item
           label="Phê duyệt"
