@@ -16,4 +16,21 @@ public interface AdminGiftResponse extends IsIdentified {
     @Value("#{target.name}")
     String getName();
 
+    @Value("#{target.quantity}")
+    Integer getQuantity();
+
+    @Value("#{target.status}")
+    Integer getStatus();
+
+    @Value("#{target.type}")
+    Integer getType();
+
+    @Value("#{target.honey}")
+    Integer getHoney();
+
+    @Value("#{target.honey_category_id}")
+    String getHoneyCategoryId();
+
+    @Value("#{target.image}")
+    String getImage();
 }

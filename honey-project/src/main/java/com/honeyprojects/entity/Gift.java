@@ -7,6 +7,7 @@ import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TypeGift;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,10 +32,19 @@ public class Gift extends PrimaryEntity {
 
     private TypeGift type;
 
+    private Integer quantity;
+
     private Long toDate;
 
     private Long fromDate;
 
-    private Byte image;
+    @Column(length = EntityProperties.LENGTH_ID)
+    private String honeyCategoryId;
+
+    private Integer honey;
+
+    @Lob
+    @Column(name = "image", columnDefinition = "LONGBLOB")
+    private byte[] image;
 
 }

@@ -5,8 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 public interface AdminChestGiftResponse extends IsIdentified {
 
-    @Value("#{target.id}")
-    String getId();
+    String getStt();
 
     @Value("#{target.name}")
     String getName();
@@ -19,8 +18,5 @@ public interface AdminChestGiftResponse extends IsIdentified {
 
     @Value("#{target.code}")
     String getCode();
-
-//    @Value("#{target.image}")
-//    Byte getImage();
 
 }

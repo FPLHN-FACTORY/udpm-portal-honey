@@ -9,192 +9,221 @@
   =========================================================
   * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-import logo from "../../../assets/images/logo/logo-udpm-3.png";
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Layout, Drawer, Row, Menu, Col } from "antd";
-import Header from "../../../components/user/auth/Header";
+import { useEffect, useState } from "react";
+import { Col, Layout, Row, Space, message } from "antd";
+import { ProfileApi } from "../../../apis/student/profile/profileApi.api";
+import soundClick from "../../../assets/sounds/sound_click.mp3";
+import "./index.css";
 import {
-  GiftOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  ProfileOutlined,
-  TransactionOutlined,
-} from "@ant-design/icons";
-import Sider from "antd/es/layout/Sider";
-const { Header: AntHeader, Content } = Layout;
+  connectStompClient,
+  getStompClient,
+} from "../../../helper/stomp-client/config";
+import { Content, Footer } from "antd/es/layout/layout";
+import { CloseOutlined } from "@ant-design/icons";
 
 function DashboardAuthUser({ children }) {
-  const [visible, setVisible] = useState(false);
-  const openDrawer = () => setVisible(!visible);
-  const [count, setCount] = useState(250);
-  const onSlidebar = () => {
-    if (count === 70) setCount(250);
-    else setCount(70);
-  };
+  const [transaction, setTransaction] = useState();
+  useEffect(() => {
+    connectStompClient();
+    getStompClient().connect({}, () => {
+      ProfileApi.getUserLogin().then((response) => {
+        getStompClient().subscribe(
+          `/user/${response.data.data.idUser}/transaction`,
+          (result) => {
+            if (!open) {
+              const transactionReq = JSON.parse(result.body);
+              showRequestTransaction(transactionReq);
+            }
+          }
+        );
+      });
+    });
+  }, []);
 
-  let { pathname } = useLocation();
-  pathname = pathname.replace("/", "");
-  const [collapsed, setCollapsed] = useState(false);
-  function getItem(label, key, icon, children) {
-    return {
-      key,
-      icon,
-      children,
-      label,
-    };
-  }
-  const items = [
-    getItem(
-      <Link to={"/student/profile"}>Hồ sơ</Link>,
-      "1",
-      <ProfileOutlined />
-    ),
-    getItem(
-      <Link to={"/student/transaction/create"}>Tạo giao dịch</Link>,
-      "0",
-      <TransactionOutlined />
-    ),
-    getItem("Đổi quà", "3", <GiftOutlined />, [
-      getItem(<Link to={"/student/create-conversion"}>Tạo yêu cầu</Link>, "1"),
-      getItem(
-        <Link to={"/student/create-conversion/history"}>Lịch sử đổi</Link>,
-        "2"
+  function showRequestTransaction(transactionReq) {
+    message.warning({
+      content: (
+        <span className="message-request-transaction">
+          Yêu cầu giao dịch
+          <br />
+          <b>{transactionReq.formUser}</b>
+          <div>
+            <button
+              className="tu-choi"
+              onClick={() => {
+                message.destroy(transactionReq.idTransaction);
+              }}
+            >
+              Từ chối
+            </button>
+            <button
+              className="chap-nhan"
+              onClick={() => {
+                message.destroy();
+                onsubmitTransaction(transactionReq);
+              }}
+            >
+              Chấp nhận
+            </button>
+          </div>
+        </span>
       ),
-    ]),
-  ];
-  const toggleCollapse = () => {
-    setCollapsed(!collapsed);
+      duration: 10,
+      key: transactionReq.idTransaction,
+    });
+  }
+
+  function onsubmitTransaction(transaction) {
+    setTransaction(transaction);
+    message.destroy(transaction.idTransaction);
+    setOpen(true);
+  }
+
+  const [onMusic, setOnMusic] = useState(
+    localStorage.getItem("onMusic") === "true"
+  );
+  function playSound() {
+    if (onMusic) {
+      const audio = new Audio(soundClick);
+      audio.play();
+    }
+  }
+
+  const hanlderClickCuaHang = () => {
+    playSound();
+  };
+  const hanlderClickDauGia = () => {
+    playSound();
+  };
+  const hanlderClickNangCap = () => {
+    playSound();
+  };
+  const hanlderClickGiaoDich = () => {
+    playSound();
+  };
+  const hanlderClickKhoDo = () => {
+    playSound();
+  };
+  const hanlderClickCaiDat = () => {
+    playSound();
+  };
+  const hanlderClickHomThu = () => {
+    playSound();
+  };
+  const hanlderClickAmThanh = () => {
+    localStorage.setItem("onMusic", !onMusic);
+    setOnMusic(!onMusic);
+    playSound();
+  };
+  const hanlderClickDoiQua = () => {
+    playSound();
   };
 
+  const [open, setOpen] = useState(false);
   return (
-    <Layout
-      id="authe"
-      className={`layout-dashboard ${
-        pathname === "profile" ? "layout-profile" : ""
-      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}>
-      <Drawer
-        id="drawer_ui"
-        title={false}
-        placement={"left"}
-        closable={false}
-        onClose={() => setVisible(false)}
-        open={visible}
-        key={"left"}
-        width={250}
-        style={{ background: "#fff", overflowX: "hidden" }}
-        className={`drawer-sidebar ${
-          pathname === "rtl" ? "drawer-sidebar-rtl" : ""
-        } `}>
-        <Layout
-          id="layout_drawer"
-          style={{ background: "#fff", overflowX: "hidden" }}
-          className={` bg-white layout-dashboard ${
-            pathname === "rtl" ? "layout-dashboard-rtl" : ""
-          }`}>
-          <Row className="flex justify-center align-middle mt-5 pb-8">
-            <div className="brand text-center">
-              <Link to="/" className="active">
-                <img
-                  src={logo}
-                  style={{
-                    height: "80px",
-                  }}
-                  alt="Logo"
-                />
-              </Link>
-            </div>
-          </Row>
-          <Menu mode="inline" items={items} onClick={openDrawer} />
-        </Layout>
-      </Drawer>
-      <div className="bg-white">
-        <Sider
-          id="sildebar_ui"
-          trigger={null}
-          collapsible
-          collapsed={collapsed}
-          width={250}
-          className={`sider-primary ant-layout-sider-primary`}
-          style={{
-            background: "#fff",
-            position: "fixed",
-            left: 0,
-            zIndex: 999,
-            height: "100%",
-          }}>
-          <Row
-            className="flex justify-center align-middle  mt-5 pb-8"
-            style={{ height: "80px" }}
-          />
+    <div className="main-ui-student" style={{ display: "flex" }}>
+      {children !== undefined ? (
+        <div className="frame">
+          <div className="card-close-container">
+            <CloseOutlined className="card-close-icon" />
+          </div>
 
-          <Menu mode="inline" items={items} />
-        </Sider>
-      </div>
-      <Layout className="pb-14">
-        <AntHeader style={{ zIndex: 1000, position: "fixed", width: "100%" }}>
-          <Row>
-            <Col span={8}>
-              <Row>
-                {!collapsed ? (
+          <div
+            className="content-student"
+            style={{
+              border: "10px ridge #F6C714",
+              width: "85%",
+              height: "80vh",
+              position: "absolute",
+              top: "10%",
+              left: "7%",
+            }}
+          >
+            {children}
+          </div>
+        </div>
+      ) : (
+        <div style={{ flex: 1 }}>
+          <Space direction="vertical" style={{ width: "100%" }}>
+            <Layout>
+              <Content
+                style={{
+                  paddingTop: "20px",
+                  height: "70vh",
+                  paddingRight: "60px",
+                  paddingLeft: "60px",
+                }}
+              >
+                <Row>
                   <Col span={12}>
-                    <div className="brand text-center">
-                      <Link to="/" className="active">
-                        <img
-                          src={logo}
-                          style={{
-                            height: "60px",
-                          }}
-                          alt="Logo"
-                        />
-                      </Link>
+                    <div className="container">
+                      <div class="outer-hexagon">
+                        <div class="inner-hexagon"></div>
+                      </div>
+                      <div class="tag-name">Nguyễn Văn Kiên</div>
+                    </div>
+                    <button
+                      onClick={hanlderClickKhoDo}
+                      class="btn-balo btn-student btn-icon"
+                    />
+                    <button
+                      onClick={hanlderClickNangCap}
+                      class="btn-dap-do btn-student btn-icon"
+                    />
+                    <button
+                      onClick={hanlderClickGiaoDich}
+                      class="btn-giao-dich btn-student btn-icon"
+                    />
+                  </Col>
+                  <Col span={12}>
+                    <div style={{ float: "right" }}>
+                      <button
+                        onClick={hanlderClickCaiDat}
+                        class="btn-cai-dat btn-student btn-icon"
+                      />
+                      <button
+                        onClick={hanlderClickHomThu}
+                        class="btn-hom-thu btn-student btn-icon"
+                      />
+                      <button
+                        onClick={hanlderClickAmThanh}
+                        className={
+                          onMusic
+                            ? "btn-am-thanh btn-student btn-icon"
+                            : "btn-tat-am-thanh btn-student btn-icon"
+                        }
+                      />
                     </div>
                   </Col>
-                ) : (
-                  <Col span={4}></Col>
-                )}
-                <Col span={12} className="flex items-center">
-                  <button
-                    className="buttonSlider desktop"
-                    onClick={toggleCollapse}>
-                    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                  </button>
-                  <button className="buttonSlider mobile" onClick={openDrawer}>
-                    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                  </button>
-                </Col>
-              </Row>
-            </Col>
-            <Col span={16}>
-              <Row>
-                <Col span={15}></Col>
-                <Col span={9}>
-                  <Header
-                    onPress={openDrawer}
-                    onSlidebar={onSlidebar}
-                    name={pathname}
-                    subName={pathname}
-                  />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </AntHeader>
-        {collapsed ? (
-          <Content
-            className="content-ant"
-            style={{ paddingLeft: "6%", marginTop: "7%" }}>
-            {children}
-          </Content>
-        ) : (
-          <Content
-            className="content-ant"
-            style={{ paddingLeft: "19%", marginTop: "9%" }}>
-            {children}
-          </Content>
-        )}
-      </Layout>
-    </Layout>
+                </Row>
+              </Content>
+              <Footer
+                style={{
+                  paddingBottom: "20px",
+                  height: "30vh",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "end",
+                }}
+              >
+                <button
+                  onClick={hanlderClickDauGia}
+                  className="btn-dau-gia btn-student"
+                />
+                <button
+                  onClick={hanlderClickCuaHang}
+                  className="btn-cua-hang btn-student"
+                />
+                <button
+                  onClick={hanlderClickDoiQua}
+                  className="btn-doi-qua btn-student"
+                />
+              </Footer>
+            </Layout>
+          </Space>
+        </div>
+      )}
+    </div>
   );
 }
 export default DashboardAuthUser;

@@ -1,5 +1,5 @@
 import { FormOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal, Tooltip } from "antd";
+import { Button, Form, Input, Modal, Radio, Tooltip } from "antd";
 import { useState } from "react";
 const ModalDetail = (props) => {
   const { category } = props;
@@ -37,10 +37,10 @@ const ModalDetail = (props) => {
           name="basic"
           onFinish={handleOk}
           labelCol={{
-            span: 3,
+            span: 4,
           }}
           wrapperCol={{
-            span: 16,
+            span: 18,
           }}
           style={{
             maxWidth: 600,
@@ -56,6 +56,37 @@ const ModalDetail = (props) => {
 
           <Form.Item label="Tên" name="name">
             <Input />
+          </Form.Item>
+          <Form.Item
+            label="Phê duyệt"
+            name="categoryStatus"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn tùy chọn phê duyệt",
+              },
+            ]}
+          >
+            <Radio.Group>
+              <Radio value={"1"}>Cần phê duyệt</Radio>
+              <Radio value={"0"}>Không phê duyệt</Radio>
+            </Radio.Group>
+          </Form.Item>
+
+          <Form.Item
+            label="Giao dịch"
+            name="transactionRights"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn tùy chọn phê duyệt",
+              },
+            ]}
+          >
+            <Radio.Group>
+              <Radio value={"0"}>Được giao dịch</Radio>
+              <Radio value={"1"}>Không giao dịch</Radio>
+            </Radio.Group>
           </Form.Item>
 
           <Form.Item

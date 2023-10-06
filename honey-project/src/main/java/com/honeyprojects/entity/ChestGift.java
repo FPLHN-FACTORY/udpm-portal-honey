@@ -14,10 +14,10 @@ import lombok.Setter;
 @Table(name = "chest_gift")
 public class ChestGift extends PrimaryEntity {
 
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    @Column(length = EntityProperties.LENGTH_ID)
     private String chestId;
 
-    @Column(length = EntityProperties.LENGTH_ID, nullable = false)
+    @Column(length = EntityProperties.LENGTH_ID)
     private String giftId;
 
 }

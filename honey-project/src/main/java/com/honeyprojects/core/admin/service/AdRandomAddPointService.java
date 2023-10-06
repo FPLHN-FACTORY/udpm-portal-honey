@@ -1,7 +1,10 @@
 package com.honeyprojects.core.admin.service;
 
+import com.honeyprojects.core.admin.model.request.AdminChestGiftRequest;
 import com.honeyprojects.core.admin.model.request.AdminRandomPointRequest;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
+import com.honeyprojects.core.admin.model.response.AdminChestGiftResponse;
+import com.honeyprojects.core.admin.model.response.AdminChestReponse;
 import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,11 +20,15 @@ public interface AdRandomAddPointService {
 
     Boolean createRandomItem(AdminRandomPointRequest adminRandomPointRequest);
 
-    List<AdminGiftResponse> getGiftByType(Integer typeNumber);
-
     Boolean exportExcel();
 
-    Boolean importExcel(MultipartFile file);
+    List<String> importExcel(MultipartFile file);
 
-    List<Integer> getAllTypeGift();
+    List<AdminChestReponse> getAllChest();
+
+    List<AdminChestGiftResponse> getAllGiftByChest(String idChest);
+
+    AdminChestReponse getChestById(String idChest);
+
+    Boolean deleteChestGidt(String idChest, String idGift);
 }

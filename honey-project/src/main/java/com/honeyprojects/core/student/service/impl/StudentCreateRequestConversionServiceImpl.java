@@ -5,12 +5,15 @@ import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.student.model.request.StudentCreateRequestConversionRequest;
 import com.honeyprojects.core.student.model.request.StudentFilterHistoryRequest;
 import com.honeyprojects.core.student.model.response.StudentCreateResquestConversionResponse;
+import com.honeyprojects.core.student.repository.StudentArchiveGiftRepository;
 import com.honeyprojects.core.student.repository.StudentCategoryRepository;
 import com.honeyprojects.core.student.repository.StudentCreateRequestConversionRepository;
+import com.honeyprojects.core.student.repository.StudentGiftArchiveRepository;
 import com.honeyprojects.core.student.repository.StudentGiftRepository;
 import com.honeyprojects.core.student.repository.StudentHoneyRepository;
 import com.honeyprojects.core.student.repository.StudentUserSemesterRepository;
 import com.honeyprojects.core.student.service.StudentCreateResquestConversionService;
+import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.History;
@@ -21,6 +24,7 @@ import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TypeCategory;
 import com.honeyprojects.infrastructure.contant.TypeGift;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
+import com.honeyprojects.repository.ArchiveGiftRepository;
 import com.honeyprojects.repository.CategoryRepository;
 import com.honeyprojects.repository.GiftRepository;
 import com.honeyprojects.util.ConvertRequestApiidentity;
@@ -51,6 +55,9 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
     @Autowired
     private StudentGiftRepository giftRepository;
 
+    @Autowired
+    private StudentArchiveGiftRepository giftArchiveRepository;
+
 
     @Override
     public History addRequestConversion(StudentCreateRequestConversionRequest createRequest) {
@@ -60,6 +67,7 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
 
         Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(createRequest.getStudentId(), createRequest.getCategoryId());
         History history = new History();
+        ArchiveGift archiveGift = new ArchiveGift();
         if (honey == null) {
             String idUs = userSemesterRepository.getSemesterByStudent(createRequest.getStudentId());
             if (idUs == null) return null;
@@ -74,6 +82,8 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
             if (category.getCategoryStatus().equals(CategoryStatus.ACCEPT) || gift.getStatus().equals(StatusGift.ACCEPT)) {
                 history.setStatus(HoneyStatus.CHO_PHE_DUYET);
                 history.setType(TypeHistory.DOI_QUA);
+
+
             }
             if(category.getCategoryStatus().equals(CategoryStatus.FREE) && gift.getStatus().equals(StatusGift.FREE)){
                 history.setStatus(HoneyStatus.DA_PHE_DUYET);
@@ -83,6 +93,11 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
                 honey.setHoneyPoint(honey.getHoneyPoint() - deductedPoints);
                 honey = honeyRepository.save(honey);
             }
+        }
+        if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
+            archiveGift.setGiftId(createRequest.getGiftId());
+            archiveGift.setArchiveId("738492b2-627f-11ee-8c99-0242ac120002");
+            giftArchiveRepository.save(archiveGift);
         }
 
 
@@ -94,6 +109,7 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
         history.setGiftId(createRequest.getGiftId());
         history.setHoneyId(honey.getId());
         history.setNameGift(createRequest.getNameGift());
+        history.setNote(createRequest.getNote());
 
         return studentCreateRequestConversionRepository.save(history);
 

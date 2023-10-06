@@ -2,7 +2,7 @@ import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppConfig } from "./AppConfig";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import NotFound from "./pages/404";
 import NotAuthorized from "./pages/401";
 import AuthGuard from "./guard/AuthGuard";
@@ -11,10 +11,11 @@ import GlobalLoading from "./components/global-loading/GlobalLoading";
 import DashboardAuthUser from "./layout/student/auth/DashboardAuthUser";
 import Index from "./pages/censor/category";
 import AddPoint from "./pages/teacher/addpoint/AddPoint";
-import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
 import AddPointCensor from "./pages/censor/addPoin/AddPoint";
+import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
 import HistoryAddPointCensor from "./pages/censor/addPoin/HistoryAddPoint";
-import Club from "./pages/censor/club/indexClub";
+import Club from "./pages/censor/club/Club";
+import DetailClub from "./pages/censor/club/DetailGiftClub";
 import ListRequestAddPoint from "./pages/teacher/addpoint/ListRequestAddPoint";
 import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
 import RequestManager from "./pages/censor/requestmanager/RequestManager";
@@ -29,14 +30,22 @@ import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
 import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
+import Archive from "./pages/student/archive/Archive";
 import GiftStudent from "./pages/teacher/giftstudent/GiftStudent";
 import StArchive from "./pages/student/archive/StArchive";
 import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
 import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
 import ChestGift from "./pages/censor/chest-gift/ChestGift";
 import AuctionMangement from "./pages/censor/auction-management/AuctionManagement";
+import TestTransaction from "./pages/student/transaction/TestTransaction";
+import { getToken, setToken } from "./helper/userToken";
+import { connectStompClient } from "./helper/stomp-client/config";
+import StudentChest from "./pages/student/chest/studentChest";
 
 function App() {
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM0Y2YyMWY0LWYzZTAtNDkwZS1iMWNjLTA4ZGJiNzQzZGQ3ZCIsIm5hbWUiOiJUcmlldSBWYW4gVHVvbmcgUEggMiA2IDEgNCA5IiwiZW1haWwiOiJ0dW9uZ3R2cGgyNjE0OUBmcHQuZWR1LnZuIiwidXNlck5hbWUiOiJ0dW9uZ3R2cGgyNjE0OSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NMU0hTd1cxb3B2ZVRzTjI4RGdHS0pLSWNYekpsY3hJd090c0VfbGZsZjk4SXc9czk2LWMiLCJpZFRyYWluaW5nRmFjaWxpdHkiOiI3OTZhNGZhNC04YWFiLTQyYzQtOWYzNS04NzBiYjAwMDVhZjEiLCJsb2NhbEhvc3QiOiJodHRwOi8vbG9jYWxob3N0Ojg4ODgiLCJyb2xlIjoiQURNSU4iLCJyb2xlTmFtZXMiOiJRdeG6o24gdHLhu4sgdmnDqm4iLCJuYmYiOjE2OTUwMzA5NjksImV4cCI6MTc2ODY0Mzc2OSwiaWF0IjoxNjk1MDMwOTY5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0OTA1MyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjQ5MDUzIn0.Zxmp3Ax5QVp2PK3b5BNfhcgs7c9bbWCYGF6R0QExd5s";
+  setToken(token);
   return (
     <div className="App scroll-smooth md:scroll-auto font-sans">
       <BrowserRouter basename={AppConfig.routerBase}>
@@ -74,7 +83,7 @@ function App() {
                 </AuthGuard>
               }
             />
-            <Route
+            {/* <Route
               path="/censor/semester"
               element={
                 <AuthGuard>
@@ -83,7 +92,7 @@ function App() {
                   </DashboardCensor>
                 </AuthGuard>
               }
-            />
+            /> */}
             <Route
               path="/censor/conversion"
               element={
@@ -130,6 +139,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <Club />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/club/:id"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <DetailClub />
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -247,11 +266,29 @@ function App() {
             />
             {/* Màn sinh viên */}
             <Route
+              path="/student/"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser></DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
               path="/student/create-conversion/history"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
                     <AddRequestConversionHistory />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/transaction"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <TestTransaction />
                   </DashboardAuthUser>
                 </AuthGuard>
               }
@@ -272,6 +309,16 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     <TransactionPage />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/chest"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <StudentChest />
                   </DashboardAuthUser>
                 </AuthGuard>
               }

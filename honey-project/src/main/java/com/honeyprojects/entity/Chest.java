@@ -15,11 +15,8 @@ import lombok.Setter;
 @Table(name = "chest")
 public class Chest extends PrimaryEntity {
 
-    @Column(length = EntityProperties.LENGTH_CODE)
+    @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
-
-    @Column(nullable = false)
-    private Double percent;
 
     private Status status;
 

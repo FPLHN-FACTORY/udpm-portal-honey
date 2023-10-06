@@ -9,12 +9,17 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 //import javax.validation.Valid;
 
@@ -41,18 +46,18 @@ public class AdminGiftRestController {
     }
 
     @PostMapping("")
-    public ResponseObject addGift(@Valid @RequestBody AdminCreateGiftRequest request){
+    public ResponseObject addGift(@Valid @ModelAttribute AdminCreateGiftRequest request) throws IOException {
         return new ResponseObject(adminGiftService.addGift(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseObject updateGift(@Valid @RequestBody AdminUpdateGiftRequest request, @PathVariable("id") String id){
+    public ResponseObject updateGift(@Valid @ModelAttribute AdminUpdateGiftRequest request, @PathVariable("id") String id) throws IOException {
         return new ResponseObject(adminGiftService.updateGift(request,id));
     }
 
     @PutMapping("/delete/{id}")
-    public ResponseObject updateStatusGift(@RequestBody AdminUpdateGiftRequest request, @PathVariable("id") String id){
-        return new ResponseObject(adminGiftService.updateStatusGift(request,id));
+    public ResponseObject updateStatusGift(@PathVariable("id") String id){
+        return new ResponseObject(adminGiftService.updateStatusGift(id));
     }
 
     @DeleteMapping("/{id}")

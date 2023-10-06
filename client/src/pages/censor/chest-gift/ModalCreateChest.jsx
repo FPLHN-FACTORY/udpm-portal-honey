@@ -10,14 +10,12 @@ import {
 const ModalAdd = (props) => {
   const { modalOpen, setModalOpen, chest } = props;
   const [itemName, setItemName] = useState("");
-  const [percent, setPercent] = useState();
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (chest) {
       setItemName(chest.name);
-      setPercent(chest.percent);
     }
   }, [chest]);
 
@@ -40,14 +38,13 @@ const ModalAdd = (props) => {
   };
 
   const onSaveButtonClick = () => {
-    if (itemName.trim() === "" || percent === null) {
+    if (itemName.trim() === "") {
       message.error("Vui lòng điền đầy đủ thông tin.");
       return;
     }
 
     const formValues = {
       name: itemName,
-      percent: percent,
     };
 
     if (chest === null) {
@@ -83,20 +80,6 @@ const ModalAdd = (props) => {
                   <Input
                     value={itemName}
                     onChange={(e) => setItemName(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="ant-form-item">
-                <label className="ant-form-item-label">Tỉ lệ:</label>
-                <div className="ant-form-item-control">
-                  <Input
-                    type="number"
-                    min="0"
-                    max="100"
-                    step="0.1"
-                    value={percent}
-                    onChange={(e) => setPercent(e.target.value)}
                   />
                 </div>
               </div>

@@ -9,11 +9,16 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Random;
 
 @Getter
 @Setter
+@ToString
 public class AdminCreateGiftRequest extends PageableRequest {
 
     private String code;
@@ -22,23 +27,37 @@ public class AdminCreateGiftRequest extends PageableRequest {
     @Size(min = 0, max = 250)
     private String name;
 
-    private TypeGift type;
+    private Integer type;
 
     private StatusGift status;
 
-    public Gift dtoToEntity(Gift gift) {
-        // ramdom code
+    private Integer quantity;
+
+    private MultipartFile image;
+
+    private String honeyCategoryId;
+
+    private Integer honey;
+
+    public Gift dtoToEntity(Gift gift) throws IOException {
         Random random = new Random();
         int number = random.nextInt(1000);
-        String code = String.format("G%04d",number);
+        String code = String.format("G%04d", number);
 
         gift.setCode(code);
         gift.setName(this.getName());
-        if(this.getStatus().equals(StatusGift.ACCEPT)){
-            gift.setStatus(StatusGift.ACCEPT);
-        }else {
-            gift.setStatus(StatusGift.FREE);
+        gift.setStatus(this.getStatus());
+        gift.setQuantity(this.getQuantity());
+        if (this.getType() != null) {
+            gift.setType(TypeGift.values()[this.getType()]);
         }
+        if (this.getImage() != null) {
+            byte[] imageBytes = this.getImage().getBytes();
+            gift.setImage(imageBytes);
+        }
+        gift.setHoneyCategoryId(this.getHoneyCategoryId());
+        gift.setHoney(this.getHoney());
+
         return gift;
     }
 }

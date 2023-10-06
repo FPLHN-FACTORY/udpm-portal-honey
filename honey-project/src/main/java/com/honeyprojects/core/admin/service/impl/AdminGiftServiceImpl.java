@@ -8,7 +8,8 @@ import com.honeyprojects.core.admin.repository.AdGiftRepository;
 import com.honeyprojects.core.admin.service.AdminGiftService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Gift;
-import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.StatusGift;
+import com.honeyprojects.infrastructure.contant.TypeGift;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,9 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 public class AdminGiftServiceImpl implements AdminGiftService {
@@ -41,18 +42,16 @@ public class AdminGiftServiceImpl implements AdminGiftService {
 
     @Override
     @Transactional
-    public Gift addGift(AdminCreateGiftRequest request) {
+    public Gift addGift(AdminCreateGiftRequest request) throws IOException {
         Gift gift = request.dtoToEntity(new Gift());
         return adGiftRepository.save(gift);
     }
 
-    @Override
-    @Transactional
-    public Gift updateGift(AdminUpdateGiftRequest request, String id) {
+    public Gift updateGift(AdminUpdateGiftRequest request, String id) throws IOException {
         Optional<Gift> optional = adGiftRepository.findById(id);
-//        optional.get().setStatus(Status.HOAT_DONG);
-        optional.get().setName(request.getName());
-        return adGiftRepository.save(optional.get());
+            Gift existingGift = optional.get();
+            request.dtoToEntity(existingGift);
+            return adGiftRepository.save(existingGift);
     }
 
     @Override
@@ -66,10 +65,9 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         adGiftRepository.deleteById(id);
     }
 
-    public Gift updateStatusGift(AdminUpdateGiftRequest request, String id) {
+    public Gift updateStatusGift(String id) {
         Optional<Gift> optional = adGiftRepository.findById(id);
-//        optional.get().setStatus(Status.KHONG_HOAT_DONG);
-        optional.get().setName(request.getName());
+        optional.get().setStatus(StatusGift.KHONG_HOAT_DONG);
         return adGiftRepository.save(optional.get());
     }
 }

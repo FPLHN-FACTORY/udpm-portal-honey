@@ -2,61 +2,64 @@ import React, { useEffect, useState } from "react";
 import {
   Button,
   Card,
-  Checkbox,
   Col,
   Input,
+  Popconfirm,
   Row,
   Select,
   Space,
   Spin,
   Table,
   Tabs,
+  Tooltip,
   message,
 } from "antd";
 import {
   CheckCircleOutlined,
-  DropboxOutlined,
-  SearchOutlined,
+  DeleteOutlined,
+  PlusCircleOutlined,
   VerticalAlignBottomOutlined,
-  VerticalAlignTopOutlined,
 } from "@ant-design/icons";
 import { RandomAddPointAPI } from "../../../apis/censor/random-add-point/random-add-point.api";
 import "./index.css";
+import ModalImportExcel from "./ModalImportExcel";
+import ModalAddChest from "./ModalAddChest";
+import ModalAddChestGift from "./ModalAddChestGift";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { GetChest, SetChest } from "../../../app/reducers/chest/chest.reducer";
 
 export default function RandomAddPoint() {
-  const [student, setStudent] = useState([]);
+  const dispatch = useAppDispatch();
   const [category, setCategory] = useState([]);
-  const [typeGift, setTypeGift] = useState([]);
-  const [selectedStudents, setSelectedStudents] = useState([]);
-  const [listGiftByType, setListGiftByType] = useState([]);
+  const [listGiftByChest, setListGiftByChest] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [selectAll, setSelectAll] = useState(false);
-  const [search, setSearch] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [detailChest, setDetailChest] = useState();
+  const [nameFile, setNameFile] = useState("");
+  const [chest, setChest] = useState({ id: "", name: "", percent: "" });
   const [errorMinPoint, setErrorMinPoint] = useState("");
   const [errorMaxPoint, setErrorMaxPoint] = useState("");
   const [errorNumberStudent, setErrorNumberStudent] = useState("");
   const [errorListCategory, setErrorListCategory] = useState("");
-  const [errorNumberItem, setErrorNumberItem] = useState("");
-  const [errorNumberChest, setErrorNumberChest] = useState("");
-  const [errorListType, setErrorListType] = useState("");
-  const [errorListStudent, setErrorListStudent] = useState("");
+  const [errorChestId, setErrorChestId] = useState("");
+  const [errorListItem, setErrorListItem] = useState("");
   const [dataRandomPoint, setDataRandomPoint] = useState({
     minPoint: null,
     maxPoint: null,
     numberStudent: null,
     listCategoryPoint: [],
-    listStudent: [],
+    listStudentPoint: [],
   });
   const [dataRandomItem, setDataRandomItem] = useState({
-    numberChest: null,
+    chestId: "",
     listItem: [],
-    type: null,
-    listStudent: [],
+    listStudentPoint: [],
   });
-  const [filter, setFilter] = useState({
-    emailSearch: "",
-  });
+
+  const listChest = useAppSelector(GetChest);
+
   const optionCategory = [];
   category.map((c) =>
     optionCategory.push({
@@ -64,28 +67,8 @@ export default function RandomAddPoint() {
       label: c.name,
     })
   );
-  const optionTypeGift = [];
-  typeGift.map((t) =>
-    optionTypeGift.push({
-      value: t,
-      label: t === 0 ? "Quà tặng" : t === 1 ? "Vật phẩm" : "Bộ dụng cụ",
-    })
-  );
-  const optionGiftByType = [];
-  listGiftByType.map((g) =>
-    optionGiftByType.push({
-      value: g.id,
-      label: g.name,
-    })
-  );
-
-  useEffect(() => {
-    fetchCategory();
-    fetchStudent(filter);
-    fetchTypeGift();
-    console.log(listGiftByType);
-    console.log(dataRandomItem);
-  }, [filter, dataRandomItem, listGiftByType]);
+  const optionChest = [];
+  listChest.map((c) => optionChest.push({ value: c.id, label: c.name }));
 
   const fetchCategory = () => {
     setLoading(true);
@@ -99,67 +82,106 @@ export default function RandomAddPoint() {
     setLoading(false);
   };
 
-  const fetchStudent = (filter) => {
-    setLoading(true);
-    RandomAddPointAPI.fetchAllStudent(filter)
-      .then((response) => {
-        setStudent(response.data.data);
-      })
-      .catch(() => {
-        message.error("Vui lòng f5 tải lại trang");
-      });
-    setLoading(false);
-  };
+  useEffect(() => {
+    fetchCategory();
+  }, []);
 
-  const fetchTypeGift = () => {
-    setLoading(true);
-    RandomAddPointAPI.fetchAllTypeGift()
-      .then((response) => {
-        setTypeGift(response.data.data);
-      })
-      .catch(() => {
-        message.error("Vui lòng f5 tải lại trang");
-      });
-    setLoading(false);
-  };
+  useEffect(() => {
+    RandomAddPointAPI.getAllChest().then((response) => {
+      dispatch(SetChest(response.data.data));
+    });
+  }, [dispatch]);
 
   const handleChangeCategory = (value) => {
-    setDataRandomPoint({ ...dataRandomPoint, listCategoryPoint: value });
+    setDataRandomPoint({
+      ...dataRandomPoint,
+      listCategoryPoint: value,
+    });
   };
 
-  const handleChangeType = (value) => {
-    setDataRandomItem({ ...dataRandomItem, type: value });
+  const handleChangeChest = (e) => {
+    const value = e === undefined ? "" : e;
     setLoading(true);
-    RandomAddPointAPI.getGiftByType(value)
-      .then((response) => {
-        setListGiftByType(response.data.data);
+    if (value !== "") {
+      setDataRandomItem({
+        ...dataRandomItem,
+        chestId: value,
+      });
+      RandomAddPointAPI.getAllGiftByChest(e)
+        .then((respone) => {
+          setListGiftByChest(respone.data.data);
+        })
+        .catch((err) => {
+          message.error("Lỗi: " + err.message);
+        });
+      RandomAddPointAPI.getChestById(e)
+        .then((respone) => {
+          setChest(respone.data.data);
+        })
+        .catch((err) => {
+          message.error("Lỗi: " + err.message);
+        });
+    } else {
+      setListGiftByChest([]);
+      setDataRandomItem({
+        ...dataRandomItem,
+        chestId: value,
+        listItem: [],
+      });
+    }
+    setLoading(false);
+  };
+
+  const onSelectChange = (newSelectedRowKeys) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+    setDataRandomItem((prevState) => ({
+      ...prevState,
+      listItem: newSelectedRowKeys,
+    }));
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+    type: "checkbox",
+  };
+
+  const handleDeleteChestGif = (chestId, giftId) => {
+    setLoading(true);
+    RandomAddPointAPI.deleteChestGift(chestId, giftId)
+      .then(() => {
+        message.success("Xóa thành công.");
       })
       .catch(() => {
-        message.error("Vui lòng f5 tải lại trang");
+        message.error("Xóa thất bại.");
       });
     setLoading(false);
   };
 
-  const handleStudentSelection = (studentId, checked) => {
-    if (checked) {
-      setDataRandomPoint((prevData) => ({
-        ...prevData,
-        listStudent: [...prevData.listStudent, studentId],
-      }));
-      setDataRandomItem((prevData) => ({
-        ...prevData,
-        listStudent: [...prevData.listStudent, studentId],
-      }));
-    } else {
-      setDataRandomPoint((prevData) => ({
-        ...prevData,
-        listStudent: prevData.listStudent.filter((id) => id !== studentId),
-      }));
-      setDataRandomItem((prevData) => ({
-        ...prevData,
-        listStudent: prevData.listStudent.filter((id) => id !== studentId),
-      }));
+  const handleValidationRandomItem = () => {
+    let check = 0;
+    const errors = {
+      chestId: "",
+      listItem: "",
+    };
+
+    if (dataRandomItem.chestId === "") {
+      errors.chestId = "Không được để trống loại rương";
     }
+
+    if (dataRandomItem.listItem.length < 1) {
+      errors.listItem = "Không được để trống số lượng vật phẩm";
+    }
+
+    for (const key in errors) {
+      if (errors[key]) {
+        check++;
+      }
+    }
+
+    setErrorChestId(errors.chestId);
+    setErrorListItem(errors.listItem);
+    return check;
   };
 
   const handleValidationRandomPoint = () => {
@@ -169,7 +191,6 @@ export default function RandomAddPoint() {
       maxPoint: "",
       numberStudent: "",
       listCategoryPoint: "",
-      listStudent: "",
     };
 
     if (dataRandomPoint.maxPoint === null) {
@@ -198,10 +219,6 @@ export default function RandomAddPoint() {
       errors.listCategoryPoint = "Không được để trống thể loại";
     }
 
-    if (dataRandomPoint.listStudent.length < 1) {
-      errors.listStudent = "Số lượng sinh viên phải >0";
-    }
-
     for (const key in errors) {
       if (errors[key]) {
         check++;
@@ -212,53 +229,12 @@ export default function RandomAddPoint() {
     setErrorMaxPoint(errors.maxPoint);
     setErrorNumberStudent(errors.numberStudent);
     setErrorListCategory(errors.listCategoryPoint);
-    setErrorListStudent(errors.listStudent);
-
-    return check;
-  };
-
-  const handleValidationRandomItem = () => {
-    let check = 0;
-    const errors = {
-      numberItem: "",
-      numberChest: "",
-      type: "",
-      listStudent: "",
-    };
-
-    if (dataRandomItem.listItem.length < 1) {
-      errors.numberItem = "Không được để trống số lượng vật phẩm";
-    }
-
-    if (dataRandomItem.numberChest === null) {
-      errors.numberChest = "Không được để trống số lượng rương";
-    } else if (dataRandomItem.numberChest < 0) {
-      errors.numberChest = "Số lượng rương phải > -1";
-    }
-
-    if (dataRandomItem.type === null) {
-      errors.type = "Không được để trống thể loại";
-    }
-
-    if (dataRandomItem.listStudent.length < 1) {
-      errors.listStudent = "Số lượng sinh viên phải >0";
-    }
-
-    for (const key in errors) {
-      if (errors[key]) {
-        check++;
-      }
-    }
-
-    setErrorNumberItem(errors.numberItem);
-    setErrorNumberChest(errors.numberChest);
-    setErrorListType(errors.type);
-    setErrorListStudent(errors.listStudent);
 
     return check;
   };
 
   const handleCreateRandomPoint = (dataRandomPoint) => {
+    console.log(dataRandomPoint);
     const check = handleValidationRandomPoint();
 
     if (check < 1) {
@@ -266,19 +242,32 @@ export default function RandomAddPoint() {
       RandomAddPointAPI.createRandomPoint(dataRandomPoint)
         .then(() => {
           message.success("Tạo random point thành công");
+          setDataRandomPoint({
+            minPoint: null,
+            maxPoint: null,
+            numberStudent: null,
+            listCategoryPoint: [],
+            listStudentPoint: [],
+          });
+          setNameFile("");
+          setDataRandomItem({
+            chestId: "",
+            listItem: [],
+            listStudentPoint: [],
+          });
+          setNameFile("");
         })
         .catch(() => {
           message.error("Tạo random point thất bại");
         });
       setLoading(false);
     } else {
-      message.error(
-        "Tạo random mật ong thất bại, bạn cần nhập đủ các dữ liệu và chọn sinh viên"
-      );
+      message.error("Tạo random mật ong thất bại, bạn cần nhập đủ các dữ liệu");
     }
   };
 
   const handleCreateRandomItem = (dataRandomItem) => {
+    console.log(dataRandomItem);
     const check = handleValidationRandomItem();
 
     if (check < 1) {
@@ -286,6 +275,20 @@ export default function RandomAddPoint() {
       RandomAddPointAPI.createRandomItem(dataRandomItem)
         .then(() => {
           message.success("Tạo random Item thành công");
+          setDataRandomPoint({
+            minPoint: null,
+            maxPoint: null,
+            numberStudent: null,
+            listCategoryPoint: [],
+            listStudentPoint: [],
+          });
+          setNameFile("");
+          setDataRandomItem({
+            chestId: "",
+            listItem: [],
+            listStudentPoint: [],
+          });
+          setNameFile("");
         })
         .catch(() => {
           message.error("Tạo random Item thất bại");
@@ -293,105 +296,10 @@ export default function RandomAddPoint() {
       setLoading(false);
     } else {
       message.error(
-        "Tạo random vật phẩm thất bại, bạn cần nhập đủ các dữ liệu và chọn sinh viên"
+        "Tạo random vật phẩm thất bại, bạn cần nhập đủ các dữ liệu"
       );
     }
   };
-
-  const handleExportExcel = () => {
-    setLoading(true);
-    RandomAddPointAPI.createExportExcel()
-      .then(() => {
-        message.success("Export excel thành công");
-      })
-      .catch((err) => {
-        message.error("Export excel thất bại");
-      });
-    setLoading(false);
-  };
-
-  const handleFileInputChange = (e) => {
-    const formData = new FormData();
-    formData.append("file", e.target.files[0]);
-    console.log(formData);
-    setLoading(true);
-    RandomAddPointAPI.createImportExcel(formData)
-      .then(() => {
-        message.success("Import excel thành công");
-      })
-      .catch(() => {
-        message.error("Import excel thất bại");
-      });
-    setLoading(false);
-  };
-
-  const columns = [
-    {
-      title: (
-        <Checkbox
-          checked={
-            selectedStudents.length === student.length && student.length > 0
-          }
-          indeterminate={
-            selectedStudents.length > 0 &&
-            selectedStudents.length < student.length
-          }
-          onChange={(e) => {
-            const checked = e.target.checked;
-            setSelectAll(checked);
-            if (checked) {
-              setSelectedStudents(student.map((student) => student.id));
-              setDataRandomPoint((prevData) => ({
-                ...prevData,
-                listStudent: student.map((student) => student.id),
-              }));
-              setDataRandomItem((prevData) => ({
-                ...prevData,
-                listStudent: student.map((student) => student.id),
-              }));
-            } else {
-              setSelectedStudents([]);
-              setDataRandomPoint((prevData) => ({
-                ...prevData,
-                listStudent: [],
-              }));
-              setDataRandomItem((prevData) => ({
-                ...prevData,
-                listStudent: [],
-              }));
-            }
-          }}
-        />
-      ),
-      dataIndex: "selection",
-      render: (text, record) => (
-        <Checkbox
-          checked={selectedStudents.includes(record.id)}
-          onChange={(e) => {
-            const studentId = record.id;
-            const checked = e.target.checked;
-            handleStudentSelection(studentId, checked);
-            const newSelectedStudents = checked
-              ? [...selectedStudents, studentId]
-              : selectedStudents.filter((id) => id !== studentId);
-            setSelectedStudents(newSelectedStudents);
-          }}
-        />
-      ),
-    },
-    {
-      title: "Họ và tên",
-      dataIndex: "name",
-    },
-    {
-      title: "Tên đăng nhập",
-      dataIndex: "userName",
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-    },
-  ];
 
   const items = [
     {
@@ -409,17 +317,53 @@ export default function RandomAddPoint() {
             <span style={{ fontSize: "18px" }}>
               <b>Tặng ngẫu nhiên mật ong</b>
             </span>
-            <Button
-              className="button-css"
-              onClick={() => handleCreateRandomPoint(dataRandomPoint)}
+            <Space
+              style={{
+                justifyContent: "space-between",
+                display: "flex",
+              }}
             >
-              <CheckCircleOutlined />
-              Xác nhận
-            </Button>
+              <Button
+                className="button-css"
+                htmlFor="file-input"
+                style={{
+                  display: "inline-block",
+                  padding: "10px",
+                  zIndex: 2,
+                }}
+                onClick={() => setOpen(true)}
+              >
+                <VerticalAlignBottomOutlined />
+                Import Excel
+              </Button>
+              {open && (
+                <ModalImportExcel
+                  open={open}
+                  setOpen={setOpen}
+                  setLoading={setLoading}
+                  dataRandomPoint={dataRandomPoint}
+                  dataRandomItem={dataRandomItem}
+                  setListStudentPoint={setDataRandomPoint}
+                  setListStudentItem={setDataRandomItem}
+                  nameFile={nameFile}
+                  setNameFile={setNameFile}
+                />
+              )}
+              <Button
+                className="button-css"
+                onClick={() => handleCreateRandomPoint(dataRandomPoint)}
+              >
+                <CheckCircleOutlined />
+                Xác nhận
+              </Button>
+            </Space>
           </Space>
           <Row gutter={16}>
             <Col span={6}>
-              <Card title="Loại mật ong">
+              <Card
+                title="Loại mật ong"
+                style={{ borderTop: "5px solid #1c315e" }}
+              >
                 <Select
                   mode="multiple"
                   allowClear
@@ -436,7 +380,7 @@ export default function RandomAddPoint() {
               </Card>
             </Col>
             <Col span={6}>
-              <Card title="Số lượng">
+              <Card title="Số lượng" style={{ borderTop: "5px solid #1c315e" }}>
                 <Input
                   style={{ width: "100%" }}
                   type="number"
@@ -453,7 +397,10 @@ export default function RandomAddPoint() {
               </Card>
             </Col>
             <Col span={12}>
-              <Card title="Khoảng mật ong">
+              <Card
+                title="Khoảng mật ong"
+                style={{ borderTop: "5px solid #1c315e" }}
+              >
                 <Space
                   style={{
                     justifyContent: "space_between",
@@ -514,124 +461,12 @@ export default function RandomAddPoint() {
             <span style={{ fontSize: "18px" }}>
               <b>Tặng ngẫu vật phẩm</b>
             </span>
-            <Button
-              className="button-css"
-              onClick={() => handleCreateRandomItem(dataRandomItem)}
+            <Space
+              style={{
+                justifyContent: "space-between",
+                display: "flex",
+              }}
             >
-              <CheckCircleOutlined />
-              Xác nhận
-            </Button>
-          </Space>
-          <Row gutter={16}>
-            <Col span={6}>
-              <Card title="Loại vật phẩm">
-                <Select
-                  placeholder="Chọn loại vật phẩm"
-                  style={{
-                    width: "100%",
-                    height: "40px",
-                  }}
-                  onChange={(e) => handleChangeType(e)}
-                  options={optionTypeGift}
-                />
-                <span className="error">{errorListType}</span>
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card title="Số lượng vật phẩm">
-                <Select
-                  mode="multiple"
-                  allowClear
-                  placeholder="Chọn vật phẩm"
-                  style={{
-                    width: "100%",
-                    height: "40px",
-                  }}
-                  defaultValue={[]}
-                  onChange={(e) =>
-                    setDataRandomItem({ ...dataRandomItem, listItem: e })
-                  }
-                  options={optionGiftByType}
-                />
-                <span className="error">{errorNumberItem}</span>
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card title="Số lượng rương">
-                <Input
-                  style={{ width: "100%" }}
-                  type="number"
-                  min={0}
-                  defaultValue={dataRandomItem.numberChest}
-                  onChange={(e) =>
-                    setDataRandomItem({
-                      ...dataRandomItem,
-                      numberChest: Number(e.target.value),
-                    })
-                  }
-                />{" "}
-                <span className="error">{errorNumberChest}</span>
-              </Card>
-            </Col>
-            <Col span={6}></Col>
-          </Row>
-        </div>
-      ),
-    },
-  ];
-
-  return (
-    <div>
-      <Spin spinning={loading}>
-        <Card style={{ borderTop: "5px solid #FFCC00" }}>
-          <Space
-            style={{
-              justifyContent: "space-between",
-              display: "flex",
-              marginBottom: "16px",
-            }}
-          >
-            <Space style={{ float: "left" }}>
-              <Input
-                style={{ width: "300px" }}
-                placeholder="tìm sinh viên theo mã"
-                value={search}
-                prefix={<SearchOutlined />}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <Button
-                className="button-css"
-                icon={<SearchOutlined />}
-                onClick={() => setFilter({ ...filter, emailSearch: search })}
-              >
-                Tìm kiếm
-              </Button>
-            </Space>
-            <Space style={{ float: "right" }}>
-              <Button className="button-css" onClick={() => setOpen(!open)}>
-                <DropboxOutlined />
-                {open === true ? "Đóng random" : "Mở random"}
-              </Button>
-            </Space>
-          </Space>
-        </Card>
-        {open && (
-          <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
-            <Tabs items={items} defaultActiveKey="1" />
-          </Card>
-        )}
-        <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
-          <Space
-            style={{
-              justifyContent: "space-between",
-              display: "flex",
-              marginBottom: "16px",
-            }}
-          >
-            <span style={{ fontSize: "18px" }}>
-              <b>Danh sách sinh viên</b>
-            </span>
-            <Space style={{ float: "right" }}>
               <Button
                 className="button-css"
                 htmlFor="file-input"
@@ -640,41 +475,154 @@ export default function RandomAddPoint() {
                   padding: "10px",
                   zIndex: 2,
                 }}
+                onClick={() => setOpen(true)}
               >
                 <VerticalAlignBottomOutlined />
                 Import Excel
-                <input
-                  type="file"
-                  accept=".xlsx,.xls"
-                  onChange={(e) => handleFileInputChange(e)}
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    cursor: "pointer",
-                    opacity: 0,
-                    zIndex: 1,
-                  }}
-                />
               </Button>
+              {open && (
+                <ModalImportExcel
+                  open={open}
+                  setOpen={setOpen}
+                  setLoading={setLoading}
+                  dataRandomPoint={dataRandomPoint}
+                  dataRandomItem={dataRandomItem}
+                  setListStudentPoint={setDataRandomPoint}
+                  setListStudentItem={setDataRandomItem}
+                  nameFile={nameFile}
+                  setNameFile={setNameFile}
+                />
+              )}
               <Button
                 className="button-css"
-                onClick={() => handleExportExcel()}
+                onClick={() => handleCreateRandomItem(dataRandomItem)}
               >
-                <VerticalAlignTopOutlined />
-                Export Excel
+                <CheckCircleOutlined />
+                Xác nhận
               </Button>
             </Space>
           </Space>
-          <Table
-            rowKey="id"
-            columns={columns}
-            dataSource={student.filter(
-              (item) =>
-                item !== null && typeof item === "object" && "id" in item
-            )}
-          />
+          <Row gutter={16}>
+            {/* <Col span={6}> */}
+            <Card
+              title={
+                <Space
+                  style={{
+                    justifyContent: "space-between",
+                    display: "flex",
+                  }}
+                >
+                  <div>Loại rương</div>
+                  <div>
+                    <Tooltip title="Thêm rương">
+                      <Button
+                        onClick={() => {
+                          setDetailChest(null);
+                          setShowModal(true);
+                        }}
+                      >
+                        <PlusCircleOutlined style={{ fontSize: "15px" }} />
+                      </Button>
+                    </Tooltip>
+                  </div>
+                </Space>
+              }
+              style={{ width: "300px", borderTop: "5px solid #1c315e" }}
+            >
+              <Select
+                placeholder="Chọn loại rương"
+                style={{
+                  width: "100%",
+                  height: "40px",
+                }}
+                options={optionChest}
+                onChange={(e) => handleChangeChest(e)}
+              />
+              <span className="error">{errorChestId}</span>
+            </Card>
+          </Row>
+        </div>
+      ),
+    },
+  ];
+
+  const colums = [
+    {
+      title: "STT",
+      dataIndex: "stt",
+      key: "stt",
+    },
+    { title: "Tên vật phẩm", dataIndex: "name", key: "name" },
+    {
+      title: () => <div>Hành dộng</div>,
+      key: "action",
+      render: (_, record) => (
+        <Space size="small">
+          <Popconfirm
+            title="Xóa rương"
+            description="Bạn có chắc chắn muốn xóa?"
+            onConfirm={() => handleDeleteChestGif(chest.id, record.id)}
+            color="cyan"
+            okText="Yes"
+            cancelText="No"
+          >
+            <Tooltip title="Xóa vật phẩm">
+              <Button className="detail-button">
+                <DeleteOutlined />
+              </Button>
+            </Tooltip>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
+  return (
+    <div>
+      {showModal && (
+        <ModalAddChest
+          modalOpen={showModal}
+          setModalOpen={setShowModal}
+          chest={detailChest}
+          SetChest={setDetailChest}
+        />
+      )}
+      <Spin spinning={loading}>
+        <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+          <Tabs items={items} defaultActiveKey="1" />
         </Card>
+        {dataRandomItem.chestId !== "" && (
+          <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+            <Space
+              style={{
+                justifyContent: "space-between",
+                display: "flex",
+                marginBottom: "16px",
+              }}
+            >
+              <span style={{ fontSize: "18px" }}>
+                <b>Danh sách vật phẩm</b>
+              </span>
+              <Space
+                style={{
+                  justifyContent: "space-between",
+                  display: "flex",
+                }}
+              >
+                <ModalAddChestGift
+                  chest={chest}
+                  icon={<PlusCircleOutlined />}
+                />
+              </Space>
+            </Space>
+            <Table
+              rowSelection={rowSelection}
+              rowKey="id"
+              columns={colums}
+              dataSource={listGiftByChest}
+            />
+          </Card>
+        )}
       </Spin>
     </div>
   );

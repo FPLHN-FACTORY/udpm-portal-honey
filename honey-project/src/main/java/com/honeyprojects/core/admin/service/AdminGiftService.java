@@ -6,23 +6,25 @@ import com.honeyprojects.core.admin.model.request.AdminUpdateGiftRequest;
 import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Gift;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
-public interface AdminGiftService {
+public interface  AdminGiftService {
 
     PageableObject<AdminGiftResponse> getAllCategoryByAdmin(AdminGiftRequest request);
 
     List<AdminGiftResponse> getAllListGift();
 
-    Gift addGift(AdminCreateGiftRequest request);
+    Gift addGift(AdminCreateGiftRequest request) throws IOException;
 
-    Gift updateGift(AdminUpdateGiftRequest request,String id);
+    Gift updateGift(AdminUpdateGiftRequest request,String id) throws IOException;
 
     Gift getOne(String id);
 
     void deleteById(String id);
 
-    Gift updateStatusGift(AdminUpdateGiftRequest request,String id);
+    Gift updateStatusGift(String id);
 
 }

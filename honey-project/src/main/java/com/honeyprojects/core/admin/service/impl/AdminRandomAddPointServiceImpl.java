@@ -1,26 +1,26 @@
 package com.honeyprojects.core.admin.service.impl;
 
+import com.honeyprojects.core.admin.model.request.AdminCreateArchiveGiftRequest;
 import com.honeyprojects.core.admin.model.request.AdminRandomPointRequest;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
-import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
+import com.honeyprojects.core.admin.model.response.AdminChestGiftResponse;
+import com.honeyprojects.core.admin.model.response.AdminChestReponse;
 import com.honeyprojects.core.admin.repository.AdArchiveGiftRepository;
+import com.honeyprojects.core.admin.repository.AdChestGiftRepository;
 import com.honeyprojects.core.admin.repository.AdRandomAddPointRepository;
 import com.honeyprojects.core.admin.service.AdRandomAddPointService;
 import com.honeyprojects.core.common.response.SimpleResponse;
-import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
-import com.honeyprojects.entity.Chest;
+import com.honeyprojects.entity.ChestGift;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.util.ConvertRequestApiidentity;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +31,9 @@ import java.util.stream.Collectors;
 public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     @Autowired
     private AdRandomAddPointRepository adRandomAddPointRepository;
+
+    @Autowired
+    private AdChestGiftRepository adChestGiftRepository;
 
     @Autowired
     private AdArchiveGiftRepository adArchiveGiftRepository;
@@ -69,23 +72,40 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         Random random = new Random();
         try {
             List<Honey> honeyList = new ArrayList<>();
-            for (String idStudent : adminRandomPointRequest.getListStudent()) {
-                for (String idCategory : adminRandomPointRequest.getListCategoryPoint()) {
-                    Optional<Honey> honey = adRandomAddPointRepository.getHoneyByIdStudent(idStudent, idCategory);
-                    if (honey.isPresent()) {
-                        Honey student = honey.get();
-                        honeyList.add(student);
-                    } else {
-                        continue;
+            if (adminRandomPointRequest.getListStudentPoint().size() < 1) {
+                List<String> allStudent = adRandomAddPointRepository.getAllIdStudentInHoney();
+                List<SimpleResponse> simpleResponseList = convertRequestApiidentity.handleCallApiGetListUserByListId(allStudent);
+                for (SimpleResponse idS : simpleResponseList) {
+                    for (String idCategory : adminRandomPointRequest.getListCategoryPoint()) {
+                        Optional<Honey> honey = adRandomAddPointRepository.getHoneyByIdStudent(idS.getId(), idCategory);
+                        if (honey.isPresent()) {
+                            Honey student = honey.get();
+                            honeyList.add(student);
+                        } else {
+                            continue;
+                        }
+                    }
+                }
+            } else {
+                for (String student : adminRandomPointRequest.getListStudentPoint()) {
+                    for (String idCategory : adminRandomPointRequest.getListCategoryPoint()) {
+                        Optional<Honey> honey = adRandomAddPointRepository.getHoneyByIdStudent(student, idCategory);
+                        if (honey.isPresent()) {
+                            Honey honey1 = honey.get();
+                            honeyList.add(honey1);
+                        } else {
+                            continue;
+                        }
                     }
                 }
             }
-            for (int i = 0; i < adminRandomPointRequest.getNumberStudent(); i++) {
-                for (Honey honey : honeyList) {
-                    Integer randomPoint = random.nextInt(adminRandomPointRequest.getMaxPoint() - adminRandomPointRequest.getMinPoint() + 1) + adminRandomPointRequest.getMinPoint();
-                    honey.setHoneyPoint(honey.getHoneyPoint() + randomPoint);
-                    adRandomAddPointRepository.save(honey);
-                }
+            Collections.shuffle(honeyList); // Xáo trộn danh sách honeyList
+            int numStudentsToProcess = Math.min(adminRandomPointRequest.getNumberStudent(), honeyList.size());
+            for (int i = 0; i < numStudentsToProcess; i++) {
+                Honey honey = honeyList.get(i);
+                Integer randomPoint = random.nextInt(adminRandomPointRequest.getMaxPoint() - adminRandomPointRequest.getMinPoint() + 1) + adminRandomPointRequest.getMinPoint();
+                honey.setHoneyPoint(honey.getHoneyPoint() + randomPoint);
+                adRandomAddPointRepository.save(honey);
             }
             return true;
         } catch (Exception e) {
@@ -95,54 +115,98 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     }
 
     @Override
-    public Boolean createRandomItem(AdminRandomPointRequest adminRandomPointRequest) {
+    public Boolean createRandomItem(AdminRandomPointRequest req) {
         Random random = new Random();
-        Chest chest = new Chest();
-        List<ArchiveGift> archiveGiftList = new ArrayList<>();
         try {
-            for (int i = 0; i < adminRandomPointRequest.getNumberChest(); i++) {
-                int randomIndex = random.nextInt(adminRandomPointRequest.getListItem().size());
-                String randomGiftId = adminRandomPointRequest.getListItem().get(randomIndex);
-                ArchiveGift archiveGift = new ArchiveGift();
-                archiveGift.setChestId(chest.getId());
-                archiveGift.setGiftId(randomGiftId);
-                archiveGiftList.add(archiveGift);
-            }
-            adArchiveGiftRepository.saveAll(archiveGiftList);
-            for (String idStudent : adminRandomPointRequest.getListStudent()) {
-                int randomIndex = random.nextInt(archiveGiftList.size());
-                ArchiveGift randomGiftId = archiveGiftList.get(randomIndex);
-                Archive archive = adRandomAddPointRepository.getArchiveByIdStudent(idStudent);
-                if (randomGiftId.getArchiveId() != null) {
-                    randomGiftId.setArchiveId(archive.getClubId());
-                } else {
-                    continue;
+            if (req.getListStudentPoint().size() < 1) {
+                List<String> allStudent = adRandomAddPointRepository.getAllIdStudentInHoney();
+                List<SimpleResponse> simpleResponseList = convertRequestApiidentity.handleCallApiGetListUserByListId(allStudent);
+                for (SimpleResponse simple : simpleResponseList) {
+                    String archiveId = adRandomAddPointRepository.getArchiveByIdStudent(simple.getId());
+                    int indexRandom = random.nextInt(req.getListItem().size());
+                    String itemRandom = req.getListItem().get(indexRandom);
+                    String chestGiftId = adRandomAddPointRepository.getOptionalChestGift(req.getChestId(), itemRandom);
+                    Optional<ChestGift> optionalChestGift = adChestGiftRepository.findById(chestGiftId);
+                    System.out.println("NEXT");
+                    if (optionalChestGift.isPresent()) {
+                        ChestGift chestGift = optionalChestGift.get();
+                        String idChest = chestGift.getChestId();
+                        String idGift = chestGift.getGiftId();
+                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, idChest, idGift);
+                        ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
+                        adArchiveGiftRepository.save(archiveGift);
+                    } else {
+                        continue;
+                    }
+                }
+            } else {
+                for (String idStudent : req.getListStudentPoint()) {
+                    String archiveId = adRandomAddPointRepository.getArchiveByIdStudent(idStudent);
+                    int indexRandom = random.nextInt(req.getListItem().size());
+                    String itemRandom = req.getListItem().get(indexRandom);
+                    String chestGiftId = adRandomAddPointRepository.getOptionalChestGift(req.getChestId(), itemRandom);
+                    Optional<ChestGift> optionalChestGift = adChestGiftRepository.findById(chestGiftId);
+                    System.out.println("NEXT");
+                    if (optionalChestGift.isPresent()) {
+                        ChestGift chestGift = optionalChestGift.get();
+                        String idChest = chestGift.getChestId();
+                        String idGift = chestGift.getGiftId();
+                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, idChest, idGift);
+                        ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
+                        adArchiveGiftRepository.save(archiveGift);
+                    } else {
+                        continue;
+                    }
                 }
             }
             return true;
         } catch (Exception e) {
             return false;
         }
-    }
 
-    @Override
-    public List<AdminGiftResponse> getGiftByType(Integer typeNumber) {
-        return adRandomAddPointRepository.getGiftByType(typeNumber);
     }
 
     @Override
     public Boolean exportExcel() {
+        String userHome = System.getProperty("user.home");
+        String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_random.xlsx";
+
+        File outputFile = new File(outputPath);
+
+        int count = 1;
+        while (outputFile.exists()) {
+            outputPath = userHome + File.separator + "Downloads" + File.separator + "file_random" + "(" + count + ")" + ".xlsx";
+            outputFile = new File(outputPath);
+            count++;
+        }
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Trang 1");
 
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setColor(IndexedColors.BLACK.getIndex());
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 15);
+        headerStyle.setFont(font);
+        headerStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+        headerStyle.setBorderTop(BorderStyle.THIN);
+        headerStyle.setBorderBottom(BorderStyle.THIN);
+        headerStyle.setBorderLeft(BorderStyle.THIN);
+        headerStyle.setBorderRight(BorderStyle.THIN);
+
         Row headerRow = sheet.createRow(0);
-        String[] headers = {"STT", "Họ và tên", "Tên đăng nhập", "Email", "Loại mật ong", "Số mật ong"};
+        String[] headers = {"STT", "Tên đăng nhập", "Email"};
         for (int i = 0; i < headers.length; i++) {
             Cell headerCell = headerRow.createCell(i);
             headerCell.setCellValue(headers[i]);
+            headerCell.setCellStyle(headerStyle);
         }
 
-        String outputPath = "D:\\file_export.xlsx";
+        for (int i = 0; i < headers.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
 
         try {
             FileOutputStream outputStream = new FileOutputStream(outputPath);
@@ -156,7 +220,8 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     }
 
     @Override
-    public Boolean importExcel(MultipartFile file) {
+    public List<String> importExcel(MultipartFile file) {
+        List<String> simpleResponseList = new ArrayList<>();
         try {
             InputStream inputStream = file.getInputStream();
             Workbook workbook = new XSSFWorkbook(inputStream);
@@ -166,17 +231,11 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             Row headerRow = sheet.getRow(0);
 
             int emailColumnIndex = -1;
-            int categoryColumnIndex = -1;
-            int pointColumnIndex = -1;
 
             for (Cell cell : headerRow) {
                 String columnName = cell.getStringCellValue();
                 if ("Email".equalsIgnoreCase(columnName)) {
                     emailColumnIndex = cell.getColumnIndex();
-                } else if ("Loại mật ong".equalsIgnoreCase(columnName)) {
-                    categoryColumnIndex = cell.getColumnIndex();
-                } else if ("Số mật ong".equalsIgnoreCase(columnName)) {
-                    pointColumnIndex = cell.getColumnIndex();
                 }
             }
 
@@ -186,40 +245,47 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 }
 
                 Cell emailCell = row.getCell(emailColumnIndex);
-                Cell categoryCell = row.getCell(categoryColumnIndex);
-                Cell pointCell = row.getCell(pointColumnIndex);
 
                 String email = (emailCell != null) ? emailCell.getStringCellValue() : "";
-                String category = (categoryCell != null) ? categoryCell.getStringCellValue() : "";
-                double point = (pointCell != null) ? pointCell.getNumericCellValue() : 0;
 
                 SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmail(email);
-                AdminCategoryResponse optionalCategory = adRandomAddPointRepository.getCategoryByName(category);
-                if (optionalCategory == null) {
-                    continue;
-                }
-                Optional<Honey> honey = adRandomAddPointRepository.getHoneyByIdStudent(response.getId(), optionalCategory.getId());
-                if (honey.isEmpty()) {
-                    continue;
-                }
-                Honey honeyAddPoint = honey.get();
-                honeyAddPoint.setHoneyPoint(honeyAddPoint.getHoneyPoint() + (int) point);
-                adRandomAddPointRepository.save(honeyAddPoint);
+                simpleResponseList.add(response.getId());
             }
-
 
             // Đóng tệp Excel
             workbook.close();
             inputStream.close();
-            return true;
+            return simpleResponseList;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
 
     @Override
-    public List<Integer> getAllTypeGift() {
-        return adRandomAddPointRepository.getAllTypeGift();
+    public List<AdminChestReponse> getAllChest() {
+        return adRandomAddPointRepository.getAllChest();
+    }
+
+    @Override
+    public List<AdminChestGiftResponse> getAllGiftByChest(String idChest) {
+        return adRandomAddPointRepository.getAllGiftByChest(idChest);
+    }
+
+    @Override
+    public AdminChestReponse getChestById(String idChest) {
+        return adRandomAddPointRepository.getChestById(idChest);
+    }
+
+    @Override
+    public Boolean deleteChestGidt(String idChest, String idGift) {
+        String chestGift = adRandomAddPointRepository.getOptionalChestGift(idChest, idGift);
+
+        if (chestGift != null) {
+            adChestGiftRepository.deleteById(chestGift);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

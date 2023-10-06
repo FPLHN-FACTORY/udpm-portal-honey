@@ -12,26 +12,48 @@ export class GiftAPI {
   };
 
   static create = (data) => {
+    const formData = new FormData();
+    formData.append("code", data.code);
+    formData.append("name", data.name);
+    formData.append("image", data.image);
+    if (!isNaN(data.quantity) && data.quantity !== null) {
+      formData.append("quantity", data.quantity);
+    }
+    formData.append("status", "FREE");
+    formData.append("type", data.type);
+    formData.append("honeyCategoryId", data.honeyCategoryId);
+    formData.append("honey", data.honey);
+
     return request({
       method: "POST",
       url: `/${this.COMPONENT_NAME}`,
-      data: data,
+      data: formData,
     });
   };
 
   static update = (data, id) => {
+    const formData = new FormData();
+    formData.append("code", data.code);
+    formData.append("name", data.name);
+    formData.append("image", data.image);
+    if (!isNaN(data.quantity) && data.quantity !== null) {
+      formData.append("quantity", data.quantity);
+    }
+    formData.append("status", "FREE");
+    formData.append("type", data.type);
+    formData.append("honeyCategoryId", data.honeyCategoryId);
+    formData.append("honey", data.honey);
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/${id}`,
-      data: data,
+      data: formData,
     });
   };
 
-  static delete = (data, id) => {
+  static delete = (id) => {
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/delete/${id}`,
-      data: data,
     });
   };
 

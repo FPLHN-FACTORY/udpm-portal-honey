@@ -44,13 +44,23 @@
     padding-bottom: 0;
 }
 
-.add-point .search-button:hover {
-    background-color: #EEB30D !important;
+.add-point .import-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
 }
 
-.add-point .import-button {
-    background-color: #24923e;
-    margin-bottom: 24px;
+.import-button input[type="file"] {
+    display: none;
+}
+
+.import-button input[type="file"]::-webkit-file-upload-button {
+    visibility: hidden;
 }
 
 .add-point .import-button:hover {
