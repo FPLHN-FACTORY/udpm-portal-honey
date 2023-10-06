@@ -10,6 +10,10 @@ export const ClubSlice = createSlice({
       state.push(action.payload);
       return state;
     },
+    AddGiftClub: (state, action) => {
+      state.push(action.payload);
+      return state;
+    },
     UpdateClub: (state, action) => {
       const index = state.findIndex((el) => el.id === action.payload.id);
       if (index > -1) {
@@ -50,6 +54,7 @@ export const ClubSlice = createSlice({
 export const GetClub = (state) => state.club;
 export const {
   AddClub,
+  AddGiftClub,
   UpdateClub,
   DeleteClub,
   SetClub,

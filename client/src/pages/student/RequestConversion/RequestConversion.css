@@ -2,12 +2,12 @@
   background-color: red;
 }
 .custom-popconfirm {
-  color: #ff0000 !important; /* Replace with your desired text color */
+  color: #ff0000 !important; 
 }
 
-/* Change background color */
+
 .custom-popconfirm .ant-popover-inner-content {
-  background-color: #00ff00; /* Replace with your desired background color */
+  background-color: #00ff00; 
 }
 .gift {
   width: 196px;
@@ -29,28 +29,28 @@
   background-color: #f3bfa5;
 }
 .modelConversion .ant-modal-close-x {
-  font-size: 24px; /* Đặt kích thước font lớn hơn */
-  width: 40px; /* Đặt chiều rộng của nút */
-  height: 40px; /* Đặt chiều cao của nút */
-  line-height: 40px; /* Đặt chiều cao dòng để căn giữa nội dung */
-  border-radius: 50%; /* Đặt hình dạng thành hình tròn */ /* Canh giữa nội dung trong nút */
-  background-color: #8c251c; /* Đặt màu nền cho nút */
-  color: #fff; /* Đặt màu cho văn bản của nút */
-  cursor: pointer; /* Biểu tượng chuột khi di chuyển qua nút */
+  font-size: 24px; 
+  width: 40px; 
+  height: 40px; 
+  line-height: 40px; 
+  border-radius: 50%; 
+  background-color: #8c251c; 
+  color: #fff; 
+  cursor: pointer; 
   padding-top: 10px;
   margin-top: -45px;
   margin-left: 15px;
-  /* Đặt kích thước font cho nút đóng */
+  
 }
 
 .cardGift {
-  /* height: 235px; */ /* Đặt chiều cao tối đa của phần chứa quà */
-  overflow-y: scroll; /* Hiển thị thanh cuốn ngay cả khi không cần thiết */
-  scrollbar-width: none; /* Ẩn thanh cuốn trong Firefox */
+  
+  overflow-y: scroll; 
+  scrollbar-width: none; 
   -ms-overflow-style: none;
 }
 .cardGift::-webkit-scrollbar {
-  width: 0; /* Ẩn thanh cuốn trong trình duyệt dựa trên Chromium (như Chrome, Edge) */
+  width: 0; 
 }
 .point {
   width: 80px;

@@ -10,4 +10,6 @@ public class AdminGiftRequest extends PageableRequest {
 
     private String search;
 
+    private String idClub;
+
 }
