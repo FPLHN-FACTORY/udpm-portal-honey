@@ -19,6 +19,7 @@ import {
   getStompClient,
 } from "../../../helper/stomp-client/config";
 import { Content, Footer } from "antd/es/layout/layout";
+import { CloseOutlined } from "@ant-design/icons";
 
 function DashboardAuthUser({ children }) {
   const [transaction, setTransaction] = useState();
@@ -51,7 +52,8 @@ function DashboardAuthUser({ children }) {
               className="tu-choi"
               onClick={() => {
                 message.destroy(transactionReq.idTransaction);
-              }}>
+              }}
+            >
               Từ chối
             </button>
             <button
@@ -59,7 +61,8 @@ function DashboardAuthUser({ children }) {
               onClick={() => {
                 message.destroy();
                 onsubmitTransaction(transactionReq);
-              }}>
+              }}
+            >
               Chấp nhận
             </button>
           </div>
@@ -120,17 +123,24 @@ function DashboardAuthUser({ children }) {
   return (
     <div className="main-ui-student" style={{ display: "flex" }}>
       {children !== undefined ? (
-        <div
-          className="content-student"
-          style={{
-            width: "100%",
-            height: "100vh",
-            background: "red",
-            position: "absolute",
-            top: 0,
-            left: 0,
-          }}>
-          {children}
+        <div className="frame">
+          <div className="card-close-container">
+            <CloseOutlined className="card-close-icon" />
+          </div>
+
+          <div
+            className="content-student"
+            style={{
+              border: "10px ridge #F6C714",
+              width: "85%",
+              height: "80vh",
+              position: "absolute",
+              top: "10%",
+              left: "7%",
+            }}
+          >
+            {children}
+          </div>
         </div>
       ) : (
         <div style={{ flex: 1 }}>
@@ -142,7 +152,8 @@ function DashboardAuthUser({ children }) {
                   height: "70vh",
                   paddingRight: "60px",
                   paddingLeft: "60px",
-                }}>
+                }}
+              >
                 <Row>
                   <Col span={12}>
                     <div className="container">
@@ -193,7 +204,8 @@ function DashboardAuthUser({ children }) {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "end",
-                }}>
+                }}
+              >
                 <button
                   onClick={hanlderClickDauGia}
                   className="btn-dau-gia btn-student"

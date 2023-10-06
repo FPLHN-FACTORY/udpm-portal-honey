@@ -241,6 +241,12 @@ export default function RequestConversionHistory() {
           <Table
             columns={columns}
             rowKey="id"
+            expandable={{
+              expandedRowRender: (record) => (
+                <p style={{ margin: 0 }}>{record.note}</p>
+              ),
+              rowExpandable: (record) => record.note !== "Not Expandable",
+            }}
             dataSource={getHistory}
             pagination={false}
           />

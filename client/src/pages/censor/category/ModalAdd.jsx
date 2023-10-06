@@ -117,7 +117,7 @@ const ModalThem = (props) => {
           </Form.Item>
           <Form.Item
             label="Phê duyệt"
-            name="status"
+            name="categoryStatus"
             rules={[
               {
                 required: true,
@@ -126,8 +126,24 @@ const ModalThem = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={1}>Cần phê duyệt</Radio>
-              <Radio value={0}>Không phê duyệt</Radio>
+              <Radio value={"1"}>Cần phê duyệt</Radio>
+              <Radio value={"0"}>Không phê duyệt</Radio>
+            </Radio.Group>
+          </Form.Item>
+
+          <Form.Item
+            label="Giao dịch"
+            name="transactionRights"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn tùy chọn phê duyệt",
+              },
+            ]}
+          >
+            <Radio.Group>
+              <Radio value={"0"}>Được giao dịch</Radio>
+              <Radio value={"1"}>Không giao dịch</Radio>
             </Radio.Group>
           </Form.Item>
 

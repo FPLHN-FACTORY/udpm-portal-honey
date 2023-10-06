@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 public interface AdRequestConversionHistoryRepository extends HistoryRepository {
     @Query(value = """
                 SELECT c.name as nameCategory,  h.id,h.name_gift, h.honey_point, 
-                h.created_date, h.status, h.student_id FROM History h  inner join
+                h.created_date, h.status, h.student_id, h.note FROM History h  inner join
                  honey hn on hn.id = h.honey_id inner join category c 
                  on hn.honey_category_id = c.id 
                   WHERE (:#{#filter.status} IS NULL OR h.status = :#{#filter.status})

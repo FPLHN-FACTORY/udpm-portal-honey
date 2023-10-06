@@ -38,6 +38,7 @@ import AuctionMangement from "./pages/censor/auction-management/AuctionManagemen
 import TestTransaction from "./pages/student/transaction/TestTransaction";
 import { getToken, setToken } from "./helper/userToken";
 import { connectStompClient } from "./helper/stomp-client/config";
+import StudentChest from "./pages/student/chest/studentChest";
 
 function App() {
   const token =
@@ -298,6 +299,16 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     <TransactionPage />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/chest"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <StudentChest />
                   </DashboardAuthUser>
                 </AuthGuard>
               }
