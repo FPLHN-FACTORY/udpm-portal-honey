@@ -2,8 +2,8 @@ package com.honeyprojects.core.admin.repository;
 
 import com.honeyprojects.core.admin.model.request.AdminClubRequest;
 import com.honeyprojects.core.admin.model.request.AdminGiftRequest;
+import com.honeyprojects.core.admin.model.response.AdminClubGiftResponse;
 import com.honeyprojects.core.admin.model.response.AdminClubResponse;
-import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
 import com.honeyprojects.repository.ClubRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,7 +46,7 @@ public interface AdClubRepository extends ClubRepository {
     List<AdminClubResponse> getAllListResponse();
 
     @Query(value = """
-            SELECT ROW_NUMBER() OVER(ORDER BY g.last_modified_date DESC) AS stt, g.id, g.code, g.name, g.type, g.image
+            SELECT ROW_NUMBER() OVER(ORDER BY g.last_modified_date DESC) AS stt, g.id, g.code, g.name, g.type, g.image, g.status
             FROM gift g LEFT JOIN club_gift cl ON g.id = cl.gift_id
             WHERE ((:#{#request.search} IS NULL
             OR :#{#request.search} LIKE ''
@@ -69,10 +69,10 @@ public interface AdClubRepository extends ClubRepository {
                     AND g.type = 1
                     GROUP BY g.id
             """, nativeQuery = true)
-    Page<AdminGiftResponse> findGiftInClub(Pageable pageable, @Param("request") AdminGiftRequest request);
+    Page<AdminClubGiftResponse> findGiftInClub(Pageable pageable, @Param("request") AdminGiftRequest request);
 
     @Query(value = """
-            SELECT ROW_NUMBER() OVER(ORDER BY g.last_modified_date DESC) AS stt, g.id, g.code, g.name, g.type, g.image
+            SELECT ROW_NUMBER() OVER(ORDER BY g.last_modified_date DESC) AS stt, g.id, g.code, g.name, g.type, g.image, g.status
             FROM gift g LEFT JOIN club_gift cl ON g.id = cl.gift_id AND cl.club_id = :#{#request.idClub}
             WHERE ((:#{#request.search} IS NULL
             OR :#{#request.search} LIKE ''
@@ -95,6 +95,6 @@ public interface AdClubRepository extends ClubRepository {
                     AND g.type = 1
                     GROUP BY g.id
             """, nativeQuery = true)
-    Page<AdminGiftResponse> findGiftNotInClub(Pageable pageable, @Param("request") AdminGiftRequest request);
+    Page<AdminClubGiftResponse> findGiftNotInClub(Pageable pageable, @Param("request") AdminGiftRequest request);
 
 }
