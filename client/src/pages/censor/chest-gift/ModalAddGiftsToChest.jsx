@@ -2,11 +2,16 @@ import React, { useState, useEffect } from "react";
 import { Button, Modal, Table, Tooltip, message } from "antd";
 import { ChestGiftAPI } from "../../../apis/censor/chest-gift/chest-gift.api";
 import { PlusCircleOutlined } from "@ant-design/icons";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import {
+  SetChestGift,
+  GetChestGift,
+} from "../../../app/reducers/chest-gift/chest-gift.reducer";
 const ModalAddGiftToChest = (props) => {
   const { chest } = props;
   const [modalOpen, setModalOpen] = useState(false);
-  const [dataGifts, setDataGifts] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const dispatch = useAppDispatch();
 
   const columns = [
     {
@@ -26,13 +31,16 @@ const ModalAddGiftToChest = (props) => {
 
   const fetchData = () => {
     ChestGiftAPI.getGiftNotJoinChest(chest.id).then((response) => {
-      setDataGifts(response.data.data);
+      dispatch(SetChestGift(response.data.data));
     });
   };
 
   const handleCancel = () => {
+    setSelectedRowKeys([]);
     setModalOpen(false);
   };
+
+  const dataGifts = useAppSelector(GetChestGift);
 
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
@@ -51,6 +59,7 @@ const ModalAddGiftToChest = (props) => {
     }).then(() => {
       fetchData();
       message.success("Thêm thành công.");
+      handleCancel();
     });
   };
 

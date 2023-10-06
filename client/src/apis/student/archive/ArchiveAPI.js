@@ -10,4 +10,11 @@ export class ArchiveAPI {
       params: filter,
     });
   };
+
+  static delete = (id) => {
+    return request({
+      method: "DELETE",
+      url: `/${this.COMPONENT_NAME}/${id}`,
+    });
+  };
 }

@@ -25,6 +25,6 @@ public interface AdminGiftService {
 
     void deleteById(String id);
 
-    Gift updateStatusGift(AdminUpdateGiftRequest request,String id);
+    Gift updateStatusGift(String id);
 
 }

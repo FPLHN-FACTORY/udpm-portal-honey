@@ -65,10 +65,9 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         adGiftRepository.deleteById(id);
     }
 
-    public Gift updateStatusGift(AdminUpdateGiftRequest request, String id) {
+    public Gift updateStatusGift(String id) {
         Optional<Gift> optional = adGiftRepository.findById(id);
-        optional.get().setStatus(StatusGift.values()[request.getStatus().ordinal()]);
-        optional.get().setName(request.getName());
+        optional.get().setStatus(StatusGift.KHONG_HOAT_DONG);
         return adGiftRepository.save(optional.get());
     }
 }

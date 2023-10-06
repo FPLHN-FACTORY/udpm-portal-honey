@@ -3,6 +3,7 @@ import { Button, Form, Input, message, Modal, Radio, Select } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { UpdateGift } from "../../../app/reducers/gift/gift.reducer";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
+import { CategoryAPI } from "../../../apis/censor/category/category.api";
 
 const ModalDetailGift = (props) => {
   const onFinishFailed = () => {
@@ -14,11 +15,12 @@ const ModalDetailGift = (props) => {
   const [form] = Form.useForm();
   const [image, setImage] = useState([]);
   const [isLimitedQuantity, setIsLimitedQuantity] = useState(true);
+  const [listCategory, setListCategory] = useState([]);
 
   useEffect(() => {
+    fetchCategory();
     if (gift && gift.quantity !== null) {
       setIsLimitedQuantity(true);
-      console.log(gift);
     } else {
       setIsLimitedQuantity(false);
       form.setFieldsValue({ quantityLimit: 1 });
@@ -33,6 +35,12 @@ const ModalDetailGift = (props) => {
   const handleFileInputChange = (event) => {
     const selectedFile = event.target.files[0];
     setImage(selectedFile);
+  };
+
+  const fetchCategory = () => {
+    CategoryAPI.fetchAllCategory().then((response) => {
+      setListCategory(response.data.data);
+    });
   };
 
   const dispatch = useAppDispatch();
@@ -57,6 +65,8 @@ const ModalDetailGift = (props) => {
             status: formValues.status,
             quantity: quantity,
             type: formValues.type,
+            honey: formValues.honey,
+            honeyCategoryId: formValues.honeyCategoryId,
           },
           gift ? gift.id : null
         )
@@ -97,12 +107,16 @@ const ModalDetailGift = (props) => {
         }}
         initialValues={{
           remember: true,
-          quantity: gift && gift.quantity !== null ? gift.quantity : "",
-          quantityLimit: gift && gift.quantity !== null ? gift.quantity : "",
+          image: gift && gift.image !== null ? gift.image : null,
+          quantity: gift && gift.quantity !== null ? gift.quantity : null,
+          quantityLimit: gift && gift.quantity !== null ? gift.quantity : null,
           name: gift && gift.name ? gift.name : "",
           code: gift && gift.code ? gift.code : "",
           status: gift && gift.status !== null ? gift.status : 0,
           type: gift && gift.type ? gift.type : 0,
+          honey: gift && gift.honey !== null ? gift.honey : 0,
+          honeyCategoryId:
+            gift && gift.honeyCategoryId !== null ? gift.honeyCategoryId : null,
         }}
         autoComplete="off"
       >
@@ -139,9 +153,11 @@ const ModalDetailGift = (props) => {
         </Form.Item>
         <Form.Item label="Số lượng" name="quantity">
           <Radio.Group
-            onChange={(e) => setIsLimitedQuantity(e.target.value !== null)}
+            onChange={(e) => setIsLimitedQuantity(e.target.value !== "")}
           >
-            <Radio value={""}>Vô hạn</Radio>
+            <Radio value={null} defaultChecked={gift && gift.quantity === null}>
+              Vô hạn
+            </Radio>
             <Radio value={gift && gift.quantity !== null ? gift.quantity : 1}>
               Giới hạn
             </Radio>
@@ -161,7 +177,6 @@ const ModalDetailGift = (props) => {
             <Input type="number" />
           </Form.Item>
         )}
-
         <Form.Item
           label="Loại"
           name="type"
@@ -177,6 +192,36 @@ const ModalDetailGift = (props) => {
             <Option value={1}>Vật phẩm nâng cấp</Option>
             <Option value={2}>Dụng cụ</Option>
           </Select>
+        </Form.Item>
+        <Form.Item
+          label="cấp bậc"
+          name="honeyCategoryId"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng chọn cấp",
+            },
+          ]}
+        >
+          <Select placeholder="Chọn cấp bậc">
+            {listCategory.map((category) => (
+              <Option key={category.id} value={category.id}>
+                {category.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          label="Số điểm"
+          name="honey"
+          rules={[
+            {
+              required: true,
+              message: "Điểm Quà không để trống",
+            },
+          ]}
+        >
+          <Input />
         </Form.Item>
         <Form.Item
           label="Phê duyệt"
