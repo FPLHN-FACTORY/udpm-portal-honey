@@ -1,31 +1,5 @@
-import {
-  FormOutlined,
-  PlusCircleOutlined,
-  QuestionCircleOutlined,
-  SendOutlined,
-} from "@ant-design/icons";
-
-import {
-  Button,
-  Card,
-  Col,
-  Form,
-  Input,
-  Modal,
-  Pagination,
-  Popconfirm,
-  Row,
-  Segmented,
-  Select,
-  Space,
-  Table,
-  Tag,
-  Tooltip,
-  message,
-} from "antd";
 import React, { useEffect, useState } from "react";
 import { ConversionAPI } from "../../../apis/censor/conversion/conversion.api";
-import ModalDetailConversion from "../../student/RequestConversion/ModalDetail";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { ResquestConversion } from "../../../apis/user/ResquestConversiton/ResquestConversion.api";
 import { useNavigate } from "react-router-dom";
@@ -35,6 +9,18 @@ import {
   GetConversion,
   SetConversion,
 } from "../../../app/reducers/conversion/conversion.reducer";
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  Modal,
+  Row,
+  Segmented,
+  Tag,
+  Tooltip,
+  message,
+} from "antd";
 
 export default function AddRequestConversion(props) {
   const requestConversion = props;
@@ -58,6 +44,7 @@ export default function AddRequestConversion(props) {
   const [cardBackgroundColor, setCardBackgroundColor] = useState("#F8DA95");
   const [addDiscribe, setAddDiscribe] = useState([]);
   const [selectedGiftName, setSelectedGiftName] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const [form] = Form.useForm();
   form.setFieldsValue(requestConversion);
@@ -67,15 +54,17 @@ export default function AddRequestConversion(props) {
   const dispatch = useAppDispatch();
   const data = useAppSelector(GetConversion);
 
+  const onCategoryChange = (value) => {
+    setSelectedCategory(value);
+  };
+
   useEffect(() => {
     if (categoryType) {
-      // Sử dụng categoryType để lọc danh sách dữ liệu
       const filteredData = listConversion.filter(
         (conversion) => conversion.categoryId === categoryType
       );
       setFilteredConversions(filteredData);
     } else {
-      // Nếu không có categoryType hoặc categoryType không được chọn, hiển thị toàn bộ danh sách
       setFilteredConversions(listConversion);
     }
   }, [categoryType, listConversion]);
@@ -106,7 +95,6 @@ export default function AddRequestConversion(props) {
     ResquestConversion.getPointHoney(data)
       .then((response) => {
         setFillPoint(response.data.data ? response.data.data : "0");
-        console.log("Điểm từ API:", response.data.data);
       })
       .catch((error) => console.log(error));
   };
@@ -118,7 +106,6 @@ export default function AddRequestConversion(props) {
         khoa: "17.3",
         phone: "0763104018",
       });
-      console.log(response.data.data.idUser);
     });
   };
 
@@ -138,14 +125,14 @@ export default function AddRequestConversion(props) {
     setSelectedConversion(conversion);
     if (selectedCardIndex === index) {
       setSelectedCardIndex(-1);
-      setCardBackgroundColor("#F8DA95"); // Đặt lại màu nền mặc định
+      setCardBackgroundColor("#F8DA95");
     } else {
       setSelectedConversion(conversion);
       setSelectedCardIndex(index);
       setCardBackgroundColor("#CCCC99");
       const selectedGiftId = conversion.giftId;
       const selectedGift = fillGift.find((gift) => gift.id === selectedGiftId);
-      setSelectedGiftName(selectedGift ? selectedGift.name : ""); // Set the selected gift name
+      setSelectedGiftName(selectedGift ? selectedGift.name : "");
     }
   };
 
@@ -161,16 +148,10 @@ export default function AddRequestConversion(props) {
   };
 
   useEffect(() => {
-    fetchDataConversion();
+    fechGift();
   }, []);
-  const fetchDataConversion = () => {
-    ConversionAPI.fetchAllConversion().then((response) => {
-      setListConversion(response.data.data);
-    });
-  };
 
   const onSubmitCreate = () => {
-    // lấy  name gift theo id
     const selectedGiftId = selectedConversion
       ? selectedConversion.giftId
       : undefined;
@@ -191,7 +172,7 @@ export default function AddRequestConversion(props) {
       message.error("Bạn không đủ điểm để đổi quà trong ranh này.");
       return;
     }
-    console.log("Tên quà đã chọn:", selectedGiftName);
+
     const dataToAdd = {
       honeyId: fillPoint.id,
       studentId: fillUserApi.idUser,
@@ -202,7 +183,6 @@ export default function AddRequestConversion(props) {
       note: addDiscribe,
     };
     createRequest(dataToAdd);
-    console.log(dataToAdd);
   };
 
   const createRequest = (addRequest) => {
@@ -212,7 +192,7 @@ export default function AddRequestConversion(props) {
           message.success("Đổi quà thành công");
           navigate("/student/create-conversion/history");
         } else {
-          message.error("Đổi qu thất bại!");
+          message.error("Đổi quà thất bại!");
         }
       })
       .catch((error) => {
@@ -225,11 +205,11 @@ export default function AddRequestConversion(props) {
     return category ? category.name : "";
   };
 
-  // Function to get the name of the Gift based on its ID
   const getGiftNameById = (giftId) => {
     const gift = fillGift.find((item) => item.id === giftId);
     return gift ? gift.name : "";
   };
+
   const getGiftImageById = (giftId) => {
     const gift = fillGift.find((item) => item.id === giftId);
     return gift ? gift.image : "";
@@ -251,15 +231,11 @@ export default function AddRequestConversion(props) {
 
   return (
     <>
-      {/* <Button type="primary" onClick={showModal}>
-          Quy đổi quà
-        </Button> */}
       <Modal
         title="Điền tên giảng viên hướng dẫn "
         open={isModalOpen}
         onOk={onSubmitCreate}
         onCancel={handleCancel}
-        // footer={null}
       >
         <textarea
           name=""
@@ -318,21 +294,20 @@ export default function AddRequestConversion(props) {
             className="cardGift"
           >
             <Row justify="start">
-              {filteredConversions.map((conversion, index) => (
+              {fillGift.map((gift, index) => (
                 <Col
                   span={1.5}
                   className="colGift"
                   style={{
                     marginRight: "10px",
-
                     marginBottom: "10px",
                   }}
                 >
                   <Tooltip
-                    title={`${parseInt(conversion.ratio)} mật 
+                    title={`${parseInt(gift.honey)} mật 
                     ${getCategoryNameById(
-                      conversion.categoryId
-                    )} để đổi 0.25 ${getGiftNameById(conversion.giftId)} `}
+                      gift.honeyCategoryId
+                    )} để đổi 0.25 ${getGiftNameById(gift.id)} `}
                     overlayStyle={{
                       color: "orange",
                       background: "gold !important",
@@ -341,7 +316,7 @@ export default function AddRequestConversion(props) {
                     <div
                       className="gift"
                       onClick={() => {
-                        handleAddToComboBox(conversion, index);
+                        handleAddToComboBox(gift, index);
                         showModal(true);
                       }}
                       style={{
@@ -349,7 +324,6 @@ export default function AddRequestConversion(props) {
                           selectedCardIndex === index
                             ? cardBackgroundColor
                             : "",
-
                         boxShadow:
                           selectedCardIndex === index
                             ? "0px 0px 10px gold"
@@ -358,16 +332,6 @@ export default function AddRequestConversion(props) {
                     >
                       <img
                         src={require("../../../assets/images/gift.png")}
-                        // src={require(`url(data:image/jpeg;base64,${btoa(
-                        //   String.fromCharCode.apply(
-                        //     null,
-                        //     new Uint8Array(
-                        //       getGiftImageById(conversion.giftId)
-                        //         .split(",")
-                        //         .map(Number)
-                        //     )
-                        //   )
-                        // )})`)}
                         alt="Gift"
                         style={{ marginLeft: "75px", display: "block" }}
                         height={40}
@@ -380,10 +344,8 @@ export default function AddRequestConversion(props) {
                         }}
                       >
                         {" "}
-                        {getGiftNameById(conversion.giftId)}
+                        {getGiftNameById(gift.id)}
                       </span>
-
-                      {/* {parseInt(conversion.ratio)} */}
                     </div>
                   </Tooltip>
                 </Col>
