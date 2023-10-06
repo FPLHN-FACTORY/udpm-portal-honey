@@ -38,6 +38,11 @@ public class Gift extends PrimaryEntity {
 
     private Long fromDate;
 
+    @Column(length = EntityProperties.LENGTH_ID)
+    private String honeyCategoryId;
+
+    private Integer honey;
+
     @Lob
     @Column(name = "image", columnDefinition = "LONGBLOB")
     private byte[] image;

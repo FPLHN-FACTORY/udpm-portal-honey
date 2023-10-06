@@ -119,7 +119,7 @@ export default function AddPoint() {
     AddPointExcelAPI.importExcel(formData)
       .then((response) => {
         message.success("Import thành công!");
-       console.log(response.data.data)
+   //    console.log(response.data.data)
       })
       .catch((error) => {
         message.error("Lỗi khi import Excel.");
@@ -154,6 +154,7 @@ export default function AddPoint() {
                 prefix={<SearchOutlined />}
               />
             </Form.Item>
+            <div className="ml-auto">
             <label className="import-button" type="primary">
               Import excel
               <input
@@ -163,6 +164,7 @@ export default function AddPoint() {
                 style={{ display: "none" }}
               />
             </label>
+            </div>
           </Form>
         </Card>
         {Object.keys(student).length > 0 ? (
