@@ -20,7 +20,8 @@ public interface AdminCategoryRepository extends CategoryRepository {
     List<AdminCategoryResponse> getAllCategory();
 
     @Query(value = """
-            SELECT ROW_NUMBER() OVER(ORDER BY ca.created_date DESC) AS stt, ca.id, ca.code, ca.name, ca.last_modified_date
+            SELECT ROW_NUMBER() OVER(ORDER BY ca.created_date DESC) AS stt, ca.id, ca.code, ca.name, ca.last_modified_date,
+            ca.category_status, ca.transaction_rights 
             FROM category ca
              WHERE ( ( :#{#request.search} IS NULL
                       OR :#{#request.search} LIKE '' 
@@ -30,7 +31,8 @@ public interface AdminCategoryRepository extends CategoryRepository {
                     OR ca.name LIKE %:#{#request.search}% ) )
            
             """, countQuery = """
-            SELECT ROW_NUMBER() OVER(ORDER BY ca.created_date DESC) AS stt, ca.id, ca.code, ca.name, ca.last_modified_date
+            SELECT ROW_NUMBER() OVER(ORDER BY ca.created_date DESC) AS stt, ca.id, ca.code, ca.name, ca.last_modified_date,
+            ca.category_status , ca.transaction_rights 
             FROM category ca
              WHERE ( ( :#{#request.search} IS NULL
                       OR :#{#request.search} LIKE '' 
@@ -43,7 +45,7 @@ public interface AdminCategoryRepository extends CategoryRepository {
     Page<AdminCategoryResponse> getAllCategoryByAdmin(Pageable pageable, @Param("request") AdminCategoryRequest request);
 
     @Query(value = """
-            SELECT c.id, c.name, c.code, c.last_modified_date FROM category c
+            SELECT c.id, c.name, c.code, c.last_modified_date ,c.category_status , c.transaction_rights  FROM category c
             ORDER BY c.last_modified_date DESC
             """, nativeQuery = true)
     List<AdminCategoryResponse> getAllListCategory();
