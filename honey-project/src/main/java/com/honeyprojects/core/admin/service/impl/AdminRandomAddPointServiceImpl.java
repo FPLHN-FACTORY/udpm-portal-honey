@@ -1,6 +1,7 @@
 package com.honeyprojects.core.admin.service.impl;
 
 import com.honeyprojects.core.admin.model.request.AdminCreateArchiveGiftRequest;
+import com.honeyprojects.core.admin.model.request.AdminCreateHoneyRequest;
 import com.honeyprojects.core.admin.model.request.AdminRandomPointRequest;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminChestGiftResponse;
@@ -82,7 +83,14 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                             Honey student = honey.get();
                             honeyList.add(student);
                         } else {
-                            continue;
+                            AdminCreateHoneyRequest adminCreateHoneyRequest = new AdminCreateHoneyRequest();
+                            adminCreateHoneyRequest.setSemesterId(null);
+                            adminCreateHoneyRequest.setStudentId(idS.getId());
+                            adminCreateHoneyRequest.setCategoryId(idCategory);
+                            adminCreateHoneyRequest.setHoneyPoint(0);
+                            Honey newHoney = adminCreateHoneyRequest.createHoney(new Honey());
+                            System.out.println("=======" + newHoney);
+                            honeyList.add(newHoney);
                         }
                     }
                 }
@@ -94,14 +102,20 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                             Honey honey1 = honey.get();
                             honeyList.add(honey1);
                         } else {
-                            continue;
+                            AdminCreateHoneyRequest adminCreateHoneyRequest = new AdminCreateHoneyRequest();
+                            adminCreateHoneyRequest.setSemesterId(null);
+                            adminCreateHoneyRequest.setStudentId(student);
+                            adminCreateHoneyRequest.setCategoryId(idCategory);
+                            adminCreateHoneyRequest.setHoneyPoint(0);
+                            Honey newHoney = adminCreateHoneyRequest.createHoney(new Honey());
+                            honeyList.add(newHoney);
                         }
                     }
                 }
             }
             Collections.shuffle(honeyList); // Xáo trộn danh sách honeyList
-            int numStudentsToProcess = Math.min(adminRandomPointRequest.getNumberStudent(), honeyList.size());
-            for (int i = 0; i < numStudentsToProcess; i++) {
+//            int numStudentsToProcess = Math.min(adminRandomPointRequest.getNumberStudent(), honeyList.size());
+            for (int i = 0; i < honeyList.size(); i++) {
                 Honey honey = honeyList.get(i);
                 Integer randomPoint = random.nextInt(adminRandomPointRequest.getMaxPoint() - adminRandomPointRequest.getMinPoint() + 1) + adminRandomPointRequest.getMinPoint();
                 honey.setHoneyPoint(honey.getHoneyPoint() + randomPoint);

@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface AdRandomAddPointRepository extends HoneyRepository {
     @Query(value = """
-            SELECT c.id, c.name, c.code
+            SELECT c.id, c.name, c.code, c.category_status, c.transaction_rights
             FROM category c
             ORDER BY c.last_modified_date DESC
             """, nativeQuery = true)
@@ -34,7 +34,7 @@ public interface AdRandomAddPointRepository extends HoneyRepository {
     Optional<Honey> getHoneyByIdStudent(String idStudent, String idCategory);
 
     @Query(value = """
-            select row_number() OVER(ORDER BY created_date DESC) as stt, id, name, percent
+            select row_number() OVER(ORDER BY created_date DESC) as stt, id, name
             from chest
             """, nativeQuery = true)
     List<AdminChestReponse> getAllChest();
@@ -49,7 +49,7 @@ public interface AdRandomAddPointRepository extends HoneyRepository {
     List<AdminChestGiftResponse> getAllGiftByChest(String idchest);
 
     @Query(value = """
-            select row_number()  OVER(ORDER BY created_date DESC) as stt, id, percent, name
+            select row_number()  OVER(ORDER BY created_date DESC) as stt, id, name
             from chest
             where id = :#{#idChest}
             """, nativeQuery = true)
