@@ -27,6 +27,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import java.math.BigDecimal;
+
 @SpringBootApplication
 @EnableJpaRepositories(
         basePackages = "com.honeyprojects.repository"
@@ -56,6 +58,9 @@ public class DBGenerator implements CommandLineRunner {
 
     @Autowired
     private ClubRepository clubRepository;
+
+    @Autowired
+    private AuctionRepository auctionRepository;
 
 
     public void run(String... args) throws Exception {
@@ -124,7 +129,7 @@ public class DBGenerator implements CommandLineRunner {
 
         Honey honey5 = new Honey();
         honey5.setHoneyPoint(100);
-        honey5.setStudentId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
+        honey5.setStudentId(userAPI3.getId());
         honey5.setUserSemesterId(semester.getId());
         honey5.setHoneyCategoryId(category2.getId());
         honey5.setId(honeyRepository.save(honey5).getId());
@@ -277,6 +282,27 @@ public class DBGenerator implements CommandLineRunner {
         club2.setStatus(Status.HOAT_DONG);
         club2.setId(clubRepository.save(club2).getId());
 
+        Auction auction = new Auction();
+        auction.setName("Phiên đấu giá biển số");
+        auction.setFromDate(1678294800000L);
+        auction.setToDate(1685379600000L);
+        auction.setStartingPrice(BigDecimal.valueOf(5000));
+        auction.setJump(BigDecimal.valueOf(100));
+        auction.setHoneyCategoryId(category1.getId());
+        auction.setHoney(200L);
+        auction.setStatus(Status.HOAT_DONG);
+        auction.setId(auctionRepository.save(auction).getId());
+
+        Auction auction1 = new Auction();
+        auction1.setName("Phiên đấu giá biển số đầu tiên");
+        auction1.setFromDate(1678294800000L);
+        auction1.setToDate(1685379600000L);
+        auction1.setStartingPrice(BigDecimal.valueOf(5000));
+        auction1.setJump(BigDecimal.valueOf(100));
+        auction1.setHoneyCategoryId(category2.getId());
+        auction1.setHoney(200L);
+        auction1.setStatus(Status.KHONG_HOAT_DONG);
+        auction1.setId(auctionRepository.save(auction1).getId());
     }
 
     public static void main(String[] args) {

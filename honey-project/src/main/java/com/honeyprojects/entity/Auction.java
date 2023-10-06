@@ -51,7 +51,6 @@ public class Auction extends PrimaryEntity {
     @Column
     private Long honey;
 
-    @Enumerated(EnumType.STRING)
     private Status status;
 
 
