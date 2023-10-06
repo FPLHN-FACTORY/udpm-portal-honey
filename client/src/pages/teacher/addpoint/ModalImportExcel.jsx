@@ -5,25 +5,14 @@ import {
 } from "@ant-design/icons";
 import { Button, Col, Input, Modal, Row, Space, message } from "antd";
 import React from "react";
-import "./index.css";
-import { RandomAddPointAPI } from "../../../apis/censor/random-add-point/random-add-point.api";
+import { AddPointExcelAPI } from "../../../apis/teacher/add-point/add-point-excel.api";
 
 export default function ModalImportExcel(props) {
-  const {
-    open,
-    setOpen,
-    setLoading,
-    dataRandomPoint,
-    dataRandomItem,
-    setListStudentPoint,
-    setListStudentItem,
-    nameFile,
-    setNameFile,
-  } = props;
+  const { open, setOpen, nameFile, setNameFile, loading, setLoading } = props;
 
   const handleExportExcel = () => {
     setLoading(true);
-    RandomAddPointAPI.createExportExcel()
+    AddPointExcelAPI.exportExcel()
       .then(() => {
         message.success("Export excel thành công");
       })
@@ -38,29 +27,21 @@ export default function ModalImportExcel(props) {
     const formData = new FormData();
     formData.append("file", e.target.files[0]);
     setLoading(true);
-    RandomAddPointAPI.createImportExcel(formData)
+    AddPointExcelAPI.importExcel(formData)
       .then((response) => {
-        message.success("Import excel thành công");
-        setListStudentPoint({
-          ...dataRandomPoint,
-          listStudentPoint: response.data.data,
-        });
-        setListStudentItem({
-          ...dataRandomItem,
-          listStudentPoint: response.data.data,
-        });
+        message.success("Import thành công!");
+        console.log(response.data.data);
       })
-      .catch(() => {
-        message.error("Import excel thất bại");
+      .catch((error) => {
+        message.error("Lỗi khi import Excel.");
       });
     setLoading(false);
   };
 
   const handleRemoveFile = () => {
     setNameFile("");
-    setListStudentPoint([]);
-    setListStudentItem([]);
   };
+
   return (
     <div>
       <Modal

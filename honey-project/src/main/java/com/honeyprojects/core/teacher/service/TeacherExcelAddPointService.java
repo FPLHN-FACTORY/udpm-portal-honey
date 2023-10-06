@@ -9,4 +9,6 @@ import java.util.List;
 public interface TeacherExcelAddPointService {
 
     Boolean importFromExcel(MultipartFile file) ;
+
+    Boolean exportExcel();
 }

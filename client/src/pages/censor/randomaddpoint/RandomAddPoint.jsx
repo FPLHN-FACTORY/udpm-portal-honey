@@ -512,18 +512,19 @@ export default function RandomAddPoint() {
                     display: "flex",
                   }}
                 >
-                  Loại rương
-                  <Tooltip title="Thêm rương">
-                    <Button
-                      onClick={() => {
-                        setDetailChest(null);
-                        setShowModal(true);
-                      }}
-                    >
-                      <PlusCircleOutlined style={{ fontSize: "15px" }} />
-                    </Button>
-                  </Tooltip>
-                  <span className="error">{}</span>
+                  <div>Loại rương</div>
+                  <div>
+                    <Tooltip title="Thêm rương">
+                      <Button
+                        onClick={() => {
+                          setDetailChest(null);
+                          setShowModal(true);
+                        }}
+                      >
+                        <PlusCircleOutlined style={{ fontSize: "15px" }} />
+                      </Button>
+                    </Tooltip>
+                  </div>
                 </Space>
               }
               style={{ width: "300px", borderTop: "5px solid #1c315e" }}
@@ -537,6 +538,7 @@ export default function RandomAddPoint() {
                 options={optionChest}
                 onChange={(e) => handleChangeChest(e)}
               />
+              <span className="error">{errorChestId}</span>
             </Card>
           </Row>
         </div>
