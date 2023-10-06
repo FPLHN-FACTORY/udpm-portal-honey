@@ -76,18 +76,21 @@ public class DBGenerator implements CommandLineRunner {
         category1.setCategoryStatus(CategoryStatus.ACCEPT);
         category1.setCode("CT1");
         category1.setId(categoryRepository.save(category1).getId());
+        category1.setTransactionRights(CategoryTransaction.LIMIT);
 
         Category category2 = new Category();
         category2.setName("SLIVER");
         category2.setCategoryStatus(CategoryStatus.ACCEPT);
         category2.setCode("CT2");
         category2.setId(categoryRepository.save(category2).getId());
+        category2.setTransactionRights(CategoryTransaction.FREE);
 
         Category category3 = new Category();
         category3.setName("BRONZE");
         category3.setCategoryStatus(CategoryStatus.FREE);
         category3.setCode("CT3");
         category3.setId(categoryRepository.save(category3).getId());
+        category3.setTransactionRights(CategoryTransaction.FREE);
 
         Semester semester = new Semester();
         semester.setCode("SE1");
@@ -155,6 +158,7 @@ public class DBGenerator implements CommandLineRunner {
         gift1.setStatus(StatusGift.FREE);
         gift1.setType(TypeGift.QUA_TANG);
         gift1.setId(giftRepository.save(gift1).getId());
+//        gift1.setNote("Nguyễn Thúy Hằng lớp IT17326 môn font-end ");
 
         Gift gift2 = new Gift();
         gift2.setCode("G2");
@@ -162,6 +166,7 @@ public class DBGenerator implements CommandLineRunner {
         gift2.setStatus(StatusGift.FREE);
         gift2.setType(TypeGift.QUA_TANG);
         gift2.setId(giftRepository.save(gift2).getId());
+//        gift2.setNote("Nguyễn Thúy Hằng lớp IT17326 môn font-end ");
 
         Gift gift3 = new Gift();
         gift3.setCode("G3");
@@ -169,6 +174,7 @@ public class DBGenerator implements CommandLineRunner {
         gift3.setStatus(StatusGift.ACCEPT);
         gift3.setType(TypeGift.VAT_PHAM);
         gift3.setId(giftRepository.save(gift3).getId());
+//        gift3.setNote("Nguyễn Thúy Hằng lớp IT17326 môn font-end ");
 
         Gift gift4 = new Gift();
         gift4.setCode("G4");
@@ -176,6 +182,7 @@ public class DBGenerator implements CommandLineRunner {
         gift4.setStatus(StatusGift.ACCEPT);
         gift4.setType(TypeGift.DUNG_CU);
         gift4.setId(giftRepository.save(gift4).getId());
+//        gift4.setNote("Nguyễn Thúy Hằng lớp IT17326 môn font-end ");
 
         UserSemester userSemester1 = new UserSemester();
         userSemester1.setSemesterId(semester.getId());

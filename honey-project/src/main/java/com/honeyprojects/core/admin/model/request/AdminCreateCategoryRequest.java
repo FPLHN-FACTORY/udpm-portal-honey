@@ -2,6 +2,7 @@ package com.honeyprojects.core.admin.model.request;
 
 import com.honeyprojects.core.common.base.PageableRequest;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
+import com.honeyprojects.infrastructure.contant.CategoryTransaction;
 import com.honeyprojects.infrastructure.contant.TypeCategory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -18,5 +19,7 @@ public class AdminCreateCategoryRequest extends PageableRequest {
 
     private TypeCategory type;
 
-    private CategoryStatus status;
+    private CategoryStatus categoryStatus;
+
+    private CategoryTransaction transactionRights;
 }

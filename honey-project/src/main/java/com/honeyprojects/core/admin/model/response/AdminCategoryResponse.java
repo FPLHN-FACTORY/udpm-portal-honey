@@ -16,4 +16,10 @@ public interface AdminCategoryResponse extends IsIdentified {
 
     @Value("#{target.name}")
     String getName();
+
+    @Value("#{target.category_status}")
+    String getCategoryStatus();
+
+    @Value("#{target.transaction_rights}")
+    String getTransactionRights();
 }

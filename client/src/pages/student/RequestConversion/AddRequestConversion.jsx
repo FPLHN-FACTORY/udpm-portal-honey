@@ -56,6 +56,7 @@ export default function AddRequestConversion(props) {
 
   const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
   const [cardBackgroundColor, setCardBackgroundColor] = useState("#F8DA95");
+  const [addDiscribe, setAddDiscribe] = useState([]);
   const [selectedGiftName, setSelectedGiftName] = useState("");
 
   const [form] = Form.useForm();
@@ -198,8 +199,10 @@ export default function AddRequestConversion(props) {
       giftId: selectedConversion ? selectedConversion.giftId : 0,
       nameGift: selectedGiftName,
       categoryId: selectedConversion ? selectedConversion.categoryId : 0,
+      note: addDiscribe,
     };
     createRequest(dataToAdd);
+    console.log(dataToAdd);
   };
 
   const createRequest = (addRequest) => {
@@ -227,6 +230,10 @@ export default function AddRequestConversion(props) {
     const gift = fillGift.find((item) => item.id === giftId);
     return gift ? gift.name : "";
   };
+  const getGiftImageById = (giftId) => {
+    const gift = fillGift.find((item) => item.id === giftId);
+    return gift ? gift.image : "";
+  };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -241,100 +248,27 @@ export default function AddRequestConversion(props) {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
   return (
     <>
       {/* <Button type="primary" onClick={showModal}>
           Quy đổi quà
         </Button> */}
       <Modal
-        style={{
-          border: "5px solid #A55600",
-          height: "538px",
-          borderRadius: "12px",
-        }}
-        width={780}
-        height={600}
-        className="modelConversion"
-        // title="Phần thưởng tự chọn "
+        title="Điền tên giảng viên hướng dẫn "
         open={isModalOpen}
-        onOk={handleOk}
+        onOk={onSubmitCreate}
         onCancel={handleCancel}
-        footer={null}
+        // footer={null}
       >
-        <p style={{ fontSize: "20px", fontWeight: "700", color: "#A55600" }}>
-          <img
-            src={require("../../../assets/images/honey.png")}
-            alt="Gift"
-            height={30}
-            width={30}
-          />
-          Phần thưởng tự chọn
-          <img
-            src={require("../../../assets/images/honey.png")}
-            alt="Gift"
-            height={30}
-            width={30}
-          />
-        </p>
-        <Card
-          title={
-            <Tag className="point">
-              {fillPoint.point ? fillPoint.point : parseInt(0)}
-            </Tag>
-          }
-          style={{ marginTop: "20px", backgroundColor: "#ECBB5E" }}
-          className="cardAll"
-          extra={
-            <Segmented
-              className="font-bold select-category"
-              onChange={(value) => onchageCtae(value)}
-              value={categoryType}
-              options={fillCategory.map((category) => ({
-                label: category.name,
-                value: category.id,
-              }))}
-            />
-          }
-        >
-          <Card style={{ background: "#00BFFF", height: "30px" }}></Card>
-          <Card
-            style={{ background: "#F8DA95", height: "290px" }}
-            className="cardGift"
-          >
-            <Row justify="start">
-              {filteredConversions.map((conversion, index) => (
-                <Col
-                  span={1.5}
-                  className="colGift"
-                  style={{
-                    marginRight: "10px",
-
-                    marginBottom: "10px",
-                  }}
-                >
-                  <div className="gift">
-                    <img
-                      src={require("../../../assets/images/gift.png")}
-                      alt="Gift"
-                      style={{ marginLeft: "2px" }}
-                      height={30}
-                      width={30}
-                    />
-                  </div>
-                </Col>
-              ))}
-            </Row>
-          </Card>
-        </Card>
-        <div style={{ textAlign: "center" }}>
-          <Button
-            className="btnXacNhan"
-            style={{ marginTop: "20px" }}
-            onClick={handleOk}
-          >
-            XÁC NHẬN
-          </Button>
-        </div>
+        <textarea
+          name=""
+          id=""
+          cols="30"
+          rows="10"
+          style={{ width: "465px", height: "100px" }}
+          onChange={(e) => setAddDiscribe(e.target.value)}
+        />
       </Modal>
       <Card style={{ marginTop: "20px" }} className="cartAllConversion">
         <p style={{ fontSize: "20px", fontWeight: "700", color: "#A55600" }}>
@@ -378,6 +312,7 @@ export default function AddRequestConversion(props) {
           }
         >
           <Card style={{ background: "#00BFFF", height: "30px" }}></Card>
+
           <Card
             style={{ background: "#F8DA95", height: "300px" }}
             className="cardGift"
@@ -405,7 +340,10 @@ export default function AddRequestConversion(props) {
                   >
                     <div
                       className="gift"
-                      onClick={() => handleAddToComboBox(conversion, index)}
+                      onClick={() => {
+                        handleAddToComboBox(conversion, index);
+                        showModal(true);
+                      }}
                       style={{
                         backgroundColor:
                           selectedCardIndex === index
@@ -420,13 +358,26 @@ export default function AddRequestConversion(props) {
                     >
                       <img
                         src={require("../../../assets/images/gift.png")}
+                        // src={require(`url(data:image/jpeg;base64,${btoa(
+                        //   String.fromCharCode.apply(
+                        //     null,
+                        //     new Uint8Array(
+                        //       getGiftImageById(conversion.giftId)
+                        //         .split(",")
+                        //         .map(Number)
+                        //     )
+                        //   )
+                        // )})`)}
                         alt="Gift"
                         style={{ marginLeft: "75px", display: "block" }}
                         height={40}
                         width={40}
                       />
                       <span
-                        style={{ fontWeight: "1000", color: "rgb(165, 86, 0)" }}
+                        style={{
+                          fontWeight: "1000",
+                          color: "rgb(165, 86, 0)",
+                        }}
                       >
                         {" "}
                         {getGiftNameById(conversion.giftId)}
