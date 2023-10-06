@@ -1,6 +1,7 @@
 package com.honeyprojects.core.admin.service.impl;
 
 import com.honeyprojects.core.admin.model.request.AdminCreateArchiveGiftRequest;
+import com.honeyprojects.core.admin.model.request.AdminCreateHoneyRequest;
 import com.honeyprojects.core.admin.model.request.AdminRandomPointRequest;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminChestGiftResponse;
@@ -14,15 +15,13 @@ import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.entity.ChestGift;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.util.ConvertRequestApiidentity;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -84,7 +83,14 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                             Honey student = honey.get();
                             honeyList.add(student);
                         } else {
-                            continue;
+                            AdminCreateHoneyRequest adminCreateHoneyRequest = new AdminCreateHoneyRequest();
+                            adminCreateHoneyRequest.setSemesterId(null);
+                            adminCreateHoneyRequest.setStudentId(idS.getId());
+                            adminCreateHoneyRequest.setCategoryId(idCategory);
+                            adminCreateHoneyRequest.setHoneyPoint(0);
+                            Honey newHoney = adminCreateHoneyRequest.createHoney(new Honey());
+                            System.out.println("=======" + newHoney);
+                            honeyList.add(newHoney);
                         }
                     }
                 }
@@ -96,14 +102,20 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                             Honey honey1 = honey.get();
                             honeyList.add(honey1);
                         } else {
-                            continue;
+                            AdminCreateHoneyRequest adminCreateHoneyRequest = new AdminCreateHoneyRequest();
+                            adminCreateHoneyRequest.setSemesterId(null);
+                            adminCreateHoneyRequest.setStudentId(student);
+                            adminCreateHoneyRequest.setCategoryId(idCategory);
+                            adminCreateHoneyRequest.setHoneyPoint(0);
+                            Honey newHoney = adminCreateHoneyRequest.createHoney(new Honey());
+                            honeyList.add(newHoney);
                         }
                     }
                 }
             }
             Collections.shuffle(honeyList); // Xáo trộn danh sách honeyList
-            int numStudentsToProcess = Math.min(adminRandomPointRequest.getNumberStudent(), honeyList.size());
-            for (int i = 0; i < numStudentsToProcess; i++) {
+//            int numStudentsToProcess = Math.min(adminRandomPointRequest.getNumberStudent(), honeyList.size());
+            for (int i = 0; i < honeyList.size(); i++) {
                 Honey honey = honeyList.get(i);
                 Integer randomPoint = random.nextInt(adminRandomPointRequest.getMaxPoint() - adminRandomPointRequest.getMinPoint() + 1) + adminRandomPointRequest.getMinPoint();
                 honey.setHoneyPoint(honey.getHoneyPoint() + randomPoint);
@@ -170,17 +182,45 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
     @Override
     public Boolean exportExcel() {
+        String userHome = System.getProperty("user.home");
+        String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_random.xlsx";
+
+        File outputFile = new File(outputPath);
+
+        int count = 1;
+        while (outputFile.exists()) {
+            outputPath = userHome + File.separator + "Downloads" + File.separator + "file_random" + "(" + count + ")" + ".xlsx";
+            outputFile = new File(outputPath);
+            count++;
+        }
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Trang 1");
 
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setColor(IndexedColors.BLACK.getIndex());
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 15);
+        headerStyle.setFont(font);
+        headerStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+        headerStyle.setBorderTop(BorderStyle.THIN);
+        headerStyle.setBorderBottom(BorderStyle.THIN);
+        headerStyle.setBorderLeft(BorderStyle.THIN);
+        headerStyle.setBorderRight(BorderStyle.THIN);
+
         Row headerRow = sheet.createRow(0);
-        String[] headers = {"STT", "Tên đăng nhập", "email"};
+        String[] headers = {"STT", "Tên đăng nhập", "Email"};
         for (int i = 0; i < headers.length; i++) {
             Cell headerCell = headerRow.createCell(i);
             headerCell.setCellValue(headers[i]);
+            headerCell.setCellStyle(headerStyle);
         }
 
-        String outputPath = "D:\\file_export.xlsx";
+        for (int i = 0; i < headers.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
 
         try {
             FileOutputStream outputStream = new FileOutputStream(outputPath);

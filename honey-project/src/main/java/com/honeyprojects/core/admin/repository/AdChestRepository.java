@@ -13,13 +13,13 @@ import org.springframework.stereotype.Repository;
 public interface AdChestRepository extends ChestRepository {
 
     @Query(value = """
-            SELECT ROW_NUMBER() OVER(ORDER BY c.created_date DESC) AS stt, c.id, c.name AS name, c.percent AS percent
+            SELECT ROW_NUMBER() OVER(ORDER BY c.created_date DESC) AS stt, c.id, c.name AS name
                        FROM chest c
                         WHERE ( ( :#{#request.search} IS NULL
                                  OR :#{#request.search} LIKE ''
                                 OR c.name LIKE %:#{#request.search}% ) )
                        """, countQuery = """
-            SELECT ROW_NUMBER() OVER(ORDER BY c.created_date DESC) AS stt, c.id, c.name AS name, c.percent AS percent
+            SELECT ROW_NUMBER() OVER(ORDER BY c.created_date DESC) AS stt, c.id, c.name AS name
                        FROM chest c
                         WHERE ( ( :#{#request.search} IS NULL
                                  OR :#{#request.search} LIKE ''

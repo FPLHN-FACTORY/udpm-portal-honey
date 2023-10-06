@@ -10,10 +10,6 @@ import lombok.Setter;
 @Setter
 public class AdminCreateChestRequest extends PageableRequest {
 
-    @NotBlank
     private String name;
-
-    @NotNull
-    private Double percent;
 
 }

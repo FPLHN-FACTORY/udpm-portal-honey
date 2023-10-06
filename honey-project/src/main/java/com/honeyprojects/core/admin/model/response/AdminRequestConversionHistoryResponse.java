@@ -24,4 +24,7 @@ public interface AdminRequestConversionHistoryResponse extends IsIdentified {
     @Value("#{target.status}")
     Integer getStatus();
 
+    @Value("#{target.note}")
+    String getNote();
+
 }

@@ -19,7 +19,4 @@ public interface AdminChestGiftResponse extends IsIdentified {
     @Value("#{target.code}")
     String getCode();
 
-//    @Value("#{target.image}")
-//    Byte getImage();
-
 }

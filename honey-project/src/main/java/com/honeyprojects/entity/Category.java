@@ -2,6 +2,7 @@ package com.honeyprojects.entity;
 
 import com.honeyprojects.entity.base.PrimaryEntity;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
+import com.honeyprojects.infrastructure.contant.CategoryTransaction;
 import com.honeyprojects.infrastructure.contant.EntityProperties;
 import com.honeyprojects.infrastructure.contant.TypeCategory;
 import jakarta.persistence.Column;
@@ -23,5 +24,7 @@ public class Category extends PrimaryEntity {
     private String name;
 
     private CategoryStatus categoryStatus;
+
+    private CategoryTransaction transactionRights;
 
 }

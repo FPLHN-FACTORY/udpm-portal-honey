@@ -17,14 +17,14 @@ import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.util.ConvertRequestApiidentity;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -75,21 +75,27 @@ public class TeacherExcelAddPointServiceImpl implements TeacherExcelAddPointServ
                 TeacherAddPoinExcelResponse response = new TeacherAddPoinExcelResponse();
 
 
-                String name = row.getCell(0).getStringCellValue();
-                String email = row.getCell(1).getStringCellValue();
-                String categoryName = row.getCell(2).getStringCellValue();
-                Integer poin = (int) row.getCell(3).getNumericCellValue();
-                String note = row.getCell(4).getStringCellValue();
+                String name = row.getCell(1).getStringCellValue();
+                String email = row.getCell(2).getStringCellValue();
+                String categoryName = row.getCell(3).getStringCellValue();
+                Integer poin = (int) row.getCell(4).getNumericCellValue();
+                String note = row.getCell(5).getStringCellValue();
 
                 response.setStudentName(name);
-                response.setEmail(email);
+                if (!email.matches("^[^@]+@[^@]+$")) {
+                    continue;
+                } else {
+                    response.setEmail(email);
+                }
                 response.setCategoryName(categoryName);
-                response.setHoneyPoint(poin);
+                if (poin < 0) {
+                    continue;
+                } else {
+                    response.setHoneyPoint(poin);
+                }
                 response.setNote(note);
 
                 dataList.add(response);
-                //    System.out.println("====================");
-                //  dataList.forEach(s -> System.out.println(s.toString()));
             }
 
             for (TeacherAddPoinExcelResponse response : dataList) {
@@ -135,5 +141,56 @@ public class TeacherExcelAddPointServiceImpl implements TeacherExcelAddPointServ
         return false;
     }
 
+    @Override
+    public Boolean exportExcel() {
+        String userHome = System.getProperty("user.home");
+        String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_add_point.xlsx";
 
+        File outputFile = new File(outputPath);
+
+        int count = 1;
+        while (outputFile.exists()) {
+            outputPath = userHome + File.separator + "Downloads" + File.separator + "file_add_point" + "(" + count + ")" + ".xlsx";
+            outputFile = new File(outputPath);
+            count++;
+        }
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Trang 1");
+
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setColor(IndexedColors.BLACK.getIndex());
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 15);
+        headerStyle.setFont(font);
+        headerStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+        headerStyle.setBorderTop(BorderStyle.THIN);
+        headerStyle.setBorderBottom(BorderStyle.THIN);
+        headerStyle.setBorderLeft(BorderStyle.THIN);
+        headerStyle.setBorderRight(BorderStyle.THIN);
+
+        Row headerRow = sheet.createRow(0);
+        String[] headers = {"STT", "Họ và tên", "Email", "Loại mật ong", "Mật ong", "Mô tả"};
+        for (int i = 0; i < headers.length; i++) {
+            Cell headerCell = headerRow.createCell(i);
+            headerCell.setCellValue(headers[i]);
+            headerCell.setCellStyle(headerStyle);
+        }
+
+        for (int i = 0; i < headers.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        try {
+            FileOutputStream outputStream = new FileOutputStream(outputPath);
+            workbook.write(outputStream);
+            outputStream.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

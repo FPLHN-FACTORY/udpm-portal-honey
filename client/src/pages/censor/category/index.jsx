@@ -27,9 +27,6 @@ export default function Index() {
 
   useEffect(() => {
     CategoryAPI.fetchAll().then((response) => {
-      console.log("====================================");
-      console.log(response);
-      console.log("====================================");
       dispatch(SetCategory(response.data.data.data));
       setTotal(response.data.data.totalPages);
     });
@@ -65,9 +62,33 @@ export default function Index() {
       render: (text) => <span>{text}</span>,
     },
     {
-      title: "Tên thể loại",
+      title: "Loại mật",
       dataIndex: "name",
       key: "name",
+    },
+    {
+      title: "Phê duyệt",
+      dataIndex: "categoryStatus",
+      key: "categoryStatus",
+      render: (text) => {
+        if (text === "0") {
+          return <span>Không phê duyệt</span>;
+        } else {
+          return <span>Phê duyệt</span>;
+        }
+      },
+    },
+    {
+      title: "Quy đổi",
+      dataIndex: "transactionRights",
+      key: "transactionRights",
+      render: (text) => {
+        if (text === "0") {
+          return <span>Được giao dịch</span>;
+        } else {
+          return <span>Không giao dịch</span>;
+        }
+      },
     },
     {
       title: () => <div>Action</div>,

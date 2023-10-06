@@ -128,7 +128,7 @@ export default function ModalImportExcel(props) {
         >
           <Button className="button-css" onClick={() => handleExportExcel()}>
             <DownloadOutlined />
-            Export excel
+            Tải file mẫu
           </Button>
           <Button className="button-css" onClick={() => setOpen(false)}>
             Xác nhận

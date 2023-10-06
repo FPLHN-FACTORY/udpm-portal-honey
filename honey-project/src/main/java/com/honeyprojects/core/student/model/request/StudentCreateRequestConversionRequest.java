@@ -26,4 +26,7 @@ public class StudentCreateRequestConversionRequest {
 
     @NotBlank
     private String honeyId;
+
+    @NotBlank
+    private String note;
 }

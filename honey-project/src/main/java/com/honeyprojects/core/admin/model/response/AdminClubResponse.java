@@ -4,10 +4,8 @@ import com.honeyprojects.entity.base.IsIdentified;
 import org.springframework.beans.factory.annotation.Value;
 
 public interface AdminClubResponse extends IsIdentified {
-    Integer getStt();
 
-    @Value("#{target.id}")
-    String getId();
+    Integer getStt();
 
     @Value("#{target.code}")
     String getCode();
