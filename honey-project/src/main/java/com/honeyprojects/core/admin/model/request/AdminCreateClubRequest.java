@@ -14,6 +14,7 @@ import java.util.Random;
 @Getter
 @Setter
 public class AdminCreateClubRequest extends PageableRequest {
+
     private String code;
 
     @NotBlank(message = "tên không được để trống")

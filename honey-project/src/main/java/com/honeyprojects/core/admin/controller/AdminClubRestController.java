@@ -15,37 +15,52 @@ public class AdminClubRestController {
     private AdminClubService adminClubService;
 
     @GetMapping("")
-    public ResponseObject getAllGiftByAdmin(final AdminClubRequest request){
+    public ResponseObject getAllGiftByAdmin(final AdminClubRequest request) {
         return new ResponseObject(adminClubService.getAllCategoryByAdmin(request));
     }
 
+    @GetMapping("/gift")
+    public ResponseObject findGiftInClub(final AdminGiftRequest request) {
+        return new ResponseObject(adminClubService.findGiftInClub(request));
+    }
+
+    @GetMapping("/gift-not-in-club")
+    public ResponseObject findGiftNotInClub(final AdminGiftRequest request) {
+        return new ResponseObject(adminClubService.findGiftNotInClub(request));
+    }
+
     @GetMapping("/list-gift")
-    public ResponseObject getAllListGift(){
+    public ResponseObject getAllListGift() {
         return new ResponseObject(adminClubService.getAllListGift());
     }
 
-    @GetMapping("/get-one/{id}")
-    public ResponseObject getOne(@PathVariable("id") String id){
+    @GetMapping("/{id}")
+    public ResponseObject getOne(@PathVariable("id") String id) {
         return new ResponseObject(adminClubService.getOne(id));
     }
 
     @PostMapping("")
-    public ResponseObject addGift(@Valid @RequestBody AdminCreateClubRequest request){
+    public ResponseObject addClub(@Valid @RequestBody AdminCreateClubRequest request) {
         return new ResponseObject(adminClubService.addClub(request));
     }
 
-    @PutMapping("/{id}")
-    public ResponseObject updateGift(@Valid @RequestBody AdminUpdateClubRequest request, @PathVariable("id") String id){
-        return new ResponseObject(adminClubService.updateClub(request,id));
+    @PostMapping("/create/gift-club")
+    public ResponseObject addClubGift(@Valid @RequestBody AdminCreateClubGiftRequest request) {
+        return new ResponseObject(adminClubService.addGiftClub(request));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseObject updateGift(@Valid @RequestBody AdminUpdateClubRequest request, @PathVariable("id") String id) {
+        return new ResponseObject(adminClubService.updateClub(request, id));
     }
 
     @PutMapping("/delete/{id}")
-    public ResponseObject updateStatusGift(@RequestBody AdminUpdateClubRequest request, @PathVariable("id") String id){
-        return new ResponseObject(adminClubService.updateStatusClub(request,id));
+    public ResponseObject updateStatusGift(@RequestBody AdminUpdateClubRequest request, @PathVariable("id") String id) {
+        return new ResponseObject(adminClubService.updateStatusClub(request, id));
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteGift(@PathVariable("id") String id){
+    @DeleteMapping("/delete/{id}")
+    public void deleteGift(@PathVariable("id") String id) {
         adminClubService.deleteById(id);
     }
 }
