@@ -4,6 +4,7 @@ import { useAppDispatch } from "../../../app/hooks";
 import { UpdateGift } from "../../../app/reducers/gift/gift.reducer";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
+import TextArea from "antd/es/input/TextArea";
 
 const ModalDetailGift = (props) => {
   const onFinishFailed = () => {
@@ -13,7 +14,7 @@ const ModalDetailGift = (props) => {
   const { Option } = Select;
   const { visible, onCancel, onUpdate, gift } = props;
   const [form] = Form.useForm();
-  const [image, setImage] = useState([]);
+  const [image, setImage] = useState(null);
   const [isLimitedQuantity, setIsLimitedQuantity] = useState(true);
   const [listCategory, setListCategory] = useState([]);
 
@@ -45,6 +46,21 @@ const ModalDetailGift = (props) => {
 
   const dispatch = useAppDispatch();
 
+  const validateQuantity = (rule, value) => {
+    const quantityValue = form.getFieldValue("quantity");
+    if (quantityValue === 1 && (!value || value <= 0)) {
+      return Promise.reject("Số lượng phải lớn hơn 0.");
+    }
+    return Promise.resolve();
+  };
+
+  const validateHoney = (rule, value) => {
+    if (!value || value <= 0) {
+      return Promise.reject("Điểm (điểm số) phải lớn hơn 0.");
+    }
+    return Promise.resolve();
+  };
+
   const onFinish = () => {
     form
       .validateFields()
@@ -54,9 +70,10 @@ const ModalDetailGift = (props) => {
           quantity = parseInt(formValues.quantityLimit);
         } else {
           quantity =
-            formValues.quantity !== null ? parseInt(formValues.quantity) : "";
+            formValues.quantity !== undefined
+              ? parseInt(formValues.quantity)
+              : null;
         }
-        console.log(gift.id);
         GiftAPI.update(
           {
             ...formValues,
@@ -67,6 +84,7 @@ const ModalDetailGift = (props) => {
             type: formValues.type,
             honey: formValues.honey,
             honeyCategoryId: formValues.honeyCategoryId,
+            note: formValues.note,
           },
           gift ? gift.id : null
         )
@@ -97,7 +115,7 @@ const ModalDetailGift = (props) => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         labelCol={{
-          span: 4,
+          span: 7,
         }}
         wrapperCol={{
           span: 18,
@@ -117,6 +135,7 @@ const ModalDetailGift = (props) => {
           honey: gift && gift.honey !== null ? gift.honey : 0,
           honeyCategoryId:
             gift && gift.honeyCategoryId !== null ? gift.honeyCategoryId : null,
+          note: gift && gift.note ? gift.note : "",
         }}
         autoComplete="off"
       >
@@ -153,7 +172,12 @@ const ModalDetailGift = (props) => {
         </Form.Item>
         <Form.Item label="Số lượng" name="quantity">
           <Radio.Group
-            onChange={(e) => setIsLimitedQuantity(e.target.value !== "")}
+            onChange={(e) => {
+              setIsLimitedQuantity(e.target.value !== null);
+              if (!e.target.value) {
+                form.setFieldsValue({ quantityLimit: null });
+              }
+            }}
           >
             <Radio value={null} defaultChecked={gift && gift.quantity === null}>
               Vô hạn
@@ -163,7 +187,7 @@ const ModalDetailGift = (props) => {
             </Radio>
           </Radio.Group>
         </Form.Item>
-        {isLimitedQuantity && (
+        {isLimitedQuantity ? (
           <Form.Item
             label="Số lượng giới hạn"
             name="quantityLimit"
@@ -172,13 +196,16 @@ const ModalDetailGift = (props) => {
                 required: true,
                 message: "Vui lòng nhập số lượng giới hạn",
               },
+              {
+                validator: validateQuantity,
+              },
             ]}
           >
             <Input type="number" />
           </Form.Item>
-        )}
+        ) : null}
         <Form.Item
-          label="Loại"
+          label="Loại vật phẩm"
           name="type"
           rules={[
             {
@@ -194,7 +221,7 @@ const ModalDetailGift = (props) => {
           </Select>
         </Form.Item>
         <Form.Item
-          label="cấp bậc"
+          label="Loại mật ong"
           name="honeyCategoryId"
           rules={[
             {
@@ -212,12 +239,15 @@ const ModalDetailGift = (props) => {
           </Select>
         </Form.Item>
         <Form.Item
-          label="Số điểm"
+          label="Số mật ong"
           name="honey"
           rules={[
             {
               required: true,
               message: "Điểm Quà không để trống",
+            },
+            {
+              validator: validateHoney,
             },
           ]}
         >
@@ -241,7 +271,22 @@ const ModalDetailGift = (props) => {
             <Radio value={1}>Cần phê duyệt</Radio>
           </Radio.Group>
         </Form.Item>
-
+        <Form.Item
+          label="Ghi chú"
+          name="note"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập mô tả",
+            },
+          ]}
+        >
+          <TextArea
+            cols="30"
+            rows="10"
+            style={{ width: "350px", height: "100px" }}
+          />
+        </Form.Item>
         <Form.Item
           wrapperCol={{
             offset: 8,

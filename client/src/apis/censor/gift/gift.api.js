@@ -23,7 +23,7 @@ export class GiftAPI {
     formData.append("type", data.type);
     formData.append("honeyCategoryId", data.honeyCategoryId);
     formData.append("honey", data.honey);
-
+    formData.append("note", data.note);
     return request({
       method: "POST",
       url: `/${this.COMPONENT_NAME}`,
@@ -35,7 +35,9 @@ export class GiftAPI {
     const formData = new FormData();
     formData.append("code", data.code);
     formData.append("name", data.name);
-    formData.append("image", data.image);
+    if (data.image !== null) {
+      formData.append("image", data.image);
+    }
     if (!isNaN(data.quantity) && data.quantity !== null) {
       formData.append("quantity", data.quantity);
     }
@@ -43,6 +45,7 @@ export class GiftAPI {
     formData.append("type", data.type);
     formData.append("honeyCategoryId", data.honeyCategoryId);
     formData.append("honey", data.honey);
+    formData.append("note", data.note);
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/${id}`,

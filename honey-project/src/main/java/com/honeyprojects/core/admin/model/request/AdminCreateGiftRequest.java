@@ -39,6 +39,8 @@ public class AdminCreateGiftRequest extends PageableRequest {
 
     private Integer honey;
 
+    private String note;
+
     public Gift dtoToEntity(Gift gift) throws IOException {
         Random random = new Random();
         int number = random.nextInt(1000);
@@ -57,7 +59,7 @@ public class AdminCreateGiftRequest extends PageableRequest {
         }
         gift.setHoneyCategoryId(this.getHoneyCategoryId());
         gift.setHoney(this.getHoney());
-
+        gift.setNote(this.getNote());
         return gift;
     }
 }
