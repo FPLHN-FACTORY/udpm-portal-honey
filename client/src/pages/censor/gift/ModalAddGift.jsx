@@ -5,22 +5,31 @@ import { AddGift } from "../../../app/reducers/gift/gift.reducer";
 import { useState, useEffect } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import TextArea from "antd/es/input/TextArea";
+import "./index.css";
 
 const ModalThem = (props) => {
   const onFinishFailed = () => {
     message.error("Error");
   };
 
-  const { modalOpen, setModalOpen, gift, onSave } = props;
+  const { modalOpen, setModalOpen, gift, onSave, fetchData } = props;
   const [form] = Form.useForm();
   const { Option } = Select;
   const [image, setImage] = useState([]);
   const [quantityValue, setQuantityValue] = useState(0);
   const [listCategory, setListCategory] = useState([]);
+  const [selectedImageUrl, setSelectedImageUrl] = useState("");
 
   const handleFileInputChange = (event) => {
     const selectedFile = event.target.files[0];
     setImage(selectedFile);
+
+    if (selectedFile) {
+      const imageUrl = URL.createObjectURL(selectedFile);
+      setSelectedImageUrl(imageUrl);
+    } else {
+      setSelectedImageUrl("");
+    }
   };
 
   form.setFieldsValue(gift);
@@ -41,13 +50,6 @@ const ModalThem = (props) => {
     CategoryAPI.fetchAllCategory().then((response) => {
       setListCategory(response.data.data);
     });
-  };
-
-  const validateImage = (rule, value) => {
-    if (!value) {
-      return Promise.reject("Vui lòng chọn một hình ảnh.");
-    }
-    return Promise.resolve();
   };
 
   const validateQuantity = (rule, value) => {
@@ -96,6 +98,7 @@ const ModalThem = (props) => {
               honeyCategoryId: result.data.data.honeyCategoryId,
             };
             onSave && onSave(newGift);
+            fetchData();
           })
           .catch((err) => {
             message.error("Lỗi: " + err.message);
@@ -140,25 +143,21 @@ const ModalThem = (props) => {
         }}
         autoComplete="off"
       >
-        <Form.Item
-          label="Ảnh"
-          name="image"
-          rules={[
-            {
-              validator: validateImage,
-            },
-          ]}
+        <div
+          onClick={() => {
+            document.getElementById("select-avatar").click();
+          }}
+          className="image-container"
         >
-          <Input
-            hidden
-            id="image"
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={(event) => handleFileInputChange(event)}
-          />
-          <label htmlFor="image"></label>
-        </Form.Item>
+          {image ? <img src={selectedImageUrl} alt="Chọn ảnh" /> : "Chọn ảnh"}
+        </div>
+        <input
+          className="hidden-input"
+          id="select-avatar"
+          type="file"
+          accept="image/*"
+          onChange={(event) => handleFileInputChange(event)}
+        />
         <Form.Item
           label="Tên"
           name="name"

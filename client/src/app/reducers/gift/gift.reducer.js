@@ -7,7 +7,7 @@ export const GiftSlice = createSlice({
   initialState,
   reducers: {
     AddGift: (state, action) => {
-      state.push(action.payload);
+      state.shift(action.payload);
       return state;
     },
     UpdateGift: (state, action) => {

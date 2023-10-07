@@ -12,13 +12,20 @@ const ModalDetailGift = (props) => {
   };
 
   const { Option } = Select;
-  const { visible, onCancel, onUpdate, gift } = props;
+  const { visible, onCancel, onUpdate, gift, fetchData } = props;
   const [form] = Form.useForm();
   const [image, setImage] = useState(null);
   const [isLimitedQuantity, setIsLimitedQuantity] = useState(true);
+  const [selectedImageUrl, setSelectedImageUrl] = useState("");
   const [listCategory, setListCategory] = useState([]);
 
   useEffect(() => {
+    const byteArray = gift.image ? gift.image.split(",").map(Number) : [];
+    const base64ImageData = btoa(
+      String.fromCharCode.apply(null, new Uint8Array(byteArray))
+    );
+    const imageUrl = `data:image/jpeg;base64,${base64ImageData}`;
+    setSelectedImageUrl(imageUrl);
     fetchCategory();
     if (gift && gift.quantity !== null) {
       setIsLimitedQuantity(true);
@@ -36,6 +43,13 @@ const ModalDetailGift = (props) => {
   const handleFileInputChange = (event) => {
     const selectedFile = event.target.files[0];
     setImage(selectedFile);
+
+    if (selectedFile) {
+      const imageUrl = URL.createObjectURL(selectedFile);
+      setSelectedImageUrl(imageUrl);
+    } else {
+      setSelectedImageUrl("");
+    }
   };
 
   const fetchCategory = () => {
@@ -92,6 +106,7 @@ const ModalDetailGift = (props) => {
             dispatch(UpdateGift(response.data.data));
             message.success("Cập nhật thành công!");
             onUpdate();
+            fetchData();
           })
           .catch((err) => {
             message.error("Lỗi: " + err.message);
@@ -139,17 +154,21 @@ const ModalDetailGift = (props) => {
         }}
         autoComplete="off"
       >
-        <Form.Item label="Ảnh" name="image">
-          <Input
-            hidden
-            id="image"
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={(event) => handleFileInputChange(event)}
-          />
-          <label htmlFor="image"></label>
-        </Form.Item>
+        <div
+          onClick={() => {
+            document.getElementById("select-avatar").click();
+          }}
+          className="image-container"
+        >
+          {<img src={selectedImageUrl} alt="Chọn ảnh" />}
+        </div>
+        <input
+          className="hidden-input"
+          id="select-avatar"
+          type="file"
+          accept="image/*"
+          onChange={(event) => handleFileInputChange(event)}
+        />
 
         <Form.Item label="Code" name="code">
           <Input disabled />

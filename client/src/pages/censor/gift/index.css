@@ -1,0 +1,26 @@
+.image-container {
+  border: 2px dashed #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 150px;
+  width: 150px;
+  margin-left: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 30px;
+  position: relative;
+  text-align: center;
+}
+.image-container img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.hidden-input {
+  display: none !important;
+}

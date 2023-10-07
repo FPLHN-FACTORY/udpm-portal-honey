@@ -19,7 +19,6 @@ import {
 } from "@ant-design/icons";
 import ModalDetailGift from "./ModalDetailGift";
 import ModalAma from "./ModalAddGift";
-import ModalDelete from "./deleteGift";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GetGift, SetGift } from "../../../app/reducers/gift/gift.reducer";
 
@@ -168,6 +167,7 @@ export default function IndexGift() {
         <ModalAma
           modalOpen={showModal}
           setModalOpen={setShowModal}
+          fetchData={fetchData}
           gift={detailGift}
           setGift={setDetailGift}
         />
@@ -175,6 +175,7 @@ export default function IndexGift() {
       {showModalDetail && (
         <ModalDetailGift
           gift={detailGift}
+          fetchData={fetchData}
           visible={showModalDetail}
           onCancel={() => setShowModalDetail(false)}
           onUpdate={() => {
