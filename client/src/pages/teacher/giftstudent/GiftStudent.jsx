@@ -1,14 +1,29 @@
-import { SearchOutlined } from "@ant-design/icons";
-import { Button, Card, Form, Input, message } from "antd";
+import React, { useState } from "react";
+import { Button, Modal, Input, Space, message } from "antd";
+import {
+  CloseCircleOutlined,
+  DownloadOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import "./Index.css";
-import { GiftStudentAPI } from "../../../apis/teacher/gift-student/gift-student.api";
 
-export default function TcListStudent() {
-  const handleOnchangeExport = () => {
-    GiftStudentAPI.export().then(() => {
+export default function ModalImportExportExcel(props) {
+  const {
+    open,
+    setOpen,
+    setLoading,
+    nameFile,
+    setNameFile,
+    setListStudentPoint,
+    setListStudentItem,
+  } = props;
+
+  const handleExportExcel = () => {
+    setLoading(true);
+    setTimeout(() => {
       message.success("Tải temolate mẫu thành công!");
-      downloadExcelTemplate();
-    });
+      setLoading(false);
+    }, 1000);
   };
 
   const downloadExcelTemplate = () => {
@@ -40,66 +55,107 @@ export default function TcListStudent() {
     xhr.send();
   };
 
-  const handleOnchangeImport = (event) => {
+  const handleFileInputChange = (e) => {
+    setNameFile(e.target.files[0].name);
     const formData = new FormData();
-    formData.append("file", event.target.files[0]);
+    formData.append("file", e.target.files[0]);
+    setLoading(true);
+    setTimeout(() => {
+      message.success("Import excel thành công");
+      setListStudentPoint([]);
+      setListStudentItem([]);
+      setLoading(false);
+    }, 1000);
+  };
 
-    GiftStudentAPI.importExcel(formData)
-      .then((response) => {
-        console.log(response);
-        if (response.data.data.status) {
-          message.success(response.data.data.message);
-        } else {
-          message.error(response.data.data.message);
-        }
-      })
-      .catch((error) => {
-        message.error("Lỗi khi import Excel.");
-      });
+  const handleRemoveFile = () => {
+    setNameFile("");
+    setListStudentPoint([]);
+    setListStudentItem([]);
   };
 
   return (
-    <div className="tc-listStudent">
-      <Card className="mb-2 py-1">
-        <Form className="d-flex align-items-center">
-          <Button className="search-button" htmlType="submit" type="primary">
-            Search
+    <div>
+      <Button
+        type="primary"
+        onClick={() => setOpen(true)}
+        className="import-export-button"
+      >
+        Import/Export excel
+      </Button>
+      <Modal
+        title="Import/Export Excel"
+        visible={open}
+        onCancel={() => setOpen(false)}
+        footer={null}
+        className="import-export-modal"
+      >
+        <hr className="border-0 bg-gray-300 mt-3 mb-6" />
+        <div>
+          <Input
+            type="file"
+            accept=".xlsx,.xls"
+            onChange={handleFileInputChange}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              cursor: "pointer",
+              opacity: 0,
+              zIndex: 1,
+              width: "100%",
+              height: "100%",
+            }}
+          />
+          <Button
+            htmlFor="file-input"
+            style={{
+              marginTop: "16px",
+              marginBottom: "16px",
+              width: "100%",
+            }}
+          >
+            <UploadOutlined />
+            {nameFile === "" ? "Tải lên file" : nameFile}
           </Button>
-          <Form.Item className="search-input">
-            <Input
-              size="small"
-              placeholder="Nhập mã sinh viên cần tìm"
-              prefix={<SearchOutlined />}
-            />
-          </Form.Item>
-          <div className="ml-auto">
+          {nameFile && (
             <Button
-              className="export-button"
-              type="primary"
-              onClick={handleOnchangeExport}
+              style={{
+                marginTop: "16px",
+                marginBottom: "16px",
+                border: "none",
+              }}
+              onClick={handleRemoveFile}
+              className="remove-file-button"
             >
-              Export excel
+              <CloseCircleOutlined style={{ fontSize: "20px", color: "red" }} />
             </Button>
-            <label className="import-button" type="primary">
-              Import excel
-              <input
-                type="file"
-                accept=".xlsx, .xls"
-                onChange={handleOnchangeImport}
-                style={{ display: "none" }}
-              />
-            </label>
-          </div>
-        </Form>
-      </Card>
-      <Card>
-        {/* <Table
-          columns={columns}
-          dataSource={listStudent}
-          rowKey="code"
-          pagination={true}
-        /> */}
-      </Card>
+          )}
+        </div>
+        <Space
+          style={{
+            justifyContent: "space-between",
+            display: "flex",
+            marginBottom: "16px",
+          }}
+        >
+          <Button
+            type="primary"
+            onClick={handleExportExcel}
+            className="export-excel-button"
+          >
+            <DownloadOutlined />
+            Tải file mẫu
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => setOpen(false)}
+            className="confirm-button"
+          >
+            Xác nhận
+          </Button>
+        </Space>
+      </Modal>
     </div>
   );
 }
