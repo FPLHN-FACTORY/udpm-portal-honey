@@ -54,6 +54,14 @@ export class RandomAddPointAPI {
     });
   };
 
+  static createPreviewImportExcel = (importExcel) => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}/create/preview-data`,
+      data: importExcel,
+    });
+  };
+
   static getAllChest = () => {
     return request({
       method: "GET",
