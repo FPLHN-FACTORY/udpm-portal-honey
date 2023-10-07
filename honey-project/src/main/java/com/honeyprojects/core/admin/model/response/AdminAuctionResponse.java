@@ -16,18 +16,6 @@ public interface AdminAuctionResponse extends IsIdentified {
     @Value("#{target.name}")
     String getName();
 
-    @Value("#{target.from_date}")
-    Long getFromDate();
-
-    @Value("#{target.to_date}")
-    Long getToDate();
-
-    @Value("#{target.starting_price}")
-    BigDecimal getStartingPrice();
-
-    @Value("#{target.jump}")
-    BigDecimal getJump();
-
     @Value("#{target.category_name}")
     String getCategoryName();
 

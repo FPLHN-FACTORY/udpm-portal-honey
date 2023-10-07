@@ -8,13 +8,7 @@ import com.honeyprojects.core.admin.service.AdminAuctionService;
 import com.honeyprojects.core.admin.service.AdminCategoryService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.ResponseObject;
-import com.honeyprojects.entity.Auction;
-import com.honeyprojects.entity.Semester;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -63,7 +57,7 @@ public class AdminAuctionController {
     }
 
     @PutMapping("/change-status/{id}")
-    public ResponseObject changeAuctionStatus(@PathVariable("id") String id) {
+    public ResponseObject changeAuctionStatus(@PathVariable("id") String id ) {
         return new ResponseObject(adminAuctionService.changeAuctionStatus(id));
     }
 

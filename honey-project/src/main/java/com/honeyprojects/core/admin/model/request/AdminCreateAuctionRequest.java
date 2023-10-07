@@ -1,31 +1,20 @@
 package com.honeyprojects.core.admin.model.request;
 
 
-import com.honeyprojects.infrastructure.contant.Status;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 
 @Getter
 @Setter
 public class AdminCreateAuctionRequest {
 
-
+    @NotBlank(message = "Tên phòng đấu giá không được để trống")
+    @Size(min = 0, max = 100)
     private String name;
-
-    @NotNull
-    private Long fromDate;
-
-    @NotNull
-    private Long toDate;
-
-    @NotNull
-    private BigDecimal startingPrice;
-
-    @NotNull
-    private BigDecimal jump;
 
     @NotNull
     private Long honey;

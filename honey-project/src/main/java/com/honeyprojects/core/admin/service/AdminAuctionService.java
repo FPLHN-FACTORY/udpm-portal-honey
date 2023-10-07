@@ -20,7 +20,7 @@ public interface AdminAuctionService {
 
     Auction updateAuction(AdminUpdateAuctionRequest request);
 
-    boolean changeAuctionStatus(String id);
+    String changeAuctionStatus(String id);
 
     boolean deleteAuction(String id);
 }
