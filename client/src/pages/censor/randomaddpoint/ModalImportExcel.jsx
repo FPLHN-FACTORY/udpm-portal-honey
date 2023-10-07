@@ -38,8 +38,11 @@ export default function ModalImportExcel(props) {
     const formData = new FormData();
     formData.append("file", e.target.files[0]);
     setLoading(true);
-    RandomAddPointAPI.createImportExcel(formData)
+    RandomAddPointAPI.createPreviewImportExcel(formData)
       .then((response) => {
+        console.log("====================================");
+        console.log(response.data.data);
+        console.log("====================================");
         message.success("Import excel thành công");
         setListStudentPoint({
           ...dataRandomPoint,

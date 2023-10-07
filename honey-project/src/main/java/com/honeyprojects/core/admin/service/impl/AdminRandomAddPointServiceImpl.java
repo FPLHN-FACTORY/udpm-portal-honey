@@ -3,9 +3,11 @@ package com.honeyprojects.core.admin.service.impl;
 import com.honeyprojects.core.admin.model.request.AdminCreateArchiveGiftRequest;
 import com.honeyprojects.core.admin.model.request.AdminCreateHoneyRequest;
 import com.honeyprojects.core.admin.model.request.AdminRandomPointRequest;
+import com.honeyprojects.core.admin.model.response.AdminAddItemBO;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminChestGiftResponse;
 import com.honeyprojects.core.admin.model.response.AdminChestReponse;
+import com.honeyprojects.core.admin.model.response.AdminAddItemDTO;
 import com.honeyprojects.core.admin.repository.AdArchiveGiftRepository;
 import com.honeyprojects.core.admin.repository.AdChestGiftRepository;
 import com.honeyprojects.core.admin.repository.AdRandomAddPointRepository;
@@ -15,10 +17,15 @@ import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.entity.ChestGift;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.util.ConvertRequestApiidentity;
+import com.honeyprojects.util.DataUtils;
+import com.honeyprojects.util.ExcelUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.tomcat.util.bcel.Const;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -27,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
@@ -276,6 +284,69 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         }
     }
 
+    @Override
+    public AdminAddItemBO previewDataImportExcel(MultipartFile file) throws IOException {
+        InputStream inputStream = file.getInputStream();
+        Workbook workbook = new XSSFWorkbook(inputStream);
+
+        Sheet sheet = workbook.getSheetAt(0);
+
+        List<AdminAddItemDTO> lstUserImportDTO = StreamSupport.stream(sheet.spliterator(), false)
+                .skip(1) // Bỏ qua 2 dòng đầu tiên
+                .filter(row -> !ExcelUtils.checkNullLCells(row, 1))
+                .map(row -> processRow(row))
+                .collect(Collectors.toList());
+
+        Map<Boolean, Long> importStatusCounts = lstUserImportDTO.stream()
+                .collect(Collectors.groupingBy(AdminAddItemDTO::isError, Collectors.counting()));
+
+        // set tổng số bản ghi lỗi, tổng số bản ghi thành công, tổng số bản ghi
+        AdminAddItemBO adminAddItemBO = new AdminAddItemBO();
+        adminAddItemBO.setLstAdminAddItemDTO(lstUserImportDTO);
+        adminAddItemBO.setTotal(Long.parseLong(String.valueOf(lstUserImportDTO.size())));
+        adminAddItemBO.setTotalError(importStatusCounts.getOrDefault(true, 0L));
+        adminAddItemBO.setTotalSuccess(importStatusCounts.getOrDefault(false, 0L));
+        return adminAddItemBO;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void importData(List<AdminAddItemDTO> lstAddItemDTO) throws IOException {
+        if (!DataUtils.isNullObject(lstAddItemDTO)) {
+            List<AdminAddItemDTO> lstImportUser = lstAddItemDTO.stream()
+                    .filter(e -> !e.isError())
+                    .collect(Collectors.toList());
+            saveImportData(lstImportUser);
+        }
+    }
+
+    private void saveImportData(List<AdminAddItemDTO> lstImportUser) throws IOException {
+        for (AdminAddItemDTO userDTO : lstImportUser) {
+//            CreateUserReq userReq = new CreateUserReq();
+//            BeanUtils.copyProperties(userDTO, userReq);
+//            addUserInGroup(userReq, username);
+        }
+    }
+
+    private AdminAddItemDTO processRow(Row row) {
+        AdminAddItemDTO userDTO = new AdminAddItemDTO();
+        String userName = ExcelUtils.getCellString(row.getCell(1));
+
+        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmail(userName + "@fpt.edu.vn");
+
+        if (DataUtils.isNullObject(userName)) {
+            userDTO.setImportMessage("Sinh viên không được để trống");
+            userDTO.setError(true);
+        } else if (DataUtils.isNullObject(response)) {
+            userDTO.setImportMessage("Sinh viên không tồn tại");
+            userDTO.setError(true);
+        } else {
+            userDTO.setImportMessage("SUCCESS");
+            userDTO.setError(false);
+        }
+
+        return userDTO;
+    }
     @Override
     public List<AdminChestReponse> getAllChest() {
         return adRandomAddPointRepository.getAllChest();

@@ -1,11 +1,15 @@
 package com.honeyprojects.core.admin.controller;
 
 import com.honeyprojects.core.admin.model.request.AdminRandomPointRequest;
+import com.honeyprojects.core.admin.model.response.AdminAddItemDTO;
 import com.honeyprojects.core.admin.service.AdRandomAddPointService;
 import com.honeyprojects.core.common.base.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/censor/random-add-point")
@@ -41,6 +45,16 @@ public class AdminRandomAddPointController {
     @PostMapping("/create/import")
     public ResponseObject createImportRandomPoint(@RequestParam("file") MultipartFile file) {
         return new ResponseObject(adRandomAddPointService.importExcel(file));
+    }
+
+    @PostMapping("/create/preview-data")
+    public ResponseObject createPreviewImportPoint(@RequestParam("file") MultipartFile file) throws IOException {
+        return new ResponseObject(adRandomAddPointService.previewDataImportExcel(file));
+    }
+
+    @PostMapping("/create/import-data")
+    public void createImportPoint(@RequestBody List<AdminAddItemDTO> lstAdminAddItemDTO) throws IOException {
+        adRandomAddPointService.importData(lstAdminAddItemDTO);
     }
 
     @GetMapping("/get-all-chest")
