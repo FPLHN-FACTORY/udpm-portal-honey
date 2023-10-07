@@ -14,7 +14,7 @@ const ModalDetailGift = (props) => {
   const { Option } = Select;
   const { visible, onCancel, onUpdate, gift } = props;
   const [form] = Form.useForm();
-  const [image, setImage] = useState([]);
+  const [image, setImage] = useState(null);
   const [isLimitedQuantity, setIsLimitedQuantity] = useState(true);
   const [listCategory, setListCategory] = useState([]);
 
@@ -74,7 +74,6 @@ const ModalDetailGift = (props) => {
               ? parseInt(formValues.quantity)
               : null;
         }
-        console.log("quantityLimit in onFinish:", formValues.quantityLimit);
         GiftAPI.update(
           {
             ...formValues,
