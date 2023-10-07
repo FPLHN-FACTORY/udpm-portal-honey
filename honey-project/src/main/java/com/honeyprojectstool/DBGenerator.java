@@ -270,10 +270,6 @@ public class DBGenerator implements CommandLineRunner {
 
         Auction auction = new Auction();
         auction.setName("Phiên đấu giá biển số");
-        auction.setFromDate(1678294800000L);
-        auction.setToDate(1685379600000L);
-        auction.setStartingPrice(BigDecimal.valueOf(5000));
-        auction.setJump(BigDecimal.valueOf(100));
         auction.setHoneyCategoryId(category1.getId());
         auction.setHoney(200L);
         auction.setStatus(Status.HOAT_DONG);
@@ -281,10 +277,6 @@ public class DBGenerator implements CommandLineRunner {
 
         Auction auction1 = new Auction();
         auction1.setName("Phiên đấu giá biển số đầu tiên");
-        auction1.setFromDate(1678294800000L);
-        auction1.setToDate(1685379600000L);
-        auction1.setStartingPrice(BigDecimal.valueOf(5000));
-        auction1.setJump(BigDecimal.valueOf(100));
         auction1.setHoneyCategoryId(category2.getId());
         auction1.setHoney(200L);
         auction1.setStatus(Status.KHONG_HOAT_DONG);

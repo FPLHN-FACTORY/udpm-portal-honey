@@ -47,16 +47,11 @@ public class AdminAuctionServiceImpl implements AdminAuctionService {
         Auction auction = new Auction();
         auction.setName(request.getName());
         auction.setHoney(request.getHoney());
-        auction.setStartingPrice(request.getStartingPrice());
-        auction.setJump(request.getJump());
         auction.setHoneyCategoryId(request.getHoneyCategoryId());
-        auction.setFromDate(request.getFromDate());
-        auction.setToDate(request.getToDate());
-
-        if (request.getStatus() == 1) {
+        if (request.getStatus() == 0) {
             auction.setStatus(Status.HOAT_DONG);
         }
-        if (request.getStatus() == 0) {
+        if (request.getStatus() == 1) {
             auction.setStatus(Status.KHONG_HOAT_DONG);
         }
         return adAuctionRepository.save(auction);
@@ -71,30 +66,28 @@ public class AdminAuctionServiceImpl implements AdminAuctionService {
         Auction auction = findAuctionById.get();
         auction.setName(request.getName());
         auction.setHoney(request.getHoney());
-        auction.setStartingPrice(request.getStartingPrice());
-        auction.setJump(request.getJump());
         auction.setHoneyCategoryId(request.getHoneyCategoryId());
-        auction.setFromDate(request.getFromDate());
-        auction.setToDate(request.getToDate());
 
-        if (request.getStatus() == 1) {
+        if (request.getStatus() == 0) {
             auction.setStatus(Status.HOAT_DONG);
         }
-        if (request.getStatus() == 0) {
+        if (request.getStatus() == 1) {
             auction.setStatus(Status.KHONG_HOAT_DONG);
         }
         return adAuctionRepository.save(auction);
     }
 
     @Override
-    public boolean changeAuctionStatus(String id) {
+    public String changeAuctionStatus(String id) {
         Optional<Auction> findAuctionById = adAuctionRepository.findById(id);
         if (!findAuctionById.isPresent()) {
             throw new RestApiException(Message.AUCTION_NOT_EXISTS);
         }
-        return adAuctionRepository.changeStatus(id);
+        Auction auction = findAuctionById.get();
+        auction.setStatus(Status.KHONG_HOAT_DONG);
+        adAuctionRepository.save(auction);
+         return id;
     }
-
 
     @Override
     public boolean deleteAuction(String id) {

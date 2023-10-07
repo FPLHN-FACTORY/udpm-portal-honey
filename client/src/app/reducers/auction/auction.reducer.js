@@ -21,14 +21,19 @@ export const AuctionSlice = createSlice({
       );
       if (index !== -1) {
         state[index].name = updateAuction.name;
-        state[index].fromDate = updateAuction.fromDate;
-        state[index].toDate = updateAuction.toDate;
-        state[index].startingPrice = updateAuction.startingPrice;
         state[index].honey = updateAuction.honey;
         state[index].status = updateAuction.status;
-        state[index].jump = updateAuction.jump;
         state[index].categoryId = updateAuction.categoryId;
         state[index].categoryName = updateAuction.categoryName;
+      }
+    },
+    ChangeAuctionStatus: (state, action) => {
+      const updateAuction = action.payload;
+      const index = state.findIndex(
+        (auction) => auction.id === updateAuction.id
+      );
+      if (index !== -1) {
+        state[index].status = updateAuction.status;
       }
     },
     DeleteAuction: (state, action) => {
@@ -40,6 +45,6 @@ export const AuctionSlice = createSlice({
 });
 
 export const GetAuction = (state) => state.auction;
-export const { SetAuction, AddAuction, DeleteAuction, UpdateAuction } =
+export const { SetAuction, AddAuction, DeleteAuction, UpdateAuction, ChangeAuctionStatus } =
   AuctionSlice.actions;
 export default AuctionSlice.reducer;
