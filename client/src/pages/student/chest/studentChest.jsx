@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Button, Card, Col, Modal, Row } from "antd";
-import DialogTransaction from "../transaction/DialogTransaction";
+import { Button, Card, Col, Modal, Radio, Row, Space, Tabs } from "antd";
+import "./studentChest.css";
+import { useNavigate } from "react-router-dom";
+// import DialogTransaction from "../transaction/DialogTransaction";
 const StudentChest = ({ setClose, transaction, open }) => {
   const [open1, setOpen] = useState(false);
-  const chessSquares = Array.from({ length: 48 }, (_, i) => i);
+  const chessSquares = Array.from({ length: 300 }, (_, i) => i);
   const chessSquares2 = Array.from({ length: 12 }, (_, i) => i);
   const [chest, setChest] = useState([]);
   const [chestTo, setChestTo] = useState({
@@ -19,62 +21,18 @@ const StudentChest = ({ setClose, transaction, open }) => {
     honey: 0,
     lock: false,
   });
-  //   const data = useAppSelector(GetUser);
 
-  //   window.addEventListener("beforeunload", () => {
-  //     getStompClient().send(
-  //       `/user/transaction/${transaction.idTransaction}/accept`,
-  //       {},
-  //       ""
-  //     );
-  //   });
-
-  //   useEffect(() => {
-  //     if (open) {
-  //       getStompClient().subscribe(
-  //         `/user/transaction/${transaction.idTransaction}/accept`,
-  //         (result) => {
-  //           if (result.body === "") {
-  //             setClose(false);
-  //           }
-  //         }
-  //       );
-  //       getStompClient().send(
-  //         `/user/transaction/${transaction.idTransaction}/accept`,
-  //         {},
-  //         JSON.stringify({
-  //           ...transaction,
-  //           formUser: data.name,
-  //         })
-  //       );
-  //     }
-  //   }, [transaction, open]);
-
-  //   function cancelTransaction() {
-  //     getStompClient().send(
-  //       `/user/transaction/${transaction.idTransaction}/accept`,
-  //       {},
-  //       ""
-  //     );
-  //   }
+  const [tabPosition, setTabPosition] = useState("right");
+  const changeTabPosition = (e) => {
+    setTabPosition(e.target.value);
+  };
 
   return (
     <>
-      {/* <Button type="primary" onClick={() => setOpen(true)}>
-        Open Modal of 1000px width
-      </Button> */}
-      <Modal
-        title="Modal 1000px width"
-        centered
-        open={open}
-        onOk={() => setOpen(false)}
-        onCancel={() => setOpen(false)}
-        width={1000}
+      <div
+        className="dialog-transaction"
+        style={{ minWidth: "800px", Height: "1000px" }}
       >
-        <DialogTransaction key={"a"} transaction={"a"} />
-      </Modal>
-
-      <div className="dialog-transaction" style={{ minWidth: "800px" }}>
         <Card>
           <div className="bar-transaction" />
           <Row
@@ -82,7 +40,7 @@ const StudentChest = ({ setClose, transaction, open }) => {
               padding: "5px 15px 0px 15px",
             }}
           >
-            <Col span={12} className="col-title">
+            <Col span={12}>
               <div className="tag-backgroup">
                 <b className="text-title"></b>
               </div>
@@ -102,9 +60,40 @@ const StudentChest = ({ setClose, transaction, open }) => {
             </Col>
           </Row>
           <Row className="row-content">
-            <Col span={12} className="chest-transaction">
+            <Col span={7} className="chest-transaction">
               <Row className="row-items">
-                {chessSquares2.map((square) => (
+                <Col span={4}>
+                  <div className="chess-square-note">
+                    <div className="item">
+                      <img
+                        src={require("../../../assets/images/ui-student/avata-item.png")}
+                        alt=""
+                      />
+                    </div>
+                    <span className="name-item">Siêu nhân đỏ</span>
+                    <span className="quantity-item">Sô lượng: 1</span>
+                    <hr
+                      style={{
+                        height: "2px",
+                        width: "85%",
+                        backgroundColor: "black",
+                      }}
+                    />
+                    <span className="quantity-item">
+                      Sử dụng siêu nhân đỏ đấm chết cm cu nhật
+                    </span>
+                    <div className="div-button">
+                      <Button className="button-khoa">Xóa</Button>
+                      <Button className="button-xac-nhan">Sử dụng</Button>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+            </Col>
+
+            <Col span={14}>
+              <Row className="row-chest">
+                {chessSquares.map((square) => (
                   <Col key={square} span={4}>
                     <div className="chess-square">
                       <div className="item"></div>
@@ -112,58 +101,33 @@ const StudentChest = ({ setClose, transaction, open }) => {
                   </Col>
                 ))}
               </Row>
-              <div style={{ textAlign: "center" }}>
-                <div style={{ marginBottom: "10px", marginTop: "10px" }}>
-                  <img
-                    className="honey-balo"
-                    src={require("../../../assets/images/transaction-honey.png")}
-                    alt="honey"
-                  />
-                  <input className="input-honey" disabled value={10000} />
-                </div>
-                <div className="tag-backgroup" style={{ margin: "5px 0px" }}>
-                  <b className="text-title">Vật phẩm của bạn</b>
-                </div>
-                <Row className="row-items">
-                  {chessSquares2.map((square) => (
-                    <Col key={square} span={4}>
-                      <div className="chess-square">
-                        <div className="item"></div>
-                      </div>
-                    </Col>
-                  ))}
-                </Row>
-                <div className="my-10">
-                  <img
-                    className="honey-balo"
-                    src={require("../../../assets/images/transaction-honey.png")}
-                    alt="honey"
-                  />
-                  <input className="input-honey" />
-                </div>
-              </div>
+              {/* 
+              <Space
+                style={{
+                  marginBottom: 24,
+                }}
+              >
+                Tab position:
+                <Radio.Group value={tabPosition} onChange={changeTabPosition}>
+                  <Radio.Button value="top">top</Radio.Button>
+                  <Radio.Button value="bottom">bottom</Radio.Button>
+                  <Radio.Button value="left">left</Radio.Button>
+                  <Radio.Button value="right">right</Radio.Button>
+                </Radio.Group>
+              </Space> */}
             </Col>
-            <Col span={12}>
-              <Row className="row-chest">
-                {chessSquares.map((square) => (
-                  <Col key={square} span={4}>
-                    <div className="chess-square">
-                      <div className="item">
-                        <img
-                          className="img-item"
-                          src={require("../../../assets/images/tim.jpg")}
-                          alt="anh"
-                        />
-                      </div>
-                    </div>
-                  </Col>
-                ))}
-              </Row>
-              <div className="div-button">
-                <Button className="button-khoa">Khóa</Button>
-                <Button className="button-xac-nhan">Xác nhận</Button>
-              </div>
-            </Col>
+            <Tabs
+              tabPosition={tabPosition}
+              items={new Array(5).fill(null).map((_, i) => {
+                const id = String(i + 1);
+                return {
+                  label: `Tất cả`,
+                  key: id,
+                  // children: `Content of Tab ${id}`,
+                };
+              })}
+              style={{ color: "white", fontWeight: "700" }}
+            />
           </Row>
         </Card>
       </div>

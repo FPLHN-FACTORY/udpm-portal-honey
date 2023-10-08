@@ -19,7 +19,7 @@ export class GiftAPI {
     if (!isNaN(data.quantity) && data.quantity !== null) {
       formData.append("quantity", data.quantity);
     }
-    formData.append("status", "FREE");
+    formData.append("status", data.status);
     formData.append("type", data.type);
     formData.append("honeyCategoryId", data.honeyCategoryId);
     formData.append("honey", data.honey);
@@ -41,7 +41,7 @@ export class GiftAPI {
     if (!isNaN(data.quantity) && data.quantity !== null) {
       formData.append("quantity", data.quantity);
     }
-    formData.append("status", "FREE");
+    formData.append("status", data.status);
     formData.append("type", data.type);
     formData.append("honeyCategoryId", data.honeyCategoryId);
     formData.append("honey", data.honey);

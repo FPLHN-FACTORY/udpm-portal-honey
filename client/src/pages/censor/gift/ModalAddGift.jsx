@@ -52,6 +52,13 @@ const ModalThem = (props) => {
     });
   };
 
+  // const validateImage = (rule, value) => {
+  //   if (!value) {
+  //     return Promise.reject("Vui lòng chọn một hình ảnh.");
+  //   }
+  //   return Promise.resolve();
+  // };
+
   const validateQuantity = (rule, value) => {
     const quantityValue = form.getFieldValue("quantity");
     if (quantityValue === 1 && (!value || value <= 0)) {

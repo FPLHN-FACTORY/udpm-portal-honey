@@ -261,7 +261,7 @@ export default function IndexGift() {
               setCurrent(value);
               fetchData();
             }}
-            total={total}
+            total={total * 10}
           />
         </div>
       </Card>

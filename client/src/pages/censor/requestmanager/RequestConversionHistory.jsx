@@ -236,7 +236,7 @@ export default function RequestConversionHistory() {
         </Form>
       </Card>
 
-      <Card title="Lịch sử quy đổi">
+      <Card title="Danh sách yêu cầu đồi quà">
         <div className="mt-5">
           <Table
             columns={columns}

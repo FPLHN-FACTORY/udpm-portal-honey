@@ -1,33 +1,47 @@
-.dialog-transaction .ant-card-body {
-  padding: 0;
-  background-image: url("../../../assets/images/bar-transaction.png");
-}
-
-.dialog-transaction .ant-btn:hover {
-  background-color: #d39e0c !important;
-  color: white !important;
-}
-
-.dialog-transaction .ant-btn {
-  border-style: outset;
-  border-color: white !important;
-}
-
-.dialog-transaction .ant-card-body {
-  border-radius: 5px !important;
-  background-repeat: repeat;
-}
-
-.dialog-transaction .ant-card {
-  border-radius: 10px !important;
-}
-
 .dialog-transaction .chess-square {
-  border-radius: 5px;
   border-style: ridge;
   background: #464239;
-  height: 55px;
+  height: 100px;
+  width: 100px;
   margin: 3px;
+}
+
+.dialog-transaction .chess-square-note {
+  border-style: ridge;
+  background: rgb(146, 144, 144);
+  height: 100%;
+  width: 580%;
+  margin: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.dialog-transaction .chess-square-note .name-item {
+  color: rgb(52, 45, 45);
+  font-weight: 1000;
+  font-size: 20px;
+  white-space: normal;
+}
+
+.dialog-transaction .chess-square-note .quantity-item {
+  color: rgb(52, 45, 45);
+  font-size: 15px;
+  display: block;
+  white-space: normal;
+  font-weight: bold;
+  color: rgb(255, 253, 253);
+}
+
+.dialog-transaction .chess-square-note .item {
+  border-style: ridge;
+  background: rgb(200, 197, 197);
+  height: 85px;
+  width: 80px;
+  margin: 3px;
+  display: block;
+  border-bottom: 7px solid #f6c714;
 }
 
 .dialog-transaction .chess-square:hover {
@@ -35,23 +49,12 @@
   background: #eeb20d52;
 }
 
-.dialog-transaction .close-button {
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  background-image: url("../../../assets/images/bar.jpg");
-  float: right;
-  border-radius: 50%;
-  margin-right: -10px;
-  margin-top: -10px;
-}
-
 .dialog-transaction .row-chest {
   overflow: auto;
   scrollbar-width: 0px;
   -ms-overflow-style: none;
   padding-left: 10px;
-  max-height: 350px;
+  max-height: 524px;
   overflow-y: auto;
 }
 
@@ -82,13 +85,8 @@
   width: 0px;
 }
 
-.dialog-transaction .ant-row {
-  width: 100%;
-}
-
 /* .dialog-transaction .bar-transaction {
   background-image: url("../../../assets/images/bar.jpg");
-  border-radius: 5px;
   border-bottom-left-radius: 0px;
   height: 25px;
 } */
@@ -130,19 +128,20 @@
   line-height: 30px;
 }
 
-.dialog-transaction .col-title {
+/* .dialog-transaction .col-title {
   border-right: 2px solid #837463;
   padding-right: 10px;
   padding-left: 14px;
   text-align: center;
-}
+} */
 
 .dialog-transaction .title-balo {
   font-weight: 800;
-  color: #504438;
+  color: #4b5038;
   font-size: 20px;
   display: inline-block;
   vertical-align: middle;
+  float: left;
 }
 
 .dialog-transaction .img-balo {
@@ -162,47 +161,11 @@
 
 .dialog-transaction .tag-backgroup {
   padding: 0px 15px;
-  border-radius: 5px;
-  background-color: rgba(0, 0, 0, 0.11);
-}
-
-.input-honey {
-  border: 2px ridge;
-  background-color: #464239;
-  height: 30px;
-  color: white;
-  text-align: center;
-  font-weight: 600;
-}
-
-.dialog-transaction .input-honey:focus {
-  outline: none;
-}
-
-.dialog-transaction .honey-balo {
-  margin-top: -5px;
-  display: inline-block;
-  vertical-align: middle;
-  height: 35px;
-  margin-right: 5px;
-  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.7));
+  /* background-color: rgba(0, 0, 0, 0.11); */
 }
 
 .dialog-transaction .div-button {
   margin: 10px;
   text-align: center;
-  margin-top: 13px;
-}
-
-.dialog-transaction .ant-modal-content {
-  padding: 0px !important;
-  background-color: none !important;
-}
-
-.dialog-transaction .ant-card-bordered {
-  border: 2px ridge;
-}
-
-.dialog-transaction .ant-modal-close {
-  display: none;
+  margin-top: 260px;
 }
