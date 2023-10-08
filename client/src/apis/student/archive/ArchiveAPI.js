@@ -24,4 +24,14 @@ export class ArchiveAPI {
       url: `/${this.COMPONENT_NAME}/${id}`,
     });
   };
+
+  static openChest = (idChest) => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}`,
+      data: {
+        chestId: idChest,
+      },
+    });
+  };
 }
