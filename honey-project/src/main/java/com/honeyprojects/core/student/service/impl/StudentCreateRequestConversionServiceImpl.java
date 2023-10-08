@@ -61,11 +61,11 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
 
     @Override
     public History addRequestConversion(StudentCreateRequestConversionRequest createRequest) {
-        Category category = categoryRepository.findById(createRequest.getCategoryId()).orElse(null);
+        Category category = categoryRepository.findById(createRequest.getHoneyCategoryId()).orElse(null);
         Gift gift = giftRepository.findById(createRequest.getGiftId()).orElse(null);
 
 
-        Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(createRequest.getStudentId(), createRequest.getCategoryId());
+        Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(createRequest.getStudentId(), createRequest.getHoneyCategoryId());
         History history = new History();
         ArchiveGift archiveGift = new ArchiveGift();
         if (honey == null) {
@@ -74,7 +74,7 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
             // Nếu Honey chưa tồn tại, tạo mới
             honey = new Honey();
             honey.setStudentId(createRequest.getStudentId());
-            honey.setHoneyCategoryId(createRequest.getCategoryId());
+            honey.setHoneyCategoryId(createRequest.getHoneyCategoryId());
             honey.setUserSemesterId(idUs);
             honey.setHoneyPoint(createRequest.getHoneyPoint());
             honey = honeyRepository.save(honey);
@@ -94,11 +94,6 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
                 honey = honeyRepository.save(honey);
             }
         }
-        if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
-            archiveGift.setGiftId(createRequest.getGiftId());
-            archiveGift.setArchiveId("738492b2-627f-11ee-8c99-0242ac120002");
-            giftArchiveRepository.save(archiveGift);
-        }
 
 
         // Tiếp tục với việc thêm yêu cầu vào bảng History
@@ -110,6 +105,15 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
         history.setHoneyId(honey.getId());
         history.setNameGift(createRequest.getNameGift());
         history.setNote(createRequest.getNote());
+
+        if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
+            archiveGift.setGiftId(createRequest.getGiftId());
+            archiveGift.setArchiveId("738492b2-627f-11ee-8c99-0242ac120002");
+            archiveGift.setNote(createRequest.getNote());
+            giftArchiveRepository.save(archiveGift);
+        }
+
+
 
         return studentCreateRequestConversionRepository.save(history);
 

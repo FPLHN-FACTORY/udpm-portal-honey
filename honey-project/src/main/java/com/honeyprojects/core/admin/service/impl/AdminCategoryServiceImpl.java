@@ -76,6 +76,8 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     public Category updateCategory(AdminUpdateCategoryRequest request, String id) {
         Optional<Category> categoryOptional = adminCategoryRepository.findById(id);
         categoryOptional.get().setName(request.getName());
+        categoryOptional.get().setCategoryStatus(request.getCategoryStatus());
+        categoryOptional.get().setTransactionRights(request.getTransactionRights());
         adminCategoryRepository.save(categoryOptional.get());
         return categoryOptional.get();
     }

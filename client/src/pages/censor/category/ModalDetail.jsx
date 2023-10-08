@@ -1,6 +1,9 @@
 import { FormOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal, Radio, Tooltip } from "antd";
+import { Button, Form, Input, Modal, Radio, Tooltip, message } from "antd";
 import { useState } from "react";
+import { CategoryAPI } from "../../../apis/censor/category/category.api";
+import { useAppDispatch } from "../../../app/hooks";
+import { UpdateCategory } from "../../../app/reducers/category/category.reducer";
 const ModalDetail = (props) => {
   const { category } = props;
   const [form] = Form.useForm();
@@ -15,6 +18,30 @@ const ModalDetail = (props) => {
     setIsModalOpen(false);
   };
   form.setFieldsValue(category);
+  form.setFieldsValue(category);
+
+  const dispatch = useAppDispatch();
+  form.setFieldsValue(category);
+
+  const onFinish = () => {
+    form
+      .validateFields()
+      .then((formValues) => {
+        CategoryAPI.update(formValues, category.id)
+          .then((response) => {
+            dispatch(UpdateCategory(response.data.data));
+            message.success("Thành công!");
+            setIsModalOpen(false);
+            form.resetFields();
+          })
+          .catch((err) => {
+            message.error("Lỗi: " + err.message);
+          });
+      })
+      .catch(() => {
+        message.error("Vui lòng điền đầy đủ thông tin.");
+      });
+  };
   return (
     <>
       <Tooltip title="Chi tiết">
@@ -35,7 +62,7 @@ const ModalDetail = (props) => {
         <Form
           form={form}
           name="basic"
-          onFinish={handleOk}
+          onFinish={onFinish}
           labelCol={{
             span: 4,
           }}
@@ -50,9 +77,9 @@ const ModalDetail = (props) => {
           }}
           autoComplete="off"
         >
-          <Form.Item label="Mã" name="code">
+          {/* <Form.Item label="Mã" name="code">
             <Input />
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item label="Tên" name="name">
             <Input />
@@ -102,6 +129,13 @@ const ModalDetail = (props) => {
             >
               Đóng
             </Button>
+            <button
+              style={{ width: "60px", height: "38px", marginLeft: "20px" }}
+              htmlType="submit"
+              className="submit-button ml-2"
+            >
+              OK
+            </button>
           </Form.Item>
         </Form>
       </Modal>

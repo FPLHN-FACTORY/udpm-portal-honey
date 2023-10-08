@@ -2,6 +2,7 @@ package com.honeyprojects.core.admin.model.request;
 
 import com.honeyprojects.core.common.base.PageableRequest;
 import com.honeyprojects.entity.Gift;
+import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TypeGift;
@@ -29,7 +30,7 @@ public class AdminCreateGiftRequest extends PageableRequest {
 
     private Integer type;
 
-    private StatusGift status;
+    private Integer status;
 
     private Integer quantity;
 
@@ -48,7 +49,15 @@ public class AdminCreateGiftRequest extends PageableRequest {
 
         gift.setCode(code);
         gift.setName(this.getName());
-        gift.setStatus(this.getStatus());
+//        gift.setStatus(this.getStatus());
+        if (this.getStatus() != null) {
+            gift.setStatus(StatusGift.values()[this.getStatus()]);
+        }
+//        if(this.getStatus().equals(StatusGift.ACCEPT)){
+//            gift.setStatus(StatusGift.ACCEPT);
+//        }else {
+//            gift.setStatus(StatusGift.FREE);
+//        }
         gift.setQuantity(this.getQuantity());
         if (this.getType() != null) {
             gift.setType(TypeGift.values()[this.getType()]);

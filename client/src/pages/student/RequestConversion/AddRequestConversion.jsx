@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { ConversionAPI } from "../../../apis/censor/conversion/conversion.api";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { ResquestConversion } from "../../../apis/user/ResquestConversiton/ResquestConversion.api";
 import { useNavigate } from "react-router-dom";
 import "./RequestConversion.css";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import {
-  GetConversion,
-  SetConversion,
-} from "../../../app/reducers/conversion/conversion.reducer";
 import {
   Button,
   Card,
@@ -21,53 +15,55 @@ import {
   Tooltip,
   message,
 } from "antd";
+import { CloseCircleOutlined, StarTwoTone } from "@ant-design/icons";
 
 export default function AddRequestConversion(props) {
   const requestConversion = props;
-  const [listConversion, setListConversion] = useState([]);
-  const [totalPages, setTotalPages] = useState(0);
-  const [filter, setFilter] = useState({
-    page: 1,
-    size: 5,
-    textSearch: "",
-  });
   const [fillCategory, setFillCategory] = useState([]);
   const [fillGift, setFillGift] = useState([]);
   const [selectedConversion, setSelectedConversion] = useState(null);
   const [fillUserApi, setFillUserApi] = useState([]);
   const [fillPoint, setFillPoint] = useState({ point: 0 });
   const [categoryType, setCategoryType] = useState();
-  const [inputNumberValue, setInputNumberValue] = useState(0);
   const [filteredConversions, setFilteredConversions] = useState([]);
 
   const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
   const [cardBackgroundColor, setCardBackgroundColor] = useState("#F8DA95");
-  const [addDiscribe, setAddDiscribe] = useState([]);
-  const [selectedGiftName, setSelectedGiftName] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [addDiscribe, setAddDiscribe] = useState("");
+  const [selectedGiftNote, setSelectedGiftNote] = useState("");
+  const [categoryStatus, setCategoryStatus] = useState(0);
+
+  function ImageRenderer({ image }) {
+    const byteArray = image ? image.split(",").map(Number) : [];
+    const base64ImageData = btoa(
+      String.fromCharCode.apply(null, new Uint8Array(byteArray))
+    );
+    const imageUrl = `data:image/jpeg;base64,${base64ImageData}`;
+
+    return (
+      <img
+        src={imageUrl}
+        style={{ width: "40px", height: "40px" }}
+        alt="Hình ảnh"
+      />
+    );
+  }
 
   const [form] = Form.useForm();
   form.setFieldsValue(requestConversion);
 
   let navigate = useNavigate();
 
-  const dispatch = useAppDispatch();
-  const data = useAppSelector(GetConversion);
-
-  const onCategoryChange = (value) => {
-    setSelectedCategory(value);
-  };
-
   useEffect(() => {
     if (categoryType) {
-      const filteredData = listConversion.filter(
-        (conversion) => conversion.categoryId === categoryType
+      const filteredData = fillGift.filter(
+        (gift) => gift.honeyCategoryId === categoryType
       );
       setFilteredConversions(filteredData);
     } else {
-      setFilteredConversions(listConversion);
+      setFilteredConversions(fillGift);
     }
-  }, [categoryType, listConversion]);
+  }, [categoryType, fillGift]);
 
   useEffect(() => {
     fechCategory();
@@ -78,8 +74,6 @@ export default function AddRequestConversion(props) {
     fechUserApiById();
   }, []);
 
-  const getpointGift = parseInt(inputNumberValue) * 0.25;
-
   const onchageCtae = (value) => {
     setCategoryType(value);
     const data = {
@@ -88,7 +82,15 @@ export default function AddRequestConversion(props) {
     };
     getPoint(data);
     setSelectedConversion(null);
-    setInputNumberValue("0");
+    const selectedCategory = fillCategory.find(
+      (category) => category.id === value
+    );
+
+    if (selectedCategory) {
+      const newCategoryStatus = selectedCategory.categoryStatus;
+      console.log(`Status category : ${newCategoryStatus}`);
+      setCategoryStatus(newCategoryStatus);
+    }
   };
 
   const getPoint = (data) => {
@@ -130,21 +132,8 @@ export default function AddRequestConversion(props) {
       setSelectedConversion(conversion);
       setSelectedCardIndex(index);
       setCardBackgroundColor("#CCCC99");
-      const selectedGiftId = conversion.giftId;
-      const selectedGift = fillGift.find((gift) => gift.id === selectedGiftId);
-      setSelectedGiftName(selectedGift ? selectedGift.name : "");
+      setSelectedGiftNote(conversion.note);
     }
-  };
-
-  useEffect(() => {
-    fetchData(filter);
-  }, [filter]);
-
-  const fetchData = (filter) => {
-    ConversionAPI.fetchAllPage(filter).then((response) => {
-      dispatch(SetConversion(response.data.data.data));
-      setTotalPages(response.data.data.totalPages);
-    });
   };
 
   useEffect(() => {
@@ -152,12 +141,6 @@ export default function AddRequestConversion(props) {
   }, []);
 
   const onSubmitCreate = () => {
-    const selectedGiftId = selectedConversion
-      ? selectedConversion.giftId
-      : undefined;
-    const selectedGift = fillGift.find((gift) => gift.id === selectedGiftId);
-    const selectedGiftName = selectedGift ? selectedGift.name : "";
-
     if (!categoryType) {
       message.error("Vui lòng chọn loại điểm");
       return;
@@ -166,8 +149,11 @@ export default function AddRequestConversion(props) {
     if (!selectedConversion) {
       message.error("Vui lòng chọn một mục trong danh sách chọn");
       return;
+    } else if (!addDiscribe.trim()) {
+      message.error("Bạn chưa nhập mô tả");
+      return;
     } else if (
-      (selectedConversion ? selectedConversion.ratio : 0) > fillPoint.point
+      (selectedConversion ? selectedConversion.honey : 0) > fillPoint.point
     ) {
       message.error("Bạn không đủ điểm để đổi quà trong ranh này.");
       return;
@@ -176,10 +162,12 @@ export default function AddRequestConversion(props) {
     const dataToAdd = {
       honeyId: fillPoint.id,
       studentId: fillUserApi.idUser,
-      honeyPoint: parseInt(selectedConversion ? selectedConversion.ratio : 0),
-      giftId: selectedConversion ? selectedConversion.giftId : 0,
-      nameGift: selectedGiftName,
-      categoryId: selectedConversion ? selectedConversion.categoryId : 0,
+      honeyPoint: parseInt(selectedConversion ? selectedConversion.honey : 0),
+      giftId: selectedConversion ? selectedConversion.id : 0,
+      nameGift: selectedConversion.name,
+      honeyCategoryId: selectedConversion
+        ? selectedConversion.honeyCategoryId
+        : 0,
       note: addDiscribe,
     };
     createRequest(dataToAdd);
@@ -210,34 +198,29 @@ export default function AddRequestConversion(props) {
     return gift ? gift.name : "";
   };
 
-  const getGiftImageById = (giftId) => {
-    const gift = fillGift.find((item) => item.id === giftId);
-    return gift ? gift.image : "";
-  };
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
+  console.log(categoryStatus);
+
   return (
     <>
       <Modal
-        title="Điền tên giảng viên hướng dẫn "
+        title="Nhập mô tả"
         open={isModalOpen}
         onOk={onSubmitCreate}
         onCancel={handleCancel}
+        footer={null}
       >
         <textarea
+          autoFocus
           name=""
           id=""
           cols="30"
@@ -245,6 +228,23 @@ export default function AddRequestConversion(props) {
           style={{ width: "465px", height: "100px" }}
           onChange={(e) => setAddDiscribe(e.target.value)}
         />
+        {selectedGiftNote && (
+          <div>
+            <h4 style={{ color: "red" }}>
+              *Sinh viên phải nhập mô tả theo định dạng sau:
+            </h4>
+            <p>{selectedGiftNote}</p>
+          </div>
+        )}
+        <div style={{ textAlign: "center" }}>
+          <Button
+            className="btnXacNhan"
+            style={{ marginTop: "20px" }}
+            onClick={onSubmitCreate}
+          >
+            XÁC NHẬN
+          </Button>
+        </div>
       </Modal>
       <Card style={{ marginTop: "20px" }} className="cartAllConversion">
         <p style={{ fontSize: "20px", fontWeight: "700", color: "#A55600" }}>
@@ -294,7 +294,7 @@ export default function AddRequestConversion(props) {
             className="cardGift"
           >
             <Row justify="start">
-              {fillGift.map((gift, index) => (
+              {filteredConversions.map((gift, index) => (
                 <Col
                   span={1.5}
                   className="colGift"
@@ -304,14 +304,29 @@ export default function AddRequestConversion(props) {
                   }}
                 >
                   <Tooltip
-                    title={`${parseInt(gift.honey)} mật 
-                    ${getCategoryNameById(
-                      gift.honeyCategoryId
-                    )} để đổi 0.25 ${getGiftNameById(gift.id)} `}
+                    title={() => {
+                      if (categoryStatus === 0 && gift.status === 0) {
+                        return `${parseInt(gift.honey)} mật 
+                          ${getCategoryNameById(gift.honeyCategoryId)} để đổi ${
+                          gift.name
+                        } (Không phê duyệt)`;
+                      } else if (categoryStatus === 1 || gift.status === 1) {
+                        return `${parseInt(gift.honey)} mật 
+                          ${getCategoryNameById(gift.honeyCategoryId)} để đổi ${
+                          gift.name
+                        } (Cần phê duyệt)`;
+                      } else {
+                        return `${parseInt(gift.honey)} mật 
+                          ${getCategoryNameById(gift.honeyCategoryId)} để đổi ${
+                          gift.name
+                        }`;
+                      }
+                    }}
                     overlayStyle={{
                       color: "orange",
                       background: "gold !important",
                     }}
+                    categoryType={categoryType}
                   >
                     <div
                       className="gift"
@@ -330,22 +345,18 @@ export default function AddRequestConversion(props) {
                             : "",
                       }}
                     >
-                      <img
-                        src={require("../../../assets/images/gift.png")}
-                        alt="Gift"
-                        style={{ marginLeft: "75px", display: "block" }}
-                        height={40}
-                        width={40}
-                      />
-                      <span
-                        style={{
-                          fontWeight: "1000",
-                          color: "rgb(165, 86, 0)",
-                        }}
-                      >
-                        {" "}
-                        {getGiftNameById(gift.id)}
-                      </span>
+                      <ImageRenderer image={gift.image} />
+                      {categoryStatus === 1 || gift.status === 1 ? (
+                        <StarTwoTone
+                          style={{
+                            position: "absolute",
+                            top: "5px",
+                            right: "5px",
+                            fontSize: "18px",
+                            color: "red",
+                          }}
+                        />
+                      ) : null}
                     </div>
                   </Tooltip>
                 </Col>
@@ -353,15 +364,6 @@ export default function AddRequestConversion(props) {
             </Row>
           </Card>
         </Card>
-        <div style={{ textAlign: "center" }}>
-          <Button
-            className="btnXacNhan"
-            style={{ marginTop: "20px" }}
-            onClick={onSubmitCreate}
-          >
-            XÁC NHẬN
-          </Button>
-        </div>
       </Card>
     </>
   );
