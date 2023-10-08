@@ -52,6 +52,11 @@ public class AdminRandomAddPointController {
         return new ResponseObject(adRandomAddPointService.previewDataImportExcel(file));
     }
 
+    @PostMapping("/export/preview-data")
+    public ResponseObject previewDataExportExcel() {
+        return new ResponseObject(adRandomAddPointService.previewDataExportExcel());
+    }
+
     @PostMapping("/create/import-data")
     public void createImportPoint(@RequestBody List<AdminAddItemDTO> lstAdminAddItemDTO) throws IOException {
         adRandomAddPointService.importData(lstAdminAddItemDTO);
@@ -75,6 +80,11 @@ public class AdminRandomAddPointController {
     @DeleteMapping("/delete/chest-gift")
     public ResponseObject deleteChestGift(@RequestParam("idChest") String idChest, @RequestParam("idGift") String idGift) {
         return new ResponseObject(adRandomAddPointService.deleteChestGidt(idChest, idGift));
+    }
+
+    @GetMapping("/get-all-name-chest")
+    public ResponseObject getAllNameChest() {
+        return new ResponseObject(adRandomAddPointService.getAllNameChest());
     }
 
 }
