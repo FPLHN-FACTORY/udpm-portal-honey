@@ -12,8 +12,8 @@ public class AdminAddItemDTO {
     private String id;
     private String userName;
     private String email;
-    private List<Gift> lstGift;
-    private List<Honey> lstHoney;
+    private String lstGift;
+    private String lstHoney;
     private String importMessage;
     private boolean isError;
     private ImportStatus importStatus;

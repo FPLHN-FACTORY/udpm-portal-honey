@@ -27,36 +27,48 @@ import ModalAddChest from "./ModalAddChest";
 import ModalAddChestGift from "./ModalAddChestGift";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GetChest, SetChest } from "../../../app/reducers/chest/chest.reducer";
+import ModalUpLoadFile from "./ModalUploadFile";
+import ModalConfirm from "./ModalConfirm";
+
+const initialDataRandomPoint = {
+  minPoint: null,
+  maxPoint: null,
+  listCategoryPoint: [],
+  listStudentPoint: [],
+};
+
+const initialDataRandomItem = {
+  chestId: "",
+  listItem: [],
+  listStudentPoint: [],
+};
 
 export default function RandomAddPoint() {
   const dispatch = useAppDispatch();
   const [category, setCategory] = useState([]);
   const [listGiftByChest, setListGiftByChest] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [dataPreview, setDataPreview] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openUpload, setOpenUpload] = useState(false);
+  const [openConfirm, setOpenConfirm] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [detailChest, setDetailChest] = useState();
   const [nameFile, setNameFile] = useState("");
+  const [nameFileUpload, setNameFileUpload] = useState("");
   const [chest, setChest] = useState({ id: "", name: "", percent: "" });
+  const [activeTabKey, setActiveTabKey] = useState("1");
+  const [selectedChest, setSelectedChest] = useState("");
   const [errorMinPoint, setErrorMinPoint] = useState("");
   const [errorMaxPoint, setErrorMaxPoint] = useState("");
-  // const [errorNumberStudent, setErrorNumberStudent] = useState("");
   const [errorListCategory, setErrorListCategory] = useState("");
   const [errorChestId, setErrorChestId] = useState("");
-  const [errorListItem, setErrorListItem] = useState("");
-  const [dataRandomPoint, setDataRandomPoint] = useState({
-    minPoint: null,
-    maxPoint: null,
-    // numberStudent: null,
-    listCategoryPoint: [],
-    listStudentPoint: [],
-  });
-  const [dataRandomItem, setDataRandomItem] = useState({
-    chestId: "",
-    listItem: [],
-    listStudentPoint: [],
-  });
+  const [dataRandomPoint, setDataRandomPoint] = useState(
+    initialDataRandomPoint
+  );
+  const [dataRandomItem, setDataRandomItem] = useState(initialDataRandomItem);
 
   const listChest = useAppSelector(GetChest);
 
@@ -180,7 +192,6 @@ export default function RandomAddPoint() {
     }
 
     setErrorChestId(errors.chestId);
-    setErrorListItem(errors.listItem);
     return check;
   };
 
@@ -234,72 +245,90 @@ export default function RandomAddPoint() {
   };
 
   const handleCreateRandomPoint = (dataRandomPoint) => {
-    console.log(dataRandomPoint);
     const check = handleValidationRandomPoint();
 
     if (check < 1) {
       setLoading(true);
       RandomAddPointAPI.createRandomPoint(dataRandomPoint)
         .then(() => {
-          message.success("Tạo random point thành công");
-          setDataRandomPoint({
-            minPoint: null,
-            maxPoint: null,
-            // numberStudent: null,
-            listCategoryPoint: [],
-            listStudentPoint: [],
-          });
+          message.success("Tạo ngẫu nhiên mật ong thành công");
+          setDataRandomPoint(initialDataRandomPoint);
+          setDataRandomItem(initialDataRandomItem);
           setNameFile("");
-          setDataRandomItem({
-            chestId: "",
-            listItem: [],
-            listStudentPoint: [],
-          });
-          setNameFile("");
+          setSelectedCategories([]);
         })
         .catch(() => {
-          message.error("Tạo random point thất bại");
+          message.error("Tạo ngẫu nhiên mật ong thất bại");
         });
       setLoading(false);
     } else {
-      message.error("Tạo random mật ong thất bại, bạn cần nhập đủ các dữ liệu");
+      message.error(
+        "Tạo ngẫu nhiên mật ong thất bại, bạn cần nhập đủ các dữ liệu"
+      );
     }
   };
 
   const handleCreateRandomItem = (dataRandomItem) => {
-    console.log(dataRandomItem);
     const check = handleValidationRandomItem();
 
     if (check < 1) {
       setLoading(true);
       RandomAddPointAPI.createRandomItem(dataRandomItem)
         .then(() => {
-          message.success("Tạo random Item thành công");
-          setDataRandomPoint({
-            minPoint: null,
-            maxPoint: null,
-            // numberStudent: null,
-            listCategoryPoint: [],
-            listStudentPoint: [],
-          });
+          message.success("Tạo ngẫu nhiên vật phẩm thành công");
+          setDataRandomPoint(initialDataRandomPoint);
+          setDataRandomItem(initialDataRandomItem);
           setNameFile("");
-          setDataRandomItem({
-            chestId: "",
-            listItem: [],
-            listStudentPoint: [],
-          });
-          setNameFile("");
+          setSelectedChest("");
         })
         .catch(() => {
-          message.error("Tạo random Item thất bại");
+          message.error("Tạo ngẫu nhiên vật phẩm thất bại");
         });
       setLoading(false);
     } else {
       message.error(
-        "Tạo random vật phẩm thất bại, bạn cần nhập đủ các dữ liệu"
+        "Tạo ngẫu nhiên vật phẩm thất bại, bạn cần nhập đủ các dữ liệu"
       );
     }
   };
+
+  const handleTabChange = (key) => {
+    setActiveTabKey(key);
+  };
+
+  const columsPreview = [
+    {
+      title: "Mã sinh viên",
+      dataIndex: "userName",
+      key: "username",
+    },
+    {
+      title: "Vật phẩm",
+      dataIndex: "lstGift",
+      key: "lstGift",
+    },
+    {
+      title: "Mật ong",
+      dataIndex: "lstHoney",
+      key: "lstHoney",
+    },
+    {
+      title: "trạng thái",
+      dataIndex: "importMessage",
+      key: "importMessage",
+      render: (_, record) => {
+        return record.error === false ? (
+          <Tooltip title={record.importMessage}>
+            <span style={{ color: "green" }}>Thành công</span>
+          </Tooltip>
+        ) : (
+          <Tooltip title={record.importMessage}>
+            <span style={{ color: "red" }}>Thất bại</span>
+          </Tooltip>
+        );
+      },
+    },
+  ];
 
   const items = [
     {
@@ -372,30 +401,16 @@ export default function RandomAddPoint() {
                     height: "40px",
                   }}
                   placeholder="Chọn loại mật ong"
-                  defaultValue={[]}
-                  onChange={handleChangeCategory}
+                  value={selectedCategories}
+                  onChange={(value) => {
+                    setSelectedCategories(value);
+                    handleChangeCategory(value);
+                  }}
                   options={optionCategory}
                 />
                 <span className="error">{errorListCategory}</span>
               </Card>
             </Col>
-            {/* <Col span={6}>
-              <Card title="Số lượng" style={{ borderTop: "5px solid #1c315e" }}>
-                <Input
-                  style={{ width: "100%" }}
-                  type="number"
-                  min={0}
-                  defaultValue={dataRandomPoint.numberStudent}
-                  onChange={(e) =>
-                    setDataRandomPoint({
-                      ...dataRandomPoint,
-                      numberStudent: Number(e.target.value),
-                    })
-                  }
-                />
-                <span className="error">{errorNumberStudent}</span>
-              </Card>
-            </Col> */}
             <Col span={10}>
               <Card
                 title="Khoảng mật ong"
@@ -420,7 +435,11 @@ export default function RandomAddPoint() {
                         style={{ width: "100%" }}
                         type="number"
                         min={0}
-                        defaultValue={dataRandomPoint.minPoint}
+                        value={
+                          dataRandomPoint.minPoint !== null
+                            ? dataRandomPoint.minPoint
+                            : ""
+                        }
                         onChange={(e) =>
                           setDataRandomPoint({
                             ...dataRandomPoint,
@@ -444,7 +463,11 @@ export default function RandomAddPoint() {
                         type="number"
                         style={{ width: "100%" }}
                         min={0}
-                        defaultValue={dataRandomPoint.maxPoint}
+                        value={
+                          dataRandomPoint.maxPoint !== null
+                            ? dataRandomPoint.maxPoint
+                            : ""
+                        }
                         onChange={(e) =>
                           setDataRandomPoint({
                             ...dataRandomPoint,
@@ -519,7 +542,6 @@ export default function RandomAddPoint() {
             </Space>
           </Space>
           <Row gutter={16}>
-            {/* <Col span={6}> */}
             <Card
               title={
                 <Space
@@ -551,12 +573,97 @@ export default function RandomAddPoint() {
                   width: "100%",
                   height: "40px",
                 }}
+                value={selectedChest}
                 options={optionChest}
-                onChange={(e) => handleChangeChest(e)}
+                onChange={(value) => {
+                  setSelectedChest(value);
+                  handleChangeChest(value);
+                }}
+                allowClear
               />
               <span className="error">{errorChestId}</span>
             </Card>
           </Row>
+        </div>
+      ),
+    },
+    {
+      key: "3",
+      label: "Phát vật phẩm",
+      children: (
+        <div>
+          <Space
+            style={{
+              justifyContent: "space-between",
+              display: "flex",
+              marginBottom: "16px",
+            }}
+          >
+            <span style={{ fontSize: "18px" }}>
+              <b>Phát vật phẩm</b>
+            </span>
+            <Space
+              style={{
+                justifyContent: "space-between",
+                display: "flex",
+              }}
+            >
+              <Button
+                className="button-css"
+                htmlFor="file-input"
+                style={{
+                  display: "inline-block",
+                  padding: "10px",
+                  zIndex: 2,
+                }}
+                onClick={() => setOpenUpload(true)}
+              >
+                <VerticalAlignBottomOutlined />
+                Upload File
+              </Button>
+              {openUpload && (
+                <ModalUpLoadFile
+                  openUpload={openUpload}
+                  setOpenUpload={setOpenUpload}
+                  setLoading={setLoading}
+                  setDataPreview={setDataPreview}
+                  nameFileUpload={nameFileUpload}
+                  setNameFileUpload={setNameFileUpload}
+                />
+              )}
+            </Space>
+          </Space>
+          {dataPreview.length > 0 && (
+            <Card style={{ borderTop: "5px solid #FFCC00" }}>
+              <Row style={{ marginBottom: "32px" }}>
+                <b style={{ fontSize: "25px" }}>Dữ liệu import</b>
+              </Row>
+              <Table dataSource={dataPreview} columns={columsPreview} />
+              <Space
+                style={{
+                  justifyContent: "right",
+                  display: "flex",
+                  marginTop: "32px",
+                }}
+              >
+                <Button className="button-css">CLOSE</Button>
+
+                <Button
+                  className="button-css"
+                  onClick={() => setOpenConfirm(true)}
+                >
+                  ADD
+                </Button>
+                {openConfirm && (
+                  <ModalConfirm
+                    dataPreview={dataPreview}
+                    openConfirm={openConfirm}
+                    setOpenConfirm={setOpenConfirm}
+                  />
+                )}
+              </Space>
+            </Card>
+          )}
         </div>
       ),
     },
@@ -605,9 +712,14 @@ export default function RandomAddPoint() {
       )}
       <Spin spinning={loading}>
         <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
-          <Tabs items={items} defaultActiveKey="1" />
+          <Tabs
+            items={items}
+            defaultActiveKey="1"
+            activeKey={activeTabKey}
+            onChange={handleTabChange}
+          />
         </Card>
-        {dataRandomItem.chestId !== "" && (
+        {activeTabKey === "2" && dataRandomItem.chestId !== "" && (
           <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
             <Space
               style={{
@@ -631,12 +743,14 @@ export default function RandomAddPoint() {
                 />
               </Space>
             </Space>
+            {/* {dataRandomItem.chestId !== "" && ( */}
             <Table
               rowSelection={rowSelection}
               rowKey="id"
               columns={colums}
               dataSource={listGiftByChest}
             />
+            {/* )} */}
           </Card>
         )}
       </Spin>

@@ -41,6 +41,7 @@ import TestTransaction from "./pages/student/transaction/TestTransaction";
 import { getToken, setToken } from "./helper/userToken";
 import { connectStompClient } from "./helper/stomp-client/config";
 import StudentChest from "./pages/student/chest/studentChest";
+import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
 
 function App() {
   const token =
@@ -209,6 +210,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <RandomAddPoint />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/preview-import"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <ListDataImport />
                   </DashboardCensor>
                 </AuthGuard>
               }

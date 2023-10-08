@@ -46,11 +46,26 @@ export class RandomAddPointAPI {
     });
   };
 
+  static previewDataExportExcel = () => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}/export/preview-data`,
+    });
+  };
+
   static createImportExcel = (importExcel) => {
     return request({
       method: "POST",
       url: `/${this.COMPONENT_NAME}/create/import`,
       data: importExcel,
+    });
+  };
+
+  static createImportData = (dataPreview) => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}/create/import-data`,
+      data: dataPreview,
     });
   };
 
@@ -88,6 +103,13 @@ export class RandomAddPointAPI {
       method: "DELETE",
       url: `/${this.COMPONENT_NAME}/delete/chest-gift`,
       params: { idChest, idGift },
+    });
+  };
+
+  static getAllNameChest = () => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/get-all-name-chest`,
     });
   };
 }

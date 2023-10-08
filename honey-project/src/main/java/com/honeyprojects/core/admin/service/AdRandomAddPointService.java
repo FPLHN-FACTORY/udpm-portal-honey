@@ -23,6 +23,8 @@ public interface AdRandomAddPointService {
 
     Boolean exportExcel();
 
+    Boolean previewDataExportExcel();
+
     List<String> importExcel(MultipartFile file);
 
     AdminAddItemBO previewDataImportExcel(MultipartFile file) throws IOException;
@@ -36,4 +38,6 @@ public interface AdRandomAddPointService {
     AdminChestReponse getChestById(String idChest);
 
     Boolean deleteChestGidt(String idChest, String idGift);
+
+    List<String> getAllNameChest();
 }
