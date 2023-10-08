@@ -37,7 +37,6 @@ public class AdminChestGiftServiceImpl implements AdminChestGiftService {
         chestRepository.delete(chest);
     }
 
-
     @Override
     public List<AdminChestGiftResponse> getChestGift(String chestId) {
         return chestGiftRepository.getChestGift(chestId);
@@ -97,7 +96,21 @@ public class AdminChestGiftServiceImpl implements AdminChestGiftService {
 
     @Override
     public List<ChestGift> createChestGift(AdminCreateChestGiftRequest request) {
-
-        return null;
+        List<String> listGiftId = request.getListGift();
+        if (listGiftId.size() != 0) {
+            Chest chestNew = new Chest();
+            chestRepository.save(chestNew);
+            List<ChestGift> chestGiftList = new ArrayList<>();
+            for (String giftId : listGiftId) {
+                ChestGift chestGift = new ChestGift();
+                chestGift.setChestId(chestNew.getId());
+                chestGift.setGiftId(giftId);
+                chestGiftList.add(chestGift);
+            }
+            chestGiftRepository.saveAll(chestGiftList);
+            return chestGiftList;
+        }else {
+            return null;
+        }
     }
 }

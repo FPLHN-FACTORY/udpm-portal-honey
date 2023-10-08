@@ -11,10 +11,35 @@ export class ArchiveAPI {
     });
   };
 
+  static getChest = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/list-chest`,
+      params: filter,
+    });
+  };
+
   static delete = (id) => {
     return request({
       method: "DELETE",
       url: `/${this.COMPONENT_NAME}/${id}`,
+    });
+  };
+
+  static update = (id) => {
+    return request({
+      method: "PUT",
+      url: `/${this.COMPONENT_NAME}/${id}`,
+    });
+  };
+
+  static openChest = (idChest) => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}/open-chest`,
+      data: {
+        chestId: idChest,
+      },
     });
   };
 }
