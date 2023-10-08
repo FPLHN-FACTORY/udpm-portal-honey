@@ -17,4 +17,11 @@ export class ArchiveAPI {
       url: `/${this.COMPONENT_NAME}/${id}`,
     });
   };
+
+  static update = (id) => {
+    return request({
+      method: "PUT",
+      url: `/${this.COMPONENT_NAME}/${id}`,
+    });
+  };
 }
