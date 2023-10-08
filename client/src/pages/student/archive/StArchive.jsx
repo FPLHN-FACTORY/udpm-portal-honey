@@ -1,9 +1,9 @@
-import { Card, Segmented, Space, Spin, Table, Tabs } from "antd";
+import { Card, Space, Spin, Table, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import UsingGift from "./StudentUsingGift";
-import { EyeOutlined, RocketOutlined } from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
 import {
   GetArchiveGift,
   SetArchiveGift,

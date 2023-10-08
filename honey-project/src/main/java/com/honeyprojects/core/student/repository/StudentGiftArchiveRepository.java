@@ -5,6 +5,7 @@ import com.honeyprojects.core.student.model.request.StudentArchiveOpenChestReque
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
 import com.honeyprojects.repository.ArchiveGiftRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,8 +15,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Primary
 @Repository
+@Primary
 public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
     @Query(value = """
                     SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.id, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 

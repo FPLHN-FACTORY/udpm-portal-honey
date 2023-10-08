@@ -11,6 +11,14 @@ export class ArchiveAPI {
     });
   };
 
+  static getChest = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/list-chest`,
+      params: filter,
+    });
+  };
+
   static delete = (id) => {
     return request({
       method: "DELETE",
@@ -28,7 +36,7 @@ export class ArchiveAPI {
   static openChest = (idChest) => {
     return request({
       method: "POST",
-      url: `/${this.COMPONENT_NAME}`,
+      url: `/${this.COMPONENT_NAME}/open-chest`,
       data: {
         chestId: idChest,
       },

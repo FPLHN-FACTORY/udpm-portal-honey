@@ -11,7 +11,6 @@ import com.honeyprojects.core.student.repository.StudentGiftArchiveRepository;
 import com.honeyprojects.core.student.service.StudentArchiveService;
 import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
-import com.honeyprojects.entity.Chest;
 import com.honeyprojects.repository.ArchiveGiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
