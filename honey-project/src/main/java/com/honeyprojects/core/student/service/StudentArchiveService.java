@@ -21,4 +21,6 @@ public interface StudentArchiveService {
 
     ArchiveGift updateArchiveGift(String id);
 
+    ArchiveGift detailArchiveGift(String id);
+
 }

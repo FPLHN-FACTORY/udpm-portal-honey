@@ -19,6 +19,13 @@ export class ArchiveAPI {
     });
   };
 
+  static detail = (id) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/${id}`,
+    });
+  };
+
   static delete = (id) => {
     return request({
       method: "DELETE",
