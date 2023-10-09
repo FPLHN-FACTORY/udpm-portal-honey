@@ -41,6 +41,7 @@ import TestTransaction from "./pages/student/transaction/TestTransaction";
 import { getToken, setToken } from "./helper/userToken";
 import { connectStompClient } from "./helper/stomp-client/config";
 import StudentChest from "./pages/student/chest/studentChest";
+import StudentAuction from "./pages/student/auction/StudentAuction";
 import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
 
 function App() {
@@ -350,6 +351,16 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     <StArchive />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/auction"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <StudentAuction />
                   </DashboardAuthUser>
                 </AuthGuard>
               }

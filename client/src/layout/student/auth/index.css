@@ -15,6 +15,7 @@
   position: relative;
   z-index: 1;
 }
+
 .main-ui-student .frame {
   /* background-image: url("../../../assets/images/ui-student/KhungProfile1.png"); */
   width: 1000vw;
@@ -24,13 +25,13 @@
   margin-top: -150px;
   margin-left: 120px;
 }
+
 .main-ui-student .content-student::-webkit-scrollbar {
   width: 0px;
 }
 
 .main-ui-student .btn-cua-hang {
-  background: url("../../../assets/images/ui-student/btn-cua-hang.png")
-    no-repeat;
+  background: url("../../../assets/images/ui-student/btn-cua-hang.png") no-repeat;
   width: 415px;
   height: 160px;
   cursor: pointer;
@@ -90,6 +91,7 @@
 .main-ui-student .container {
   align-items: center;
   display: flex;
+  cursor: pointer;
 }
 
 .main-ui-student .tag-name {
@@ -130,8 +132,7 @@
 }
 
 .main-ui-student .btn-giao-dich {
-  background: url("../../../assets/images/ui-student/btn-giao-dich.png")
-    no-repeat;
+  background: url("../../../assets/images/ui-student/btn-giao-dich.png") no-repeat;
 }
 
 .main-ui-student .btn-cai-dat {
@@ -147,8 +148,7 @@
 }
 
 .main-ui-student .btn-tat-am-thanh {
-  background: url("../../../assets/images/ui-student/btn-mute-music.png")
-    no-repeat;
+  background: url("../../../assets/images/ui-student/btn-mute-music.png") no-repeat;
 }
 
 .main-ui-student .btn-icon {

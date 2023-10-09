@@ -20,8 +20,10 @@ import {
 } from "../../../helper/stomp-client/config";
 import { Content, Footer } from "antd/es/layout/layout";
 import { CloseOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 function DashboardAuthUser({ children }) {
+  const navigate = useNavigate();
   const [transaction, setTransaction] = useState();
   useEffect(() => {
     connectStompClient();
@@ -52,8 +54,7 @@ function DashboardAuthUser({ children }) {
               className="tu-choi"
               onClick={() => {
                 message.destroy(transactionReq.idTransaction);
-              }}
-            >
+              }}>
               Từ chối
             </button>
             <button
@@ -61,8 +62,7 @@ function DashboardAuthUser({ children }) {
               onClick={() => {
                 message.destroy();
                 onsubmitTransaction(transactionReq);
-              }}
-            >
+              }}>
               Chấp nhận
             </button>
           </div>
@@ -94,6 +94,7 @@ function DashboardAuthUser({ children }) {
   };
   const hanlderClickDauGia = () => {
     playSound();
+    navigate("/student/auction");
   };
   const hanlderClickNangCap = () => {
     playSound();
@@ -103,6 +104,7 @@ function DashboardAuthUser({ children }) {
   };
   const hanlderClickKhoDo = () => {
     playSound();
+    navigate("/student/chest");
   };
   const hanlderClickCaiDat = () => {
     playSound();
@@ -118,13 +120,22 @@ function DashboardAuthUser({ children }) {
   const hanlderClickDoiQua = () => {
     playSound();
   };
+  const hanlderClickProfile = () => {
+    playSound();
+    navigate("/student/profile");
+  };
 
   const [open, setOpen] = useState(false);
+
+  const returnHome = () => {
+    playSound();
+    navigate("/student");
+  };
   return (
     <div className="main-ui-student" style={{ display: "flex" }}>
       {children !== undefined ? (
         <div className="frame">
-          <div className="card-close-container">
+          <div className="card-close-container" onClick={returnHome}>
             <CloseOutlined className="card-close-icon" />
           </div>
 
@@ -137,8 +148,7 @@ function DashboardAuthUser({ children }) {
               position: "absolute",
               top: "10%",
               left: "7%",
-            }}
-          >
+            }}>
             {children}
           </div>
         </div>
@@ -152,11 +162,10 @@ function DashboardAuthUser({ children }) {
                   height: "70vh",
                   paddingRight: "60px",
                   paddingLeft: "60px",
-                }}
-              >
+                }}>
                 <Row>
                   <Col span={12}>
-                    <div className="container">
+                    <div onClick={hanlderClickProfile} className="container">
                       <div class="outer-hexagon">
                         <div class="inner-hexagon"></div>
                       </div>
@@ -204,8 +213,7 @@ function DashboardAuthUser({ children }) {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "end",
-                }}
-              >
+                }}>
                 <button
                   onClick={hanlderClickDauGia}
                   className="btn-dau-gia btn-student"
