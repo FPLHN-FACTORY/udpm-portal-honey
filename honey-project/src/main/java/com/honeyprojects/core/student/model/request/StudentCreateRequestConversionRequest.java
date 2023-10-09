@@ -22,7 +22,7 @@ public class StudentCreateRequestConversionRequest {
     private String nameGift;
 
     @NotBlank
-    private String categoryId;
+    private String honeyCategoryId;
 
     @NotBlank
     private String honeyId;

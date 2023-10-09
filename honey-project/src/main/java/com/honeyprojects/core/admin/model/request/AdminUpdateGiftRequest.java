@@ -19,43 +19,44 @@ import java.util.Random;
 @Setter
 public class AdminUpdateGiftRequest {
 
-   private String code;
+    private String code;
 
-   @NotBlank(message = "tên không được để trống")
-   @Size(min = 0, max = 250)
-   private String name;
+    @NotBlank(message = "tên không được để trống")
+    @Size(min = 0, max = 250)
+    private String name;
 
-   private Integer type;
+    private Integer type;
 
-   private StatusGift status;
+    private StatusGift status;
 
-   private Integer quantity;
+    private Integer quantity;
 
-   private MultipartFile image;
+    private MultipartFile image;
 
-   private String honeyCategoryId;
+    private String honeyCategoryId;
 
-   private Integer honey;
+    private Integer honey;
 
-   public Gift dtoToEntity(Gift gift) throws IOException {
-      gift.setCode(this.getCode());
-      gift.setName(this.getName());
-      gift.setStatus(this.getStatus());
-      if (this.getType() != null) {
-         gift.setType(TypeGift.values()[this.getType()]);
-      }
+    private String note;
 
-      if (this.getQuantity() != null) {
-         gift.setQuantity(this.getQuantity());
-      }
+    public Gift dtoToEntity(Gift gift) throws IOException {
+        gift.setCode(this.getCode());
+        gift.setName(this.getName());
+        gift.setStatus(this.getStatus());
+        if (this.getType() != null) {
+            gift.setType(TypeGift.values()[this.getType()]);
+        }
 
-      if (this.getImage() != null) {
-         byte[] imageBytes = this.getImage().getBytes();
-         gift.setImage(imageBytes);
-      }
-      gift.setHoneyCategoryId(this.getHoneyCategoryId());
-      gift.setHoney(this.getHoney());
+        gift.setQuantity(this.getQuantity());
 
-      return gift;
-   }
+        if (this.getImage() != null) {
+            byte[] imageBytes = this.getImage().getBytes();
+            gift.setImage(imageBytes);
+        }
+        gift.setHoneyCategoryId(this.getHoneyCategoryId());
+        gift.setHoney(this.getHoney());
+        gift.setNote(this.getNote());
+
+        return gift;
+    }
 }

@@ -6,8 +6,16 @@ import {
   AddCategory,
 } from "../../../app/reducers/category/category.reducer";
 import "./index.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 const ModalThem = (props) => {
+  const [listCategory, setListCategory] = useState([]);
+
+  useEffect(() => {
+    CategoryAPI.fetchAll().then((response) => {
+      setListCategory(response.data.data.data);
+    });
+  });
+
   const onFinishFailed = () => {
     message.error("Error");
   };
@@ -22,34 +30,42 @@ const ModalThem = (props) => {
     form
       .validateFields()
       .then((formValues) => {
-        if (category === null) {
-          console.log(formValues);
-          CategoryAPI.create(formValues)
-            .then((result) => {
-              dispatch(AddCategory(result.data.data));
-              message.success("Thành công!");
-              setModalOpen(false);
-              form.resetFields();
-              const newCategory = {
-                id: result.data.data.id,
-                name: result.data.data.name,
-              };
-              onSave && onSave(newCategory);
-            })
-            .catch((err) => {
-              message.error("Lỗi: " + err.message);
-            });
+        const isNameExists = listCategory.some(
+          (listCategory) => listCategory.name === formValues.name
+        );
+        if (isNameExists) {
+          message.error("Tên thể loại không được trùng");
+          return;
         } else {
-          CategoryAPI.update(formValues, category.id)
-            .then((response) => {
-              dispatch(UpdateCategory(response.data.data));
-              message.success("Thành công!");
-              setModalOpen(false);
-              form.resetFields();
-            })
-            .catch((err) => {
-              message.error("Lỗi: " + err.message);
-            });
+          if (category === null) {
+            console.log(formValues);
+            CategoryAPI.create(formValues)
+              .then((result) => {
+                dispatch(AddCategory(result.data.data));
+                message.success("Thành công!");
+                setModalOpen(false);
+                form.resetFields();
+                const newCategory = {
+                  id: result.data.data.id,
+                  name: result.data.data.name,
+                };
+                onSave && onSave(newCategory);
+              })
+              .catch((err) => {
+                message.error("Lỗi: " + err.message);
+              });
+          } else {
+            CategoryAPI.update(formValues, category.id)
+              .then((response) => {
+                dispatch(UpdateCategory(response.data.data));
+                message.success("Thành công!");
+                setModalOpen(false);
+                form.resetFields();
+              })
+              .catch((err) => {
+                message.error("Lỗi: " + err.message);
+              });
+          }
         }
       })
       .catch(() => {
@@ -61,17 +77,22 @@ const ModalThem = (props) => {
     setModalOpen(false);
     form.resetFields();
   };
+  const initialValues = {
+    categoryStatus: "1",
+    transactionRights: "0",
+  };
 
   return (
     <>
       <Modal
-        title="Thể loại bài viết"
+        title="Thể loại mật ong"
         open={modalOpen}
         onCancel={onCancel}
         footer={null}
       >
         <hr className="border-0 bg-gray-300 mt-3 mb-6" />
         <Form
+          initialValues={initialValues}
           form={form}
           name="basic"
           onFinish={onFinish}
@@ -85,9 +106,9 @@ const ModalThem = (props) => {
           style={{
             maxWidth: 600,
           }}
-          initialValues={{
-            remember: true,
-          }}
+          // initialValues={{
+          //   remember: true,
+          // }}
           autoComplete="off"
         >
           {/* <Form.Item label="Mã" name="code">
@@ -101,15 +122,6 @@ const ModalThem = (props) => {
               {
                 required: true,
                 message: "Tên bài viết không để trống",
-              },
-              {
-                pattern:
-                  /^[a-zA-Z0-9\sÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+$/,
-                message: "Tên bài viết không bao gồm các ký tự đặc biệt",
-              },
-              {
-                min: 4,
-                message: "Tên bài viết phải tối thiểu 4 kí tự",
               },
             ]}
           >

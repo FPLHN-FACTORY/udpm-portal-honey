@@ -23,4 +23,6 @@ public class ArchiveGift extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_ID)
     private String chestId;
 
+    private String note;
+
 }

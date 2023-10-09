@@ -3,6 +3,7 @@ package com.honeyprojects.core.admin.repository;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminChestGiftResponse;
 import com.honeyprojects.core.admin.model.response.AdminChestReponse;
+import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.repository.HoneyRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -68,6 +69,26 @@ public interface AdRandomAddPointRepository extends HoneyRepository {
             where student_id = :#{#idStudent}
             """,nativeQuery = true)
     String getArchiveByIdStudent(String idStudent);
+
+    @Query(value = """
+            select name
+            from chest
+            """, nativeQuery = true)
+    List<String> getAllNameChest();
+
+    @Query(value = """
+            SELECT  row_number()  OVER(ORDER BY created_date DESC) as stt, id, name, code, category_status, transaction_rights
+            FROM category
+            where name = :categoryPoint
+            """,nativeQuery = true)
+    AdminCategoryResponse getCategoryByName(String categoryPoint);
+
+    @Query(value = """
+            SELECT id
+            from gift
+            where name = :#{#name}
+            """,nativeQuery = true)
+    String getIdGiftByName(String name);
 
 //    @Query(value = """
 //            SELECT c.id, c.name, c.code

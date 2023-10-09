@@ -4,22 +4,32 @@ import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { AddGift } from "../../../app/reducers/gift/gift.reducer";
 import { useState, useEffect } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
+import TextArea from "antd/es/input/TextArea";
+import "./index.css";
 
 const ModalThem = (props) => {
   const onFinishFailed = () => {
     message.error("Error");
   };
 
-  const { modalOpen, setModalOpen, gift, onSave } = props;
+  const { modalOpen, setModalOpen, gift, onSave, fetchData } = props;
   const [form] = Form.useForm();
   const { Option } = Select;
   const [image, setImage] = useState([]);
-  const [quantityValue, setQuantityValue] = useState(null);
+  const [quantityValue, setQuantityValue] = useState(0);
   const [listCategory, setListCategory] = useState([]);
+  const [selectedImageUrl, setSelectedImageUrl] = useState("");
 
   const handleFileInputChange = (event) => {
     const selectedFile = event.target.files[0];
     setImage(selectedFile);
+
+    if (selectedFile) {
+      const imageUrl = URL.createObjectURL(selectedFile);
+      setSelectedImageUrl(imageUrl);
+    } else {
+      setSelectedImageUrl("");
+    }
   };
 
   form.setFieldsValue(gift);
@@ -40,6 +50,28 @@ const ModalThem = (props) => {
     CategoryAPI.fetchAllCategory().then((response) => {
       setListCategory(response.data.data);
     });
+  };
+
+  // const validateImage = (rule, value) => {
+  //   if (!value) {
+  //     return Promise.reject("Vui lòng chọn một hình ảnh.");
+  //   }
+  //   return Promise.resolve();
+  // };
+
+  const validateQuantity = (rule, value) => {
+    const quantityValue = form.getFieldValue("quantity");
+    if (quantityValue === 1 && (!value || value <= 0)) {
+      return Promise.reject("Số lượng phải lớn hơn 0.");
+    }
+    return Promise.resolve();
+  };
+
+  const validateHoney = (rule, value) => {
+    if (!value || value <= 0) {
+      return Promise.reject("Điểm (điểm số) phải lớn hơn 0.");
+    }
+    return Promise.resolve();
   };
 
   const onFinish = () => {
@@ -73,6 +105,7 @@ const ModalThem = (props) => {
               honeyCategoryId: result.data.data.honeyCategoryId,
             };
             onSave && onSave(newGift);
+            fetchData();
           })
           .catch((err) => {
             message.error("Lỗi: " + err.message);
@@ -94,7 +127,6 @@ const ModalThem = (props) => {
       visible={modalOpen}
       onCancel={onCancel}
       footer={null}
-      width={1000}
     >
       <hr className="border-0 bg-gray-300 mt-3 mb-6" />
       <Form
@@ -103,7 +135,7 @@ const ModalThem = (props) => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         labelCol={{
-          span: 4,
+          span: 7,
         }}
         wrapperCol={{
           span: 18,
@@ -118,17 +150,21 @@ const ModalThem = (props) => {
         }}
         autoComplete="off"
       >
-        <Form.Item label="Ảnh" name="image">
-          <Input
-            hidden
-            id="image"
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={(event) => handleFileInputChange(event)}
-          />
-          <label htmlFor="image"></label>
-        </Form.Item>
+        <div
+          onClick={() => {
+            document.getElementById("select-avatar").click();
+          }}
+          className="image-container"
+        >
+          {image ? <img src={selectedImageUrl} alt="Chọn ảnh" /> : "Chọn ảnh"}
+        </div>
+        <input
+          className="hidden-input"
+          id="select-avatar"
+          type="file"
+          accept="image/*"
+          onChange={(event) => handleFileInputChange(event)}
+        />
         <Form.Item
           label="Tên"
           name="name"
@@ -169,13 +205,16 @@ const ModalThem = (props) => {
                 required: true,
                 message: "Vui lòng nhập số lượng giới hạn",
               },
+              {
+                validator: validateQuantity,
+              },
             ]}
           >
             <Input type="number" />
           </Form.Item>
         )}
         <Form.Item
-          label="Loại"
+          label="Loại vật phẩm"
           name="type"
           rules={[
             {
@@ -191,7 +230,7 @@ const ModalThem = (props) => {
           </Select>
         </Form.Item>
         <Form.Item
-          label="cấp bậc"
+          label="loại mật"
           name="honeyCategoryId"
           rules={[
             {
@@ -209,12 +248,15 @@ const ModalThem = (props) => {
           </Select>
         </Form.Item>
         <Form.Item
-          label="Số điểm"
+          label="Số mật ong"
           name="honey"
           rules={[
             {
               required: true,
               message: "Điểm Quà không để trống",
+            },
+            {
+              validator: validateHoney,
             },
           ]}
         >
@@ -234,6 +276,23 @@ const ModalThem = (props) => {
             <Radio value={1}>Cần phê duyệt</Radio>
             <Radio value={0}>Không phê duyệt</Radio>
           </Radio.Group>
+        </Form.Item>
+        <Form.Item
+          label="Ghi chú"
+          name="note"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập mô tả",
+            },
+          ]}
+        >
+          <TextArea
+            name="note"
+            cols="30"
+            rows="10"
+            style={{ width: "350px", height: "100px" }}
+          />
         </Form.Item>
 
         <Form.Item

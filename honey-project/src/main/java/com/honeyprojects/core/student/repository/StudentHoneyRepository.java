@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 public interface StudentHoneyRepository extends HoneyRepository {
     @Query(value = """
             SELECT h.id, h.honey_point from honey h
-
             where h.student_id = :#{#rep.studentId}
             and h.honey_category_id = :#{#rep.categoryId}
             """, nativeQuery = true)

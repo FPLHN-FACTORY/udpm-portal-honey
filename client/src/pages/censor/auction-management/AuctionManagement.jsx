@@ -16,7 +16,6 @@ import {
 import "./auction-management.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faEye,
   faFilter,
   faPenToSquare,
   faRectangleList,
@@ -32,12 +31,11 @@ import {
   GetAuction,
   SetAuction,
   DeleteAuction,
-  UpdateAuction,
+  ChangeAuctionStatus,
 } from "../../../app/reducers/auction/auction.reducer";
 import ModalCreateAuction from "./modal-create/ModalCreateAuction.jsx";
 import ModalUpdateAuction from "./modal-update/ModalUpdateAuction";
 import { GetCategory } from "../../../app/reducers/category/category.reducer";
-import moment from "moment";
 const { Option } = Select;
 
 export default function AuctionMangement() {
@@ -98,44 +96,12 @@ export default function AuctionMangement() {
       render: (text, record, index) => index + 1,
     },
     {
-      title: "Tên",
+      title: "Tên phòng đấu giá",
       dataIndex: "name",
       key: "name",
     },
     {
-      title: "Thời gian",
-      dataIndex: "fromDateAndToDate",
-      key: "fromDateAndToDate",
-      render: (text, record) => {
-        const fromDate = new Date(record.fromDate);
-        const formattedFromDate = `${fromDate.getDate()}/${
-          fromDate.getMonth() + 1
-        }/${fromDate.getFullYear()}`;
-
-        const toDate = new Date(record.toDate);
-        const formattedToDate = `${toDate.getDate()}/${
-          toDate.getMonth() + 1
-        }/${toDate.getFullYear()}`;
-
-        return (
-          <span>
-            {formattedFromDate} - {formattedToDate}
-          </span>
-        );
-      },
-    },
-    {
-      title: "Giá tiền ban đầu",
-      dataIndex: "startingPrice",
-      key: "startingPrice",
-    },
-    {
-      title: "Bước nhảy",
-      dataIndex: "jump",
-      key: "jump",
-    },
-    {
-      title: "Thể loại",
+      title: "Loại điểm",
       dataIndex: "categoryName",
       key: "categoryName",
       render: (text) => <span>{text}</span>,
@@ -152,7 +118,7 @@ export default function AuctionMangement() {
       align: "center",
       render: (text) => (
         <Tag
-          color={parseInt(text) === 0 || text === "HOAT_DONG"   ? "green" : "red"}
+          color={text === "HOAT_DONG" ? "green" : "red"}
           style={{
             fontSize: "14px",
             padding: "5px 10px",
@@ -161,7 +127,7 @@ export default function AuctionMangement() {
             textAlign: "center",
           }}
         >
-          {parseInt(text) === 0 || text === "HOAT_DONG"  ? "Mở" : "Đóng"}
+          {text === "HOAT_DONG" ? "Mở" : "Đóng"}
         </Tag>
       ),
     },
@@ -173,18 +139,18 @@ export default function AuctionMangement() {
       render: (_, record) => (
         <Space size="middle">
           <Popconfirm
-            title="Xóa phiên đấu giá"
-            description="Bạn có chắc chắn muốn xóa bản ghi này không?"
+            title="Đón phòng đấu giá"
+            description="Bạn có chắc chắn muốn đóng phòng này không?"
             onConfirm={() => {
               buttonDelete(record.id);
             }}
             okText="Có"
             cancelText="Không"
           >
-            <Tooltip title="Xóa">
+            <Tooltip title="Đóng phòng đấu giá">
               <Button
                 style={{
-                  backgroundColor: "#FF9900",
+                  backgroundColor: "red",
                   color: "white",
                   height: "35px",
                 }}
@@ -193,18 +159,20 @@ export default function AuctionMangement() {
               </Button>
             </Tooltip>
           </Popconfirm>
-          <Button
-            onClick={() => {
-              buttonUpdate(record);
-            }}
-            style={{
-              backgroundColor: "#0066CC",
-              color: "white",
-              height: "35px",
-            }}
-          >
-            <FontAwesomeIcon icon={faPenToSquare} />
-          </Button>
+          <Tooltip title="Sửa">
+            <Button
+              onClick={() => {
+                buttonUpdate(record);
+              }}
+              style={{
+                backgroundColor: "#0066CC",
+                color: "white",
+                height: "35px",
+              }}
+            >
+              <FontAwesomeIcon icon={faPenToSquare} />
+            </Button>
+          </Tooltip>
         </Space>
       ),
     },
@@ -255,14 +223,14 @@ export default function AuctionMangement() {
   };
 
   const buttonDelete = (id) => {
-    AuctionAPI.delete(id).then(
+    AuctionAPI.changeStatus(id).then(
       (response) => {
-        message.success("Xóa thành công!");
-        dispatch(DeleteAuction(response.data.data));
+        message.success("Đóng thành công!");
+        dispatch(ChangeAuctionStatus(response.data.data));
         fetchData();
       },
       (error) => {
-        message.success("Xóa thất bại!");
+        message.error("Đóng thất bại!");
       }
     );
   };
@@ -270,83 +238,81 @@ export default function AuctionMangement() {
   return (
     <div>
       <Card style={{ borderTop: "5px solid #FFCC00" }}>
-      <div className="filter__auction">
-        <FontAwesomeIcon
-          icon={faFilter}
-          size="2px"
-          style={{ fontSize: "26px" }}
-        />{" "}
-        <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span>
-     
-            <Row
-              gutter={24}
-              style={{ marginBottom: "15px", paddingTop: "20px" }}
-            >
-              <Col span={8}>
-                <span>Tên phiên đấu giá:</span>{" "}
-                <Input                  type="text"
-                  value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
-                />
-              </Col>
-              <Col span={8}>
-                <span>Thể loại:</span>
-                {""}
-                <Select
-                  value={honeyCategoryId}
-                  onChange={(value) => {
-                    setHoneyCategoryId(value);
-                  }}
-                  style={{ width: "100%", marginRight: "10px"}}
-                >
-                  <Option value="">Tất cả</Option>
-                  {listCategorySearch.map((item) => {
-                    return <Option value={item.id}>{item.name}</Option>;
-                  })}
-                </Select>
-              </Col>
-              <Col span={8}>
-                <span>Trạng thái:</span>
-                {""}
-                <Select
-                  value={status}
-                  onChange={(value) => {
-                    setStatus(value);
-                  }}
+        <div className="filter__auction">
+          <FontAwesomeIcon
+            icon={faFilter}
+            size="2px"
+            style={{ fontSize: "26px" }}
+          />{" "}
+          <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span>
+          <Row gutter={24} style={{ marginBottom: "15px", paddingTop: "20px" }}>
+            <Col span={8}>
+              <span>Tên phiên đấu giá:</span>{" "}
+              <Input
+                type="text"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
+                style={{ height: "30px" }}
+              />
+            </Col>
+            <Col span={8}>
+              <span>Thể loại:</span>
+              {""}
+              <Select
+                value={honeyCategoryId}
+                onChange={(value) => {
+                  setHoneyCategoryId(value);
+                }}
+                style={{ width: "100%", marginRight: "10px" }}
+              >
+                <Option value="">Tất cả</Option>
+                {listCategorySearch.map((item) => {
+                  return <Option value={item.id}>{item.name}</Option>;
+                })}
+              </Select>
+            </Col>
+            <Col span={8}>
+              <span>Trạng thái:</span>
+              {""}
+              <Select
+                value={status}
+                onChange={(value) => {
+                  setStatus(value);
+                }}
+                style={{
+                  width: "100%",
+                  fontSize: "13px",
+                }}
+              >
+                <Option
+                  value=""
                   style={{
-                    width: "100%",
                     fontSize: "13px",
                   }}
                 >
-                  <Option
-                    value=""
-                    style={{
-                      fontSize: "13px",
-                    }}
-                  >
-                    Tất cả
-                  </Option>
-                  <Option
-                    value="1"
-                    style={{
-                      fontSize: "13px",
-                    }}
-                  >
-                    Mở
-                  </Option>
-                  <Option
-                    value="0"
-                    style={{
-                      fontSize: "13px",
-                    }}
-                  >
-                    Đóng
-                  </Option>
-                </Select>
-              </Col>
-            </Row>
+                  Tất cả
+                </Option>
+                <Option
+                  value="0"
+                  style={{
+                    fontSize: "13px",
+                  }}
+                >
+                  Mở
+                </Option>
+                <Option
+                  value="1"
+                  style={{
+                    fontSize: "13px",
+                  }}
+                >
+                  Đóng
+                </Option>
+              </Select>
+            </Col>
+          </Row>
         </div>
         <Space
           style={{
@@ -375,6 +341,8 @@ export default function AuctionMangement() {
                   marginLeft: "8px",
                   backgroundColor: "#FF9900",
                   color: "white",
+                  outline: "none",
+                  border: "none"
                 }}
               >
                 Làm mới
@@ -406,6 +374,7 @@ export default function AuctionMangement() {
               style={{
                 color: "white",
                 backgroundColor: "rgb(55, 137, 220)",
+                textAlign: "center",
               }}
               onClick={buttonCreate}
             >
@@ -417,7 +386,7 @@ export default function AuctionMangement() {
                   marginRight: "5px",
                 }}
               />
-              Thêm phiên đấu giá
+              Thêm phòng đấu giá
             </Button>
           </div>
         </Space>
@@ -429,7 +398,7 @@ export default function AuctionMangement() {
           }}
         >
           <Table
-          style={{width: "100%"}}
+            style={{ width: "100%" }}
             dataSource={data}
             rowKey="id"
             columns={columns}
@@ -458,6 +427,7 @@ export default function AuctionMangement() {
         visible={modalUpdate}
         onCancel={buttonUpdateCancel}
         auction={auction}
+        fetchAllData={fetchData}
       />
     </div>
   );

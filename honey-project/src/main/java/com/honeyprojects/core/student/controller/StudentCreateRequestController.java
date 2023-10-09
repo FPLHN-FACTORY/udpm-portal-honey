@@ -48,7 +48,6 @@ public class StudentCreateRequestController {
 
     @GetMapping("/honey-point")
     public ResponseObject getPointHoney(StudentHoneyRequest honeyRequest){
-        System.out.println("-------get point -------" +honeyRequest);
         return new ResponseObject( studentHoneyService.getPoint(honeyRequest));
     }
 

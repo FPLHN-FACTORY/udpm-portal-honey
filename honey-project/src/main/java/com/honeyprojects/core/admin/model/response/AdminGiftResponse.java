@@ -33,4 +33,7 @@ public interface AdminGiftResponse extends IsIdentified {
 
     @Value("#{target.image}")
     String getImage();
+
+    @Value("#{target.note}")
+    String getNote();
 }

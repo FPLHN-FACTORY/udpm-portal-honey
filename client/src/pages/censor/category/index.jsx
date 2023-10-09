@@ -95,7 +95,7 @@ export default function Index() {
       key: "action",
       render: (_, record) => (
         <Space size="small">
-          <Tooltip title="Cập nhập">
+          {/* <Tooltip title="Cập nhập">
             <Button
               className="update-button"
               onClick={() => {
@@ -106,7 +106,7 @@ export default function Index() {
             >
               <EditOutlined className="icon" />
             </Button>
-          </Tooltip>
+          </Tooltip> */}
 
           <ModalDetail category={record} icon={<FormOutlined />} />
         </Space>

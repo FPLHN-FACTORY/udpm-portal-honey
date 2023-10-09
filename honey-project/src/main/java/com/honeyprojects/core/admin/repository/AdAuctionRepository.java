@@ -29,14 +29,10 @@ public interface AdAuctionRepository extends AuctionRepository {
             ROW_NUMBER() OVER(ORDER BY auc.last_modified_date DESC) AS stt,
             auc.id as id,
             auc.name as name,
-            auc.from_date as from_date,
-            auc.to_date as to_date,
-            auc.starting_price as starting_price,
-            auc.jump as jump,
             auc.honey as honey,
             CASE
-                    WHEN auc.status = 1 THEN 'HOAT_DONG'
-                    WHEN auc.status = 2 THEN 'KHONG_HOAT_DONG'
+                    WHEN auc.status = 0 THEN 'HOAT_DONG'
+                    WHEN auc.status = 1 THEN 'KHONG_HOAT_DONG'
             END AS status,
             cate.name as category_name,
             cate.id as category_id
