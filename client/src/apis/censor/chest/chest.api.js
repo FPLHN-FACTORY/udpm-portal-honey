@@ -27,6 +27,8 @@ export class ChestAPI {
     });
   };
 
+  
+
   static delete = (id) => {
     return request({
       method: "DELETE",

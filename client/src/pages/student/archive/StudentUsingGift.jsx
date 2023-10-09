@@ -2,16 +2,12 @@ import { Button, message, Popconfirm, Tooltip } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
-import React, { useEffect } from "react";
+import React from "react";
 import { SetArchiveGift } from "../../../app/reducers/archive-gift/archive-gift.reducer";
 
 const UsingGift = (props) => {
   const { archivegift, filter } = props;
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    fetchData();
-  }, [dispatch]);
 
   const fetchData = () => {
     ArchiveAPI.getArchive(filter).then((response) => {
@@ -20,7 +16,6 @@ const UsingGift = (props) => {
   };
 
   const deleteGift = () => {
-    console.log(archivegift.id);
     ArchiveAPI.delete(archivegift.id).then(
       (response) => {
         fetchData();

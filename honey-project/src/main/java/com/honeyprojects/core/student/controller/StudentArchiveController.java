@@ -28,6 +28,11 @@ public class StudentArchiveController {
         return service.getAllGiftArchive(filterRequest);
     }
 
+    @GetMapping("/{id}")
+    public ResponseObject detailArchive(@PathVariable("id") String id) {
+        return new ResponseObject(service.detailArchiveGift(id));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseObject studentUsingGift(@PathVariable("id") String id) {
         return new ResponseObject(service.studentUsingGift(id));
