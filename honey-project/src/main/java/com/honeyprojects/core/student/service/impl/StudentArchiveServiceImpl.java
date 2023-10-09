@@ -89,4 +89,10 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
         return archiveGift;
     }
 
+    @Override
+    public ArchiveGift detailArchiveGift(String id) {
+        Optional<ArchiveGift> archiveGift = archiveGiftRepository.findById(id);
+        return archiveGift.get();
+    }
+
 }
