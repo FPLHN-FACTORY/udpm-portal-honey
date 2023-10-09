@@ -49,4 +49,11 @@ public interface AdminCategoryRepository extends CategoryRepository {
             ORDER BY c.last_modified_date DESC
             """, nativeQuery = true)
     List<AdminCategoryResponse> getAllListCategory();
+
+    @Query(value = """
+            SELECT c.name FROM category c
+            WHERE ( c.category_status = 0 or c.category_status = 2 or c.category_status = 3 )
+            ORDER BY c.last_modified_date DESC
+            """, nativeQuery = true)
+    List<String> getAllNameCategoryByStatus();
 }
