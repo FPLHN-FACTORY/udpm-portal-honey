@@ -8,15 +8,9 @@ import com.honeyprojects.core.admin.service.AdminCategoryService;
 import com.honeyprojects.core.common.base.ResponseObject;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 
 @RestController
@@ -38,18 +32,18 @@ public class AdminCategoryRestController {
     }
 
     @PostMapping("")
-    public ResponseObject addCategory(@Valid @RequestBody AdminCreateCategoryRequest request) {
+    public ResponseObject addCategory(@Valid @ModelAttribute AdminCreateCategoryRequest request) throws IOException {
         return new ResponseObject(adminCategoryService.addCategory(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseObject updateCategory(@Valid @RequestBody AdminUpdateCategoryRequest request, @PathVariable("id") String id) {
+    public ResponseObject updateCategory(@Valid @ModelAttribute AdminUpdateCategoryRequest request, @PathVariable("id") String id) throws IOException {
         return new ResponseObject(adminCategoryService.updateCategory(request, id));
     }
 
-    @PatchMapping("/delete/{id}")
-    public ResponseObject delete(@Valid @RequestBody AdminUpdateCategoryRequest request, @PathVariable("id") String id) {
-        return new ResponseObject(adminCategoryService.updateCategoryByCategory(request, id));
+    @PutMapping("/delete/{id}")
+    public ResponseObject delete(@Valid @PathVariable("id") String id) {
+        return new ResponseObject(adminCategoryService.updateCategoryByCategory(id));
     }
 
     @GetMapping("/get-one/{id}")
