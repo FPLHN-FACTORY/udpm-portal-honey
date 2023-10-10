@@ -53,5 +53,4 @@ public class Auction extends PrimaryEntity {
 
     private Status status;
 
-
 }

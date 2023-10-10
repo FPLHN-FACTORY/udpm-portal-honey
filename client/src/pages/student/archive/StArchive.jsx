@@ -84,6 +84,11 @@ export default function StArchive() {
       key: "name",
     },
     {
+      title: "Số lượng",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
       title: "Ảnh",
       dataIndex: "image",
       key: "image",

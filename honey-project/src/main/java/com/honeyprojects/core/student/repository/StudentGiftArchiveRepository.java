@@ -21,7 +21,7 @@ import java.util.Optional;
 @Primary
 public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
     @Query(value = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.id, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
+                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, COUNT(g.id) AS soLuong, ag.id, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
                     FROM archive_gift ag JOIN archive a ON ag.archive_id = a.id 
                     LEFT JOIN gift g ON ag.gift_id = g.id 
                     WHERE (a.student_id = :#{#req.idStudent})
@@ -29,7 +29,7 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
                     AND (:#{#req.type} IS NULL OR g.type = :#{#req.type})
                     GROUP BY g.id
             """, countQuery = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.id, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
+                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, COUNT(g.id) AS soLuong, ag.id, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
                     FROM archive_gift ag JOIN archive a ON ag.archive_id = a.id 
                     LEFT JOIN gift g ON ag.gift_id = g.id 
                     WHERE (a.student_id = :#{#req.idStudent})
