@@ -86,7 +86,7 @@ public interface AdRandomAddPointRepository extends HoneyRepository {
     @Query(value = """
             SELECT id
             from gift
-            where name = :#{#name}
+            where name = :#{#name} and status = 2
             """,nativeQuery = true)
     String getIdGiftByName(String name);
 
