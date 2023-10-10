@@ -1,10 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { Button, Pagination, Space, Table, Card, Input, Tooltip } from "antd";
+import {
+  Button,
+  Pagination,
+  Space,
+  Table,
+  Card,
+  Input,
+  Tooltip,
+  Modal,
+  message,
+} from "antd";
 import {
   PlusOutlined,
   EditOutlined,
   FormOutlined,
+  DeleteOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
@@ -20,6 +31,7 @@ import "./index.css";
 export default function Index() {
   const [showModal, setShowModal] = useState(false);
   const [detailCategory, setDetailCategory] = useState();
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const dispatch = useAppDispatch();
   const [current, setCurrent] = useState(1);
   const [search, setSearch] = useState("");
@@ -46,6 +58,20 @@ export default function Index() {
     });
   };
 
+  const deletect = (id) => {
+    CategoryAPI.delete(id)
+      .then(() => {
+        fetchData();
+        message.success("Xóa thể loại thành công!");
+      })
+      .catch((error) => {
+        message.error("Lỗi xóa thể loại: " + error.message);
+      })
+      .finally(() => {
+        setConfirmDelete(false);
+      });
+  };
+
   const data = useAppSelector(GetCategory);
 
   const columns = [
@@ -54,6 +80,28 @@ export default function Index() {
       dataIndex: "stt",
       key: "stt",
       render: (text, record, index) => index + 1,
+    },
+    {
+      title: "Ảnh",
+      dataIndex: "image",
+      key: "image",
+      render: (image) => {
+        const byteArray = image ? image.split(",").map(Number) : [];
+
+        const base64ImageData = btoa(
+          String.fromCharCode.apply(null, new Uint8Array(byteArray))
+        );
+
+        const imageUrl = `data:image/jpeg;base64,${base64ImageData}`;
+
+        return (
+          <img
+            src={imageUrl}
+            style={{ width: "40px", height: "40px" }}
+            alt="Hình ảnh"
+          />
+        );
+      },
     },
     {
       title: "Mã",
@@ -108,7 +156,22 @@ export default function Index() {
             </Button>
           </Tooltip> */}
 
-          <ModalDetail category={record} icon={<FormOutlined />} />
+          <ModalDetail
+            category={record}
+            fetchData={fetchData}
+            icon={<FormOutlined />}
+          />
+          <Tooltip title="Xóa">
+            <Button
+              onClick={() => {
+                setDetailCategory(record);
+                setConfirmDelete(true);
+              }}
+              className="detail-button"
+            >
+              <DeleteOutlined className="icon" />
+            </Button>
+          </Tooltip>
         </Space>
       ),
     },
@@ -122,8 +185,23 @@ export default function Index() {
           setModalOpen={setShowModal}
           category={detailCategory}
           SetCategory={setDetailCategory}
+          fetchData={fetchData}
         />
       )}
+      <Modal
+        title="Xác nhận xóa"
+        visible={confirmDelete}
+        onOk={() => {
+          if (detailCategory) {
+            deletect(detailCategory.id);
+          }
+        }}
+        onCancel={() => setConfirmDelete(false)}
+        okText="Xóa"
+        cancelText="Hủy"
+      >
+        Bạn có chắc chắn muốn xóa quà này?
+      </Modal>
 
       <Card className="mb-2">
         <h1 className="text-xl">Tìm kiếm thể loại</h1>
