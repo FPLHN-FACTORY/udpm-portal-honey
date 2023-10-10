@@ -1,13 +1,26 @@
 import { FormOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, Radio, Tooltip, message } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { useAppDispatch } from "../../../app/hooks";
 import { UpdateCategory } from "../../../app/reducers/category/category.reducer";
 const ModalDetail = (props) => {
-  const { category } = props;
+  const { category, fetchData } = props;
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImageUrl, setSelectedImageUrl] = useState("");
+  const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    const byteArray = category.image
+      ? category.image.split(",").map(Number)
+      : [];
+    const base64ImageData = btoa(
+      String.fromCharCode.apply(null, new Uint8Array(byteArray))
+    );
+    const imageUrl = `data:image/jpeg;base64,${base64ImageData}`;
+    setSelectedImageUrl(imageUrl);
+  }, [category]);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -20,6 +33,17 @@ const ModalDetail = (props) => {
   form.setFieldsValue(category);
   form.setFieldsValue(category);
 
+  const handleFileInputChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setImage(selectedFile);
+    if (selectedFile) {
+      const imageUrl = URL.createObjectURL(selectedFile);
+      setSelectedImageUrl(imageUrl);
+    } else {
+      setSelectedImageUrl("");
+    }
+  };
+
   const dispatch = useAppDispatch();
   form.setFieldsValue(category);
 
@@ -27,12 +51,13 @@ const ModalDetail = (props) => {
     form
       .validateFields()
       .then((formValues) => {
-        CategoryAPI.update(formValues, category.id)
+        CategoryAPI.update({ ...formValues, image: image }, category.id)
           .then((response) => {
             dispatch(UpdateCategory(response.data.data));
             message.success("Thành công!");
             setIsModalOpen(false);
             form.resetFields();
+            fetchData();
           })
           .catch((err) => {
             message.error("Lỗi: " + err.message);
@@ -77,9 +102,25 @@ const ModalDetail = (props) => {
           }}
           autoComplete="off"
         >
-          {/* <Form.Item label="Mã" name="code">
-            <Input />
-          </Form.Item> */}
+          <div
+            onClick={() => {
+              document.getElementById("select-avatar").click();
+            }}
+            className="image-container"
+          >
+            {<img src={selectedImageUrl} alt="Chọn ảnh" />}
+          </div>
+          <input
+            className="hidden-input"
+            id="select-avatar"
+            type="file"
+            accept="image/*"
+            onChange={(event) => handleFileInputChange(event)}
+          />
+
+          <Form.Item label="Mã" name="code">
+            <Input disabled />
+          </Form.Item>
 
           <Form.Item label="Tên" name="name">
             <Input />
@@ -95,8 +136,8 @@ const ModalDetail = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={"1"}>Cần phê duyệt</Radio>
-              <Radio value={"0"}>Không phê duyệt</Radio>
+              <Radio value={"3"}>Cần phê duyệt</Radio>
+              <Radio value={"2"}>Không phê duyệt</Radio>
             </Radio.Group>
           </Form.Item>
 

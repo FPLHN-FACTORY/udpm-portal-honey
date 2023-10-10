@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -17,9 +18,9 @@ public class AdminCreateCategoryRequest extends PageableRequest {
     @Size(min = 0, max = 250)
     private String name;
 
-    private TypeCategory type;
+    private Integer categoryStatus;
 
-    private CategoryStatus categoryStatus;
+    private Integer transactionRights;
 
-    private CategoryTransaction transactionRights;
+    private MultipartFile image;
 }

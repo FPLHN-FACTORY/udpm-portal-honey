@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -50,34 +51,36 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
 
     @Override
     @Transactional
-    public Category addCategory(AdminCreateCategoryRequest request) {
+    public Category addCategory(AdminCreateCategoryRequest request) throws IOException {
         Random random = new Random();
         int number = random.nextInt(10000);
         String code = String.format("CA%04d", number);
         Category ca = new Category();
         ca.setCode(code);
-        ca.setName(request.getName());;
-        if (request.getTransactionRights().equals(CategoryTransaction.FREE)){
-            ca.setTransactionRights(CategoryTransaction.FREE);
-        }else {
-            ca.setTransactionRights(CategoryTransaction.LIMIT);
+        ca.setName(request.getName());
+        ;
+        if (request.getImage() != null) {
+            byte[] imageBytes = request.getImage().getBytes();
+            ca.setImage(imageBytes);
         }
-        if(request.getCategoryStatus().equals(CategoryStatus.ACCEPT)){
-            ca.setCategoryStatus(CategoryStatus.ACCEPT);
-        }else {
-            ca.setCategoryStatus(CategoryStatus.FREE);
-        }
+        ca.setTransactionRights(CategoryTransaction.values()[request.getTransactionRights()]);
+        ca.setCategoryStatus(CategoryStatus.values()[request.getCategoryStatus()]);
         adminCategoryRepository.save(ca);
         return ca;
     }
 
     @Override
     @Transactional
-    public Category updateCategory(AdminUpdateCategoryRequest request, String id) {
+    public Category updateCategory(AdminUpdateCategoryRequest request, String id) throws IOException {
         Optional<Category> categoryOptional = adminCategoryRepository.findById(id);
+        System.out.println("=======================");
         categoryOptional.get().setName(request.getName());
-        categoryOptional.get().setCategoryStatus(request.getCategoryStatus());
-        categoryOptional.get().setTransactionRights(request.getTransactionRights());
+        categoryOptional.get().setCategoryStatus(CategoryStatus.values()[request.getCategoryStatus()]);
+        categoryOptional.get().setTransactionRights(CategoryTransaction.values()[request.getTransactionRights()]);
+        if (request.getImage() != null) {
+            byte[] imageBytes = request.getImage().getBytes();
+            categoryOptional.get().setImage(imageBytes);
+        }
         adminCategoryRepository.save(categoryOptional.get());
         return categoryOptional.get();
     }
@@ -92,7 +95,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     @Override
     public Category getOne(String id) {
         Optional<Category> categoryOptional = adminCategoryRepository.findById(id);
-        if(!categoryOptional.isPresent()){
+        if (!categoryOptional.isPresent()) {
             throw new RestApiException(Message.SUCCESS);
         }
         return categoryOptional.get();
@@ -100,9 +103,9 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
 
     @Override
     @Transactional
-    public Category updateCategoryByCategory(AdminUpdateCategoryRequest request, String id) {
+    public Category updateCategoryByCategory(String id) {
         Optional<Category> categoryOptional = adminCategoryRepository.findById(id);
-//        categoryOptional.get().setCategoryStatus(CategoryStatus.INACTIVE);
+        categoryOptional.get().setCategoryStatus(CategoryStatus.INACTIVE);
         adminCategoryRepository.save(categoryOptional.get());
         return categoryOptional.get();
     }

@@ -22,4 +22,7 @@ public interface AdminCategoryResponse extends IsIdentified {
 
     @Value("#{target.transaction_rights}")
     String getTransactionRights();
+
+    @Value("#{target.image}")
+    String getImage();
 }

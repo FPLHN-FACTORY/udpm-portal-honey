@@ -9,13 +9,28 @@ import "./index.css";
 import { useEffect, useState } from "react";
 const ModalThem = (props) => {
   const [listCategory, setListCategory] = useState([]);
+  const [image, setImage] = useState([]);
+  const [selectedImageUrl, setSelectedImageUrl] = useState("");
+
+  const { fetchData } = props;
 
   useEffect(() => {
     CategoryAPI.fetchAll().then((response) => {
       setListCategory(response.data.data.data);
     });
-  });
+  }, []);
 
+  const handleFileInputChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setImage(selectedFile);
+
+    if (selectedFile) {
+      const imageUrl = URL.createObjectURL(selectedFile);
+      setSelectedImageUrl(imageUrl);
+    } else {
+      setSelectedImageUrl("");
+    }
+  };
   const onFinishFailed = () => {
     message.error("Error");
   };
@@ -39,7 +54,7 @@ const ModalThem = (props) => {
         } else {
           if (category === null) {
             console.log(formValues);
-            CategoryAPI.create(formValues)
+            CategoryAPI.create({ ...formValues, image: image })
               .then((result) => {
                 dispatch(AddCategory(result.data.data));
                 message.success("Thành công!");
@@ -48,8 +63,10 @@ const ModalThem = (props) => {
                 const newCategory = {
                   id: result.data.data.id,
                   name: result.data.data.name,
+                  image: image,
                 };
                 onSave && onSave(newCategory);
+                fetchData();
               })
               .catch((err) => {
                 message.error("Lỗi: " + err.message);
@@ -61,6 +78,7 @@ const ModalThem = (props) => {
                 message.success("Thành công!");
                 setModalOpen(false);
                 form.resetFields();
+                fetchData();
               })
               .catch((err) => {
                 message.error("Lỗi: " + err.message);
@@ -78,8 +96,8 @@ const ModalThem = (props) => {
     form.resetFields();
   };
   const initialValues = {
-    categoryStatus: "1",
-    transactionRights: "0",
+    categoryStatus: 3,
+    transactionRights: 0,
   };
 
   return (
@@ -114,7 +132,21 @@ const ModalThem = (props) => {
           {/* <Form.Item label="Mã" name="code">
             <Input disabled />
           </Form.Item> */}
-
+          <div
+            onClick={() => {
+              document.getElementById("select-avatar").click();
+            }}
+            className="image-container"
+          >
+            {image ? <img src={selectedImageUrl} alt="Chọn ảnh" /> : "Chọn ảnh"}
+          </div>
+          <input
+            className="hidden-input"
+            id="select-avatar"
+            type="file"
+            accept="image/*"
+            onChange={(event) => handleFileInputChange(event)}
+          />
           <Form.Item
             label="Tên"
             name="name"
@@ -138,8 +170,8 @@ const ModalThem = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={"1"}>Cần phê duyệt</Radio>
-              <Radio value={"0"}>Không phê duyệt</Radio>
+              <Radio value={3}>Cần phê duyệt</Radio>
+              <Radio value={2}>Không phê duyệt</Radio>
             </Radio.Group>
           </Form.Item>
 
@@ -154,8 +186,8 @@ const ModalThem = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={"0"}>Được giao dịch</Radio>
-              <Radio value={"1"}>Không giao dịch</Radio>
+              <Radio value={0}>Được giao dịch</Radio>
+              <Radio value={1}>Không giao dịch</Radio>
             </Radio.Group>
           </Form.Item>
 
