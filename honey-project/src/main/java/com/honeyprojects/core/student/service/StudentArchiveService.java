@@ -5,6 +5,7 @@ import com.honeyprojects.core.student.model.request.StudentArchiveFilterRequest;
 import com.honeyprojects.core.student.model.request.StudentArchiveOpenChestRequest;
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
+import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
 import com.honeyprojects.entity.ArchiveGift;
 
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.List;
 public interface StudentArchiveService {
 
     PageableObject<StudentArchiveResponse> getAllGiftArchive(StudentArchiveFilterRequest filterRequest);
+
+    PageableObject<StudentGetListGiftResponse> getListGift(StudentArchiveFilterRequest filterRequest);
 
     ArchiveGift studentUsingGift(String id);
 

@@ -1,11 +1,10 @@
-import { Button, message, Modal, Tooltip } from "antd";
+import { message, Modal } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
-import { EyeOutlined } from "@ant-design/icons";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 import React, { useEffect } from "react";
-import { SetArchiveGift } from "../../../app/reducers/archive-gift/archive-gift.reducer";
 import { useState } from "react";
 import TextArea from "antd/es/input/TextArea";
+import { SetGiftArchive } from "../../../app/reducers/archive-gift/gift-archive.reducer";
 
 const DetailArchiveGift = (props) => {
   const { archivegift, filter, modalVisible, setModalVisible } = props;
@@ -18,7 +17,7 @@ const DetailArchiveGift = (props) => {
 
   const fetchData = () => {
     ArchiveAPI.getArchive(filter).then((response) => {
-      dispatch(SetArchiveGift(response.data.data));
+      dispatch(SetGiftArchive(response.data.data));
     });
   };
 

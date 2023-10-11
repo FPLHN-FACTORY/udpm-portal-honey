@@ -8,10 +8,11 @@ import {
 } from "../../../app/reducers/chest-gift/chest-gift.reducer";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
+
 import {
-  AddArchiveGift,
-  PutArchiveGift,
-} from "../../../app/reducers/archive-gift/archive-gift.reducer";
+  DeleteArchiveChest,
+  SetArchiveChest,
+} from "../../../app/reducers/archive-gift/archive-chest.reducer";
 
 const ModalArchiveChest = (props) => {
   const { chest } = props;
@@ -51,13 +52,11 @@ const ModalArchiveChest = (props) => {
   };
 
   const handelOk = () => {
-    ArchiveAPI.openChest(chest.chestId).then((response) => {
-      console.log(response.data.data);
-      dispatch(AddArchiveGift(response.data.data));
+    ArchiveAPI.openChest(chest.chestId).then(() => {
       message.success("Sử dụng thành công.");
     });
     ArchiveAPI.update(chest.id).then((response) => {
-      dispatch(PutArchiveGift(response.data.data));
+      dispatch(DeleteArchiveChest(response.data.data));
     });
     setModalVisible(false);
   };

@@ -6,6 +6,7 @@ import com.honeyprojects.core.student.model.request.StudentArchiveFilterRequest;
 import com.honeyprojects.core.student.model.request.StudentArchiveOpenChestRequest;
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
+import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
 import com.honeyprojects.core.student.service.StudentArchiveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,6 +27,11 @@ public class StudentArchiveController {
     @GetMapping("")
     public PageableObject<StudentArchiveResponse> getAllArchiveByIdStudent(StudentArchiveFilterRequest filterRequest) {
         return service.getAllGiftArchive(filterRequest);
+    }
+
+    @GetMapping("/list-gift")
+    public PageableObject<StudentGetListGiftResponse> getListGift(StudentArchiveFilterRequest filterRequest) {
+        return service.getListGift(filterRequest);
     }
 
     @GetMapping("/{id}")

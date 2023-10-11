@@ -11,6 +11,14 @@ export class ArchiveAPI {
     });
   };
 
+  static getGift = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/list-gift`,
+      params: filter,
+    });
+  };
+
   static getChest = (filter) => {
     return request({
       method: "GET",

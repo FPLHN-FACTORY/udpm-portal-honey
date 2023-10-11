@@ -15,6 +15,8 @@ import auctionReducer from "./reducers/auction/auction.reducer";
 import archiveGiftReducer from "./reducers/archive-gift/archive-gift.reducer";
 import chestGiftReducer from "./reducers/chest-gift/chest-gift.reducer";
 import importReducer from "./reducers/import/import.reducer";
+import giftArchiveReducer from "./reducers/archive-gift/gift-archive.reducer";
+import archiveChestReducer from "./reducers/archive-gift/archive-chest.reducer";
 
 export const store = configureStore({
   reducer: {
@@ -34,6 +36,8 @@ export const store = configureStore({
     archiveGift: archiveGiftReducer,
     chestGift: chestGiftReducer,
     import: importReducer,
+    giftArchive: giftArchiveReducer,
+    archiveChest: archiveChestReducer,
   },
 });
 
