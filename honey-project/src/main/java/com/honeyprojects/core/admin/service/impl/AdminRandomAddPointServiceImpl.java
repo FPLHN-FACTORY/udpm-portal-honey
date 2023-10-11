@@ -574,10 +574,9 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             hasError = true;
         }
 
+        int check = 0;
         if (DataUtils.isNullObject(listGift)) {
-            userDTO.setImportMessage("Vật phẩm không được để trống");
-            userDTO.setError(true);
-            hasError = true;
+            check++;
         } else {
             String regexGift = "^\\d+\\s+[^,]*(,\\s*\\d+\\s+[^,]*)?$";
             if (!listGift.trim().matches(regexGift)) {
@@ -612,9 +611,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         }
 
         if (DataUtils.isNullObject(listHoney)) {
-            userDTO.setImportMessage("Mật ong không được để trống");
-            userDTO.setError(true);
-            hasError = true;
+            check++;
         } else {
             String regexHoney = "^(\\d+\\s*-\\s*[a-zA-Z]+)(,\\s*\\d+\\s*-\\s*[a-zA-Z]+)*$";
             if (!listHoney.trim().matches(regexHoney)) {
@@ -639,6 +636,12 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     }
                 }
             }
+        }
+
+        if(check == 2){
+            userDTO.setImportMessage("Vật phẩm và mật ong không được để trống");
+            userDTO.setError(true);
+            hasError = true;
         }
 
         // Xác định trạng thái thành công hoặc lỗi và cung cấp thông báo
