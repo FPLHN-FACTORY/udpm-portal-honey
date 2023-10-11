@@ -32,7 +32,7 @@ public interface StudentArchiveResponse extends IsIdentified {
     @Value("#{target.image}")
     String getImage();
 
-    @Value("#{target.soLuong}")
-    Integer getSoLuong();
+    @Value("#{target.quantity}")
+    String getQuantity();
 
 }
