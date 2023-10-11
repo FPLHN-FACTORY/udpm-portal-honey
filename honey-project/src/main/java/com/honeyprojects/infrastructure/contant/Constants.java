@@ -29,4 +29,7 @@ public class Constants {
     }
     public static String TOKEN = "token";
 
+    public static final class SEQUENCE {
+        public static final String CATEGORY_SEQ = "category_seq";
+    }
 }
