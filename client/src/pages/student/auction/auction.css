@@ -68,10 +68,97 @@
     height: 40px;
     border: none;
     margin-left: 1%;
-    font-size: 16px;
+    font-size: 20px;
+    color: white;
+    font-family: 'VT323', monospace;
 }
 
 .ui-auction .name-item {
     font-family: 'VT323', monospace;
-    color: crimson;
+    color: #F6C714;
+    font-size: 40px;
+}
+
+.ui-auction .gia {
+    font-family: 'VT323', monospace;
+    color: green;
+    font-size: 25px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.ui-auction .gia>span {
+    font-family: 'VT323', monospace;
+    color: red;
+    font-size: 25px;
+}
+
+.ui-auction .item-description {
+    font-family: 'VT323', monospace;
+    color: white;
+    font-size: 25px;
+}
+
+.ui-auction .user-online {
+    font-family: 'VT323', monospace;
+    color: white;
+    font-size: 25px;
+    margin-top: 20px;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.25);
+    padding: 5px;
+    border-radius: 10%;
+    line-height: 10px;
+}
+
+.ui-auction .user-online>div {
+    background-color: green;
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    display: inline-block;
+    border-radius: 50%;
+}
+
+.ui-auction .time {
+    font-family: 'VT323', monospace;
+    color: #03fc07;
+    font-size: 25px;
+    position: absolute;
+    right: 20px;
+    margin-top: 20px;
+    background-color: rgba(0, 0, 0, 0.25);
+    padding: 5px;
+    border-radius: 10%;
+    line-height: 10px;
+}
+
+.ui-auction .pb-5 {
+    padding-bottom: 5px;
+}
+
+.ui-auction .content-chat {
+    margin: 10px 0;
+    background-color: rgba(61, 49, 17, 0.12);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.ui-auction .content-chat>p {
+    line-height: 0;
+    font-size: 19px;
+    color: green;
+    text-align: center;
+    background-color: red;
+}
+
+.ui-auction .content-chat>img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.ui-auction .mid-center {
+    height: 90%;
 }

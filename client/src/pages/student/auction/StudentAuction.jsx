@@ -1,46 +1,90 @@
 import { Layout } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Content, Footer, Header } from "antd/es/layout/layout";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./auction.css";
-import { SendOutlined } from "@ant-design/icons";
+import { SendOutlined, UserOutlined } from "@ant-design/icons";
+import { getStompClient } from "../../../helper/stomp-client/config";
 
 export default function StudentAuction() {
-  const liveChat = [
-    {
-      id: 1,
-      name: "Nguyễn Thị Thùy Dương",
-      avatar:
-        "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-      message: "Hello, how are you?",
-      time: "10:00",
-      type: 0, //0 = chat 1 = đấu giá
-    },
-    {
-      id: 2,
-      name: "Nguyễn Thị Thùy Dương",
-      avatar:
-        "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-      message: "Đấu giá 100 điểm",
-      time: "10:00",
-      type: 1, //0 = chat 1 = đấu giá
-    },
-  ];
+  const [liveChat, setLiveChat] = useState([]);
+  const item = {
+    name: "Balo siêu vip",
+    description:
+      "Balo là một loại túi lớn được thiết kế đặc biệt để đeo trên vai hoặc lưng, thường được sử dụng để mang theo đồ đạc cá nhân khi di chuyển.",
+    image: require("../../../assets/images/balo-student.png"),
+  };
+
+  useEffect(() => {
+    getStompClient().subscribe(`/user/chat`, (result) => {
+      setLiveChat((prevLiveChat) => [...prevLiveChat, JSON.parse(result.body)]);
+    });
+  }, []);
+
+  const [mess, setMess] = useState("");
+
+  function sendChat() {
+    getStompClient().send(
+      `/user/chat`,
+      {},
+      JSON.stringify({
+        name: "Nguyễn Thị Thùy Dương",
+        avatar:
+          "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+        message: mess,
+        time: "10:00",
+        type: 0,
+      })
+    );
+  }
 
   return (
     <div className="ui-auction" style={{ height: "100%" }}>
       <Layout style={{ height: "100%" }}>
-        <Sider style={{ paddingTop: "20px" }}>
-          <div style={{ textAlign: "center" }}>
-            <img
-              width={"150px"}
-              height={"150px"}
-              src={require("../../../assets/images/balo-student.png")}
-              alt="icon"
-            />
+        <Sider style={{ position: "relative" }}>
+          <span className="user-online">
+            <div />
+            200 <UserOutlined style={{ fontSize: "20px" }} />
+          </span>
+          <span className="time">10:40</span>
+
+          <div className="mid-center" style={{ textAlign: "center" }}>
+            <img width={"150px"} height={"150px"} src={item.image} alt="icon" />
             <div>
-              <h2 className="name-item">Balo siêu vip</h2>
+              <h2 className="name-item">{item.name}</h2>
+              <p className="item-description">{item.description}</p>
             </div>
+            <div>
+              <h2 className="gia">
+                <img
+                  className="pb-5"
+                  width={"40px"}
+                  src={require("../../../assets/images/transaction-honey.png")}
+                  alt="diem"
+                />
+                Giá khởi điểm: <span> 100 điểm</span>
+              </h2>
+            </div>
+            <div>
+              <h2 className="gia">
+                <img
+                  className="pb-5"
+                  width={"40px"}
+                  src={require("../../../assets/images/transaction-honey.png")}
+                  alt="diem"
+                />
+                Giá hiện tại: <span> 100 điểm</span>
+              </h2>
+            </div>
+            <div>
+              <h2 className="gia">
+                Bước giá: <span> 10 điểm</span>
+              </h2>
+            </div>
+          </div>
+          <div className="input-dau-gia">
+            <input className="input-message" />
+            <button className="send-message">Xác nhận</button>
           </div>
         </Sider>
         <Layout>
@@ -48,34 +92,9 @@ export default function StudentAuction() {
           <Content>
             {liveChat.map((e) => {
               return (
-                <div
-                  key={e.id}
-                  style={{
-                    margin: "10px 0px",
-                    backgroundColor: "#3d31311f",
-                    padding: "10px",
-                    borderRadius: "10px",
-                  }}>
-                  <p
-                    style={{
-                      lineHeight: "0",
-                      fontSize: "19px",
-                      color: "green",
-                      textAlign: "center",
-                      // with: "100px",
-                      backgroundColor: "red",
-                    }}>
-                    {e.time}
-                  </p>
-                  <img
-                    alt="avatar"
-                    src={e.avatar}
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      borderRadius: "50%",
-                    }}
-                  />
+                <div className="content-chat">
+                  <p>{e.time}</p>
+                  <img alt="avatar" src={e.avatar} />
                   <b style={{ marginLeft: "5px", lineHeight: "30px" }}>
                     {e.name}:{" "}
                   </b>
@@ -89,8 +108,13 @@ export default function StudentAuction() {
             })}
           </Content>
           <Footer>
-            <input className="input-message" />
-            <button className="send-message">
+            <input
+              onChange={(e) => {
+                setMess(e.target.value);
+              }}
+              className="input-message"
+            />
+            <button onClick={sendChat} className="send-message">
               <SendOutlined />
             </button>
           </Footer>
