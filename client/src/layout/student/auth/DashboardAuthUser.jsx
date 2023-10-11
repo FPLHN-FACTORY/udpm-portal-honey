@@ -10,7 +10,7 @@
   * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 import { useEffect, useState } from "react";
-import { Col, Layout, Row, Space, message } from "antd";
+import { Col, Dropdown, Layout, Menu, Row, Space, message } from "antd";
 import { ProfileApi } from "../../../apis/student/profile/profileApi.api";
 import soundClick from "../../../assets/sounds/sound_click.mp3";
 import "./index.css";
@@ -19,8 +19,11 @@ import {
   getStompClient,
 } from "../../../helper/stomp-client/config";
 import { Content, Footer } from "antd/es/layout/layout";
-import { CloseOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { setToken } from "../../../helper/userToken";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { GetUser, SetUser } from "../../../app/reducers/users/users.reducer";
+import DialogTransaction from "../../../pages/student/transaction/DialogTransaction";
 
 function DashboardAuthUser({ children }) {
   const navigate = useNavigate();
@@ -98,17 +101,50 @@ function DashboardAuthUser({ children }) {
   };
   const hanlderClickNangCap = () => {
     playSound();
+    navigate("/student/upgrade-honey");
   };
   const hanlderClickGiaoDich = () => {
+    navigate("/student/transaction");
     playSound();
   };
   const hanlderClickKhoDo = () => {
     playSound();
     navigate("/student/chest");
   };
+
+  //fake login
+  const token1 =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM0Y2YyMWY0LWYzZTAtNDkwZS1iMWNjLTA4ZGJiNzQzZGQ3ZCIsIm5hbWUiOiJUcmlldSBWYW4gVHVvbmcgUEggMiA2IDEgNCA5IiwiZW1haWwiOiJ0dW9uZ3R2cGgyNjE0OUBmcHQuZWR1LnZuIiwidXNlck5hbWUiOiJ0dW9uZ3R2cGgyNjE0OSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NMU0hTd1cxb3B2ZVRzTjI4RGdHS0pLSWNYekpsY3hJd090c0VfbGZsZjk4SXc9czk2LWMiLCJpZFRyYWluaW5nRmFjaWxpdHkiOiI3OTZhNGZhNC04YWFiLTQyYzQtOWYzNS04NzBiYjAwMDVhZjEiLCJsb2NhbEhvc3QiOiJodHRwOi8vbG9jYWxob3N0Ojg4ODgiLCJyb2xlIjoiQURNSU4iLCJyb2xlTmFtZXMiOiJRdeG6o24gdHLhu4sgdmnDqm4iLCJuYmYiOjE2OTUwMzA5NjksImV4cCI6MTc2ODY0Mzc2OSwiaWF0IjoxNjk1MDMwOTY5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0OTA1MyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjQ5MDUzIn0.Zxmp3Ax5QVp2PK3b5BNfhcgs7c9bbWCYGF6R0QExd5s";
+  const token2 =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIzNGM2MTNkLThhYTUtNDg2NS1iMWJkLTA4ZGJiNzQzZGQ3ZCIsIm5hbWUiOiJOZ3V54buFbiBWxINuIFR14bqlbiIsImVtYWlsIjoidHVhbm52cGgyNTU3N0BmcHQuZWR1LnZuIiwidXNlck5hbWUiOiJ0dWFubnZwaDI1NTc3IiwicGljdHVyZSI6IkltYWdlcy9EZWZhdWx0LnBuZyIsImlkVHJhaW5pbmdGYWNpbGl0eSI6Ijc5NmE0ZmE0LThhYWItNDJjNC05ZjM1LTg3MGJiMDAwNWFmMSIsImxvY2FsSG9zdCI6Imh0dHBzOi8vbG9jYWxob3N0OjMwMDAiLCJyb2xlIjoiUEFSVElDSVBBTlQiLCJyb2xlTmFtZXMiOiJUaMOtIHNpbmgiLCJuYmYiOjE2OTU4Mjk4MDEsImV4cCI6MTcyNzM2NTgwMSwiaWF0IjoxNjk1ODI5ODAxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0OTA1MyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjQ5MDUzIn0.1mm_fSj9CiJZSjS9J7RfLiOpHLJMmSQzkX_PZIpauSk";
+
+  const [isSettingMenuOpen, setIsSettingMenuOpen] = useState(false);
   const hanlderClickCaiDat = () => {
     playSound();
+    setIsSettingMenuOpen(!isSettingMenuOpen);
   };
+  const settingMenu = (
+    <Menu onClick={hanlderClickCaiDat}>
+      <Menu.Item
+        key="1"
+        onClick={() => {
+          setToken(token1);
+          getProfile();
+        }}>
+        Tài khoản 1
+      </Menu.Item>
+      <Menu.Item
+        key="2"
+        onClick={() => {
+          setToken(token2);
+          getProfile();
+        }}>
+        Tài khoản 2
+      </Menu.Item>
+    </Menu>
+  );
+  // ========================
+
   const hanlderClickHomThu = () => {
     playSound();
   };
@@ -119,6 +155,7 @@ function DashboardAuthUser({ children }) {
   };
   const hanlderClickDoiQua = () => {
     playSound();
+    navigate("/student/create-conversion");
   };
   const hanlderClickProfile = () => {
     playSound();
@@ -131,26 +168,43 @@ function DashboardAuthUser({ children }) {
     playSound();
     navigate("/student");
   };
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  const getProfile = () => {
+    return ProfileApi.getUserLogin().then((response) => {
+      dispatch(SetUser(response.data.data));
+    });
+  };
+
+  const data = useAppSelector(GetUser);
+
   return (
     <div className="main-ui-student" style={{ display: "flex" }}>
+      {open && (
+        <DialogTransaction
+          key={transaction.idTransaction}
+          open={open}
+          setClose={setOpen}
+          transaction={transaction}
+        />
+      )}
       {children !== undefined ? (
-        <div className="frame">
-          <div className="card-close-container" onClick={returnHome}>
-            <CloseOutlined className="card-close-icon" />
-          </div>
-
+        <div style={{ position: "relative" }}>
           <div
-            className="content-student"
-            style={{
-              border: "10px ridge #F6C714",
-              width: "85%",
-              height: "80vh",
-              position: "absolute",
-              top: "10%",
-              left: "7%",
-            }}>
-            {children}
+            className="card-close-container btn-student"
+            onClick={returnHome}>
+            <img
+              width={"50px"}
+              src={require("../../../assets/images/ui-student/btn-close.png")}
+              alt="icon-btn"
+            />
           </div>
+          <div className="content-student">{children}</div>
         </div>
       ) : (
         <div style={{ flex: 1 }}>
@@ -167,9 +221,11 @@ function DashboardAuthUser({ children }) {
                   <Col span={12}>
                     <div onClick={hanlderClickProfile} className="container">
                       <div class="outer-hexagon">
-                        <div class="inner-hexagon"></div>
+                        <div class="inner-hexagon">
+                          <img src={data.picture} alt="avatar" />
+                        </div>
                       </div>
-                      <div class="tag-name">Nguyễn Văn Kiên</div>
+                      <div class="tag-name">{data.name}</div>
                     </div>
                     <button
                       onClick={hanlderClickKhoDo}
@@ -190,6 +246,15 @@ function DashboardAuthUser({ children }) {
                         onClick={hanlderClickCaiDat}
                         class="btn-cai-dat btn-student btn-icon"
                       />
+                      {isSettingMenuOpen && (
+                        <Dropdown
+                          overlay={settingMenu}
+                          placement="bottomRight"
+                          visible={isSettingMenuOpen}
+                          onVisibleChange={() => {}}>
+                          <span />
+                        </Dropdown>
+                      )}
                       <button
                         onClick={hanlderClickHomThu}
                         class="btn-hom-thu btn-student btn-icon"
