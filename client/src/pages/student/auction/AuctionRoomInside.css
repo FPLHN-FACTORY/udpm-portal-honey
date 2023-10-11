@@ -1,0 +1,86 @@
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+.auction-main-inside .ant-card {
+  background-image: url("../../../assets/images/bar-transaction.png");
+}
+.auction-room-inside {
+  cursor: pointer;
+  /* width: 100%; */
+  background-image: url("https://media.istockphoto.com/photos/light-brown-wood-texture-background-picture-id958689614?b=1&k=6&m=958689614&s=170667a&w=0&h=0VEJL0lKAlPV9ZRzqXfU-dyQlA403Mo84xpCwE7ercI=");
+  height: 120px;
+  border: 4px solid #cd853f;
+  background-color: white;
+  border-style: inset;
+  text-align: center;
+  line-height: 70px;
+  border-radius: 50px;
+  margin: 20px;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+.col-aucion .auction-room-inside:hover {
+  background-color: rgb(236, 236, 236);
+}
+.auction-text {
+  font-family: "VT323", monospace;
+  font-size: 60px;
+  color: #f6c714;
+}
+.name-gift-acution {
+  font-size: 20px;
+  font-weight: 1000;
+  color: #c56600;
+}
+.user-online {
+  font-family: "VT323", monospace;
+  color: #c56600;
+  font-size: 25px;
+  margin-top: 30px;
+  left: 0;
+  position: absolute;
+  /* background-color: rgba(90, 86, 86, 0.25); */
+  padding: 5px;
+  border-radius: 10%;
+  line-height: 10px;
+  margin-left: 30px;
+  top: 0;
+}
+
+.user-online > div {
+  background-color: green;
+  width: 10px;
+  height: 10px;
+  /* margin-right: 5px; */
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.time {
+  font-family: "VT323", monospace;
+  color: #c56600;
+  font-size: 25px;
+  position: absolute;
+  right: 20px;
+  margin-top: 38px;
+  margin-right: 15px;
+  /* background-color: rgba(0, 0, 0, 0.25); */
+  padding: 5px;
+  border-radius: 10%;
+  line-height: 10px;
+  top: 0;
+}
+
+.price {
+  font-family: "VT323", monospace;
+  color: #c56600;
+  position: absolute;
+  font-size: 25px;
+  margin-right: 15px;
+  padding: 5px;
+  bottom: 0;
+}
+.btn-add-auction-inside {
+  top: 0;
+}
