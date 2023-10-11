@@ -3,7 +3,13 @@ import React from "react";
 import { RandomAddPointAPI } from "../../../apis/censor/random-add-point/random-add-point.api";
 
 export default function ModalConfirm(props) {
-  const { openConfirm, setOpenConfirm, dataPreview } = props;
+  const {
+    openConfirm,
+    setOpenConfirm,
+    dataPreview,
+    setDataPreview,
+    setNameFileUpload,
+  } = props;
 
   const handleConfirm = (dataPreview) => {
     RandomAddPointAPI.createImportData(dataPreview)
@@ -13,6 +19,8 @@ export default function ModalConfirm(props) {
       .catch(() => {
         message.error("Import thất bại");
       });
+    setDataPreview([]);
+    setNameFileUpload("");
     setOpenConfirm(false);
   };
 

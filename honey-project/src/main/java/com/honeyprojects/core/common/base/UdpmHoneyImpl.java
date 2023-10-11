@@ -29,4 +29,9 @@ public class UdpmHoneyImpl implements UdpmHoney {
     public String getUserName() {
         return (String) httpSession.getAttribute("userName");
     }
+
+    @Override
+    public String getPicture() {
+        return (String) httpSession.getAttribute("picture");
+    }
 }

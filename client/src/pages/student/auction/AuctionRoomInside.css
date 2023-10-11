@@ -3,6 +3,7 @@
   background-image: url("../../../assets/images/bar-transaction.png");
 }
 .auction-room-inside {
+  cursor: pointer;
   /* width: 100%; */
   background-image: url("https://media.istockphoto.com/photos/light-brown-wood-texture-background-picture-id958689614?b=1&k=6&m=958689614&s=170667a&w=0&h=0VEJL0lKAlPV9ZRzqXfU-dyQlA403Mo84xpCwE7ercI=");
   height: 120px;
@@ -82,5 +83,4 @@
 }
 .btn-add-auction-inside {
   top: 0;
-  margin-left: 740px;
 }

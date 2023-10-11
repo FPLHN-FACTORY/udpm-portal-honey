@@ -2,8 +2,10 @@ import { Card, Col, Row } from "antd";
 import React from "react";
 import "./AuctionRoomInside.css";
 import { DollarOutlined, UserOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 export default function StudentAuctionRoomInside() {
+  const nav = useNavigate();
   const divArray = Array.from({ length: 20 }, (_, index) => index);
   return (
     <div className="auction-main-inside">
@@ -41,7 +43,12 @@ export default function StudentAuctionRoomInside() {
           <Row justify="start">
             {divArray.map((_, index) => (
               <Col span={6} className="col-aucion">
-                <div className="auction-room-inside">
+                <div
+                  className="auction-room-inside"
+                  onClick={() => {
+                    nav("/student/auction");
+                  }}
+                >
                   <span className="user-online">
                     <div />
                     200 <UserOutlined style={{ fontSize: "20px" }} />

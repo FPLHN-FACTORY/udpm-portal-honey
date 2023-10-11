@@ -37,8 +37,10 @@ public class JwtTokenProvider {
         String userName = claims.get("userName", String.class);
         String email = claims.get("email", String.class);
         String id = claims.get("id", String.class);
+        String picture = claims.get("picture", String.class);
 
         httpSession.setAttribute("idUser", id);
+        httpSession.setAttribute("picture", picture);
         httpSession.setAttribute("name", name);
         httpSession.setAttribute("userName", userName);
         httpSession.setAttribute("email", email);

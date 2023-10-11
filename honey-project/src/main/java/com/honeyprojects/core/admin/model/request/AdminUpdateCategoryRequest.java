@@ -6,6 +6,7 @@ import com.honeyprojects.infrastructure.contant.TypeCategory;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -13,7 +14,9 @@ public class AdminUpdateCategoryRequest {
     @NotBlank
     private String name;
 
-    private CategoryStatus categoryStatus;
+    private Integer categoryStatus;
 
-    private CategoryTransaction transactionRights;
+    private Integer transactionRights;
+
+    private MultipartFile image;
 }

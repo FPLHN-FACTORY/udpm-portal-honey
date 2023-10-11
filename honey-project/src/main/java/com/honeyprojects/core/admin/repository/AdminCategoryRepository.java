@@ -7,9 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface AdminCategoryRepository extends CategoryRepository {
     @Query(value = """
             SELECT c.id, c.name, c.code, c.last_modified_date FROM category c JOIN articles a on c.id = a.category_id
@@ -20,10 +22,11 @@ public interface AdminCategoryRepository extends CategoryRepository {
     List<AdminCategoryResponse> getAllCategory();
 
     @Query(value = """
-            SELECT ROW_NUMBER() OVER(ORDER BY ca.created_date DESC) AS stt, ca.id, ca.code, ca.name, ca.last_modified_date,
+            SELECT ROW_NUMBER() OVER(ORDER BY ca.created_date DESC) AS stt, ca.id, ca.code, ca.name, ca.last_modified_date,ca.image,
             ca.category_status, ca.transaction_rights 
             FROM category ca
-             WHERE ( ( :#{#request.search} IS NULL
+             WHERE (ca.category_status =0 or ca.category_status = 2 or ca.category_status = 3) AND 
+              ( ( :#{#request.search} IS NULL
                       OR :#{#request.search} LIKE '' 
                      OR ca.code LIKE %:#{#request.search}% )
             OR ( :#{#request.search} IS NULL
@@ -31,10 +34,11 @@ public interface AdminCategoryRepository extends CategoryRepository {
                     OR ca.name LIKE %:#{#request.search}% ) )
            
             """, countQuery = """
-            SELECT ROW_NUMBER() OVER(ORDER BY ca.created_date DESC) AS stt, ca.id, ca.code, ca.name, ca.last_modified_date,
+            SELECT ROW_NUMBER() OVER(ORDER BY ca.created_date DESC) AS stt, ca.id, ca.code, ca.name, ca.last_modified_date,ca.image,
             ca.category_status , ca.transaction_rights 
             FROM category ca
-             WHERE ( ( :#{#request.search} IS NULL
+             WHERE (ca.category_status =0 or ca.category_status = 2 or ca.category_status = 3) AND 
+              ( ( :#{#request.search} IS NULL
                       OR :#{#request.search} LIKE '' 
                      OR ca.code LIKE %:#{#request.search}% )
             OR ( :#{#request.search} IS NULL
@@ -45,7 +49,7 @@ public interface AdminCategoryRepository extends CategoryRepository {
     Page<AdminCategoryResponse> getAllCategoryByAdmin(Pageable pageable, @Param("request") AdminCategoryRequest request);
 
     @Query(value = """
-            SELECT c.id, c.name, c.code, c.last_modified_date ,c.category_status , c.transaction_rights  FROM category c
+            SELECT c.id, c.name, c.code, c.last_modified_date ,c.category_status ,c.image, c.transaction_rights  FROM category c
             ORDER BY c.last_modified_date DESC
             """, nativeQuery = true)
     List<AdminCategoryResponse> getAllListCategory();
