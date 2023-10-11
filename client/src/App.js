@@ -43,6 +43,8 @@ import { connectStompClient } from "./helper/stomp-client/config";
 import StudentChest from "./pages/student/chest/studentChest";
 import StudentAuction from "./pages/student/auction/StudentAuction";
 import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
+// import StudentAuctionRoom from "./pages/student/auction/StudentAuctionRoom";
+import StudentAuctionRoomInside from "./pages/student/auction/StudentAuctionRoomInside";
 
 function App() {
   const token =
@@ -282,6 +284,28 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardAuthUser></DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            {/* 
+            <Route
+              path="/student/auction-room"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <StudentAuctionRoom />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            /> */}
+
+            <Route
+              path="/student/auction-room-inside"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <StudentAuctionRoomInside />
+                  </DashboardAuthUser>
                 </AuthGuard>
               }
             />
