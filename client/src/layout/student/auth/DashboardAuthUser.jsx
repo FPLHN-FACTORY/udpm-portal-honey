@@ -57,7 +57,8 @@ function DashboardAuthUser({ children }) {
               className="tu-choi"
               onClick={() => {
                 message.destroy(transactionReq.idTransaction);
-              }}>
+              }}
+            >
               Từ chối
             </button>
             <button
@@ -65,7 +66,8 @@ function DashboardAuthUser({ children }) {
               onClick={() => {
                 message.destroy();
                 onsubmitTransaction(transactionReq);
-              }}>
+              }}
+            >
               Chấp nhận
             </button>
           </div>
@@ -97,7 +99,7 @@ function DashboardAuthUser({ children }) {
   };
   const hanlderClickDauGia = () => {
     playSound();
-    navigate("/student/auction");
+    navigate("/student/auction-room");
   };
   const hanlderClickNangCap = () => {
     playSound();
@@ -130,7 +132,8 @@ function DashboardAuthUser({ children }) {
         onClick={() => {
           setToken(token1);
           getProfile();
-        }}>
+        }}
+      >
         Tài khoản 1
       </Menu.Item>
       <Menu.Item
@@ -138,7 +141,8 @@ function DashboardAuthUser({ children }) {
         onClick={() => {
           setToken(token2);
           getProfile();
-        }}>
+        }}
+      >
         Tài khoản 2
       </Menu.Item>
     </Menu>
@@ -197,7 +201,8 @@ function DashboardAuthUser({ children }) {
         <div style={{ position: "relative" }}>
           <div
             className="card-close-container btn-student"
-            onClick={returnHome}>
+            onClick={returnHome}
+          >
             <img
               width={"50px"}
               src={require("../../../assets/images/ui-student/btn-close.png")}
@@ -216,7 +221,8 @@ function DashboardAuthUser({ children }) {
                   height: "70vh",
                   paddingRight: "60px",
                   paddingLeft: "60px",
-                }}>
+                }}
+              >
                 <Row>
                   <Col span={12}>
                     <div onClick={hanlderClickProfile} className="container">
@@ -251,7 +257,8 @@ function DashboardAuthUser({ children }) {
                           overlay={settingMenu}
                           placement="bottomRight"
                           visible={isSettingMenuOpen}
-                          onVisibleChange={() => {}}>
+                          onVisibleChange={() => {}}
+                        >
                           <span />
                         </Dropdown>
                       )}
@@ -278,7 +285,8 @@ function DashboardAuthUser({ children }) {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "end",
-                }}>
+                }}
+              >
                 <button
                   onClick={hanlderClickDauGia}
                   className="btn-dau-gia btn-student"

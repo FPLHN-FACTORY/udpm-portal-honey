@@ -44,6 +44,8 @@ import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
 import UpgradeHoney from "./pages/student/upgradeHoney/UpgradeHoney";
 import StudentAuctionRoom from "./pages/student/auction/StudentAuctionRoom";
 import StudentAuction from "./pages/student/auction/StudentAuction";
+// import StudentAuctionRoom from "./pages/student/auction/StudentAuctionRoom";
+import StudentAuctionRoomInside from "./pages/student/auction/StudentAuctionRoomInside";
 
 function App() {
   const token =
@@ -288,6 +290,28 @@ function App() {
                 </AuthGuard>
               }
             />
+
+            <Route
+              path="/student/auction-room"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <StudentAuctionRoom />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+
+            <Route
+              path="/student/auction-room-inside"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <StudentAuctionRoomInside />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
             <Route
               path="/student/create-conversion/history"
               element={
@@ -363,7 +387,7 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
-                    <StudentAuctionRoom />
+                    <StudentAuction />
                   </DashboardAuthUser>
                 </AuthGuard>
               }

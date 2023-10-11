@@ -15,29 +15,6 @@ export default function StudentAuction() {
     image: require("../../../assets/images/balo-student.png"),
   };
 
-  useEffect(() => {
-    getStompClient().subscribe(`/user/chat`, (result) => {
-      setLiveChat((prevLiveChat) => [...prevLiveChat, JSON.parse(result.body)]);
-    });
-  }, []);
-
-  const [mess, setMess] = useState("");
-
-  function sendChat() {
-    getStompClient().send(
-      `/user/chat`,
-      {},
-      JSON.stringify({
-        name: "Nguyễn Thị Thùy Dương",
-        avatar:
-          "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-        message: mess,
-        time: "10:00",
-        type: 0,
-      })
-    );
-  }
-
   return (
     <div className="ui-auction" style={{ height: "100%" }}>
       <Layout style={{ height: "100%" }}>
@@ -108,13 +85,8 @@ export default function StudentAuction() {
             })}
           </Content>
           <Footer>
-            <input
-              onChange={(e) => {
-                setMess(e.target.value);
-              }}
-              className="input-message"
-            />
-            <button onClick={sendChat} className="send-message">
+            <input className="input-message" />
+            <button className="send-message">
               <SendOutlined />
             </button>
           </Footer>

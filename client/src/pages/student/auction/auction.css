@@ -1,164 +1,163 @@
-@import url('https://fonts.googleapis.com/css2?family=Nabla&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nabla&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
 
 .ui-auction {
-    background-image: url("../../../assets/images/bar-transaction.png");
+  background-image: url("../../../assets/images/bar-transaction.png");
 }
 
 .ui-auction .ant-layout-sider {
-    min-width: 65% !important;
-    background: none;
-    border-right: 10px ridge #F6C714;
-    padding-left: 20px;
-    padding-right: 20px;
+  min-width: 65% !important;
+  background: none;
+  border-right: 10px ridge #f6c714;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .ui-auction .ant-layout-content {
-    height: 75%;
-    overflow-y: auto;
-    background: none;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 20px;
-    font-family: 'VT323', monospace;
+  height: 75%;
+  overflow-y: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 20px;
+  font-family: "VT323", monospace;
 }
 
 .ui-auction .ant-layout-footer {
-    border-top: 5px ridge #F6C714;
-    padding-left: 10px;
-    padding-right: 10px;
-    height: 15%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  border-top: 5px ridge #f6c714;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .ui-auction .ant-layout-header {
-    border-bottom: 5px ridge #F6C714;
-    height: 15%;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Nabla', cursive;
-    font-size: 40px;
+  border-bottom: 5px ridge #f6c714;
+  height: 15%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Nabla", cursive;
+  font-size: 40px;
 }
 
 .ui-auction .input-message {
-    border: 2px ridge;
-    background-color: #464239;
-    height: 40px;
-    width: 80%;
-    color: white;
-    padding-left: 5px;
-    font-weight: 500;
-    font-size: 20px;
-    font-family: 'VT323', monospace;
+  border: 2px ridge;
+  background-color: #464239;
+  height: 40px;
+  width: 80%;
+  color: white;
+  padding-left: 5px;
+  font-weight: 500;
+  font-size: 20px;
+  font-family: "VT323", monospace;
 }
 
 .ui-auction .input-message:focus {
-    outline: none;
+  outline: none;
 }
 
 .ui-auction .send-message {
-    background-color: #F6C714;
-    width: 19%;
-    border: 2px outset white !important;
-    border-radius: 10%;
-    height: 40px;
-    border: none;
-    margin-left: 1%;
-    font-size: 20px;
-    color: white;
-    font-family: 'VT323', monospace;
+  background-color: #f6c714;
+  width: 19%;
+  border: 2px outset white !important;
+  border-radius: 10%;
+  height: 40px;
+  border: none;
+  margin-left: 1%;
+  font-size: 20px;
+  color: white;
+  font-family: "VT323", monospace;
 }
 
 .ui-auction .name-item {
-    font-family: 'VT323', monospace;
-    color: #F6C714;
-    font-size: 40px;
+  font-family: "VT323", monospace;
+  color: #f6c714;
+  font-size: 40px;
 }
 
 .ui-auction .gia {
-    font-family: 'VT323', monospace;
-    color: green;
-    font-size: 25px;
-    justify-content: center;
-    align-items: center;
-    display: flex;
+  font-family: "VT323", monospace;
+  color: green;
+  font-size: 25px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 
-.ui-auction .gia>span {
-    font-family: 'VT323', monospace;
-    color: red;
-    font-size: 25px;
+.ui-auction .gia > span {
+  font-family: "VT323", monospace;
+  color: red;
+  font-size: 25px;
 }
 
 .ui-auction .item-description {
-    font-family: 'VT323', monospace;
-    color: white;
-    font-size: 25px;
+  font-family: "VT323", monospace;
+  color: white;
+  font-size: 25px;
 }
 
 .ui-auction .user-online {
-    font-family: 'VT323', monospace;
-    color: white;
-    font-size: 25px;
-    margin-top: 20px;
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.25);
-    padding: 5px;
-    border-radius: 10%;
-    line-height: 10px;
+  font-family: "VT323", monospace;
+  color: white;
+  font-size: 25px;
+  margin-top: 20px;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.25);
+  padding: 5px;
+  border-radius: 10%;
+  line-height: 10px;
 }
 
-.ui-auction .user-online>div {
-    background-color: green;
-    width: 10px;
-    height: 10px;
-    margin-right: 5px;
-    display: inline-block;
-    border-radius: 50%;
+.ui-auction .user-online > div {
+  background-color: green;
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+  display: inline-block;
+  border-radius: 50%;
 }
 
 .ui-auction .time {
-    font-family: 'VT323', monospace;
-    color: #03fc07;
-    font-size: 25px;
-    position: absolute;
-    right: 20px;
-    margin-top: 20px;
-    background-color: rgba(0, 0, 0, 0.25);
-    padding: 5px;
-    border-radius: 10%;
-    line-height: 10px;
+  font-family: "VT323", monospace;
+  color: #03fc07;
+  font-size: 25px;
+  position: absolute;
+  right: 20px;
+  margin-top: 20px;
+  background-color: rgba(0, 0, 0, 0.25);
+  padding: 5px;
+  border-radius: 10%;
+  line-height: 10px;
 }
 
 .ui-auction .pb-5 {
-    padding-bottom: 5px;
+  padding-bottom: 5px;
 }
 
 .ui-auction .content-chat {
-    margin: 10px 0;
-    background-color: rgba(61, 49, 17, 0.12);
-    padding: 10px;
-    border-radius: 10px;
+  margin: 10px 0;
+  background-color: rgba(61, 49, 17, 0.12);
+  padding: 10px;
+  border-radius: 10px;
 }
 
-.ui-auction .content-chat>p {
-    line-height: 0;
-    font-size: 19px;
-    color: green;
-    text-align: center;
-    background-color: red;
+.ui-auction .content-chat > p {
+  line-height: 0;
+  font-size: 19px;
+  color: green;
+  text-align: center;
+  background-color: red;
 }
 
-.ui-auction .content-chat>img {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+.ui-auction .content-chat > img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
 }
 
 .ui-auction .mid-center {
-    height: 90%;
+  height: 90%;
 }

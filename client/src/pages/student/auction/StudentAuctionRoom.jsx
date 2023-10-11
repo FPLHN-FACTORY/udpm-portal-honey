@@ -1,8 +1,10 @@
 import { Card, Col, Row } from "antd";
 import React from "react";
 import "./AuctionRoom.css";
+import { useNavigate } from "react-router-dom";
 
 export default function StudentAuctionRoom() {
+  const nav = useNavigate();
   const divArray = Array.from({ length: 3 }, (_, index) => index);
   return (
     <div className="main-ui-room">
@@ -25,7 +27,12 @@ export default function StudentAuctionRoom() {
         <Row justify="start">
           {divArray.map((_, index) => (
             <Col span={12} className="col-room">
-              <div className="auction-room">
+              <div
+                className="auction-room"
+                onClick={() => {
+                  nav("/student/auction-room-inside");
+                }}
+              >
                 <p>Phiên đấu giá biển số</p>
                 <p className="loai-diem">
                   <img

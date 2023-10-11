@@ -1,10 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
 
 .main-ui-room {
   padding: 0px 30px;
 }
 
 .main-ui-room .auction-room {
+  cursor: pointer;
   border: 4px solid #cd853f;
   background-color: white;
   border-style: inset;
@@ -16,15 +17,15 @@
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-.main-ui-room .auction-room>p {
-  font-family: 'VT323', monospace;
+.main-ui-room .auction-room > p {
+  font-family: "VT323", monospace;
   font-weight: 700;
   color: #cb820a;
   font-size: 40px;
   margin: 0;
 }
 
-.main-ui-room .auction-room>.loai-diem {
+.main-ui-room .auction-room > .loai-diem {
   font-size: 25px;
   display: flex;
   align-items: center;
@@ -35,19 +36,18 @@
   line-height: 40px;
 }
 
-.main-ui-room .auction-room>.loai-diem img {
+.main-ui-room .auction-room > .loai-diem img {
   margin: 0 auto;
 }
-
 
 .main-ui-room .col-room .auction-room:hover {
   background-color: rgb(236, 236, 236);
 }
 
-.main-ui-room>p {
+.main-ui-room > p {
   font-size: 60px;
   color: #cb820a;
-  font-family: 'VT323', monospace;
+  font-family: "VT323", monospace;
   margin: 0;
 }
 
@@ -61,7 +61,7 @@
   width: 0;
 }
 
-.main-ui-room .auction-room>.loai-diem>.image-category {
+.main-ui-room .auction-room > .loai-diem > .image-category {
   justify-content: center;
   align-items: center;
   margin: 0;
