@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 public interface AdRandomAddPointRepository extends HoneyRepository {
     @Query(value = """
-            SELECT c.id, c.name, c.code, c.category_status, c.transaction_rights
+            SELECT c.id, c.name, c.code, c.category_status, c.transaction_rights, c.image
             FROM category c
             ORDER BY c.last_modified_date DESC
             """, nativeQuery = true)

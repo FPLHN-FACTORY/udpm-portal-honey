@@ -39,15 +39,20 @@ import ChestGift from "./pages/censor/chest-gift/ChestGift";
 import AuctionMangement from "./pages/censor/auction-management/AuctionManagement";
 import TestTransaction from "./pages/student/transaction/TestTransaction";
 import { getToken, setToken } from "./helper/userToken";
-import { connectStompClient } from "./helper/stomp-client/config";
 import StudentChest from "./pages/student/chest/studentChest";
-import StudentAuction from "./pages/student/auction/StudentAuction";
 import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
+import UpgradeHoney from "./pages/student/upgradeHoney/UpgradeHoney";
+import StudentAuctionRoom from "./pages/student/auction/StudentAuctionRoom";
+import StudentAuction from "./pages/student/auction/StudentAuction";
+// import StudentAuctionRoom from "./pages/student/auction/StudentAuctionRoom";
+import StudentAuctionRoomInside from "./pages/student/auction/StudentAuctionRoomInside";
 
 function App() {
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM0Y2YyMWY0LWYzZTAtNDkwZS1iMWNjLTA4ZGJiNzQzZGQ3ZCIsIm5hbWUiOiJUcmlldSBWYW4gVHVvbmcgUEggMiA2IDEgNCA5IiwiZW1haWwiOiJ0dW9uZ3R2cGgyNjE0OUBmcHQuZWR1LnZuIiwidXNlck5hbWUiOiJ0dW9uZ3R2cGgyNjE0OSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NMU0hTd1cxb3B2ZVRzTjI4RGdHS0pLSWNYekpsY3hJd090c0VfbGZsZjk4SXc9czk2LWMiLCJpZFRyYWluaW5nRmFjaWxpdHkiOiI3OTZhNGZhNC04YWFiLTQyYzQtOWYzNS04NzBiYjAwMDVhZjEiLCJsb2NhbEhvc3QiOiJodHRwOi8vbG9jYWxob3N0Ojg4ODgiLCJyb2xlIjoiQURNSU4iLCJyb2xlTmFtZXMiOiJRdeG6o24gdHLhu4sgdmnDqm4iLCJuYmYiOjE2OTUwMzA5NjksImV4cCI6MTc2ODY0Mzc2OSwiaWF0IjoxNjk1MDMwOTY5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0OTA1MyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjQ5MDUzIn0.Zxmp3Ax5QVp2PK3b5BNfhcgs7c9bbWCYGF6R0QExd5s";
-  setToken(token);
+  if (!getToken()) {
+    setToken(token);
+  }
   return (
     <div className="App scroll-smooth md:scroll-auto font-sans">
       <BrowserRouter basename={AppConfig.routerBase}>
@@ -285,6 +290,28 @@ function App() {
                 </AuthGuard>
               }
             />
+
+            <Route
+              path="/student/auction-room"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <StudentAuctionRoom />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+
+            <Route
+              path="/student/auction-room-inside"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <StudentAuctionRoomInside />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
             <Route
               path="/student/create-conversion/history"
               element={
@@ -361,6 +388,16 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     <StudentAuction />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/upgrade-honey"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <UpgradeHoney />
                   </DashboardAuthUser>
                 </AuthGuard>
               }
