@@ -6,7 +6,6 @@
   margin: 0;
   text-decoration: none;
   list-style: none;
-  font-family: 'VT323', monospace;
 }
 
 /* ------------------------student----------------- */
@@ -86,12 +85,14 @@
 .student__card__infor p {
   font-weight: bold;
   font-size: 23px;
+  font-family: 'VT323', monospace;
 }
 
 .student__card__infor em {
   font-size: 23px;
-}
+  font-family: 'VT323', monospace;
 
+}
 
 .category__button {
   margin-top: 30px;
@@ -109,11 +110,15 @@
   transition: all 0.3s;
   padding: 10px 20px;
   outline: none;
+  font-family: 'VT323', monospace;
+
 }
 
 .show:hover {
   background: #e07a5f;
   color: #ffffff;
+  font-family: 'VT323', monospace;
+
 }
 
 
@@ -194,11 +199,15 @@
   font-size: 25px;
   font-weight: bold;
   color: #fff;
+  font-family: 'VT323', monospace;
+
 }
 
 .category__name p {
   font-size: 25px;
   color: #fff;
+  font-family: 'VT323', monospace;
+
 }
 
 /* ------------category---------- */
