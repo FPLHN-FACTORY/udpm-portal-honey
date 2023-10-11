@@ -1,10 +1,13 @@
 package com.honeyprojects.core.teacher.controller;
 
 import com.honeyprojects.core.common.base.ResponseObject;
+import com.honeyprojects.core.teacher.model.response.TeacherExcelAddPoinBO;
 import com.honeyprojects.core.teacher.service.TeacherExcelAddPointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/teacher/list-students-add-point")
@@ -24,4 +27,9 @@ public class TeacherAddPointExcelCotroller {
         return new ResponseObject(service.exportExcel());
     }
 
+    @PostMapping("/create/preview-data")
+    public ResponseObject createPreviewImportPoint(@RequestParam("file") MultipartFile file) throws IOException {
+        TeacherExcelAddPoinBO addPoinBO = service.previewDataImportExcel(file);
+        return new ResponseObject(addPoinBO);
+    }
 }

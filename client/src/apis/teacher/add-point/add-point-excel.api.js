@@ -16,4 +16,12 @@ export class AddPointExcelAPI {
       url: `${this.COMPONENT_NAME}/export-excel`,
     });
   };
+
+  static previewImportPoint = (file) => {
+    return request({
+      method: "POST",
+      url: `${this.COMPONENT_NAME}/create/preview-data`,
+      data: file,
+    });
+  };
 }
