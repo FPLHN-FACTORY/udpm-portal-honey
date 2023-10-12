@@ -11,10 +11,13 @@ import java.util.List;
 public interface StudentUserRepository extends HoneyRepository {
 
     @Query(value = """
-            SELECT h.honey_point, c.name
-                 FROM honey h
-                 JOIN category c ON h.honey_category_id = c.id
-                 WHERE h.student_id = :userId
+            SELECT 
+            h.honey_point,
+            c.name,
+            c.image
+            FROM honey h
+            JOIN category c ON h.honey_category_id = c.id
+            WHERE h.student_id = :userId
              """, nativeQuery = true)
     List<StudentMyHoneyResponse> getHoney(String userId);
 
