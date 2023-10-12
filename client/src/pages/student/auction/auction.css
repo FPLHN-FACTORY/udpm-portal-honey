@@ -75,3 +75,28 @@
     font-family: 'VT323', monospace;
     color: crimson;
 }
+
+.avatar{
+background-color: rgb(118, 100, 237);
+padding: 3px 5px;   
+border-radius: 5px;
+color:#fff;
+}
+.avatar.self{
+color:#000;
+background-color: greenyellow;
+}
+.message{
+padding:5px;
+width: auto;
+display: flex;
+flex-direction: row;
+box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+margin: 5px 10px;
+}
+.message-data{
+padding:5px;
+}
+.message.self{
+justify-content: end;
+}

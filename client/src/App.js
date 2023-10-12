@@ -30,7 +30,6 @@ import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
 import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
-import Archive from "./pages/student/archive/Archive";
 import GiftStudent from "./pages/teacher/giftstudent/GiftStudent";
 import StArchive from "./pages/student/archive/StArchive";
 import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
@@ -38,11 +37,12 @@ import RequestConversionHistory from "./pages/censor/requestmanager/RequestConve
 import ChestGift from "./pages/censor/chest-gift/ChestGift";
 import AuctionMangement from "./pages/censor/auction-management/AuctionManagement";
 import TestTransaction from "./pages/student/transaction/TestTransaction";
-import { getToken, setToken } from "./helper/userToken";
-import { connectStompClient } from "./helper/stomp-client/config";
+import { setToken } from "./helper/userToken";
 import StudentChest from "./pages/student/chest/studentChest";
 import StudentAuction from "./pages/student/auction/StudentAuction";
 import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
+import StudentAuctionChat from "./pages/student/auction/model-chat/StudentAuctionChat";
+import StudentAuctionChat1 from "./pages/student/auction/model-chat/StudentAuctionChat1";
 
 function App() {
   const token =
@@ -372,6 +372,27 @@ function App() {
                   <DashboardCensor>
                     <AuctionMangement />
                   </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+
+            <Route
+              path="/student/auction-management-chat"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <StudentAuctionChat />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/auction-management-chat-1"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <StudentAuctionChat1 />
+                  </DashboardAuthUser>
                 </AuthGuard>
               }
             />
