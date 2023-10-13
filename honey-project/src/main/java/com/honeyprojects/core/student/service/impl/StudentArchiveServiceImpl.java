@@ -4,8 +4,11 @@ import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.student.model.request.StudentArchiveFilterRequest;
 import com.honeyprojects.core.student.model.request.StudentArchiveOpenChestRequest;
+import com.honeyprojects.core.student.model.request.StudentGetArchiveChestRequest;
+import com.honeyprojects.core.student.model.request.StudentGetArchiveGiftRequest;
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
+import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
 import com.honeyprojects.core.student.repository.StudentArchiveRepository;
 import com.honeyprojects.core.student.repository.StudentGiftArchiveRepository;
 import com.honeyprojects.core.student.service.StudentArchiveService;
@@ -41,6 +44,13 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
         System.out.println("--------------------");
         System.out.println(udpmHoney.getIdUser());
         return new PageableObject<>(studentGiftArchiveRepository.getAllGiftArchive(filterRequest, pageable));
+    }
+
+    @Override
+    public PageableObject<StudentGetListGiftResponse> getListGift(StudentArchiveFilterRequest filterRequest) {
+        Pageable pageable = PageRequest.of(filterRequest.getPage(), filterRequest.getSize());
+        filterRequest.setIdStudent(udpmHoney.getIdUser());
+        return new PageableObject<>(studentGiftArchiveRepository.getListGift(filterRequest, pageable));
     }
 
     @Override
@@ -90,9 +100,21 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     }
 
     @Override
-    public ArchiveGift detailArchiveGift(String id) {
+    public ArchiveGift getArchiveGift(String id) {
         Optional<ArchiveGift> archiveGift = archiveGiftRepository.findById(id);
         return archiveGift.get();
+    }
+
+    @Override
+    public StudentArchiveResponse detailArchiveGift(StudentGetArchiveGiftRequest request) {
+        request.setIdStudent(udpmHoney.getIdUser());
+        return studentGiftArchiveRepository.detailArchiveGift(request);
+    }
+
+    @Override
+    public StudentArchiveGetChestResponse detailArchiveChest(StudentGetArchiveChestRequest request) {
+        request.setIdStudent(udpmHoney.getIdUser());
+        return studentGiftArchiveRepository.detailArchiveChest(request);
     }
 
 }

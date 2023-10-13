@@ -11,6 +11,14 @@ export class ArchiveAPI {
     });
   };
 
+  static getGift = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/list-gift`,
+      params: filter,
+    });
+  };
+
   static getChest = (filter) => {
     return request({
       method: "GET",
@@ -46,6 +54,26 @@ export class ArchiveAPI {
       url: `/${this.COMPONENT_NAME}/open-chest`,
       data: {
         chestId: idChest,
+      },
+    });
+  };
+
+  static detailArchiveGift = (idGift) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/detail`,
+      params: {
+        idGift: idGift,
+      },
+    });
+  };
+
+  static detailArchiveChest = (id) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/detail-chest`,
+      params: {
+        idChest: id,
       },
     });
   };

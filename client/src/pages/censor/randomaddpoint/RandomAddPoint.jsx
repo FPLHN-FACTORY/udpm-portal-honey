@@ -285,6 +285,7 @@ export default function RandomAddPoint() {
           message.error("Tạo ngẫu nhiên vật phẩm thất bại");
         });
       setLoading(false);
+      setSelectedRowKeys([]);
     } else {
       message.error(
         "Tạo ngẫu nhiên vật phẩm thất bại, bạn cần nhập đủ các dữ liệu"

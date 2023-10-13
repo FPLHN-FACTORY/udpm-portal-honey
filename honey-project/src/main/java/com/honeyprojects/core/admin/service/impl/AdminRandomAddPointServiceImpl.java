@@ -2,15 +2,13 @@ package com.honeyprojects.core.admin.service.impl;
 
 import com.honeyprojects.core.admin.model.request.AdminCreateArchiveGiftRequest;
 import com.honeyprojects.core.admin.model.request.AdminCreateHoneyRequest;
+import com.honeyprojects.core.admin.model.request.AdminNotificationRandomRequest;
 import com.honeyprojects.core.admin.model.request.AdminRandomPointRequest;
 import com.honeyprojects.core.admin.model.response.*;
 import com.honeyprojects.core.admin.repository.*;
 import com.honeyprojects.core.admin.service.AdRandomAddPointService;
 import com.honeyprojects.core.common.response.SimpleResponse;
-import com.honeyprojects.entity.Archive;
-import com.honeyprojects.entity.ArchiveGift;
-import com.honeyprojects.entity.ChestGift;
-import com.honeyprojects.entity.Honey;
+import com.honeyprojects.entity.*;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import com.honeyprojects.util.DataUtils;
 import com.honeyprojects.util.DateUtils;
@@ -52,6 +50,9 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
     @Autowired
     private AdArchiveRepository adArchiveRepository;
+
+    @Autowired
+    private AdNotificationRespository adNotificationRespository;
 
     @Autowired
     private ConvertRequestApiidentity convertRequestApiidentity;
@@ -144,6 +145,17 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 Integer randomPoint = random.nextInt(adminRandomPointRequest.getMaxPoint() - adminRandomPointRequest.getMinPoint() + 1) + adminRandomPointRequest.getMinPoint();
                 honey.setHoneyPoint(honey.getHoneyPoint() + randomPoint);
                 adRandomAddPointRepository.save(honey);
+                Optional<Category> categoryOptional = adminCategoryRepository.findById(honey.getHoneyCategoryId());
+                if (!categoryOptional.isPresent()) {
+                    continue;
+                } else {
+                    Category category = categoryOptional.get();
+                    String title = "TIN NHẮN TỪ HỆ THỐNG";
+                    String content = "Hệ thống đã tặng cho bạn: Honey - " + category.getName() + " - Số lượng: " + randomPoint;
+                    AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, honey.getStudentId(), 0);
+                    Notification notification = request.createNotification(new Notification());
+                    adNotificationRespository.save(notification);
+                }
             }
 
             return true;
@@ -177,6 +189,12 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                         AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, idChest, idGift);
                         ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
                         adArchiveGiftRepository.save(archiveGift);
+                        Gift gift = adGiftRepository.findById(idGift).get();
+                        String title = "TIN NHẮN TỪ HỆ THỐNG";
+                        String content = "Hệ thống đã tặng cho bạn: Vật phẩm - " + gift.getName() + " - Số lương: 1";
+                        AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, simple.getId(), 1);
+                        Notification notification = request.createNotification(new Notification());
+                        adNotificationRespository.save(notification);
                     } else {
                         continue;
                     }
@@ -197,6 +215,12 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                         AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, idChest, idGift);
                         ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
                         adArchiveGiftRepository.save(archiveGift);
+                        Gift gift = adGiftRepository.findById(idGift).get();
+                        String title = "TIN NHẮN TỪ HỆ THỐNG";
+                        String content = "Hệ thống đã tặng cho bạn: Vật phẩm - " + gift.getName() + " - Số lượng: 1";
+                        AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, idStudent, 1);
+                        Notification notification = request.createNotification(new Notification());
+                        adNotificationRespository.save(notification);
                     } else {
                         continue;
                     }
@@ -357,13 +381,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     // Đặt một constant cho cỡ cột
     private static final int COLUMN_WIDTH = 15 * 256;
 
-
-    private List<String[]> getData() {
-        List<String[]> data = new ArrayList<>();
-        data.add(new String[]{"Data A1", "Data B1", "Data C1", "Data D1", "Data E1", "Data A3", "Data B3", "Data C3", "Data D3", "Data E3", "", "Data G2", "Data A2", "Data B2", "Data C2", "Data D2", "Data E2"});
-        return data;
-    }
-
     @Override
     public List<String> importExcel(MultipartFile file) {
         List<String> simpleResponseList = new ArrayList<>();
@@ -483,62 +500,92 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 }
                 System.out.println("================" + archiveId);
 
-                // Xử lý vật phẩm (gift)
-                String[] partsGift = userDTO.getLstGift().split(", ");
-                for (String part : partsGift) {
-                    String[] subParts = part.split(" ", 2);
-                    if (subParts.length == 2) {
-                        String numberItemStr = subParts[0];
-                        String nameItem = subParts[1];
-                        Integer numberItem = Integer.parseInt(numberItemStr);
+                if (userDTO.getLstGift() == null) {
+                    continue;
+                } else {
+                    // Xử lý vật phẩm (gift)
+                    String[] partsGift = userDTO.getLstGift().split(", ");
+                    for (String part : partsGift) {
+                        String[] subParts = part.split(" ", 2);
+                        if (subParts.length == 2) {
+                            String numberItemStr = subParts[0];
+                            String nameItem = subParts[1];
+                            Integer numberItem = Integer.parseInt(numberItemStr);
 
-                        // Lấy id của vật phẩm từ cơ sở dữ liệu
-                        String idGift = adRandomAddPointRepository.getIdGiftByName(nameItem);
-                        System.out.println("=================" + idGift);
-                        if (idGift == null) {
-                            continue;
-                        } else {
-                            for (int i = 0; i < numberItem; i++) {
-                                // Tạo một bản ghi ArchiveGift mới và lưu vào cơ sở dữ liệu
-                                AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, null, idGift);
-                                ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
-                                System.out.println("=================" + archiveGift);
-                                adArchiveGiftRepository.save(archiveGift);
+                            // Lấy id của vật phẩm từ cơ sở dữ liệu
+                            String idGift = adRandomAddPointRepository.getIdGiftByName(nameItem);
+                            System.out.println("=================" + idGift);
+                            if (idGift == null) {
+                                continue;
+                            } else {
+                                for (int i = 0; i < numberItem; i++) {
+                                    // Tạo một bản ghi ArchiveGift mới và lưu vào cơ sở dữ liệu
+                                    AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, null, idGift);
+                                    ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
+                                    System.out.println("=================" + archiveGift);
+                                    adArchiveGiftRepository.save(archiveGift);
+                                }
+                                Optional<Gift> giftOptional = adGiftRepository.findById(idGift);
+                                if (giftOptional.isPresent()) {
+                                    Gift gift = giftOptional.get();
+                                    String title = "TIN NHẮN TỪ HỆ THỐNG";
+                                    String content = "Hệ thống đã tặng cho bạn: Vật phẩm - " + gift.getName() + " - Số lượng: " + numberItem;
+                                    AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, simpleResponse.getId(), 1);
+                                    Notification notification = request.createNotification(new Notification());
+                                    adNotificationRespository.save(notification);
+                                } else {
+                                    continue;
+                                }
                             }
                         }
                     }
                 }
 
                 // Xử lý điểm mật ong (honey)
-                String[] partsHoney = userDTO.getLstHoney().split(", ");
-                for (String part : partsHoney) {
-                    String[] subParts = part.split(" ", 2);
-                    if (subParts.length == 2) {
-                        String numberPoint = subParts[0].trim();
-                        String categoryPoint = subParts[1].trim().replace("-", "");
-                        System.out.println("============" + categoryPoint);
+                if (userDTO.getLstHoney() == null) {
+                    continue;
+                } else {
+                    String[] partsHoney = userDTO.getLstHoney().split(", ");
+                    for (String part : partsHoney) {
+                        String[] subParts = part.split(" ", 2);
+                        if (subParts.length == 2) {
+                            String numberPoint = subParts[0].trim();
+                            String categoryPoint = subParts[1].trim().replace("-", "");
+                            System.out.println("============" + categoryPoint);
 
-                        // Lấy thông tin về loại điểm mật ong từ cơ sở dữ liệu
-                        AdminCategoryResponse categoryResponse = adRandomAddPointRepository.getCategoryByName(categoryPoint.trim());
-                        System.out.println("============" + categoryResponse.getId());
+                            // Lấy thông tin về loại điểm mật ong từ cơ sở dữ liệu
+                            AdminCategoryResponse categoryResponse = adRandomAddPointRepository.getCategoryByName(categoryPoint.trim());
+                            System.out.println("============" + categoryResponse.getId());
 
-                        // Kiểm tra xem đã có bản ghi Honey cho người dùng và loại điểm mật ong này chưa
-                        Optional<Honey> honeyOptional = adRandomAddPointRepository.getHoneyByIdStudent(simpleResponse.getId(), categoryResponse.getId());
-                        if (honeyOptional.isPresent()) {
-                            // Nếu đã có, cập nhật điểm mật ong cho bản ghi tồn tại
-                            Honey honey = honeyOptional.get();
-                            System.out.println("================" + honeyOptional.get());
-                            System.out.println("=================" + honey.getId());
-                            honey.setHoneyPoint(honey.getHoneyPoint() + Integer.parseInt(numberPoint));
-                        } else {
-                            // Nếu chưa có, tạo một bản ghi Honey mới và lưu vào cơ sở dữ liệu
-                            AdminCreateHoneyRequest adminCreateHoneyRequest = new AdminCreateHoneyRequest();
-                            adminCreateHoneyRequest.setSemesterId(null);
-                            adminCreateHoneyRequest.setStudentId(simpleResponse.getId());
-                            adminCreateHoneyRequest.setCategoryId(categoryResponse.getId());
-                            adminCreateHoneyRequest.setHoneyPoint(Integer.parseInt(numberPoint));
-                            Honey newHoney = adminCreateHoneyRequest.createHoney(new Honey());
-                            adminHoneyRepository.save(newHoney);
+                            // Kiểm tra xem đã có bản ghi Honey cho người dùng và loại điểm mật ong này chưa
+                            Optional<Honey> honeyOptional = adRandomAddPointRepository.getHoneyByIdStudent(simpleResponse.getId(), categoryResponse.getId());
+                            if (honeyOptional.isPresent()) {
+                                // Nếu đã có, cập nhật điểm mật ong cho bản ghi tồn tại
+                                Honey honey = honeyOptional.get();
+                                System.out.println("================" + honeyOptional.get());
+                                System.out.println("=================" + honey.getId());
+                                honey.setHoneyPoint(honey.getHoneyPoint() + Integer.parseInt(numberPoint));
+                                adminHoneyRepository.save(honey);
+                                String title = "TIN NHẮN TỪ HỆ THỐNG";
+                                String content = "Hệ thống đã tặng cho bạn: Honey - " + categoryPoint + " - Số lượng: " + numberPoint;
+                                AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, simpleResponse.getId(), 0);
+                                Notification notification = request.createNotification(new Notification());
+                                adNotificationRespository.save(notification);
+                            } else {
+                                // Nếu chưa có, tạo một bản ghi Honey mới và lưu vào cơ sở dữ liệu
+                                AdminCreateHoneyRequest adminCreateHoneyRequest = new AdminCreateHoneyRequest();
+                                adminCreateHoneyRequest.setSemesterId(null);
+                                adminCreateHoneyRequest.setStudentId(simpleResponse.getId());
+                                adminCreateHoneyRequest.setCategoryId(categoryResponse.getId());
+                                adminCreateHoneyRequest.setHoneyPoint(Integer.parseInt(numberPoint));
+                                Honey newHoney = adminCreateHoneyRequest.createHoney(new Honey());
+                                adminHoneyRepository.save(newHoney);
+                                String title = "TIN NHẮN TỪ HỆ THỐNG";
+                                String content = "Hệ thống đã tặng cho bạn: Honey - " + categoryPoint + " - Số lượng: " + numberPoint;
+                                AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, simpleResponse.getId(), 0);
+                                Notification notification = request.createNotification(new Notification());
+                                adNotificationRespository.save(notification);
+                            }
                         }
                     }
                 }
@@ -638,7 +685,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             }
         }
 
-        if(check == 2){
+        if (check == 2) {
             userDTO.setImportMessage("Vật phẩm và mật ong không được để trống");
             userDTO.setError(true);
             hasError = true;

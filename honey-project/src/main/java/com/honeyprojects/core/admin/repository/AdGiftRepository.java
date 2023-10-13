@@ -20,7 +20,7 @@ public interface AdGiftRepository extends GiftRepository {
             SELECT ROW_NUMBER() OVER(ORDER BY g.created_date DESC) AS stt, g.id, g.code, g.name,g.note,g.quantity,g.status,g.type,
             g.last_modified_date,g.honey,g.honey_category_id, g.image
             FROM gift g
-             WHERE (status =0 or status = 1 or status = 2) AND 
+             WHERE (status =0 or status = 1) AND 
              ( ( :#{#request.search} IS NULL
                       OR :#{#request.search} LIKE '' 
                      OR g.code LIKE %:#{#request.search}% )
@@ -30,7 +30,7 @@ public interface AdGiftRepository extends GiftRepository {
             """, countQuery = """
             SELECT ROW_NUMBER() OVER(ORDER BY g.created_date DESC) AS stt, g.id, g.code, g.name,g.quantity,g.status,g.type,g.honey,g.honey_category_id, g.last_modified_date, g.image, g.type,g.note
             FROM gift g
-             WHERE (status =0 or status = 1 or status = 2) AND 
+             WHERE (status =0 or status = 1 ) AND 
               ( ( :#{#request.search} IS NULL
                       OR :#{#request.search} LIKE '' 
                      OR g.code LIKE %:#{#request.search}% )
@@ -41,13 +41,13 @@ public interface AdGiftRepository extends GiftRepository {
     Page<AdminGiftResponse> getAllGiftByAdmin(Pageable pageable, @Param("request") AdminGiftRequest request);
 
     @Query(value = """
-            SELECT g.id, g.name, g.code,g.quantity,g.status,g.type,g.honey,g.honey_category_id,g.note, g.last_modified_date, g.image FROM gift g where (status =0 or status = 1 or status = 2) 
+            SELECT g.id, g.name, g.code,g.quantity,g.status,g.type,g.honey,g.honey_category_id,g.note, g.last_modified_date, g.image FROM gift g where (status =0 or status = 1) 
             ORDER BY g.last_modified_date DESC
             """, nativeQuery = true)
     List<AdminGiftResponse> getAllListResponse();
 
     @Query(value = """
-            SELECT g.name FROM gift g where (g.status = 0 or g.status = 1 or g.status = 2) 
+            SELECT g.name FROM gift g where (g.status = 0 or g.status = 1) 
             ORDER BY g.last_modified_date DESC
             """, nativeQuery = true )
     List<String> getAllNameByStatus();

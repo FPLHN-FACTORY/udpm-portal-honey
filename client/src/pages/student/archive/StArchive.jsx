@@ -9,8 +9,15 @@ import {
   SetArchiveGift,
 } from "../../../app/reducers/archive-gift/archive-gift.reducer";
 import ModalArchiveChest from "./StudentOpenChest";
-import { GetChest, SetChest } from "../../../app/reducers/chest/chest.reducer";
 import DetailArchiveGift from "./StudentDetailGift";
+import {
+  GetGiftArchive,
+  SetGiftArchive,
+} from "../../../app/reducers/archive-gift/gift-archive.reducer";
+import {
+  GetArchiveChest,
+  SetArchiveChest,
+} from "../../../app/reducers/archive-gift/archive-chest.reducer";
 
 export default function StArchive() {
   const [loading, setLoading] = useState(false);
@@ -31,17 +38,27 @@ export default function StArchive() {
     console.log(selectedOption);
     try {
       setLoading(true);
-      ArchiveAPI.getArchive(filter).then((response) => {
-        dispatch(SetArchiveGift(response.data.data));
-        setTotalPage(response.data.totalPages);
-        setLoading(false);
-      });
+      if (selectedOption === 0) {
+        ArchiveAPI.getGift(filter).then((response) => {
+          dispatch(SetGiftArchive(response.data.data));
+          console.log(response.data.data);
+          setTotalPage(response.data.totalPages);
+          setLoading(false);
+        });
+      } else {
+        ArchiveAPI.getArchive(filter).then((response) => {
+          dispatch(SetArchiveGift(response.data.data));
+          setTotalPage(response.data.totalPages);
+          setLoading(false);
+        });
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
   const dataArchive = useAppSelector(GetArchiveGift);
+  const dataGift = useAppSelector(GetGiftArchive);
 
   const columns = [
     {
@@ -172,11 +189,11 @@ export default function StArchive() {
 
   const fetchChest = () => {
     ArchiveAPI.getChest(filter).then((response) => {
-      dispatch(SetChest(response.data.data));
+      dispatch(SetArchiveChest(response.data.data));
     });
   };
 
-  const listChest = useAppSelector(GetChest);
+  const listChest = useAppSelector(GetArchiveChest);
 
   return (
     <div className="st_archive">
@@ -205,7 +222,13 @@ export default function StArchive() {
                     ? columnsChest
                     : columns
                 }
-                dataSource={selectedOption == "3" ? listChest : dataArchive}
+                dataSource={
+                  selectedOption == "3"
+                    ? listChest
+                    : selectedOption == "0"
+                    ? dataGift
+                    : dataArchive
+                }
                 rowKey="code"
                 pagination={true}
               />

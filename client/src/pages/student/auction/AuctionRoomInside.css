@@ -82,5 +82,187 @@
   bottom: 0;
 }
 .btn-add-auction-inside {
-  top: 0;
+  float: right;
+}
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-create-auction .ant-card-body {
+  padding: 0;
+  background-image: url("../../../assets/images/bar-transaction.png");
+}
+
+.modal-create-auction .chess-square {
+  border-style: ridge;
+  background: #464239;
+  height: 100px;
+  width: 100px;
+  margin: 3px;
+}
+
+.modal-create-auction .chess-square-note {
+  border-style: ridge;
+  background: rgb(146, 144, 144);
+  height: 100%;
+  width: 580%;
+  margin: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.modal-create-auction .chess-square-note .name-item {
+  color: rgb(52, 45, 45);
+  font-weight: 1000;
+  font-size: 20px;
+  white-space: normal;
+}
+
+.modal-create-auction .chess-square-note .quantity-item {
+  color: rgb(52, 45, 45);
+  font-size: 15px;
+  display: block;
+  white-space: normal;
+  font-weight: bold;
+  color: rgb(255, 253, 253);
+}
+
+.modal-create-auction .chess-square-note .item {
+  border-style: ridge;
+  background: rgb(200, 197, 197);
+  height: 85px;
+  width: 80px;
+  margin: 3px;
+  display: block;
+  border-bottom: 7px solid #f6c714;
+}
+
+.modal-create-auction .chess-square:hover {
+  cursor: pointer;
+  background: #eeb20d52;
+}
+
+.modal-create-auction .row-chest {
+  overflow: auto;
+  scrollbar-width: 0px;
+  -ms-overflow-style: none;
+  padding-left: 10px;
+  max-height: 524px;
+  overflow-y: auto;
+}
+
+.modal-create-auction .my-10 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.modal-create-auction .text-title {
+  color: #504438;
+  font-size: 15px;
+  line-height: 30px;
+}
+w-chest .modal-create-auction .row-content {
+  padding-top: 0px;
+  padding-right: 15px;
+  padding-bottom: 5px;
+  padding-left: 15px;
+}
+
+.modal-create-auction .chest-transaction {
+  border-right: 2px solid #837463;
+  padding-right: 10px;
+}
+
+.modal-create-auction .row-chest::-webkit-scrollbar {
+  width: 0px;
+}
+
+.modal-create-auction .item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.modal-create-auction .button-xac-nhan {
+  border: 3px ridge !important;
+  width: 130px;
+  color: white;
+  margin-left: 10px;
+  margin-right: -10px;
+  background-color: #50873e;
+}
+
+.modal-create-auction .img-item {
+  padding: 5px;
+  width: 35px;
+  height: 35px;
+}
+
+.modal-create-auction .col-title-balo {
+  padding-left: 14px;
+  margin-bottom: 5px;
+  text-align: center;
+  line-height: 30px;
+}
+
+.modal-create-auction .title-balo {
+  font-weight: 800;
+  color: #4b5038;
+  font-size: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  float: left;
+}
+
+.modal-create-auction .img-balo {
+  vertical-align: middle;
+  margin-right: 10px;
+  margin-top: -10px;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.7));
+}
+
+.modal-create-auction .button-xac-nhan:hover {
+  background-color: #457436 !important;
+}
+
+.modal-create-auction .div-button {
+  margin: 10px;
+  text-align: center;
+  margin-top: 95px;
+}
+.custom-close-icon {
+  border-radius: 50% !important;
+  background-color: #6a4325;
+  color: #fff;
+  padding: 10px;
+  cursor: pointer;
+}
+.input-auction {
+  border: inset;
+  background-color: #464239;
+  height: 30px;
+  width: 200px;
+}
+.text-gia {
+  color: white;
+  font-weight: 700;
+  margin-right: 160px;
+  margin-top: 20px;
+}
+.text-thoi-han {
+  color: white;
+  font-weight: 700;
+  margin-right: 190px;
+  margin-top: 20px;
+}
+.text-phi-quan-ly {
+  color: white;
+  font-weight: 700;
+  margin-top: 20px;
+  margin-right: 110px;
 }

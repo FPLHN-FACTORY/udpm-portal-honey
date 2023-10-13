@@ -79,6 +79,7 @@ const ModalDetailGift = (props) => {
     form
       .validateFields()
       .then((formValues) => {
+        console.log(formValues);
         let quantity;
         if (isLimitedQuantity) {
           quantity = parseInt(formValues.quantityLimit);
@@ -92,7 +93,7 @@ const ModalDetailGift = (props) => {
           {
             ...formValues,
             image: image,
-            gift: gift ? gift.id : null,
+            id: gift ? gift.id : null,
             status: formValues.status,
             quantity: quantity,
             type: formValues.type,

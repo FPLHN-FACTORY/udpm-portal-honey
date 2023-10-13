@@ -96,7 +96,7 @@ const ModalThem = (props) => {
     form.resetFields();
   };
   const initialValues = {
-    categoryStatus: 3,
+    categoryStatus: 2,
     transactionRights: 0,
   };
 
@@ -170,8 +170,8 @@ const ModalThem = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={3}>Cần phê duyệt</Radio>
-              <Radio value={2}>Không phê duyệt</Radio>
+              <Radio value={2}>Cần phê duyệt</Radio>
+              <Radio value={1}>Không phê duyệt</Radio>
             </Radio.Group>
           </Form.Item>
 
