@@ -2,15 +2,13 @@ package com.honeyprojects.core.admin.service.impl;
 
 import com.honeyprojects.core.admin.model.request.AdminCreateArchiveGiftRequest;
 import com.honeyprojects.core.admin.model.request.AdminCreateHoneyRequest;
+import com.honeyprojects.core.admin.model.request.AdminNotificationRandomRequest;
 import com.honeyprojects.core.admin.model.request.AdminRandomPointRequest;
 import com.honeyprojects.core.admin.model.response.*;
 import com.honeyprojects.core.admin.repository.*;
 import com.honeyprojects.core.admin.service.AdRandomAddPointService;
 import com.honeyprojects.core.common.response.SimpleResponse;
-import com.honeyprojects.entity.Archive;
-import com.honeyprojects.entity.ArchiveGift;
-import com.honeyprojects.entity.ChestGift;
-import com.honeyprojects.entity.Honey;
+import com.honeyprojects.entity.*;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import com.honeyprojects.util.DataUtils;
 import com.honeyprojects.util.DateUtils;
@@ -52,6 +50,9 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
     @Autowired
     private AdArchiveRepository adArchiveRepository;
+
+    @Autowired
+    private AdNotificationRespository adNotificationRespository;
 
     @Autowired
     private ConvertRequestApiidentity convertRequestApiidentity;
@@ -144,6 +145,17 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 Integer randomPoint = random.nextInt(adminRandomPointRequest.getMaxPoint() - adminRandomPointRequest.getMinPoint() + 1) + adminRandomPointRequest.getMinPoint();
                 honey.setHoneyPoint(honey.getHoneyPoint() + randomPoint);
                 adRandomAddPointRepository.save(honey);
+                Optional<Category> categoryOptional = adminCategoryRepository.findById(honey.getHoneyCategoryId());
+                if (!categoryOptional.isPresent()) {
+                    continue;
+                } else {
+                    Category category = categoryOptional.get();
+                    String title = "TIN NHẮN TỪ HỆ THỐNG";
+                    String content = "Hệ thống đã tặng cho bạn: Honey - " + category.getName() + " - Số lượng: " + randomPoint;
+                    AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, honey.getStudentId(), 0);
+                    Notification notification = request.createNotification(new Notification());
+                    adNotificationRespository.save(notification);
+                }
             }
 
             return true;
@@ -177,6 +189,12 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                         AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, idChest, idGift);
                         ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
                         adArchiveGiftRepository.save(archiveGift);
+                        Gift gift = adGiftRepository.findById(idGift).get();
+                        String title = "TIN NHẮN TỪ HỆ THỐNG";
+                        String content = "Hệ thống đã tặng cho bạn: Vật phẩm - " + gift.getName() + " - Số lương: 1";
+                        AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, simple.getId(), 1);
+                        Notification notification = request.createNotification(new Notification());
+                        adNotificationRespository.save(notification);
                     } else {
                         continue;
                     }
@@ -197,6 +215,12 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                         AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, idChest, idGift);
                         ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
                         adArchiveGiftRepository.save(archiveGift);
+                        Gift gift = adGiftRepository.findById(idGift).get();
+                        String title = "TIN NHẮN TỪ HỆ THỐNG";
+                        String content = "Hệ thống đã tặng cho bạn: Vật phẩm - " + gift.getName() + " - Số lượng: 1";
+                        AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, idStudent, 1);
+                        Notification notification = request.createNotification(new Notification());
+                        adNotificationRespository.save(notification);
                     } else {
                         continue;
                     }
@@ -357,13 +381,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     // Đặt một constant cho cỡ cột
     private static final int COLUMN_WIDTH = 15 * 256;
 
-
-    private List<String[]> getData() {
-        List<String[]> data = new ArrayList<>();
-        data.add(new String[]{"Data A1", "Data B1", "Data C1", "Data D1", "Data E1", "Data A3", "Data B3", "Data C3", "Data D3", "Data E3", "", "Data G2", "Data A2", "Data B2", "Data C2", "Data D2", "Data E2"});
-        return data;
-    }
-
     @Override
     public List<String> importExcel(MultipartFile file) {
         List<String> simpleResponseList = new ArrayList<>();
@@ -508,6 +525,17 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                                     System.out.println("=================" + archiveGift);
                                     adArchiveGiftRepository.save(archiveGift);
                                 }
+                                Optional<Gift> giftOptional = adGiftRepository.findById(idGift);
+                                if (giftOptional.isPresent()) {
+                                    Gift gift = giftOptional.get();
+                                    String title = "TIN NHẮN TỪ HỆ THỐNG";
+                                    String content = "Hệ thống đã tặng cho bạn: Vật phẩm - " + gift.getName() + " - Số lượng: " + numberItem;
+                                    AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, simpleResponse.getId(), 1);
+                                    Notification notification = request.createNotification(new Notification());
+                                    adNotificationRespository.save(notification);
+                                } else {
+                                    continue;
+                                }
                             }
                         }
                     }
@@ -537,6 +565,12 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                                 System.out.println("================" + honeyOptional.get());
                                 System.out.println("=================" + honey.getId());
                                 honey.setHoneyPoint(honey.getHoneyPoint() + Integer.parseInt(numberPoint));
+                                adminHoneyRepository.save(honey);
+                                String title = "TIN NHẮN TỪ HỆ THỐNG";
+                                String content = "Hệ thống đã tặng cho bạn: Honey - " + categoryPoint + " - Số lượng: " + numberPoint;
+                                AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, simpleResponse.getId(), 0);
+                                Notification notification = request.createNotification(new Notification());
+                                adNotificationRespository.save(notification);
                             } else {
                                 // Nếu chưa có, tạo một bản ghi Honey mới và lưu vào cơ sở dữ liệu
                                 AdminCreateHoneyRequest adminCreateHoneyRequest = new AdminCreateHoneyRequest();
@@ -546,6 +580,11 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                                 adminCreateHoneyRequest.setHoneyPoint(Integer.parseInt(numberPoint));
                                 Honey newHoney = adminCreateHoneyRequest.createHoney(new Honey());
                                 adminHoneyRepository.save(newHoney);
+                                String title = "TIN NHẮN TỪ HỆ THỐNG";
+                                String content = "Hệ thống đã tặng cho bạn: Honey - " + categoryPoint + " - Số lượng: " + numberPoint;
+                                AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, simpleResponse.getId(), 0);
+                                Notification notification = request.createNotification(new Notification());
+                                adNotificationRespository.save(notification);
                             }
                         }
                     }
