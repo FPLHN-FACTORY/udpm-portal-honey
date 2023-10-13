@@ -188,7 +188,6 @@ w-chest .modal-create-auction .row-content {
   height: 100%;
 }
 
-
 .modal-create-auction .button-xac-nhan {
   border: 3px ridge !important;
   width: 130px;
@@ -227,21 +226,43 @@ w-chest .modal-create-auction .row-content {
   filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.7));
 }
 
-
 .modal-create-auction .button-xac-nhan:hover {
   background-color: #457436 !important;
 }
 
-
 .modal-create-auction .div-button {
   margin: 10px;
   text-align: center;
-  margin-top: 260px;
+  margin-top: 95px;
 }
 .custom-close-icon {
   border-radius: 50% !important;
   background-color: #6a4325;
   color: #fff;
-  padding: 10px; 
+  padding: 10px;
   cursor: pointer;
+}
+.input-auction {
+  border: inset;
+  background-color: #464239;
+  height: 30px;
+  width: 200px;
+}
+.text-gia {
+  color: white;
+  font-weight: 700;
+  margin-right: 160px;
+  margin-top: 20px;
+}
+.text-thoi-han {
+  color: white;
+  font-weight: 700;
+  margin-right: 190px;
+  margin-top: 20px;
+}
+.text-phi-quan-ly {
+  color: white;
+  font-weight: 700;
+  margin-top: 20px;
+  margin-right: 110px;
 }

@@ -1,4 +1,4 @@
-import { Button, Card, Col, Modal, Row, Tabs } from "antd";
+import { Button, Card, Col, Input, Modal, Radio, Row, Space, Tabs } from "antd";
 import React, { useState } from "react";
 import "./AuctionRoomInside.css";
 import { DollarOutlined, UserOutlined } from "@ant-design/icons";
@@ -20,6 +20,12 @@ export default function StudentAuctionRoomInside() {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
+  const [value, setValue] = useState(1);
+  const onChange = (e) => {
+    console.log("radio checked", e.target.value);
+    setValue(e.target.value);
+  };
   return (
     <>
       <Modal
@@ -28,9 +34,7 @@ export default function StudentAuctionRoomInside() {
         onCancel={handleCancel}
         footer={null}
         width={1000}
-        closeIcon={
-          <span className="custom-close-icon">X</span>
-        }
+        closeIcon={<span className="custom-close-icon">X</span>}
       >
         <div
           className="modal-create-auction"
@@ -81,6 +85,24 @@ export default function StudentAuctionRoomInside() {
                           backgroundColor: "black",
                         }}
                       />
+                      <span className="text-gia">Giá khởi điểm</span>
+                      <Input className="input-auction" />
+                      <span className="text-thoi-han">Thời hạn</span>
+
+                      <Radio.Group onChange={onChange} value={value}>
+                        <Space direction="vertical">
+                          <Radio value={1}>08 giờ</Radio>
+                          <Radio value={2}>16 giờ</Radio>
+                          <Radio value={3}>24 giờ</Radio>
+                        </Space>
+                      </Radio.Group>
+                      <span className="text-phi-quan-ly">
+                        Phí quản lý:{" "}
+                        <span style={{ color: "red", marginRight: "10px" }}>
+                          100
+                        </span>
+                        mật
+                      </span>
                       <div className="div-button">
                         <Button className="button-xac-nhan">Tạo bàn</Button>
                       </div>
