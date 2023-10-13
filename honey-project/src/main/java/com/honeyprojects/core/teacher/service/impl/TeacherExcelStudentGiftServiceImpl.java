@@ -146,7 +146,7 @@ public class TeacherExcelStudentGiftServiceImpl implements TeacherExcelStudentGi
                 Gift newGift = new Gift();
                 newGift.setCode("G" + (teacherGiftRepository.findAll().size() + 1));
                 newGift.setName(gift.getName());
-                newGift.setStatus(StatusGift.HOAT_DONG);
+                newGift.setStatus(StatusGift.FREE);
                 newGift.setType(TypeGift.DUNG_CU);
                 Date currentDate = new Date();
                 Long fromDateLong = currentDate.getTime();
@@ -185,9 +185,6 @@ public class TeacherExcelStudentGiftServiceImpl implements TeacherExcelStudentGi
         for (Gift gift : giftList) {
             if (gift.getToDate() < dateNow && gift.getStatus() != StatusGift.KHONG_HOAT_DONG) {
                 gift.setStatus(StatusGift.KHONG_HOAT_DONG);
-                flag = true;
-            } else if (gift.getFromDate() <= dateNow && gift.getToDate() > dateNow && gift.getStatus() != StatusGift.HOAT_DONG) {
-                gift.setStatus(StatusGift.HOAT_DONG);
                 flag = true;
             }
         }
