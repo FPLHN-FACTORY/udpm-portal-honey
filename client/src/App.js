@@ -29,12 +29,10 @@ import TransactionPage from "./pages/student/transaction/TransactionPage";
 import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction";
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
-import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
 import Archive from "./pages/student/archive/Archive";
 import GiftStudent from "./pages/teacher/giftstudent/GiftStudent";
 import StArchive from "./pages/student/archive/StArchive";
 import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
-import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
 import ChestGift from "./pages/censor/chest-gift/ChestGift";
 import AuctionMangement from "./pages/censor/auction-management/AuctionManagement";
 import TestTransaction from "./pages/student/transaction/TestTransaction";
@@ -46,6 +44,8 @@ import StudentAuctionRoom from "./pages/student/auction/StudentAuctionRoom";
 import StudentAuction from "./pages/student/auction/StudentAuction";
 // import StudentAuctionRoom from "./pages/student/auction/StudentAuctionRoom";
 import StudentAuctionRoomInside from "./pages/student/auction/StudentAuctionRoomInside";
+import ConvertionHoney from "./pages/teacher/convertion-honey/RequestConversion";
+import RequestConversionHistory from "./pages/teacher/convertion-honey/RequestConversionHistory";
 
 function App() {
   const token =
@@ -267,6 +267,16 @@ function App() {
                 <AuthGuard>
                   <DashboardTeacher>
                     <ConvertionHoney />
+                  </DashboardTeacher>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/teacher/request-conversion/history"
+              element={
+                <AuthGuard>
+                  <DashboardTeacher>
+                    <RequestConversionHistory />
                   </DashboardTeacher>
                 </AuthGuard>
               }
