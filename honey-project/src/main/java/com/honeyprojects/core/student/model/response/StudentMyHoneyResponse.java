@@ -10,4 +10,7 @@ public interface StudentMyHoneyResponse {
     @Value("#{target.honey_point}")
     Integer getPoint();
 
+    @Value("#{target.image}")
+    String getImage();
+
 }
