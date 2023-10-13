@@ -2,6 +2,8 @@ package com.honeyprojects.core.student.repository;
 
 import com.honeyprojects.core.student.model.request.StudentArchiveFilterRequest;
 import com.honeyprojects.core.student.model.request.StudentArchiveOpenChestRequest;
+import com.honeyprojects.core.student.model.request.StudentGetArchiveChestRequest;
+import com.honeyprojects.core.student.model.request.StudentGetArchiveGiftRequest;
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
 import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
@@ -29,23 +31,16 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
                     AND (:#{#req.status} IS NULL OR g.status = :#{#req.status})
                     AND (:#{#req.type} IS NULL OR g.type = :#{#req.type})
                     GROUP BY g.id
-            """, countQuery = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, COUNT(g.id) AS quantity, ag.id, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
-                    FROM archive_gift ag JOIN archive a ON ag.archive_id = a.id 
-                    LEFT JOIN gift g ON ag.gift_id = g.id 
-                    WHERE (a.student_id = :#{#req.idStudent})
-                    AND (:#{#req.status} IS NULL OR g.status = :#{#req.status})
-                    AND (:#{#req.type} IS NULL OR g.type = :#{#req.type})
-                    GROUP BY g.id
             """, nativeQuery = true)
     Page<StudentArchiveResponse> getAllGiftArchive(@Param("req") StudentArchiveFilterRequest req, Pageable pageable);
 
     @Query(value = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.id, c.id AS chestId, c.name
+                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, COUNT(c.id) AS quantity, ag.id, c.id AS chestId, c.name
                     FROM archive_gift ag
             		JOIN chest c ON ag.chest_id = c.id
             		JOIN archive a ON ag.archive_id = a.id
-            		WHERE (a.student_id = :#{#filterRequest.idStudent})
+            		WHERE (a.student_id = :#{#filterRequest.idStudent}) 
+            		GROUP BY c.id
             """, nativeQuery = true)
     Page<StudentArchiveGetChestResponse> getChestArchive(StudentArchiveFilterRequest filterRequest, Pageable pageable);
 
@@ -63,14 +58,29 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
                     WHERE (a.student_id = :#{#req.idStudent})
                     AND (:#{#req.status} IS NULL OR g.status = :#{#req.status})
                     AND (:#{#req.type} IS NULL OR g.type = :#{#req.type})
-            """, countQuery = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.id, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
-                    FROM archive_gift ag JOIN archive a ON ag.archive_id = a.id 
-                    LEFT JOIN gift g ON ag.gift_id = g.id 
-                    WHERE (a.student_id = :#{#req.idStudent})
-                    AND (:#{#req.status} IS NULL OR g.status = :#{#req.status})
-                    AND (:#{#req.type} IS NULL OR g.type = :#{#req.type})
             """, nativeQuery = true)
     Page<StudentGetListGiftResponse> getListGift(StudentArchiveFilterRequest req, Pageable pageable);
 
+    @Query(value = """
+                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, COUNT(g.id) AS quantity, ag.id, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
+                    FROM archive_gift ag JOIN archive a ON ag.archive_id = a.id 
+                    LEFT JOIN gift g ON ag.gift_id = g.id 
+                    WHERE (a.student_id = :#{#req.idStudent})
+                    AND (g.id = :#{#req.idGift})
+                    GROUP BY g.id;
+            """, nativeQuery = true)
+    StudentArchiveResponse detailArchiveGift(@Param("req") StudentGetArchiveGiftRequest req);
+
+    @Query(value = """
+                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, COUNT(c.id) AS quantity, ag.id, c.id AS chestId, c.name
+                    FROM archive_gift ag
+                    JOIN chest c ON ag.chest_id = c.id
+                    JOIN archive a ON ag.archive_id = a.id
+                    WHERE (a.student_id = :#{#req.idStudent})
+                    AND (c.id = :#{#req.idChest})
+                    GROUP BY c.id
+            """, nativeQuery = true)
+    StudentArchiveGetChestResponse detailArchiveChest(@Param("req") StudentGetArchiveChestRequest req);
+
 }
+

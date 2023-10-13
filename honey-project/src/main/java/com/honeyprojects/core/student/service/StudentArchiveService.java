@@ -3,6 +3,8 @@ package com.honeyprojects.core.student.service;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.student.model.request.StudentArchiveFilterRequest;
 import com.honeyprojects.core.student.model.request.StudentArchiveOpenChestRequest;
+import com.honeyprojects.core.student.model.request.StudentGetArchiveChestRequest;
+import com.honeyprojects.core.student.model.request.StudentGetArchiveGiftRequest;
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
 import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
@@ -24,6 +26,10 @@ public interface StudentArchiveService {
 
     ArchiveGift updateArchiveGift(String id);
 
-    ArchiveGift detailArchiveGift(String id);
+    ArchiveGift getArchiveGift(String id);
+
+    StudentArchiveResponse detailArchiveGift(StudentGetArchiveGiftRequest request);
+
+    StudentArchiveGetChestResponse detailArchiveChest(StudentGetArchiveChestRequest request);
 
 }

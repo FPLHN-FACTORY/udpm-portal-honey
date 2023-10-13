@@ -57,4 +57,24 @@ export class ArchiveAPI {
       },
     });
   };
+
+  static detailArchiveGift = (idGift) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/detail`,
+      params: {
+        idGift: idGift,
+      },
+    });
+  };
+
+  static detailArchiveChest = (id) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/detail-chest`,
+      params: {
+        idChest: id,
+      },
+    });
+  };
 }

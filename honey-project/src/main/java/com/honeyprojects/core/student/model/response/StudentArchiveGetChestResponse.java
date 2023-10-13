@@ -14,4 +14,7 @@ public interface StudentArchiveGetChestResponse extends IsIdentified {
     @Value("#{target.name}")
     String getName();
 
+    @Value("#{target.quantity}")
+    String getQuantity();
+
 }
