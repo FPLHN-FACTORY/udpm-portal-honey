@@ -5,6 +5,9 @@
   width: 100px;
   margin: 3px;
 }
+.dialog-transaction .ant-card-body {
+  height: 80vh;
+}
 
 .dialog-transaction .chess-square-note {
   border-style: ridge;

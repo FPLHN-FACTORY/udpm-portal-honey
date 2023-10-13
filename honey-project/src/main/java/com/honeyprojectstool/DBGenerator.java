@@ -48,7 +48,6 @@ public class DBGenerator implements CommandLineRunner {
     @Autowired
     private AuctionRepository auctionRepository;
 
-
     public void run(String... args) throws Exception {
 
         Club club = new Club();
