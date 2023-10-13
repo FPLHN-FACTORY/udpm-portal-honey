@@ -73,7 +73,6 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     @Transactional
     public Category updateCategory(AdminUpdateCategoryRequest request, String id) throws IOException {
         Optional<Category> categoryOptional = adminCategoryRepository.findById(id);
-        System.out.println("=======================");
         categoryOptional.get().setName(request.getName());
         categoryOptional.get().setCategoryStatus(CategoryStatus.values()[request.getCategoryStatus()]);
         categoryOptional.get().setTransactionRights(CategoryTransaction.values()[request.getTransactionRights()]);
