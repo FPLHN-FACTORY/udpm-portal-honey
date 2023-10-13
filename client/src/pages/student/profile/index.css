@@ -20,6 +20,7 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  min-height: 495px;
 }
 
 .wrapper {
@@ -58,7 +59,7 @@
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background-color: red;
+  background-color: #DDD;
   border: 5px solid #d6a354;
   overflow: hidden;
 }
@@ -193,6 +194,8 @@
 
 .category__name {
   text-align: right;
+  margin-left: 5px;
+  width: 80px;
 }
 
 .category__name h4 {
@@ -209,6 +212,14 @@
   font-family: 'VT323', monospace;
 
 }
+
+.category__name h4,
+.category__name p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 
 /* ------------category---------- */
 .category {
