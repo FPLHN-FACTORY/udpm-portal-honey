@@ -13,9 +13,9 @@ import com.honeyprojects.entity.ChestGift;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import com.honeyprojects.util.DataUtils;
+import com.honeyprojects.util.DateUtils;
 import com.honeyprojects.util.ExcelUtils;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -271,104 +271,92 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
     @Override
     public Boolean previewDataExportExcel() {
-        // Lấy đường dẫn thư mục "Downloads" trong hệ thống
-        String userHome = System.getProperty("user.home");
-        String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_preview_data.xlsx";
-
-        File outputFile = new File(outputPath);
-
-        // Kiểm tra nếu tệp đã tồn tại, thì thêm số thứ tự vào tên tệp để tránh ghi đè tệp cũ
-        int count = 1;
-        while (outputFile.exists()) {
-            outputPath = userHome + File.separator + "Downloads" + File.separator + "file_preview_data" + "(" + count + ")" + ".xlsx";
-            outputFile = new File(outputPath);
-            count++;
-        }
-
-        // Tạo một workbook (bảng tính) mới cho bản xem trước dữ liệu
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Trang 1");
-
-        // Thiết lập kiểu cho phần tiêu đề của bảng tính
-        CellStyle headerStyle = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        font.setBold(true);
-        font.setFontHeightInPoints((short) 13);
-        headerStyle.setFont(font);
-        font.setColor(IndexedColors.WHITE.getIndex());
-        headerStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
-        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-
-        headerStyle.setBorderTop(BorderStyle.THIN);
-        headerStyle.setBorderBottom(BorderStyle.THIN);
-        headerStyle.setBorderLeft(BorderStyle.THIN);
-        headerStyle.setBorderRight(BorderStyle.THIN);
-
-        // Tạo hàng tiêu đề và đặt các tiêu đề cột
-        Row headerRow = sheet.createRow(0);
-        String[] headers = {"STT", "Mã sinh viên", "Vật phẩm", "Mật ong", "", "", "", "A", "B", "C", "D", "E"};
-
-        // Tạo một ô gộp để làm tiêu đề cho một phần của bảng
-        CellRangeAddress region = new CellRangeAddress(0, 0, 7, 11);
-        sheet.addMergedRegion(region);
-
-        Cell headerCell = headerRow.createCell(0);
-        headerCell.setCellValue(headers[0]);
-        headerCell.setCellStyle(headerStyle);
-
-        // Tạo kiểu cho ô tiêu đề trống
-        CellStyle emptyHeaderStyle = workbook.createCellStyle();
-        Font emptyHeaderFont = workbook.createFont();
-        emptyHeaderFont.setColor(IndexedColors.RED.getIndex());
-        emptyHeaderStyle.setFont(emptyHeaderFont);
-
-        // Đặt các tiêu đề cột và kiểu cho ô tiêu đề trống
-        for (int i = 1; i < headers.length; i++) {
-            headerCell = headerRow.createCell(i);
-            headerCell.setCellValue(headers[i]);
-            if (headers[i].isEmpty()) {
-                headerCell.setCellStyle(emptyHeaderStyle);
-            } else {
-                headerCell.setCellStyle(headerStyle);
-            }
-        }
-
-        // Tự động điều chỉnh kích thước cột cho các tiêu đề
-        for (int i = 0; i < headers.length; i++) {
-            sheet.autoSizeColumn(i);
-        }
-
-        // Lấy dữ liệu cho bản xem trước từ phương thức getData()
-        List<String[]> data = getData();
-
-        int rowIndex = 6;
-        // Duyệt qua dữ liệu và điền vào bản xem trước
-        for (String[] rowData : data) {
-            for (int i = 0; i < rowData.length; i++) {
-                if (i % 6 == 0) {
-                    rowIndex++;
-                }
-                int columnIndex = i % 6 + 7;
-                Row dataRow = sheet.createRow(rowIndex);
-                Cell cell = dataRow.createCell(columnIndex);
-                if (!rowData[i].isEmpty()) {
-                    cell.setCellValue(rowData[i]);
-                }
-            }
-            rowIndex++;
-        }
-
         try {
+            // Lấy đường dẫn thư mục "Downloads" trong hệ thống
+            String userHome = System.getProperty("user.home");
+            String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_data" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
+
+            // Tạo một workbook (bảng tính) mới cho bản xem trước dữ liệu
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet("Trang 1");
+
+            // Thiết lập kiểu cho phần tiêu đề của bảng tính
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font font = workbook.createFont();
+            font.setBold(true);
+            font.setFontHeightInPoints((short) 13);
+            headerStyle.setFont(font);
+            font.setColor(IndexedColors.WHITE.getIndex());
+            headerStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+            headerStyle.setBorderTop(BorderStyle.THIN);
+            headerStyle.setBorderBottom(BorderStyle.THIN);
+            headerStyle.setBorderLeft(BorderStyle.THIN);
+            headerStyle.setBorderRight(BorderStyle.THIN);
+
+            // Tạo hàng tiêu đề và đặt các tiêu đề cột
+            Row headerRow = sheet.createRow(0);
+            String[] headers = {"STT", "Mã sinh viên", "Vật phẩm", "Mật ong", "Danh sách tên vật phẩm", "Danh sách loại mật ong"};
+            int columnCount = headers.length;
+
+            for (int i = 0; i < columnCount; i++) {
+                Cell headerCell = headerRow.createCell(i);
+                headerCell.setCellValue(headers[i]);
+                headerCell.setCellStyle(headerStyle);
+
+                // Thiết lập cỡ cột
+                sheet.setColumnWidth(i, COLUMN_WIDTH); // Sử dụng một constant cho cỡ cột
+            }
+
+            // Tạo kiểu cho ô tiêu đề trống
+            CellStyle emptyHeaderStyle = workbook.createCellStyle();
+            Font emptyHeaderFont = workbook.createFont();
+            emptyHeaderFont.setColor(IndexedColors.RED.getIndex());
+            emptyHeaderStyle.setFont(emptyHeaderFont);
+
+            // Danh sách tên vật phẩm
+            List<String> lstGift = adGiftRepository.getAllNameByStatus();
+
+            // Danh sách tên thể loại mật ong
+            List<String> lstCategoryHoney = adminCategoryRepository.getAllNameCategoryByStatus();
+
+            // Ghi danh sách tên vật phẩm và danh sách tên thể loại mật ong cùng lúc
+            int rowIndex = 1; // Bắt đầu từ hàng thứ hai cho dữ liệu
+
+            int maxItemCount = Math.max(lstGift.size(), lstCategoryHoney.size());
+
+            for (int i = 0; i < maxItemCount; i++) {
+                Row dataRow = sheet.createRow(rowIndex);
+
+                if (i < lstGift.size()) {
+                    dataRow.createCell(columnCount - 2).setCellValue(lstGift.get(i)); // Cột trước cuối là danh sách tên vật phẩm
+                }
+
+                if (i < lstCategoryHoney.size()) {
+                    dataRow.createCell(columnCount - 1).setCellValue(lstCategoryHoney.get(i)); // Cột cuối là danh sách loại mật ong
+                }
+
+                rowIndex++;
+            }
+
             // Lưu workbook vào tệp Excel tại đường dẫn đã xác định
-            FileOutputStream outputStream = new FileOutputStream(outputPath);
-            workbook.write(outputStream);
-            outputStream.close();
-            return true;
-        } catch (IOException e) {
+            try (FileOutputStream outputStream = new FileOutputStream(outputPath)) {
+                workbook.write(outputStream);
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
+
+    // Đặt một constant cho cỡ cột
+    private static final int COLUMN_WIDTH = 15 * 256;
+
 
     private List<String[]> getData() {
         List<String[]> data = new ArrayList<>();
@@ -507,12 +495,17 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                         // Lấy id của vật phẩm từ cơ sở dữ liệu
                         String idGift = adRandomAddPointRepository.getIdGiftByName(nameItem);
                         System.out.println("=================" + idGift);
-
-                        // Tạo một bản ghi ArchiveGift mới và lưu vào cơ sở dữ liệu
-                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, null, idGift);
-                        ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
-                        System.out.println("=================" + archiveGift);
-                        adArchiveGiftRepository.save(archiveGift);
+                        if (idGift == null) {
+                            continue;
+                        } else {
+                            for (int i = 0; i < numberItem; i++) {
+                                // Tạo một bản ghi ArchiveGift mới và lưu vào cơ sở dữ liệu
+                                AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, null, idGift);
+                                ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
+                                System.out.println("=================" + archiveGift);
+                                adArchiveGiftRepository.save(archiveGift);
+                            }
+                        }
                     }
                 }
 
@@ -581,51 +574,74 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             hasError = true;
         }
 
+        int check = 0;
         if (DataUtils.isNullObject(listGift)) {
-            userDTO.setImportMessage("Vật phẩm không được để trống");
-            userDTO.setError(true);
-            hasError = true;
-        }
-
-        // Xử lý danh sách vật phẩm và kiểm tra
-        String[] partsGift = listGift.split(", ");
-        for (String part : partsGift) {
-            String[] subParts = part.split(" ", 2);
-            if (subParts.length == 2) {
-                String numberItemStr = subParts[0];
-                String nameItem = subParts[1];
-                Integer numberItem = Integer.parseInt(numberItemStr);
-                String idGift = adRandomAddPointRepository.getIdGiftByName(nameItem);
-                if (DataUtils.isNullObject(idGift)) {
-                    userDTO.setImportMessage("Vật phẩm " + nameItem + " không tồn tại");
-                    userDTO.setError(true);
-                    hasError = true;
-                    break;
+            check++;
+        } else {
+            String regexGift = "^\\d+\\s+[^,]*(,\\s*\\d+\\s+[^,]*)?$";
+            if (!listGift.trim().matches(regexGift)) {
+                userDTO.setImportMessage("Định dạng vật phẩm không hợp lệ. Phải là '<số lượng> <tên vật phẩm>, <số lượng> <tên vật phẩm>, ..., <số lượng> <tên vật phẩm>");
+                userDTO.setError(true);
+                hasError = true;
+            } else {
+                // Xử lý danh sách vật phẩm và kiểm tra
+                String[] partsGift = listGift.split(", ");
+                for (String part : partsGift) {
+                    String[] subParts = part.split(" ", 2);
+                    if (subParts.length == 2) {
+                        String numberItemStr = subParts[0];
+                        String nameItem = subParts[1];
+                        Integer numberItem = Integer.parseInt(numberItemStr);
+                        String idGift = adRandomAddPointRepository.getIdGiftByName(nameItem);
+                        if (numberItem < 1) {
+                            userDTO.setImportMessage("Số lượng Vật phẩm không được nhỏ hơn 1");
+                            userDTO.setError(true);
+                            hasError = true;
+                            break;
+                        }
+                        if (DataUtils.isNullObject(idGift)) {
+                            userDTO.setImportMessage("Vật phẩm " + nameItem + " không tồn tại");
+                            userDTO.setError(true);
+                            hasError = true;
+                            break;
+                        }
+                    }
                 }
             }
         }
 
         if (DataUtils.isNullObject(listHoney)) {
-            userDTO.setImportMessage("Mật ong không được để trống");
-            userDTO.setError(true);
-            hasError = true;
-        }
-
-        // Xử lý danh sách mật ong và kiểm tra
-        String[] partsHoney = listHoney.split(", ");
-        for (String part : partsHoney) {
-            String[] subParts = part.split(" ", 2);
-            if (subParts.length == 2) {
-                String numberPoint = subParts[0].trim();
-                String categoryPoint = subParts[1].trim().replace("-", "");
-                AdminCategoryResponse categoryResponse = adRandomAddPointRepository.getCategoryByName(categoryPoint.trim());
-                if (DataUtils.isNullObject(categoryResponse) || DataUtils.isNullObject(categoryResponse.getId())) {
-                    userDTO.setImportMessage("Loại mật ong " + categoryPoint + " không tồn tại");
-                    userDTO.setError(true);
-                    hasError = true;
-                    break;
+            check++;
+        } else {
+            String regexHoney = "^(\\d+\\s*-\\s*[a-zA-Z]+)(,\\s*\\d+\\s*-\\s*[a-zA-Z]+)*$";
+            if (!listHoney.trim().matches(regexHoney)) {
+                userDTO.setImportMessage("Định dạng mật ong không hợp lệ. Phải là '<số lượng> - <loại điểm>, <số lượng> - <loại điểm>, ..., <số lượng> - <loại điểm>");
+                userDTO.setError(true);
+                hasError = true;
+            } else {
+                // Xử lý danh sách mật ong và kiểm tra
+                String[] partsHoney = listHoney.split(", ");
+                for (String part : partsHoney) {
+                    String[] subParts = part.split(" ", 2);
+                    if (subParts.length == 2) {
+                        String numberPoint = subParts[0].trim();
+                        String categoryPoint = subParts[1].trim().replace("-", "");
+                        AdminCategoryResponse categoryResponse = adRandomAddPointRepository.getCategoryByName(categoryPoint.trim());
+                        if (DataUtils.isNullObject(categoryResponse) || DataUtils.isNullObject(categoryResponse.getId())) {
+                            userDTO.setImportMessage("Loại mật ong " + categoryPoint + " không tồn tại");
+                            userDTO.setError(true);
+                            hasError = true;
+                            break;
+                        }
+                    }
                 }
             }
+        }
+
+        if(check == 2){
+            userDTO.setImportMessage("Vật phẩm và mật ong không được để trống");
+            userDTO.setError(true);
+            hasError = true;
         }
 
         // Xác định trạng thái thành công hoặc lỗi và cung cấp thông báo
@@ -636,10 +652,10 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
         // Đặt các thuộc tính của đối tượng AdminAddItemDTO
         userDTO.setId(response != null ? response.getId() : null);
-        userDTO.setUserName(userName);
+        userDTO.setUserName(userName != null ? userName : null);
         userDTO.setEmail(response != null ? response.getEmail() : null);
-        userDTO.setLstGift(listGift);
-        userDTO.setLstHoney(listHoney);
+        userDTO.setLstGift(listGift != null ? listGift : null);
+        userDTO.setLstHoney(listHoney != null ? listHoney : null);
 
         return userDTO;
     }

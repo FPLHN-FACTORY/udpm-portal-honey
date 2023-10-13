@@ -77,7 +77,6 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
                 history.setStatus(HoneyStatus.CHO_PHE_DUYET);
                 history.setType(TypeHistory.DOI_QUA);
 
-
             }
             if(category.getCategoryStatus().equals(CategoryStatus.FREE) && gift.getStatus().equals(StatusGift.FREE)){
                 history.setStatus(HoneyStatus.DA_PHE_DUYET);
@@ -89,6 +88,12 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
             }
         }
 
+        if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
+            archiveGift.setGiftId(createRequest.getGiftId());
+            archiveGift.setArchiveId("738492b2-627f-11ee-8c99-0242ac120002");
+            archiveGift.setNote(createRequest.getNote());
+            giftArchiveRepository.save(archiveGift);
+        }
 
         // Tiếp tục với việc thêm yêu cầu vào bảng History
         Long dateNow = Calendar.getInstance().getTimeInMillis();
@@ -100,12 +105,6 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
         history.setNameGift(createRequest.getNameGift());
         history.setNote(createRequest.getNote());
 
-        if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
-            archiveGift.setGiftId(createRequest.getGiftId());
-            archiveGift.setArchiveId("738492b2-627f-11ee-8c99-0242ac120002");
-            archiveGift.setNote(createRequest.getNote());
-            giftArchiveRepository.save(archiveGift);
-        }
 
 
 

@@ -12,25 +12,39 @@ export class CategoryAPI {
   };
 
   static create = (data) => {
+    const formData = new FormData();
+    formData.append("code", data.code);
+    formData.append("name", data.name);
+    formData.append("categoryStatus", data.categoryStatus);
+    formData.append("transactionRights", data.transactionRights);
+    formData.append("image", data.image);
     return request({
       method: "POST",
       url: `/${this.COMPONENT_NAME}`,
-      data: data,
+      data: formData,
     });
   };
 
   static update = (data, id) => {
+    const formData = new FormData();
+    formData.append("code", data.code);
+    formData.append("name", data.name);
+    formData.append("categoryStatus", data.categoryStatus);
+    formData.append("transactionRights", data.transactionRights);
+    if (data.image !== null) {
+      formData.append("image", data.image);
+    }
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/${id}`,
-      data: data,
+      data: formData,
     });
   };
 
   static delete = (id) => {
     return request({
-      method: "DELETE",
-      url: `/${this.COMPONENT_NAME}/delete${id}`,
+      method: "PUT",
+      url: `/${this.COMPONENT_NAME}/delete/${id}`,
     });
   };
 

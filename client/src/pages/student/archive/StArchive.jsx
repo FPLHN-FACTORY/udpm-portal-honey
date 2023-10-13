@@ -1,4 +1,4 @@
-import { Card, Space, Spin, Table, Tabs } from "antd";
+import { Button, Card, Space, Spin, Table, Tabs, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -10,10 +10,13 @@ import {
 } from "../../../app/reducers/archive-gift/archive-gift.reducer";
 import ModalArchiveChest from "./StudentOpenChest";
 import { GetChest, SetChest } from "../../../app/reducers/chest/chest.reducer";
+import DetailArchiveGift from "./StudentDetailGift";
 
 export default function StArchive() {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const [archivegift, setArchiveGift] = useState();
+  const [showModal, setShowModal] = useState(false);
   const [totalPage, setTotalPage] = useState(0);
   const [filter, setFilter] = useState({ page: 0, size: 4, type: 0 });
   const [selectedOption, setSelectedOption] = useState(0);
@@ -25,11 +28,13 @@ export default function StArchive() {
   }, [filter]);
 
   const fetchData = () => {
+    console.log(selectedOption);
     try {
-      setLoading(false);
+      setLoading(true);
       ArchiveAPI.getArchive(filter).then((response) => {
         dispatch(SetArchiveGift(response.data.data));
         setTotalPage(response.data.totalPages);
+        setLoading(false);
       });
     } catch (error) {
       console.error(error);
@@ -51,6 +56,11 @@ export default function StArchive() {
       key: "name",
     },
     {
+      title: "Số lượng",
+      dataIndex: "quantity",
+      key: "quantity",
+    },
+    {
       title: "Ảnh",
       dataIndex: "image",
       key: "image",
@@ -65,6 +75,48 @@ export default function StArchive() {
       ),
     },
   ];
+
+  const columnsGift = [
+    {
+      title: "STT",
+      dataIndex: "stt",
+      key: "stt",
+      render: (text, record, index) => index + 1,
+    },
+    {
+      title: "Tên",
+      dataIndex: "name",
+      key: "name",
+    },
+
+    {
+      title: "Ảnh",
+      dataIndex: "image",
+      key: "image",
+    },
+    {
+      title: () => <div>Action</div>,
+      key: "action",
+      render: (_, record) => (
+        <Space size="small">
+          <Tooltip title="Sử dụng">
+            <Button
+              className="detail-button"
+              style={{ padding: "1px 0.7rem" }}
+              onClick={() => {
+                setShowModal(true);
+                setArchiveGift(record);
+                fetchData();
+              }}
+            >
+              <EyeOutlined className="icon" />
+            </Button>
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
+
   const columnsChest = [
     {
       title: "STT",
@@ -87,11 +139,7 @@ export default function StArchive() {
       key: "action",
       render: (_, record) => (
         <Space size="small">
-          <ModalArchiveChest
-            chest={record}
-            icon={EyeOutlined}
-            filter={filter}
-          />
+          <ModalArchiveChest chest={record} icon={EyeOutlined} />
         </Space>
       ),
     },
@@ -130,11 +178,17 @@ export default function StArchive() {
 
   const listChest = useAppSelector(GetChest);
 
-  useEffect(() => {}, [listChest]);
-
   return (
     <div className="st_archive">
       <Spin spinning={loading}></Spin>
+      {showModal && (
+        <DetailArchiveGift
+          modalVisible={showModal}
+          setModalVisible={setShowModal}
+          filter={filter}
+          archivegift={archivegift}
+        />
+      )}
       <Card>
         <Tabs
           className="font-bold select-category"
@@ -144,8 +198,14 @@ export default function StArchive() {
           {optionsType().map((option) => (
             <TabPane tab={option.label} key={option.value.toString()}>
               <Table
-                columns={selectedOption === "3" ? columnsChest : columns}
-                dataSource={selectedOption === "3" ? listChest : dataArchive}
+                columns={
+                  selectedOption == "0"
+                    ? columnsGift
+                    : selectedOption == "3"
+                    ? columnsChest
+                    : columns
+                }
+                dataSource={selectedOption == "3" ? listChest : dataArchive}
                 rowKey="code"
                 pagination={true}
               />

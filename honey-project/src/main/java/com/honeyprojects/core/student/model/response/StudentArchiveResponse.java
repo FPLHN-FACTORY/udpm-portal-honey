@@ -11,6 +11,9 @@ public interface StudentArchiveResponse extends IsIdentified {
     @Value("#{target.code}")
     String getCode();
 
+    @Value("#{target.idGift}")
+    String getIdGift();
+
     @Value("#{target.name}")
     String getName();
 
@@ -28,5 +31,8 @@ public interface StudentArchiveResponse extends IsIdentified {
 
     @Value("#{target.image}")
     String getImage();
+
+    @Value("#{target.quantity}")
+    String getQuantity();
 
 }

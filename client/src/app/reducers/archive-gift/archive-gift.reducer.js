@@ -6,6 +6,10 @@ export const ArchiveGiftSlice = createSlice({
   name: "archiveGift",
   initialState,
   reducers: {
+    AddArchiveGift: (state, action) => {
+      state.push(action.payload);
+      return state;
+    },
     DeleteArchiveGift: (state, action) => {
       const index = state.findIndex((el) => el.id === action.payload.id);
       if (index > -1) {
@@ -23,10 +27,24 @@ export const ArchiveGiftSlice = createSlice({
         return state[index];
       }
     },
+    PutArchiveGift: (state, action) => {
+      const index = state.findIndex((el) => el.id === action.payload.id);
+      if (index > -1) {
+        state[index] = action.payload;
+      } else {
+        state.push(action.payload);
+      }
+      return state;
+    },
   },
 });
 
 export const GetArchiveGift = (state) => state.archiveGift;
-export const { DeleteArchiveGift, SetArchiveGift, FindByIdArchiveGift } =
-  ArchiveGiftSlice.actions;
+export const {
+  DeleteArchiveGift,
+  AddArchiveGift,
+  SetArchiveGift,
+  PutArchiveGift,
+  FindByIdArchiveGift,
+} = ArchiveGiftSlice.actions;
 export default ArchiveGiftSlice.reducer;

@@ -7,6 +7,7 @@ import com.honeyprojects.infrastructure.contant.EntityProperties;
 import com.honeyprojects.infrastructure.contant.TypeCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,4 +28,7 @@ public class Category extends PrimaryEntity {
 
     private CategoryTransaction transactionRights;
 
+    @Lob
+    @Column(name = "image", columnDefinition = "LONGBLOB")
+    private byte[] image;
 }

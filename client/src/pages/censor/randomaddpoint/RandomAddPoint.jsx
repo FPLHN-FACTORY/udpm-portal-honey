@@ -296,21 +296,47 @@ export default function RandomAddPoint() {
     setActiveTabKey(key);
   };
 
+  const handleClostPreview = () => {
+    setDataPreview([]);
+    setNameFileUpload("");
+  };
+
   const columsPreview = [
     {
       title: "Mã sinh viên",
       dataIndex: "userName",
       key: "username",
+      render: (_, record) => {
+        return record.userName === null ? (
+          <span style={{ color: "orange" }}>không có dữ liệu</span>
+        ) : (
+          <span>{record.userName}</span>
+        );
+      },
     },
     {
       title: "Vật phẩm",
       dataIndex: "lstGift",
       key: "lstGift",
+      render: (_, record) => {
+        return record.lstGift === null ? (
+          <span style={{ color: "orange" }}>không có dữ liệu</span>
+        ) : (
+          <span>{record.lstGift}</span>
+        );
+      },
     },
     {
       title: "Mật ong",
       dataIndex: "lstHoney",
       key: "lstHoney",
+      render: (_, record) => {
+        return record.lstHoney === null ? (
+          <span style={{ color: "orange" }}>không có dữ liệu</span>
+        ) : (
+          <span>{record.lstHoney}</span>
+        );
+      },
     },
     {
       title: "trạng thái",
@@ -638,7 +664,11 @@ export default function RandomAddPoint() {
               <Row style={{ marginBottom: "32px" }}>
                 <b style={{ fontSize: "25px" }}>Dữ liệu import</b>
               </Row>
-              <Table dataSource={dataPreview} columns={columsPreview} />
+              <Table
+                dataSource={dataPreview}
+                columns={columsPreview}
+                pagination={false}
+              />
               <Space
                 style={{
                   justifyContent: "right",
@@ -646,7 +676,12 @@ export default function RandomAddPoint() {
                   marginTop: "32px",
                 }}
               >
-                <Button className="button-css">CLOSE</Button>
+                <Button
+                  className="button-css"
+                  onClick={() => handleClostPreview()}
+                >
+                  CLOSE
+                </Button>
 
                 <Button
                   className="button-css"
@@ -659,6 +694,8 @@ export default function RandomAddPoint() {
                     dataPreview={dataPreview}
                     openConfirm={openConfirm}
                     setOpenConfirm={setOpenConfirm}
+                    setDataPreview={setDataPreview}
+                    setNameFileUpload={setNameFileUpload}
                   />
                 )}
               </Space>

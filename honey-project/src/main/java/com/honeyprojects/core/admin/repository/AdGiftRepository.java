@@ -46,5 +46,11 @@ public interface AdGiftRepository extends GiftRepository {
             """, nativeQuery = true)
     List<AdminGiftResponse> getAllListResponse();
 
+    @Query(value = """
+            SELECT g.name FROM gift g where (g.status = 0 or g.status = 1 or g.status = 2) 
+            ORDER BY g.last_modified_date DESC
+            """, nativeQuery = true )
+    List<String> getAllNameByStatus();
+
 
 }

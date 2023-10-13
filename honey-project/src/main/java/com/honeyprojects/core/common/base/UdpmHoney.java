@@ -10,4 +10,6 @@ public interface UdpmHoney {
 
     String getUserName();
 
+    String getPicture();
+
 }
