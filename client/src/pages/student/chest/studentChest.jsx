@@ -101,20 +101,6 @@ const StudentChest = ({ setClose, transaction, open }) => {
                   </Col>
                 ))}
               </Row>
-              {/* 
-              <Space
-                style={{
-                  marginBottom: 24,
-                }}
-              >
-                Tab position:
-                <Radio.Group value={tabPosition} onChange={changeTabPosition}>
-                  <Radio.Button value="top">top</Radio.Button>
-                  <Radio.Button value="bottom">bottom</Radio.Button>
-                  <Radio.Button value="left">left</Radio.Button>
-                  <Radio.Button value="right">right</Radio.Button>
-                </Radio.Group>
-              </Space> */}
             </Col>
             <Tabs
               tabPosition={tabPosition}
