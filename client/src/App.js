@@ -29,7 +29,6 @@ import TransactionPage from "./pages/student/transaction/TransactionPage";
 import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction";
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
-import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
 import Archive from "./pages/student/archive/Archive";
 import GiftStudent from "./pages/teacher/giftstudent/GiftStudent";
 import StArchive from "./pages/student/archive/StArchive";
