@@ -7,7 +7,12 @@ import com.honeyprojects.core.student.model.request.StudentSearchHistoryRequest;
 import com.honeyprojects.core.student.model.request.StudentTransactionRequest;
 import com.honeyprojects.core.student.model.response.StudentHistoryResponse;
 import com.honeyprojects.core.student.service.StudentTransactionService;
+import com.honeyprojects.infrastructure.configws.modelmessage.MessageWebSocket;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -75,4 +80,11 @@ public class StudentTransactionRestController {
     public ResponseObject sendTransaction(String userName, String idTransaction) {
         return new ResponseObject(transactionService.sendTransaction(userName, idTransaction));
     }
+
+    @MessageMapping("/message")
+    @SendTo("/topic/public")
+    public MessageWebSocket receiveMessage(@Payload MessageWebSocket message){
+        return message;
+    }
+
 }
