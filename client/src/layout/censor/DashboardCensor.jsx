@@ -76,11 +76,11 @@ function DashboardAuthUser({ children }) {
       getItem(<Link to={"/censor/add-point"}>Cộng mật ong</Link>, "6"),
       getItem(<Link to={"/censor/add-point/history"}>Lịch sử</Link>, "7"),
     ]),
-    getItem(
-      <Link to="/censor/club">Club</Link>,
-      "8",
-      <FontAwesomeIcon icon={faPeopleRoof} />
-    ),
+    // getItem(
+    //   <Link to="/censor/club">Club</Link>,
+    //   "8",
+    //   <FontAwesomeIcon icon={faPeopleRoof} />
+    // ),
     getItem(
       <Link to="/censor/request-manager">Quản lý yêu cầu</Link>,
       "9",

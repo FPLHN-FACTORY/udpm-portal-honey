@@ -1,6 +1,5 @@
 package com.honeyprojects.core.teacher.repository;
 
-import com.honeyprojects.entity.Club;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

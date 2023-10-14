@@ -77,11 +77,11 @@ export default function StArchive() {
       dataIndex: "quantity",
       key: "quantity",
     },
-    {
-      title: "Ảnh",
-      dataIndex: "image",
-      key: "image",
-    },
+    // {
+    //   title: "Ảnh",
+    //   dataIndex: "image",
+    //   key: "image",
+    // },
     {
       title: () => <div>Action</div>,
       key: "action",
@@ -146,11 +146,11 @@ export default function StArchive() {
       dataIndex: "name",
       key: "name",
     },
-    {
-      title: "Ảnh",
-      dataIndex: "image",
-      key: "image",
-    },
+    // {
+    //   title: "Ảnh",
+    //   dataIndex: "image",
+    //   key: "image",
+    // },
     {
       title: () => <div>Action</div>,
       key: "action",
