@@ -14,8 +14,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtTokenProvider {
@@ -32,20 +34,29 @@ public class JwtTokenProvider {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        String role = claims.get("role", String.class);
         String name = claims.get("name", String.class);
         String userName = claims.get("userName", String.class);
         String email = claims.get("email", String.class);
         String id = claims.get("id", String.class);
         String picture = claims.get("picture", String.class);
 
+        Object roleClaim = claims.get("role");
+
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        if (roleClaim instanceof String) {
+            authorities.add(new SimpleGrantedAuthority((String) roleClaim));
+        } else if (roleClaim instanceof List<?>) {
+            List<String> roleList = (List<String>) roleClaim;
+            for (String role : roleList) {
+                authorities.add(new SimpleGrantedAuthority(role));
+            }
+        }
         httpSession.setAttribute("idUser", id);
         httpSession.setAttribute("picture", picture);
         httpSession.setAttribute("name", name);
         httpSession.setAttribute("userName", userName);
         httpSession.setAttribute("email", email);
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
-        return new UsernamePasswordAuthenticationToken(null, token, Collections.singletonList(authority));
+        return new UsernamePasswordAuthenticationToken(null, token, authorities);
     }
 
     public boolean validateToken(String token) {

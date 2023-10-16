@@ -230,7 +230,7 @@ const ModalThem = (props) => {
           </Select>
         </Form.Item>
         <Form.Item
-          label="loại mật"
+          label="Loại mật quy đổi"
           name="honeyCategoryId"
           rules={[
             {
@@ -248,7 +248,7 @@ const ModalThem = (props) => {
           </Select>
         </Form.Item>
         <Form.Item
-          label="Số mật ong"
+          label="Số mật ong quy đổi"
           name="honey"
           rules={[
             {
@@ -263,8 +263,9 @@ const ModalThem = (props) => {
           <Input />
         </Form.Item>
         <Form.Item
-          label="Phê duyệt"
+          label="Yêu cầu phê duyệt"
           name="status"
+          initialValue={1}
           rules={[
             {
               required: true,
