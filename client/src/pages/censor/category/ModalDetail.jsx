@@ -136,8 +136,8 @@ const ModalDetail = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={"3"}>Cần phê duyệt</Radio>
-              <Radio value={"2"}>Không phê duyệt</Radio>
+              <Radio value={"2"}>Cần phê duyệt</Radio>
+              <Radio value={"1"}>Không phê duyệt</Radio>
             </Radio.Group>
           </Form.Item>
 

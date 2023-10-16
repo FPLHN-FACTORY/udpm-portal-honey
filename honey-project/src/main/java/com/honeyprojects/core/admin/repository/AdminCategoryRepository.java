@@ -25,7 +25,7 @@ public interface AdminCategoryRepository extends CategoryRepository {
             SELECT ROW_NUMBER() OVER(ORDER BY ca.created_date DESC) AS stt, ca.id, ca.code, ca.name, ca.last_modified_date,ca.image,
             ca.category_status, ca.transaction_rights 
             FROM category ca
-             WHERE (ca.category_status =0 or ca.category_status = 2 or ca.category_status = 3) AND 
+             WHERE (ca.category_status =1 or ca.category_status = 2) AND 
               ( ( :#{#request.search} IS NULL
                       OR :#{#request.search} LIKE '' 
                      OR ca.code LIKE %:#{#request.search}% )
@@ -37,7 +37,7 @@ public interface AdminCategoryRepository extends CategoryRepository {
             SELECT ROW_NUMBER() OVER(ORDER BY ca.created_date DESC) AS stt, ca.id, ca.code, ca.name, ca.last_modified_date,ca.image,
             ca.category_status , ca.transaction_rights 
             FROM category ca
-             WHERE (ca.category_status =0 or ca.category_status = 2 or ca.category_status = 3) AND 
+             WHERE (ca.category_status =1 or ca.category_status = 2) AND 
               ( ( :#{#request.search} IS NULL
                       OR :#{#request.search} LIKE '' 
                      OR ca.code LIKE %:#{#request.search}% )
@@ -56,7 +56,7 @@ public interface AdminCategoryRepository extends CategoryRepository {
 
     @Query(value = """
             SELECT c.name FROM category c
-            WHERE ( c.category_status = 0 or c.category_status = 2 or c.category_status = 3 )
+            WHERE ( c.category_status = 1 or c.category_status = 2)
             ORDER BY c.last_modified_date DESC
             """, nativeQuery = true)
     List<String> getAllNameCategoryByStatus();

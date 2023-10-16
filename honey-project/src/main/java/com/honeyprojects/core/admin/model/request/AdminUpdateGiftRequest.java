@@ -27,7 +27,7 @@ public class AdminUpdateGiftRequest {
 
     private Integer type;
 
-    private StatusGift status;
+    private Integer status;
 
     private Integer quantity;
 
@@ -42,7 +42,9 @@ public class AdminUpdateGiftRequest {
     public Gift dtoToEntity(Gift gift) throws IOException {
         gift.setCode(this.getCode());
         gift.setName(this.getName());
-        gift.setStatus(this.getStatus());
+        if (this.getStatus() != null) {
+            gift.setStatus(StatusGift.values()[this.getStatus()]);
+        }
         if (this.getType() != null) {
             gift.setType(TypeGift.values()[this.getType()]);
         }
