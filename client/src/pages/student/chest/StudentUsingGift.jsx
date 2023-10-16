@@ -2,7 +2,9 @@ import { Button, message, Popconfirm, Tooltip } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 import React from "react";
-import { SetArchiveGift } from "../../../app/reducers/archive-gift/archive-gift.reducer";
+import {
+  SetArchiveGift,
+} from "../../../app/reducers/archive-gift/archive-gift.reducer";
 
 const UsingGift = (props) => {
   const { archivegift, filter } = props;
@@ -14,11 +16,17 @@ const UsingGift = (props) => {
     });
   };
 
+  // const updateGiftQuantity = () => {
+  //   const updatedGift = { ...archivegift, quantity: archivegift.quantity - 1 };
+  //   dispatch(PutArchiveGift(updatedGift));
+  // };
+
   const deleteGift = () => {
     console.log(archivegift);
     ArchiveAPI.delete(archivegift.id).then(
       () => {
         fetchData();
+        // updateGiftQuantity();
         message.success("Sử dụng thành công");
       },
       (err) => {

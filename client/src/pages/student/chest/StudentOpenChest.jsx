@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Popconfirm, Table, Tooltip, message } from "antd";
+import { Button, Popconfirm, Tooltip, message } from "antd";
 import { ChestGiftAPI } from "../../../apis/censor/chest-gift/chest-gift.api";
 import { SetChestGift } from "../../../app/reducers/chest-gift/chest-gift.reducer";
 import { useAppDispatch } from "../../../app/hooks";
