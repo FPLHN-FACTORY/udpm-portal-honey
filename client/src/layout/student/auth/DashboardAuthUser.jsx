@@ -150,6 +150,7 @@ function DashboardAuthUser({ children }) {
   // ========================
 
   const hanlderClickHomThu = () => {
+    navigate("/student/letter");
     playSound();
   };
   const hanlderClickAmThanh = () => {
@@ -265,7 +266,26 @@ function DashboardAuthUser({ children }) {
                       <button
                         onClick={hanlderClickHomThu}
                         class="btn-hom-thu btn-student btn-icon"
-                      />
+                        style={{ position: "relative" }}
+                      >
+                        <span
+                          style={{
+                            position: "absolute",
+                            top: "0",
+                            right: "0",
+                            textAlign: "center",
+                            background:"#0dcaf0",
+                            border:"none",
+                            borderRadius:"100px",
+                            width: "25px",
+                            height: "25px",
+                            lineHeight:"25px",
+                            color:"#ffffff"
+                          }}
+                        >
+                          3
+                        </span>
+                      </button>
                       <button
                         onClick={hanlderClickAmThanh}
                         className={

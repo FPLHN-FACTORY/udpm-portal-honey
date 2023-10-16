@@ -1,7 +1,15 @@
+.upgrade-honey {
+  background-image: url("../../../assets/images/bar-transaction.png");
+}
 .upgrade-honey .ant-card-body {
   background-image: url("../../../assets/images/bar-transaction.png");
 }
-
+.dapdo {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+}
 .upgrade-honey .chess-square {
   border-style: ridge;
   background: #464239;
@@ -20,7 +28,7 @@
   scrollbar-width: 0px;
   -ms-overflow-style: none;
   padding-left: 10px;
-  max-height: 220px;
+  max-height: 300px;
   overflow-y: auto;
 }
 
@@ -96,7 +104,7 @@
   max-width: 30% !important;
   min-width: 30% !important;
   width: 30% !important;
-  background-color: #ccc;
+  background-image: url("../../../assets/images/bar-transaction.png");
 }
 .dapdo .name-item {
   color: rgb(52, 45, 45);
@@ -177,7 +185,7 @@
 .dapdo .gift-box-container {
   align-items: center;
   justify-content: center;
-  height: 80% !important;
+  height: 100% !important;
   text-align: center;
 }
 
@@ -185,7 +193,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-top: 50px;
+  height: 10%;
 }
 
 .dapdo .div-button .use-button {
@@ -197,7 +205,6 @@
 
 .content-honey {
   padding: 0px 30px;
-  background-color: rgb(52, 45, 45);
   border-style: outset;
   text-align: center;
   height: 100%;
@@ -226,7 +233,7 @@
   scrollbar-width: 0px;
   -ms-overflow-style: none;
   padding-left: 10px;
-  max-height: 220px;
+  max-height: 310px;
   overflow-y: auto;
 }
 
@@ -293,7 +300,7 @@
 
 .content-honey .chest-honey .chess-square-note .item {
   border-style: ridge;
-  background: rgb(200, 197, 197);
+  background: rgb(52, 56, 16);
   height: 85px;
   width: 80px;
   margin: 3px;
@@ -340,7 +347,7 @@
   scrollbar-width: 0px;
   -ms-overflow-style: none;
   padding-left: 10px;
-  max-height: 220px;
+  max-height: 310px;
   overflow-y: auto;
 }
 
@@ -348,8 +355,10 @@
   width: 0px;
 }
 
-/* Tô màu khi hover */
 .upgrade-honey .chest-honey .item-square:hover {
   cursor: pointer;
   background: #b1850c52;
+}
+.dapdo .middapdo {
+  min-height: 90% !important;
 }

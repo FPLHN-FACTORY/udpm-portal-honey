@@ -12,15 +12,23 @@ const ModalDetail = (props) => {
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-    const byteArray = category.image
-      ? category.image.split(",").map(Number)
-      : [];
-    const base64ImageData = btoa(
-      String.fromCharCode.apply(null, new Uint8Array(byteArray))
-    );
-    const imageUrl = `data:image/jpeg;base64,${base64ImageData}`;
-    setSelectedImageUrl(imageUrl);
+    if (category.image) {
+      // Chuyển đổi chuỗi byte thành mảng byte
+      const byteArray = category.image.split(",").map(Number);
+
+      // Tạo một Uint8Array từ mảng byte
+      const uint8Array = new Uint8Array(byteArray);
+
+      // Chuyển đổi Uint8Array thành Blob
+      const blob = new Blob([uint8Array], { type: "image/jpeg" });
+
+      // Tạo URL dữ liệu từ Blob
+      const imageUrl = URL.createObjectURL(blob);
+
+      setSelectedImageUrl(imageUrl);
+    }
   }, [category]);
+
   const showModal = () => {
     setIsModalOpen(true);
   };

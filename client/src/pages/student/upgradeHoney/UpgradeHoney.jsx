@@ -158,7 +158,26 @@ export default function UpgradeHoney() {
             </div>
           </Footer>
         </Layout>
-        <Sider style={{ position: "relative" }}>
+        <Sider>
+          <Modal
+            title={`Xác nhận đập đồ (${(successRate * 100).toFixed(2)}%)`}
+            visible={isConfirmModalVisible}
+            onOk={handleConfirm}
+            onCancel={hideConfirmModal}
+            okText="Đồng ý"
+            cancelText="Hủy"
+          >
+            Bạn có muốn đập đồ không?
+          </Modal>
+
+          <Modal
+            title={isSuccess ? "Thành công" : "Thất bại"}
+            visible={isResultModalVisible}
+            onOk={hideResultModal}
+            okText="OK"
+          >
+            {resultMessage}
+          </Modal>
           <div className="dapdo">
             <div className="middapdo">
               <div className="gift-box-container">
@@ -178,16 +197,14 @@ export default function UpgradeHoney() {
                   Tỉ lệ thành công: {(successRate * 100).toFixed(2)}%
                 </p>
                 <p className="quantity-item">Phí đập:</p>
-              </div>
-              <hr
-                style={{
-                  height: "2px",
-                  width: "85%",
-                  backgroundColor: "black",
-                  margin: "20px",
-                }}
-              />
-              <div className="gift-box-container">
+                <hr
+                  style={{
+                    height: "2px",
+                    width: "90%",
+                    backgroundColor: "black",
+                    margin: "20px",
+                  }}
+                />
                 <h3>Lúc sau</h3>
                 <div
                   className={`chess-square-note ${isAnimating ? "shake" : ""}`}
@@ -211,25 +228,6 @@ export default function UpgradeHoney() {
                 Đập đồ
               </Button>
             </div>
-            <Modal
-              title={`Xác nhận đập đồ (${(successRate * 100).toFixed(2)}%)`}
-              visible={isConfirmModalVisible}
-              onOk={handleConfirm}
-              onCancel={hideConfirmModal}
-              okText="Đồng ý"
-              cancelText="Hủy"
-            >
-              Bạn có muốn đập đồ không?
-            </Modal>
-
-            <Modal
-              title={isSuccess ? "Thành công" : "Thất bại"}
-              visible={isResultModalVisible}
-              onOk={hideResultModal}
-              okText="OK"
-            >
-              {resultMessage}
-            </Modal>
           </div>
         </Sider>
       </Layout>
