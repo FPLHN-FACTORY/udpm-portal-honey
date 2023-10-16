@@ -53,7 +53,7 @@ export default function ConversionHome() {
       render: (text) => <span>{`${text} / 0.25`}</span>,
     },
     {
-      title: () => <div>Action</div>,
+      title: () => <div>Hành động</div>,
       key: "action",
       render: (_, record) => (
         <Space size="small">

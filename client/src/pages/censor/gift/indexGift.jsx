@@ -11,12 +11,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { DeleteOutlined } from "@ant-design/icons";
-import {
-  EditOutlined,
-  FormOutlined,
-  PlusOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { EditOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import ModalDetailGift from "./ModalDetailGift";
 import ModalAma from "./ModalAddGift";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -74,21 +69,29 @@ export default function IndexGift() {
       dataIndex: "image",
       key: "image",
       render: (image) => {
-        const byteArray = image ? image.split(",").map(Number) : [];
+        if (image) {
+          // Chuyển đổi chuỗi byte thành mảng byte
+          const byteArray = image.split(",").map(Number);
 
-        const base64ImageData = btoa(
-          String.fromCharCode.apply(null, new Uint8Array(byteArray))
-        );
+          // Tạo một Uint8Array từ mảng byte
+          const uint8Array = new Uint8Array(byteArray);
 
-        const imageUrl = `data:image/jpeg;base64,${base64ImageData}`;
+          // Chuyển đổi Uint8Array thành Blob
+          const blob = new Blob([uint8Array], { type: "image/jpeg" });
 
-        return (
-          <img
-            src={imageUrl}
-            style={{ width: "40px", height: "40px" }}
-            alt="Hình ảnh"
-          />
-        );
+          // Tạo URL dữ liệu từ Blob
+          const imageUrl = URL.createObjectURL(blob);
+
+          return (
+            <img
+              src={imageUrl}
+              style={{ width: "40px", height: "40px" }}
+              alt="Hình ảnh"
+            />
+          );
+        } else {
+          return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
+        }
       },
     },
     {
@@ -131,11 +134,11 @@ export default function IndexGift() {
       key: "honey",
     },
     {
-      title: () => <div>Action</div>,
+      title: () => <div>Hành động</div>,
       key: "action",
       render: (_, record) => (
         <Space size="small">
-          <Tooltip title="Cập nhập">
+          <Tooltip title="Cập nhật">
             <button
               className="update-button"
               onClick={() => {
