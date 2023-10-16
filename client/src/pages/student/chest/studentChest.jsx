@@ -8,7 +8,6 @@ import {
   SetGiftArchive,
 } from "../../../app/reducers/archive-gift/gift-archive.reducer";
 import {
-  FindByIdArchiveGift,
   GetArchiveGift,
   SetArchiveGift,
 } from "../../../app/reducers/archive-gift/archive-gift.reducer";
@@ -259,7 +258,6 @@ const StudentChest = () => {
               style={{ color: "white", fontWeight: "700" }}
             />
           </Row>
-          {/* <Pagination simple defaultCurrent={2} total={50} /> */}
         </Card>
       </div>
     </>
