@@ -83,7 +83,7 @@ export default function StArchive() {
     //   key: "image",
     // },
     {
-      title: () => <div>Action</div>,
+      title: () => <div>Hành động</div>,
       key: "action",
       render: (_, record) => (
         <Space size="small">
@@ -112,7 +112,7 @@ export default function StArchive() {
       key: "image",
     },
     {
-      title: () => <div>Action</div>,
+      title: () => <div>Hành động</div>,
       key: "action",
       render: (_, record) => (
         <Space size="small">
@@ -152,7 +152,7 @@ export default function StArchive() {
     //   key: "image",
     // },
     {
-      title: () => <div>Action</div>,
+      title: () => <div>Hành động</div>,
       key: "action",
       render: (_, record) => (
         <Space size="small">

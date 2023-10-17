@@ -84,9 +84,9 @@ public interface AdRandomAddPointRepository extends HoneyRepository {
     AdminCategoryResponse getCategoryByName(String categoryPoint);
 
     @Query(value = """
-            SELECT id
-            from gift
-            where name = :#{#name} and status = 2
+            SELECT g.id
+            from gift g
+            where g.name like :#{#name} and g.status in (0, 1)
             """,nativeQuery = true)
     String getIdGiftByName(String name);
 
