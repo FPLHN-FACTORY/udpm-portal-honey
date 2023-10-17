@@ -20,13 +20,24 @@ const ModalDetailGift = (props) => {
   const [listCategory, setListCategory] = useState([]);
 
   useEffect(() => {
-    const byteArray = gift.image ? gift.image.split(",").map(Number) : [];
-    const base64ImageData = btoa(
-      String.fromCharCode.apply(null, new Uint8Array(byteArray))
-    );
-    const imageUrl = `data:image/jpeg;base64,${base64ImageData}`;
-    setSelectedImageUrl(imageUrl);
+    if (gift.image) {
+      // Chuyển đổi chuỗi byte thành mảng byte
+      const byteArray = gift.image.split(",").map(Number);
+
+      // Tạo một Uint8Array từ mảng byte
+      const uint8Array = new Uint8Array(byteArray);
+
+      // Chuyển đổi Uint8Array thành Blob
+      const blob = new Blob([uint8Array], { type: "image/jpeg" });
+
+      // Tạo URL dữ liệu từ Blob
+      const imageUrl = URL.createObjectURL(blob);
+
+      setSelectedImageUrl(imageUrl);
+    }
+
     fetchCategory();
+
     if (gift && gift.quantity !== null) {
       setIsLimitedQuantity(true);
     } else {

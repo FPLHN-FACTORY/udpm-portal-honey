@@ -32,4 +32,10 @@ public class Constants {
     public static final class SEQUENCE {
         public static final String CATEGORY_SEQ = "category_seq";
     }
+    public static final int MAX_CONTENT_LENGTH = 255; // Điều chỉnh độ dài theo nhu cầu
+
+    public static String TITLE_NOTIFICATION_SYSTEM = "THÔNG BÁO TỪ HỆ THỐNG";
+
+    public static String CONTENT_NOTIFICATION_SYSTEM = "Hệ thống đã tặng cho bạn: ";
+
 }

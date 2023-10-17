@@ -51,7 +51,7 @@ const Index = () => {
       key: "name",
     },
     {
-      title: () => <div>Action</div>,
+      title: () => <div>Hành động</div>,
       key: "action",
       render: (_, record) => (
         <Space size="small">

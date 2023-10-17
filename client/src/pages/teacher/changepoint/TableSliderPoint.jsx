@@ -20,7 +20,7 @@ const columns = [
     // sorter: (a, b) => a.age - b.age,
   },
   {
-    title: () => <div>Action</div>,
+    title: () => <div>Hành động</div>,
     key: "action",
     render: (_, record) => (
       <Space size="small">

@@ -1,11 +1,16 @@
 import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
-
-var stompClient = null;
+import { AppConfig } from "../../AppConfig";
+let stompClient = null;
 
 export const connectStompClient = () => {
-  const socket = new SockJS("http://localhost:2508/ws-honey-end-point");
-  stompClient = Stomp.over(socket);
+  const socket = new SockJS(
+    AppConfig.apiUrl + "/portal-honey-websocket-endpoint"
+  );
+  stompClient = Stomp.over(socket, {
+    heartbeatIncoming: 10000,
+    heartbeatOutgoing: 10000,
+  });
 };
 
 export const getStompClient = () => stompClient;

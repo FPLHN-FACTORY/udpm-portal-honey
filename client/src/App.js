@@ -47,6 +47,8 @@ import StudentAuction from "./pages/student/auction/StudentAuction";
 import StudentAuctionRoomInside from "./pages/student/auction/StudentAuctionRoomInside";
 import RequestApprovedHistory from "./pages/censor/requestmanager/ApproveHistory";
 import ListRequest from "./pages/censor/requestmanager/ListRequest";
+import LetterDetail from "./pages/student/letters/LetterDetail";
+import Letter from "./pages/student/letters/letter";
 
 function App() {
   const token =
@@ -430,6 +432,26 @@ function App() {
                   <DashboardCensor>
                     <AuctionMangement />
                   </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/letter"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <Letter />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/letter/detail"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <LetterDetail />
+                  </DashboardAuthUser>
                 </AuthGuard>
               }
             />

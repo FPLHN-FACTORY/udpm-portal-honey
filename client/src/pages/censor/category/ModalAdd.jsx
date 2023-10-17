@@ -31,6 +31,7 @@ const ModalThem = (props) => {
       setSelectedImageUrl("");
     }
   };
+
   const onFinishFailed = () => {
     message.error("Error");
   };
@@ -53,7 +54,6 @@ const ModalThem = (props) => {
           return;
         } else {
           if (category === null) {
-            console.log(formValues);
             CategoryAPI.create({ ...formValues, image: image })
               .then((result) => {
                 dispatch(AddCategory(result.data.data));
@@ -124,14 +124,8 @@ const ModalThem = (props) => {
           style={{
             maxWidth: 600,
           }}
-          // initialValues={{
-          //   remember: true,
-          // }}
           autoComplete="off"
         >
-          {/* <Form.Item label="Mã" name="code">
-            <Input disabled />
-          </Form.Item> */}
           <div
             onClick={() => {
               document.getElementById("select-avatar").click();

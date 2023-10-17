@@ -49,15 +49,9 @@ public class AdminCreateGiftRequest extends PageableRequest {
 
         gift.setCode(code);
         gift.setName(this.getName());
-//        gift.setStatus(this.getStatus());
         if (this.getStatus() != null) {
             gift.setStatus(StatusGift.values()[this.getStatus()]);
         }
-//        if(this.getStatus().equals(StatusGift.ACCEPT)){
-//            gift.setStatus(StatusGift.ACCEPT);
-//        }else {
-//            gift.setStatus(StatusGift.FREE);
-//        }
         gift.setQuantity(this.getQuantity());
         if (this.getType() != null) {
             gift.setType(TypeGift.values()[this.getType()]);

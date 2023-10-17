@@ -52,19 +52,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     @Override
     @Transactional
     public Category addCategory(AdminCreateCategoryRequest request) throws IOException {
-        Random random = new Random();
-        int number = random.nextInt(10000);
-        String code = String.format("CA%04d", number);
-        Category ca = new Category();
-        ca.setCode(code);
-        ca.setName(request.getName());
-        ;
-        if (request.getImage() != null) {
-            byte[] imageBytes = request.getImage().getBytes();
-            ca.setImage(imageBytes);
-        }
-        ca.setTransactionRights(CategoryTransaction.values()[request.getTransactionRights()]);
-        ca.setCategoryStatus(CategoryStatus.values()[request.getCategoryStatus()]);
+        Category ca = request.dtoToEntity(new Category());
         adminCategoryRepository.save(ca);
         return ca;
     }
@@ -73,15 +61,9 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     @Transactional
     public Category updateCategory(AdminUpdateCategoryRequest request, String id) throws IOException {
         Optional<Category> categoryOptional = adminCategoryRepository.findById(id);
-        categoryOptional.get().setName(request.getName());
-        categoryOptional.get().setCategoryStatus(CategoryStatus.values()[request.getCategoryStatus()]);
-        categoryOptional.get().setTransactionRights(CategoryTransaction.values()[request.getTransactionRights()]);
-        if (request.getImage() != null) {
-            byte[] imageBytes = request.getImage().getBytes();
-            categoryOptional.get().setImage(imageBytes);
-        }
-        adminCategoryRepository.save(categoryOptional.get());
-        return categoryOptional.get();
+        Category category = categoryOptional.get();
+        request.dtoToEntity(category);
+        return adminCategoryRepository.save(category);
     }
 
     @Override

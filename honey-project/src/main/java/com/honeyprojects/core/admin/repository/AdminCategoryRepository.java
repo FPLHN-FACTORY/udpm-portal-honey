@@ -56,7 +56,7 @@ public interface AdminCategoryRepository extends CategoryRepository {
 
     @Query(value = """
             SELECT c.name FROM category c
-            WHERE ( c.category_status = 1 or c.category_status = 2)
+            WHERE ( c.category_status in (1, 2))
             ORDER BY c.last_modified_date DESC
             """, nativeQuery = true)
     List<String> getAllNameCategoryByStatus();
