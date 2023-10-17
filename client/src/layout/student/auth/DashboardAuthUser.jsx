@@ -24,10 +24,35 @@ import { setToken } from "../../../helper/userToken";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GetUser, SetUser } from "../../../app/reducers/users/users.reducer";
 import DialogTransaction from "../../../pages/student/transaction/DialogTransaction";
+import { NotificationAPI } from "../../../apis/student/notification/notification.api";
+import {
+  AddNotification,
+  GetNotification,
+  SetNotification,
+} from "../../../app/reducers/notification/notification.reducer";
+import {
+  GetCountNotification,
+  SetCountNotification,
+} from "../../../app/reducers/notification/count-notification.reducer";
 
 function DashboardAuthUser({ children }) {
   const navigate = useNavigate();
   const [transaction, setTransaction] = useState();
+  const dispatch = useAppDispatch();
+  const fetchCountNotification = async () => {
+    try {
+      const response = await NotificationAPI.fetchCountNotification();
+      dispatch(SetCountNotification(response.data));
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchCountNotification();
+  }, [dispatch]);
+
+  const dataCountNotification = useAppSelector(GetCountNotification);
+
+  
   useEffect(() => {
     connectStompClient();
     getStompClient().connect({}, () => {
@@ -174,8 +199,6 @@ function DashboardAuthUser({ children }) {
     navigate("/student");
   };
 
-  const dispatch = useAppDispatch();
-
   useEffect(() => {
     getProfile();
   }, []);
@@ -274,16 +297,16 @@ function DashboardAuthUser({ children }) {
                             top: "0",
                             right: "0",
                             textAlign: "center",
-                            background:"#0dcaf0",
-                            border:"none",
-                            borderRadius:"100px",
+                            background: "#0dcaf0",
+                            border: "none",
+                            borderRadius: "100px",
                             width: "25px",
                             height: "25px",
-                            lineHeight:"25px",
-                            color:"#ffffff"
+                            lineHeight: "25px",
+                            color: "#ffffff",
                           }}
                         >
-                          3
+                          {dataCountNotification}
                         </span>
                       </button>
                       <button

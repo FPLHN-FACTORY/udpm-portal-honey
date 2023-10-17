@@ -2,6 +2,7 @@ package com.honeyprojects.entity;
 
 import com.honeyprojects.entity.base.PrimaryEntity;
 import com.honeyprojects.infrastructure.contant.EntityProperties;
+import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,4 +26,8 @@ public class Notification extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_ID)
     private String studentId;
+
+    private NotificationStatus status;
+
+
 }
