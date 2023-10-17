@@ -88,6 +88,8 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
 
             honeyRepository.save(honey);
             history.setChangeDate(dateNow);
+
+
         }
         return historyRepository.save(history);
     }
