@@ -67,7 +67,7 @@ export default function ChestGift() {
       render: (text) => <span>{text}</span>,
     },
     {
-      title: () => <div>Action</div>,
+      title: () => <div>Hành động</div>,
       key: "action",
       render: (_, record) => (
         <Space size="small">

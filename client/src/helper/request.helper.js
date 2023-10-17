@@ -8,20 +8,8 @@ export const request = axios.create({
   baseURL: AppConfig.apiUrl,
 });
 
-// request.interceptors.request.use(
-//   (config) => {
-//     const token = getToken();
-//     if (config.headers && token) {
-//       config.headers["Authorization"] = token;
-//     }
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
-// );
-
 request.interceptors.request.use((config) => {
   const token = getToken();
-  console.log(token);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -38,9 +26,6 @@ request.interceptors.response.use(
     ) {
       window.location.href = "/not-authorization";
     }
-    // if (error.response && error.response.status === 404) {
-    //   window.location.href = "/not-found";
-    // }
     throw error;
   }
 );

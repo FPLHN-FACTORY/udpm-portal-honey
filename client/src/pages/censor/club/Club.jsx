@@ -56,11 +56,11 @@ export default function IndexClub() {
       key: "name",
     },
     {
-      title: () => <div>Action</div>,
+      title: () => <div>Hành động</div>,
       key: "action",
       render: (_, record) => (
         <Space size="small">
-          <Tooltip title="Cập nhập">
+          <Tooltip title="Cập nhật">
             <Button
               className="update-button"
               onClick={() => {

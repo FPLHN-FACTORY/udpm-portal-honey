@@ -29,10 +29,10 @@ import TransactionPage from "./pages/student/transaction/TransactionPage";
 import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction";
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
-import Archive from "./pages/student/archive/Archive";
 import GiftStudent from "./pages/teacher/giftstudent/GiftStudent";
 import StArchive from "./pages/student/archive/StArchive";
 import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
+import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
 import ChestGift from "./pages/censor/chest-gift/ChestGift";
 import AuctionMangement from "./pages/censor/auction-management/AuctionManagement";
 import TestTransaction from "./pages/student/transaction/TestTransaction";
@@ -45,7 +45,9 @@ import StudentAuction from "./pages/student/auction/StudentAuction";
 // import StudentAuctionRoom from "./pages/student/auction/StudentAuctionRoom";
 import StudentAuctionRoomInside from "./pages/student/auction/StudentAuctionRoomInside";
 import ConvertionHoney from "./pages/teacher/convertion-honey/RequestConversion";
-import RequestConversionHistory from "./pages/teacher/convertion-honey/RequestConversionHistory";
+import TeacherRequestConversionHistory from "./pages/teacher/convertion-honey/RequestConversionHistory";
+import LetterDetail from "./pages/student/letters/LetterDetail";
+import Letter from "./pages/student/letters/letter";
 
 function App() {
   const token =
@@ -276,7 +278,7 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardTeacher>
-                    <RequestConversionHistory />
+                    <TeacherRequestConversionHistory />
                   </DashboardTeacher>
                 </AuthGuard>
               }
@@ -419,6 +421,26 @@ function App() {
                   <DashboardCensor>
                     <AuctionMangement />
                   </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/letter"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <Letter />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/letter/detail"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <LetterDetail />
+                  </DashboardAuthUser>
                 </AuthGuard>
               }
             />
