@@ -123,7 +123,7 @@ export default function TransactionHistory() {
               <Card
                 key={`cardhistory${index}`}
                 style={{ boxShadow: "none" }}
-                className=" mt-10 card-history">
+                className=" mt-10 card-hist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ory">
                 <Row style={{ padding: "10px 15px" }}>
                   <Col span={12}>
                     <div style={{ color: "gray", fontSize: "12px" }}>
