@@ -1,8 +1,12 @@
 import { DownloadOutlined, InboxOutlined } from "@ant-design/icons";
 import { Button, Modal, Upload, message } from "antd";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./index.css";
 import { RandomAddPointAPI } from "../../../apis/censor/random-add-point/random-add-point.api";
+import {
+  connectStompClient,
+  getStompClient,
+} from "../../../helper/stomp-client/config";
 
 export default function ModalImportExcel(props) {
   const {
@@ -18,6 +22,27 @@ export default function ModalImportExcel(props) {
   } = props;
 
   const [file, setFile] = useState(null);
+
+  useEffect(() => {
+    connectStompClient();
+  }, []);
+
+  let stompClient = getStompClient();
+
+  const connect = () => {
+    stompClient.connect({}, () => {});
+  };
+
+  useEffect(() => {
+    if (stompClient != null) {
+      connect();
+    }
+    return () => {
+      if (stompClient != null) {
+        getStompClient().disconnect();
+      }
+    };
+  }, [stompClient]);
 
   const handleExportExcel = () => {
     setLoading(true);
@@ -46,6 +71,7 @@ export default function ModalImportExcel(props) {
             ...dataRandomItem,
             listStudentPoint: response.data.data,
           });
+          stompClient.send("/action/create-notification", {}, {});
           message.success("Import excel thành công");
         })
         .catch(() => {
