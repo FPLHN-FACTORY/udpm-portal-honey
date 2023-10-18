@@ -39,6 +39,12 @@ public class AdminUpdateGiftRequest {
 
     private String note;
 
+    private Long toDate;
+
+    private Long fromDate;
+
+    private String semesterId;
+
     public Gift dtoToEntity(Gift gift) throws IOException {
         gift.setCode(this.getCode());
         gift.setName(this.getName());
@@ -58,7 +64,9 @@ public class AdminUpdateGiftRequest {
         gift.setHoneyCategoryId(this.getHoneyCategoryId());
         gift.setHoney(this.getHoney());
         gift.setNote(this.getNote());
-
+        gift.setToDate(this.getToDate());
+        gift.setFromDate(this.getFromDate());
+        gift.setSemesterId(this.getSemesterId());
         return gift;
     }
 }

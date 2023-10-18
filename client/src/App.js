@@ -30,7 +30,6 @@ import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
 import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
-import GiftStudent from "./pages/teacher/giftstudent/GiftStudent";
 import StArchive from "./pages/student/archive/StArchive";
 import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
 import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
@@ -268,16 +267,6 @@ function App() {
                 <AuthGuard>
                   <DashboardTeacher>
                     <ConvertionHoney />
-                  </DashboardTeacher>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/teacher/list-students"
-              element={
-                <AuthGuard>
-                  <DashboardTeacher>
-                    <GiftStudent />
                   </DashboardTeacher>
                 </AuthGuard>
               }

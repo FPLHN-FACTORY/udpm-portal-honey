@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   Input,
   Modal,
@@ -139,25 +140,26 @@ export default function IndexGift() {
       render: (_, record) => (
         <Space size="small">
           <Tooltip title="Cập nhật">
-            <button
-              className="update-button"
+            <Button
               onClick={() => {
                 setDetailGift(record);
                 setShowModalDetail(true);
               }}
+              className="detail-button"
             >
               <EditOutlined className="icon" />
-            </button>
+            </Button>
           </Tooltip>
           <Tooltip title="Xóa">
-            <button
+            <Button
               onClick={() => {
                 setDetailGift(record);
                 setConfirmDelete(true);
               }}
+              className="detail-button"
             >
               <DeleteOutlined className="icon" />
-            </button>
+            </Button>
           </Tooltip>
         </Space>
       ),
