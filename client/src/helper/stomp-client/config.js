@@ -11,6 +11,7 @@ export const connectStompClient = () => {
     heartbeatIncoming: 10000,
     heartbeatOutgoing: 10000,
   });
+  stompClient.activate();
 };
 
 export const getStompClient = () => stompClient;
