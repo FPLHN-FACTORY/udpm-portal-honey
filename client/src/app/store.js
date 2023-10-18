@@ -17,6 +17,7 @@ import chestGiftReducer from "./reducers/chest-gift/chest-gift.reducer";
 import importReducer from "./reducers/import/import.reducer";
 import giftArchiveReducer from "./reducers/archive-gift/gift-archive.reducer";
 import archiveChestReducer from "./reducers/archive-gift/archive-chest.reducer";
+import archiveCountGiftReducer from "./reducers/archive-gift/archive-count-gift.reducer";
 
 export const store = configureStore({
   reducer: {
@@ -38,6 +39,7 @@ export const store = configureStore({
     import: importReducer,
     giftArchive: giftArchiveReducer,
     archiveChest: archiveChestReducer,
+    archiveCountGift: archiveCountGiftReducer,
   },
 });
 
