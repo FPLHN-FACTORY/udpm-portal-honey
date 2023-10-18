@@ -142,20 +142,19 @@ export default function StudentAuction() {
           <span className="time">10:40</span>
 
           <div className="mid-center" style={{ textAlign: "center" }}>
-            <img width={"150px"} height={"150px"} src={item.image} alt="icon" />
+            <img width={"200px"} height={"200px"} src={item.image} alt="icon" />
             <div>
-              <h2 className="name-item">{item.name}</h2>
-              <p className="item-description">{item.description}</p>
+              <h2 className="name-item" style={{ color: "#FF9933" }}>{item.name}</h2>
+              <p className="item-description" style={{ color: "#D1D1D1" }}>{item.description}</p>
             </div>
             <div>
               <h2 className="gia">
                 <img
                   className="pb-5"
                   width={"40px"}
-                  src={require("../../../assets/images/transaction-honey.png")}
+                  src={require("../../../assets/images/Honeycomb.webp")}
                   alt="diem"
-                />
-                Giá khởi điểm: <span> 100 điểm</span>
+                /><span className="pr-5" style={{ textShadow: "0 0 black", color: "#FF9933" }}>Giá khởi điểm: </span><span style={{ textShadow: "0 0 black", color: "#EBA937", fontSize: "36px" }}> 100 điểm</span>
               </h2>
             </div>
             <div>
@@ -163,34 +162,42 @@ export default function StudentAuction() {
                 <img
                   className="pb-5"
                   width={"40px"}
-                  src={require("../../../assets/images/transaction-honey.png")}
+                  src={require("../../../assets/images/Honeycomb.webp")}
                   alt="diem"
                 />
-                Giá hiện tại: <span> 100 điểm</span>
+                <span className="pr-5" style={{ textShadow: "0 0 black", color: "#FF9933" }}>Giá hiện tại: </span><span style={{ textShadow: "0 0 black", color: "#EBA937", fontSize: "36px" }}> 100 điểm</span>
               </h2>
             </div>
             <div>
               <h2 className="gia">
-                Bước giá: <span> 10 điểm</span>
+                <img
+                  className="pb-5"
+                  width={"40px"}
+                  src={require("../../../assets/images/Honeycomb.webp")}
+                  alt="diem"
+                />
+                <span className="pr-5" style={{ textShadow: "0 0 black", color: "#FF9933" }}>Bước giá: </span><span style={{ textShadow: "0 0 black", color: "#EBA937", fontSize: "36px" }}> 10 điểm</span>
               </h2>
             </div>
           </div>
           <div className="input-dau-gia">
-            <input className="input-message" />
-            <button className="send-message">Xác nhận</button>
+            <input className="input-message" style={{ borderRadius: "5px" }} />
+            <button className="send-message" style={{ fontSize: "25px", borderRadius: "5px" }}>Xác nhận</button>
           </div>
         </Sider>
         <Layout>
-          <Header>Khung chat</Header>
+          <Header><img
+            src={require("../../../assets/images/khung-chat.png")}
+            alt="khung chat"
+          /></Header>
           <Content>
             <div className="chat-box">
               <div className="chat-content">
                 <ul className="chat-messages">
                   {publicChats.map((chat, index) => (
                     <li
-                      className={`message ${
-                        chat.senderName === userData.username && "self"
-                      }`}
+                      className={`message ${chat.senderName === userData.username && "self"
+                        }`}
                       key={index}
                     >
                       {chat.senderName !== userData.username && (
@@ -249,7 +256,7 @@ export default function StudentAuction() {
           <Footer>
             <input
               className="input-message"
-              value={userData.message}
+              value={userData.message} style={{ borderRadius: "5px" }}
               onChange={handleMessage}
               placeholder="Nhập tin nhắn..."
             />

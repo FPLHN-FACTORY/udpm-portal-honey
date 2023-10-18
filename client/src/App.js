@@ -93,7 +93,7 @@ function App() {
                 </AuthGuard>
               }
             />
-            {/* <Route
+            <Route
               path="/censor/semester"
               element={
                 <AuthGuard>
@@ -102,7 +102,7 @@ function App() {
                   </DashboardCensor>
                 </AuthGuard>
               }
-            /> */}
+            />
             <Route
               path="/censor/conversion"
               element={

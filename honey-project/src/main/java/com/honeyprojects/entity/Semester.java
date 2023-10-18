@@ -29,4 +29,6 @@ public class Semester extends PrimaryEntity {
     @Column(nullable = false)
     private Long fromDate;
 
+    @Column(nullable = false)
+    private Boolean deleted;
 }
