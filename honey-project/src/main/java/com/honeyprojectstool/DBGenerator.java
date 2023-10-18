@@ -37,27 +37,15 @@ public class DBGenerator implements CommandLineRunner {
     private SemesterRepository semesterRepository;
 
     @Autowired
-    private UserSemesterRepository userSemesterRepository;
-
-    @Autowired
     private ConversionRepository conversionRepository;
-
-//    @Autowired
-//    private ClubRepository clubRepository;
-//
-//    @Autowired
-//    private ClubGiftRepository clubGiftRepository;
 
     @Autowired
     private AuctionRepository auctionRepository;
 
-    public void run(String... args) throws Exception {
+    @Autowired
+    private UpgradeRateRepository upgradeRateRepository;
 
-//        Club club = new Club();
-//        club.setCode("CLB1");
-//        club.setName("Bee SuperHero");
-//        club.setStatus(Status.HOAT_DONG);
-//        club.setId(clubRepository.save(club).getId());
+    public void run(String... args) throws Exception {
 
         Category category1 = new Category();
         category1.setName("GOLD");
@@ -79,6 +67,20 @@ public class DBGenerator implements CommandLineRunner {
         category3.setCode("CT3");
         category3.setId(categoryRepository.save(category3).getId());
         category3.setTransactionRights(CategoryTransaction.FREE);
+
+        UpgradeRate upgrade = new UpgradeRate();
+        upgrade.setCode("RT1");
+        upgrade.setOriginalHoney(category3.getId());
+        upgrade.setDestinationHoney(category2.getId());
+        upgrade.setRatio(0.8);
+        upgrade.setStatus(Status.HOAT_DONG);
+
+        UpgradeRate upgrade1 = new UpgradeRate();
+        upgrade1.setCode("RT1");
+        upgrade1.setOriginalHoney(category2.getId());
+        upgrade1.setDestinationHoney(category2.getId());
+        upgrade1.setRatio(0.3);
+        upgrade1.setStatus(Status.HOAT_DONG);
 
         Semester semester = new Semester();
         semester.setCode("SE1");
@@ -201,14 +203,12 @@ public class DBGenerator implements CommandLineRunner {
         userSemester1.setStudentId("C4CF21F4-F3E0-490E-B1CC-08DBB743DD7D");
         userSemester1.setTotalHoney(2000);
         userSemester1.setCategoryId(category1.getId());
-        userSemester1.setId(userSemesterRepository.save(userSemester1).getId());
 
         UserSemester userSemester2 = new UserSemester();
         userSemester2.setSemesterId(semester.getId());
         userSemester2.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
         userSemester2.setTotalHoney(3100);
         userSemester2.setCategoryId(category2.getId());
-        userSemester2.setId(userSemesterRepository.save(userSemester2).getId());
 
 
         Conversion conversion1 = new Conversion();
