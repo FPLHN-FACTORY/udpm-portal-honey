@@ -41,11 +41,10 @@ export class SemesterAPI {
       data: data,
     });
   };
-  static fetchAllSemester = (filter) => {
+  static fetchAllSemester = () => {
     return request({
       method: "GET",
-      url: `/${this.COMPONENT_NAME}/list-semester`,
-      params: filter,
+      url: `/${this.COMPONENT_NAME}/list`,
     });
   };
 }

@@ -42,6 +42,12 @@ public class AdminCreateGiftRequest extends PageableRequest {
 
     private String note;
 
+    private Long toDate;
+
+    private Long fromDate;
+
+    private String semesterId;
+
     public Gift dtoToEntity(Gift gift) throws IOException {
         Random random = new Random();
         int number = random.nextInt(1000);
@@ -63,6 +69,9 @@ public class AdminCreateGiftRequest extends PageableRequest {
         gift.setHoneyCategoryId(this.getHoneyCategoryId());
         gift.setHoney(this.getHoney());
         gift.setNote(this.getNote());
+        gift.setToDate(this.getToDate());
+        gift.setFromDate(this.getFromDate());
+        gift.setSemesterId(this.getSemesterId());
         return gift;
     }
 }
