@@ -76,16 +76,15 @@ function DashboardAuthUser({ children }) {
       getItem(<Link to={"/censor/add-point"}>Cộng mật ong</Link>, "6"),
       getItem(<Link to={"/censor/add-point/history"}>Lịch sử</Link>, "7"),
     ]),
-    // getItem(
-    //   <Link to="/censor/club">Club</Link>,
-    //   "8",
-    //   <FontAwesomeIcon icon={faPeopleRoof} />
-    // ),
     getItem(
-      <Link to="/censor/request-manager">Quản lý yêu cầu</Link>,
-      "9",
-      <FontAwesomeIcon icon={faCodePullRequest} />
+      <Link to="/censor/club">Club</Link>,
+      "8",
+      <FontAwesomeIcon icon={faPeopleRoof} />
     ),
+    getItem("Quản lý yêu cầu", "9", <FontAwesomeIcon icon={faCodePullRequest} />, [
+      getItem(<Link to={"/censor/request-manager/list-request"}>Danh sách yêu cầu</Link>, "10"),
+      getItem(<Link to={"/censor/request-manager/approved-history"}>Lịch sử phê duyệt</Link>, "11"),
+    ]),
     getItem(
       <Link to="/censor/request-manager/random-add-point">
         Tặng điểm sinh viên
