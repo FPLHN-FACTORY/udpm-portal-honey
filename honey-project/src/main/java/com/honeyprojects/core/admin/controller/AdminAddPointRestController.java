@@ -55,8 +55,6 @@ public class AdminAddPointRestController {
         return new ResponseObject(addPointService.addPoint(addPointRequest));
     }
 
-
-
     @GetMapping("/search-student")
     public ResponseObject searchStudent( String username) {
         return new ResponseObject(addPointService.searchUser(username));
