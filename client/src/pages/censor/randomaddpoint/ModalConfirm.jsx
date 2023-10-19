@@ -7,6 +7,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../app/hooks";
 import { SetCountNotification } from "../../../app/reducers/notification/count-notification.reducer";
+import { getToken } from "../../../helper/userToken";
 
 export default function ModalConfirm(props) {
   const {
@@ -59,9 +60,13 @@ export default function ModalConfirm(props) {
   }, [stompClient, isLoad]);
 
   const handleConfirm = (dataPreview) => {
+    const bearerToken = getToken();
+    const headers = {
+      Authorization: "Bearer " + bearerToken,
+    };
     RandomAddPointAPI.createImportData(dataPreview)
       .then(() => {
-        stompClient.send("/action/create-notification-user");
+        stompClient.send("/action/create-notification-user", headers, {});
 
         message.success("Import thành công");
       })
