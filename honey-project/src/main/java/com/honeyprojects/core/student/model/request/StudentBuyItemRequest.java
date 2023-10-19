@@ -7,8 +7,7 @@ import org.springframework.format.annotation.NumberFormat;
 
 @Getter
 @Setter
-public class StudentCreateRequestConversionRequest {
-
+public class StudentBuyItemRequest {
     @NumberFormat
     private Integer honeyPoint;
 
@@ -29,6 +28,4 @@ public class StudentCreateRequestConversionRequest {
 
     @NotBlank
     private String note;
-
-    private String idArchive;
 }

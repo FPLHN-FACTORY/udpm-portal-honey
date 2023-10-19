@@ -1,10 +1,7 @@
 package com.honeyprojects.core.student.service;
 
 import com.honeyprojects.core.common.base.PageableObject;
-import com.honeyprojects.core.student.model.request.StudentArchiveFilterRequest;
-import com.honeyprojects.core.student.model.request.StudentArchiveOpenChestRequest;
-import com.honeyprojects.core.student.model.request.StudentGetArchiveChestRequest;
-import com.honeyprojects.core.student.model.request.StudentGetArchiveGiftRequest;
+import com.honeyprojects.core.student.model.request.*;
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
 import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
@@ -18,7 +15,7 @@ public interface StudentArchiveService {
 
     PageableObject<StudentGetListGiftResponse> getListGift(StudentArchiveFilterRequest filterRequest);
 
-    ArchiveGift studentUsingGift(String id);
+    ArchiveGift studentUsingGift(StudentRequestChangeGift request);
 
     List<ArchiveGift> openChest(StudentArchiveOpenChestRequest request);
 
