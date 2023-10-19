@@ -29,7 +29,6 @@ import TransactionPage from "./pages/student/transaction/TransactionPage";
 import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction";
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
-import GiftStudent from "./pages/teacher/giftstudent/GiftStudent";
 import StArchive from "./pages/student/archive/StArchive";
 import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
 import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
@@ -42,7 +41,6 @@ import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
 import UpgradeHoney from "./pages/student/upgradeHoney/UpgradeHoney";
 import StudentAuctionRoom from "./pages/student/auction/StudentAuctionRoom";
 import StudentAuction from "./pages/student/auction/StudentAuction";
-// import StudentAuctionRoom from "./pages/student/auction/StudentAuctionRoom";
 import StudentAuctionRoomInside from "./pages/student/auction/StudentAuctionRoomInside";
 import RequestApprovedHistory from "./pages/censor/requestmanager/ApproveHistory";
 import ListRequest from "./pages/censor/requestmanager/ListRequest";
@@ -184,7 +182,7 @@ function App() {
                 </AuthGuard>
               }
             />
-             <Route
+            <Route
               path="/censor/request-manager/approved-history"
               element={
                 <AuthGuard>
@@ -301,16 +299,6 @@ function App() {
                 <AuthGuard>
                   <DashboardTeacher>
                     <TeacherRequestConversionHistory />
-                  </DashboardTeacher>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/teacher/list-students"
-              element={
-                <AuthGuard>
-                  <DashboardTeacher>
-                    <GiftStudent />
                   </DashboardTeacher>
                 </AuthGuard>
               }

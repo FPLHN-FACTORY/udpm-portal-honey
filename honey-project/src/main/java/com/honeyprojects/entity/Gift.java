@@ -45,6 +45,9 @@ public class Gift extends PrimaryEntity {
 
     private String note;
 
+    @Column(length = EntityProperties.LENGTH_ID)
+    private String semesterId;
+
     @Lob
     @Column(name = "image", columnDefinition = "LONGBLOB")
     private byte[] image;
