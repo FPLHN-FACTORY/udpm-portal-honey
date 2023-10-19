@@ -179,7 +179,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
                 // Duyệt qua danh sách sinh viên và tạo vật phẩm ngẫu nhiên cho từng sinh viên
                 for (SimpleResponse simple : simpleResponseList) {
-                    String archiveId = adRandomAddPointRepository.getArchiveByIdStudent(simple.getId());
                     int indexRandom = random.nextInt(req.getListItem().size());
                     String itemRandom = req.getListItem().get(indexRandom);
                     String chestGiftId = adRandomAddPointRepository.getOptionalChestGift(req.getChestId(), itemRandom);
@@ -189,7 +188,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                         ChestGift chestGift = optionalChestGift.get();
                         String idChest = chestGift.getChestId();
                         String idGift = chestGift.getGiftId();
-                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, idChest, idGift);
+                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(idChest, idGift);
                         ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
                         adArchiveGiftRepository.save(archiveGift);
                         Gift gift = adGiftRepository.findById(idGift).get();
@@ -205,7 +204,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             } else {
                 // Trường hợp có danh sách sinh viên cụ thể được chỉ định
                 for (String idStudent : req.getListStudentPoint()) {
-                    String archiveId = adRandomAddPointRepository.getArchiveByIdStudent(idStudent);
                     int indexRandom = random.nextInt(req.getListItem().size());
                     String itemRandom = req.getListItem().get(indexRandom);
                     String chestGiftId = adRandomAddPointRepository.getOptionalChestGift(req.getChestId(), itemRandom);
@@ -215,7 +213,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                         ChestGift chestGift = optionalChestGift.get();
                         String idChest = chestGift.getChestId();
                         String idGift = chestGift.getGiftId();
-                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, idChest, idGift);
+                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(idChest, idGift);
                         ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
                         adArchiveGiftRepository.save(archiveGift);
                         Gift gift = adGiftRepository.findById(idGift).get();
@@ -454,8 +452,13 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 Cell emailCell = row.getCell(emailColumnIndex);
                 String email = (emailCell != null) ? emailCell.getStringCellValue() : "";
 
-                // Thêm địa chỉ email vào danh sách kết quả
-                simpleResponseList.add(email);
+                // Tìm sinh viên bằng email và thêm vào list
+                if (email.equals("")) {
+                    continue;
+                } else {
+                    SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(email);
+                    simpleResponseList.add(simpleResponse.getId());
+                }
             }
 
             // Đóng tệp Excel và trả về danh sách địa chỉ email
@@ -523,22 +526,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 // Gọi API để lấy thông tin người dùng bằng địa chỉ email
                 SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(userDTO.getEmail());
 
-                String archiveId = "";
-
-                // Kiểm tra xem có một bản ghi Archive đã tồn tại cho người dùng này chưa
-                String archiveByIdStudent = adRandomAddPointRepository.getArchiveByIdStudent(simpleResponse.getId());
-                if (archiveByIdStudent == null) {
-                    // Nếu không có, tạo một bản ghi Archive mới và lưu vào cơ sở dữ liệu
-                    Archive archive = new Archive();
-                    archive.setClubId(null);
-                    archive.setStudentId(simpleResponse.getId());
-                    adArchiveRepository.save(archive);
-                    archiveId = archive.getId();
-                } else {
-                    // Nếu đã có, sử dụng archiveId từ bản ghi tồn tại
-                    archiveId = archiveByIdStudent;
-                }
-
                 if (userDTO.getLstGift() == null) {
                     continue;
                 } else {
@@ -558,7 +545,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                             } else {
                                 for (int i = 0; i < numberItem; i++) {
                                     // Tạo một bản ghi ArchiveGift mới và lưu vào cơ sở dữ liệu
-                                    AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, null, idGift);
+                                    AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(null, idGift);
                                     ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
                                     adArchiveGiftRepository.save(archiveGift);
                                 }
