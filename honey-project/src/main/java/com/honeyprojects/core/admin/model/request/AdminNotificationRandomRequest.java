@@ -17,7 +17,6 @@ public class AdminNotificationRandomRequest {
     private String title;
     private String content;
     private String studentId;
-    private String giftId;
     private NotificationType type;
     private NotificationStatus status;
     public Notification createNotification(Notification notification) {
@@ -28,7 +27,6 @@ public class AdminNotificationRandomRequest {
         notification.setTitle(this.title);
         notification.setContent(this.content);
         notification.setStudentId(this.studentId);
-        notification.setGiftId(this.giftId);
         notification.setType(this.type);
         notification.setStatus(this.status);
         return notification;

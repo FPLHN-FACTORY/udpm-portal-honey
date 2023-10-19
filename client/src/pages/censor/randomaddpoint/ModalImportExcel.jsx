@@ -46,7 +46,6 @@ export default function ModalImportExcel(props) {
             ...dataRandomItem,
             listStudentPoint: response.data.data,
           });
-          // stompClient.send("/action/create-notification", {}, {});
           message.success("Import excel thành công");
         })
         .catch(() => {

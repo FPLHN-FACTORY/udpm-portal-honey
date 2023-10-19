@@ -27,9 +27,6 @@ public class Notification extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_ID)
     private String studentId;
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String giftId;
-
     private NotificationStatus status;
 
 

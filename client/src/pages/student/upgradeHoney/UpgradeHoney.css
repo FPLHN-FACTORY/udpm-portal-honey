@@ -28,7 +28,7 @@
   scrollbar-width: 0px;
   -ms-overflow-style: none;
   padding-left: 10px;
-  max-height: 12rem !important;
+  max-height: 300px;
   overflow-y: auto;
 }
 
@@ -207,18 +207,13 @@
   padding: 0px 30px;
   border-style: outset;
   text-align: center;
-  height: 100% !important;
+  height: 100%;
 }
 .content-honey .ant-col {
   height: 100%;
 }
-
-.ant-layout-content {
-  height: 50% !important;
-}
-
 .ant-layout-content .ant-row {
-  height: 100% !important;
+  height: 100%;
 }
 
 .content-honey > p {
@@ -238,7 +233,7 @@
   scrollbar-width: 0px;
   -ms-overflow-style: none;
   padding-left: 10px;
-  max-height: 13rem !important;
+  max-height: 310px;
   overflow-y: auto;
 }
 
@@ -270,8 +265,8 @@
 .content-honey .chest-honey .chess-square {
   border-style: ridge;
   background: #464239;
-  /* height: 100% !important;
-  width: 100% !important; */
+  height: 100px;
+  width: 100px;
   margin: 3px;
 }
 
@@ -347,12 +342,12 @@
   display: block;
 }
 
-.upgrade-honey .content-honey .chest-honey {
+.upgrade-honey .chest-honey {
   overflow: auto;
   scrollbar-width: 0px;
   -ms-overflow-style: none;
   padding-left: 10px;
-  max-height: 13rem !important;
+  max-height: 310px;
   overflow-y: auto;
 }
 
