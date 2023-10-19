@@ -14,8 +14,8 @@ import AddPoint from "./pages/teacher/addpoint/AddPoint";
 import AddPointCensor from "./pages/censor/addPoin/AddPoint";
 import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
 import HistoryAddPointCensor from "./pages/censor/addPoin/HistoryAddPoint";
-import Club from "./pages/censor/club/Club";
-import DetailClub from "./pages/censor/club/DetailGiftClub";
+// import Club from "./pages/censor/club/Club";
+// import DetailClub from "./pages/censor/club/DetailGiftClub";
 import ListRequestAddPoint from "./pages/teacher/addpoint/ListRequestAddPoint";
 import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
 import RequestManager from "./pages/censor/requestmanager/RequestManager";
@@ -48,6 +48,7 @@ import RequestApprovedHistory from "./pages/censor/requestmanager/ApproveHistory
 import ListRequest from "./pages/censor/requestmanager/ListRequest";
 import LetterDetail from "./pages/student/letters/LetterDetail";
 import Letter from "./pages/student/letters/letter";
+import UpgradeRateManagement from "./pages/censor/upgradeRate/UpgradeRateManagement";
 
 function App() {
   const token =
@@ -142,7 +143,7 @@ function App() {
                 </AuthGuard>
               }
             />
-            <Route
+            {/* <Route
               path="/censor/club"
               element={
                 <AuthGuard>
@@ -161,7 +162,7 @@ function App() {
                   </DashboardCensor>
                 </AuthGuard>
               }
-            />
+            /> */}
             <Route
               path="/censor/request-manager"
               element={
@@ -430,6 +431,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <AuctionMangement />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/upgrade-rate"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <UpgradeRateManagement/>
                   </DashboardCensor>
                 </AuthGuard>
               }
