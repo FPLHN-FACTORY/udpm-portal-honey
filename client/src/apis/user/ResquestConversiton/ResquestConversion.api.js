@@ -56,6 +56,14 @@ export class ResquestConversion {
     });
   };
 
+  static changeGift = (data) => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}/change-gift`,
+      data: data,
+    });
+  };
+
   static deleteRequest = (id) => {
     return request({
       method: "DELETE",

@@ -15,6 +15,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Layout, Drawer, Row, Menu, Col } from "antd";
 import Header from "../../components/user/auth/Header";
 import {
+  GiftFilled,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   PlusCircleFilled,
@@ -57,12 +58,17 @@ function DashboardTeacher({ children }) {
         "3"
       ),
     ]),
+    getItem("Yêu cầu đổi quà", "4", <GiftFilled />, [
+      getItem(
+        <Link to={"/teacher/convertion-honey"}>Danh sách yêu cầu</Link>,
+        "5"
+      ),
 
-    getItem(
-      <Link to={"/teacher/convertion-honey"}>Đổi điểm</Link>,
-      "10",
-      <RetweetOutlined style={{ marginLeft: "5px" }} />
-    ),
+      getItem(
+        <Link to={"/teacher/request-conversion/history"}>Lịch sử yêu cầu</Link>,
+        "6"
+      ),
+    ]),
   ];
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
