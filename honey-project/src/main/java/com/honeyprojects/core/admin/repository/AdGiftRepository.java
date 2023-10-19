@@ -18,7 +18,7 @@ import java.util.List;
 public interface AdGiftRepository extends GiftRepository {
 
     @Query(value = """
-            SELECT ROW_NUMBER() OVER(ORDER BY g.created_date DESC) AS stt, g.id, g.code, g.name,g.note,g.quantity,g.status,g.type,
+            SELECT ROW_NUMBER() OVER(ORDER BY g.created_date DESC) AS stt, g.id, g.code, g.name,g.note,g.quantity,g.status,g.type,g.from_date, g.to_date, g.semester_id, 
             g.last_modified_date,g.honey,g.honey_category_id, g.image
             FROM gift g
              WHERE (status =0 or status = 1) AND 
@@ -29,7 +29,7 @@ public interface AdGiftRepository extends GiftRepository {
                     OR :#{#request.search} LIKE '' 
                     OR g.name LIKE %:#{#request.search}% ) )
             """, countQuery = """
-            SELECT ROW_NUMBER() OVER(ORDER BY g.created_date DESC) AS stt, g.id, g.code, g.name,g.quantity,g.status,g.type,g.honey,g.honey_category_id, g.last_modified_date, g.image, g.type,g.note
+            SELECT ROW_NUMBER() OVER(ORDER BY g.created_date DESC) AS stt, g.id, g.code, g.name,g.quantity,g.status,g.type,g.honey,g.honey_category_id, g.last_modified_date, g.image, g.type,g.note,g.from_date, g.to_date, g.semester_id
             FROM gift g
              WHERE (status =0 or status = 1 ) AND 
               ( ( :#{#request.search} IS NULL
@@ -42,7 +42,7 @@ public interface AdGiftRepository extends GiftRepository {
     Page<AdminGiftResponse> getAllGiftByAdmin(Pageable pageable, @Param("request") AdminGiftRequest request);
 
     @Query(value = """
-            SELECT g.id, g.name, g.code,g.quantity,g.status,g.type,g.honey,g.honey_category_id,g.note, g.last_modified_date, g.image FROM gift g where (status =0 or status = 1) 
+            SELECT g.id, g.name, g.code,g.quantity,g.status,g.type,g.honey,g.honey_category_id, g.from_date, g.to_date, g.semester_id,g.note, g.last_modified_date, g.image FROM gift g where (status =0 or status = 1) 
             ORDER BY g.last_modified_date DESC
             """, nativeQuery = true)
     List<AdminGiftResponse> getAllListResponse();

@@ -42,6 +42,22 @@ export class RequestManagerAPI {
     });
   };
 
+  static historyApproved = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/approved-history`,
+      params: filter,
+    });
+  };
+
+  static listRequest = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/list-request`,
+      params: filter,
+    });
+  };
+
   static getTransaction = (filter) => {
     return request({
       method: "GET",
@@ -79,4 +95,5 @@ export class RequestManagerAPI {
       params: { type: type },
     });
   };
+  
 }

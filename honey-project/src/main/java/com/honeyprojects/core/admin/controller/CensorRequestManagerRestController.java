@@ -5,6 +5,7 @@ import com.honeyprojects.core.admin.model.request.AdminConversionRequest;
 import com.honeyprojects.core.admin.model.request.AdminCreateConversionHistoryRequest;
 import com.honeyprojects.core.admin.model.request.CensorChangeStatusRequest;
 import com.honeyprojects.core.admin.model.request.CensorSearchHistoryRequest;
+import com.honeyprojects.core.admin.model.request.*;
 import com.honeyprojects.core.admin.model.response.AdminRequestConversionHistoryResponse;
 import com.honeyprojects.core.admin.model.response.CensorAddHoneyRequestResponse;
 import com.honeyprojects.core.admin.model.response.CensorTransactionRequestResponse;
@@ -74,5 +75,19 @@ public class CensorRequestManagerRestController {
     @GetMapping("/count-request")
     public ResponseObject getCountRequest(Integer type) {
         return new ResponseObject(requestManagerService.countRequest(type));
+    }
+
+    @GetMapping("/approved-history")
+    public PageableObject<CensorTransactionRequestResponse> historyApproved(AdminHistoryApprovedSearchRequest dataSearch) {
+        if(dataSearch.getStatus()==null){
+            return requestManagerService.getHistoryApprovedAllStatus(dataSearch);
+        }else{
+            return requestManagerService.getHistoryApprovedByStatus(dataSearch);
+        }
+    }
+
+    @GetMapping("/list-request")
+    public PageableObject<CensorTransactionRequestResponse> listRequest(AdminHistoryApprovedSearchRequest dataSearch) {
+        return requestManagerService.getHistoryApprovedByStatus(dataSearch);
     }
 }

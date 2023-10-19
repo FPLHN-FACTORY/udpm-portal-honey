@@ -37,20 +37,16 @@ import { type } from "@testing-library/user-event/dist/type";
 
 const statusHistory = (status) => {
   switch (status) {
-    case 0:
-      return <Tag color="geekblue">Chờ phê duyệt</Tag>; // Màu xanh dương
     case 1:
       return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
     case 2:
       return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
-    case 3:
-      return <Tag color="cyan">Gửi lại yêu cầu</Tag>; // Màu xanh dương nhạt
     default:
       return <Tag>Không xác định</Tag>;
   }
 };
 
-export default function RequestAddPoint() {
+export default function RequestApprovedHistory() {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const columns = [
@@ -88,35 +84,11 @@ export default function RequestAddPoint() {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-    },
-    {
-      title: "Hành động",
-      dataIndex: "acction",
-      key: "acction",
-      render: (values) => (
-        <div style={{ fontSize: "19px", textAlign: "center", color: "green" }}>
-          {values.status !== 1 && values.status !== 2 && (
-            <CheckCircleFilled
-              onClick={() => changeStatus(values.idHistory, 1)}
-            />
-          )}
-
-          {values.status !== 1 && values.status !== 2 && (
-            <CloseCircleFilled
-              style={{ fontSize: "19px", margin: "0px 10px", color: "red" }}
-              onClick={() => changeStatus(values.idHistory, 2)}
-            />
-          )}
-          <Link to={"/censor/request-manager/detail/" + values.idHistory}>
-            <EyeFilled style={{ fontSize: "20px", color: "#3498db" }} />
-          </Link>
-        </div>
-      ),
-    },
+    }
   ];
 
   const [totalPage, setTotalPage] = useState(1);
-  const [filter, setFilter] = useState({ page: 0, status: 0 });
+  const [filter, setFilter] = useState({ page: 0, status: null });
   const [type, setType] = useState();
 
   useEffect(() => {
@@ -137,7 +109,7 @@ export default function RequestAddPoint() {
         setLoading(true);
         const fetchData = async (filter) => {
           try {
-            const response = await RequestManagerAPI.getAddPoint(filter);
+            const response = await RequestManagerAPI.historyApproved(filter);
             const listHistory = await Promise.all(
               response.data.data.map(async (data) => {
                 try {
@@ -257,14 +229,14 @@ export default function RequestAddPoint() {
                   ]}
                 />
               </Form.Item>
-              <Form.Item name={"status"} initialValue={0}>
+              <Form.Item name={"status"} initialValue={null}>
                 <Select
                   style={{ width: "150px" }}
                   size="large"
                   placeholder="Trạng thái"
                   options={[
                     { value: null, label: "Tất cả" },
-                    ...[0, 1, 2, 3].map((value) => {
+                    ...[1, 2].map((value) => {
                       return {
                         value: value,
                         label: statusHistory(value),

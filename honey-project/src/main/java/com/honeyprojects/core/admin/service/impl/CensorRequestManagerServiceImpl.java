@@ -1,6 +1,7 @@
 package com.honeyprojects.core.admin.service.impl;
 
 import com.honeyprojects.core.admin.model.request.AdminChangeStatusGiftRequest;
+import com.honeyprojects.core.admin.model.request.AdminHistoryApprovedSearchRequest;
 import com.honeyprojects.core.admin.model.request.CensorChangeStatusRequest;
 import com.honeyprojects.core.admin.model.request.CensorSearchHistoryRequest;
 import com.honeyprojects.core.admin.model.response.CensorAddHoneyRequestResponse;
@@ -166,4 +167,15 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
         return requestApiidentity.handleCallApiGetUserById(id);
     }
 
+    @Override
+    public PageableObject<CensorTransactionRequestResponse> getHistoryApprovedByStatus(AdminHistoryApprovedSearchRequest searchParams) {
+        Pageable pageable = PageRequest.of(searchParams.getPage(), searchParams.getSize());
+        return new PageableObject<>(historyRepository.getHistoryApprovedByStatus(searchParams, pageable));
+    }
+
+    @Override
+    public PageableObject<CensorTransactionRequestResponse> getHistoryApprovedAllStatus(AdminHistoryApprovedSearchRequest searchParams) {
+        Pageable pageable = PageRequest.of(searchParams.getPage(), searchParams.getSize());
+        return new PageableObject<>(historyRepository.getHistoryApprovedAllStatus(searchParams, pageable));
+    }
 }

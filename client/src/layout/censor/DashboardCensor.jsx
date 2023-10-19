@@ -81,11 +81,10 @@ function DashboardAuthUser({ children }) {
       "8",
       <FontAwesomeIcon icon={faPeopleRoof} />
     ),
-    getItem(
-      <Link to="/censor/request-manager">Quản lý yêu cầu</Link>,
-      "9",
-      <FontAwesomeIcon icon={faCodePullRequest} />
-    ),
+    getItem("Quản lý yêu cầu", "9", <FontAwesomeIcon icon={faCodePullRequest} />, [
+      getItem(<Link to={"/censor/request-manager/list-request"}>Danh sách yêu cầu</Link>, "10"),
+      getItem(<Link to={"/censor/request-manager/approved-history"}>Lịch sử phê duyệt</Link>, "11"),
+    ]),
     getItem(
       <Link to="/censor/request-manager/random-add-point">
         Tặng điểm sinh viên
