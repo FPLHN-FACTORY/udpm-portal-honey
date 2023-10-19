@@ -340,7 +340,7 @@ export default function RandomAddPoint() {
       },
     },
     {
-      title: "trạng thái",
+      title: "Trạng thái",
       dataIndex: "importMessage",
       key: "importMessage",
       render: (_, record) => {
@@ -681,14 +681,14 @@ export default function RandomAddPoint() {
                   className="button-css"
                   onClick={() => handleClostPreview()}
                 >
-                  CLOSE
+                  Đóng
                 </Button>
 
                 <Button
                   className="button-css"
                   onClick={() => setOpenConfirm(true)}
                 >
-                  ADD
+                  Thêm
                 </Button>
                 {openConfirm && (
                   <ModalConfirm
