@@ -31,6 +31,15 @@ public interface AdminGiftResponse extends IsIdentified {
     @Value("#{target.honey_category_id}")
     String getHoneyCategoryId();
 
+    @Value("#{target.from_date}")
+    String getFromDate();
+
+    @Value("#{target.to_date}")
+    String getToDate();
+
+    @Value("#{target.semester_id}")
+    String getSemesterId();
+
     @Value("#{target.image}")
     String getImage();
 
