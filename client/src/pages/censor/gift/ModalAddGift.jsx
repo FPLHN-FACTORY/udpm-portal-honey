@@ -6,10 +6,11 @@ import { useState, useEffect } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import TextArea from "antd/es/input/TextArea";
 import "./index.css";
+import { SemesterAPI } from "../../../apis/censor/semester/semester.api";
 
 const ModalThem = (props) => {
   const onFinishFailed = () => {
-    message.error("Error");
+    message.error("Lỗi");
   };
 
   const { modalOpen, setModalOpen, gift, onSave, fetchData } = props;
@@ -19,6 +20,9 @@ const ModalThem = (props) => {
   const [quantityValue, setQuantityValue] = useState(0);
   const [listCategory, setListCategory] = useState([]);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
+
+  const [timeType, setTimeType] = useState("vĩnh viễn");
+  const [listSemester, setListSemester] = useState([]);
 
   const handleFileInputChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -38,6 +42,7 @@ const ModalThem = (props) => {
 
   useEffect(() => {
     fetchCategory();
+    fetchSemester();
     if (gift && gift.quantity !== null) {
       setQuantityValue(1);
     } else {
@@ -52,12 +57,11 @@ const ModalThem = (props) => {
     });
   };
 
-  // const validateImage = (rule, value) => {
-  //   if (!value) {
-  //     return Promise.reject("Vui lòng chọn một hình ảnh.");
-  //   }
-  //   return Promise.resolve();
-  // };
+  const fetchSemester = () => {
+    SemesterAPI.fetchAllSemester().then((response) => {
+      setListSemester(response.data.data);
+    });
+  };
 
   const validateQuantity = (rule, value) => {
     const quantityValue = form.getFieldValue("quantity");
@@ -74,21 +78,72 @@ const ModalThem = (props) => {
     return Promise.resolve();
   };
 
+  // const validateImage = (rule, value) => {
+  //   if (!value) {
+  //     return Promise.reject("Vui lòng chọn một hình ảnh.");
+  //   }
+  //   return Promise.resolve();
+  // };
+
+  const validateStartDate = (rule, value) => {
+    const endDate = form.getFieldValue("end");
+    if (value && endDate && new Date(value) >= new Date(endDate)) {
+      return Promise.reject("Thời gian bắt đầu phải trước thời gian kết thúc.");
+    }
+    return Promise.resolve();
+  };
+
+  const validateEndDate = (rule, value) => {
+    const startDate = form.getFieldValue("start");
+    if (value && startDate && new Date(value) <= new Date(startDate)) {
+      return Promise.reject("Thời gian kết thúc phải sau thời gian bắt đầu.");
+    }
+    return Promise.resolve();
+  };
+
   const onFinish = () => {
     form
       .validateFields()
       .then((formValues) => {
         let quantity = null;
 
+        let fromDate = null;
+        let toDate = null;
+        let semesterId = null;
         if (quantityValue === 1) {
           quantity = parseInt(formValues.quantityLimit, 10);
+        }
+
+        if (timeType === "học kì") {
+          const selectedSemester = listSemester.find(
+            (semester) => semester.id === formValues.semester
+          );
+
+          if (selectedSemester) {
+            fromDate = selectedSemester.fromDate;
+            toDate = selectedSemester.toDate;
+            semesterId = selectedSemester.id;
+          }
+        } else if (timeType === "thời hạn") {
+          fromDate = formValues.start
+            ? new Date(formValues.start).getTime()
+            : null;
+          toDate = formValues.end ? new Date(formValues.end).getTime() : null;
         }
 
         if (isNaN(quantity) && quantityValue === 1) {
           message.error("Vui lòng nhập số lượng giới hạn hợp lệ.");
           return;
         }
-        GiftAPI.create({ ...formValues, image: image, quantity: quantity })
+
+        GiftAPI.create({
+          ...formValues,
+          image: image,
+          quantity: quantity,
+          fromDate: timeType === "vĩnh viễn" ? null : fromDate,
+          toDate: timeType === "vĩnh viễn" ? null : toDate,
+          semesterId: semesterId,
+        })
           .then((result) => {
             dispatch(AddGift(result.data.data));
             message.success("Thành công!");
@@ -147,6 +202,7 @@ const ModalThem = (props) => {
           remember: true,
           quantity: quantityValue,
           quantityLimit: 1,
+          timeType: "vĩnh viễn",
         }}
         autoComplete="off"
       >
@@ -262,6 +318,80 @@ const ModalThem = (props) => {
         >
           <Input />
         </Form.Item>
+        <Form.Item
+          label="Thời gian"
+          name="timeType"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng chọn thời gian",
+            },
+          ]}
+        >
+          <Radio.Group
+            value={timeType}
+            onChange={(e) => setTimeType(e.target.value)}
+          >
+            <Radio value={"vĩnh viễn"}>Vĩnh viễn</Radio>
+            <Radio value={"học kì"}>Học kì</Radio>
+            <Radio value={"thời hạn"}>Thời hạn</Radio>
+          </Radio.Group>
+        </Form.Item>
+        {timeType === "học kì" && (
+          <Form.Item
+            label="Chọn học kì"
+            name="semester"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn học kì",
+              },
+            ]}
+          >
+            <Select placeholder="Chọn học kì">
+              {listSemester.map((semester) => (
+                <Option key={semester.id} value={semester.id}>
+                  {semester.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+        {timeType === "thời hạn" && (
+          <>
+            <Form.Item
+              label="Thời gian bắt đầu"
+              name="start"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn thời gian bắt đầu",
+                },
+                {
+                  validator: validateStartDate,
+                },
+              ]}
+            >
+              <Input type="date" />
+            </Form.Item>
+
+            <Form.Item
+              label="Thời gian kết thúc"
+              name="end"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn thời gian kết thúc",
+                },
+                {
+                  validator: validateEndDate,
+                },
+              ]}
+            >
+              <Input type="date" />
+            </Form.Item>
+          </>
+        )}
         <Form.Item
           label="Yêu cầu phê duyệt"
           name="status"

@@ -11,12 +11,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdminCreateArchiveGiftRequest {
-    private String archiveId;
     private String chestId;
     private String giftId;
 
     public ArchiveGift createArchivegift(ArchiveGift archiveGift) {
-        archiveGift.setArchiveId(this.archiveId);
+        archiveGift.setArchiveId(null);
         archiveGift.setChestId(this.chestId);
         archiveGift.setGiftId(this.giftId);
         return archiveGift;
