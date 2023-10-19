@@ -1,11 +1,30 @@
 import { Card, Col, Row } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import "./AuctionRoom.css";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import {
+  GetAuction,
+  SetAuction,
+} from "../../../app/reducers/auction/auction.reducer";
+import { StudentAuctionAPI } from "../../../apis/student/auction/auction.api";
 
 export default function StudentAuctionRoom() {
   const nav = useNavigate();
-  const divArray = Array.from({ length: 3 }, (_, index) => index);
+  const dispatch = useAppDispatch();
+  const listAuction = useAppSelector(GetAuction);
+
+  const loadData = () => {
+    StudentAuctionAPI.fetchAll().then((res) => {
+      dispatch(SetAuction(res.data.data));
+      console.log(res.data.data);
+    });
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   return (
     <div className="main-ui-room">
       <p>
@@ -25,15 +44,15 @@ export default function StudentAuctionRoom() {
       </p>
       <Card className="card-room">
         <Row justify="start">
-          {divArray.map((_, index) => (
+          {listAuction.map((response, index) => (
             <Col span={12} className="col-room">
               <div
                 className="auction-room"
                 onClick={() => {
-                  nav("/student/auction-room-inside");
+                  nav(`/student/auction-room-inside/${response.id}`);
                 }}
               >
-                <p>Phiên đấu giá biển số</p>
+                <p>Phiên đấu giá biển số {response.stt}</p>
                 <p className="loai-diem">
                   <img
                     width={"40px"}
@@ -42,10 +61,10 @@ export default function StudentAuctionRoom() {
                     alt="anh-loai-diem"
                     className="image-category"
                   />
-                  SLIVER
+                  {response.categoryName}
                 </p>
                 <p>
-                  Phí: <span>100 mật</span>
+                  Phí: <span>{response.honey}</span>
                 </p>
               </div>
             </Col>

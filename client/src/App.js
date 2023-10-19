@@ -183,7 +183,7 @@ function App() {
                 </AuthGuard>
               }
             />
-             <Route
+            <Route
               path="/censor/request-manager/approved-history"
               element={
                 <AuthGuard>
@@ -326,7 +326,7 @@ function App() {
             />
 
             <Route
-              path="/student/auction-room-inside"
+              path="/student/auction-room-inside/:id"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>

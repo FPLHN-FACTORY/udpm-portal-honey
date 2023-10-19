@@ -1,15 +1,41 @@
 import { Button, Card, Col, Input, Modal, Radio, Row, Space, Tabs } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./AuctionRoomInside.css";
 import { DollarOutlined, UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import {
+  GetAuction,
+  SetAuction,
+} from "../../../app/reducers/auction/auction.reducer";
+import { StudentAuctionAPI } from "../../../apis/student/auction/auction.api";
 
 export default function StudentAuctionRoomInside() {
+  const { id } = useParams();
   const nav = useNavigate();
-  const divArray = Array.from({ length: 20 }, (_, index) => index);
+  const dispatch = useAppDispatch();
+  const [search, setSearch] = useState({
+    id: id,
+    name: "",
+    nameGift: "",
+    startingPrice: null,
+    lastPrice: null,
+    jump: null,
+  });
+
+  const listAuctionRoom = useAppSelector(GetAuction);
+  const loadData = () => {
+    StudentAuctionAPI.fetchAllRoom(search).then((res) => {
+      dispatch(SetAuction(res.data.data));
+      console.log(res.data.data);
+    });
+  };
+  useEffect(() => {
+    loadData();
+  }, [id]);
 
   const chessSquares = Array.from({ length: 300 }, (_, i) => i);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -26,6 +52,7 @@ export default function StudentAuctionRoomInside() {
     console.log("radio checked", e.target.value);
     setValue(e.target.value);
   };
+
   return (
     <>
       <Modal
@@ -160,7 +187,7 @@ export default function StudentAuctionRoomInside() {
 
           <Card className="cardGift">
             <Row justify="start">
-              {divArray.map((_, index) => (
+              {listAuctionRoom.map((response, index) => (
                 <Col span={6} className="col-aucion">
                   <div
                     className="auction-room-inside"
@@ -184,7 +211,8 @@ export default function StudentAuctionRoomInside() {
                     <p className="name-gift-acution"> Vật phẩm đấu giá</p>
                     <span className="price">
                       {" "}
-                      <DollarOutlined /> 10000 - 50000
+                      <DollarOutlined />
+                      {response.startingPrice}-{response.lastPrice}
                     </span>
                   </div>
                 </Col>

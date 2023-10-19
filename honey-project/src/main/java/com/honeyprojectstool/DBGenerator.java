@@ -14,6 +14,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @SpringBootApplication
 @EnableJpaRepositories(
@@ -280,6 +281,21 @@ public class DBGenerator implements CommandLineRunner {
         auction1.setHoney(200L);
         auction1.setStatus(Status.KHONG_HOAT_DONG);
         auction1.setId(auctionRepository.save(auction1).getId());
+
+        Auction auction2 = new Auction();
+        auction2.setName("Phiên đấu giá ");
+        auction2.setHoneyCategoryId(category2.getId());
+        auction2.setHoney(200L);
+        auction2.setStatus(Status.HOAT_DONG);
+        auction2.setGiftId(gift1.getId());
+        auction2.setFromDate(1689932796276L);
+        auction2.setToDate(1789932796276L);
+        auction2.setIdRoom("1243F96A-42BD-49B3-8E45-08DBB2F9FEB6");
+        auction2.setJump(new BigDecimal(2000));
+        auction2.setLastPrice(new BigDecimal(5000));
+        auction2.setStartingPrice(new BigDecimal(2000));
+        auction2.setId(auctionRepository.save(auction2).getId());
+
     }
 
     public static void main(String[] args) {

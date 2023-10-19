@@ -99,5 +99,10 @@ public class AdminAuctionServiceImpl implements AdminAuctionService {
         return true;
     }
 
+    @Override
+    public List<AdminAuctionResponse> findAll(AdminFindAuctionRequest req) {
+        return adAuctionRepository.findAll(req);
+    }
+
 
 }
