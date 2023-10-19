@@ -44,8 +44,7 @@ public class AdminSemesterServiceImpl implements AdminSemesterService {
     public Semester deleteSemester(String id) {
         Optional<Semester> optionalSemester = adSemesterRepository.findById(id);
         return optionalSemester.map(semester -> {
-            semester.setDeleted(true);
-            adSemesterRepository.save(semester);
+            adSemesterRepository.delete(semester);
             return semester;
         }).orElse(null);
     }
@@ -53,7 +52,6 @@ public class AdminSemesterServiceImpl implements AdminSemesterService {
     @Override
     public Semester addSemester(AdminSemesterRequest request) {
         Semester se = request.map(new Semester());
-        se.setDeleted(false);
         return adSemesterRepository.save(se);
     }
 

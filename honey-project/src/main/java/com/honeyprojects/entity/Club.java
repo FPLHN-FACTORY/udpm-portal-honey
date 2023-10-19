@@ -5,8 +5,6 @@ import com.honeyprojects.infrastructure.contant.EntityProperties;
 import com.honeyprojects.infrastructure.contant.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,22 +12,14 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "upgrade_rate")
-public class UpgradeRate extends PrimaryEntity {
+@Table(name = "club")
+public class Club extends PrimaryEntity {
 
-    @Column(length = EntityProperties.LENGTH_CODE)
     private String code;
 
-    @Column()
-    private String originalHoney;
+    @Column(nullable = false, length = EntityProperties.LENGTH_NAME)
+    private String name;
 
-    @Column()
-    private String destinationHoney;
-
-    @Column()
-    private Double ratio;
-
-    @Enumerated(EnumType.STRING)
     private Status status;
 
 }

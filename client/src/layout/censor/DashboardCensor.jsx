@@ -27,7 +27,6 @@ import {
   faPeopleRoof,
   faPlusCircle,
   faScaleUnbalanced,
-  faStar,
 } from "@fortawesome/free-solid-svg-icons";
 const { Header: AntHeader, Content } = Layout;
 
@@ -97,11 +96,6 @@ function DashboardAuthUser({ children }) {
       <Link to="/censor/auction-management">Quản lý phiên đấu giá</Link>,
       "7",
       <FontAwesomeIcon icon={faScaleUnbalanced} />
-    ),
-    getItem(
-      <Link to="/censor/upgrade-rate">Quản lý nâng hạng</Link>,
-      "8",
-      <FontAwesomeIcon icon={faStar} />
     ),
   ];
   const toggleCollapse = () => {

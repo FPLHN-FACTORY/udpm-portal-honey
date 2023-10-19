@@ -12,7 +12,7 @@ import java.util.List;
 public interface TeacherCategoryRepository extends CategoryRepository {
     @Query(value = """
             SELECT c.id, c.name FROM category c
-            WHERE c.category_status <> 0
+            WHERE c.category_status = 0
             """, nativeQuery = true)
     List<TeacherCategoryResponse> getAllCategory();
 
