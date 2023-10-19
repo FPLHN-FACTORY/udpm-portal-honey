@@ -5,6 +5,8 @@ import { UpdateGift } from "../../../app/reducers/gift/gift.reducer";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import TextArea from "antd/es/input/TextArea";
+import { SemesterAPI } from "../../../apis/censor/semester/semester.api";
+import moment from "moment";
 
 const ModalDetailGift = (props) => {
   const onFinishFailed = () => {
@@ -18,26 +20,29 @@ const ModalDetailGift = (props) => {
   const [isLimitedQuantity, setIsLimitedQuantity] = useState(true);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
   const [listCategory, setListCategory] = useState([]);
+  const [listSemester, setListSemester] = useState([]);
+  const [timeType, setTimeType] = useState(null);
 
   useEffect(() => {
     if (gift.image) {
-      // Chuyển đổi chuỗi byte thành mảng byte
       const byteArray = gift.image.split(",").map(Number);
-
-      // Tạo một Uint8Array từ mảng byte
       const uint8Array = new Uint8Array(byteArray);
-
-      // Chuyển đổi Uint8Array thành Blob
       const blob = new Blob([uint8Array], { type: "image/jpeg" });
-
-      // Tạo URL dữ liệu từ Blob
       const imageUrl = URL.createObjectURL(blob);
 
       setSelectedImageUrl(imageUrl);
     }
+    const timeType =
+      gift.semesterId && gift.fromDate && gift.toDate
+        ? "học kì"
+        : gift.fromDate && gift.toDate
+        ? "thời hạn"
+        : "vĩnh viễn";
+
+    setTimeType(timeType);
 
     fetchCategory();
-
+    fetchSemester();
     if (gift && gift.quantity !== null) {
       setIsLimitedQuantity(true);
     } else {
@@ -68,6 +73,11 @@ const ModalDetailGift = (props) => {
       setListCategory(response.data.data);
     });
   };
+  const fetchSemester = () => {
+    SemesterAPI.fetchAllSemester().then((response) => {
+      setListSemester(response.data.data);
+    });
+  };
 
   const dispatch = useAppDispatch();
 
@@ -75,6 +85,22 @@ const ModalDetailGift = (props) => {
     const quantityValue = form.getFieldValue("quantity");
     if (quantityValue === 1 && (!value || value <= 0)) {
       return Promise.reject("Số lượng phải lớn hơn 0.");
+    }
+    return Promise.resolve();
+  };
+
+  const validateStartDate = (rule, value) => {
+    const endDate = form.getFieldValue("end");
+    if (value && endDate && new Date(value) >= new Date(endDate)) {
+      return Promise.reject("Thời gian bắt đầu phải trước thời gian kết thúc.");
+    }
+    return Promise.resolve();
+  };
+
+  const validateEndDate = (rule, value) => {
+    const startDate = form.getFieldValue("start");
+    if (value && startDate && new Date(value) <= new Date(startDate)) {
+      return Promise.reject("Thời gian kết thúc phải sau thời gian bắt đầu.");
     }
     return Promise.resolve();
   };
@@ -100,6 +126,30 @@ const ModalDetailGift = (props) => {
               ? parseInt(formValues.quantity)
               : null;
         }
+
+        let updatedFromDate = null;
+        let updatedToDate = null;
+        let updatedSemesterId = null;
+
+        if (formValues.timeType === "vĩnh viễn") {
+          updatedFromDate = null;
+          updatedToDate = null;
+          updatedSemesterId = null;
+        } else if (formValues.timeType === "học kì") {
+          const selectedSemester = listSemester.find(
+            (semester) => semester.id === formValues.semester
+          );
+
+          if (selectedSemester) {
+            updatedFromDate = selectedSemester.fromDate;
+            updatedToDate = selectedSemester.toDate;
+            updatedSemesterId = selectedSemester.id;
+          }
+        } else if (formValues.timeType === "thời hạn") {
+          updatedFromDate = new Date(formValues.start).getTime();
+          updatedToDate = new Date(formValues.end).getTime();
+          updatedSemesterId = null;
+        }
         GiftAPI.update(
           {
             ...formValues,
@@ -111,6 +161,9 @@ const ModalDetailGift = (props) => {
             honey: formValues.honey,
             honeyCategoryId: formValues.honeyCategoryId,
             note: formValues.note,
+            fromDate: updatedFromDate,
+            toDate: updatedToDate,
+            semesterId: updatedSemesterId,
           },
           gift ? gift.id : null
         )
@@ -127,6 +180,34 @@ const ModalDetailGift = (props) => {
       .catch(() => {
         message.error("Vui lòng điền đầy đủ thông tin.");
       });
+  };
+  const fromDate = new Date(Number(gift.fromDate));
+  const toDate = new Date(Number(gift.toDate));
+
+  const formattedFromDate = moment(fromDate).format("YYYY-MM-DD");
+  const formattedToDate = moment(toDate).format("YYYY-MM-DD");
+
+  const initialValues = {
+    image: gift && gift.image !== null ? gift.image : null,
+    quantity: gift && gift.quantity !== null ? gift.quantity : null,
+    quantityLimit: gift && gift.quantity !== null ? gift.quantity : null,
+    name: gift && gift.name ? gift.name : "",
+    code: gift && gift.code ? gift.code : "",
+    status: gift && gift.status !== null ? gift.status : 0,
+    type: gift && gift.type ? gift.type : 0,
+    honey: gift && gift.honey !== null ? gift.honey : 0,
+    honeyCategoryId:
+      gift && gift.honeyCategoryId !== null ? gift.honeyCategoryId : null,
+    note: gift && gift.note ? gift.note : "",
+    timeType:
+      gift.semesterId && gift.fromDate && gift.toDate
+        ? "học kì"
+        : gift.fromDate && gift.toDate
+        ? "thời hạn"
+        : "vĩnh viễn",
+    semester: gift.semesterId,
+    start: formattedFromDate,
+    end: formattedToDate,
   };
 
   return (
@@ -150,20 +231,7 @@ const ModalDetailGift = (props) => {
         style={{
           maxWidth: 600,
         }}
-        initialValues={{
-          remember: true,
-          image: gift && gift.image !== null ? gift.image : null,
-          quantity: gift && gift.quantity !== null ? gift.quantity : null,
-          quantityLimit: gift && gift.quantity !== null ? gift.quantity : null,
-          name: gift && gift.name ? gift.name : "",
-          code: gift && gift.code ? gift.code : "",
-          status: gift && gift.status !== null ? gift.status : 0,
-          type: gift && gift.type ? gift.type : 0,
-          honey: gift && gift.honey !== null ? gift.honey : 0,
-          honeyCategoryId:
-            gift && gift.honeyCategoryId !== null ? gift.honeyCategoryId : null,
-          note: gift && gift.note ? gift.note : "",
-        }}
+        initialValues={initialValues}
         autoComplete="off"
       >
         <div
@@ -284,6 +352,81 @@ const ModalDetailGift = (props) => {
         >
           <Input />
         </Form.Item>
+        <Form.Item
+          label="Thời gian"
+          name="timeType"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng chọn thời gian",
+            },
+          ]}
+        >
+          <Radio.Group
+            value={timeType}
+            onChange={(e) => setTimeType(e.target.value)}
+          >
+            <Radio value="vĩnh viễn">Vĩnh viễn</Radio>
+            <Radio value="học kì">Học kì</Radio>
+            <Radio value="thời hạn">Thời hạn</Radio>
+          </Radio.Group>
+        </Form.Item>
+        {timeType === "học kì" && (
+          <Form.Item
+            label="Chọn học kì"
+            name="semester"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn học kì",
+              },
+            ]}
+          >
+            <Select placeholder="Chọn học kì">
+              {listSemester.map((semester) => (
+                <Option key={semester.id} value={semester.id}>
+                  {semester.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+        {timeType === "thời hạn" && (
+          <>
+            <Form.Item
+              label="Thời gian bắt đầu"
+              name="start"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn thời gian bắt đầu",
+                },
+                {
+                  validator: validateStartDate,
+                },
+              ]}
+            >
+              <Input type="date" />
+            </Form.Item>
+
+            <Form.Item
+              label="Thời gian kết thúc"
+              name="end"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn thời gian kết thúc",
+                },
+                {
+                  validator: validateEndDate,
+                },
+              ]}
+            >
+              <Input type="date" />
+            </Form.Item>
+          </>
+        )}
+
         <Form.Item
           label="Phê duyệt"
           name="status"

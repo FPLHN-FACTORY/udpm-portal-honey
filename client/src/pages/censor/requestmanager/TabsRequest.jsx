@@ -60,19 +60,19 @@ export default function TabsRequest({ selectIndex, type }) {
       style={{ marginBottom: 12, width: "100%" }}>
       <Radio.Group value={selectIndex} style={{ width: "100%" }}>
         <Radio.Button
-          style={{ width: "20%" }}
+          style={{ width: "50%" }}
           value={0}
           onClick={() => navigate("/censor/request-manager")}>
           Tất cả <Badge showZero count={tatCa} />
         </Radio.Button>
-        <Radio.Button
+        {/* <Radio.Button
           style={{ width: "40%" }}
           value={1}
           onClick={() => navigate("/censor/request-manager/add-point")}>
           Yêu cầu cộng điểm <Badge showZero count={congDiem} />
-        </Radio.Button>
+        </Radio.Button> */}
         <Radio.Button
-          style={{ width: "40%" }}
+          style={{ width: "50%" }}
           value={2}
           onClick={() => navigate("/censor/request-manager/transaction")}>
           Yêu cầu giao dịch <Badge showZero count={giaoDich} />

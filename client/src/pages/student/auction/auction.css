@@ -2,15 +2,17 @@
 @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
 
 .ui-auction {
-  background-image: url("../../../assets/images/bar-transaction.png");
+  background-image: url("../../../assets/images/student-profile/Honey.jpg");
+  background-repeat: no-repeat;
+  background-size: 100%;
 }
 
 .ui-auction .ant-layout-sider {
-  min-width: 65% !important;
-  background: none;
-  border-right: 10px ridge #f6c714;
+  min-width: 60% !important;
+  border-right: 10px ridge #f6c9148e;
   padding-left: 20px;
   padding-right: 20px;
+  background-color: #00000088;
 }
 
 .ui-auction .ant-layout-content {
@@ -23,7 +25,7 @@
 }
 
 .ui-auction .ant-layout-footer {
-  border-top: 5px ridge #f6c714;
+  border-top: 5px ridge #f6c9148e;
   padding-left: 10px;
   padding-right: 10px;
   height: 15%;
@@ -33,7 +35,7 @@
 }
 
 .ui-auction .ant-layout-header {
-  border-bottom: 5px ridge #f6c714;
+  border-bottom: 5px ridge #f6c9148e;
   height: 15%;
   text-align: center;
   display: flex;
@@ -63,7 +65,7 @@
   background-color: #f6c714;
   width: 19%;
   border: 2px outset white !important;
-  border-radius: 10%;
+  border-radius: 10px;
   height: 40px;
   border: none;
   margin-left: 1%;
@@ -75,54 +77,61 @@
 .ui-auction .name-item {
   font-family: "VT323", monospace;
   color: #f6c714;
-  font-size: 40px;
+  font-size: 50px;
+  line-height: 50px;
 }
 
-.avatar{
-background-color: rgb(118, 100, 237);
-padding: 3px 5px;   
-border-radius: 5px;
-color:#fff;
+.avatar {
+  padding: 3px 5px;
+  border-radius: 5px;
+  color: #fff;
 }
-.avatar.self{
-color:#000;
-background-color: greenyellow;
+
+.avatar.self {
+  color: #000;
 }
-.message{
-padding:5px;
-width: auto;
-display: flex;
-flex-direction: row;
-box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-margin: 5px 10px;
+
+.message {
+  padding: 5px;
+  width: auto;
+  display: flex;
+  flex-direction: row;
+  margin: 5px 10px;
+  border-radius: 20px;
+  background-color: rgba(171, 255, 46, 0.3);
 }
-.message-data{
-padding:5px;
+
+.message-data {
+  padding: 5px;
+  text-align: end;
 }
-.message.self{
-justify-content: end;
+
+.message.self {
+  justify-content: end;
+  background-color: rgba(46, 255, 245, 0.3);
 }
- 
+
 
 .ui-auction .gia {
   font-family: "VT323", monospace;
-  color: green;
+  color: white;
   font-size: 25px;
   justify-content: center;
   align-items: center;
   display: flex;
 }
 
-.ui-auction .gia > span {
+.ui-auction .gia>span {
   font-family: "VT323", monospace;
-  color: red;
-  font-size: 25px;
+  color: #f6c714;
+  font-size: 30px;
 }
 
 .ui-auction .item-description {
   font-family: "VT323", monospace;
-  color: white;
+  color: #fff;
   font-size: 25px;
+  border-radius: 10px;
 }
 
 .ui-auction .user-online {
@@ -131,13 +140,13 @@ justify-content: end;
   font-size: 25px;
   margin-top: 20px;
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.25);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
   padding: 5px;
-  border-radius: 10%;
+  border-radius: 10px;
   line-height: 10px;
 }
 
-.ui-auction .user-online > div {
+.ui-auction .user-online>div {
   background-color: green;
   width: 10px;
   height: 10px;
@@ -148,15 +157,15 @@ justify-content: end;
 
 .ui-auction .time {
   font-family: "VT323", monospace;
-  color: #03fc07;
+  color: #ffffff;
   font-size: 25px;
   position: absolute;
   right: 20px;
   margin-top: 20px;
-  background-color: rgba(0, 0, 0, 0.25);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
   padding: 5px;
-  border-radius: 10%;
-  line-height: 10px;
+  border-radius: 10px;
+  line-height: 20px;
 }
 
 .ui-auction .pb-5 {
@@ -170,7 +179,7 @@ justify-content: end;
   border-radius: 10px;
 }
 
-.ui-auction .content-chat > p {
+.ui-auction .content-chat>p {
   line-height: 0;
   font-size: 19px;
   color: green;
@@ -178,7 +187,7 @@ justify-content: end;
   background-color: red;
 }
 
-.ui-auction .content-chat > img {
+.ui-auction .content-chat>img {
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -186,4 +195,8 @@ justify-content: end;
 
 .ui-auction .mid-center {
   height: 90%;
+}
+
+.ui-auction .mid-center>img {
+  margin-top: 15px;
 }

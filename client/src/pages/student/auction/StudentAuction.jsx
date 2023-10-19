@@ -3,7 +3,11 @@ import Sider from "antd/es/layout/Sider";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import React, { useEffect, useState } from "react";
 import "./auction.css";
-import { SendOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  FieldTimeOutlined,
+  SendOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GetUser, SetUser } from "../../../app/reducers/users/users.reducer";
 import { ProfileApi } from "../../../apis/student/profile/profileApi.api";
@@ -100,8 +104,7 @@ export default function StudentAuction() {
       id: user.idUser,
       email: user.email,
       date: moment(new Date()).format("HH:mm:ss"),
-      avatar:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqekwL2LW2-NBO_FE2f2IjZQnp_1xl-shGcg&usqp=CAU",
+      avatar: user.picture,
     });
   };
 
@@ -139,44 +142,52 @@ export default function StudentAuction() {
             <div />
             200 <UserOutlined style={{ fontSize: "20px" }} />
           </span>
-          <span className="time">10:40</span>
+          <span className="time">
+            <FieldTimeOutlined
+              style={{ fontSize: "20px", marginRight: "5px" }}
+            />
+            10:40
+          </span>
 
           <div className="mid-center" style={{ textAlign: "center" }}>
-            <img width={"150px"} height={"150px"} src={item.image} alt="icon" />
+            <img width={"130px"} height={"130px"} src={item.image} alt="icon" />
             <div>
               <h2 className="name-item">{item.name}</h2>
               <p className="item-description">{item.description}</p>
             </div>
             <div>
-              <h2 className="gia">
+              <p className="gia">
                 <img
                   className="pb-5"
-                  width={"40px"}
+                  width={"35px"}
                   src={require("../../../assets/images/transaction-honey.png")}
                   alt="diem"
                 />
                 Giá khởi điểm: <span> 100 điểm</span>
-              </h2>
+              </p>
             </div>
             <div>
-              <h2 className="gia">
+              <p className="gia">
                 <img
                   className="pb-5"
-                  width={"40px"}
+                  width={"35px"}
                   src={require("../../../assets/images/transaction-honey.png")}
                   alt="diem"
                 />
                 Giá hiện tại: <span> 100 điểm</span>
-              </h2>
+              </p>
             </div>
             <div>
-              <h2 className="gia">
+              <p className="gia">
                 Bước giá: <span> 10 điểm</span>
-              </h2>
+              </p>
             </div>
           </div>
           <div className="input-dau-gia">
-            <input className="input-message" />
+            <input
+              className="input-message"
+              placeholder="Nhập giá muốn đấu giá..."
+            />
             <button className="send-message">Xác nhận</button>
           </div>
         </Sider>
@@ -191,8 +202,7 @@ export default function StudentAuction() {
                       className={`message ${
                         chat.senderName === userData.username && "self"
                       }`}
-                      key={index}
-                    >
+                      key={index}>
                       {chat.senderName !== userData.username && (
                         <div className="avatar">
                           {chat.checkHideShowAvatar && (
@@ -217,12 +227,11 @@ export default function StudentAuction() {
                         <p
                           style={{
                             lineHeight: "0",
-                            fontSize: "19px",
+                            fontSize: "16px",
                             color: "green",
                             textAlign: "center",
-                            backgroundColor: "red",
-                          }}
-                        >
+                            width: "100%",
+                          }}>
                           {chat.date}
                         </p>
                         {chat.message}

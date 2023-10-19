@@ -28,7 +28,7 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
                     WHERE (a.student_id = :#{#req.idStudent})
                     AND (:#{#req.status} IS NULL OR g.status = :#{#req.status})
                     AND (:#{#req.type} IS NULL OR g.type = :#{#req.type})
-                    GROUP BY ag.id, idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image
+                    GROUP BY idGift;
             """, nativeQuery = true)
     Page<StudentArchiveResponse> getAllGiftArchive(@Param("req") StudentArchiveFilterRequest req, Pageable pageable);
 
@@ -38,7 +38,7 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
             		JOIN archive_gift ag ON ag.chest_id = c.id
             		JOIN archive a ON ag.archive_id = a.id
             		WHERE (a.student_id = :#{#filterRequest.idStudent}) 
-            		GROUP BY c.id, ag.id, c.name
+            		GROUP BY c.id;
             """, nativeQuery = true)
     Page<StudentArchiveGetChestResponse> getChestArchive(StudentArchiveFilterRequest filterRequest, Pageable pageable);
 
@@ -50,7 +50,7 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
     List<String> listGiftId(@Param("req") StudentArchiveOpenChestRequest req);
 
     @Query(value = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.id, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
+                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, COUNT(g.id) AS quantity, ag.id, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
                     FROM gift g 
                     JOIN archive_gift ag ON ag.gift_id = g.id 
                     JOIN archive a ON ag.archive_id = a.id 
@@ -66,7 +66,7 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
                     JOIN  archive a ON ag.archive_id = a.id 
                     WHERE (a.student_id = :#{#req.idStudent})
                     AND (g.id = :#{#req.idGift})
-                    GROUP BY g.id, ag.id, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image ;
+                    GROUP BY g.id;
             """, nativeQuery = true)
     StudentArchiveResponse detailArchiveGift(@Param("req") StudentGetArchiveGiftRequest req);
 
@@ -77,7 +77,7 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
                     JOIN archive a ON ag.archive_id = a.id
                     WHERE (a.student_id = :#{#req.idStudent})
                     AND (c.id = :#{#req.idChest})
-                    GROUP BY ag.id, c.id, c.name
+                    GROUP BY c.id;
             """, nativeQuery = true)
     StudentArchiveGetChestResponse detailArchiveChest(@Param("req") StudentGetArchiveChestRequest req);
 

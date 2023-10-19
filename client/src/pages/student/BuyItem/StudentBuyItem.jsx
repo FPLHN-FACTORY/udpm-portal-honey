@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { ResquestConversion } from "../../../apis/user/ResquestConversiton/ResquestConversion.api";
 import { useNavigate } from "react-router-dom";
-import "./RequestConversion.css";
+import "./StudentBuyItem.css";
 import {
   Button,
   Card,
@@ -17,7 +17,7 @@ import {
 } from "antd";
 import { StarTwoTone } from "@ant-design/icons";
 
-export default function AddRequestConversion(props) {
+export default function StudentBuyItem(props) {
   const requestConversion = props;
   const [fillCategory, setFillCategory] = useState([]);
   const [fillGift, setFillGift] = useState([]);
@@ -169,7 +169,6 @@ export default function AddRequestConversion(props) {
         ? selectedConversion.honeyCategoryId
         : 0,
       note: addDiscribe,
-      idArchive: fillUserApi.idUser,
     };
     createRequest(dataToAdd);
   };

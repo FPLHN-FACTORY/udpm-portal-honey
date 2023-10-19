@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Col, Pagination, Row, Spin, Tabs } from "antd";
+import { Card, Col, Pagination, Row, Spin, Tabs, Tooltip } from "antd";
 import "./studentChest.css";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -31,6 +31,7 @@ const StudentChest = () => {
   const [archiveGift, setArchiveGift] = useState();
   const [archiveChest, setArchiveChest] = useState();
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
+  const [hoveredName, setHoveredName] = useState("");
 
   function ImageRenderer({ image }) {
     const byteArray = image ? image.split(",").map(Number) : [];
@@ -76,6 +77,7 @@ const StudentChest = () => {
     setLoading(true);
     ArchiveAPI.getGift(filter).then((response) => {
       dispatch(SetGiftArchive(response.data.data));
+      console.log(response.data.data);
       setLoading(false);
     });
   };
@@ -92,15 +94,11 @@ const StudentChest = () => {
     setLoading(true);
     ArchiveAPI.getChest(filter).then((response) => {
       dispatch(SetArchiveChest(response.data.data));
-      console.log(response.data.data);
       setLoading(false);
     });
   };
 
   const handleTabChange = (key) => {
-    setName("");
-    setNote("");
-    setQuantity("");
     setShowAdditionalInfo(false);
     if (key === "0") {
       setFilter({ type: 0 });
@@ -134,15 +132,13 @@ const StudentChest = () => {
       <Spin spinning={loading}></Spin>
       <div
         className="dialog-transaction"
-        style={{ minWidth: "800px", Height: "1000px" }}
-      >
+        style={{ minWidth: "800px", Height: "1000px" }}>
         <Card>
           <div className="bar-transaction" />
           <Row
             style={{
               padding: "5px 15px 0px 15px",
-            }}
-          >
+            }}>
             <Col span={12}>
               <div className="tag-backgroup">
                 <b className="text-title"></b>
@@ -205,47 +201,53 @@ const StudentChest = () => {
                 {filter.type === 0 &&
                   dataGift.map((data, id) => (
                     <Col key={id} span={4}>
-                      <div
-                        className="chess-square"
-                        onClick={() => {
-                          detailArchive(data.idGift);
-                          setArchiveGift(data);
-                          setShowAdditionalInfo(true);
-                        }}
-                      >
-                        <ImageRenderer image={data.image} />
-                      </div>
+                      <Tooltip title={data.name}>
+                        <div
+                          className="chess-square"
+                          onClick={() => {
+                            detailArchive(data.idGift);
+                            setArchiveGift(data);
+                            setShowAdditionalInfo(true);
+                          }}>
+                          <ImageRenderer image={data.image} />
+                          <div className="quantity-gift">{data.quantity}</div>
+                        </div>
+                      </Tooltip>
                     </Col>
                   ))}
                 {(filter.type === 1 || filter.type === 2) &&
                   dataArchive.map((data, id) => (
                     <Col key={id} span={4}>
-                      <div
-                        className="chess-square"
-                        onClick={() => {
-                          detailArchive(data.idGift);
-                          setArchiveGift(data);
-                          setShowAdditionalInfo(true);
-                        }}
-                      >
-                        <ImageRenderer image={data.image} />
-                      </div>
+                      <Tooltip title={data.name}>
+                        <div
+                          className="chess-square"
+                          onClick={() => {
+                            detailArchive(data.idGift);
+                            setArchiveGift(data);
+                            setShowAdditionalInfo(true);
+                          }}>
+                          <ImageRenderer image={data.image} />
+                          <div className="quantity-gift">{data.quantity}</div>
+                        </div>
+                      </Tooltip>
                     </Col>
                   ))}
 
                 {filter.type === 3 &&
                   dataChest.map((data, id) => (
                     <Col key={id} span={4}>
-                      <div
-                        className="chess-square"
-                        onClick={() => {
-                          detailArchiveChest(data.chestId);
-                          setArchiveChest(data);
-                          setShowAdditionalInfo(true);
-                        }}
-                      >
-                        <ImageRenderer image={data.image} />
-                      </div>
+                      <Tooltip title={data.name}>
+                        <div
+                          className="chess-square"
+                          onClick={() => {
+                            detailArchiveChest(data.chestId);
+                            setArchiveChest(data);
+                            setShowAdditionalInfo(true);
+                          }}>
+                          <ImageRenderer image={data.image} />
+                          <div className="quantity-gift">{data.quantity}</div>
+                        </div>
+                      </Tooltip>
                     </Col>
                   ))}
               </Row>

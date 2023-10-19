@@ -29,8 +29,6 @@ import TransactionPage from "./pages/student/transaction/TransactionPage";
 import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction";
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
-import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
-import GiftStudent from "./pages/teacher/giftstudent/GiftStudent";
 import StArchive from "./pages/student/archive/StArchive";
 import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
 import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
@@ -44,6 +42,10 @@ import UpgradeHoney from "./pages/student/upgradeHoney/UpgradeHoney";
 import StudentAuctionRoom from "./pages/student/auction/StudentAuctionRoom";
 import StudentAuction from "./pages/student/auction/StudentAuction";
 import StudentAuctionRoomInside from "./pages/student/auction/StudentAuctionRoomInside";
+import RequestApprovedHistory from "./pages/censor/requestmanager/ApproveHistory";
+import ListRequest from "./pages/censor/requestmanager/ListRequest";
+import ConvertionHoney from "./pages/teacher/convertion-honey/RequestConversion";
+import TeacherRequestConversionHistory from "./pages/teacher/convertion-honey/RequestConversionHistory";
 import LetterDetail from "./pages/student/letters/LetterDetail";
 import Letter from "./pages/student/letters/letter";
 
@@ -181,6 +183,26 @@ function App() {
               }
             />
             <Route
+              path="/censor/request-manager/approved-history"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <RequestApprovedHistory />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/request-manager/list-request"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <ListRequest />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
               path="/censor/request-manager/transaction"
               element={
                 <AuthGuard>
@@ -272,11 +294,11 @@ function App() {
               }
             />
             <Route
-              path="/teacher/list-students"
+              path="/teacher/request-conversion/history"
               element={
                 <AuthGuard>
                   <DashboardTeacher>
-                    <GiftStudent />
+                    <TeacherRequestConversionHistory />
                   </DashboardTeacher>
                 </AuthGuard>
               }
