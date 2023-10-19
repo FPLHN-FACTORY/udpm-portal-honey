@@ -37,24 +37,15 @@ public class DBGenerator implements CommandLineRunner {
     private SemesterRepository semesterRepository;
 
     @Autowired
-    private UserSemesterRepository userSemesterRepository;
-
-    @Autowired
     private ConversionRepository conversionRepository;
-
-    @Autowired
-    private ClubRepository clubRepository;
 
     @Autowired
     private AuctionRepository auctionRepository;
 
-    public void run(String... args) throws Exception {
+    @Autowired
+    private UpgradeRateRepository upgradeRateRepository;
 
-        Club club = new Club();
-        club.setCode("CLB1");
-        club.setName("Bee SuperHero");
-        club.setStatus(Status.HOAT_DONG);
-        club.setId(clubRepository.save(club).getId());
+    public void run(String... args) throws Exception {
 
         Category category1 = new Category();
         category1.setName("GOLD");
@@ -76,6 +67,20 @@ public class DBGenerator implements CommandLineRunner {
         category3.setCode("CT3");
         category3.setId(categoryRepository.save(category3).getId());
         category3.setTransactionRights(CategoryTransaction.FREE);
+
+        UpgradeRate upgrade = new UpgradeRate();
+        upgrade.setCode("RT1");
+        upgrade.setOriginalHoney(category3.getId());
+        upgrade.setDestinationHoney(category2.getId());
+        upgrade.setRatio(0.8);
+        upgrade.setStatus(Status.HOAT_DONG);
+
+        UpgradeRate upgrade1 = new UpgradeRate();
+        upgrade1.setCode("RT1");
+        upgrade1.setOriginalHoney(category2.getId());
+        upgrade1.setDestinationHoney(category2.getId());
+        upgrade1.setRatio(0.3);
+        upgrade1.setStatus(Status.HOAT_DONG);
 
         Semester semester = new Semester();
         semester.setCode("SE1");
@@ -156,7 +161,7 @@ public class DBGenerator implements CommandLineRunner {
         gift5.setName("Vô cực kiếm");
         gift5.setStatus(StatusGift.ACCEPT);
         gift5.setType(TypeGift.VAT_PHAM);
-        gift5.setId(giftRepository.save(gift4).getId());
+        gift5.setId(giftRepository.save(gift5).getId());
 
         Gift gift6 = new Gift();
         gift6.setCode("G6");
@@ -172,19 +177,38 @@ public class DBGenerator implements CommandLineRunner {
         gift7.setType(TypeGift.VAT_PHAM);
         gift7.setId(giftRepository.save(gift7).getId());
 
+        Gift gift8 = new Gift();
+        gift8.setCode("G8");
+        gift8.setName("Giáp gai");
+        gift8.setStatus(StatusGift.ACCEPT);
+        gift8.setType(TypeGift.VAT_PHAM);
+        gift8.setId(giftRepository.save(gift8).getId());
+
+        Gift gift9 = new Gift();
+        gift9.setCode("G7");
+        gift9.setName("Mũ phù thủy");
+        gift9.setStatus(StatusGift.ACCEPT);
+        gift9.setType(TypeGift.VAT_PHAM);
+        gift9.setId(giftRepository.save(gift9).getId());
+
+        Gift gift10 = new Gift();
+        gift10.setCode("G7");
+        gift10.setName("Nỏ sét");
+        gift10.setStatus(StatusGift.ACCEPT);
+        gift10.setType(TypeGift.VAT_PHAM);
+        gift10.setId(giftRepository.save(gift10).getId());
+
         UserSemester userSemester1 = new UserSemester();
         userSemester1.setSemesterId(semester.getId());
         userSemester1.setStudentId("C4CF21F4-F3E0-490E-B1CC-08DBB743DD7D");
         userSemester1.setTotalHoney(2000);
         userSemester1.setCategoryId(category1.getId());
-        userSemester1.setId(userSemesterRepository.save(userSemester1).getId());
 
         UserSemester userSemester2 = new UserSemester();
         userSemester2.setSemesterId(semester.getId());
         userSemester2.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
         userSemester2.setTotalHoney(3100);
         userSemester2.setCategoryId(category2.getId());
-        userSemester2.setId(userSemesterRepository.save(userSemester2).getId());
 
 
         Conversion conversion1 = new Conversion();
@@ -254,18 +278,6 @@ public class DBGenerator implements CommandLineRunner {
         history6.setStudentId("C4CF21F4-F3E0-490E-B1CC-08DBB743DD7D");
         history6.setTeacherId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
         history6.setId(historyRepository.save(history6).getId());
-
-        Club club1 = new Club();
-        club1.setCode("CLB2");
-        club1.setName("Bóng đá");
-        club1.setStatus(Status.HOAT_DONG);
-        club1.setId(clubRepository.save(club1).getId());
-
-        Club club2 = new Club();
-        club2.setCode("CLB3");
-        club2.setName("Bee Bee");
-        club2.setStatus(Status.HOAT_DONG);
-        club2.setId(clubRepository.save(club2).getId());
 
         Auction auction = new Auction();
         auction.setName("Phiên đấu giá biển số");

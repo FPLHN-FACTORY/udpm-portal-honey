@@ -4,9 +4,8 @@ import React, { useState } from "react";
 import { RandomAddPointAPI } from "../../../apis/censor/random-add-point/random-add-point.api";
 import {
   SetImport,
-  GetImport,
 } from "../../../app/reducers/import/import.reducer";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useAppDispatch } from "../../../app/hooks";
 
 export default function ModalUpLoadFile(props) {
   const {
@@ -40,7 +39,6 @@ export default function ModalUpLoadFile(props) {
       setLoading(true);
       RandomAddPointAPI.createPreviewImportExcel(formData)
         .then((response) => {
-          console.log(response.data.data);
           setDataPreview(response.data.data.lstAdminAddItemDTO);
           dispatch(SetImport(response.data.data));
           message.success("Import excel thành công");
@@ -60,10 +58,6 @@ export default function ModalUpLoadFile(props) {
     setNameFileUpload(e.file.name);
     setFile(e);
   };
-  const data = useAppSelector(GetImport);
-
-  console.log(data);
-
   const handleRemoveFile = () => {
     setNameFileUpload("");
     setOpenUpload(false);

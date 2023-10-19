@@ -4,16 +4,13 @@ import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.teacher.model.response.TeacherExcelMessageResponse;
 import com.honeyprojects.core.teacher.model.response.TeacherGiftStudentResponse;
 import com.honeyprojects.core.teacher.repository.TeacherArchiveGiftRepository;
-import com.honeyprojects.core.teacher.repository.TeacherClubRepository;
 import com.honeyprojects.core.teacher.repository.TeacherGiftRepository;
 import com.honeyprojects.core.teacher.service.TeacherExcelStudentGiftService;
 import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.entity.Gift;
-import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TypeGift;
-import com.honeyprojects.repository.ArchiveGiftRepository;
 import com.honeyprojects.repository.ArchiveRepository;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import org.apache.poi.ss.usermodel.*;
@@ -44,9 +41,6 @@ public class TeacherExcelStudentGiftServiceImpl implements TeacherExcelStudentGi
 
     @Autowired
     private ArchiveRepository archiveRepository;
-
-    @Autowired
-    private TeacherClubRepository teacherClubRepository;
 
 
     @Override
@@ -135,11 +129,8 @@ public class TeacherExcelStudentGiftServiceImpl implements TeacherExcelStudentGi
             for (TeacherGiftStudentResponse response : dataList) {
 
                 SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(response.getEmail());
-                System.out.println(response.getEmail());
-                String idClub = teacherClubRepository.getIdGiftByCode(response.getClub());
                 Archive archive = new Archive();
                 archive.setStudentId(simpleResponse.getId());
-                archive.setClubId(idClub);
                 archiveRepository.save(archive);
                 System.out.println(archive);
                 Gift gift = teacherGiftRepository.getIdClubByCode("G4");

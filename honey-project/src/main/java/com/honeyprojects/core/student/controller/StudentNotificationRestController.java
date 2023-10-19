@@ -24,6 +24,13 @@ public class StudentNotificationRestController extends BaseController {
     @Autowired
     private UdpmHoney udpmHoney;
 
+    @MessageMapping("/create-notification-user")
+    @SendTo("/portal-honey/create-notification-user")
+    private ResponseObject notificationUser(){
+        System.out.println(udpmHoney.getIdUser());
+        return new ResponseObject(studentNotificationService.countNotification(udpmHoney.getIdUser()));
+    }
+
     @Autowired
     private StudentNotificationService studentNotificationService;
 
@@ -58,9 +65,5 @@ public class StudentNotificationRestController extends BaseController {
         studentNotificationService.updateAllStatus();
     }
 
-    @MessageMapping("/create-notification-user/{userId}")
-    @SendTo("/portal-honey/create-notification-user/{userId}")
-    private ResponseObject notificationUser( @DestinationVariable String userId){
-        return new ResponseObject(studentNotificationService.countNotification(userId));
-    }
+
 }
