@@ -118,7 +118,7 @@ export default function AddRequestConversion(props) {
   };
 
   const fechGift = () => {
-    GiftAPI.fetchAllGift().then((response) => {
+    ResquestConversion.fetchAllGift().then((response) => {
       setFillGift(response.data.data);
     });
   };
@@ -148,9 +148,6 @@ export default function AddRequestConversion(props) {
 
     if (!selectedConversion) {
       message.error("Vui lòng chọn một mục trong danh sách chọn");
-      return;
-    } else if (!addDiscribe.trim()) {
-      message.error("Bạn chưa nhập mô tả");
       return;
     } else if (
       (selectedConversion ? selectedConversion.honey : 0) > fillPoint.point
@@ -213,40 +210,6 @@ export default function AddRequestConversion(props) {
 
   return (
     <>
-      <Modal
-        title="Nhập mô tả"
-        open={isModalOpen}
-        onOk={onSubmitCreate}
-        onCancel={handleCancel}
-        footer={null}
-      >
-        <textarea
-          autoFocus
-          name=""
-          id=""
-          cols="30"
-          rows="10"
-          style={{ width: "465px", height: "100px" }}
-          onChange={(e) => setAddDiscribe(e.target.value)}
-        />
-        {selectedGiftNote && (
-          <div>
-            <h4 style={{ color: "red" }}>
-              *Sinh viên phải nhập mô tả theo định dạng sau:
-            </h4>
-            <p>{selectedGiftNote}</p>
-          </div>
-        )}
-        <div style={{ textAlign: "center" }}>
-          <Button
-            className="btnXacNhan"
-            style={{ marginTop: "20px" }}
-            onClick={onSubmitCreate}
-          >
-            XÁC NHẬN
-          </Button>
-        </div>
-      </Modal>
       <Card style={{ marginTop: "20px" }} className="cartAllConversion">
         <p style={{ fontSize: "20px", fontWeight: "700", color: "#A55600" }}>
           <img
@@ -347,6 +310,7 @@ export default function AddRequestConversion(props) {
                       }}
                     >
                       <ImageRenderer image={gift.image} />
+
                       {categoryStatus === 1 || gift.status === 1 ? (
                         <StarTwoTone
                           style={{
@@ -358,6 +322,7 @@ export default function AddRequestConversion(props) {
                           }}
                         />
                       ) : null}
+                      {gift.quantity ? gift.quantity : ""}
                     </div>
                   </Tooltip>
                 </Col>
@@ -365,6 +330,15 @@ export default function AddRequestConversion(props) {
             </Row>
           </Card>
         </Card>
+        <div style={{ textAlign: "center" }}>
+          <Button
+            className="btnXacNhan"
+            style={{ marginTop: "20px" }}
+            onClick={onSubmitCreate}
+          >
+            XÁC NHẬN
+          </Button>
+        </div>
       </Card>
     </>
   );

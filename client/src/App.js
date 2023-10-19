@@ -47,6 +47,7 @@ import StudentAuction from "./pages/student/auction/StudentAuction";
 import StudentAuctionRoomInside from "./pages/student/auction/StudentAuctionRoomInside";
 import LetterDetail from "./pages/student/letters/LetterDetail";
 import Letter from "./pages/student/letters/letter";
+import StudentBuyItem from "./pages/student/BuyItem/StudentBuyItem";
 
 function App() {
   const token =
@@ -429,6 +430,16 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     <LetterDetail />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/buy-item"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <StudentBuyItem />
                   </DashboardAuthUser>
                 </AuthGuard>
               }

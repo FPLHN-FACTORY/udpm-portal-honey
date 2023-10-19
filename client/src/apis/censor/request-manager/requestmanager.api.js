@@ -57,11 +57,11 @@ export class RequestManagerAPI {
     });
   };
 
-  static changeStatusConversion = (idHistory, status) => {
+  static changeStatusConversion = (idStudent, idGift, idHistory, status) => {
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/change-status-conversion`,
-      data: { idHistory, status },
+      data: { idStudent, idGift, idHistory, status },
     });
   };
 

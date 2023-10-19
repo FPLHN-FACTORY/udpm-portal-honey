@@ -16,6 +16,7 @@ import {
   message,
 } from "antd";
 import { StarTwoTone } from "@ant-design/icons";
+import { BuyItem } from "../../../apis/student/buyItem/ButItem";
 
 export default function StudentBuyItem(props) {
   const requestConversion = props;
@@ -94,7 +95,7 @@ export default function StudentBuyItem(props) {
   };
 
   const getPoint = (data) => {
-    ResquestConversion.getPointHoney(data)
+    BuyItem.getPointHoney(data)
       .then((response) => {
         setFillPoint(response.data.data ? response.data.data : "0");
       })
@@ -102,7 +103,7 @@ export default function StudentBuyItem(props) {
   };
 
   const fechUserApiById = () => {
-    ResquestConversion.getUserAPiByid().then((response) => {
+    BuyItem.getUserAPiByid().then((response) => {
       setFillUserApi({
         ...response.data.data,
         khoa: "17.3",
@@ -112,13 +113,13 @@ export default function StudentBuyItem(props) {
   };
 
   const fechCategory = () => {
-    ResquestConversion.fetchAllCategory().then((response) => {
+    BuyItem.fetchAllCategory().then((response) => {
       setFillCategory(response.data.data);
     });
   };
 
   const fechGift = () => {
-    GiftAPI.fetchAllGift().then((response) => {
+    BuyItem.fetchAllGift().then((response) => {
       setFillGift(response.data.data);
     });
   };
@@ -149,9 +150,6 @@ export default function StudentBuyItem(props) {
     if (!selectedConversion) {
       message.error("Vui lòng chọn một mục trong danh sách chọn");
       return;
-    } else if (!addDiscribe.trim()) {
-      message.error("Bạn chưa nhập mô tả");
-      return;
     } else if (
       (selectedConversion ? selectedConversion.honey : 0) > fillPoint.point
     ) {
@@ -174,7 +172,7 @@ export default function StudentBuyItem(props) {
   };
 
   const createRequest = (addRequest) => {
-    ResquestConversion.createRequest(addRequest)
+    BuyItem.createRequest(addRequest)
       .then((response) => {
         if (response.data.success) {
           message.success("Đổi quà thành công");
@@ -212,40 +210,6 @@ export default function StudentBuyItem(props) {
 
   return (
     <>
-      <Modal
-        title="Nhập mô tả"
-        open={isModalOpen}
-        onOk={onSubmitCreate}
-        onCancel={handleCancel}
-        footer={null}
-      >
-        <textarea
-          autoFocus
-          name=""
-          id=""
-          cols="30"
-          rows="10"
-          style={{ width: "465px", height: "100px" }}
-          onChange={(e) => setAddDiscribe(e.target.value)}
-        />
-        {selectedGiftNote && (
-          <div>
-            <h4 style={{ color: "red" }}>
-              *Sinh viên phải nhập mô tả theo định dạng sau:
-            </h4>
-            <p>{selectedGiftNote}</p>
-          </div>
-        )}
-        <div style={{ textAlign: "center" }}>
-          <Button
-            className="btnXacNhan"
-            style={{ marginTop: "20px" }}
-            onClick={onSubmitCreate}
-          >
-            XÁC NHẬN
-          </Button>
-        </div>
-      </Modal>
       <Card style={{ marginTop: "20px" }} className="cartAllConversion">
         <p style={{ fontSize: "20px", fontWeight: "700", color: "#A55600" }}>
           <img
@@ -346,17 +310,7 @@ export default function StudentBuyItem(props) {
                       }}
                     >
                       <ImageRenderer image={gift.image} />
-                      {categoryStatus === 1 || gift.status === 1 ? (
-                        <StarTwoTone
-                          style={{
-                            position: "absolute",
-                            top: "5px",
-                            right: "5px",
-                            fontSize: "18px",
-                            color: "red",
-                          }}
-                        />
-                      ) : null}
+                      <div style={{ marginTop: "40px" }}>{gift.quantity}</div>
                     </div>
                   </Tooltip>
                 </Col>
@@ -364,6 +318,15 @@ export default function StudentBuyItem(props) {
             </Row>
           </Card>
         </Card>
+        <div style={{ textAlign: "center" }}>
+          <Button
+            className="btnXacNhan"
+            style={{ marginTop: "20px" }}
+            onClick={onSubmitCreate}
+          >
+            XÁC NHẬN
+          </Button>
+        </div>
       </Card>
     </>
   );

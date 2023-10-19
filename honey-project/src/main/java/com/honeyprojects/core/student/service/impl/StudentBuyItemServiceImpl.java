@@ -6,13 +6,16 @@ import com.honeyprojects.core.student.model.request.StudentBuyItemRequest;
 import com.honeyprojects.core.student.model.request.StudentCreateRequestConversionRequest;
 import com.honeyprojects.core.student.model.request.StudentFilterHistoryRequest;
 import com.honeyprojects.core.student.model.response.StudentCreateResquestConversionResponse;
+import com.honeyprojects.core.student.model.response.StudentGiftResponse;
 import com.honeyprojects.core.student.repository.StudentArchiveGiftRepository;
+import com.honeyprojects.core.student.repository.StudentArchiveRepository;
 import com.honeyprojects.core.student.repository.StudentCategoryRepository;
 import com.honeyprojects.core.student.repository.StudentCreateRequestConversionRepository;
 import com.honeyprojects.core.student.repository.StudentGiftRepository;
 import com.honeyprojects.core.student.repository.StudentHoneyRepository;
 import com.honeyprojects.core.student.repository.StudentUserSemesterRepository;
 import com.honeyprojects.core.student.service.StudentBuyItemService;
+import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Gift;
@@ -29,6 +32,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.List;
 
 @Service
 public class StudentBuyItemServiceImpl implements StudentBuyItemService {
@@ -53,6 +57,9 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
     @Autowired
     private StudentArchiveGiftRepository giftArchiveRepository;
 
+    @Autowired
+    private StudentArchiveRepository archiveRepository;
+
 
     @Override
     public History addBuyItem(StudentBuyItemRequest createRequest) {
@@ -63,9 +70,11 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
         Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(createRequest.getStudentId(), createRequest.getHoneyCategoryId());
         History history = new History();
         ArchiveGift archiveGift = new ArchiveGift();
+        Archive archive = new Archive();
         if (honey == null) {
             String idUs = userSemesterRepository.getSemesterByStudent(createRequest.getStudentId());
             if (idUs == null) return null;
+            // Nếu Honey chưa tồn tại, tạo mới
             honey = new Honey();
             honey.setStudentId(createRequest.getStudentId());
             honey.setHoneyCategoryId(createRequest.getHoneyCategoryId());
@@ -73,22 +82,28 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
             honey.setHoneyPoint(createRequest.getHoneyPoint());
             honey = honeyRepository.save(honey);
         } else {
-            if (category.getCategoryStatus().equals(CategoryStatus.FREE) && gift.getStatus().equals(StatusGift.FREE)) {
                 history.setStatus(HoneyStatus.DA_PHE_DUYET);
                 history.setType(TypeHistory.DOI_QUA);
 
                 int deductedPoints = createRequest.getHoneyPoint();
                 honey.setHoneyPoint(honey.getHoneyPoint() - deductedPoints);
                 honey = honeyRepository.save(honey);
-            }
+                gift.setQuantity(gift.getQuantity() - 1);
+                giftRepository.save(gift);
         }
 
         if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
-            archiveGift.setGiftId(createRequest.getGiftId());
-            archiveGift.setArchiveId("738492b2-627f-11ee-8c99-0242ac120002");
-            archiveGift.setNote(createRequest.getNote());
-            giftArchiveRepository.save(archiveGift);
+            archive.setStudentId(createRequest.getStudentId());
+            archiveRepository.save(archive);
+            if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
+                archiveGift.setGiftId(createRequest.getGiftId());
+                archiveGift.setNote(createRequest.getNote());
+                archiveGift.setArchiveId(archive.getId());
+                giftArchiveRepository.save(archiveGift);
+            }
         }
+
+        // Tiếp tục với việc thêm yêu cầu vào bảng History
         Long dateNow = Calendar.getInstance().getTimeInMillis();
         history.setCreatedAt(dateNow);
         history.setHoneyPoint(createRequest.getHoneyPoint());
@@ -98,7 +113,12 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
         history.setNameGift(createRequest.getNameGift());
         history.setNote(createRequest.getNote());
 
+
+
+
         return studentCreateRequestConversionRepository.save(history);
+
+
     }
 
     @Override
@@ -115,6 +135,11 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
     @Override
     public SimpleResponse getUserById(String id) {
         return convertRequestApiidentity.handleCallApiGetUserById(id);
+    }
+
+    @Override
+    public List<StudentGiftResponse> getAllListItem() {
+        return giftRepository.getAllListItem();
     }
 
 }

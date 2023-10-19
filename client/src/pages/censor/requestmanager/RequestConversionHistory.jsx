@@ -87,8 +87,13 @@ export default function RequestConversionHistory() {
     }
   };
 
-  const changeStatusConversion = (idHistory, status) => {
-    RequestManagerAPI.changeStatusConversion(idHistory, status)
+  const changeStatusConversion = (idStudent, idGift, idHistory, status) => {
+    RequestManagerAPI.changeStatusConversion(
+      idStudent,
+      idGift,
+      idHistory,
+      status
+    )
       .then((response) => {
         if (response.data.success) {
           if (status === 1) message.success("Đã xác nhận yêu cầu cộng điểm!");
@@ -174,9 +179,22 @@ export default function RequestConversionHistory() {
           <div
             style={{ fontSize: "19px", textAlign: "center", color: "green" }}
           >
+            {console.log(values)}
             {values.status !== 1 && values.status !== 2 && (
               <CheckCircleFilled
-                onClick={() => changeStatusConversion(values.id, 1)}
+                onClick={() => {
+                  const dataStatus = {
+                    idStudent: values.studentId,
+                    note: values.note,
+                    idGift: values.giftId,
+                  };
+                  changeStatusConversion(
+                    values.studentId,
+                    values.giftId,
+                    values.id,
+                    1
+                  );
+                }}
               />
             )}
             {values.status !== 1 && values.status !== 2 && (

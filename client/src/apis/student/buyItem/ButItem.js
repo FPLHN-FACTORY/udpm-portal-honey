@@ -1,7 +1,7 @@
 import { request } from "../../../helper/request.helper";
 
-export class ResquestConversion {
-  static COMPONENT_NAME = "student/createResquest";
+export class BuyItem {
+  static COMPONENT_NAME = "student/buyItem";
 
   //UserAPI
   static getUserAPi = () => {

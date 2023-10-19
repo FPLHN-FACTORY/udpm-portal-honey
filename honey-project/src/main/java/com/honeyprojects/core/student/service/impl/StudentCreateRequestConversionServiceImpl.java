@@ -5,6 +5,7 @@ import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.student.model.request.StudentCreateRequestConversionRequest;
 import com.honeyprojects.core.student.model.request.StudentFilterHistoryRequest;
 import com.honeyprojects.core.student.model.response.StudentCreateResquestConversionResponse;
+import com.honeyprojects.core.student.model.response.StudentGiftResponse;
 import com.honeyprojects.core.student.repository.StudentArchiveGiftRepository;
 import com.honeyprojects.core.student.repository.StudentArchiveRepository;
 import com.honeyprojects.core.student.repository.StudentCategoryRepository;
@@ -30,6 +31,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.List;
 
 @Service
 public class StudentCreateRequestConversionServiceImpl implements StudentCreateResquestConversionService {
@@ -90,10 +92,9 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
                 int deductedPoints = createRequest.getHoneyPoint();
                 honey.setHoneyPoint(honey.getHoneyPoint() - deductedPoints);
                 honey = honeyRepository.save(honey);
+                gift.setQuantity(gift.getQuantity() - 1);
+                giftRepository.save(gift);
             }
-
-
-
         }
 
         if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
@@ -139,6 +140,11 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
     @Override
     public SimpleResponse getUserById(String id) {
         return convertRequestApiidentity.handleCallApiGetUserById(id);
+    }
+
+    @Override
+    public List<StudentGiftResponse> getListGift() {
+        return giftRepository.getAllListGift();
     }
 
 }

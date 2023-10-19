@@ -6,7 +6,10 @@ import com.honeyprojects.core.student.model.request.StudentBuyItemRequest;
 import com.honeyprojects.core.student.model.request.StudentCreateRequestConversionRequest;
 import com.honeyprojects.core.student.model.request.StudentFilterHistoryRequest;
 import com.honeyprojects.core.student.model.response.StudentCreateResquestConversionResponse;
+import com.honeyprojects.core.student.model.response.StudentGiftResponse;
 import com.honeyprojects.entity.History;
+
+import java.util.List;
 
 public interface StudentBuyItemService {
 
@@ -17,4 +20,6 @@ public interface StudentBuyItemService {
     void deleteRequestById(String id);
 
     SimpleResponse getUserById(String id);
+
+    List<StudentGiftResponse> getAllListItem();
 }

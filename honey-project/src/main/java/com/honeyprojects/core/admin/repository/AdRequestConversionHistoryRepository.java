@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AdRequestConversionHistoryRepository extends HistoryRepository {
     @Query(value = """
-                SELECT c.name as nameCategory,  h.id,h.name_gift, h.honey_point, h.last_modified_date,
+                SELECT c.name as nameCategory, h.gift_id , h.id,h.name_gift, h.honey_point, h.last_modified_date,
                 h.created_date, h.status, h.student_id, h.note FROM History h  inner join
                  honey hn on hn.id = h.honey_id inner join category c 
                  on hn.honey_category_id = c.id 
