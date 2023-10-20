@@ -8,7 +8,9 @@ import com.honeyprojects.core.student.model.request.StudentGetArchiveGiftRequest
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
 import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
+import com.honeyprojects.core.student.model.response.archive.StudentArchiveByUserResponse;
 import com.honeyprojects.entity.ArchiveGift;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -31,5 +33,7 @@ public interface StudentArchiveService {
     StudentArchiveResponse detailArchiveGift(StudentGetArchiveGiftRequest request);
 
     StudentArchiveGetChestResponse detailArchiveChest(StudentGetArchiveChestRequest request);
+
+    List<StudentArchiveByUserResponse> findArchiveByUser(String idUser , String idCategory);
 
 }

@@ -9,8 +9,10 @@ import com.honeyprojects.core.student.model.request.StudentGetArchiveGiftRequest
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
 import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
+import com.honeyprojects.core.student.model.response.archive.StudentArchiveByUserResponse;
 import com.honeyprojects.core.student.service.StudentArchiveService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +20,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/student/archive")
@@ -69,6 +74,11 @@ public class StudentArchiveController {
     @GetMapping("/detail-chest")
     public StudentArchiveGetChestResponse detailArchiveChest(StudentGetArchiveChestRequest request) {
         return service.detailArchiveChest(request);
+    }
+
+    @GetMapping("/find-all-user")
+    public ResponseObject findAllByUser(@RequestParam("id") String id , @RequestParam("idCategory") String idCategory) {
+        return new ResponseObject(service.findArchiveByUser(id, idCategory));
     }
 
 }

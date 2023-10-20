@@ -26,7 +26,7 @@ public interface StudentAuctionResponse {
     BigDecimal getLastPrice();
 
     @Value("#{target.honey}")
-    Long getHoney();
+    BigDecimal getHoney();
 
     @Value("#{target.gift_id}")
     String getGiftId();
@@ -48,4 +48,7 @@ public interface StudentAuctionResponse {
 
     @Value("#{target.to_date}")
     Long getToDate();
+
+    @Value("#{target.image}")
+    byte[] getImage();
 }

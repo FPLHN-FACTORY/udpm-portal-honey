@@ -30,12 +30,13 @@ public interface StudentAuctionRepository extends AuctionRepository {
                     WHEN a.status = 1 THEN 'KHONG_HOAT_DONG'
                 END AS status,
                 a.from_date,
-                a.to_date
+                a.to_date,
+                g.image
             FROM auction a
             LEFT JOIN category cate ON cate.id = a.honey_category_id
             LEFT JOIN gift g on a.gift_id = g.id
             WHERE  a.status = 0
-            AND a.id_room = :#{#req.id}
+            AND a.id_room = :#{#req.id} AND cate.id = :#{#req.idCategory} 
             AND (:#{#req.name} IS NULL OR :#{#req.name} LIKE '' OR a.name LIKE %:#{#req.name}%)
             AND (:#{#req.nameGift} IS NULL OR :#{#req.nameGift} LIKE '' OR g.name LIKE %:#{#req.nameGift}%)
             AND (:#{#req.startingPrice} IS NULL OR a.starting_price = :#{#req.startingPrice})

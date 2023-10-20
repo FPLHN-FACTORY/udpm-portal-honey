@@ -44,7 +44,7 @@ export default function StudentAuctionRoom() {
       </p>
       <Card className="card-room">
         <Row justify="start">
-          {listAuction.map((response, index) => (
+          {listAuction.map((response) => (
             <Col span={12} className="col-room">
               <div
                 className="auction-room"

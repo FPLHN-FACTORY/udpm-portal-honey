@@ -51,7 +51,7 @@ public class Auction extends PrimaryEntity {
     private String honeyCategoryId;
 
     @Column
-    private Long honey;
+    private BigDecimal honey;
 
     private Status status;
 

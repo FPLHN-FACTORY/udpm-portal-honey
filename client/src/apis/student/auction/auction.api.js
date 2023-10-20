@@ -18,4 +18,19 @@ export class StudentAuctionAPI {
       params: filter,
     });
   };
+
+  static getOne = (id) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/get-one-aution?id=${id}`,
+    });
+  };
+
+  static addAuction = (data) => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}/add-auction`,
+      data: data,
+    });
+  };
 }

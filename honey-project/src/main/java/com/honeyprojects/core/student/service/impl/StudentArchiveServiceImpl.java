@@ -9,6 +9,7 @@ import com.honeyprojects.core.student.model.request.StudentGetArchiveGiftRequest
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
 import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
+import com.honeyprojects.core.student.model.response.archive.StudentArchiveByUserResponse;
 import com.honeyprojects.core.student.repository.StudentArchiveRepository;
 import com.honeyprojects.core.student.repository.StudentGiftArchiveRepository;
 import com.honeyprojects.core.student.service.StudentArchiveService;
@@ -115,6 +116,11 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     public StudentArchiveGetChestResponse detailArchiveChest(StudentGetArchiveChestRequest request) {
         request.setIdStudent(udpmHoney.getIdUser());
         return studentGiftArchiveRepository.detailArchiveChest(request);
+    }
+
+    @Override
+    public List<StudentArchiveByUserResponse> findArchiveByUser(String idUser , String idCategory) {
+        return archiveRepository.findArchiveByUser(idUser , idCategory);
     }
 
 }

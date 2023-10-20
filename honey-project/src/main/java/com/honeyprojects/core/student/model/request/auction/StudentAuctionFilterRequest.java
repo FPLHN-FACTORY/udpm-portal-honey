@@ -21,4 +21,6 @@ public class StudentAuctionFilterRequest {
 
     private BigDecimal jump;
 
+    private String idCategory;
+
 }
