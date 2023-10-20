@@ -48,6 +48,7 @@ import ConvertionHoney from "./pages/teacher/convertion-honey/RequestConversion"
 import TeacherRequestConversionHistory from "./pages/teacher/convertion-honey/RequestConversionHistory";
 import LetterDetail from "./pages/student/letters/LetterDetail";
 import Letter from "./pages/student/letters/letter";
+import Shop from "./pages/student/shop/Shop";
 
 function App() {
   const token =
@@ -450,6 +451,16 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     <LetterDetail />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/shop"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <Shop />
                   </DashboardAuthUser>
                 </AuthGuard>
               }
