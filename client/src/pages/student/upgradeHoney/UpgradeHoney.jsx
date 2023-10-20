@@ -116,6 +116,7 @@ export default function UpgradeHoney() {
           <Footer
             style={{
               width: "100%",
+              height: "50%",
               padding: "0",
               borderTop: "5px solid black",
             }}

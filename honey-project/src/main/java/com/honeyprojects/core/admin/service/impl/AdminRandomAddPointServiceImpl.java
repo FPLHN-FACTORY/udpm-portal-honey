@@ -155,7 +155,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     Category category = categoryOptional.get();
                     String title = Constants.TITLE_NOTIFICATION_SYSTEM;
                     String content = Constants.CONTENT_NOTIFICATION_SYSTEM + randomPoint + "mật ong loại " + category.getName();
-                    AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, honey.getStudentId(), NotificationType.PHAT_QUA_HONEY, NotificationStatus.CHUA_DOC);
+                    AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, honey.getStudentId(), null, NotificationType.PHAT_QUA_HONEY, NotificationStatus.CHUA_DOC);
                     Notification notification = request.createNotification(new Notification());
                     adNotificationRespository.save(notification);
                 }
@@ -179,7 +179,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
                 // Duyệt qua danh sách sinh viên và tạo vật phẩm ngẫu nhiên cho từng sinh viên
                 for (SimpleResponse simple : simpleResponseList) {
-                    String archiveId = adRandomAddPointRepository.getArchiveByIdStudent(simple.getId());
                     int indexRandom = random.nextInt(req.getListItem().size());
                     String itemRandom = req.getListItem().get(indexRandom);
                     String chestGiftId = adRandomAddPointRepository.getOptionalChestGift(req.getChestId(), itemRandom);
@@ -189,13 +188,13 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                         ChestGift chestGift = optionalChestGift.get();
                         String idChest = chestGift.getChestId();
                         String idGift = chestGift.getGiftId();
-                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, idChest, idGift);
+                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(idChest, idGift);
                         ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
                         adArchiveGiftRepository.save(archiveGift);
                         Gift gift = adGiftRepository.findById(idGift).get();
                         String title = Constants.TITLE_NOTIFICATION_SYSTEM;
                         String content = Constants.CONTENT_NOTIFICATION_SYSTEM + "Vật phẩm - " + gift.getName() + " - Số lương: 1";
-                        AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, simple.getId(), NotificationType.PHAT_QUA_ITEM, NotificationStatus.CHUA_DOC);
+                        AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, simple.getId(), gift.getId(), NotificationType.PHAT_QUA_ITEM, NotificationStatus.CHUA_DOC);
                         Notification notification = request.createNotification(new Notification());
                         adNotificationRespository.save(notification);
                     } else {
@@ -205,7 +204,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             } else {
                 // Trường hợp có danh sách sinh viên cụ thể được chỉ định
                 for (String idStudent : req.getListStudentPoint()) {
-                    String archiveId = adRandomAddPointRepository.getArchiveByIdStudent(idStudent);
                     int indexRandom = random.nextInt(req.getListItem().size());
                     String itemRandom = req.getListItem().get(indexRandom);
                     String chestGiftId = adRandomAddPointRepository.getOptionalChestGift(req.getChestId(), itemRandom);
@@ -215,13 +213,13 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                         ChestGift chestGift = optionalChestGift.get();
                         String idChest = chestGift.getChestId();
                         String idGift = chestGift.getGiftId();
-                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, idChest, idGift);
+                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(idChest, idGift);
                         ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
                         adArchiveGiftRepository.save(archiveGift);
                         Gift gift = adGiftRepository.findById(idGift).get();
                         String title = Constants.TITLE_NOTIFICATION_SYSTEM;
                         String content = Constants.CONTENT_NOTIFICATION_SYSTEM + "Vật phẩm - " + gift.getName() + " - Số lượng: 1";
-                        AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, idStudent, NotificationType.PHAT_QUA_ITEM, NotificationStatus.CHUA_DOC);
+                        AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, idStudent, gift.getId(), NotificationType.PHAT_QUA_ITEM, NotificationStatus.CHUA_DOC);
                         Notification notification = request.createNotification(new Notification());
                         adNotificationRespository.save(notification);
                     } else {
@@ -322,8 +320,46 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             headerStyle.setBorderLeft(BorderStyle.THIN);
             headerStyle.setBorderRight(BorderStyle.THIN);
 
+            // Dòng thứ 1 - Chữ "Chú ý"
+            Row noteRow = sheet.createRow(0);
+            Cell noteCell = noteRow.createCell(0);
+            noteCell.setCellValue("Chú ý");
+
+            // Tạo một kiểu cho ô "Lưu ý"
+            CellStyle noteStyle = workbook.createCellStyle();
+            Font noteFont = workbook.createFont();
+            noteFont.setBold(true);
+            noteFont.setFontHeightInPoints((short) 13);
+            noteStyle.setFont(noteFont);
+            noteFont.setColor(IndexedColors.RED.getIndex());
+            noteStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+            noteStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            noteCell.setCellStyle(noteStyle);
+
+            // Dòng thứ 2 - cách viết đúng định dạng quà tặng
+            Row formatGiftRow = sheet.createRow(1);
+            Cell formatGiftCell = formatGiftRow.createCell(1);
+            formatGiftCell.setCellValue("Định dạng vật phẩm: số-lượng tên-vật-phẩm, ..., số-lượng tên-vật-phẩm");
+
+            // Dòng thứ 3 - cách viết đúng định dạng mật ong
+            Row formatHoneyRow = sheet.createRow(2);
+            Cell formatHoneyCell = formatHoneyRow.createCell(1);
+            formatHoneyCell.setCellValue("Định dạng mật ong: số-lượng - loại-điểm,..., số-lượng - loại-điểm");
+
+            // Tạo một kiểu cho các ô định dạng
+            CellStyle formatStyle = workbook.createCellStyle();
+            Font formatFont = workbook.createFont();
+            formatFont.setBold(true);
+            formatFont.setFontHeightInPoints((short) 13);
+            formatFont.setColor(IndexedColors.BLACK.getIndex());
+            formatStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+//            formatStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            formatStyle.setFont(formatFont);
+            formatGiftCell.setCellStyle(formatStyle);
+            formatHoneyCell.setCellStyle(formatStyle);
+
             // Tạo hàng tiêu đề và đặt các tiêu đề cột
-            Row headerRow = sheet.createRow(0);
+            Row headerRow = sheet.createRow(4);
             String[] headers = {"STT", "Mã sinh viên", "Vật phẩm", "Mật ong", "Danh sách tên vật phẩm", "Danh sách loại mật ong"};
             int columnCount = headers.length;
 
@@ -349,7 +385,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             List<String> lstCategoryHoney = adminCategoryRepository.getAllNameCategoryByStatus();
 
             // Ghi danh sách tên vật phẩm và danh sách tên thể loại mật ong cùng lúc
-            int rowIndex = 1; // Bắt đầu từ hàng thứ hai cho dữ liệu
+            int rowIndex = 5; // Bắt đầu từ hàng thứ hai cho dữ liệu
 
             int maxItemCount = Math.max(lstGift.size(), lstCategoryHoney.size());
 
@@ -416,8 +452,13 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 Cell emailCell = row.getCell(emailColumnIndex);
                 String email = (emailCell != null) ? emailCell.getStringCellValue() : "";
 
-                // Thêm địa chỉ email vào danh sách kết quả
-                simpleResponseList.add(email);
+                // Tìm sinh viên bằng email và thêm vào list
+                if (email.equals("")) {
+                    continue;
+                } else {
+                    SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(email);
+                    simpleResponseList.add(simpleResponse.getId());
+                }
             }
 
             // Đóng tệp Excel và trả về danh sách địa chỉ email
@@ -485,22 +526,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 // Gọi API để lấy thông tin người dùng bằng địa chỉ email
                 SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(userDTO.getEmail());
 
-                String archiveId = "";
-
-                // Kiểm tra xem có một bản ghi Archive đã tồn tại cho người dùng này chưa
-                String archiveByIdStudent = adRandomAddPointRepository.getArchiveByIdStudent(simpleResponse.getId());
-                if (archiveByIdStudent == null) {
-                    // Nếu không có, tạo một bản ghi Archive mới và lưu vào cơ sở dữ liệu
-                    Archive archive = new Archive();
-                    archive.setClubId(null);
-                    archive.setStudentId(simpleResponse.getId());
-                    adArchiveRepository.save(archive);
-                    archiveId = archive.getId();
-                } else {
-                    // Nếu đã có, sử dụng archiveId từ bản ghi tồn tại
-                    archiveId = archiveByIdStudent;
-                }
-
                 if (userDTO.getLstGift() == null) {
                     continue;
                 } else {
@@ -520,14 +545,14 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                             } else {
                                 for (int i = 0; i < numberItem; i++) {
                                     // Tạo một bản ghi ArchiveGift mới và lưu vào cơ sở dữ liệu
-                                    AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, null, idGift);
+                                    AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(null, idGift);
                                     ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
                                     adArchiveGiftRepository.save(archiveGift);
                                 }
                                 Optional<Gift> giftOptional = adGiftRepository.findById(idGift);
                                 if (giftOptional.isPresent()) {
                                     Gift gift = giftOptional.get();
-                                    createNotificationItem(gift.getName(), numberItemStr, simpleResponse);
+                                    createNotificationItem(gift.getName(), numberItemStr, simpleResponse, gift.getId());
                                 } else {
                                     continue;
                                 }
@@ -567,7 +592,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                                 Honey newHoney = adminCreateHoneyRequest.createHoney(new Honey());
                                 adminHoneyRepository.save(newHoney);
                             }
-                            createNotificationHoney(categoryPoint, numberPoint, simpleResponse);
+                            createNotificationHoney(categoryPoint, numberPoint, simpleResponse, null);
                         }
                     }
                 }
@@ -575,18 +600,18 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         }
     }
 
-    private void createNotificationHoney(String categoryPoint, String numberPoint, SimpleResponse simpleResponse){
+    private void createNotificationHoney(String categoryPoint, String numberPoint, SimpleResponse simpleResponse, String giftId) {
         String title = Constants.TITLE_NOTIFICATION_SYSTEM;
         String content = Constants.CONTENT_NOTIFICATION_SYSTEM + "Honey - " + categoryPoint + " - Số lượng: " + numberPoint;
-        AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, simpleResponse.getId(), NotificationType.PHAT_QUA_HONEY, NotificationStatus.CHUA_DOC);
+        AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, simpleResponse.getId(), giftId, NotificationType.PHAT_QUA_HONEY, NotificationStatus.CHUA_DOC);
         Notification notification = request.createNotification(new Notification());
         adNotificationRespository.save(notification);
     }
 
-    private void createNotificationItem(String itemName, String numberItem, SimpleResponse simpleResponse){
+    private void createNotificationItem(String itemName, String numberItem, SimpleResponse simpleResponse, String giftId) {
         String title = Constants.TITLE_NOTIFICATION_SYSTEM;
         String content = Constants.CONTENT_NOTIFICATION_SYSTEM + "Vật phẩm - " + itemName + " - Số lượng: " + numberItem;
-        AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, simpleResponse.getId(), NotificationType.PHAT_QUA_ITEM, NotificationStatus.CHUA_DOC);
+        AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, content, simpleResponse.getId(), giftId, NotificationType.PHAT_QUA_ITEM, NotificationStatus.CHUA_DOC);
         Notification notification = request.createNotification(new Notification());
         adNotificationRespository.save(notification);
     }
@@ -625,7 +650,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         } else {
             String regexGift = "^\\d+\\s+[^,]*(,\\s*\\d+\\s+[^,]*)?$";
             if (!listGift.trim().matches(regexGift)) {
-                userDTO.setImportMessage("Định dạng vật phẩm không hợp lệ. Phải là '<số lượng> <tên vật phẩm>, <số lượng> <tên vật phẩm>, ..., <số lượng> <tên vật phẩm>");
+                userDTO.setImportMessage("Định dạng vật phẩm không hợp lệ. Phải là 'số-lượng tên-vật-phẩm,..., số-lượng tên-vật-phẩm");
                 userDTO.setError(true);
                 hasError = true;
             } else {
@@ -660,7 +685,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         } else {
             String regexHoney = "^(\\d+\\s*-\\s*[a-zA-Z]+)(,\\s*\\d+\\s*-\\s*[a-zA-Z]+)*$";
             if (!listHoney.trim().matches(regexHoney)) {
-                userDTO.setImportMessage("Định dạng mật ong không hợp lệ. Phải là '<số lượng> - <loại điểm>, <số lượng> - <loại điểm>, ..., <số lượng> - <loại điểm>");
+                userDTO.setImportMessage("Định dạng mật ong không hợp lệ. Phải là 'số-lượng - loại-điểm,..., số-lượng - loại-điểm");
                 userDTO.setError(true);
                 hasError = true;
             } else {
