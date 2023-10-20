@@ -58,7 +58,7 @@ public class StudentAuctionServiceImpl implements StudentAuctionService {
         var honey = studentHoneyRepository.getOneByIdUser(request.getIdUser());
         honey.setHoneyPoint(honey.getHoneyPoint() - Integer.valueOf(request.getHoney()));
         studentHoneyRepository.save(honey);
-        
+
         return studentAuctionRepository.save(auction);
     }
 }

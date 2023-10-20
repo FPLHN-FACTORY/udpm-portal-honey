@@ -122,7 +122,7 @@ public class DBGenerator implements CommandLineRunner {
 
         Honey honey5 = new Honey();
         honey5.setHoneyPoint(100);
-        honey5.setStudentId("C4CF21F4-F3E0-490E-B1CC-08DBB743DD7D");
+        honey5.setStudentId("59b9fb7e-9065-4102-f03c-08dbce69e594");
         honey5.setUserSemesterId(semester.getId());
         honey5.setHoneyCategoryId(category2.getId());
         honey5.setId(honeyRepository.save(honey5).getId());
@@ -237,7 +237,7 @@ public class DBGenerator implements CommandLineRunner {
         history2.setHoneyPoint(100);
         history2.setChangeDate(1689932796276L);
         history2.setGiftId(gift1.getId());
-        history2.setStudentId("C4CF21F4-F3E0-490E-B1CC-08DBB743DD7D");
+        history2.setStudentId("59b9fb7e-9065-4102-f03c-08dbce69e594");
         history2.setTeacherId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
         history2.setId(historyRepository.save(history2).getId());
 
@@ -255,7 +255,7 @@ public class DBGenerator implements CommandLineRunner {
         history4.setHoneyPoint(100);
         history4.setChangeDate(1689932796276L);
         history4.setGiftId(gift2.getId());
-        history4.setStudentId("C4CF21F4-F3E0-490E-B1CC-08DBB743DD7D");
+        history4.setStudentId("59b9fb7e-9065-4102-f03c-08dbce69e594");
         history4.setTeacherId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
         history4.setId(historyRepository.save(history4).getId());
 
@@ -273,7 +273,7 @@ public class DBGenerator implements CommandLineRunner {
         history6.setHoneyPoint(100);
         history6.setChangeDate(1689932796276L);
         history6.setGiftId(gift2.getId());
-        history6.setStudentId("C4CF21F4-F3E0-490E-B1CC-08DBB743DD7D");
+        history6.setStudentId("59b9fb7e-9065-4102-f03c-08dbce69e594");
         history6.setTeacherId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
         history6.setId(historyRepository.save(history6).getId());
 
