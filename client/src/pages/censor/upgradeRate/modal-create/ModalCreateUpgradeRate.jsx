@@ -1,25 +1,24 @@
 import { Input, Modal, Radio, message, Button, Row, Col, Select } from "antd";
 import { useEffect, useState } from "react";
-import { AddAuction } from "../../../../app/reducers/upgradeRate/upgradeRate.reducer";
-
+import { AddUpgradeRate } from "../../../../app/reducers/upgradeRate/upgradeRate.reducer";
+import { UpgradeApi } from "../../../../apis/censor/upgradeRate/UpgradeRate.api";
 import {
   GetCategory,
   SetCategory,
 } from "../../../../app/reducers/category/category.reducer";
 import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
-import { UpgradeApi } from "../../../apis/censor/upgradeRate/UpgradeRate.api";
 
-const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
-  const [name, setName] = useState("");
-  const [errorNameAuction, setErrorNameAuction] = useState("");
+const ModalCreateUpgradeRate = ({ visible, onCancel, fetchAllData }) => {
   const [status, setStatus] = useState("");
   const [originalHoney, setOriginalHoney] = useState("");
   const [errorOriginalHoney, setErrorOriginalHoney] = useState("");
   const [destinationHoney, setDestinationHoney] = useState("");
   const [errorDestinationHoney, setErrorDestinationHoney] = useState("");
   const [errorStatus, setErrorStatus] = useState("");
+  const [ratio, setRatio] = useState("");
+  const [errorRatio, setErrorRatio] = useState("");
 
-  const [OriginalHoneyIdSL, setOriginalHoneyIdSL] = useState("");
+  const [originalHoneyIdSL, setOriginalHoneyIdSL] = useState("");
   const [destinationHoneyIdSL, setDestinationHoneyIdSL] = useState("");
 
   const dispatch = useAppDispatch();
@@ -37,6 +36,7 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
         setErrorOriginalHoney("");
         setErrorDestinationHoney("");
         setErrorStatus("");
+        setRatio("");
       };
     }
   }, [visible]);
@@ -74,6 +74,15 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
       setErrorDestinationHoney("");
     }
 
+    if (destinationHoney.toString().trim() === originalHoney.toString().trim()) {
+      setErrorOriginalHoney("Điểm cuối và điểm đầu không được trùng nhau");
+      setErrorDestinationHoney("Điểm cuối và điểm đầu không được trùng nhau");
+      check++;
+    } else {
+      setErrorOriginalHoney("");
+      setErrorDestinationHoney("");
+    }
+
     if (status.toString().trim().length === 0) {
       setErrorStatus("Trạng thái không được để trống");
       check++;
@@ -81,29 +90,43 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
       setErrorStatus("");
     }
 
+    if (ratio.toString().trim().length === 0) {
+      setErrorRatio("Tỉ lệ nâng cấp không được để trống");
+      check++;
+    } else {
+      setErrorRatio("");
+    }
+
+    if (ratio.toString().trim()< 0 || ratio.toString().trim()>100) {
+      setErrorRatio("Tỉ lệ nâng cấp không được nhỏ hơn 0 và lớn hơn 100");
+      check++;
+    } else {
+      setErrorRatio("");
+    }
+
     if (check === 0) {
       let obj = {
         originalHoneyId: originalHoney,
         destinationHoneyId: destinationHoney,
         status: status,
+        ratio: ratio
       };
 
-      console.log(obj);
       const originalHoneyId = listCategory.find(
-        (item) => item.id === originalHoney
+        (item) => item.id === originalHoneyIdSL
       );
       const destinationHoneyId = listCategory.find(
-        (item) => item.id === destinationHoney
+        (item) => item.id === destinationHoneyIdSL
       );
       UpgradeApi.create(obj).then(
         (response) => {
-          console.log("🚀 ~ file: ModalCreateAuction.jsx:99 ~ create ~ response:", response)
           message.success("Thêm thành công!");
           let objCreate = {
             ...response.data.data,
           };
+          console.log("🚀 ~ file: ModalCreateAuction.jsx:126 ~ create ~ objCreate:", objCreate)
           fetchAllData();
-          dispatch(AddAuction(objCreate));
+          dispatch(AddUpgradeRate(objCreate));
           onCancel();
         },
         (error) => {
@@ -127,14 +150,14 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
           <span style={{ fontSize: "18px" }}>Thêm mới nâng hạng</span>
         </div>
         <div style={{ marginTop: "15px" }}>
-          <Row gutter={16} style={{ marginBottom: "15px" }}>
-          <Col span={12}>
+          <Row gutter={24} style={{ marginBottom: "15px" }}>
+            <Col span={12}>
               <span>Loại điểm đầu:</span> <br />
               <Select
                 style={{ width: "100%" }}
                 value={originalHoney}
                 onChange={(value) => {
-                  setHoneyCategoryId(value);
+                  setOriginalHoney(value);
                 }}
                 size="large"
                 placeholder="Thể loại"
@@ -155,7 +178,7 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
                 style={{ width: "100%" }}
                 value={destinationHoney}
                 onChange={(value) => {
-                  setHoneyCategoryId(value);
+                  setDestinationHoney(value);
                 }}
                 size="large"
                 placeholder="Thể loại"
@@ -171,7 +194,16 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
               <span className="error">{errorDestinationHoney}</span>
             </Col>
           </Row>
-          <Row gutter={16} style={{ marginBottom: "15px" }}>
+          <Row gutter={24} style={{ marginBottom: "15px" }}>
+            <Col span={12}>
+              <span>Tỉ lệ nâng cấp:</span>
+              {""}
+              <Input type="number"
+                value={ratio}
+                onChange={(e) => setRatio(e.target.value)}
+              />
+              <span className="error">{errorRatio}</span>
+            </Col>
             <Col span={12}>
               <span>Trạng thái:</span> <br />
               <Radio.Group
@@ -219,4 +251,4 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
     </>
   );
 };
-export default ModalCreateAuction;
+export default ModalCreateUpgradeRate;

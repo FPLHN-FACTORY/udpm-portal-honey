@@ -10,7 +10,8 @@ import java.util.Optional;
 public interface AdUpgradeRateService {
     PageableObject<AdminUpgradeRateResponse> getUpgradeRate(AdminUpgradeRateRequest searchParams);
 
-    <S extends UpgradeRate> S save(S entity);
+
+    UpgradeRate save(AdminUpgradeRateRequest params);
 
     Optional<UpgradeRate> findById(String s);
 

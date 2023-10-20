@@ -28,17 +28,17 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useEffect, useState } from "react";
 import { UpgradeApi } from "../../../apis/censor/upgradeRate/UpgradeRate.api";
 import {
-  GetAuction,
-  SetAuction,
-  DeleteAuction,
-  ChangeAuctionStatus,
-} from "../../../app/reducers/auction/auction.reducer";
-import ModalCreateAuction from "./modal-create/ModalCreateAuction.jsx";
-import ModalUpdateAuction from "./modal-update/ModalUpdateAuction";
+  GetUpgradeRate,
+  SetUpgradeRate,
+  DeleteUpgradeRate,
+  ChangeUpgradeRateStatus,
+} from "../../../app/reducers/upgradeRate/upgradeRate.reducer";
+import ModalCreateUpgradeRate from "./modal-create/ModalCreateUpgradeRate";
+import ModalUpdateUpgradeRate from "./modal-update/ModalUpdateUpgradeRate";
 const { Option } = Select;
 
 export default function UpgradeRateManagement() {
-  const [auction, setAuction] = useState(null);
+  const [upgradeRate, setUpgradeRate] = useState(null);
   const [status, setStatus] = useState("");
   const [listCategorySearch, setListCategorySearch] = useState([]);
 
@@ -55,7 +55,7 @@ export default function UpgradeRateManagement() {
   useEffect(() => {
     fetchData();
     return () => {
-      dispatch(SetAuction([]));
+      dispatch(setUpgradeRate([]));
     };
   }, [current]);
 
@@ -80,30 +80,31 @@ export default function UpgradeRateManagement() {
       size: 10,
     };
     UpgradeApi.fetchAll(filter).then((response) => {
-      dispatch(SetAuction(response.data.data.data));
-      setTotal(response.data.data.totalPages);
+      dispatch(setUpgradeRate(response.data.data.data));
       console.log(response.data.data.data);
+      setTotal(response.data.data.totalPages);
     });
   };
 
-  const data = useAppSelector(GetAuction);
+  const data = useAppSelector(GetUpgradeRate);
 
   const columns = [
     {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
-      align: "center"
+      align: "center",
     },
     {
-      title: "Loại điểm đầu",
-      dataIndex: "originalHoney",
-      key: "originalHoney",
+      title: "Tên loại điểm đầu",
+      dataIndex: "originalHoneyName",
+      key: "originalHoneyName",
+      align: "center",
     },
     {
-      title: "Loại điểm cuối",
-      dataIndex: "destinationHoney",
-      key: "destinationHoney",
+      title: "Tên loại điểm cuối",
+      dataIndex: "destinationHoneyName",
+      key: "destinationHoneyName",
       align: "center",
     },
     ,
@@ -184,15 +185,15 @@ export default function UpgradeRateManagement() {
   const buttonSearch = async () => {
     setCurrent(1);
     let filter = {
-      originalHoney: originalHoney,
-      destinationHoney: destinationHoney,
+      originalHoneyId: originalHoney,
+      destinationHoneyId: destinationHoney,
       status: status,
       page: current,
       size: 10,
     };
     console.log(filter);
     UpgradeApi.fetchAll(filter).then((response) => {
-      dispatch(SetAuction(response.data.data.data));
+      dispatch(setUpgradeRate(response.data.data.data));
       setTotal(response.data.data.totalPages);
       console.log(response.data.data.data);
     });
@@ -212,24 +213,24 @@ export default function UpgradeRateManagement() {
 
   const buttonCreateCancel = () => {
     setModalCreate(false);
-    setAuction(null);
+    setUpgradeRate(null);
   };
 
   const buttonUpdate = (record) => {
     setModalUpdate(true);
-    setAuction(record);
+    setUpgradeRate(record);
   };
 
   const buttonUpdateCancel = () => {
     setModalUpdate(false);
-    setAuction(null);
+    setUpgradeRate(null);
   };
 
   const buttonDelete = (id) => {
     UpgradeApi.changeStatus(id).then(
       (response) => {
         message.success("Đóng thành công!");
-        dispatch(ChangeAuctionStatus(response.data.data));
+        dispatch(ChangeUpgradeRateStatus(response.data.data));
         fetchData();
       },
       (error) => {
@@ -255,7 +256,7 @@ export default function UpgradeRateManagement() {
               <Select
                 value={originalHoney}
                 onChange={(value) => {
-                  setDestinationHoney(value);
+                  setOriginalHoney(value);
                 }}
                 style={{ width: "100%", marginRight: "10px" }}
               >
@@ -271,7 +272,7 @@ export default function UpgradeRateManagement() {
               <Select
                 value={destinationHoney}
                 onChange={(value) => {
-                  setOriginalHoney(value);
+                  setDestinationHoney(value);
                 }}
                 style={{ width: "100%", marginRight: "10px" }}
               >
@@ -426,15 +427,15 @@ export default function UpgradeRateManagement() {
         </div>
       </Card>
 
-      <ModalCreateAuction
+      <ModalCreateUpgradeRate
         visible={modalCreate}
         onCancel={buttonCreateCancel}
         fetchAllData={fetchData}
       />
-      <ModalUpdateAuction
+      <ModalUpdateUpgradeRate
         visible={modalUpdate}
         onCancel={buttonUpdateCancel}
-        auction={auction}
+        // auction={auction}
         fetchAllData={fetchData}
       />
     </div>

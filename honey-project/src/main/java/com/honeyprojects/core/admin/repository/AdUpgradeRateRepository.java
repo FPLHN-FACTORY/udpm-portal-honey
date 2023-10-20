@@ -12,11 +12,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AdUpgradeRateRepository extends UpgradeRateRepository {
     @Query(value = """
-            SELECT ROW_NUMBER() over (ORDER BY u.created_date desc ) as stt, u.id, u.originalHoney as originalHoneyId, 
-            u.destinationHoney as destinationHoneyId, u.ratio, u.status
-            FROM upgradeRate u
-            WHERE (:#{#searchParams.originalHoneyId} IS NULL OR u.originalHoney = :#{#searchParams.originalHoneyId}) 
-            AND (:#{#searchParams.destinationHoneyId} IS NULL OR u.destinationHoney = :#{#searchParams.destinationHoneyId}) 
+            SELECT ROW_NUMBER() over (ORDER BY u.created_date desc ) as stt, u.id,  c1.name as originalHoneyName, 
+            c2.name as destinationHoneyName, u.ratio, u.status
+            FROM upgrade_rate u
+            LEFT JOIN category c1 ON u.original_honey = c1.id
+            LEFT JOIN category c2 ON u.destination_honey = c2.id
+            WHERE (:#{#searchParams.originalHoneyId} IS NULL OR u.original_honey = :#{#searchParams.originalHoneyId}) 
+            AND (:#{#searchParams.destinationHoneyId} IS NULL OR u.destination_honey = :#{#searchParams.destinationHoneyId}) 
             AND (:#{#searchParams.status} IS NULL OR u.status = :#{#searchParams.status}) 
             """, nativeQuery = true)
     Page<AdminUpgradeRateResponse> getUpgradeRate(@Param("searchParams") AdminUpgradeRateRequest searchParams, Pageable pageable);

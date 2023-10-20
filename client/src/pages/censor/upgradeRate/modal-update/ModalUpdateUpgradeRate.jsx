@@ -5,7 +5,7 @@ import { UpdateAuction } from "../../../../app/reducers/auction/auction.reducer"
 import { GetCategory } from "../../../../app/reducers/category/category.reducer";
 import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 
-const ModalUpdateAuction = ({ visible, onCancel, auction,  fetchAllData }) => {
+const ModalUpdateUpgradeRate = ({ visible, onCancel, auction,  fetchAllData }) => {
   const [name, setName] = useState("");
   const [errorNameAuction, setErrorNameAuction] = useState("");
   const [honey, setHoney] = useState("");
@@ -209,4 +209,4 @@ const ModalUpdateAuction = ({ visible, onCancel, auction,  fetchAllData }) => {
     </>
   );
 };
-export default ModalUpdateAuction;
+export default ModalUpdateUpgradeRate;
