@@ -9,6 +9,8 @@ import com.honeyprojects.entity.UpgradeRate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("api/censor/upgrade-rate")
 public class AdminUpgradeRateController {
@@ -25,5 +27,18 @@ public class AdminUpgradeRateController {
     @PostMapping("add")
     public ResponseObject add(@RequestBody AdminUpgradeRateRequest searchParams){
         return new ResponseObject(adUpgradeRateService.save(searchParams));
+    }
+
+    @PutMapping("update/{id}")
+    public ResponseObject update(@RequestBody AdminUpgradeRateRequest searchParams, @PathVariable("id") String id){
+        return new ResponseObject(adUpgradeRateService.update(searchParams, id));
+    }
+
+    @DeleteMapping("delete/{id}")
+    public void delete(@PathVariable("id") String id){
+        Optional<UpgradeRate> opt = adUpgradeRateService.findById(id);
+        if(opt.isPresent()){
+          adUpgradeRateService.delete(opt.get());
+        }
     }
 }

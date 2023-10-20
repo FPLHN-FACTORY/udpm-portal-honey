@@ -13,6 +13,8 @@ public interface AdUpgradeRateService {
 
     UpgradeRate save(AdminUpgradeRateRequest params);
 
+    UpgradeRate update(AdminUpgradeRateRequest params, String id);
+
     Optional<UpgradeRate> findById(String s);
 
     void delete(UpgradeRate entity);
