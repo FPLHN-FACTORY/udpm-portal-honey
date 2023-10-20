@@ -65,4 +65,5 @@ public class AdminAuctionController {
     public ResponseObject deleteAuction(@PathVariable("id") String id) {
         return new ResponseObject(adminAuctionService.deleteAuction(id));
     }
+
 }

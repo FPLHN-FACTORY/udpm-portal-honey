@@ -16,5 +16,4 @@ public class AdminFindAuctionRequest extends PageableRequest {
 
     private String honeyCategoryId;
 
-
 }
