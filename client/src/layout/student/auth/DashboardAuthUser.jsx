@@ -120,6 +120,7 @@ function DashboardAuthUser({ children }) {
   }
 
   const hanlderClickCuaHang = () => {
+    navigate("/student/shop");
     playSound();
   };
   const hanlderClickDauGia = () => {

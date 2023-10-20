@@ -49,6 +49,7 @@ import RequestApprovedHistory from "./pages/censor/requestmanager/ApproveHistory
 import ListRequest from "./pages/censor/requestmanager/ListRequest";
 import LetterDetail from "./pages/student/letters/LetterDetail";
 import Letter from "./pages/student/letters/letter";
+import Shop from "./pages/student/shop/Shop";
 
 function App() {
   const token =
@@ -451,6 +452,16 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     <LetterDetail />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/shop"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <Shop />
                   </DashboardAuthUser>
                 </AuthGuard>
               }
