@@ -1,12 +1,12 @@
 import { Input, Modal, Radio, message, Button, Row, Col, Select } from "antd";
 import { useEffect, useState } from "react";
-import { AddUpgradeRate } from "../../../../app/reducers/upgradeRate/upgradeRate.reducer";
-import { UpgradeApi } from "../../../../apis/censor/upgradeRate/UpgradeRate.api";
+import { AddUpgradeRate } from "../../../app/reducers/upgrade-rate/upgrade-rate.reducer";
+import { UpgradeApi } from "../../../apis/censor/upgrade-rate/upgrade-rate.api";
 import {
   GetCategory,
   SetCategory,
-} from "../../../../app/reducers/category/category.reducer";
-import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
+} from "../../../app/reducers/category/category.reducer";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 const ModalCreateUpgradeRate = ({ visible, onCancel, fetchAllData }) => {
   const [status, setStatus] = useState("");
@@ -74,7 +74,9 @@ const ModalCreateUpgradeRate = ({ visible, onCancel, fetchAllData }) => {
       setErrorDestinationHoney("");
     }
 
-    if (destinationHoney.toString().trim() === originalHoney.toString().trim()) {
+    if (
+      destinationHoney.toString().trim() === originalHoney.toString().trim()
+    ) {
       setErrorOriginalHoney("Điểm cuối và điểm đầu không được trùng nhau");
       setErrorDestinationHoney("Điểm cuối và điểm đầu không được trùng nhau");
       check++;
@@ -97,7 +99,7 @@ const ModalCreateUpgradeRate = ({ visible, onCancel, fetchAllData }) => {
       setErrorRatio("");
     }
 
-    if (ratio.toString().trim()< 0 || ratio.toString().trim()>100) {
+    if (ratio.toString().trim() < 0 || ratio.toString().trim() > 100) {
       setErrorRatio("Tỉ lệ nâng cấp không được nhỏ hơn 0 và lớn hơn 100");
       check++;
     } else {
@@ -109,7 +111,7 @@ const ModalCreateUpgradeRate = ({ visible, onCancel, fetchAllData }) => {
         originalHoneyId: originalHoney,
         destinationHoneyId: destinationHoney,
         status: status,
-        ratio: ratio
+        ratio: ratio,
       };
 
       const originalHoneyId = listCategory.find(
@@ -124,7 +126,10 @@ const ModalCreateUpgradeRate = ({ visible, onCancel, fetchAllData }) => {
           let objCreate = {
             ...response.data.data,
           };
-          console.log("🚀 ~ file: ModalCreateAuction.jsx:126 ~ create ~ objCreate:", objCreate)
+          console.log(
+            "🚀 ~ file: ModalCreateAuction.jsx:126 ~ create ~ objCreate:",
+            objCreate
+          );
           fetchAllData();
           dispatch(AddUpgradeRate(objCreate));
           onCancel();
@@ -198,7 +203,8 @@ const ModalCreateUpgradeRate = ({ visible, onCancel, fetchAllData }) => {
             <Col span={12}>
               <span>Tỉ lệ nâng cấp:</span>
               {""}
-              <Input type="number"
+              <Input
+                type="number"
                 value={ratio}
                 onChange={(e) => setRatio(e.target.value)}
               />
@@ -212,12 +218,8 @@ const ModalCreateUpgradeRate = ({ visible, onCancel, fetchAllData }) => {
                   setStatus(e.target.value);
                 }}
               >
-                <Radio value={"0"} >
-                  Hoạt động
-                </Radio>
-                <Radio value={"1"} >
-                  Không hoạt động
-                </Radio>
+                <Radio value={"0"}>Hoạt động</Radio>
+                <Radio value={"1"}>Không hoạt động</Radio>
               </Radio.Group>
               <br></br>
               <span className="error">{errorStatus}</span>

@@ -13,7 +13,6 @@ import {
   Input,
   Select,
 } from "antd";
-import "./UpgradeRateManagement.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFilter,
@@ -26,25 +25,15 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useEffect, useState } from "react";
-import { UpgradeApi } from "../../../apis/censor/upgradeRate/UpgradeRate.api";
-import {
-  GetUpgradeRate,
-  SetUpgradeRate,
-  DeleteUpgradeRate,
-  ChangeUpgradeRateStatus,
-} from "../../../app/reducers/upgradeRate/upgradeRate.reducer";
-import ModalCreateUpgradeRate from "./modal-create/ModalCreateUpgradeRate";
-import ModalUpdateUpgradeRate from "./modal-update/ModalUpdateUpgradeRate";
+
 const { Option } = Select;
 
-export default function UpgradeRateManagement() {
-  const [upgradeRate, setUpgradeRate] = useState(null);
+export default function UpgradeRate() {
+  const [auction, setAuction] = useState(null);
+  const [name, setName] = useState("");
   const [status, setStatus] = useState("");
+  const [honeyCategoryId, setHoneyCategoryId] = useState("");
   const [listCategorySearch, setListCategorySearch] = useState([]);
-
-  const [originalHoney, setOriginalHoney] = useState("");
-  const [destinationHoney, setDestinationHoney] = useState("");
-
   const { id } = useParams();
   const [current, setCurrent] = useState(1);
   const [total, setTotal] = useState(0);
@@ -52,67 +41,29 @@ export default function UpgradeRateManagement() {
   const [modalCreate, setModalCreate] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
 
-  useEffect(() => {
-    fetchData();
-    return () => {
-      dispatch(setUpgradeRate([]));
-    };
-  }, [current]);
-
-  useEffect(() => {
-    setDestinationHoney("");
-    setOriginalHoney("");
-    setStatus("");
-    fetchDataCategory();
-  }, []);
-
-  const fetchDataCategory = async () => {
-    const responeGetAllCategory = await UpgradeApi.getALLCategory();
-    setListCategorySearch(responeGetAllCategory.data.data);
-  };
-
-  const fetchData = () => {
-    let filter = {
-      originalHoney: originalHoney,
-      destinationHoney: destinationHoney,
-      status: status,
-      page: current,
-      size: 10,
-    };
-    UpgradeApi.fetchAll(filter).then((response) => {
-      dispatch(setUpgradeRate(response.data.data.data));
-      console.log(response.data.data.data);
-      setTotal(response.data.data.totalPages);
-    });
-  };
-
-  const data = useAppSelector(GetUpgradeRate);
-
   const columns = [
     {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
       align: "center",
+      render: (text, record, index) => index + 1,
     },
     {
-      title: "Tên loại điểm đầu",
-      dataIndex: "originalHoneyName",
-      key: "originalHoneyName",
-      align: "center",
+      title: "Tên phòng đấu giá",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: "Tên loại điểm cuối",
-      dataIndex: "destinationHoneyName",
-      key: "destinationHoneyName",
-      align: "center",
+      title: "Loại điểm",
+      dataIndex: "categoryName",
+      key: "categoryName",
+      render: (text) => <span>{text}</span>,
     },
-    ,
     {
-      title: "Tỉ lệ thành công",
-      dataIndex: "ratio",
-      key: "ratio",
-      align: "center",
+      title: "Mật ong",
+      dataIndex: "honey",
+      key: "honey",
     },
     {
       title: "Trạng thái",
@@ -130,7 +81,7 @@ export default function UpgradeRateManagement() {
             textAlign: "center",
           }}
         >
-          {text === "HOAT_DONG" ? "Hoạt động" : "Không hoạt động"}
+          {text === "HOAT_DONG" ? "Mở" : "Đóng"}
         </Tag>
       ),
     },
@@ -139,15 +90,12 @@ export default function UpgradeRateManagement() {
       align: "center",
       key: "action",
       width: "10px",
-      align: "center",
       render: (_, record) => (
         <Space size="middle">
           <Popconfirm
             title="Đón phòng đấu giá"
             description="Bạn có chắc chắn muốn đóng phòng này không?"
-            onConfirm={() => {
-              buttonDelete(record.id);
-            }}
+            onConfirm={() => {}}
             okText="Có"
             cancelText="Không"
           >
@@ -165,9 +113,7 @@ export default function UpgradeRateManagement() {
           </Popconfirm>
           <Tooltip title="Sửa">
             <Button
-              onClick={() => {
-                buttonUpdate(record);
-              }}
+              onClick={() => {}}
               style={{
                 backgroundColor: "#0066CC",
                 color: "white",
@@ -182,63 +128,6 @@ export default function UpgradeRateManagement() {
     },
   ];
 
-  const buttonSearch = async () => {
-    setCurrent(1);
-    let filter = {
-      originalHoneyId: originalHoney,
-      destinationHoneyId: destinationHoney,
-      status: status,
-      page: current,
-      size: 10,
-    };
-    console.log(filter);
-    UpgradeApi.fetchAll(filter).then((response) => {
-      dispatch(setUpgradeRate(response.data.data.data));
-      setTotal(response.data.data.totalPages);
-      console.log(response.data.data.data);
-    });
-  };
-
-  const buttonClear = async () => {
-    setStatus("");
-    setOriginalHoney("");
-    setDestinationHoney("");
-    setCurrent(1);
-    await fetchData();
-  };
-
-  const buttonCreate = () => {
-    setModalCreate(true);
-  };
-
-  const buttonCreateCancel = () => {
-    setModalCreate(false);
-    setUpgradeRate(null);
-  };
-
-  const buttonUpdate = (record) => {
-    setModalUpdate(true);
-    setUpgradeRate(record);
-  };
-
-  const buttonUpdateCancel = () => {
-    setModalUpdate(false);
-    setUpgradeRate(null);
-  };
-
-  const buttonDelete = (id) => {
-    UpgradeApi.changeStatus(id).then(
-      (response) => {
-        message.success("Đóng thành công!");
-        dispatch(ChangeUpgradeRateStatus(response.data.data));
-        fetchData();
-      },
-      (error) => {
-        message.error("Đóng thất bại!");
-      }
-    );
-  };
-
   return (
     <div>
       <Card style={{ borderTop: "5px solid #FFCC00" }}>
@@ -251,28 +140,23 @@ export default function UpgradeRateManagement() {
           <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span>
           <Row gutter={24} style={{ marginBottom: "15px", paddingTop: "20px" }}>
             <Col span={8}>
-              <span>Loại điểm đầu:</span>
-              {""}
-              <Select
-                value={originalHoney}
-                onChange={(value) => {
-                  setOriginalHoney(value);
+              <span>Tên phiên đấu giá:</span>{" "}
+              <Input
+                type="text"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
                 }}
-                style={{ width: "100%", marginRight: "10px" }}
-              >
-                <Option value="">Tất cả</Option>
-                {listCategorySearch.map((item) => {
-                  return <Option value={item.id}>{item.name}</Option>;
-                })}
-              </Select>
+                style={{ height: "30px" }}
+              />
             </Col>
             <Col span={8}>
-              <span>Loại điểm cuối:</span>
+              <span>Thể loại:</span>
               {""}
               <Select
-                value={destinationHoney}
+                value={honeyCategoryId}
                 onChange={(value) => {
-                  setDestinationHoney(value);
+                  setHoneyCategoryId(value);
                 }}
                 style={{ width: "100%", marginRight: "10px" }}
               >
@@ -309,7 +193,7 @@ export default function UpgradeRateManagement() {
                     fontSize: "13px",
                   }}
                 >
-                  Hoạt động
+                  Mở
                 </Option>
                 <Option
                   value="1"
@@ -317,7 +201,7 @@ export default function UpgradeRateManagement() {
                     fontSize: "13px",
                   }}
                 >
-                  Không hoạt động
+                  Đóng
                 </Option>
               </Select>
             </Col>
@@ -333,7 +217,6 @@ export default function UpgradeRateManagement() {
           <Row>
             <Col span={12}>
               <Button
-                onClick={buttonSearch}
                 style={{
                   marginRight: "8px",
                   backgroundColor: "rgb(55, 137, 220)",
@@ -345,13 +228,12 @@ export default function UpgradeRateManagement() {
             </Col>
             <Col span={12}>
               <Button
-                onClick={buttonClear}
                 style={{
                   marginLeft: "8px",
                   backgroundColor: "#FF9900",
                   color: "white",
                   outline: "none",
-                  border: "none"
+                  border: "none",
                 }}
               >
                 Làm mới
@@ -373,7 +255,7 @@ export default function UpgradeRateManagement() {
             <span style={{ fontSize: "18px" }}>
               <FontAwesomeIcon icon={faRectangleList} size="xl" />
               <b style={{ marginLeft: "5px", fontWeight: "500" }}>
-                Danh sách nâng hạng
+                Danh sách đấu giá
               </b>
             </span>
           </div>
@@ -385,7 +267,6 @@ export default function UpgradeRateManagement() {
                 backgroundColor: "rgb(55, 137, 220)",
                 textAlign: "center",
               }}
-              onClick={buttonCreate}
             >
               <FontAwesomeIcon
                 icon={faPlus}
@@ -395,7 +276,7 @@ export default function UpgradeRateManagement() {
                   marginRight: "5px",
                 }}
               />
-              Thêm nâng hạng
+              Thêm phòng đấu giá
             </Button>
           </div>
         </Space>
@@ -408,7 +289,7 @@ export default function UpgradeRateManagement() {
         >
           <Table
             style={{ width: "100%" }}
-            dataSource={data}
+            dataSource={""}
             rowKey="id"
             columns={columns}
             pagination={false}
@@ -427,17 +308,17 @@ export default function UpgradeRateManagement() {
         </div>
       </Card>
 
-      <ModalCreateUpgradeRate
+      {/* <ModalCreateAuction
         visible={modalCreate}
         onCancel={buttonCreateCancel}
         fetchAllData={fetchData}
       />
-      <ModalUpdateUpgradeRate
+      <ModalUpdateAuction
         visible={modalUpdate}
         onCancel={buttonUpdateCancel}
-        // auction={auction}
+        auction={auction}
         fetchAllData={fetchData}
-      />
+      /> */}
     </div>
   );
 }

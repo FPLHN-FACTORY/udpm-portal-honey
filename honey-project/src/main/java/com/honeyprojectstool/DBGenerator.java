@@ -88,6 +88,7 @@ public class DBGenerator implements CommandLineRunner {
         semester.setToDate(2007194000000L);
         semester.setFromDate(1681600400000L);
         semester.setId(semesterRepository.save(semester).getId());
+        semester.setStatus(Status.HOAT_DONG);
 
         Honey honey1 = new Honey();
         honey1.setHoneyPoint(1000);

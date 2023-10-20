@@ -62,45 +62,54 @@ function DashboardAuthUser({ children }) {
       "2",
       <FontAwesomeIcon icon={faMoneyBillTransfer} />
     ),
-    // getItem(
-    //   <Link to="/censor/semester">Kỳ học</Link>,
-    //   "3",
-    //   <FontAwesomeIcon icon={faPenRuler} />
-    // ),
+    getItem(
+      <Link to="/censor/semester">Kỳ học</Link>,
+      "3",
+      <FontAwesomeIcon icon={faPenRuler} />
+    ),
     getItem(
       <Link to="/censor/gift">Gói quà</Link>,
       "4",
       <FontAwesomeIcon icon={faGift} />
     ),
-    // getItem( <Link to="/censor/add-point">Cộng mật ong</Link>,"5" ,<PlusCircleFilled />),
     getItem("Cộng mật ong", "5", <FontAwesomeIcon icon={faPlusCircle} />, [
       getItem(<Link to={"/censor/add-point"}>Cộng mật ong</Link>, "6"),
       getItem(<Link to={"/censor/add-point/history"}>Lịch sử</Link>, "7"),
     ]),
     getItem(
-      <Link to="/censor/club">Club</Link>,
+      "Quản lý yêu cầu",
       "8",
-      <FontAwesomeIcon icon={faPeopleRoof} />
+      <FontAwesomeIcon icon={faCodePullRequest} />,
+      [
+        getItem(
+          <Link to={"/censor/request-manager/list-request"}>
+            Danh sách yêu cầu
+          </Link>,
+          "9"
+        ),
+        getItem(
+          <Link to={"/censor/request-manager/approved-history"}>
+            Lịch sử phê duyệt
+          </Link>,
+          "10"
+        ),
+      ]
     ),
-    getItem("Quản lý yêu cầu", "9", <FontAwesomeIcon icon={faCodePullRequest} />, [
-      getItem(<Link to={"/censor/request-manager/list-request"}>Danh sách yêu cầu</Link>, "10"),
-      getItem(<Link to={"/censor/request-manager/approved-history"}>Lịch sử phê duyệt</Link>, "11"),
-    ]),
     getItem(
       <Link to="/censor/request-manager/random-add-point">
         Tặng điểm sinh viên
       </Link>,
-      "6",
+      "11",
       <FontAwesomeIcon icon={faCommentsDollar} />
     ),
     getItem(
       <Link to="/censor/auction-management">Quản lý phiên đấu giá</Link>,
-      "7",
+      "12",
       <FontAwesomeIcon icon={faScaleUnbalanced} />
     ),
     getItem(
       <Link to="/censor/upgrade-rate">Quản lý nâng hạng</Link>,
-      "8",
+      "13",
       <FontAwesomeIcon icon={faStar} />
     ),
   ];

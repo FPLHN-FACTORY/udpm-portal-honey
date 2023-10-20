@@ -1,11 +1,16 @@
 import { Input, Modal, Radio, message, Button, Row, Col, Select } from "antd";
 import { useEffect, useState } from "react";
-import { AuctionAPI } from "../../../../apis/censor/auction/auction.api";
-import { UpdateAuction } from "../../../../app/reducers/auction/auction.reducer";
-import { GetCategory } from "../../../../app/reducers/category/category.reducer";
-import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
+import { AuctionAPI } from "../../../apis/censor/auction/auction.api";
+import { UpdateAuction } from "../../../app/reducers/auction/auction.reducer";
+import { GetCategory } from "../../../app/reducers/category/category.reducer";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
-const ModalUpdateUpgradeRate = ({ visible, onCancel, auction,  fetchAllData }) => {
+const ModalUpdateUpgradeRate = ({
+  visible,
+  onCancel,
+  auction,
+  fetchAllData,
+}) => {
   const [name, setName] = useState("");
   const [errorNameAuction, setErrorNameAuction] = useState("");
   const [honey, setHoney] = useState("");
@@ -20,7 +25,7 @@ const ModalUpdateUpgradeRate = ({ visible, onCancel, auction,  fetchAllData }) =
     if (auction !== null) {
       setName(auction.name);
       setHoney(auction.honey);
-      setStatus(auction.status == "HOAT_DONG" ? "0":"1");
+      setStatus(auction.status == "HOAT_DONG" ? "0" : "1");
       setHoneyCategoryId(auction.categoryId);
       console.log(auction.honeyCategoryId);
       return () => {

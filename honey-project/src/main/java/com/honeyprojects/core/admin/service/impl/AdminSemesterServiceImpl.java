@@ -7,6 +7,7 @@ import com.honeyprojects.core.admin.repository.AdSemesterRepository;
 import com.honeyprojects.core.admin.service.AdminSemesterService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Semester;
+import com.honeyprojects.infrastructure.contant.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,7 +45,7 @@ public class AdminSemesterServiceImpl implements AdminSemesterService {
     public Semester deleteSemester(String id) {
         Optional<Semester> optionalSemester = adSemesterRepository.findById(id);
         return optionalSemester.map(semester -> {
-            semester.setDeleted(true);
+            semester.setStatus(Status.KHONG_HOAT_DONG);
             adSemesterRepository.save(semester);
             return semester;
         }).orElse(null);
@@ -53,7 +54,7 @@ public class AdminSemesterServiceImpl implements AdminSemesterService {
     @Override
     public Semester addSemester(AdminSemesterRequest request) {
         Semester se = request.map(new Semester());
-        se.setDeleted(false);
+        se.setStatus(Status.HOAT_DONG);
         return adSemesterRepository.save(se);
     }
 
