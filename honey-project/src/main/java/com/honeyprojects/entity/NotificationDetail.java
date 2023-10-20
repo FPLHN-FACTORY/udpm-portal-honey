@@ -2,8 +2,7 @@ package com.honeyprojects.entity;
 
 import com.honeyprojects.entity.base.PrimaryEntity;
 import com.honeyprojects.infrastructure.contant.EntityProperties;
-import com.honeyprojects.infrastructure.contant.NotificationStatus;
-import com.honeyprojects.infrastructure.contant.NotificationType;
+import com.honeyprojects.infrastructure.contant.NotificationDetailType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -13,18 +12,19 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "notification")
-public class Notification extends PrimaryEntity {
+@Table(name = "notification_detail")
+public class NotificationDetail extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_CONTENT)
-    private String title;
-
-    private NotificationType type;
+    private String content;
 
     @Column(length = EntityProperties.LENGTH_ID)
-    private String studentId;
+    private String idObject;
 
-    private NotificationStatus status;
+    @Column(length = EntityProperties.LENGTH_ID)
+    private String idNotification;
 
+    private NotificationDetailType type;
 
+    private Integer quantity;
 }
