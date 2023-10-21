@@ -14,8 +14,6 @@ import AddPoint from "./pages/teacher/addpoint/AddPoint";
 import AddPointCensor from "./pages/censor/addPoin/AddPoint";
 import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
 import HistoryAddPointCensor from "./pages/censor/addPoin/HistoryAddPoint";
-import Club from "./pages/censor/club/Club";
-import DetailClub from "./pages/censor/club/DetailGiftClub";
 import ListRequestAddPoint from "./pages/teacher/addpoint/ListRequestAddPoint";
 import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
 import RequestManager from "./pages/censor/requestmanager/RequestManager";
@@ -48,6 +46,7 @@ import ConvertionHoney from "./pages/teacher/convertion-honey/RequestConversion"
 import TeacherRequestConversionHistory from "./pages/teacher/convertion-honey/RequestConversionHistory";
 import LetterDetail from "./pages/student/letters/LetterDetail";
 import Letter from "./pages/student/letters/letter";
+import UpgradeRate from "./pages/censor/upgrade-rate/upgrade-rate";
 import Shop from "./pages/student/shop/Shop";
 
 function App() {
@@ -63,7 +62,10 @@ function App() {
           <Routes>
             <Route path="*" element={<NotFound />} />
             <Route path="/layout-guard-roles" element={<NotAuthorized />} />
-            <Route path="/" element={<Navigate replace to="/home" />} />
+            <Route
+              path="/"
+              element={<Navigate replace to="/censor/category" />}
+            />
             {/* Màn censor */}
             <Route
               path=""
@@ -93,7 +95,7 @@ function App() {
                 </AuthGuard>
               }
             />
-            {/* <Route
+            <Route
               path="/censor/semester"
               element={
                 <AuthGuard>
@@ -102,7 +104,7 @@ function App() {
                   </DashboardCensor>
                 </AuthGuard>
               }
-            /> */}
+            />
             <Route
               path="/censor/conversion"
               element={
@@ -139,26 +141,6 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <HistoryAddPointCensor />
-                  </DashboardCensor>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/censor/club"
-              element={
-                <AuthGuard>
-                  <DashboardCensor>
-                    <Club />
-                  </DashboardCensor>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/censor/club/:id"
-              element={
-                <AuthGuard>
-                  <DashboardCensor>
-                    <DetailClub />
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -249,6 +231,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <ListDataImport />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/upgrade-rate"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <UpgradeRate />
                   </DashboardCensor>
                 </AuthGuard>
               }
