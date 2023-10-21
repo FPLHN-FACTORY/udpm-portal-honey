@@ -20,7 +20,7 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  min-height: 495px;
+  min-height: 100%;
 }
 
 .wrapper {

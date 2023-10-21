@@ -50,6 +50,7 @@ import ListRequest from "./pages/censor/requestmanager/ListRequest";
 import LetterDetail from "./pages/student/letters/LetterDetail";
 import Letter from "./pages/student/letters/letter";
 import Shop from "./pages/student/shop/Shop";
+import ChestIndex from "./pages/student/chest/ChestIndex";
 
 function App() {
   const token =
@@ -381,7 +382,8 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
-                    <StudentChest />
+                    {/* <StudentChest /> */}
+                    <ChestIndex/>
                   </DashboardAuthUser>
                 </AuthGuard>
               }
