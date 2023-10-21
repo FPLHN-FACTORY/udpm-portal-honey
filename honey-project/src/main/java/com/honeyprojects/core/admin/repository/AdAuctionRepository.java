@@ -75,6 +75,29 @@ public interface AdAuctionRepository extends AuctionRepository {
             """
             , nativeQuery = true)
     Page<AdminAuctionResponse> findAllAuction(@Param("req") AdminFindAuctionRequest req, Pageable pageable);
+
+
+    @Query(value = """
+            SELECT
+                ROW_NUMBER() OVER(ORDER BY a.last_modified_date DESC) AS stt,
+                a.id AS id,
+                a.name,
+                cate.name AS category_name,
+                cate.id AS category_id,
+                a.honey,
+                CASE
+                    WHEN a.status = 0 THEN 'HOAT_DONG'
+                    WHEN a.status = 1 THEN 'KHONG_HOAT_DONG'
+                END AS status
+            FROM auction a
+            LEFT JOIN category cate ON cate.id = a.honey_category_id
+            WHERE  a.status = 0
+            AND a.id_room IS NULL
+            AND (:#{#req.name} IS NULL OR a.name = :#{#req.name})
+            ORDER BY a.last_modified_date ASC 
+            """
+            , nativeQuery = true)
+    List<AdminAuctionResponse> findAll(@Param("req") AdminFindAuctionRequest req);
 }
 
 
