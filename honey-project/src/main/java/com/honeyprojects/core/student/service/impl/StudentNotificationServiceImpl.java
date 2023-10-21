@@ -39,21 +39,13 @@ public class StudentNotificationServiceImpl implements StudentNotificationServic
     @Transactional
     public Notification updateStatus(String id) {
         Optional<Notification> optionalNotification = notificationRepository.findById(id);
-        optionalNotification.get().setStatus(NotificationStatus.DA_DOC);
-        notificationRepository.save(optionalNotification.get());
-        return optionalNotification.get();
-    }
-
-    @Override
-    @Transactional
-    public void updateAllStatus() {
-        List<Notification> notifications = notificationRepository.findAll();
-        for (Notification notification : notifications) {
-            notification.setStatus(NotificationStatus.DA_DOC);
+        if (optionalNotification.get().getStatus() == NotificationStatus.CHUA_DOC) {
+            optionalNotification.get().setStatus(NotificationStatus.DA_DOC_CHUA_NHAN_QUA);
+            return notificationRepository.save(optionalNotification.get());
+        } else {
+            return optionalNotification.get();
         }
-        notificationRepository.saveAll(notifications);
     }
-
 
     @Override
     public Notification getOne(String id) {
