@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Col, Row, Spin, Tabs, Tooltip } from "antd";
+import { Card, Col, Pagination, Row, Spin, Tabs, Tooltip } from "antd";
 import "./studentChest.css";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -17,10 +17,6 @@ import {
 } from "../../../app/reducers/archive-gift/archive-chest.reducer";
 import UsingGift from "./StudentUsingGift";
 import OpenChest from "./StudentOpenChest";
-import {
-  GetArchiveCountGift,
-  SetArchiveCountGift,
-} from "../../../app/reducers/archive-gift/archive-count-gift.reducer";
 const StudentChest = () => {
   const [filter, setFilter] = useState({ type: 0 });
   const [tabPosition] = useState("right");
@@ -30,10 +26,12 @@ const StudentChest = () => {
   const dataChest = useAppSelector(GetArchiveChest);
   const dataArchive = useAppSelector(GetArchiveGift);
   const [name, setName] = useState("");
+  const [quantity, setQuantity] = useState("");
   const [note, setNote] = useState("");
   const [archiveGift, setArchiveGift] = useState();
   const [archiveChest, setArchiveChest] = useState();
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
+  const [hoveredName, setHoveredName] = useState("");
 
   function ImageRenderer({ image }) {
     const byteArray = image ? image.split(",").map(Number) : [];
@@ -79,6 +77,7 @@ const StudentChest = () => {
     setLoading(true);
     ArchiveAPI.getGift(filter).then((response) => {
       dispatch(SetGiftArchive(response.data.data));
+      console.log(response.data.data);
       setLoading(false);
     });
   };
@@ -114,21 +113,19 @@ const StudentChest = () => {
 
   const detailArchive = (id) => {
     ArchiveAPI.detailArchiveGift(id).then((response) => {
-      dispatch(SetArchiveCountGift(response.data.quantity));
       setNote(response.data.note);
       setName(response.data.name);
+      setQuantity("Số lượng: " + response.data.quantity);
     });
   };
 
   const detailArchiveChest = (id) => {
     ArchiveAPI.detailArchiveChest(id).then((response) => {
-      dispatch(SetArchiveCountGift(response.data.quantity));
-      setName(response.data.name);
       setNote(response.data.note);
+      setName(response.data.name);
+      setQuantity("Số lượng: " + response.data.quantity);
     });
   };
-
-  const quantityArchive = useAppSelector(GetArchiveCountGift);
 
   return (
     <>
@@ -167,7 +164,7 @@ const StudentChest = () => {
             <Col span={7} className="chest-transaction">
               <Row className="row-items">
                 <Col span={4}>
-                  {showAdditionalInfo && quantityArchive !== 0 ? (
+                  {showAdditionalInfo ? (
                     <div className="chess-square-note">
                       <div className="item">
                         <img
@@ -176,9 +173,7 @@ const StudentChest = () => {
                         />
                       </div>
                       <span className="name-item">{name}</span>
-                      <span className="quantity-item">
-                        Số lượng: {quantityArchive}
-                      </span>
+                      <span className="quantity-item">{quantity}</span>
                       <hr
                         style={{
                           height: "2px",

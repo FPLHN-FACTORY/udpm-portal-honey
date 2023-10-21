@@ -1,0 +1,64 @@
+.btn-add {
+  background-color: red;
+}
+.custom-popconfirm {
+  color: #ff0000 !important;
+}
+
+.custom-popconfirm .ant-popover-inner-content {
+  background-color: #00ff00;
+}
+.gift {
+  width: 80px;
+  height: 70px;
+  border: 4px solid #cd853f;
+  background-color: white;
+  border-style: inset;
+  text-align: center;
+  line-height: 70px;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+.colGift :hover {
+  background-color: rgb(236, 236, 236);
+}
+.btnXacNhan {
+  border: 4px solid #cd853f;
+  font-size: fantasy;
+  font-weight: 800;
+  background-color: #f3bfa5;
+}
+.modelConversion .ant-modal-close-x {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 50%;
+  background-color: #8c251c;
+  color: #fff;
+  cursor: pointer;
+  padding-top: 10px;
+  margin-top: -45px;
+  margin-left: 15px;
+}
+
+.cardGift {
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.cardGift::-webkit-scrollbar {
+  width: 0;
+}
+.point {
+  width: 80px;
+  height: 40px;
+  text-align: center;
+  line-height: 34px;
+  border: 4px solid #cd853f;
+  font-size: fantasy;
+  font-weight: 800;
+  background-color: #f3bfa5;
+}

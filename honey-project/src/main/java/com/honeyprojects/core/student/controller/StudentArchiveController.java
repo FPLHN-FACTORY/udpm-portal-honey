@@ -2,10 +2,7 @@ package com.honeyprojects.core.student.controller;
 
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.ResponseObject;
-import com.honeyprojects.core.student.model.request.StudentArchiveFilterRequest;
-import com.honeyprojects.core.student.model.request.StudentArchiveOpenChestRequest;
-import com.honeyprojects.core.student.model.request.StudentGetArchiveChestRequest;
-import com.honeyprojects.core.student.model.request.StudentGetArchiveGiftRequest;
+import com.honeyprojects.core.student.model.request.*;
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
 import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
@@ -41,9 +38,9 @@ public class StudentArchiveController {
         return new ResponseObject(service.getArchiveGift(id));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseObject studentUsingGift(@PathVariable("id") String id) {
-        return new ResponseObject(service.studentUsingGift(id));
+    @PostMapping("/use-gift")
+    public ResponseObject studentUsingGift(@RequestBody StudentRequestChangeGift request) {
+        return new ResponseObject(service.studentUsingGift(request));
     }
 
     @PostMapping("/open-chest")

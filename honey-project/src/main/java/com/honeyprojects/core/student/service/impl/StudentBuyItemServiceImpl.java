@@ -2,18 +2,17 @@ package com.honeyprojects.core.student.service.impl;
 
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.response.SimpleResponse;
+import com.honeyprojects.core.student.model.request.StudentBuyItemRequest;
 import com.honeyprojects.core.student.model.request.StudentCreateRequestConversionRequest;
 import com.honeyprojects.core.student.model.request.StudentFilterHistoryRequest;
 import com.honeyprojects.core.student.model.response.StudentCreateResquestConversionResponse;
 import com.honeyprojects.core.student.repository.StudentArchiveGiftRepository;
-import com.honeyprojects.core.student.repository.StudentArchiveRepository;
 import com.honeyprojects.core.student.repository.StudentCategoryRepository;
 import com.honeyprojects.core.student.repository.StudentCreateRequestConversionRepository;
 import com.honeyprojects.core.student.repository.StudentGiftRepository;
 import com.honeyprojects.core.student.repository.StudentHoneyRepository;
 import com.honeyprojects.core.student.repository.StudentUserSemesterRepository;
-import com.honeyprojects.core.student.service.StudentCreateResquestConversionService;
-import com.honeyprojects.entity.Archive;
+import com.honeyprojects.core.student.service.StudentBuyItemService;
 import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Gift;
@@ -32,7 +31,7 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 
 @Service
-public class StudentCreateRequestConversionServiceImpl implements StudentCreateResquestConversionService {
+public class StudentBuyItemServiceImpl implements StudentBuyItemService {
     @Autowired
     private StudentCreateRequestConversionRepository studentCreateRequestConversionRepository;
 
@@ -54,12 +53,9 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
     @Autowired
     private StudentArchiveGiftRepository giftArchiveRepository;
 
-    @Autowired
-    private StudentArchiveRepository archiveRepository;
-
 
     @Override
-    public History addRequestConversion(StudentCreateRequestConversionRequest createRequest) {
+    public History addBuyItem(StudentBuyItemRequest createRequest) {
         Category category = categoryRepository.findById(createRequest.getHoneyCategoryId()).orElse(null);
         Gift gift = giftRepository.findById(createRequest.getGiftId()).orElse(null);
 
@@ -67,11 +63,9 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
         Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(createRequest.getStudentId(), createRequest.getHoneyCategoryId());
         History history = new History();
         ArchiveGift archiveGift = new ArchiveGift();
-        Archive archive = new Archive();
         if (honey == null) {
             String idUs = userSemesterRepository.getSemesterByStudent(createRequest.getStudentId());
             if (idUs == null) return null;
-            // Nếu Honey chưa tồn tại, tạo mới
             honey = new Honey();
             honey.setStudentId(createRequest.getStudentId());
             honey.setHoneyCategoryId(createRequest.getHoneyCategoryId());
@@ -79,11 +73,7 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
             honey.setHoneyPoint(createRequest.getHoneyPoint());
             honey = honeyRepository.save(honey);
         } else {
-            if (category.getCategoryStatus().equals(CategoryStatus.ACCEPT) || gift.getStatus().equals(StatusGift.ACCEPT)) {
-                history.setStatus(HoneyStatus.CHO_PHE_DUYET);
-                history.setType(TypeHistory.DOI_QUA);
-
-            } else {
+            if (category.getCategoryStatus().equals(CategoryStatus.FREE) && gift.getStatus().equals(StatusGift.FREE)) {
                 history.setStatus(HoneyStatus.DA_PHE_DUYET);
                 history.setType(TypeHistory.DOI_QUA);
 
@@ -91,23 +81,14 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
                 honey.setHoneyPoint(honey.getHoneyPoint() - deductedPoints);
                 honey = honeyRepository.save(honey);
             }
-
-
-
         }
 
         if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
-          archive.setStudentId(createRequest.getStudentId());
-            archiveRepository.save(archive);
-            if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
-                archiveGift.setGiftId(createRequest.getGiftId());
-                archiveGift.setNote(createRequest.getNote());
-                archiveGift.setArchiveId(archive.getId());
-                giftArchiveRepository.save(archiveGift);
-            }
+            archiveGift.setGiftId(createRequest.getGiftId());
+            archiveGift.setArchiveId("738492b2-627f-11ee-8c99-0242ac120002");
+            archiveGift.setNote(createRequest.getNote());
+            giftArchiveRepository.save(archiveGift);
         }
-
-        // Tiếp tục với việc thêm yêu cầu vào bảng History
         Long dateNow = Calendar.getInstance().getTimeInMillis();
         history.setCreatedAt(dateNow);
         history.setHoneyPoint(createRequest.getHoneyPoint());
@@ -117,18 +98,13 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
         history.setNameGift(createRequest.getNameGift());
         history.setNote(createRequest.getNote());
 
-
-
-
         return studentCreateRequestConversionRepository.save(history);
-
-
     }
 
     @Override
-    public PageableObject<StudentCreateResquestConversionResponse> getHistory(StudentFilterHistoryRequest filter){
+    public PageableObject<StudentCreateResquestConversionResponse> getHistory(StudentFilterHistoryRequest filter) {
         Pageable pageable1 = PageRequest.of(filter.getPage(), filter.getSize());
-        return  new PageableObject<>( studentCreateRequestConversionRepository.getHistory(filter,pageable1));
+        return new PageableObject<>(studentCreateRequestConversionRepository.getHistory(filter, pageable1));
     }
 
     @Override

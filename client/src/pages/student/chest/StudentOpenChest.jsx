@@ -6,7 +6,6 @@ import { useAppDispatch } from "../../../app/hooks";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 
 import { DeleteArchiveChest } from "../../../app/reducers/archive-gift/archive-chest.reducer";
-import { SetArchiveCountGift } from "../../../app/reducers/archive-gift/archive-count-gift.reducer";
 
 const OpenChest = (props) => {
   const { chest } = props;
@@ -25,7 +24,6 @@ const OpenChest = (props) => {
     ArchiveAPI.update(chest.id).then((response) => {
       dispatch(DeleteArchiveChest(response.data.data));
     });
-    dispatch(SetArchiveCountGift(parseInt(chest.quantity) - 1));
     fetchData();
   };
 

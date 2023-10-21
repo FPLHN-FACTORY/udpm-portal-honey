@@ -34,10 +34,11 @@ export class ArchiveAPI {
     });
   };
 
-  static delete = (id) => {
+  static openGift = (data) => {
     return request({
-      method: "DELETE",
-      url: `/${this.COMPONENT_NAME}/${id}`,
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}/use-gift`,
+      data: data,
     });
   };
 
