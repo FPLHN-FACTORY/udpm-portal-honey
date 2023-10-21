@@ -1,8 +1,6 @@
 package com.honeyprojects.core.admin.model.request;
 
-import com.honeyprojects.core.common.base.PageableRequest;
 import com.honeyprojects.entity.Gift;
-import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TypeGift;
 import jakarta.validation.constraints.NotBlank;
@@ -12,7 +10,6 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Random;
 
 
 @Getter

@@ -50,7 +50,7 @@ export class AuctionAPI {
     });
   };
 
-    static changeStatus = (id) => {
+  static changeStatus = (id) => {
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}` + `/change-status/` + id,

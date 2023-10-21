@@ -7,7 +7,7 @@ public final class EntityProperties {
 
     public static final byte LENGTH_ID = 36;
     public static final byte LENGTH_NAME = 100;
-    public static final byte LENGTH_CONTENT = 100;
+    public static final int LENGTH_CONTENT = 500;
     public static final byte LENGTH_CODE = 10;
     public static final byte LENGTH_NOTE = 100;
     public static final byte LENGTH_EMAIL = 50;

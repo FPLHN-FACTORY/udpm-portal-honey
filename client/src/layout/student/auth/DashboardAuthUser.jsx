@@ -69,9 +69,7 @@ function DashboardAuthUser({ children }) {
       getStompClient().subscribe(
         `/portal-honey/create-notification-user`,
         (result) => {
-          console.log("====================================");
-          console.log(result);
-          console.log("====================================");
+          dispatch(SetCountNotification(JSON.parse(result.body).data));
         }
       );
     });
@@ -127,6 +125,7 @@ function DashboardAuthUser({ children }) {
   }
 
   const hanlderClickCuaHang = () => {
+    navigate("/student/shop");
     playSound();
   };
   const hanlderClickDauGia = () => {

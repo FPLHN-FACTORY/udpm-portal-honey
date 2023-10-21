@@ -246,7 +246,7 @@ w-chest .modal-create-auction .row-content {
   border: inset;
   background-color: #464239;
   height: 30px;
-  width: 200px;
+  width: 97%;
 }
 .text-gia {
   color: white;
@@ -265,4 +265,22 @@ w-chest .modal-create-auction .row-content {
   font-weight: 700;
   margin-top: 20px;
   margin-right: 110px;
+}
+
+.item-cart-null {
+  position: relative;
+  text-align: center; 
+  vertical-align: middle; 
+}
+
+.item-cart-null span {
+  position: absolute;
+  top: 50%; 
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5); 
+  padding: 5px;
+  border-radius: 5px;
+  margin-top: 18%;
 }

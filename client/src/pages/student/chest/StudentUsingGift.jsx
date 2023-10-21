@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Button, message, Modal, Form, Input } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
-import { SetArchiveGift } from "../../../app/reducers/archive-gift/archive-gift.reducer";
-import { ResquestConversion } from "../../../apis/user/ResquestConversiton/ResquestConversion.api";
+import { SetGiftArchive } from "../../../app/reducers/archive-gift/gift-archive.reducer";
 
 const UsingGift = (props) => {
   const { archivegift, filter } = props;
@@ -18,7 +17,7 @@ const UsingGift = (props) => {
 
   const fetchData = () => {
     ArchiveAPI.getArchive(filter).then((response) => {
-      dispatch(SetArchiveGift(response.data.data));
+      dispatch(SetGiftArchive(response.data.data));
     });
   };
 
