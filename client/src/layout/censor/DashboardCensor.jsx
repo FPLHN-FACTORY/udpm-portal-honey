@@ -12,7 +12,7 @@
 import logo from "../../assets/images/logo/logo-udpm-3.png";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Layout, Drawer, Row, Menu, Col, AutoComplete } from "antd";
+import { Layout, Drawer, Row, Menu, Col } from "antd";
 import Header from "../../components/censor/Header";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
@@ -22,11 +22,10 @@ import {
   faCommentsDollar,
   faGift,
   faKaaba,
-  faMoneyBillTransfer,
   faPenRuler,
-  faPeopleRoof,
   faPlusCircle,
   faScaleUnbalanced,
+  faStar,
 } from "@fortawesome/free-solid-svg-icons";
 const { Header: AntHeader, Content } = Layout;
 
@@ -52,50 +51,62 @@ function DashboardAuthUser({ children }) {
   }
   const items = [
     getItem(
-      <Link to="/censor/category">Thể loại</Link>,
+      <Link to="/censor/category">Quản lý thể loại</Link>,
       "1",
       <FontAwesomeIcon icon={faKaaba} />
     ),
-    getItem(
-      <Link to="/censor/conversion">Quy đổi</Link>,
-      "2",
-      <FontAwesomeIcon icon={faMoneyBillTransfer} />
-    ),
     // getItem(
-    //   <Link to="/censor/semester">Kỳ học</Link>,
-    //   "3",
-    //   <FontAwesomeIcon icon={faPenRuler} />
+    //   <Link to="/censor/conversion">Quy đổi</Link>,
+    //   "2",
+    //   <FontAwesomeIcon icon={faMoneyBillTransfer} />
     // ),
     getItem(
-      <Link to="/censor/gift">Gói quà</Link>,
+      <Link to="/censor/semester">Quản lý học kỳ</Link>,
+      "3",
+      <FontAwesomeIcon icon={faPenRuler} />
+    ),
+    getItem(
+      <Link to="/censor/gift">Quản lý vật phẩm</Link>,
       "4",
       <FontAwesomeIcon icon={faGift} />
     ),
-    // getItem( <Link to="/censor/add-point">Cộng mật ong</Link>,"5" ,<PlusCircleFilled />),
     getItem("Cộng mật ong", "5", <FontAwesomeIcon icon={faPlusCircle} />, [
       getItem(<Link to={"/censor/add-point"}>Cộng mật ong</Link>, "6"),
       getItem(<Link to={"/censor/add-point/history"}>Lịch sử</Link>, "7"),
     ]),
     getItem(
-      <Link to="/censor/club">Club</Link>,
+      "Quản lý yêu cầu",
       "8",
-      <FontAwesomeIcon icon={faPeopleRoof} />
+      <FontAwesomeIcon icon={faCodePullRequest} />,
+      [
+        getItem(
+          <Link to={"/censor/request-manager/list-request"}>
+            Danh sách yêu cầu
+          </Link>,
+          "9"
+        ),
+        getItem(
+          <Link to={"/censor/request-manager/approved-history"}>
+            Lịch sử phê duyệt
+          </Link>,
+          "10"
+        ),
+      ]
     ),
-    getItem("Quản lý yêu cầu", "9", <FontAwesomeIcon icon={faCodePullRequest} />, [
-      getItem(<Link to={"/censor/request-manager/list-request"}>Danh sách yêu cầu</Link>, "10"),
-      getItem(<Link to={"/censor/request-manager/approved-history"}>Lịch sử phê duyệt</Link>, "11"),
-    ]),
     getItem(
-      <Link to="/censor/request-manager/random-add-point">
-        Tặng điểm sinh viên
-      </Link>,
-      "6",
+      <Link to="/censor/request-manager/random-add-point">Tặng mật ong</Link>,
+      "11",
       <FontAwesomeIcon icon={faCommentsDollar} />
     ),
     getItem(
-      <Link to="/censor/auction-management">Quản lý phiên đấu giá</Link>,
-      "7",
+      <Link to="/censor/auction-management">Quản lý phòng đấu giá</Link>,
+      "12",
       <FontAwesomeIcon icon={faScaleUnbalanced} />
+    ),
+    getItem(
+      <Link to="/censor/upgrade-rate">Quản lý tỉ lệ nâng cấp</Link>,
+      "13",
+      <FontAwesomeIcon icon={faStar} />
     ),
   ];
   const toggleCollapse = () => {

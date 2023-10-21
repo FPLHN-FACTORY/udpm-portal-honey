@@ -8,7 +8,6 @@ import com.honeyprojects.core.teacher.repository.TeacherGetHoneyRepository;
 import com.honeyprojects.core.teacher.repository.TeacherGiftRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherShowConvertionRepository;
-import com.honeyprojects.core.teacher.repository.TeacherUserSemesterRepository;
 import com.honeyprojects.core.teacher.service.TeacherConvertionHoneyService;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Honey;
@@ -16,10 +15,8 @@ import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.PaginationConstant;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
-import com.honeyprojects.repository.GiftRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,8 +33,6 @@ public class TeacherConvertionHoneyServiceImpl implements TeacherConvertionHoney
     @Autowired
     private TeacherHistoryRepository teacherHistoryRepository;
     @Autowired
-    private TeacherUserSemesterRepository usRepository;
-    @Autowired
     private UdpmHoney udpmHoney;
     @Autowired
     private TeacherGetHoneyRepository honeyRepository;
@@ -52,13 +47,10 @@ public class TeacherConvertionHoneyServiceImpl implements TeacherConvertionHoney
         Long dateNow = Calendar.getInstance().getTimeInMillis();
         Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(convertionHoneyRequest.getStudentId(), convertionHoneyRequest.getCategoryId());
         if (honey == null) {
-            String idUs = usRepository.getUsByStudent(convertionHoneyRequest.getStudentId(), dateNow);
-            if (idUs == null) return null;
             honey = new Honey();
             honey.setStatus(Status.HOAT_DONG);
             honey.setStudentId(convertionHoneyRequest.getStudentId());
             honey.setHoneyCategoryId(convertionHoneyRequest.getCategoryId());
-            honey.setUserSemesterId(idUs);
         } else {
             int deductedPoints = convertionHoneyRequest.getHoneyPoint();
             honey.setHoneyPoint(honey.getHoneyPoint() - deductedPoints);

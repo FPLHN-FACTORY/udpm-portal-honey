@@ -13,7 +13,6 @@ import {
   Input,
   Select,
 } from "antd";
-import "./auction-management.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFilter,
@@ -26,19 +25,10 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useEffect, useState } from "react";
-import { AuctionAPI } from "../../../apis/censor/auction/auction.api";
-import {
-  GetAuction,
-  SetAuction,
-  DeleteAuction,
-  ChangeAuctionStatus,
-} from "../../../app/reducers/auction/auction.reducer";
-import ModalCreateAuction from "./modal-create/ModalCreateAuction.jsx";
-import ModalUpdateAuction from "./modal-update/ModalUpdateAuction";
-import { GetCategory } from "../../../app/reducers/category/category.reducer";
+
 const { Option } = Select;
 
-export default function AuctionMangement() {
+export default function UpgradeRate() {
   const [auction, setAuction] = useState(null);
   const [name, setName] = useState("");
   const [status, setStatus] = useState("");
@@ -50,42 +40,6 @@ export default function AuctionMangement() {
   const dispatch = useAppDispatch();
   const [modalCreate, setModalCreate] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
-
-  useEffect(() => {
-    fetchData();
-    return () => {
-      dispatch(SetAuction([]));
-    };
-  }, [current]);
-
-  useEffect(() => {
-    setName("");
-    setStatus("");
-    setHoneyCategoryId("");
-    fetchDataCategory();
-  }, []);
-
-  const fetchDataCategory = async () => {
-    const responeGetAllCategory = await AuctionAPI.getALLCategory();
-    setListCategorySearch(responeGetAllCategory.data.data);
-  };
-
-  const fetchData = () => {
-    let filter = {
-      name: name,
-      status: status,
-      honeyCategoryId: honeyCategoryId,
-      page: current,
-      size: 10,
-    };
-    AuctionAPI.fetchAll(filter).then((response) => {
-      dispatch(SetAuction(response.data.data.data));
-      setTotal(response.data.data.totalPages);
-      console.log(response.data.data.data);
-    });
-  };
-
-  const data = useAppSelector(GetAuction);
 
   const columns = [
     {
@@ -141,9 +95,7 @@ export default function AuctionMangement() {
           <Popconfirm
             title="Đón phòng đấu giá"
             description="Bạn có chắc chắn muốn đóng phòng này không?"
-            onConfirm={() => {
-              buttonDelete(record.id);
-            }}
+            onConfirm={() => {}}
             okText="Có"
             cancelText="Không"
           >
@@ -152,6 +104,7 @@ export default function AuctionMangement() {
                 style={{
                   backgroundColor: "red",
                   color: "white",
+                  height: "35px",
                 }}
               >
                 <FontAwesomeIcon icon={faTrash} />
@@ -160,12 +113,11 @@ export default function AuctionMangement() {
           </Popconfirm>
           <Tooltip title="Sửa">
             <Button
-              onClick={() => {
-                buttonUpdate(record);
-              }}
+              onClick={() => {}}
               style={{
                 backgroundColor: "#0066CC",
                 color: "white",
+                height: "35px",
               }}
             >
               <FontAwesomeIcon icon={faPenToSquare} />
@@ -175,63 +127,6 @@ export default function AuctionMangement() {
       ),
     },
   ];
-
-  const buttonSearch = async () => {
-    setCurrent(1);
-    let filter = {
-      name: name,
-      status: status,
-      honeyCategoryId: honeyCategoryId,
-      page: current,
-      size: 10,
-    };
-    console.log(filter);
-    AuctionAPI.fetchAll(filter).then((response) => {
-      dispatch(SetAuction(response.data.data.data));
-      setTotal(response.data.data.totalPages);
-      console.log(response.data.data.data);
-    });
-  };
-
-  const buttonClear = async () => {
-    setName("");
-    setStatus("");
-    setHoneyCategoryId("");
-    setCurrent(1);
-    await fetchData();
-  };
-
-  const buttonCreate = () => {
-    setModalCreate(true);
-  };
-
-  const buttonCreateCancel = () => {
-    setModalCreate(false);
-    setAuction(null);
-  };
-
-  const buttonUpdate = (record) => {
-    setModalUpdate(true);
-    setAuction(record);
-  };
-
-  const buttonUpdateCancel = () => {
-    setModalUpdate(false);
-    setAuction(null);
-  };
-
-  const buttonDelete = (id) => {
-    AuctionAPI.changeStatus(id).then(
-      (response) => {
-        message.success("Đóng thành công!");
-        dispatch(ChangeAuctionStatus(response.data.data));
-        fetchData();
-      },
-      (error) => {
-        message.error("Đóng thất bại!");
-      }
-    );
-  };
 
   return (
     <div>
@@ -322,7 +217,6 @@ export default function AuctionMangement() {
           <Row>
             <Col span={12}>
               <Button
-                onClick={buttonSearch}
                 style={{
                   marginRight: "8px",
                   backgroundColor: "rgb(55, 137, 220)",
@@ -334,7 +228,6 @@ export default function AuctionMangement() {
             </Col>
             <Col span={12}>
               <Button
-                onClick={buttonClear}
                 style={{
                   marginLeft: "8px",
                   backgroundColor: "#FF9900",
@@ -374,7 +267,6 @@ export default function AuctionMangement() {
                 backgroundColor: "rgb(55, 137, 220)",
                 textAlign: "center",
               }}
-              onClick={buttonCreate}
             >
               <FontAwesomeIcon
                 icon={faPlus}
@@ -397,7 +289,7 @@ export default function AuctionMangement() {
         >
           <Table
             style={{ width: "100%" }}
-            dataSource={data}
+            dataSource={""}
             rowKey="id"
             columns={columns}
             pagination={false}
@@ -416,7 +308,7 @@ export default function AuctionMangement() {
         </div>
       </Card>
 
-      <ModalCreateAuction
+      {/* <ModalCreateAuction
         visible={modalCreate}
         onCancel={buttonCreateCancel}
         fetchAllData={fetchData}
@@ -426,7 +318,7 @@ export default function AuctionMangement() {
         onCancel={buttonUpdateCancel}
         auction={auction}
         fetchAllData={fetchData}
-      />
+      /> */}
     </div>
   );
 }
