@@ -322,11 +322,9 @@ public class DBGenerator implements CommandLineRunner {
         auction3.setStartingPrice(new BigDecimal(5000));
         auction3.setId(auctionRepository.save(auction3).getId());
 
-        // todo
         Archive archive =  new Archive();
         archive.setStatus(Status.HOAT_DONG);
         archive.setStudentId(userSemester1.getStudentId());
-        archive.setClubId(club1.getId());
         archiveRepository.save(archive);
 
         ArchiveGift archiveGift = new ArchiveGift();

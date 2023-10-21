@@ -1,4 +1,5 @@
-import { FormOutlined } from "@ant-design/icons";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Form, Input, Modal, Radio, Tooltip, message } from "antd";
 import { useEffect, useState } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
@@ -39,7 +40,6 @@ const ModalDetail = (props) => {
     setIsModalOpen(false);
   };
   form.setFieldsValue(category);
-  form.setFieldsValue(category);
 
   const handleFileInputChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -51,7 +51,7 @@ const ModalDetail = (props) => {
       setSelectedImageUrl("");
     }
   };
-
+  console.log(category);
   const dispatch = useAppDispatch();
   form.setFieldsValue(category);
 
@@ -79,11 +79,13 @@ const ModalDetail = (props) => {
     <>
       <Tooltip title="Chi tiết">
         <Button
-          className="detail-button"
-          style={{ padding: "1px 0.7rem" }}
+          style={{
+            backgroundColor: "yellowgreen",
+            color: "white",
+          }}
           onClick={showModal}
         >
-          <FormOutlined className="icon" />
+          <FontAwesomeIcon icon={faPenToSquare} />
         </Button>
       </Tooltip>
       <Modal
@@ -144,14 +146,14 @@ const ModalDetail = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={"2"}>Cần phê duyệt</Radio>
-              <Radio value={"1"}>Không phê duyệt</Radio>
+              <Radio value={"0"}>Không phê duyệt</Radio>
+              <Radio value={"1"}>Cần phê duyệt</Radio>
             </Radio.Group>
           </Form.Item>
 
           <Form.Item
             label="Giao dịch"
-            name="transactionRights"
+            name="categoryStatus"
             rules={[
               {
                 required: true,
@@ -160,8 +162,8 @@ const ModalDetail = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={"0"}>Được giao dịch</Radio>
-              <Radio value={"1"}>Không giao dịch</Radio>
+              <Radio value={"1"}>Được giao dịch</Radio>
+              <Radio value={"2"}>Không giao dịch</Radio>
             </Radio.Group>
           </Form.Item>
 
