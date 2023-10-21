@@ -438,7 +438,7 @@ function App() {
               }
             />
             <Route
-              path="/student/letter/detail"
+              path="/student/letter/detail/:id"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
