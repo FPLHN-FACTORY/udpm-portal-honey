@@ -36,6 +36,8 @@ public class AdUpgradeRateServiceImpl implements AdUpgradeRateService {
 //        }else{
 //            entity.setStatus(Status.KHONG_HOAT_DONG);
 //        }
+        long entityCount = adUpgradeRateRepository.count();
+        entity.setCode("UR" + (entityCount + 1));
         entity.setStatus(Status.HOAT_DONG);
         entity.setRatio(Double.valueOf(params.getRatio()));
         Optional<Category> optionalCategory1 = adminCategoryRepository.findById(params.getOriginalHoneyId());

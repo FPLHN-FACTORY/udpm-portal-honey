@@ -9,10 +9,12 @@ public interface AdminUpgradeRateResponse extends IsIdentified {
 
     @Value("#{target.id}")
     String getId();
-    @Value("#{target.original_honey_name}")
+    @Value("#{target.code}")
+    String getCode();
+    @Value("#{target.originalHoneyName}")
     String getOriginalHoneyName();
 
-    @Value("#{target.destination_honey_id}")
+    @Value("#{target.destinationHoneyName}")
     String getDestinationHoneyName();
 
     @Value("#{target.ratio}")

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+
 const initialState = [];
 
 export const UpgradeRateSlice = createSlice({
@@ -43,7 +44,7 @@ export const UpgradeRateSlice = createSlice({
   },
 });
 
-export const GetUpgradeRate = (state) => state.auction;
+export const GetUpgradeRate = (state) => state.upgradeRate;
 export const {
   SetUpgradeRate,
   AddUpgradeRate,

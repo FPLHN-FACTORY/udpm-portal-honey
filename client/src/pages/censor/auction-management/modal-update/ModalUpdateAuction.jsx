@@ -5,7 +5,7 @@ import { UpdateAuction } from "../../../../app/reducers/auction/auction.reducer"
 import { GetCategory } from "../../../../app/reducers/category/category.reducer";
 import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 
-const ModalUpdateAuction = ({ visible, onCancel, auction,  fetchAllData }) => {
+const ModalUpdateAuction = ({ visible, onCancel, auction, fetchAllData }) => {
   const [name, setName] = useState("");
   const [errorNameAuction, setErrorNameAuction] = useState("");
   const [honey, setHoney] = useState("");
@@ -20,7 +20,7 @@ const ModalUpdateAuction = ({ visible, onCancel, auction,  fetchAllData }) => {
     if (auction !== null) {
       setName(auction.name);
       setHoney(auction.honey);
-      setStatus(auction.status == "HOAT_DONG" ? "0":"1");
+      setStatus(auction.status == "HOAT_DONG" ? "0" : "1");
       setHoneyCategoryId(auction.categoryId);
       console.log(auction.honeyCategoryId);
       return () => {
