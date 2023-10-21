@@ -2,7 +2,7 @@ import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppConfig } from "./AppConfig";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import NotFound from "./pages/404";
 import NotAuthorized from "./pages/401";
 import AuthGuard from "./guard/AuthGuard";
@@ -47,6 +47,7 @@ import TeacherRequestConversionHistory from "./pages/teacher/convertion-honey/Re
 import LetterDetail from "./pages/student/letters/LetterDetail";
 import Letter from "./pages/student/letters/letter";
 import UpgradeRate from "./pages/censor/upgrade-rate/upgrade-rate";
+import Shop from "./pages/student/shop/Shop";
 
 function App() {
   const token =
@@ -317,7 +318,7 @@ function App() {
             />
 
             <Route
-              path="/student/auction-room-inside"
+              path="/student/auction-room-inside/:id"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
@@ -442,6 +443,16 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     <LetterDetail />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/shop"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <Shop />
                   </DashboardAuthUser>
                 </AuthGuard>
               }

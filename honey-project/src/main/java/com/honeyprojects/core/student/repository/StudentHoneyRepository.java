@@ -7,6 +7,7 @@ import com.honeyprojects.entity.Honey;
 
 import com.honeyprojects.repository.HoneyRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -28,4 +29,7 @@ public interface StudentHoneyRepository extends HoneyRepository {
             AND :dateNow BETWEEN s.from_date AND s.to_date
             """, nativeQuery = true)
     StudentHoneyResponse getPoint(String categoryId,String studentId, Long dateNow);
+
+    @Query("SELECT h FROM Honey h WHERE h.studentId =:idUser")
+    Honey getOneByIdUser (@Param("idUser") String idUser);
 }
