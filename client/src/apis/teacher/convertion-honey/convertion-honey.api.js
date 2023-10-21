@@ -1,29 +1,38 @@
 import { request } from "../../../helper/request.helper";
 
-export class ConvertionHoneyAPI {
-  static COMPONENT_NAME = "teacher/convertion-honey";
+export class TeacherUseGiftApi {
+  static COMPONENT_NAME = "teacher/use-gift";
 
-  static getConvertion = (categoryId) => {
+  static getRequestUseGift = (filter) => {
     return request({
       method: "GET",
       url: `/${this.COMPONENT_NAME}`,
-      params: { categoryId },
+      params: filter,
     });
   };
-
-  static getHoney = (studentId, categoryId) => {
+  static getFilterClass = () => {
+    return request({  
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/get-filter/class`,
+    });
+  };
+  static getFilterGift = () => {
     return request({
       method: "GET",
-      url: `/${this.COMPONENT_NAME}/get-honey`,
-      params: { studentId, categoryId },
+      url: `/${this.COMPONENT_NAME}/get-filter/gift`,
     });
   };
-
-  static addConvertion = (dataAddConvertion) => {
+  static accpect = (id) => {
     return request({
-      method: "POST",
-      url: `/${this.COMPONENT_NAME}`,
-      data: dataAddConvertion,
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/accept/${id}`,
+    });
+  };
+  static cancel = (id, note) => {
+    return request({
+      method: "Post",
+      url: `/${this.COMPONENT_NAME}/cancel/${id}`,
+      data: { note: note },
     });
   };
 }
