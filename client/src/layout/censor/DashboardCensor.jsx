@@ -12,7 +12,7 @@
 import logo from "../../assets/images/logo/logo-udpm-3.png";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Layout, Drawer, Row, Menu, Col, AutoComplete } from "antd";
+import { Layout, Drawer, Row, Menu, Col } from "antd";
 import Header from "../../components/censor/Header";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
@@ -22,9 +22,7 @@ import {
   faCommentsDollar,
   faGift,
   faKaaba,
-  faMoneyBillTransfer,
   faPenRuler,
-  faPeopleRoof,
   faPlusCircle,
   faScaleUnbalanced,
   faStar,
@@ -53,22 +51,22 @@ function DashboardAuthUser({ children }) {
   }
   const items = [
     getItem(
-      <Link to="/censor/category">Thể loại</Link>,
+      <Link to="/censor/category">Quản lý thể loại</Link>,
       "1",
       <FontAwesomeIcon icon={faKaaba} />
     ),
+    // getItem(
+    //   <Link to="/censor/conversion">Quy đổi</Link>,
+    //   "2",
+    //   <FontAwesomeIcon icon={faMoneyBillTransfer} />
+    // ),
     getItem(
-      <Link to="/censor/conversion">Quy đổi</Link>,
-      "2",
-      <FontAwesomeIcon icon={faMoneyBillTransfer} />
-    ),
-    getItem(
-      <Link to="/censor/semester">Kỳ học</Link>,
+      <Link to="/censor/semester">Quản lý học kỳ</Link>,
       "3",
       <FontAwesomeIcon icon={faPenRuler} />
     ),
     getItem(
-      <Link to="/censor/gift">Gói quà</Link>,
+      <Link to="/censor/gift">Quản lý vật phẩm</Link>,
       "4",
       <FontAwesomeIcon icon={faGift} />
     ),
@@ -96,19 +94,17 @@ function DashboardAuthUser({ children }) {
       ]
     ),
     getItem(
-      <Link to="/censor/request-manager/random-add-point">
-        Tặng điểm sinh viên
-      </Link>,
+      <Link to="/censor/request-manager/random-add-point">Tặng mật ong</Link>,
       "11",
       <FontAwesomeIcon icon={faCommentsDollar} />
     ),
     getItem(
-      <Link to="/censor/auction-management">Quản lý phiên đấu giá</Link>,
+      <Link to="/censor/auction-management">Quản lý phòng đấu giá</Link>,
       "12",
       <FontAwesomeIcon icon={faScaleUnbalanced} />
     ),
     getItem(
-      <Link to="/censor/upgrade-rate">Quản lý nâng hạng</Link>,
+      <Link to="/censor/upgrade-rate">Quản lý tỉ lệ nâng cấp</Link>,
       "13",
       <FontAwesomeIcon icon={faStar} />
     ),

@@ -17,6 +17,8 @@ import ModalDetailGift from "./ModalDetailGift";
 import ModalAma from "./ModalAddGift";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GetGift, SetGift } from "../../../app/reducers/gift/gift.reducer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default function IndexGift() {
   const [showModal, setShowModal] = useState(false);
@@ -145,9 +147,12 @@ export default function IndexGift() {
                 setDetailGift(record);
                 setShowModalDetail(true);
               }}
-              className="detail-button"
+              style={{
+                backgroundColor: "yellowgreen",
+                color: "white",
+              }}
             >
-              <EditOutlined className="icon" />
+              <FontAwesomeIcon icon={faPenToSquare} />
             </Button>
           </Tooltip>
           <Tooltip title="Xóa">
@@ -156,9 +161,12 @@ export default function IndexGift() {
                 setDetailGift(record);
                 setConfirmDelete(true);
               }}
-              className="detail-button"
+              style={{
+                backgroundColor: "red",
+                color: "white",
+              }}
             >
-              <DeleteOutlined className="icon" />
+              <FontAwesomeIcon icon={faTrash} />
             </Button>
           </Tooltip>
         </Space>
@@ -264,7 +272,6 @@ export default function IndexGift() {
             current={current}
             onChange={(value) => {
               setCurrent(value);
-              fetchData();
             }}
             total={total * 10}
           />
