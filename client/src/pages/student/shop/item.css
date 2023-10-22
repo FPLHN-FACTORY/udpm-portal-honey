@@ -47,12 +47,12 @@
     box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.4);
 }
 
-.item__card.active__item:active .card__image img {
+.item__card.active__item .card__image img {
     transform: scale(0.8);
 
 }
 
-.item__card.active__item:active .card__body h3 {
+.item__card.active__item .card__body h3 {
     font-size: 21px;
 
 }
