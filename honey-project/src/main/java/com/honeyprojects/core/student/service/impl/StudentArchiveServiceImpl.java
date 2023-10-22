@@ -2,19 +2,25 @@ package com.honeyprojects.core.student.service.impl;
 
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.UdpmHoney;
-import com.honeyprojects.core.student.model.request.StudentArchiveFilterRequest;
-import com.honeyprojects.core.student.model.request.StudentArchiveOpenChestRequest;
-import com.honeyprojects.core.student.model.request.StudentGetArchiveChestRequest;
-import com.honeyprojects.core.student.model.request.StudentGetArchiveGiftRequest;
+import com.honeyprojects.core.common.response.SimpleResponse;
+import com.honeyprojects.core.student.model.request.*;
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
 import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
+import com.honeyprojects.core.student.model.response.archive.StudentArchiveByUserResponse;
 import com.honeyprojects.core.student.repository.StudentArchiveRepository;
 import com.honeyprojects.core.student.repository.StudentGiftArchiveRepository;
+import com.honeyprojects.core.student.repository.StudentHistoryRepository;
 import com.honeyprojects.core.student.service.StudentArchiveService;
 import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
+import com.honeyprojects.entity.History;
+import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.TypeHistory;
+import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.repository.ArchiveGiftRepository;
+import com.honeyprojects.util.ConvertRequestApiidentity;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +41,10 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     private StudentArchiveRepository archiveRepository;
     @Autowired
     private ArchiveGiftRepository archiveGiftRepository;
+    @Autowired
+    private StudentHistoryRepository historyRepository;
+    @Autowired
+    private ConvertRequestApiidentity requestApiidentity;
 
 
     @Override
@@ -54,18 +64,26 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     }
 
     @Override
-    public ArchiveGift studentUsingGift(String id) {
-        if (id == null || id.isEmpty()) {
-            throw new IllegalArgumentException("Id không hợp lệ. Không thể là null hoặc rỗng.");
+    @Transactional
+    public ArchiveGift studentUsingGift(StudentRequestChangeGift request) {
+        SimpleResponse teacher = requestApiidentity.handleCallApiGetUserByEmail(request.getEmailGV());
+        if (teacher == null) {
+            throw new RestApiException("Email giảng viên không tồn tại");
         }
-        Optional<ArchiveGift> archiveGiftOptional = studentGiftArchiveRepository.findById(id);
-        if (archiveGiftOptional.isPresent()) {
-            ArchiveGift archiveGift = archiveGiftOptional.get();
+        ArchiveGift archiveGift = archiveGiftRepository.findById(request.getArchiveGiftId()).orElse(null);
+        if (archiveGift != null) {
+            History history = new History();
+            history.setStudentId(udpmHoney.getIdUser());
+            history.setTeacherId(teacher.getId());
+            history.setNameGift(request.getMaLop());
+            history.setType(TypeHistory.PHE_DUYET_QUA);
+            history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+            history.setGiftId(archiveGift.getGiftId());
+            historyRepository.save(history);
             studentGiftArchiveRepository.delete(archiveGift);
             return archiveGift;
-        } else {
-            return null;
         }
+        return null;
     }
 
     @Override
@@ -115,6 +133,11 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     public StudentArchiveGetChestResponse detailArchiveChest(StudentGetArchiveChestRequest request) {
         request.setIdStudent(udpmHoney.getIdUser());
         return studentGiftArchiveRepository.detailArchiveChest(request);
+    }
+
+    @Override
+    public List<StudentArchiveByUserResponse> findArchiveByUser(String idUser , String idCategory) {
+        return archiveRepository.findArchiveByUser(idUser , idCategory);
     }
 
 }

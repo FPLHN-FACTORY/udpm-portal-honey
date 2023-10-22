@@ -12,9 +12,6 @@ public interface StudentNotificationService {
     int countNotification(String id);
 
     Notification updateStatus(String id);
-
-    void updateAllStatus();
-
     Notification getOne(String id);
 
     void deleteNotification(String id);

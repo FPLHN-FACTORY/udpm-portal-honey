@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   Input,
   Modal,
@@ -16,6 +17,8 @@ import ModalDetailGift from "./ModalDetailGift";
 import ModalAma from "./ModalAddGift";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GetGift, SetGift } from "../../../app/reducers/gift/gift.reducer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default function IndexGift() {
   const [showModal, setShowModal] = useState(false);
@@ -139,25 +142,32 @@ export default function IndexGift() {
       render: (_, record) => (
         <Space size="small">
           <Tooltip title="Cập nhật">
-            <button
-              className="update-button"
+            <Button
               onClick={() => {
                 setDetailGift(record);
                 setShowModalDetail(true);
               }}
+              style={{
+                backgroundColor: "yellowgreen",
+                color: "white",
+              }}
             >
-              <EditOutlined className="icon" />
-            </button>
+              <FontAwesomeIcon icon={faPenToSquare} />
+            </Button>
           </Tooltip>
           <Tooltip title="Xóa">
-            <button
+            <Button
               onClick={() => {
                 setDetailGift(record);
                 setConfirmDelete(true);
               }}
+              style={{
+                backgroundColor: "red",
+                color: "white",
+              }}
             >
-              <DeleteOutlined className="icon" />
-            </button>
+              <FontAwesomeIcon icon={faTrash} />
+            </Button>
           </Tooltip>
         </Space>
       ),
@@ -262,7 +272,6 @@ export default function IndexGift() {
             current={current}
             onChange={(value) => {
               setCurrent(value);
-              fetchData();
             }}
             total={total * 10}
           />

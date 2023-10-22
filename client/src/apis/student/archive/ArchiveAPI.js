@@ -34,10 +34,11 @@ export class ArchiveAPI {
     });
   };
 
-  static delete = (id) => {
+  static openGift = (data) => {
     return request({
-      method: "DELETE",
-      url: `/${this.COMPONENT_NAME}/${id}`,
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}/use-gift`,
+      data: data,
     });
   };
 
@@ -75,6 +76,13 @@ export class ArchiveAPI {
       params: {
         idChest: id,
       },
+    });
+  };
+
+  static findAllUser = (id,idCategory) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/find-all-user?id=${id}&idCategory=${idCategory}`,
     });
   };
 }

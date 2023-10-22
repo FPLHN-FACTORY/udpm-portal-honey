@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 import giftReducer from "./reducers/gift/gift.reducer";
-import clubReducer from "./reducers/club/club.reducer";
 import conversionReducer from "./reducers/conversion/conversion.reducer";
 import honeyReducer from "./reducers/honey/honey.reducer";
 import semesterReducer from "./reducers/semester/semester.reducer";
@@ -18,6 +17,7 @@ import importReducer from "./reducers/import/import.reducer";
 import giftArchiveReducer from "./reducers/archive-gift/gift-archive.reducer";
 import archiveChestReducer from "./reducers/archive-gift/archive-chest.reducer";
 import countNotificationReducer from "./reducers/notification/count-notification.reducer";
+import upgradeRateReducer from "./reducers/upgrade-rate/upgrade-rate.reducer";
 
 export const store = configureStore({
   reducer: {
@@ -32,7 +32,6 @@ export const store = configureStore({
     loadding: loaddingReducer,
     category: categoryReducer,
     chest: chestReducer,
-    club: clubReducer,
     auction: auctionReducer,
     archiveGift: archiveGiftReducer,
     chestGift: chestGiftReducer,
@@ -40,6 +39,7 @@ export const store = configureStore({
     giftArchive: giftArchiveReducer,
     archiveChest: archiveChestReducer,
     countNotification: countNotificationReducer,
+    upgradeRate: upgradeRateReducer,
   },
 });
 

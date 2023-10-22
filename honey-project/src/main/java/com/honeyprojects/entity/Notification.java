@@ -19,9 +19,6 @@ public class Notification extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_CONTENT)
     private String title;
 
-    @Column(length = EntityProperties.LENGTH_CONTENT)
-    private String content;
-
     private NotificationType type;
 
     @Column(length = EntityProperties.LENGTH_ID)

@@ -29,4 +29,6 @@ public class StudentCreateRequestConversionRequest {
 
     @NotBlank
     private String note;
+
+    private String idArchive;
 }

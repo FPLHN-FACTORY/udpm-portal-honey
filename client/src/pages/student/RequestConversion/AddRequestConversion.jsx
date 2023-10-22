@@ -15,7 +15,7 @@ import {
   Tooltip,
   message,
 } from "antd";
-import { CloseCircleOutlined, StarTwoTone } from "@ant-design/icons";
+import { StarTwoTone } from "@ant-design/icons";
 
 export default function AddRequestConversion(props) {
   const requestConversion = props;
@@ -169,6 +169,7 @@ export default function AddRequestConversion(props) {
         ? selectedConversion.honeyCategoryId
         : 0,
       note: addDiscribe,
+      idArchive: fillUserApi.idUser,
     };
     createRequest(dataToAdd);
   };

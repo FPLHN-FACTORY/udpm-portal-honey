@@ -1,6 +1,13 @@
 import { Button, Modal, Space, message } from "antd";
-import React from "react";
 import { RandomAddPointAPI } from "../../../apis/censor/random-add-point/random-add-point.api";
+import {
+  connectStompClient,
+  getStompClient,
+} from "../../../helper/stomp-client/config";
+import React, { useEffect, useState } from "react";
+import { useAppDispatch } from "../../../app/hooks";
+import { SetCountNotification } from "../../../app/reducers/notification/count-notification.reducer";
+import { getToken } from "../../../helper/userToken";
 
 export default function ModalConfirm(props) {
   const {
@@ -10,15 +17,64 @@ export default function ModalConfirm(props) {
     setDataPreview,
     setNameFileUpload,
   } = props;
+  const [isLoad, setIsLoad] = useState(false);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    connectStompClient();
+  }, []);
+
+  let stompClient = getStompClient();
+
+  const connect = () => {
+    stompClient.connect(
+      {},
+      (frame) => {
+        console.log("Kết nối STOMP đã được thiết lập.");
+        // stompClient.subscribe(
+        //   "/portal-honey/create-notification-user",
+        //   (message) => {
+        //     const data = JSON.parse(message.body).data;
+        //     console.log("====================================");
+        //     console.log(data);
+        //     console.log("====================================");
+        //     dispatch(SetCountNotification(data));
+        //   }
+        // );
+      },
+      (error) => {
+        console.error("Lỗi trong quá trình kết nối STOMP:", error);
+      }
+    );
+  };
+
+  useEffect(() => {
+    setIsLoad(true);
+    if (stompClient != null) {
+      connect();
+    }
+    // return () => {
+    //   if (stompClient != null) {
+    //     getStompClient().disconnect();
+    //   }
+    // };
+  }, [stompClient, isLoad]);
 
   const handleConfirm = (dataPreview) => {
+    const bearerToken = getToken();
+    const headers = {
+      Authorization: "Bearer " + bearerToken,
+    };
     RandomAddPointAPI.createImportData(dataPreview)
       .then(() => {
+        stompClient.send("/action/create-notification-user", headers, {});
+
         message.success("Import thành công");
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log("Lỗi khi import:", error);
         message.error("Import thất bại");
       });
+
     setDataPreview([]);
     setNameFileUpload("");
     setOpenConfirm(false);

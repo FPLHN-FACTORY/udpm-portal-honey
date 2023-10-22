@@ -23,4 +23,7 @@ public interface AdminAuctionService {
     String changeAuctionStatus(String id);
 
     boolean deleteAuction(String id);
+
+    List<AdminAuctionResponse> findAll(AdminFindAuctionRequest req);
+
 }

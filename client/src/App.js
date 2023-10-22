@@ -14,8 +14,6 @@ import AddPoint from "./pages/teacher/addpoint/AddPoint";
 import AddPointCensor from "./pages/censor/addPoin/AddPoint";
 import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
 import HistoryAddPointCensor from "./pages/censor/addPoin/HistoryAddPoint";
-import Club from "./pages/censor/club/Club";
-import DetailClub from "./pages/censor/club/DetailGiftClub";
 import ListRequestAddPoint from "./pages/teacher/addpoint/ListRequestAddPoint";
 import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
 import RequestManager from "./pages/censor/requestmanager/RequestManager";
@@ -29,8 +27,6 @@ import TransactionPage from "./pages/student/transaction/TransactionPage";
 import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction";
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
-import ConvertionHoney from "./pages/teacher/convertion-honey/Index";
-import GiftStudent from "./pages/teacher/giftstudent/GiftStudent";
 import StArchive from "./pages/student/archive/StArchive";
 import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
 import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
@@ -43,18 +39,20 @@ import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
 import UpgradeHoney from "./pages/student/upgradeHoney/UpgradeHoney";
 import StudentAuctionRoom from "./pages/student/auction/StudentAuctionRoom";
 import StudentAuction from "./pages/student/auction/StudentAuction";
-// import StudentAuctionRoom from "./pages/student/auction/StudentAuctionRoom";
 import StudentAuctionRoomInside from "./pages/student/auction/StudentAuctionRoomInside";
 import RequestApprovedHistory from "./pages/censor/requestmanager/ApproveHistory";
 import ListRequest from "./pages/censor/requestmanager/ListRequest";
+import ConvertionHoney from "./pages/teacher/convertion-honey/RequestConversion";
+import TeacherRequestConversionHistory from "./pages/teacher/convertion-honey/RequestConversionHistory";
 import LetterDetail from "./pages/student/letters/LetterDetail";
 import Letter from "./pages/student/letters/letter";
+import UpgradeRate from "./pages/censor/upgrade-rate/upgrade-rate";
 import Shop from "./pages/student/shop/Shop";
 import ChestIndex from "./pages/student/chest/ChestIndex";
 
 function App() {
   const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM0Y2YyMWY0LWYzZTAtNDkwZS1iMWNjLTA4ZGJiNzQzZGQ3ZCIsIm5hbWUiOiJUcmlldSBWYW4gVHVvbmcgUEggMiA2IDEgNCA5IiwiZW1haWwiOiJ0dW9uZ3R2cGgyNjE0OUBmcHQuZWR1LnZuIiwidXNlck5hbWUiOiJ0dW9uZ3R2cGgyNjE0OSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NMU0hTd1cxb3B2ZVRzTjI4RGdHS0pLSWNYekpsY3hJd090c0VfbGZsZjk4SXc9czk2LWMiLCJpZFRyYWluaW5nRmFjaWxpdHkiOiI3OTZhNGZhNC04YWFiLTQyYzQtOWYzNS04NzBiYjAwMDVhZjEiLCJsb2NhbEhvc3QiOiJodHRwOi8vbG9jYWxob3N0Ojg4ODgiLCJyb2xlIjoiQURNSU4iLCJyb2xlTmFtZXMiOiJRdeG6o24gdHLhu4sgdmnDqm4iLCJuYmYiOjE2OTUwMzA5NjksImV4cCI6MTc2ODY0Mzc2OSwiaWF0IjoxNjk1MDMwOTY5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0OTA1MyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjQ5MDUzIn0.Zxmp3Ax5QVp2PK3b5BNfhcgs7c9bbWCYGF6R0QExd5s";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU5YjlmYjdlLTkwNjUtNDEwMi1mMDNjLTA4ZGJjZTY5ZTU5NCIsIm5hbWUiOiJ0xrDhu59uZyBoaWhpIiwiZW1haWwiOiJ0dW9uZ3R2cGgyNjE0OUBmcHQuZWR1LnZuIiwidXNlck5hbWUiOiJ0xrDhu59uZyBoaWhpIiwicGljdHVyZSI6IkltYWdlcy9EZWZhdWx0LnBuZyIsImlkVHJhaW5pbmdGYWNpbGl0eSI6Ijc5NmE0ZmE0LThhYWItNDJjNC05ZjM1LTg3MGJiMDAwNWFmMSIsImxvY2FsSG9zdCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODg4OCIsInJvbGUiOlsiVEVBQ0hFUiIsIlNUVURFTlQiLCJBRE1JTiJdLCJyb2xlTmFtZXMiOlsiR2nhuqNuZyB2acOqbiIsIlNpbmggdmnDqm4iLCJRdeG6o24gdHLhu4sgdmnDqm4iXSwibmJmIjoxNjk3NTUwODY5LCJleHAiOjE3MDAxNDI4NjksImlhdCI6MTY5NzU1MDg2OSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDkwNTMiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0OTA1MyJ9.zjVKrdOUc5joBysdG2q8TWAppjZEQSCv4M3dz5I-SnU";
   if (!getToken()) {
     setToken(token);
   }
@@ -65,7 +63,10 @@ function App() {
           <Routes>
             <Route path="*" element={<NotFound />} />
             <Route path="/layout-guard-roles" element={<NotAuthorized />} />
-            <Route path="/" element={<Navigate replace to="/home" />} />
+            <Route
+              path="/"
+              element={<Navigate replace to="/censor/category" />}
+            />
             {/* Màn censor */}
             <Route
               path=""
@@ -95,7 +96,7 @@ function App() {
                 </AuthGuard>
               }
             />
-            {/* <Route
+            <Route
               path="/censor/semester"
               element={
                 <AuthGuard>
@@ -104,7 +105,7 @@ function App() {
                   </DashboardCensor>
                 </AuthGuard>
               }
-            /> */}
+            />
             <Route
               path="/censor/conversion"
               element={
@@ -146,26 +147,6 @@ function App() {
               }
             />
             <Route
-              path="/censor/club"
-              element={
-                <AuthGuard>
-                  <DashboardCensor>
-                    <Club />
-                  </DashboardCensor>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/censor/club/:id"
-              element={
-                <AuthGuard>
-                  <DashboardCensor>
-                    <DetailClub />
-                  </DashboardCensor>
-                </AuthGuard>
-              }
-            />
-            <Route
               path="/censor/request-manager"
               element={
                 <AuthGuard>
@@ -185,7 +166,7 @@ function App() {
                 </AuthGuard>
               }
             />
-             <Route
+            <Route
               path="/censor/request-manager/approved-history"
               element={
                 <AuthGuard>
@@ -255,6 +236,16 @@ function App() {
                 </AuthGuard>
               }
             />
+            <Route
+              path="/censor/upgrade-rate"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <UpgradeRate />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
             {/* Màn teacher */}
             <Route
               path="/teacher/add-point"
@@ -297,11 +288,11 @@ function App() {
               }
             />
             <Route
-              path="/teacher/list-students"
+              path="/teacher/request-conversion/history"
               element={
                 <AuthGuard>
                   <DashboardTeacher>
-                    <GiftStudent />
+                    <TeacherRequestConversionHistory />
                   </DashboardTeacher>
                 </AuthGuard>
               }
@@ -328,7 +319,7 @@ function App() {
             />
 
             <Route
-              path="/student/auction-room-inside"
+              path="/student/auction-room-inside/:id"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
@@ -449,7 +440,7 @@ function App() {
               }
             />
             <Route
-              path="/student/letter/detail"
+              path="/student/letter/detail/:id"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>

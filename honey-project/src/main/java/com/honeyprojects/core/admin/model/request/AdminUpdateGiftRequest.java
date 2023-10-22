@@ -1,8 +1,6 @@
 package com.honeyprojects.core.admin.model.request;
 
-import com.honeyprojects.core.common.base.PageableRequest;
 import com.honeyprojects.entity.Gift;
-import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TypeGift;
 import jakarta.validation.constraints.NotBlank;
@@ -12,7 +10,6 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Random;
 
 
 @Getter
@@ -39,6 +36,12 @@ public class AdminUpdateGiftRequest {
 
     private String note;
 
+    private Long toDate;
+
+    private Long fromDate;
+
+    private String semesterId;
+
     public Gift dtoToEntity(Gift gift) throws IOException {
         gift.setCode(this.getCode());
         gift.setName(this.getName());
@@ -58,7 +61,9 @@ public class AdminUpdateGiftRequest {
         gift.setHoneyCategoryId(this.getHoneyCategoryId());
         gift.setHoney(this.getHoney());
         gift.setNote(this.getNote());
-
+        gift.setToDate(this.getToDate());
+        gift.setFromDate(this.getFromDate());
+        gift.setSemesterId(this.getSemesterId());
         return gift;
     }
 }
