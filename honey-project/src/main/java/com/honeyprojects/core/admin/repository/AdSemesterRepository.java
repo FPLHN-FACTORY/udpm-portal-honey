@@ -28,7 +28,6 @@ public interface AdSemesterRepository extends SemesterRepository {
             OR ( :#{#request.search} IS NULL
                     OR :#{#request.search} LIKE '' 
                     OR s.name LIKE %:#{#request.search}% ) )
-                    AND s.deleted = false
             """, countQuery = """
             SELECT ROW_NUMBER() OVER(ORDER BY s.created_date DESC) AS stt, s.id, s.code, s.name, s.last_modified_date, s.to_date, s.from_date
             FROM semester s
@@ -38,7 +37,6 @@ public interface AdSemesterRepository extends SemesterRepository {
             OR ( :#{#request.search} IS NULL
                     OR :#{#request.search} LIKE '' 
                     OR s.name LIKE %:#{#request.search}% ) )
-                    AND s.deleted = false
             """, nativeQuery = true
     )
     Page<AdminSemesterResponse> getAllSemesterByAdmin(Pageable pageable, @Param("request") AdminSearchSemesterRequest request);

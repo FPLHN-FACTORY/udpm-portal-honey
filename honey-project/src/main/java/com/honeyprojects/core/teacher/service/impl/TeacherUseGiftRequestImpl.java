@@ -72,13 +72,6 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
         notification.setTitle("Yêu cầu mở quà");
         SimpleResponse teacher = apiidentity.handleCallApiGetUserById(history.getTeacherId());
         StringBuilder content = new StringBuilder("Gói quà [ ");
-        notification.setContent(content.append(gift.getName())
-                .append((" ] đã được phê duyệt.\n"))
-                .append("Lớp: ")
-                .append(history.getNameGift())
-                .append(" | Giảng viên: ")
-                .append(teacher.getName())
-                .toString());
         notificationRepository.save(notification);
         return history;
     }
@@ -105,16 +98,6 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
         notification.setTitle("Yêu cầu mở quà");
         SimpleResponse teacher = apiidentity.handleCallApiGetUserById(history.getTeacherId());
         StringBuilder content = new StringBuilder("Gói quà [ ");
-        notification.setContent(content.append(gift.getName())
-                .append((" ] bị từ chối.\n"))
-                .append("Lớp: ")
-                .append(history.getNameGift())
-                .append(" | Giảng viên: ")
-                .append(teacher.getName())
-                .append("\n")
-                .append("LÝ DO: ")
-                .append(note)
-                .toString());
         notificationRepository.save(notification);
         archiveGiftRepository.save(archiveGift);
         historyRepository.save(history);

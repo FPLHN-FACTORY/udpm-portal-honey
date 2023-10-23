@@ -44,6 +44,11 @@ export const UpgradeRateSlice = createSlice({
 });
 
 export const GetUpgradeRate = (state) => state.auction;
-export const { SetUpgradeRate, AddUpgradeRate, DeleteUpgradeRate, UpdateUpgradeRate, ChangeUpgradeRateStatus } =
-UpgradeRateSlice.actions;
+export const {
+  SetUpgradeRate,
+  AddUpgradeRate,
+  DeleteUpgradeRate,
+  UpdateUpgradeRate,
+  ChangeUpgradeRateStatus,
+} = UpgradeRateSlice.actions;
 export default UpgradeRateSlice.reducer;

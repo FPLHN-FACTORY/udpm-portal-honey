@@ -2,6 +2,7 @@ package com.honeyprojects.entity;
 
 import com.honeyprojects.entity.base.PrimaryEntity;
 import com.honeyprojects.infrastructure.contant.EntityProperties;
+import com.honeyprojects.infrastructure.contant.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -23,12 +24,9 @@ public class Semester extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
-    @Column(nullable = false)
     private Long toDate;
 
-    @Column(nullable = false)
     private Long fromDate;
 
-    @Column(nullable = false)
-    private Boolean deleted;
+    private Status status;
 }

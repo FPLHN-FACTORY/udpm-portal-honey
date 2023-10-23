@@ -13,7 +13,6 @@ import {
 } from "antd";
 import {
   PlusOutlined,
-  EditOutlined,
   FormOutlined,
   DeleteOutlined,
   SearchOutlined,
@@ -27,6 +26,8 @@ import {
 import ModalThem from "./ModalAdd";
 import ModalDetail from "./ModalDetail";
 import "./index.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default function Index() {
   const [showModal, setShowModal] = useState(false);
@@ -122,7 +123,7 @@ export default function Index() {
       key: "name",
     },
     {
-      title: "Phê duyệt",
+      title: "Trạng thái",
       dataIndex: "categoryStatus",
       key: "categoryStatus",
       render: (text) => {
@@ -135,10 +136,10 @@ export default function Index() {
     },
     {
       title: "Quy đổi",
-      dataIndex: "transactionRights",
-      key: "transactionRights",
+      dataIndex: "categoryStatus",
+      key: "categoryStatus",
       render: (text) => {
-        if (text === "0") {
+        if (text === "1") {
           return <span>Được giao dịch</span>;
         } else {
           return <span>Không giao dịch</span>;
@@ -150,19 +151,6 @@ export default function Index() {
       key: "action",
       render: (_, record) => (
         <Space size="small">
-          {/* <Tooltip title="Cập nhật">
-            <Button
-              className="update-button"
-              onClick={() => {
-                setDetailCategory(record);
-                setShowModal(true);
-                console.log(record);
-              }}
-            >
-              <EditOutlined className="icon" />
-            </Button>
-          </Tooltip> */}
-
           <ModalDetail
             category={record}
             fetchData={fetchData}
@@ -174,9 +162,12 @@ export default function Index() {
                 setDetailCategory(record);
                 setConfirmDelete(true);
               }}
-              className="detail-button"
+              style={{
+                backgroundColor: "red",
+                color: "white",
+              }}
             >
-              <DeleteOutlined className="icon" />
+              <FontAwesomeIcon icon={faTrash} />
             </Button>
           </Tooltip>
         </Space>
