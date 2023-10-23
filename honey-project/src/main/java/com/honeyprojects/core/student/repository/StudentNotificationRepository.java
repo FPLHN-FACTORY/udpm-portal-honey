@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface StudentNotificationRepository extends NotificationRepository {
     @Query(value = """
-            SELECT n.id, n.content, n.status, n.type, n.created_date, n.student_id, n.title
+            SELECT n.id, n.status, n.type, n.created_date, n.student_id, n.title
                 FROM notification n 
                 WHERE n.student_id = :usersId 
                 AND ( :#{#request.title} IS NULL 
