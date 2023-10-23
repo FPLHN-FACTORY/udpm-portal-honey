@@ -183,11 +183,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     System.out.println("NEXT");
                     if (optionalChestGift.isPresent()) {
                         ChestGift chestGift = optionalChestGift.get();
-                        String idChest = chestGift.getChestId();
                         String idGift = chestGift.getGiftId();
-                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(idChest, idGift);
-                        ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
-                        adArchiveGiftRepository.save(archiveGift);
                         Gift gift = adGiftRepository.findById(idGift).get();
                         Notification notification = createNotification(simple.getId());
                         createNotificationDetailItem(gift, notification.getId(), 1);
@@ -204,11 +200,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     Optional<ChestGift> optionalChestGift = adChestGiftRepository.findById(chestGiftId);
                     if (optionalChestGift.isPresent()) {
                         ChestGift chestGift = optionalChestGift.get();
-                        String idChest = chestGift.getChestId();
                         String idGift = chestGift.getGiftId();
-                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(idChest, idGift);
-                        ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
-                        adArchiveGiftRepository.save(archiveGift);
                         Gift gift = adGiftRepository.findById(idGift).get();
                         Notification notification = createNotification(idStudent);
                         createNotificationDetailItem(gift, notification.getId(), 1);
@@ -533,12 +525,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                             if (idGift == null) {
                                 continue;
                             } else {
-                                for (int i = 0; i < numberItem; i++) {
-                                    // Tạo một bản ghi ArchiveGift mới và lưu vào cơ sở dữ liệu
-                                    AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(null, idGift);
-                                    ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
-                                    adArchiveGiftRepository.save(archiveGift);
-                                }
                                 Optional<Gift> giftOptional = adGiftRepository.findById(idGift);
                                 if (giftOptional.isPresent()) {
                                     Gift gift = giftOptional.get();
@@ -593,7 +579,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     }
 
     private NotificationDetail createNotificationDetailItem(Gift gift, String idNotification, Integer quantity) {
-        String content = Constants.CONTENT_NOTIFICATION_SYSTEM + "Vật phẩm - " + gift.getName() + " - Số lương: " + quantity;
+        String content = Constants.CONTENT_NOTIFICATION_SYSTEM + "Vật phẩm - " + gift.getName() + " - số lượng: " + quantity;
         AdminCreateNotificationDetailRandomRequest detailRandomRequest = new AdminCreateNotificationDetailRandomRequest(content, gift.getId(), idNotification, NotificationDetailType.NOTIFICATION_DETAIL_GIFT, quantity);
         NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
         return studentNotificationDetailRepository.save(notificationDetail);
