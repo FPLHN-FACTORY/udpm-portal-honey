@@ -10,16 +10,20 @@ import org.springframework.data.repository.query.Param;
 
 public interface StudentNotificationRepository extends NotificationRepository {
     @Query(value = """
-            SELECT n.id, n.content, n.status, n.type, n.created_date, n.student_id, n.title
+            SELECT n.id, nd.content, n.status, n.type, n.created_date, n.student_id, n.title
                 FROM notification n 
+                JOIN notification_detail nd
+                ON n.id = nd.id_notification 
                 WHERE n.student_id = :usersId 
                 AND ( :#{#request.title} IS NULL 
                         OR :#{#request.title} LIKE ''
                     )
                 ORDER BY n.created_date DESC
             """, countQuery = """
-            SELECT COUNT(*)
-                FROM notification n
+            SELECT COUNT(*) 
+                FROM notification n 
+                JOIN notification_detail nd
+                ON n.id = nd.id_notification
                 WHERE n.student_id = :usersId 
                 AND ( :#{#request.title} IS NULL 
                         OR :#{#request.title} LIKE ''
