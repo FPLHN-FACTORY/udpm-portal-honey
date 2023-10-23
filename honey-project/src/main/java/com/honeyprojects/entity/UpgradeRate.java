@@ -29,7 +29,6 @@ public class UpgradeRate extends PrimaryEntity {
     @Column()
     private Double ratio;
 
-    @Enumerated(EnumType.STRING)
     private Status status;
 
 }
