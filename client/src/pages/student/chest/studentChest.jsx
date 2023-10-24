@@ -132,13 +132,15 @@ const StudentChest = () => {
       <Spin spinning={loading}></Spin>
       <div
         className="dialog-transaction"
-        style={{ minWidth: "800px", Height: "1000px" }}>
+        style={{ minWidth: "800px", Height: "1000px" }}
+      >
         <Card>
           <div className="bar-transaction" />
           <Row
             style={{
               padding: "5px 15px 0px 15px",
-            }}>
+            }}
+          >
             <Col span={12}>
               <div className="tag-backgroup">
                 <b className="text-title"></b>
@@ -208,7 +210,8 @@ const StudentChest = () => {
                             detailArchive(data.idGift);
                             setArchiveGift(data);
                             setShowAdditionalInfo(true);
-                          }}>
+                          }}
+                        >
                           <ImageRenderer image={data.image} />
                           <div className="quantity-gift">{data.quantity}</div>
                         </div>
@@ -225,7 +228,8 @@ const StudentChest = () => {
                             detailArchive(data.idGift);
                             setArchiveGift(data);
                             setShowAdditionalInfo(true);
-                          }}>
+                          }}
+                        >
                           <ImageRenderer image={data.image} />
                           <div className="quantity-gift">{data.quantity}</div>
                         </div>
@@ -243,7 +247,8 @@ const StudentChest = () => {
                             detailArchiveChest(data.chestId);
                             setArchiveChest(data);
                             setShowAdditionalInfo(true);
-                          }}>
+                          }}
+                        >
                           <ImageRenderer image={data.image} />
                           <div className="quantity-gift">{data.quantity}</div>
                         </div>

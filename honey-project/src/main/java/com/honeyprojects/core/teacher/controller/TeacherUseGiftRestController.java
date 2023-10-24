@@ -2,6 +2,7 @@ package com.honeyprojects.core.teacher.controller;
 
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.ResponseObject;
+import com.honeyprojects.core.teacher.model.request.TeacherAcceptAllRequest;
 import com.honeyprojects.core.teacher.model.request.TeacherGetUseGiftRequest;
 import com.honeyprojects.core.teacher.model.request.TeacherUseGiftCancelRequest;
 import com.honeyprojects.core.teacher.service.TeacherUseGiftRequest;
@@ -34,8 +35,14 @@ public class TeacherUseGiftRestController {
         return new ResponseObject(service.acceptRequest(id));
     }
 
+    @PostMapping("/accept-all")
+    public ResponseObject acceptAllRequest(@RequestBody TeacherAcceptAllRequest request) {
+        return new ResponseObject(service.acceptAllRequest(request));
+    }
+
     @PostMapping("/cancel/{id}")
     public ResponseObject acceptRequest(@PathVariable String id, @RequestBody TeacherUseGiftCancelRequest request) {
         return new ResponseObject(service.cancelRequest(id, request.getNote()));
     }
+
 }

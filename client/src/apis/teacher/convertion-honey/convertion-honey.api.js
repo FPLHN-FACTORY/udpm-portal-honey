@@ -11,7 +11,7 @@ export class TeacherUseGiftApi {
     });
   };
   static getFilterClass = () => {
-    return request({  
+    return request({
       method: "GET",
       url: `/${this.COMPONENT_NAME}/get-filter/class`,
     });
@@ -28,6 +28,15 @@ export class TeacherUseGiftApi {
       url: `/${this.COMPONENT_NAME}/accept/${id}`,
     });
   };
+
+  static accpectAll = (data) => {
+    return request({
+      method: "Post",
+      url: `/${this.COMPONENT_NAME}/accept-all`,
+      data: data,
+    });
+  };
+
   static cancel = (id, note) => {
     return request({
       method: "Post",
