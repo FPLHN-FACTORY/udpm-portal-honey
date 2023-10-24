@@ -50,13 +50,14 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
     List<String> listGiftId(@Param("req") StudentArchiveOpenChestRequest req);
 
     @Query(value = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, COUNT(g.id) AS quantity, ag.id, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
+                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.id, COUNT(g.id) AS quantity, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
                     FROM gift g 
                     JOIN archive_gift ag ON ag.gift_id = g.id 
                     JOIN archive a ON ag.archive_id = a.id 
                     WHERE (a.student_id = :#{#req.idStudent})
                     AND (:#{#req.status} IS NULL OR g.status = :#{#req.status})
                     AND (:#{#req.type} IS NULL OR g.type = :#{#req.type})
+                    GROUP BY idGift
             """, nativeQuery = true)
     Page<StudentGetListGiftResponse> getListGift(StudentArchiveFilterRequest req, Pageable pageable);
 

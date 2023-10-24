@@ -18,9 +18,10 @@ public class AdminUpgradeRateController {
     AdUpgradeRateService adUpgradeRateService;
     @GetMapping("")
     public ResponseObject getUpgradeRate(AdminUpgradeRateRequest searchParams){
+        System.out.println("----------------"+adUpgradeRateService.getUpgradeRate(searchParams).getData().size());
         return new ResponseObject(adUpgradeRateService.getUpgradeRate(searchParams));
     }
-    @GetMapping("search")
+    @GetMapping("/search")
     public ResponseObject search(AdminUpgradeRateRequest searchParams){
         return new ResponseObject(adUpgradeRateService.getUpgradeRate(searchParams));
     }
@@ -34,7 +35,7 @@ public class AdminUpgradeRateController {
         return new ResponseObject(adUpgradeRateService.update(searchParams, id));
     }
 
-    @DeleteMapping("delete/{id}")
+    @PutMapping("delete/{id}")
     public void delete(@PathVariable("id") String id){
         Optional<UpgradeRate> opt = adUpgradeRateService.findById(id);
         if(opt.isPresent()){

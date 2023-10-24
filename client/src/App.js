@@ -374,7 +374,7 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     {/* <StudentChest /> */}
-                    <ChestIndex/>
+                    <ChestIndex />
                   </DashboardAuthUser>
                 </AuthGuard>
               }
