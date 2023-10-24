@@ -103,21 +103,23 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
         Gift gift = giftRepository.findById(request.getIdGift()).orElse(null);
 
         Archive archive = new Archive();
+        archive.setStudentId(request.getIdStudent());
         if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && history.getType().equals(TypeHistory.DOI_QUA)) {
             Honey honey = honeyRepository.findById(history.getHoneyId()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
             honey.setHoneyPoint(honey.getHoneyPoint() - history.getHoneyPoint());
             honeyRepository.save(honey);
-            gift.setQuantity(gift.getQuantity() - 1);
-            giftRepository.save(gift);
-            history.setChangeDate(dateNow);
+            if(gift.getQuantity() != null) {
+                gift.setQuantity(gift.getQuantity() - 1);
+                giftRepository.save(gift);
+                history.setChangeDate(dateNow);
+            }
 
+                Archive getArchive = archiveRepository.findByStudentId(request.getIdStudent()).orElse(archive);
 
-                archive.setStudentId(request.getIdStudent());
-                archiveRepository.save(archive);
-
+                archiveRepository.save(getArchive);
                     archiveGift.setGiftId(request.getIdGift());
                     archiveGift.setNote(request.getNote());
-                    archiveGift.setArchiveId(archive.getId());
+                    archiveGift.setArchiveId(getArchive.getId());
                     giftArchiveRepository.save(archiveGift);
         }
         return historyRepository.save(history);

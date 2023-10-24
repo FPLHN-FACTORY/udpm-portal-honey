@@ -71,6 +71,7 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
         History history = new History();
         ArchiveGift archiveGift = new ArchiveGift();
         Archive archive = new Archive();
+        archive.setStudentId(createRequest.getStudentId());
         if (honey == null) {
             String idUs = userSemesterRepository.getSemesterByStudent(createRequest.getStudentId());
             if (idUs == null) return null;
@@ -82,23 +83,33 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
             honey.setHoneyPoint(createRequest.getHoneyPoint());
             honey = honeyRepository.save(honey);
         } else {
+            if (gift.getStatus().equals(StatusGift.ACCEPT)) {
+                history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+                history.setType(TypeHistory.DOI_QUA);
+            } else {
                 history.setStatus(HoneyStatus.DA_PHE_DUYET);
                 history.setType(TypeHistory.DOI_QUA);
 
                 int deductedPoints = createRequest.getHoneyPoint();
                 honey.setHoneyPoint(honey.getHoneyPoint() - deductedPoints);
                 honey = honeyRepository.save(honey);
-                gift.setQuantity(gift.getQuantity() - 1);
-                giftRepository.save(gift);
+                if(gift.getQuantity() != null){
+                    gift.setQuantity(gift.getQuantity() - 1);
+                    giftRepository.save(gift);
+                }
+
+            }
+
         }
 
         if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
-            archive.setStudentId(createRequest.getStudentId());
-            archiveRepository.save(archive);
+
+            Archive getArchiver = archiveRepository.findByStudentId(createRequest.getStudentId()).orElse(archive);
+            archiveRepository.save(getArchiver);
             if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
                 archiveGift.setGiftId(createRequest.getGiftId());
                 archiveGift.setNote(createRequest.getNote());
-                archiveGift.setArchiveId(archive.getId());
+                archiveGift.setArchiveId(getArchiver.getId());
                 giftArchiveRepository.save(archiveGift);
             }
         }

@@ -6,7 +6,7 @@ import React, { memo, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./letter.css";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { NotificationAPI } from "../../../apis/student/notification/notification.api";
 import {
   GetNotification,
@@ -46,20 +46,18 @@ const Letter = memo(() => {
     const day = String(d.getDate()).padStart(2, "0");
     const month = String(d.getMonth() + 1).padStart(2, "0");
     const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
+    const hours = String(d.getHours()).padStart(2, "0");
+    const minutes = String(d.getMinutes()).padStart(2, "0");
+    const seconds = String(d.getSeconds()).padStart(2, "0");
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   };
+
   useEffect(() => {
-    NotificationAPI.fetchNotification({
-      page: current,
-    }).then((response) => {
-      dispatch(SetNotification(response.data.data.data));
-    });
     fetchNotification();
   }, [current, dataCountNotification]);
 
   const dataNotification = useAppSelector(GetNotification);
   console.log(dataNotification);
-
   // {
   //   /* ------------button đánh dấu đã đọc------------ */
   // }
@@ -94,20 +92,18 @@ const Letter = memo(() => {
                     <ClockCircleOutlined className="icon__date" />
                     {formatDate(notification.createdDate)}
                   </p>
-                  <div className="item__content__detail">
+                  {/* <div className="item__content__detail">
                     <p>{notification.content}</p>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="letter__item__button">
-                <a
-                  onClick={() => {
-                    navigate("/student/chest");
-                  }}
+                <Link
+                  to={`/student/letter/detail/${notification.id}`}
                   className="item__button"
                 >
-                  Xem ngay
-                </a>
+                  {notification.status === "0" ? "Xem ngay" : "Đã xem"}
+                </Link>
               </div>
             </div>
           ))}

@@ -15,6 +15,7 @@ import moment from "moment";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
+import TabsRequest from "./TabsRequest";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -37,7 +38,7 @@ export default function RequestConversionHistory() {
   const [totalPages, setTotalPages] = useState([]);
   const [filter, setFilter] = useState({ page: 0 });
   const [fillUserApi, setFillUserApi] = useState([]);
-
+  const [type, setType] = useState();
   const fechUserApiById = () => {
     ResquestConversion.getUserAPiByid().then((response) => {
       setFillUserApi({
@@ -98,6 +99,7 @@ export default function RequestConversionHistory() {
         if (response.data.success) {
           if (status === 1) message.success("Đã xác nhận yêu cầu cộng điểm!");
           if (status === 2) message.error("Hủy yêu cầu thành công!");
+          setType(response.data.data.type);
         }
         // message.success("Phê duyệt thành công");
         fechData();
@@ -211,6 +213,7 @@ export default function RequestConversionHistory() {
   console.log(fillUserApi.name);
   return (
     <>
+      <TabsRequest selectIndex={1} type={type} />
       <Card className="mb-2 py-1">
         <Form onFinish={onFinishSearch}>
           <Space size={"large"}>

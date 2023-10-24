@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { ResquestConversion } from "../../../apis/user/ResquestConversiton/ResquestConversion.api";
 import { useNavigate } from "react-router-dom";
 import "./RequestConversion.css";
@@ -8,7 +7,6 @@ import {
   Card,
   Col,
   Form,
-  Modal,
   Row,
   Segmented,
   Tag,
@@ -29,24 +27,32 @@ export default function AddRequestConversion(props) {
 
   const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
   const [cardBackgroundColor, setCardBackgroundColor] = useState("#F8DA95");
-  const [addDiscribe, setAddDiscribe] = useState("");
-  const [selectedGiftNote, setSelectedGiftNote] = useState("");
   const [categoryStatus, setCategoryStatus] = useState(0);
 
   function ImageRenderer({ image }) {
-    const byteArray = image ? image.split(",").map(Number) : [];
-    const base64ImageData = btoa(
-      String.fromCharCode.apply(null, new Uint8Array(byteArray))
-    );
-    const imageUrl = `data:image/jpeg;base64,${base64ImageData}`;
+    if (image) {
+      // Chuyển đổi chuỗi byte thành mảng byte
+      const byteArray = image.split(",").map(Number);
 
-    return (
-      <img
-        src={imageUrl}
-        style={{ width: "40px", height: "40px" }}
-        alt="Hình ảnh"
-      />
-    );
+      // Tạo một Uint8Array từ mảng byte
+      const uint8Array = new Uint8Array(byteArray);
+
+      // Chuyển đổi Uint8Array thành Blob
+      const blob = new Blob([uint8Array], { type: "image/jpeg" });
+
+      // Tạo URL dữ liệu từ Blob
+      const imageUrl = URL.createObjectURL(blob);
+
+      return (
+        <img
+          src={imageUrl}
+          style={{ width: "40px", height: "40px" }}
+          alt="Hình ảnh"
+        />
+      );
+    } else {
+      return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
+    }
   }
 
   const [form] = Form.useForm();
@@ -114,6 +120,9 @@ export default function AddRequestConversion(props) {
   const fechCategory = () => {
     ResquestConversion.fetchAllCategory().then((response) => {
       setFillCategory(response.data.data);
+      if (response.data.data != null) {
+        setCategoryType(response.data.data[0].id);
+      }
     });
   };
 
@@ -132,7 +141,6 @@ export default function AddRequestConversion(props) {
       setSelectedConversion(conversion);
       setSelectedCardIndex(index);
       setCardBackgroundColor("#CCCC99");
-      setSelectedGiftNote(conversion.note);
     }
   };
 
@@ -165,7 +173,6 @@ export default function AddRequestConversion(props) {
       honeyCategoryId: selectedConversion
         ? selectedConversion.honeyCategoryId
         : 0,
-      note: addDiscribe,
       idArchive: fillUserApi.idUser,
     };
     createRequest(dataToAdd);
@@ -189,21 +196,6 @@ export default function AddRequestConversion(props) {
   const getCategoryNameById = (categoryId) => {
     const category = fillCategory.find((item) => item.id === categoryId);
     return category ? category.name : "";
-  };
-
-  const getGiftNameById = (giftId) => {
-    const gift = fillGift.find((item) => item.id === giftId);
-    return gift ? gift.name : "";
-  };
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
   };
 
   console.log(categoryStatus);
@@ -296,7 +288,6 @@ export default function AddRequestConversion(props) {
                       className="gift"
                       onClick={() => {
                         handleAddToComboBox(gift, index);
-                        showModal(true);
                       }}
                       style={{
                         backgroundColor:
@@ -311,7 +302,7 @@ export default function AddRequestConversion(props) {
                     >
                       <ImageRenderer image={gift.image} />
 
-                      {categoryStatus === 1 || gift.status === 1 ? (
+                      {gift.status === 1 ? (
                         <StarTwoTone
                           style={{
                             position: "absolute",
@@ -322,7 +313,9 @@ export default function AddRequestConversion(props) {
                           }}
                         />
                       ) : null}
-                      {gift.quantity ? gift.quantity : ""}
+                      <div style={{ marginTop: "40px" }}>
+                        {gift.quantity ? gift.quantity : ""}
+                      </div>
                     </div>
                   </Tooltip>
                 </Col>

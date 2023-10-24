@@ -8,6 +8,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -22,7 +24,7 @@ import java.math.BigDecimal;
 public class Auction extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_ID)
-    private String id;
+    private String idRoom;
 
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
@@ -49,7 +51,7 @@ public class Auction extends PrimaryEntity {
     private String honeyCategoryId;
 
     @Column
-    private Long honey;
+    private BigDecimal honey;
 
     private Status status;
 
