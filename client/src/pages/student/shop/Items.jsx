@@ -36,14 +36,13 @@ function ImageRenderer({ image }) {
     return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
   }
 }
-const Items = memo(() => {
+const Items = memo(({ filteredItem }) => {
   const [fillCategory, setFillCategory] = useState([]);
   const [fillGift, setFillGift] = useState([]);
   const [selectedConversion, setSelectedConversion] = useState(null);
   const [fillUserApi, setFillUserApi] = useState([]);
   const [fillPoint, setFillPoint] = useState({ point: 0 });
   const [categoryType, setCategoryType] = useState();
-  const [filteredConversions, setFilteredConversions] = useState([]);
 
   const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
   const [cardBackgroundColor, setCardBackgroundColor] = useState("#F8DA95");
@@ -62,17 +61,6 @@ const Items = memo(() => {
   };
 
   useEffect(() => {
-    if (categoryType) {
-      const filteredData = fillGift.filter(
-        (gift) => gift.honeyCategoryId === categoryType
-      );
-      setFilteredConversions(filteredData);
-    } else {
-      setFilteredConversions(fillGift);
-    }
-  }, [categoryType, fillGift]);
-
-  useEffect(() => {
     fechCategory();
     fechGift();
   }, []);
@@ -80,25 +68,6 @@ const Items = memo(() => {
   useEffect(() => {
     fechUserApiById();
   }, []);
-
-  const onchageCtae = (value) => {
-    setCategoryType(value);
-    const data = {
-      categoryId: value,
-      studentId: fillUserApi.idUser,
-    };
-    getPoint(data);
-    setSelectedConversion(null);
-    const selectedCategory = fillCategory.find(
-      (category) => category.id === value
-    );
-
-    if (selectedCategory) {
-      const newCategoryStatus = selectedCategory.categoryStatus;
-      console.log(`Status category : ${newCategoryStatus}`);
-      setCategoryStatus(newCategoryStatus);
-    }
-  };
 
   const getPoint = (data) => {
     BuyItem.getPointHoney(data)
@@ -189,15 +158,10 @@ const Items = memo(() => {
       });
   };
 
-  const getCategoryNameById = (categoryId) => {
-    const category = fillCategory.find((item) => item.id === categoryId);
-    return category ? category.name : "";
-  };
-
   return (
     <section className="shop__gift">
       <div className="item__list" gutter={16}>
-        {fillGift.map((item, index) => (
+        {filteredItem.map((item, index) => (
           <Col span={6} key={index}>
             <div
               className={`item__card`}

@@ -119,7 +119,7 @@ export default function AddRequestConversionHistory() {
           {status === 0
             ? "Chờ phê duyệt"
             : status === 1
-            ? "Đã phê duyệt"
+            ? "Đổi thành công"
             : status === 2
             ? "Đã hủy"
             : "Không sác định"}
@@ -187,7 +187,7 @@ export default function AddRequestConversionHistory() {
         </Form>
       </Card>
 
-      <Card title="Danh sách yêu cầu đồi quà">
+      <Card title="Danh sách yêu cầu đồi quà và vật phẩm">
         <div className="mt-5">
           <Table
             columns={columns}

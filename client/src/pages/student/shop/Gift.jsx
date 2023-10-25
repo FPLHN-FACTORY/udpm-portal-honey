@@ -33,15 +33,13 @@ function ImageRenderer({ image }) {
     return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
   }
 }
-const Gift = memo(() => {
+const Gift = memo(({ filteredConversions }) => {
   const [fillCategory, setFillCategory] = useState([]);
   const [fillGift, setFillGift] = useState([]);
   const [selectedConversion, setSelectedConversion] = useState(null);
   const [fillUserApi, setFillUserApi] = useState([]);
   const [fillPoint, setFillPoint] = useState({ point: 0 });
   const [categoryType, setCategoryType] = useState();
-  const [filteredConversions, setFilteredConversions] = useState([]);
-  const [mode, setMode] = useState("top");
 
   const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
   const [cardBackgroundColor, setCardBackgroundColor] = useState("#F8DA95");
@@ -115,13 +113,12 @@ const Gift = memo(() => {
     if (!selectedConversion) {
       message.error("Vui lòng chọn một mục trong danh sách chọn");
       return;
+    } else if (
+      (selectedConversion ? selectedConversion.honey : 0) > fillPoint.point
+    ) {
+      message.error("Bạn không đủ điểm để đổi quà trong ranh này.");
+      return;
     }
-    // else if (
-    //   (selectedConversion ? selectedConversion.honey : 0) > fillPoint.point
-    // ) {
-    //   message.error("Bạn không đủ điểm để đổi quà trong ranh này.");
-    //   return;
-    // }
 
     const dataToAdd = {
       honeyId: fillPoint.id,
@@ -152,49 +149,17 @@ const Gift = memo(() => {
       });
   };
   const getCategoryStatusById = (giftId) => {
-    const gift = fillGift.find((item) => item.id === giftId);
-    if (gift) {
-      const category = fillCategory.find(
-        (category) => category.id === gift.honeyCategoryId
-      );
-      if (category) {
-        return category.categoryStatus;
-      }
-    }
-    return "";
-  };
-  const onchageCtae = (value) => {
-    setCategoryType(value);
-    const data = {
-      categoryId: value,
-      studentId: fillUserApi.idUser,
-    };
-    getPoint(data);
-    // setSelectedConversion(null);
-    // const selectedCategory = fillCategory.find(
-    //   (category) => category.id === value
-    // );
+    const category = fillCategory.find(
+      (category) => category.id === giftId.honeyCategoryId
+    );
 
-    // if (selectedCategory) {
-    //   const newCategoryStatus = selectedCategory.categoryStatus;
-    //   console.log(`Status category : ${newCategoryStatus}`);
-    //   setCategoryStatus(newCategoryStatus);
-    // }
+    return category ? category.categoryStatus : "";
   };
-  useEffect(() => {
-    if (categoryType) {
-      const filteredData = fillGift.filter(
-        (gift) => gift.honeyCategoryId === categoryType
-      );
-      setFilteredConversions(filteredData);
-    } else {
-      setFilteredConversions(fillGift);
-    }
-  }, [categoryType, fillGift]);
+
   return (
     <section className="shop__gift">
       <div className="item__list" gutter={16}>
-        {fillGift.map((item, index) => (
+        {filteredConversions.map((item, index) => (
           <Col span={6} key={index}>
             <div
               className={`item__card`}
@@ -222,9 +187,7 @@ const Gift = memo(() => {
                   }}
                 />
               ) : null}
-              <div style={{ marginTop: "40px", color: "white" }}>
-                {/* {item.quantity ? item.quantity : "vô hạn"} */}
-              </div>
+              <div style={{ marginTop: "40px", color: "white" }}></div>
               <div className="card__body">
                 <h3>{item.name}</h3>
                 <div className="card__body__honey">

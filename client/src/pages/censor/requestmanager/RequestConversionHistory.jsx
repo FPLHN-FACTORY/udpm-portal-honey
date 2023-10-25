@@ -71,13 +71,6 @@ export default function RequestConversionHistory() {
     fechCategory();
   }, [filter]);
 
-  const deleteRequestConversion = (id) => {
-    ResquestConversion.deleteRequest(id).then(() => {
-      message.success("Hủy yêu cầu thành công");
-      fechData();
-    });
-  };
-
   const onFinishSearch = (value) => {
     if (value.code === undefined || value.code.trim().length === 0) {
       setFilter({
@@ -185,11 +178,6 @@ export default function RequestConversionHistory() {
             {values.status !== 1 && values.status !== 2 && (
               <CheckCircleFilled
                 onClick={() => {
-                  const dataStatus = {
-                    idStudent: values.studentId,
-                    note: values.note,
-                    idGift: values.giftId,
-                  };
                   changeStatusConversion(
                     values.studentId,
                     values.giftId,
@@ -202,7 +190,14 @@ export default function RequestConversionHistory() {
             {values.status !== 1 && values.status !== 2 && (
               <CloseCircleFilled
                 style={{ fontSize: "19px", margin: "0px 10px", color: "red" }}
-                onClick={() => changeStatusConversion(values.id, 2)}
+                onClick={() =>
+                  changeStatusConversion(
+                    values.studentId,
+                    values.giftId,
+                    values.id,
+                    2
+                  )
+                }
               />
             )}
           </div>
@@ -230,22 +225,7 @@ export default function RequestConversionHistory() {
                 ]}
               />
             </Form.Item>
-            <Form.Item name={"status"}>
-              <Select
-                style={{ width: "150px" }}
-                size="large"
-                placeholder="Trạng thái"
-                options={[
-                  { value: null, label: "tất cả" },
-                  ...[0, 1, 2, 3].map((item) => {
-                    return {
-                      label: statusHistory(item),
-                      value: item,
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
+
             <Button
               htmlType="submit"
               type="primary"
