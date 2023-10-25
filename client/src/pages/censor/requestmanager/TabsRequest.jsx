@@ -57,12 +57,14 @@ export default function TabsRequest({ selectIndex, type }) {
   return (
     <Space.Compact
       className="tab-request"
-      style={{ marginBottom: 12, width: "100%" }}>
+      style={{ marginBottom: 12, width: "100%" }}
+    >
       <Radio.Group value={selectIndex} style={{ width: "100%" }}>
         <Radio.Button
-          style={{ width: "50%" }}
+          style={{ width: "33%" }}
           value={0}
-          onClick={() => navigate("/censor/request-manager")}>
+          onClick={() => navigate("/censor/request-manager")}
+        >
           Tất cả <Badge showZero count={tatCa} />
         </Radio.Button>
         {/* <Radio.Button
@@ -72,10 +74,18 @@ export default function TabsRequest({ selectIndex, type }) {
           Yêu cầu cộng điểm <Badge showZero count={congDiem} />
         </Radio.Button> */}
         <Radio.Button
-          style={{ width: "50%" }}
+          style={{ width: "33%" }}
           value={2}
-          onClick={() => navigate("/censor/request-manager/transaction")}>
+          onClick={() => navigate("/censor/request-manager/transaction")}
+        >
           Yêu cầu giao dịch <Badge showZero count={giaoDich} />
+        </Radio.Button>
+        <Radio.Button
+          style={{ width: "34%" }}
+          value={2}
+          onClick={() => navigate("/censor/request-buy-gift/history")}
+        >
+          Yêu cầu mua quà <Badge showZero count={doiQua} />
         </Radio.Button>
       </Radio.Group>
     </Space.Compact>

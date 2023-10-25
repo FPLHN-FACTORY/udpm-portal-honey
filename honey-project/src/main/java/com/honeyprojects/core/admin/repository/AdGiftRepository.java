@@ -4,6 +4,7 @@ import com.honeyprojects.core.admin.model.request.AdminCategoryRequest;
 import com.honeyprojects.core.admin.model.request.AdminGiftRequest;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
+import com.honeyprojects.entity.Gift;
 import com.honeyprojects.repository.GiftRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,6 +52,5 @@ public interface AdGiftRepository extends GiftRepository {
             ORDER BY g.last_modified_date DESC
             """, nativeQuery = true )
     List<String> getAllNameByStatus();
-
 
 }

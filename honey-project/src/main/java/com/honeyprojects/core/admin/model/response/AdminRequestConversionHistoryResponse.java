@@ -11,6 +11,9 @@ public interface AdminRequestConversionHistoryResponse extends IsIdentified {
     @Value("#{target.name_gift}")
     String getNameGift();
 
+    @Value("#{target.gift_id}")
+    String getGiftId();
+
     @Value("#{target.nameCategory}")
     String getNameCategory();
 

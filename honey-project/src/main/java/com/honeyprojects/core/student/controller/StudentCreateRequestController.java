@@ -40,6 +40,11 @@ public class StudentCreateRequestController {
         return new ResponseObject(adminCategoryService.getAllListCategory());
     }
 
+    @GetMapping("/list-gift")
+    public ResponseObject getAllListGift() {
+        return new ResponseObject(createRequest.getListGift());
+    }
+
 
     @GetMapping("/user-api")
     public ResponseObject getUserApi(){
