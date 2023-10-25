@@ -1,7 +1,7 @@
 import { request } from "../../../helper/request.helper";
 
-export class ResquestConversion {
-  static COMPONENT_NAME = "student/createResquest";
+export class BuyItem {
+  static COMPONENT_NAME = "student/buyItem";
 
   //UserAPI
   static getUserAPi = () => {
@@ -53,14 +53,6 @@ export class ResquestConversion {
       method: "POST",
       url: `/${this.COMPONENT_NAME}/create-resquest-conversion`,
       data: createRequest,
-    });
-  };
-
-  static changeGift = (data) => {
-    return request({
-      method: "POST",
-      url: `/${this.COMPONENT_NAME}/change-gift`,
-      data: data,
     });
   };
 

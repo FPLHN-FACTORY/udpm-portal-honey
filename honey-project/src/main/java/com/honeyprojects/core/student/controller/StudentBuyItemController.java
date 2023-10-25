@@ -4,10 +4,12 @@ import com.honeyprojects.core.admin.service.AdminCategoryService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.ResponseObject;
 import com.honeyprojects.core.common.base.UdpmHoney;
+import com.honeyprojects.core.student.model.request.StudentBuyItemRequest;
 import com.honeyprojects.core.student.model.request.StudentCreateRequestConversionRequest;
 import com.honeyprojects.core.student.model.request.StudentFilterHistoryRequest;
 import com.honeyprojects.core.student.model.request.StudentHoneyRequest;
 import com.honeyprojects.core.student.model.response.StudentCreateResquestConversionResponse;
+import com.honeyprojects.core.student.service.StudentBuyItemService;
 import com.honeyprojects.core.student.service.StudentCreateResquestConversionService;
 import com.honeyprojects.core.student.service.impl.StudentHoneyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,10 @@ public class StudentBuyItemController {
     private StudentHoneyServiceImpl studentHoneyService;
 
     @Autowired
-    private StudentCreateResquestConversionService createRequest;
+    private StudentBuyItemService createRequest;
+
+    @Autowired
+    private StudentBuyItemService request;
 
     @Autowired
     private AdminCategoryService adminCategoryService;
@@ -38,6 +43,10 @@ public class StudentBuyItemController {
     @GetMapping("/list-category")
     public ResponseObject getAllListCategory() {
         return new ResponseObject(adminCategoryService.getAllListCategory());
+    }
+ @GetMapping("/list-gift")
+    public ResponseObject getAllListGift() {
+        return new ResponseObject(request.getAllListItem());
     }
 
 
@@ -52,8 +61,8 @@ public class StudentBuyItemController {
     }
 
     @PostMapping("/create-resquest-conversion")
-    public ResponseObject createRequest(@RequestBody StudentCreateRequestConversionRequest conversionRequest){
-        return new ResponseObject(createRequest.addRequestConversion(conversionRequest));
+    public ResponseObject createRequest(@RequestBody StudentBuyItemRequest conversionRequest){
+        return new ResponseObject(createRequest.addBuyItem(conversionRequest));
     }
 
     @GetMapping("/history")

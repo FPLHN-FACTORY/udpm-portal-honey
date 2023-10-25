@@ -224,7 +224,7 @@ export default function ListRequest() {
   return (
     <Spin spinning={loading}>
       <div className="request-manager">
-        {/* <TabsRequest selectIndex={1} type={type} /> */}
+        <TabsRequest selectIndex={1} type={type} />
         <Card className="mb-2 py-1">
           <Form onFinish={onFinishSearch}>
             <Space size={"large"}>
@@ -272,7 +272,8 @@ export default function ListRequest() {
               <Button
                 htmlType="submit"
                 type="primary"
-                className="mr-10 search-button">
+                className="mr-10 search-button"
+              >
                 Lọc
               </Button>
             </Space>

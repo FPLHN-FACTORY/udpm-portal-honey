@@ -1,5 +1,10 @@
 package com.honeyprojects.core.admin.controller;
 
+import com.honeyprojects.core.admin.model.request.AdminChangeStatusGiftRequest;
+import com.honeyprojects.core.admin.model.request.AdminConversionRequest;
+import com.honeyprojects.core.admin.model.request.AdminCreateConversionHistoryRequest;
+import com.honeyprojects.core.admin.model.request.CensorChangeStatusRequest;
+import com.honeyprojects.core.admin.model.request.CensorSearchHistoryRequest;
 import com.honeyprojects.core.admin.model.request.*;
 import com.honeyprojects.core.admin.model.response.AdminRequestConversionHistoryResponse;
 import com.honeyprojects.core.admin.model.response.CensorAddHoneyRequestResponse;
@@ -52,9 +57,10 @@ public class CensorRequestManagerRestController {
     }
 
     @PutMapping("/change-status-conversion")
-    public ResponseObject changeStatusConversion(@RequestBody CensorChangeStatusRequest request) {
+    public ResponseObject changeStatusConversion(@RequestBody AdminChangeStatusGiftRequest request) {
         return new ResponseObject(requestManagerService.changeStatusConversion(request));
     }
+
 
     //UserAPi
     @GetMapping("/user-api")
