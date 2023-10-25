@@ -84,4 +84,9 @@ public class CensorRequestManagerRestController {
     public PageableObject<CensorTransactionRequestResponse> listRequest(AdminHistoryApprovedSearchRequest dataSearch) {
         return requestManagerService.getHistoryApprovedByStatus(dataSearch);
     }
+
+    @GetMapping("/exchange-gifts")
+    public PageableObject<CensorTransactionRequestResponse> exchangeGifts(AdminHistoryApprovedSearchRequest dataSearch) {
+        return requestManagerService.getHistoryApprovedByStatus(dataSearch);
+    }
 }

@@ -148,4 +148,7 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
         Pageable pageable = PageRequest.of(searchParams.getPage(), searchParams.getSize());
         return new PageableObject<>(historyRepository.getHistoryApprovedAllStatus(searchParams, pageable));
     }
+
+
 }
+

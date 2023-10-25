@@ -46,7 +46,7 @@ const statusHistory = (status) => {
   }
 };
 
-export default function ListRequest() {
+export default function RequestExchangeGift() {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const columns = [
@@ -208,7 +208,7 @@ export default function ListRequest() {
         console.log(response.data);
         if (response.data.success) {
           fetchData(dispatch, filter);
-          if (status === 1) message.success("Đã xác nhận yêu cầu cộng điểm!");
+          if (status === 1) message.success("Đã xác nhận yêu cầu đổi quà!");
           if (status === 2) message.error("Hủy yêu cầu thành công!");
           setType(response.data.data.type);
         }
@@ -278,7 +278,7 @@ export default function ListRequest() {
             </Space>
           </Form>
         </Card>
-        <Card title="Yêu cầu cộng điểm">
+        <Card title="Yêu cầu đổi quà">
           <Table
             columns={columns}
             dataSource={data}
@@ -287,7 +287,7 @@ export default function ListRequest() {
             expandable={{
               expandedRowRender: (record) => (
                 <p>
-                  <b style={{ color: "#EEB30D" }}>Lý do cộng: </b>
+                  <b style={{ color: "#EEB30D" }}>Lý do đổi: </b>
                   {record.note}
                 </p>
               ),
