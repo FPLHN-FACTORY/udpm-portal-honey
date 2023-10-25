@@ -1,166 +1,173 @@
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
 
 .shop {
-    width: 100%;
-    height: 100%;
-    background-image: url("https://w.wallhaven.cc/full/57/wallhaven-57lzw8.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-position: fixed;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://w.wallhaven.cc/full/57/wallhaven-57lzw8.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-position: fixed;
 }
 
 .vertical-tab-container {
-    display: flex;
-    max-width: 100%;
-    min-height: 86%;
-    height: 86%;
+  display: flex;
+  max-width: 100%;
+  min-height: 86%;
+  height: 86%;
 }
 
 .tab-list {
-    width: 10%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    background-color: rgba(60, 60, 60, 0.5);
-    color: #ffffff;
-    font-size: 15px;
-    border-right: 1px solid #4c4c4c33;
-    border-top: 1px solid #4c4c4c33;
-    border-radius: 5px;
-    transition: all 0.3s;
-
+  width: 10%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(60, 60, 60, 0.5);
+  color: #ffffff;
+  font-size: 15px;
+  border-right: 1px solid #4c4c4c33;
+  border-top: 1px solid #4c4c4c33;
+  border-radius: 5px;
+  transition: all 0.3s;
 }
 
 .tab-list:first-child:hover {
-    border-radius: 5px;
+  border-radius: 5px;
 }
 
 .tab-list:hover {
-    border-right: 1px solid #ffffff66;
-    border-top: 1px solid #ffffff66;
-    box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.4);
+  border-right: 1px solid #ffffff66;
+  border-top: 1px solid #ffffff66;
+  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.4);
 }
 
 .tab {
-    padding: 10px;
-    cursor: pointer;
-    border-left: 4px solid transparent;
-    transition: background-color 0.2s;
-    border-bottom: 1px solid #ffffff26;
-    text-align: center;
+  padding: 10px;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #ffffff26;
+  text-align: center;
 }
 
 .tab:hover {
-    background: linear-gradient(to left, #b01717cc, rgba(60, 60, 60, 0.7));
-    font-size: 16px;
+  background: linear-gradient(to left, #b01717cc, rgba(60, 60, 60, 0.7));
+  font-size: 16px;
 }
 
 .tab.active {
-    font-size: 16px;
-    background: linear-gradient(to left, #b01717cc, rgba(60, 60, 60, 0.7));
-    border-left-color: transparent;
+  font-size: 16px;
+  background: linear-gradient(to left, #b01717cc, rgba(60, 60, 60, 0.7));
+  border-left-color: transparent;
 }
 
 .tab-content {
-    width: 90%;
-    height: 100%;
+  width: 90%;
+  height: 100%;
 }
 
 .shop__menu {
-    width: 100%;
-    height: 14%;
-    padding: 10px 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  width: 100%;
+  height: 14%;
+  padding: 10px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .shop__menu__logo {
-    font-size: 35px;
-    color: #ffffff;
-    font-weight: 500;
-    font-family: 'VT323', monospace;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  font-size: 35px;
+  color: #ffffff;
+  font-weight: 500;
+  font-family: "VT323", monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .icon__store {
-    margin-right: 5px;
+  margin-right: 5px;
 }
 
-
 .shop__menu__money {
-    font-size: 25px;
-    color: #ffffff;
-    font-family: 'VT323', monospace;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-left: 5px;
-    border-radius: 50px;
+  font-size: 25px;
+  color: #ffffff;
+  font-family: "VT323", monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 5px;
+  border-radius: 50px;
 }
 
 .shop__menu__category {
-    height: 100%;
-    border-radius: 10px 0 10px 0;
+  height: 100%;
+  border-radius: 10px 0 10px 0;
 }
 
 .shop__menu__category .ant-tabs-nav .ant-tabs-tab {
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: bold;
-    font-family: 'FantasyFont';
-    height: 40px;
-    background: #ffff;
-    line-height: 40px;
-    text-align: center;
-    background: linear-gradient(to bottom, #b01717cc, rgba(60, 60, 60, 0.7));
-    border: 1px solid #ffffff66;
-
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: "FantasyFont";
+  height: 40px;
+  background: #ffff;
+  line-height: 40px;
+  text-align: center;
+  background: linear-gradient(to bottom, #b01717cc, rgba(60, 60, 60, 0.7));
+  border: 1px solid #ffffff66;
 }
 
 .shop__menu__category .ant-tabs-nav .ant-tabs-tab:hover {
-    box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.4);
-    background: linear-gradient(to top, #b01717cc, rgba(60, 60, 60, 0.7));
+  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.4);
+  background: linear-gradient(to top, #b01717cc, rgba(60, 60, 60, 0.7));
 }
 
-:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-btn:focus:not(:focus-visible),
-:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-remove:focus:not(:focus-visible),
+:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs
+  .ant-tabs-tab-btn:focus:not(:focus-visible),
+:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs
+  .ant-tabs-tab-remove:focus:not(:focus-visible),
 :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-btn:active,
-:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-remove:active {
-    color: #ffffff;
-    text-shadow: #ffffff;
-    font-family: 'FantasyFont';
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: bold;
-
+:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs
+  .ant-tabs-tab-remove:active {
+  color: #ffffff;
+  text-shadow: #ffffff;
+  font-family: "FantasyFont";
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
 }
 
-:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: #ffffff;
-    text-shadow: 0 0 0.25px #ffffff;
-    font-family: 'FantasyFont';
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: bold;
-
+:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs
+  .ant-tabs-tab.ant-tabs-tab-active
+  .ant-tabs-tab-btn {
+  color: #ffffff;
+  text-shadow: 0 0 0.25px #ffffff;
+  font-family: "FantasyFont";
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
 }
 
-:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs>.ant-tabs-nav .ant-tabs-nav-more,
-:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs>div>.ant-tabs-nav .ant-tabs-nav-more {
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 16px;
+:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs
+  > .ant-tabs-nav
+  .ant-tabs-nav-more,
+:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs
+  > div
+  > .ant-tabs-nav
+  .ant-tabs-nav-more {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 16px;
 }
 
 :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab {
-    padding: 12px 15px;
-    border-radius: 5px;
+  padding: 12px 15px;
+  border-radius: 5px;
 }
 
-:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab+.ant-tabs-tab {
-    margin: 0 0 0 3px;
+:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs
+  .ant-tabs-tab
+  + .ant-tabs-tab {
+  margin: 0 0 0 3px;
 }

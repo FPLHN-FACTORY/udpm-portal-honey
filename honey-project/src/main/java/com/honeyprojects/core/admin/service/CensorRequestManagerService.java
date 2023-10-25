@@ -1,6 +1,7 @@
 package com.honeyprojects.core.admin.service;
 
 import com.honeyprojects.core.admin.model.request.AdminHistoryApprovedSearchRequest;
+import com.honeyprojects.core.admin.model.request.AdminChangeStatusGiftRequest;
 import com.honeyprojects.core.admin.model.request.CensorChangeStatusRequest;
 import com.honeyprojects.core.admin.model.request.CensorSearchHistoryRequest;
 import com.honeyprojects.core.admin.model.response.CensorAddHoneyRequestResponse;
@@ -16,7 +17,7 @@ import org.springframework.data.domain.Pageable;
 public interface CensorRequestManagerService {
     History changeStatus(CensorChangeStatusRequest changeStatusRequest);
 
-    History changeStatusConversion(CensorChangeStatusRequest changeStatusRequest);
+    History changeStatusConversion(AdminChangeStatusGiftRequest changeStatusRequest);
 
 
     PageableObject<CensorAddHoneyRequestResponse> getHistoryAddPoint(

@@ -5,6 +5,7 @@ import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.student.model.request.StudentCreateRequestConversionRequest;
 import com.honeyprojects.core.student.model.request.StudentFilterHistoryRequest;
 import com.honeyprojects.core.student.model.response.StudentCreateResquestConversionResponse;
+import com.honeyprojects.core.student.model.response.StudentGiftResponse;
 import com.honeyprojects.core.student.repository.StudentArchiveGiftRepository;
 import com.honeyprojects.core.student.repository.StudentArchiveRepository;
 import com.honeyprojects.core.student.repository.StudentCategoryRepository;
@@ -30,6 +31,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.List;
 
 @Service
 public class StudentCreateRequestConversionServiceImpl implements StudentCreateResquestConversionService {
@@ -68,6 +70,7 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
         History history = new History();
         ArchiveGift archiveGift = new ArchiveGift();
         Archive archive = new Archive();
+        archive.setStudentId(createRequest.getStudentId());
         if (honey == null) {
             String idUs = userSemesterRepository.getSemesterByStudent(createRequest.getStudentId());
             if (idUs == null) return null;
@@ -79,10 +82,9 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
             honey.setHoneyPoint(createRequest.getHoneyPoint());
             honey = honeyRepository.save(honey);
         } else {
-            if (category.getCategoryStatus().equals(CategoryStatus.ACCEPT) || gift.getStatus().equals(StatusGift.ACCEPT)) {
+            if (gift.getStatus().equals(StatusGift.ACCEPT)) {
                 history.setStatus(HoneyStatus.CHO_PHE_DUYET);
                 history.setType(TypeHistory.DOI_QUA);
-
             } else {
                 history.setStatus(HoneyStatus.DA_PHE_DUYET);
                 history.setType(TypeHistory.DOI_QUA);
@@ -90,19 +92,22 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
                 int deductedPoints = createRequest.getHoneyPoint();
                 honey.setHoneyPoint(honey.getHoneyPoint() - deductedPoints);
                 honey = honeyRepository.save(honey);
+                if(gift.getQuantity() != null){
+                    gift.setQuantity(gift.getQuantity() - 1);
+                    giftRepository.save(gift);
+                }
+
             }
-
-
-
         }
 
         if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
-          archive.setStudentId(createRequest.getStudentId());
-            archiveRepository.save(archive);
+
+            Archive getArchive = archiveRepository.findByStudentId(createRequest.getStudentId()).orElse(archive);
+            archiveRepository.save(getArchive);
             if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
                 archiveGift.setGiftId(createRequest.getGiftId());
                 archiveGift.setNote(createRequest.getNote());
-                archiveGift.setArchiveId(archive.getId());
+                archiveGift.setArchiveId(getArchive.getId());
                 giftArchiveRepository.save(archiveGift);
             }
         }
@@ -139,6 +144,11 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
     @Override
     public SimpleResponse getUserById(String id) {
         return convertRequestApiidentity.handleCallApiGetUserById(id);
+    }
+
+    @Override
+    public List<StudentGiftResponse> getListGift() {
+        return giftRepository.getAllListGift();
     }
 
 }

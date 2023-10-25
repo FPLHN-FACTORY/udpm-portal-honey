@@ -49,6 +49,7 @@ import Letter from "./pages/student/letters/letter";
 import UpgradeRate from "./pages/censor/upgrade-rate/upgrade-rate";
 import Shop from "./pages/student/shop/Shop";
 import ChestIndex from "./pages/student/chest/ChestIndex";
+import StudentBuyItem from "./pages/student/BuyItem/StudentBuyItem";
 
 function App() {
   const token =
@@ -87,7 +88,7 @@ function App() {
               }
             />
             <Route
-              path="/censor/request-conversion/history"
+              path="/censor/request-buy-gift/history"
               element={
                 <AuthGuard>
                   <DashboardCensor>
@@ -455,6 +456,17 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     <Shop />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+
+            <Route
+              path="/student/buy-item"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <StudentBuyItem />
                   </DashboardAuthUser>
                 </AuthGuard>
               }
