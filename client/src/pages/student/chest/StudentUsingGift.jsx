@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Button, message, Modal, Form, Input } from "antd";
+import { message, Modal, Form, Input } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 import { SetGiftArchive } from "../../../app/reducers/archive-gift/gift-archive.reducer";
+import { SetArchiveCountGift } from "../../../app/reducers/archive-gift/archive-count-gift.reducer";
+import { SetArchiveGift } from "../../../app/reducers/archive-gift/archive-gift.reducer";
 
 const UsingGift = (props) => {
   const { archivegift, filter } = props;
@@ -16,8 +18,16 @@ const UsingGift = (props) => {
   };
 
   const fetchData = () => {
-    ArchiveAPI.getArchive(filter).then((response) => {
+    ArchiveAPI.getGift(filter).then((response) => {
       dispatch(SetGiftArchive(response.data.data));
+    });
+    ArchiveAPI.getArchive(filter).then((response) => {
+      dispatch(SetArchiveGift(response.data.data));
+    });
+    ArchiveAPI.detailArchiveGift(archivegift.idGift).then((response) => {
+      let quantity = parseInt(response.data.quantity) - 1;
+      console.log(typeof response.data.quantity);
+      dispatch(SetArchiveCountGift(quantity));
     });
   };
 
@@ -57,9 +67,7 @@ const UsingGift = (props) => {
 
   return (
     <div>
-      <Button onClick={showModal} className="button-xac-nhan">
-        Sử dụng
-      </Button>
+      <div onClick={showModal}>Sử dụng</div>
       <Modal
         title="Sử dụng quà tặng"
         visible={isModalOpen}
