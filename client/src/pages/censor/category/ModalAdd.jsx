@@ -11,6 +11,7 @@ const ModalThem = (props) => {
   const [listCategory, setListCategory] = useState([]);
   const [image, setImage] = useState([]);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
+  const [errorImage, setErrorImage] = useState([]);
 
   const { fetchData } = props;
 
@@ -21,14 +22,34 @@ const ModalThem = (props) => {
   }, []);
 
   const handleFileInputChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setImage(selectedFile);
-
+    var selectedFile = event.target.files[0];
     if (selectedFile) {
-      const imageUrl = URL.createObjectURL(selectedFile);
-      setSelectedImageUrl(imageUrl);
-    } else {
-      setSelectedImageUrl("");
+      var FileUploadName = selectedFile.name;
+      if (FileUploadName == '') {
+        setErrorImage("Bạn chưa chọn ảnh");
+        setSelectedImageUrl("");
+        setImage([]);
+      } else {
+        const fileSize = selectedFile.size;
+        const checkFileSize = Math.round((fileSize / 1024));
+        if (checkFileSize > 100) {
+          setErrorImage("Ảnh không thể lớn hơn 1 mb");
+          setSelectedImageUrl("");
+          setImage([]);
+        } else {
+          var Extension = FileUploadName.substring(FileUploadName.lastIndexOf('.') + 1).toLowerCase();
+          if (Extension == "gif" || Extension == "png" || Extension == "bmp"
+            || Extension == "jpeg" || Extension == "jpg") {
+            setImage(selectedFile);
+            var imageUrl = URL.createObjectURL(selectedFile);
+            setSelectedImageUrl(imageUrl);
+          } else {
+            setErrorImage("Chỉ nhận ảnh có type GIF, PNG, JPG, JPEG và BMP. ");
+            setSelectedImageUrl("");
+            setImage([]);
+          }
+        }
+      }
     }
   };
 
@@ -49,6 +70,12 @@ const ModalThem = (props) => {
         const isNameExists = listCategory.some(
           (listCategory) => listCategory.name === formValues.name
         );
+        if (selectedImageUrl.length === 0) {
+          setErrorImage("Ảnh không được để trống");
+          return;
+        } else {
+          setErrorImage("");
+        }
         if (isNameExists) {
           message.error("Tên thể loại không được trùng");
           return;
@@ -141,6 +168,7 @@ const ModalThem = (props) => {
             accept="image/*"
             onChange={(event) => handleFileInputChange(event)}
           />
+          <span className="error errorImageMes">{errorImage}</span>
           <Form.Item
             label="Tên"
             name="name"

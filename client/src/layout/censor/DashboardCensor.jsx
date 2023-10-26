@@ -81,15 +81,21 @@ function DashboardAuthUser({ children }) {
       [
         getItem(
           <Link to={"/censor/request-manager/list-request"}>
-            Danh sách yêu cầu
+            Danh sách yêu cầu cộng điểm
           </Link>,
           "9"
+        ),
+        getItem(
+          <Link to={"/censor/request-manager/exchange-gifts"}>
+            Danh sách yêu cầu đổi quà
+          </Link>,
+          "10"
         ),
         getItem(
           <Link to={"/censor/request-manager/approved-history"}>
             Lịch sử phê duyệt
           </Link>,
-          "10"
+          "11"
         ),
       ]
     ),

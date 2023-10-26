@@ -31,11 +31,6 @@ public class AdUpgradeRateServiceImpl implements AdUpgradeRateService {
     public UpgradeRate save(AdminUpgradeRateRequest params) {
         UpgradeRate entity = new UpgradeRate();
         boolean check = true;
-//        if("0".equalsIgnoreCase(params.getStatus())){
-//            entity.setStatus(Status.HOAT_DONG);
-//        }else{
-//            entity.setStatus(Status.KHONG_HOAT_DONG);
-//        }
         long entityCount = adUpgradeRateRepository.count();
         entity.setCode("UR" + (entityCount + 1));
         entity.setStatus(Status.HOAT_DONG);
@@ -54,7 +49,7 @@ public class AdUpgradeRateServiceImpl implements AdUpgradeRateService {
         }
         if(check == true){
             return adUpgradeRateRepository.save(entity);
-        }return null;
+        }else return null;
     }
     @Override
     public UpgradeRate update(AdminUpgradeRateRequest params, String id) {
