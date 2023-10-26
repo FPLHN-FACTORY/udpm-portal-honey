@@ -38,19 +38,4 @@ public interface AdminHistoryRepository extends HistoryRepository {
             """, nativeQuery = true)
     Page<AdminAddHoneyHistoryResponse> getListRequest(@Param("searchParams") AdminSearchHistoryRequest searchParams,
                                                       Pageable pageable);
-
-    @Query(value = """
-            SELECT ROW_NUMBER() over (ORDER BY c.created_date desc ) as stt, h.id, h.note,
-            c.name as nameCategory, h.honey_point, h.created_date, h.status, h.student_id
-            FROM history h
-            LEFT JOIN gift g ON h.gift_id = g.id
-            LEFT JOIN honey ho ON h.honey_id = ho.id
-            LEFT JOIN category c ON c.id = ho.honey_category_id
-            WHERE h.status in (0,3)
-            AND (:#{#searchParams.idCategory} IS NULL OR c.id = :#{#searchParams.idCategory})
-            AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent})
-            AND h.type = 2 AND h.teacher_id = :#{#searchParams.idAdmin}
-            """, nativeQuery = true)
-    Page<AdminAddHoneyHistoryResponse> getListExchangeGift(@Param("searchParams") AdminSearchHistoryRequest searchParams,
-                                                      Pageable pageable);
 }

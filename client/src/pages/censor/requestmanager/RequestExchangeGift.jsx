@@ -133,7 +133,7 @@ export default function RequestExchangeGift() {
         setLoading(true);
         const fetchData = async (filter) => {
           try {
-            const response = await RequestManagerAPI.listRequest(filter);
+            const response = await RequestManagerAPI.getExchangeGifts(filter);
             const listHistory = await Promise.all(
               response.data.data.map(async (data) => {
                 try {

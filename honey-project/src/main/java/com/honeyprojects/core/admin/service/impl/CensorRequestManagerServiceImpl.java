@@ -180,7 +180,15 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
         Pageable pageable = PageRequest.of(searchParams.getPage(), searchParams.getSize());
         return new PageableObject<>(historyRepository.getHistoryApprovedAllStatus(searchParams, pageable));
     }
-
-
+    @Override
+    public PageableObject<CensorTransactionRequestResponse> getExchangeGiftAllStatus(AdminHistoryApprovedSearchRequest searchParams) {
+        Pageable pageable = PageRequest.of(searchParams.getPage(), searchParams.getSize());
+        return new PageableObject<>(historyRepository.getExchangeGiftAllStatus(searchParams, pageable));
+    }
+    @Override
+    public PageableObject<CensorTransactionRequestResponse> getExchangeGiftByStatus(AdminHistoryApprovedSearchRequest searchParams) {
+        Pageable pageable = PageRequest.of(searchParams.getPage(), searchParams.getSize());
+        return new PageableObject<>(historyRepository.getExchangeGiftByStatus(searchParams, pageable));
+    }
 }
 
