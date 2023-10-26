@@ -14,6 +14,8 @@ public interface TeacherUseGiftRequestResponse extends IsIdentified {
 
     String getLop();
 
+    String getMon();
+
     @Value("#{target.created_date}")
     long getCreatedDate();
 

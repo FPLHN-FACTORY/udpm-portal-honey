@@ -64,9 +64,21 @@ const UsingGift = (props) => {
         title="Sử dụng quà tặng"
         visible={isModalOpen}
         onOk={handleOk}
-        onCancel={handleCancel}
-      >
+        onCancel={handleCancel}>
         <Form form={form}>
+          <b>
+            <span style={{ color: "red" }}>* </span> Mã môn học
+          </b>
+          <Form.Item
+            name="maMon"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập mã môn học!",
+              },
+            ]}>
+            <Input />
+          </Form.Item>
           <b>
             <span style={{ color: "red" }}>* </span> Mã Lớp
           </b>
@@ -77,8 +89,7 @@ const UsingGift = (props) => {
                 required: true,
                 message: "Vui lòng nhập mã lớp!",
               },
-            ]}
-          >
+            ]}>
             <Input />
           </Form.Item>
           <b>
@@ -95,8 +106,7 @@ const UsingGift = (props) => {
                 type: "email",
                 message: "Email không hợp lệ!",
               },
-            ]}
-          >
+            ]}>
             <Input />
           </Form.Item>
         </Form>

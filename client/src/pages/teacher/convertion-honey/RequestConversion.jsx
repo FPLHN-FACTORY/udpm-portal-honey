@@ -74,6 +74,11 @@ export default function RequestConversion() {
       key: "lop",
     },
     {
+      title: "Môn",
+      dataIndex: "mon",
+      key: "mon",
+    },
+    {
       title: "Ngày tạo",
       dataIndex: "createdDate",
       key: "createdDate",
@@ -99,15 +104,13 @@ export default function RequestConversion() {
                 cancel(values.idHistory);
               }}
               okText="Yes"
-              cancelText="No"
-            >
+              cancelText="No">
               <Button
                 style={{
                   backgroundColor: "red",
                   color: "white",
                   height: "35px",
-                }}
-              >
+                }}>
                 <FontAwesomeIcon icon={faClose} />
               </Button>
             </Popconfirm>
@@ -239,8 +242,7 @@ export default function RequestConversion() {
       <div className="add-point">
         <Card
           className="mb-2"
-          style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}
-        >
+          style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
           {" "}
           <FontAwesomeIcon
             icon={faFilter}
@@ -251,8 +253,7 @@ export default function RequestConversion() {
             style={{
               fontSize: "18px",
               fontWeight: "500",
-            }}
-          >
+            }}>
             Bộ lọc
           </span>
           <Form onFinish={onFinishSearch}>
@@ -302,8 +303,7 @@ export default function RequestConversion() {
               <Button
                 htmlType="submit"
                 type="primary"
-                className="mr-10 search-button"
-              >
+                className="mr-10 search-button">
                 Lọc
               </Button>
             </Space>
@@ -315,8 +315,7 @@ export default function RequestConversion() {
               justifyContent: "space-between",
               display: "flex",
               marginBottom: "16px",
-            }}
-          >
+            }}>
             <div>
               <span style={{ fontSize: "18px" }}>
                 <FontAwesomeIcon icon={faRectangleList} size="xl" />
@@ -333,8 +332,7 @@ export default function RequestConversion() {
                       className="add-button1"
                       onClick={() => {
                         handleConfirm();
-                      }}
-                    >
+                      }}>
                       Xác nhận{" "}
                     </button>
                   </Tooltip>
