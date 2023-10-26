@@ -126,10 +126,10 @@
     background: linear-gradient(to top, #b01717cc, rgba(60, 60, 60, 0.7));
 }
 
-:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-btn:focus:not(:focus-visible),
-:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-remove:focus:not(:focus-visible),
-:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-btn:active,
-:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-remove:active {
+.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-btn:focus:not(:focus-visible),
+.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-remove:focus:not(:focus-visible),
+.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-btn:active,
+.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-remove:active {
     color: #ffffff;
     text-shadow: #ffffff;
     font-family: 'FantasyFont';
@@ -139,7 +139,7 @@
 
 }
 
-:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
     color: #ffffff;
     text-shadow: 0 0 0.25px #ffffff;
     font-family: 'FantasyFont';
@@ -149,18 +149,18 @@
 
 }
 
-:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs>.ant-tabs-nav .ant-tabs-nav-more,
-:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs>div>.ant-tabs-nav .ant-tabs-nav-more {
+.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs>.ant-tabs-nav .ant-tabs-nav-more,
+.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs>div>.ant-tabs-nav .ant-tabs-nav-more {
     color: #ffffff;
     font-weight: bold;
     font-size: 16px;
 }
 
-:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab {
+.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab {
     padding: 12px 15px;
     border-radius: 5px;
 }
 
-:where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab+.ant-tabs-tab {
+.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab+.ant-tabs-tab {
     margin: 0 0 0 3px;
 }

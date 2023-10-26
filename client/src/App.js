@@ -49,6 +49,7 @@ import Letter from "./pages/student/letters/letter";
 import UpgradeRate from "./pages/censor/upgrade-rate/upgrade-rate";
 import Shop from "./pages/student/shop/Shop";
 import ChestIndex from "./pages/student/chest/ChestIndex";
+import UpgrateHoneyIndex from "./pages/student/upgradeHoney/UpgrateHoneyIndex";
 
 function App() {
   const token =
@@ -414,7 +415,8 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
-                    <UpgradeHoney />
+                    {/* <UpgradeHoney /> */}
+                    <UpgrateHoneyIndex/>
                   </DashboardAuthUser>
                 </AuthGuard>
               }
