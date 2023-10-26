@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
+  AddAuction,
   GetAuction,
   SetAuction,
 } from "../../../app/reducers/auction/auction.reducer";
@@ -44,7 +45,7 @@ export default function StudentAuctionRoomInside() {
   });
 
   const [getOneAuction, setGetOneAuction] = useState(null);
-  const [listAuctionRoom, setListAuctionRoom] = useState([]);
+  const listAuctionRoom = useAppSelector(GetAuction);
   const [listArchiveUser, setListArchiveUser] = useState([]);
   const [archiveGift, setArchiveGift] = useState(null);
 
@@ -54,14 +55,14 @@ export default function StudentAuctionRoomInside() {
       idCategory: getOneAuction.honeyCategoryId,
     });
     StudentAuctionAPI.fetchAllRoom(search).then((res) => {
-      setListAuctionRoom(res.data.data);
+      dispatch(SetAuction(res.data.data));
+      console.log(res.data.data);
     });
   };
 
   const getOneAuctionById = () => {
     StudentAuctionAPI.getOne(id).then((res) => {
       setGetOneAuction(res.data.data);
-      console.log(res.data.data);
     });
   };
 
@@ -78,6 +79,7 @@ export default function StudentAuctionRoomInside() {
     ArchiveAPI.findAllUser(user.idUser, getOneAuction.honeyCategoryId).then(
       (res) => {
         setListArchiveUser(res.data.data);
+        console.log(res.data.data);
       }
     );
   };
@@ -97,8 +99,6 @@ export default function StudentAuctionRoomInside() {
       setGetOneAuction(null);
     });
   }, []);
-
-  console.log(listArchiveUser);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -171,18 +171,13 @@ export default function StudentAuctionRoomInside() {
           idCategory: archiveGift.idCategory,
         };
 
-        StudentAuctionAPI.addAuction(dataUpload).then(
-          (response) => {
-            console.log(response.data.data);
-            setIsModalOpen(false);
-            loadData();
-            setArchiveGift(null);
-            form.resetFields();
-          },
-          (error) => {
-            message.error(error.response.data.message);
-          }
-        );
+        StudentAuctionAPI.addAuction(dataUpload).then((response) => {
+          console.log(response.data.data);
+          setIsModalOpen(false);
+          loadData();
+          setArchiveGift(null);
+          form.resetFields();
+        });
       })
       .catch((errorInfo) => {
         console.log("Lỗi xảy ra:", errorInfo);
@@ -426,42 +421,22 @@ export default function StudentAuctionRoomInside() {
                           >
                             <div className="item">
                               {square.image == null ? (
-                                <>
-                                  <img
-                                    style={{
-                                      width: "100%",
-                                      height: "100%",
-                                    }}
-                                    src="https://png.pngtree.com/png-clipart/20230328/ourlarge/pngtree-game-item-box-png-image_6671647.png"
-                                    alt="Ảnh mặc định"
-                                  />
-                                  <span className="icon-quantity">
-                                    {square.quantity}
-                                  </span>
-                                </>
+                                <img
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                  }}
+                                  src="https://png.pngtree.com/png-clipart/20230328/ourlarge/pngtree-game-item-box-png-image_6671647.png"
+                                  alt="Ảnh mặc định"
+                                />
                               ) : (
-                                <>
-                                  <Base64Image
-                                    base64String={square.image}
-                                    css={{
-                                      width: "100%",
-                                      height: "100%",
-                                    }}
-                                  />
-                                  <span
-                                    style={{
-                                      position: "absolute",
-                                      top: "5px",
-                                      right: "5px",
-                                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                                      color: "#fff",
-                                      padding: "5px",
-                                      borderRadius: "5px",
-                                    }}
-                                  >
-                                    {square.quantity}
-                                  </span>
-                                </>
+                                <Base64Image
+                                  base64String={square.image}
+                                  css={{
+                                    width: "100%",
+                                    height: "100%",
+                                  }}
+                                />
                               )}
                             </div>
                           </div>
@@ -509,7 +484,7 @@ export default function StudentAuctionRoomInside() {
 
           <Card className="cardGift">
             <Row justify="start">
-              {listAuctionRoom.length <= 0 ? (
+              {listArchiveUser.length <= 0 ? (
                 <Col span={24} style={{ textAlign: "center" }}>
                   <div className="item-cart-null">
                     <img
@@ -526,12 +501,12 @@ export default function StudentAuctionRoomInside() {
                   </div>
                 </Col>
               ) : (
-                listAuctionRoom.map((response) => (
+                listAuctionRoom.map((response, index) => (
                   <Col span={6} className="col-aucion">
                     <div
                       className="auction-room-inside"
                       onClick={() => {
-                        nav(`/student/auction/${response.id}`);
+                        nav("/student/auction");
                       }}
                     >
                       <span className="user-online">

@@ -7,14 +7,11 @@ import com.honeyprojects.core.student.model.request.StudentNotificationRequest;
 import com.honeyprojects.core.student.service.StudentNotificationService;
 import com.honeyprojects.infrastructure.configws.SessionWebSocketInfo;
 import com.honeyprojects.infrastructure.configws.WebSocketSessionManager;
-import com.honeyprojects.infrastructure.configws.modelmessage.MessageWebSocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,9 +31,6 @@ public class StudentNotificationRestController extends BaseController {
 
     @Autowired
     private WebSocketSessionManager webSocketSessionManager;
-
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/create-notification-user")
     @SendTo("/portal-honey/create-notification-user")
@@ -79,9 +73,5 @@ public class StudentNotificationRestController extends BaseController {
         studentNotificationService.updateAllStatus();
     }
 
-    @MessageMapping("/receive-message")
-    @SendTo("/portal-honey/public")
-    public MessageWebSocket send(@Payload MessageWebSocket message) {
-        return message;
-    }
+
 }

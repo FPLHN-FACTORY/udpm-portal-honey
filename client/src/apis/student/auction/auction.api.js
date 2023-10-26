@@ -26,13 +26,6 @@ export class StudentAuctionAPI {
     });
   };
 
-  static getOneRoom = (id) => {
-    return request({
-      method: "GET",
-      url: `/${this.COMPONENT_NAME}/get-one-room?id=${id}`,
-    });
-  };
-
   static addAuction = (data) => {
     return request({
       method: "POST",

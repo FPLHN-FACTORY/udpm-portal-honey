@@ -284,13 +284,3 @@ w-chest .modal-create-auction .row-content {
   border-radius: 5px;
   margin-top: 18%;
 }
-.icon-quantity {
-  position: absolute;
-  top: 5px; 
-  right: 5px; 
-  background-color: rgba(249, 135, 4, 0.5);
-  color: #fff;
-  padding: 5px;
-  border-radius: 5px;
-  height: 25px;
-}

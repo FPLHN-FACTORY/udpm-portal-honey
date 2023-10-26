@@ -43,9 +43,4 @@ public class StudentAuctionRestController {
     public ResponseObject add (@RequestBody StudentAuctionCreateRequest request){
         return new ResponseObject(studentAuctionService.add(request));
     }
-
-    @GetMapping("/get-one-room")
-    public ResponseObject getOneRoomById(@RequestParam("id") String id) {
-        return new ResponseObject(studentAuctionService.getOneRoomById(id));
-    }
 }
