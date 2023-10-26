@@ -4,11 +4,13 @@ import com.honeyprojects.core.student.model.request.auction.StudentAuctionCreate
 import com.honeyprojects.core.student.model.request.auction.StudentAuctionFilterRequest;
 import com.honeyprojects.core.student.model.response.StudentAuctionResponse;
 import com.honeyprojects.core.student.repository.StudentAuctionRepository;
+import com.honeyprojects.core.student.repository.StudentGiftRepository;
 import com.honeyprojects.core.student.repository.StudentHoneyRepository;
 import com.honeyprojects.core.student.service.StudentAuctionService;
 import com.honeyprojects.entity.Auction;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ public class StudentAuctionServiceImpl implements StudentAuctionService {
 
     private final StudentHoneyRepository studentHoneyRepository;
 
+    private final StudentGiftRepository studentGiftRepository;
+
     @Override
     public List<StudentAuctionResponse> findAllRoomById(StudentAuctionFilterRequest rep) {
         return studentAuctionRepository.findAllRoomById(rep);
@@ -37,6 +41,15 @@ public class StudentAuctionServiceImpl implements StudentAuctionService {
             throw new RestApiException("Không tìm thấy bàn đấu giá");
         }
         return auction.get();
+    }
+
+    @Override
+    public StudentAuctionResponse getOneRoomById(String id) {
+        var auction = studentAuctionRepository.getOneRoomById(id);
+        if(auction == null){
+            throw new RestApiException("Không tìm thấy bàn đấu giá");
+        }
+        return auction;
     }
 
     @Override
@@ -55,10 +68,14 @@ public class StudentAuctionServiceImpl implements StudentAuctionService {
         auction.setStatus(Status.HOAT_DONG);
 
         // todo update honey to user
-        var honey = studentHoneyRepository.getOneByIdUser(request.getIdUser());
+        var honey = studentHoneyRepository.getOneByIdUser(request.getIdUser(), request.getIdCategory());
+        if(honey.getHoneyPoint() < Integer.valueOf(request.getHoney())){
+            throw new RestApiException("Bạn không đủ mật ong để giao dịch");
+        }
         honey.setHoneyPoint(honey.getHoneyPoint() - Integer.valueOf(request.getHoney()));
         studentHoneyRepository.save(honey);
 
+        // todo update gift to user
         return studentAuctionRepository.save(auction);
     }
 }

@@ -13,6 +13,8 @@ public interface StudentAuctionService {
 
     Auction getOneByid(String id);
 
-    Auction add (StudentAuctionCreateRequest request);
+    StudentAuctionResponse getOneRoomById(String id);
+
+    Auction add(StudentAuctionCreateRequest request);
 
 }

@@ -26,4 +26,6 @@ public class MessageWebSocket {
     private Status status;
 
     private String date;
+
+    private String idRoom;
 }

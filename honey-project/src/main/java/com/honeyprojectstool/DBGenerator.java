@@ -103,7 +103,7 @@ public class DBGenerator implements CommandLineRunner {
         honey2.setHoneyPoint(2000);
         honey2.setUserSemesterId(semester.getId());
         honey2.setHoneyCategoryId(category2.getId());
-        honey2.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
+        honey2.setStudentId("b34c613d-8aa5-4865-b1bd-08dbb743dd7d");
         honey2.setId(honeyRepository.save(honey2).getId());
 
         Honey honey3 = new Honey();
@@ -115,7 +115,7 @@ public class DBGenerator implements CommandLineRunner {
 
         Honey honey4 = new Honey();
         honey4.setHoneyPoint(1000);
-        honey4.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
+        honey4.setStudentId("b34c613d-8aa5-4865-b1bd-08dbb743dd7d");
         honey4.setUserSemesterId(semester.getId());
         honey4.setHoneyCategoryId(category1.getId());
         honey4.setId(honeyRepository.save(honey4).getId());
@@ -203,7 +203,7 @@ public class DBGenerator implements CommandLineRunner {
 
         UserSemester userSemester2 = new UserSemester();
         userSemester2.setSemesterId(semester.getId());
-        userSemester2.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
+        userSemester2.setStudentId("b34c613d-8aa5-4865-b1bd-08dbb743dd7d");
         userSemester2.setTotalHoney(3100);
         userSemester2.setCategoryId(category2.getId());
         userSemester2.setId(userSemesterRepository.save(userSemester2).getId());
@@ -246,7 +246,7 @@ public class DBGenerator implements CommandLineRunner {
         history3.setHoneyPoint(100);
         history3.setChangeDate(1689932796276L);
         history3.setGiftId(gift2.getId());
-        history3.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
+        history3.setStudentId("b34c613d-8aa5-4865-b1bd-08dbb743dd7d");
         history3.setTeacherId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
         history3.setId(historyRepository.save(history3).getId());
 
@@ -264,7 +264,7 @@ public class DBGenerator implements CommandLineRunner {
         history5.setHoneyPoint(100);
         history5.setChangeDate(1689932796276L);
         history5.setGiftId(gift1.getId());
-        history5.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
+        history5.setStudentId("b34c613d-8aa5-4865-b1bd-08dbb743dd7d");
         history5.setTeacherId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
         history5.setId(historyRepository.save(history5).getId());
 

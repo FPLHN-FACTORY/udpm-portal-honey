@@ -30,6 +30,7 @@ public interface StudentHoneyRepository extends HoneyRepository {
             """, nativeQuery = true)
     StudentHoneyResponse getPoint(String categoryId,String studentId, Long dateNow);
 
-    @Query("SELECT h FROM Honey h WHERE h.studentId =:idUser")
-    Honey getOneByIdUser (@Param("idUser") String idUser);
+    @Query("SELECT h FROM Honey h WHERE h.studentId =:idUser AND h.honeyCategoryId= :idCategory")
+    Honey getOneByIdUser (@Param("idUser") String idUser,
+                          @Param("idCategory") String idCategory);
 }

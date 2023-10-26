@@ -1,4 +1,4 @@
-import { Layout } from "antd";
+import { Button, Input, Layout, Row, message } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import React, { useEffect, useState } from "react";
@@ -14,21 +14,34 @@ import { ProfileApi } from "../../../apis/student/profile/profileApi.api";
 import moment from "moment";
 import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
+import { StudentAuctionAPI } from "../../../apis/student/auction/auction.api";
+import { useParams } from "react-router-dom";
+import { CountdownTimer } from "../../util/CountdownTimer";
 
 var stompClient = null;
 export default function StudentAuction() {
+  const { id } = useParams();
   const [publicChats, setPublicChats] = useState([]);
   const dispatch = useAppDispatch();
   const user = useAppSelector(GetUser);
+  const [getOneAuction, setGetOneAuction] = useState(null);
   const getProfile = () => {
     return ProfileApi.getUserLogin().then((response) => {
       dispatch(SetUser(response.data.data));
     });
   };
+  console.log(id);
+
+  const getOneAuctionById = () => {
+    StudentAuctionAPI.getOneRoom(id).then((res) => {
+      setGetOneAuction(res.data.data);
+    });
+  };
 
   useEffect(() => {
     getProfile();
-  }, []);
+    getOneAuctionById();
+  }, [id]);
 
   const [userData, setUserData] = useState({
     id: "",
@@ -45,14 +58,16 @@ export default function StudentAuction() {
   }, [userData]);
 
   const connect = () => {
-    const socket = new SockJS("http://localhost:2508/ws-honey-end-point");
+    const socket = new SockJS(
+      "http://localhost:2508/api/portal-honey-websocket-endpoint"
+    );
     stompClient = Stomp.over(socket);
     stompClient.connect({}, onConnected, onError);
   };
 
   const onConnected = () => {
     setUserData({ ...userData, connected: true });
-    stompClient.subscribe("/topic/public", onMessageReceived);
+    stompClient.subscribe("/portal-honey/public", onMessageReceived);
     userJoin();
   };
 
@@ -62,12 +77,15 @@ export default function StudentAuction() {
       senderName: userData.username,
       status: "JOIN",
     };
-    stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
+    stompClient.send(
+      "/action/receive-message",
+      {},
+      JSON.stringify(chatMessage)
+    );
   };
 
   const onMessageReceived = (payload) => {
     var payloadData = JSON.parse(payload.body);
-    console.log(payload);
     switch (payloadData.status) {
       case "JOIN":
         break;
@@ -119,19 +137,28 @@ export default function StudentAuction() {
         date: moment(new Date()).format("HH:mm:ss"),
         status: "MESSAGE",
       };
-      console.log(chatMessage);
-      stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
+      stompClient.send(
+        "/action/receive-message",
+        {},
+        JSON.stringify(chatMessage)
+      );
       setUserData({ ...userData, message: "" });
     }
   };
 
   useEffect(() => connect(), []);
 
-  const item = {
-    name: "Balo siêu vip",
-    description:
-      "Balo là một loại túi lớn được thiết kế đặc biệt để đeo trên vai hoặc lưng, thường được sử dụng để mang theo đồ đạc cá nhân khi di chuyển.",
-    image: require("../../../assets/images/balo-student.png"),
+  //
+  const isNumber = (value) => /^-?\d*\.?\d+$/.test(value);
+  const [inputAuction, setInputAuction] = useState("");
+  const handleInputChange = (event) => {
+    setInputAuction(event.target.value);
+  };
+  const handleSuccess = () => {
+    if (!isNumber(inputAuction)) {
+      message.error("Vui lòng nhập là số.");
+    }
+    console.log(inputAuction);
   };
 
   return (
@@ -143,27 +170,38 @@ export default function StudentAuction() {
             200 <UserOutlined style={{ fontSize: "20px" }} />
           </span>
           <span className="time">
-            <FieldTimeOutlined
-              style={{ fontSize: "20px", marginRight: "5px" }}
-            />
-            10:40
+            {getOneAuction != null && (
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <FieldTimeOutlined
+                  style={{ fontSize: "20px", marginRight: "5px" }}
+                />
+                <CountdownTimer
+                  initialTime={getOneAuction.toDate - new Date().getTime()}
+                />
+              </div>
+            )}
           </span>
 
           <div className="mid-center" style={{ textAlign: "center" }}>
-            <img width={"130px"} height={"130px"} src={item.image} alt="icon" />
+            <img
+              width={"130px"}
+              height={"130px"}
+              src={
+                getOneAuction === null
+                  ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrgRrpB3oR3RWdUZNy7EhEJxzl7cxGCsUSWg&usqp=CAU"
+                  : getOneAuction.image === null
+                  ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrgRrpB3oR3RWdUZNy7EhEJxzl7cxGCsUSWg&usqp=CAU"
+                  : getOneAuction.image
+              }
+              style={{ borderRadius: "10px" }}
+              alt="icon"
+            />
             <div>
-              <h2 className="name-item">{item.name}</h2>
-              <p className="item-description">{item.description}</p>
-            </div>
-            <div>
-              <p className="gia">
-                <img
-                  className="pb-5"
-                  width={"35px"}
-                  src={require("../../../assets/images/transaction-honey.png")}
-                  alt="diem"
-                />
-                Giá khởi điểm: <span> 100 điểm</span>
+              <h2 className="name-item">
+                {getOneAuction != null && getOneAuction.name}
+              </h2>
+              <p className="item-description">
+                {getOneAuction != null && getOneAuction.note}
               </p>
             </div>
             <div>
@@ -174,21 +212,41 @@ export default function StudentAuction() {
                   src={require("../../../assets/images/transaction-honey.png")}
                   alt="diem"
                 />
-                Giá hiện tại: <span> 100 điểm</span>
+                Giá khởi điểm:{" "}
+                <span>
+                  {getOneAuction != null && getOneAuction.startingPrice}
+                </span>
               </p>
             </div>
             <div>
               <p className="gia">
-                Bước giá: <span> 10 điểm</span>
+                <img
+                  className="pb-5"
+                  width={"35px"}
+                  src={require("../../../assets/images/transaction-honey.png")}
+                  alt="diem"
+                />
+                Giá hiện tại:{" "}
+                <span>{getOneAuction != null && getOneAuction.lastPrice}</span>
+              </p>
+            </div>
+            <div>
+              <p className="gia">
+                Bước giá:{" "}
+                <span>{getOneAuction != null && getOneAuction.jump}</span>
               </p>
             </div>
           </div>
           <div className="input-dau-gia">
-            <input
+            <Input
               className="input-message"
               placeholder="Nhập giá muốn đấu giá..."
+              value={inputAuction}
+              onChange={handleInputChange}
             />
-            <button className="send-message">Xác nhận</button>
+            <Button className="send-message" onClick={handleSuccess}>
+              Xác nhận
+            </Button>
           </div>
         </Sider>
         <Layout>
@@ -202,15 +260,20 @@ export default function StudentAuction() {
                       className={`message ${
                         chat.senderName === userData.username && "self"
                       }`}
-                      key={index}>
+                      key={index}
+                    >
                       {chat.senderName !== userData.username && (
                         <div className="avatar">
-                          {chat.checkHideShowAvatar && (
+                          {
                             <span>
                               {" "}
                               <img
                                 alt="avatar"
-                                src={chat.avatar}
+                                src={
+                                  chat.avatar === "Images/Default.png"
+                                    ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrgRrpB3oR3RWdUZNy7EhEJxzl7cxGCsUSWg&usqp=CAU"
+                                    : chat.avatar
+                                }
                                 style={{
                                   width: "30px",
                                   height: "30px",
@@ -219,7 +282,7 @@ export default function StudentAuction() {
                               />{" "}
                               <span>{chat.senderName}</span>
                             </span>
-                          )}
+                          }
                         </div>
                       )}
                       <div className="message-data">
@@ -231,7 +294,8 @@ export default function StudentAuction() {
                             color: "green",
                             textAlign: "center",
                             width: "100%",
-                          }}>
+                          }}
+                        >
                           {chat.date}
                         </p>
                         {chat.message}
@@ -240,7 +304,11 @@ export default function StudentAuction() {
                         <div className="avatar self">
                           <img
                             alt="avatar"
-                            src={chat.avatar}
+                            src={
+                              chat.avatar === "Images/Default.png"
+                                ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtrr2cRLY85meJRaW9Q5mhFnq8mBPYCtg8OA&usqp=CAU"
+                                : chat.avatar
+                            }
                             style={{
                               width: "30px",
                               height: "30px",
@@ -256,15 +324,16 @@ export default function StudentAuction() {
             </div>
           </Content>
           <Footer>
-            <input
+            <Input
               className="input-message"
               value={userData.message}
               onChange={handleMessage}
               placeholder="Nhập tin nhắn..."
+              onPressEnter={sendValue}
             />
-            <button className="send-message" onClick={sendValue}>
+            <Button className="send-message" onClick={sendValue}>
               <SendOutlined />
-            </button>
+            </Button>
           </Footer>
         </Layout>
       </Layout>

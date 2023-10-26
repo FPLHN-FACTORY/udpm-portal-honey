@@ -406,7 +406,7 @@ function App() {
               }
             />
             <Route
-              path="/student/auction"
+              path="/student/auction/:id"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>

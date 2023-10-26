@@ -51,4 +51,7 @@ public interface StudentAuctionResponse {
 
     @Value("#{target.image}")
     byte[] getImage();
+
+    @Value("#{target.note}")
+    String getNote();
 }

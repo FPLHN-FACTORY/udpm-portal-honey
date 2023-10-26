@@ -25,7 +25,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setAllowedOrigins("http://localhost:3000")
                 .withSockJS();
     }
-
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.enableSimpleBroker("/portal-honey", "/queue/");

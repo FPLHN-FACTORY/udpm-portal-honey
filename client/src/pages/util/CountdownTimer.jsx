@@ -15,7 +15,12 @@ export const CountdownTimer = ({ initialTime }) => {
     const hours = Math.floor(time / 3600000);
     const minutes = Math.floor((time % 3600000) / 60000);
     const seconds = Math.floor((time % 60000) / 1000);
-    return `${hours}:${minutes}:${seconds}`;
+
+    const formattedHours = String(hours).padStart(2, "0");
+    const formattedMinutes = String(minutes).padStart(2, "0");
+    const formattedSeconds = String(seconds).padStart(2, "0");
+
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   };
 
   return (
