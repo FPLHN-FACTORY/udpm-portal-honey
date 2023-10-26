@@ -1,14 +1,15 @@
 package com.honeyprojects.core.admin.controller;
 
 import com.honeyprojects.core.admin.model.request.AdminChangeStatusGiftRequest;
-import com.honeyprojects.core.admin.model.request.AdminConversionRequest;
 import com.honeyprojects.core.admin.model.request.AdminCreateConversionHistoryRequest;
 import com.honeyprojects.core.admin.model.request.CensorChangeStatusRequest;
 import com.honeyprojects.core.admin.model.request.CensorSearchHistoryRequest;
 import com.honeyprojects.core.admin.model.request.*;
+import com.honeyprojects.core.admin.model.response.AdminAddHoneyHistoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminRequestConversionHistoryResponse;
 import com.honeyprojects.core.admin.model.response.CensorAddHoneyRequestResponse;
 import com.honeyprojects.core.admin.model.response.CensorTransactionRequestResponse;
+import com.honeyprojects.core.admin.service.AdminAddPointService;
 import com.honeyprojects.core.admin.service.AdminRequestConversionService;
 import com.honeyprojects.core.admin.service.CensorRequestManagerService;
 import com.honeyprojects.core.common.base.PageableObject;
@@ -87,8 +88,10 @@ public class CensorRequestManagerRestController {
     }
 
     @GetMapping("/list-request")
-    public PageableObject<CensorTransactionRequestResponse> listRequest(AdminHistoryApprovedSearchRequest dataSearch) {
-        return requestManagerService.getHistoryApprovedByStatus(dataSearch);
+    public PageableObject<CensorTransactionRequestResponse> listRequests(AdminHistoryApprovedSearchRequest dataSearch) {
+        if (dataSearch.getStatus()==null){
+            return requestManagerService.getListRequests(dataSearch);
+        }else  return requestManagerService.getListRequestsByStatus(dataSearch);
     }
 
     @GetMapping("/exchange-gifts")

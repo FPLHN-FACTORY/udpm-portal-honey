@@ -86,8 +86,11 @@ public class AdUpgradeRateServiceImpl implements AdUpgradeRateService {
         return adUpgradeRateRepository.findById(s);
     }
     @Override
-    public void delete(UpgradeRate entity) {
-        entity.setStatus(Status.KHONG_HOAT_DONG);
-        adUpgradeRateRepository.save(entity);
+    public void delete(String id) {
+        Optional<UpgradeRate> opt = adUpgradeRateRepository.findById(id);
+        if(opt.isPresent()){
+            opt.get().setStatus(Status.KHONG_HOAT_DONG);
+            adUpgradeRateRepository.save(opt.get());
+        }
     }
 }
