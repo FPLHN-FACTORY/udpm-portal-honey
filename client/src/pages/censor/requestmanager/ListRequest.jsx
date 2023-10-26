@@ -112,7 +112,7 @@ export default function ListRequest() {
   ];
 
   const [totalPage, setTotalPage] = useState(1);
-  const [filter, setFilter] = useState({ page: 0, status: 0, status: 3});
+  const [filter, setFilter] = useState({ page: 0, status: null});
   const [type, setType] = useState();
 
   useEffect(() => {
@@ -253,14 +253,14 @@ export default function ListRequest() {
                   ]}
                 />
               </Form.Item>
-              {/* <Form.Item name={"status"} initialValue={0}>
+              <Form.Item name={"status"} initialValue={null}>
                 <Select
                   style={{ width: "150px" }}
                   size="large"
                   placeholder="Trạng thái"
                   options={[
-                    { value: 0, label: "Tất cả" },
-                    ...[0].map((value) => {
+                    { value: null, label: "Tất cả" },
+                    ...[0, 3].map((value) => {
                       return {
                         value: value,
                         label: statusHistory(value),
@@ -268,7 +268,7 @@ export default function ListRequest() {
                     }),
                   ]}
                 />
-              </Form.Item> */}
+              </Form.Item>
               <Button
                 htmlType="submit"
                 type="primary"
