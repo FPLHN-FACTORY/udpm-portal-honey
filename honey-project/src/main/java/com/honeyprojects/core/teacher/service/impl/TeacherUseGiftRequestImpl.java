@@ -10,7 +10,6 @@ import com.honeyprojects.core.teacher.service.TeacherUseGiftRequest;
 import com.honeyprojects.entity.*;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
-import com.honeyprojects.repository.NotificationDetailRepository;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +62,6 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
     @Transactional
     public List<Gift> getFilterGift() {
         List<String> listIdGift = historyRepository.filterGift(HoneyStatus.CHO_PHE_DUYET, TypeHistory.PHE_DUYET_QUA);
-        ;
         return listIdGift.stream().map(id -> giftRepository.findById(id).get()).toList();
     }
 
@@ -114,8 +112,10 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
             StringBuilder content = new StringBuilder("Gói quà [ ");
             notificationDetail.setContent(content.append(gift.getName())
                     .append((" ] đã được phê duyệt.\n"))
+                    .append("Môn: ")
+                    .append(history.getSubject())
                     .append("Lớp: ")
-                    .append(history.getNameGift())
+                    .append(history.getClassName())
                     .append(" | Giảng viên: ")
                     .append(teacher.getName())
                     .toString());
@@ -152,8 +152,10 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
         StringBuilder content = new StringBuilder("Gói quà [ ");
         notificationDetail.setContent(content.append(gift.getName())
                 .append((" ] bị từ chối.\n"))
+                .append("Môn: ")
+                .append(history.getSubject())
                 .append("Lớp: ")
-                .append(history.getNameGift())
+                .append(history.getClassName())
                 .append(" | Giảng viên: ")
                 .append(teacher.getName())
                 .append("\n")
