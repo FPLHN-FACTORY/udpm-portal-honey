@@ -50,6 +50,8 @@ import UpgradeRate from "./pages/censor/upgrade-rate/upgrade-rate";
 import Shop from "./pages/student/shop/Shop";
 import ChestIndex from "./pages/student/chest/ChestIndex";
 import UpgrateHoneyIndex from "./pages/student/upgradeHoney/UpgrateHoneyIndex";
+import StudentBuyItem from "./pages/student/BuyItem/StudentBuyItem";
+import RequestExchangeGift from "./pages/censor/requestmanager/RequestExchangeGift";
 
 function App() {
   const token =
@@ -88,7 +90,7 @@ function App() {
               }
             />
             <Route
-              path="/censor/request-conversion/history"
+              path="/censor/request-buy-gift/history"
               element={
                 <AuthGuard>
                   <DashboardCensor>
@@ -183,6 +185,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <ListRequest />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/request-manager/exchange-gifts"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <RequestExchangeGift />
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -375,7 +387,7 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     {/* <StudentChest /> */}
-                    <ChestIndex/>
+                    <ChestIndex />
                   </DashboardAuthUser>
                 </AuthGuard>
               }

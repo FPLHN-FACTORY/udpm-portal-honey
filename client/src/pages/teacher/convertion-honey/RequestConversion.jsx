@@ -29,7 +29,12 @@ import {
 } from "../../../app/reducers/history/history.reducer";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faClose } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faClose,
+  faFilter,
+  faRectangleList,
+} from "@fortawesome/free-solid-svg-icons";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -69,6 +74,11 @@ export default function RequestConversion() {
       key: "lop",
     },
     {
+      title: "Môn",
+      dataIndex: "mon",
+      key: "mon",
+    },
+    {
       title: "Ngày tạo",
       dataIndex: "createdDate",
       key: "createdDate",
@@ -78,20 +88,7 @@ export default function RequestConversion() {
       dataIndex: "acction",
       key: "acction",
       render: (values) => (
-        <Space size="middle">
-          <Tooltip title="Xác nhận yêu cầu">
-            <Button
-              onClick={() => {
-                accept(values.idHistory);
-              }}
-              style={{
-                backgroundColor: "green",
-                color: "white",
-                height: "35px",
-              }}>
-              <FontAwesomeIcon icon={faCheck} />
-            </Button>
-          </Tooltip>
+        <Space size="large">
           <Tooltip title="Hủy yêu cầu">
             <Popconfirm
               title="Vui lòng nhập lý do hủy"
@@ -217,12 +214,50 @@ export default function RequestConversion() {
       });
   };
 
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const onSelectChange = (newSelectedRowKeys) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+    type: "checkbox",
+  };
+
+  const handleConfirm = () => {
+    setLoading(true);
+    TeacherUseGiftApi.accpectAll({
+      listId: selectedRowKeys,
+    }).finally(() => {
+      fetchData();
+      setLoading(false);
+      message.success("Phê duyệt thành công");
+    });
+  };
+
   return (
     <Spin spinning={loading}>
       <div className="add-point">
-        <Card className="mb-2 py-1">
+        <Card
+          className="mb-2"
+          style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+          {" "}
+          <FontAwesomeIcon
+            icon={faFilter}
+            size="2px"
+            style={{ fontSize: "26px" }}
+          />{" "}
+          <span
+            style={{
+              fontSize: "18px",
+              fontWeight: "500",
+            }}>
+            Bộ lọc
+          </span>
           <Form onFinish={onFinishSearch}>
-            <Space size={"large"}>
+            <Space size={"large"} style={{ marginTop: "15px" }}>
               <Form.Item name="email" className="search-input">
                 <Input
                   style={{ width: "300px" }}
@@ -274,8 +309,39 @@ export default function RequestConversion() {
             </Space>
           </Form>
         </Card>
-        <Card title="Danh sách yêu cầu">
+        <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+          <Space
+            style={{
+              justifyContent: "space-between",
+              display: "flex",
+              marginBottom: "16px",
+            }}>
+            <div>
+              <span style={{ fontSize: "18px" }}>
+                <FontAwesomeIcon icon={faRectangleList} size="xl" />
+                <b style={{ marginLeft: "5px", fontWeight: "500" }}>
+                  Danh sách yêu cầu
+                </b>
+              </span>
+            </div>
+            <div className="flex flex-row-reverse">
+              <div>
+                <span>
+                  <Tooltip>
+                    <button
+                      className="add-button1"
+                      onClick={() => {
+                        handleConfirm();
+                      }}>
+                      Xác nhận{" "}
+                    </button>
+                  </Tooltip>
+                </span>
+              </div>
+            </div>
+          </Space>
           <Table
+            rowSelection={rowSelection}
             columns={columns}
             dataSource={data}
             rowKey="key"

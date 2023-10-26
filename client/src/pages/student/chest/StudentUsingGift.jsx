@@ -67,6 +67,19 @@ const UsingGift = (props) => {
         onCancel={handleCancel}>
         <Form form={form}>
           <b>
+            <span style={{ color: "red" }}>* </span> Mã môn học
+          </b>
+          <Form.Item
+            name="maMon"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập mã môn học!",
+              },
+            ]}>
+            <Input />
+          </Form.Item>
+          <b>
             <span style={{ color: "red" }}>* </span> Mã Lớp
           </b>
           <Form.Item

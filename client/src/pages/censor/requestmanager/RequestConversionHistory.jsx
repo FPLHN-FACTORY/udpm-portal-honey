@@ -15,6 +15,7 @@ import moment from "moment";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
+import TabsRequest from "./TabsRequest";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -37,7 +38,7 @@ export default function RequestConversionHistory() {
   const [totalPages, setTotalPages] = useState([]);
   const [filter, setFilter] = useState({ page: 0 });
   const [fillUserApi, setFillUserApi] = useState([]);
-
+  const [type, setType] = useState();
   const fechUserApiById = () => {
     ResquestConversion.getUserAPiByid().then((response) => {
       setFillUserApi({
@@ -70,13 +71,6 @@ export default function RequestConversionHistory() {
     fechCategory();
   }, [filter]);
 
-  const deleteRequestConversion = (id) => {
-    ResquestConversion.deleteRequest(id).then(() => {
-      message.success("Hủy yêu cầu thành công");
-      fechData();
-    });
-  };
-
   const onFinishSearch = (value) => {
     if (value.code === undefined || value.code.trim().length === 0) {
       setFilter({
@@ -87,12 +81,18 @@ export default function RequestConversionHistory() {
     }
   };
 
-  const changeStatusConversion = (idHistory, status) => {
-    RequestManagerAPI.changeStatusConversion(idHistory, status)
+  const changeStatusConversion = (idStudent, idGift, idHistory, status) => {
+    RequestManagerAPI.changeStatusConversion(
+      idStudent,
+      idGift,
+      idHistory,
+      status
+    )
       .then((response) => {
         if (response.data.success) {
           if (status === 1) message.success("Đã xác nhận yêu cầu cộng điểm!");
           if (status === 2) message.error("Hủy yêu cầu thành công!");
+          setType(response.data.data.type);
         }
         // message.success("Phê duyệt thành công");
         fechData();
@@ -174,15 +174,30 @@ export default function RequestConversionHistory() {
           <div
             style={{ fontSize: "19px", textAlign: "center", color: "green" }}
           >
+            {console.log(values)}
             {values.status !== 1 && values.status !== 2 && (
               <CheckCircleFilled
-                onClick={() => changeStatusConversion(values.id, 1)}
+                onClick={() => {
+                  changeStatusConversion(
+                    values.studentId,
+                    values.giftId,
+                    values.id,
+                    1
+                  );
+                }}
               />
             )}
             {values.status !== 1 && values.status !== 2 && (
               <CloseCircleFilled
                 style={{ fontSize: "19px", margin: "0px 10px", color: "red" }}
-                onClick={() => changeStatusConversion(values.id, 2)}
+                onClick={() =>
+                  changeStatusConversion(
+                    values.studentId,
+                    values.giftId,
+                    values.id,
+                    2
+                  )
+                }
               />
             )}
           </div>
@@ -193,6 +208,7 @@ export default function RequestConversionHistory() {
   console.log(fillUserApi.name);
   return (
     <>
+      <TabsRequest selectIndex={1} type={type} />
       <Card className="mb-2 py-1">
         <Form onFinish={onFinishSearch}>
           <Space size={"large"}>
@@ -209,22 +225,7 @@ export default function RequestConversionHistory() {
                 ]}
               />
             </Form.Item>
-            <Form.Item name={"status"}>
-              <Select
-                style={{ width: "150px" }}
-                size="large"
-                placeholder="Trạng thái"
-                options={[
-                  { value: null, label: "tất cả" },
-                  ...[0, 1, 2, 3].map((item) => {
-                    return {
-                      label: statusHistory(item),
-                      value: item,
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
+
             <Button
               htmlType="submit"
               type="primary"
