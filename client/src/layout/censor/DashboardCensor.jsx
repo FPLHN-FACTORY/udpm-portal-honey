@@ -76,26 +76,32 @@ function DashboardAuthUser({ children }) {
     ]),
     getItem(
       "Quản lý yêu cầu",
-      "8",
+      "80",
       <FontAwesomeIcon icon={faCodePullRequest} />,
       [
         getItem(
           <Link to={"/censor/request-manager/list-request"}>
-            Danh sách yêu cầu
+            Yêu cầu cộng điểm
           </Link>,
-          "9"
+          "90"
+        ),
+        getItem(
+          <Link to={"/censor/request-manager/exchange-gifts"}>
+            Yêu cầu đổi quà
+          </Link>,
+          "100"
         ),
         getItem(
           <Link to={"/censor/request-manager/approved-history"}>
             Lịch sử phê duyệt
           </Link>,
-          "10"
+          "110"
         ),
       ]
     ),
     getItem(
       <Link to="/censor/request-manager/random-add-point">Tặng mật ong</Link>,
-      "11",
+      "1",
       <FontAwesomeIcon icon={faCommentsDollar} />
     ),
     getItem(

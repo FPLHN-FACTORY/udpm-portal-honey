@@ -38,13 +38,16 @@ public class DBGenerator implements CommandLineRunner {
     private SemesterRepository semesterRepository;
 
     @Autowired
+    private UserSemesterRepository userSemesterRepository;
+
+    @Autowired
     private ConversionRepository conversionRepository;
 
     @Autowired
-    private AuctionRepository auctionRepository;
+    private ClubRepository clubRepository;
 
     @Autowired
-    private UpgradeRateRepository upgradeRateRepository;
+    private AuctionRepository auctionRepository;
 
     @Autowired
     private ArchiveRepository archiveRepository;
@@ -54,6 +57,12 @@ public class DBGenerator implements CommandLineRunner {
 
 
     public void run(String... args) throws Exception {
+
+        Club club = new Club();
+        club.setCode("CLB1");
+        club.setName("Bee SuperHero");
+        club.setStatus(Status.HOAT_DONG);
+        club.setId(clubRepository.save(club).getId());
 
         Category category1 = new Category();
         category1.setName("GOLD");
@@ -75,20 +84,6 @@ public class DBGenerator implements CommandLineRunner {
         category3.setCode("CT3");
         category3.setId(categoryRepository.save(category3).getId());
         category3.setTransactionRights(CategoryTransaction.FREE);
-
-        UpgradeRate upgrade = new UpgradeRate();
-        upgrade.setCode("RT1");
-        upgrade.setOriginalHoney(category3.getId());
-        upgrade.setDestinationHoney(category2.getId());
-        upgrade.setRatio(0.8);
-        upgrade.setStatus(Status.HOAT_DONG);
-
-        UpgradeRate upgrade1 = new UpgradeRate();
-        upgrade1.setCode("RT1");
-        upgrade1.setOriginalHoney(category2.getId());
-        upgrade1.setDestinationHoney(category2.getId());
-        upgrade1.setRatio(0.3);
-        upgrade1.setStatus(Status.HOAT_DONG);
 
         Semester semester = new Semester();
         semester.setCode("SE1");
@@ -204,12 +199,14 @@ public class DBGenerator implements CommandLineRunner {
         userSemester1.setStudentId("59b9fb7e-9065-4102-f03c-08dbce69e594");
         userSemester1.setTotalHoney(2000);
         userSemester1.setCategoryId(category1.getId());
+        userSemester1.setId(userSemesterRepository.save(userSemester1).getId());
 
         UserSemester userSemester2 = new UserSemester();
         userSemester2.setSemesterId(semester.getId());
         userSemester2.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
         userSemester2.setTotalHoney(3100);
         userSemester2.setCategoryId(category2.getId());
+        userSemester2.setId(userSemesterRepository.save(userSemester2).getId());
 
 
         Conversion conversion1 = new Conversion();
@@ -280,6 +277,18 @@ public class DBGenerator implements CommandLineRunner {
         history6.setTeacherId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
         history6.setId(historyRepository.save(history6).getId());
 
+        Club club1 = new Club();
+        club1.setCode("CLB2");
+        club1.setName("Bóng đá");
+        club1.setStatus(Status.HOAT_DONG);
+        club1.setId(clubRepository.save(club1).getId());
+
+        Club club2 = new Club();
+        club2.setCode("CLB3");
+        club2.setName("Bee Bee");
+        club2.setStatus(Status.HOAT_DONG);
+        club2.setId(clubRepository.save(club2).getId());
+
         Auction auction = new Auction();
         auction.setName("Phiên đấu giá biển số");
         auction.setHoneyCategoryId(category1.getId());
@@ -322,9 +331,11 @@ public class DBGenerator implements CommandLineRunner {
         auction3.setStartingPrice(new BigDecimal(5000));
         auction3.setId(auctionRepository.save(auction3).getId());
 
+        // todo
         Archive archive =  new Archive();
         archive.setStatus(Status.HOAT_DONG);
         archive.setStudentId(userSemester1.getStudentId());
+        archive.setClubId(club1.getId());
         archiveRepository.save(archive);
 
         ArchiveGift archiveGift = new ArchiveGift();

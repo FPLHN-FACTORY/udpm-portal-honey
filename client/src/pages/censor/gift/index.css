@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   position: relative;
   text-align: center;
 }
@@ -23,4 +23,12 @@
 
 .hidden-input {
   display: none !important;
+}
+
+.errorImageMes{
+  padding-left: 120px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
 }

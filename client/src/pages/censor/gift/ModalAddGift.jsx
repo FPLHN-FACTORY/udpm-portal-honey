@@ -16,6 +16,7 @@ const ModalThem = (props) => {
   const { modalOpen, setModalOpen, gift, onSave, fetchData } = props;
   const [form] = Form.useForm();
   const { Option } = Select;
+  const [errorImage, setErrorImage] = useState([]);
   const [image, setImage] = useState([]);
   const [quantityValue, setQuantityValue] = useState(0);
   const [listCategory, setListCategory] = useState([]);
@@ -25,14 +26,34 @@ const ModalThem = (props) => {
   const [listSemester, setListSemester] = useState([]);
 
   const handleFileInputChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setImage(selectedFile);
-
+    var selectedFile = event.target.files[0];
     if (selectedFile) {
-      const imageUrl = URL.createObjectURL(selectedFile);
-      setSelectedImageUrl(imageUrl);
-    } else {
-      setSelectedImageUrl("");
+      var FileUploadName = selectedFile.name;
+      if (FileUploadName == '') {
+        setErrorImage("Bạn chưa chọn ảnh");
+        setSelectedImageUrl("");
+        setImage([]);
+      } else {
+        const fileSize = selectedFile.size;
+        const checkFileSize = Math.round((fileSize / 1024));
+        if (checkFileSize > 100) {
+          setErrorImage("Ảnh không thể lớn hơn 1 mb");
+          setSelectedImageUrl("");
+          setImage([]);
+        } else {
+          var Extension = FileUploadName.substring(FileUploadName.lastIndexOf('.') + 1).toLowerCase();
+          if (Extension == "gif" || Extension == "png" || Extension == "bmp"
+            || Extension == "jpeg" || Extension == "jpg") {
+            setImage(selectedFile);
+            var imageUrl = URL.createObjectURL(selectedFile);
+            setSelectedImageUrl(imageUrl);
+          } else {
+            setErrorImage("Chỉ nhận ảnh có type GIF, PNG, JPG, JPEG và BMP. ");
+            setSelectedImageUrl("");
+            setImage([]);
+          }
+        }
+      }
     }
   };
 
@@ -72,6 +93,9 @@ const ModalThem = (props) => {
   };
 
   const validateHoney = (rule, value) => {
+    if(!/^\d*$/.test(value)){
+      return Promise.reject("Điểm số phải là số.");
+    }
     if (!value || value <= 0) {
       return Promise.reject("Điểm (điểm số) phải lớn hơn 0.");
     }
@@ -106,7 +130,6 @@ const ModalThem = (props) => {
       .validateFields()
       .then((formValues) => {
         let quantity = null;
-
         let fromDate = null;
         let toDate = null;
         let semesterId = null;
@@ -130,12 +153,16 @@ const ModalThem = (props) => {
             : null;
           toDate = formValues.end ? new Date(formValues.end).getTime() : null;
         }
-
         if (isNaN(quantity) && quantityValue === 1) {
           message.error("Vui lòng nhập số lượng giới hạn hợp lệ.");
           return;
         }
-
+        if (selectedImageUrl.length === 0) {
+          setErrorImage("Ảnh không được để trống");
+          return;
+        } else {
+          setErrorImage("");
+        }
         GiftAPI.create({
           ...formValues,
           image: image,
@@ -221,6 +248,7 @@ const ModalThem = (props) => {
           accept="image/*"
           onChange={(event) => handleFileInputChange(event)}
         />
+        <span className="error errorImageMes">{errorImage}</span>
         <Form.Item
           label="Tên"
           name="name"

@@ -50,6 +50,7 @@ import UpgradeRate from "./pages/censor/upgrade-rate/upgrade-rate";
 import Shop from "./pages/student/shop/Shop";
 import ChestIndex from "./pages/student/chest/ChestIndex";
 import StudentBuyItem from "./pages/student/BuyItem/StudentBuyItem";
+import RequestExchangeGift from "./pages/censor/requestmanager/RequestExchangeGift";
 
 function App() {
   const token =
@@ -183,6 +184,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <ListRequest />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/request-manager/exchange-gifts"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <RequestExchangeGift />
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -456,17 +467,6 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     <Shop />
-                  </DashboardAuthUser>
-                </AuthGuard>
-              }
-            />
-
-            <Route
-              path="/student/buy-item"
-              element={
-                <AuthGuard>
-                  <DashboardAuthUser>
-                    <StudentBuyItem />
                   </DashboardAuthUser>
                 </AuthGuard>
               }
