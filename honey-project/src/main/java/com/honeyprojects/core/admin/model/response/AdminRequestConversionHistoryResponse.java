@@ -29,5 +29,7 @@ public interface AdminRequestConversionHistoryResponse extends IsIdentified {
 
     @Value("#{target.note}")
     String getNote();
+    @Value("#{target.quantity}")
+    String getQuantity();
 
 }

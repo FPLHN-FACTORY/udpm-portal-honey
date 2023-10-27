@@ -36,4 +36,10 @@ public interface StudentGiftResponse extends IsIdentified {
 
     @Value("#{target.note}")
     String getNote();
+
+//    @Value("#{target.to_date}")
+//    String getToDate();
+//
+//    @Value("#{target.from_date}")
+//    String getFromDate();
 }
