@@ -362,7 +362,7 @@ function App() {
               }
             />
             <Route
-              path="/student/create-conversion"
+              path="/student/buy-gift"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
@@ -428,7 +428,7 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     {/* <UpgradeHoney /> */}
-                    <UpgrateHoneyIndex/>
+                    <UpgrateHoneyIndex />
                   </DashboardAuthUser>
                 </AuthGuard>
               }

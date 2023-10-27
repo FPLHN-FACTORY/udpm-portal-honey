@@ -25,4 +25,6 @@ public class ArchiveGift extends PrimaryEntity {
 
     private String note;
 
+    private Integer quantity;
+
 }

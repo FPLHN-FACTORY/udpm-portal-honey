@@ -37,8 +37,10 @@ public class DBGenerator implements CommandLineRunner {
     @Autowired
     private SemesterRepository semesterRepository;
 
+
     @Autowired
     private ConversionRepository conversionRepository;
+
 
     @Autowired
     private AuctionRepository auctionRepository;
@@ -51,6 +53,7 @@ public class DBGenerator implements CommandLineRunner {
 
 
     public void run(String... args) throws Exception {
+
 
         Category category1 = new Category();
         category1.setName("GOLD");
@@ -187,14 +190,12 @@ public class DBGenerator implements CommandLineRunner {
         userSemester1.setStudentId("59b9fb7e-9065-4102-f03c-08dbce69e594");
         userSemester1.setTotalHoney(2000);
         userSemester1.setCategoryId(category1.getId());
-//        userSemester1.setId(userSemesterRepository.save(userSemester1).getId());
 
         UserSemester userSemester2 = new UserSemester();
         userSemester2.setSemesterId(semester.getId());
         userSemester2.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
         userSemester2.setTotalHoney(3100);
         userSemester2.setCategoryId(category2.getId());
-//        userSemester2.setId(userSemesterRepository.save(userSemester2).getId());
 
 
         Conversion conversion1 = new Conversion();
@@ -311,7 +312,6 @@ public class DBGenerator implements CommandLineRunner {
         Archive archive =  new Archive();
         archive.setStatus(Status.HOAT_DONG);
         archive.setStudentId(userSemester1.getStudentId());
-//        archive.setClubId(club1.getId());
         archiveRepository.save(archive);
 
         ArchiveGift archiveGift = new ArchiveGift();
