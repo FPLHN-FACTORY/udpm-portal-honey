@@ -81,7 +81,6 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
             history.setStatus(HoneyStatus.CHO_PHE_DUYET);
             history.setGiftId(archiveGift.getGiftId());
             historyRepository.save(history);
-
             return archiveGift;
         }
         return null;
