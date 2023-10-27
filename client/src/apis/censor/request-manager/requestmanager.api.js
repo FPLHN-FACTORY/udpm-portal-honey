@@ -81,11 +81,17 @@ export class RequestManagerAPI {
     });
   };
 
-  static changeStatusConversion = (idStudent, idGift, idHistory, status) => {
+  static changeStatusConversion = (
+    idStudent,
+    idGift,
+    idHistory,
+    status,
+    quantity
+  ) => {
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/change-status-conversion`,
-      data: { idStudent, idGift, idHistory, status },
+      data: { idStudent, idGift, idHistory, status, quantity },
     });
   };
 
@@ -103,5 +109,4 @@ export class RequestManagerAPI {
       params: { type: type },
     });
   };
-  
 }

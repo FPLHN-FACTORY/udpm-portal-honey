@@ -14,4 +14,6 @@ public class StudentRequestChangeGift {
     private String emailGV;
 
     private String maLop;
+
+    private String maMon;
 }

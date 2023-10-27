@@ -91,10 +91,11 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
                 history.setType(TypeHistory.DOI_QUA);
 
                 int deductedPoints = createRequest.getHoneyPoint();
-                honey.setHoneyPoint(honey.getHoneyPoint() - deductedPoints);
+                int quantity = createRequest.getQuantity();
+                honey.setHoneyPoint(honey.getHoneyPoint() - (deductedPoints * quantity));
                 honey = honeyRepository.save(honey);
                 if(gift.getQuantity() != null){
-                    gift.setQuantity(gift.getQuantity() - 1);
+                    gift.setQuantity(gift.getQuantity() - createRequest.getQuantity());
                     giftRepository.save(gift);
                 }
 
@@ -104,12 +105,19 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
 
         if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
 
-            Archive getArchiver = archiveRepository.findByStudentId(createRequest.getStudentId()).orElse(archive);
-            archiveRepository.save(getArchiver);
-            if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
+            Archive getArchive = archiveRepository.findByStudentId(createRequest.getStudentId()).orElse(archive);
+            archiveRepository.save(getArchive);
+            ArchiveGift archiveGift1 = giftArchiveRepository.findByGiftId(createRequest.getGiftId()).orElse(null);
+            if(archiveGift1 != null){
+                int currentQuantity = archiveGift1.getQuantity();
+                int additionalQuantity = createRequest.getQuantity();
+                archiveGift1.setQuantity(currentQuantity + additionalQuantity);
+                giftArchiveRepository.save(archiveGift1);
+            }else if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
                 archiveGift.setGiftId(createRequest.getGiftId());
                 archiveGift.setNote(createRequest.getNote());
-                archiveGift.setArchiveId(getArchiver.getId());
+                archiveGift.setArchiveId(getArchive.getId());
+                archiveGift.setQuantity(createRequest.getQuantity());
                 giftArchiveRepository.save(archiveGift);
             }
         }
@@ -123,6 +131,7 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
         history.setHoneyId(honey.getId());
         history.setNameGift(createRequest.getNameGift());
         history.setNote(createRequest.getNote());
+        history.setQuantity(createRequest.getQuantity());
 
 
 

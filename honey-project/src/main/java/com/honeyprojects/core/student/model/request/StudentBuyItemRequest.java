@@ -28,4 +28,6 @@ public class StudentBuyItemRequest {
 
     @NotBlank
     private String note;
+
+    private Integer quantity;
 }

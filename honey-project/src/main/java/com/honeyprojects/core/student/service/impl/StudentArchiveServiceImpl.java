@@ -75,12 +75,12 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
             History history = new History();
             history.setStudentId(udpmHoney.getIdUser());
             history.setTeacherId(teacher.getId());
-            history.setNameGift(request.getMaLop());
+            history.setClassName(request.getMaLop());
+            history.setSubject(request.getMaMon());
             history.setType(TypeHistory.PHE_DUYET_QUA);
             history.setStatus(HoneyStatus.CHO_PHE_DUYET);
             history.setGiftId(archiveGift.getGiftId());
             historyRepository.save(history);
-            studentGiftArchiveRepository.delete(archiveGift);
             return archiveGift;
         }
         return null;
@@ -136,8 +136,8 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     }
 
     @Override
-    public List<StudentArchiveByUserResponse> findArchiveByUser(String idUser , String idCategory) {
-        return archiveRepository.findArchiveByUser(idUser , idCategory);
+    public List<StudentArchiveByUserResponse> findArchiveByUser(String idUser, String idCategory) {
+        return archiveRepository.findArchiveByUser(idUser, idCategory);
     }
 
 }

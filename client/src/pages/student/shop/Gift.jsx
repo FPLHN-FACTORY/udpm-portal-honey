@@ -1,8 +1,6 @@
-import { Button, Col, Tabs, message } from "antd";
+import { Button, Col, InputNumber, message } from "antd";
 import React, { memo, useEffect } from "react";
-import { useAppDispatch } from "../../../app/hooks";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "./item.css";
 import "./shop-gift.css";
 import { ResquestConversion } from "../../../apis/user/ResquestConversiton/ResquestConversion.api";
@@ -33,41 +31,24 @@ function ImageRenderer({ image }) {
     return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
   }
 }
-const Gift = memo(({ filteredConversions }) => {
-  const [fillCategory, setFillCategory] = useState([]);
-  const [fillGift, setFillGift] = useState([]);
+const Gift = memo(({ filteredConversions, fillPoint }) => {
   const [selectedConversion, setSelectedConversion] = useState(null);
   const [fillUserApi, setFillUserApi] = useState([]);
-  const [fillPoint, setFillPoint] = useState({ point: 0 });
-  const [categoryType, setCategoryType] = useState();
+  const [quantity, setQuantity] = useState(1);
 
   const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
   const [cardBackgroundColor, setCardBackgroundColor] = useState("#F8DA95");
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-
-  const fechGift = () => {
-    ResquestConversion.fetchAllGift().then((response) => {
-      setFillGift(response.data.data);
-    });
-  };
-
-  useEffect(() => {
-    fechCategory();
-    fechGift();
-  }, []);
-
+  const [initialQuantity, setInitialQuantity] = useState(null);
   useEffect(() => {
     fechUserApiById();
   }, []);
 
-  const getPoint = (data) => {
-    ResquestConversion.getPointHoney(data)
-      .then((response) => {
-        setFillPoint(response.data.data ? response.data.data : "0");
-      })
-      .catch((error) => console.log(error));
-  };
+  useEffect(() => {
+    if (selectedConversion) {
+      // Khi selectedConversion thay đổi, cập nhật initialQuantity
+      setInitialQuantity(selectedConversion.quantity);
+    }
+  }, [selectedConversion]);
 
   const fechUserApiById = () => {
     ResquestConversion.getUserAPiByid().then((response) => {
@@ -76,15 +57,6 @@ const Gift = memo(({ filteredConversions }) => {
         khoa: "17.3",
         phone: "0763104018",
       });
-    });
-  };
-
-  const fechCategory = () => {
-    ResquestConversion.fetchAllCategory().then((response) => {
-      setFillCategory(response.data.data);
-      if (response.data.data != null) {
-        setCategoryType(response.data.data[0].id);
-      }
     });
   };
 
@@ -100,24 +72,23 @@ const Gift = memo(({ filteredConversions }) => {
     }
   };
 
-  useEffect(() => {
-    fechGift();
-  }, []);
-
   const onSubmitCreate = () => {
-    if (!categoryType) {
-      message.error("Vui lòng chọn loại điểm");
-      return;
-    }
-
     if (!selectedConversion) {
       message.error("Vui lòng chọn một mục trong danh sách chọn");
       return;
-    } else if (
-      (selectedConversion ? selectedConversion.honey : 0) > fillPoint.point
+    }
+    if (
+      (selectedConversion.honey ? selectedConversion.honey : 0) >
+      fillPoint.point
     ) {
       message.error("Bạn không đủ điểm để đổi quà trong ranh này.");
       return;
+    }
+    if (selectedConversion.quantity != null) {
+      if (quantity > initialQuantity) {
+        message.error("Quà không còn đủ số lượng bạn cần");
+        return;
+      }
     }
 
     const dataToAdd = {
@@ -130,6 +101,7 @@ const Gift = memo(({ filteredConversions }) => {
         ? selectedConversion.honeyCategoryId
         : 0,
       idArchive: fillUserApi.idUser,
+      quantity: quantity,
     };
     createRequest(dataToAdd);
   };
@@ -139,21 +111,20 @@ const Gift = memo(({ filteredConversions }) => {
       .then((response) => {
         if (response.data.success) {
           message.success("Đổi quà thành công");
-          navigate("/student/create-conversion/history");
+          // window.location.reload();
+          if (selectedConversion && initialQuantity !== null) {
+            setSelectedConversion({
+              ...selectedConversion,
+              quantity: initialQuantity - quantity,
+            });
+          }
         } else {
-          message.error("Đổi quà thất bại!");
+          message.error("Bạn không đủ điểm để đổi quà trong ranh này!");
         }
       })
       .catch((error) => {
         console.log(error);
       });
-  };
-  const getCategoryStatusById = (giftId) => {
-    const category = fillCategory.find(
-      (category) => category.id === giftId.honeyCategoryId
-    );
-
-    return category ? category.categoryStatus : "";
   };
 
   return (
@@ -176,7 +147,7 @@ const Gift = memo(({ filteredConversions }) => {
               <div className="card__image">
                 <ImageRenderer image={item.image} />
               </div>
-              {item.status === 1 || getCategoryStatusById(item.id) === 1 ? (
+              {item.status === 1 ? (
                 <StarTwoTone
                   style={{
                     position: "absolute",
@@ -202,8 +173,8 @@ const Gift = memo(({ filteredConversions }) => {
           </Col>
         ))}
       </div>
-      <div className="item__detail">
-        {selectedConversion && (
+      {selectedConversion && selectedCardIndex > -1 && (
+        <div className="item__detail">
           <div className="detail__header">
             <div className="item__detail__image">
               <ImageRenderer image={selectedConversion.image} />
@@ -212,24 +183,35 @@ const Gift = memo(({ filteredConversions }) => {
               <h3 title="Ba lô siêu vip">{selectedConversion.name}</h3>{" "}
               <p>Mật ong: {selectedConversion.honey}</p>{" "}
               <span>
-                Số lượng:{" "}
-                {selectedConversion.quantity
-                  ? selectedConversion.quantity
-                  : "vô hạn"}
+                Số lượng: {initialQuantity == null ? "Vô hạn" : initialQuantity}
               </span>
+              <p>
+                {selectedConversion.status === 1
+                  ? "Cần phê duyệt"
+                  : "Không phê duyệt"}
+              </p>{" "}
             </div>
           </div>
-        )}
-        {selectedConversion && (
-          <div className="detail__text">
-            <span>{selectedConversion.note}</span>
+          {selectedConversion && (
+            <div className="detail__text">
+              <span>{selectedConversion.note}</span>
+            </div>
+          )}
+          <div className="quantity-gift">
+            <InputNumber
+              className="quantity-gift-inside"
+              min={1}
+              max={500}
+              defaultValue={1}
+              value={quantity}
+              onChange={(value) => setQuantity(value)}
+            />
           </div>
-        )}
-
-        <Button className="detail__button" onClick={onSubmitCreate}>
-          Mua quà
-        </Button>
-      </div>
+          <Button className="detail__button" onClick={onSubmitCreate}>
+            Mua quà
+          </Button>
+        </div>
+      )}
     </section>
   );
 });
