@@ -28,7 +28,7 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
                     WHERE (a.student_id = :#{#req.idStudent})
                     AND (:#{#req.status} IS NULL OR g.status = :#{#req.status})
                     AND (:#{#req.type} IS NULL OR g.type = :#{#req.type})
-                    GROUP BY idGift;
+                    GROUP BY g.id;
             """, nativeQuery = true)
     Page<StudentArchiveResponse> getAllGiftArchive(@Param("req") StudentArchiveFilterRequest req, Pageable pageable);
 
@@ -57,7 +57,7 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
                     WHERE (a.student_id = :#{#req.idStudent})
                     AND (:#{#req.status} IS NULL OR g.status = :#{#req.status})
                     AND (:#{#req.type} IS NULL OR g.type = :#{#req.type})
-                    GROUP BY idGift
+                    GROUP BY g.id
             """, nativeQuery = true)
     Page<StudentGetListGiftResponse> getListGift(StudentArchiveFilterRequest req, Pageable pageable);
 

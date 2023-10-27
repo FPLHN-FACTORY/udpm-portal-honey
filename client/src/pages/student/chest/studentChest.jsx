@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Col, Pagination, Row, Spin, Tabs, Tooltip } from "antd";
+import { Col, Row, Spin, Tabs, Tooltip } from "antd";
 import "./studentChest.css";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -17,21 +17,23 @@ import {
 } from "../../../app/reducers/archive-gift/archive-chest.reducer";
 import UsingGift from "./StudentUsingGift";
 import OpenChest from "./StudentOpenChest";
+import { ShoppingOutlined } from "@ant-design/icons";
+import {
+  GetArchiveCountGift,
+  SetArchiveCountGift,
+} from "../../../app/reducers/archive-gift/archive-count-gift.reducer";
 const StudentChest = () => {
   const [filter, setFilter] = useState({ type: 0 });
-  const [tabPosition] = useState("right");
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const dataGift = useAppSelector(GetGiftArchive);
   const dataChest = useAppSelector(GetArchiveChest);
   const dataArchive = useAppSelector(GetArchiveGift);
   const [name, setName] = useState("");
-  const [quantity, setQuantity] = useState("");
   const [note, setNote] = useState("");
   const [archiveGift, setArchiveGift] = useState();
   const [archiveChest, setArchiveChest] = useState();
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
-  const [hoveredName, setHoveredName] = useState("");
 
   function ImageRenderer({ image }) {
     const byteArray = image ? image.split(",").map(Number) : [];
@@ -54,7 +56,7 @@ const StudentChest = () => {
     fetchChest();
   }, [filter]);
 
-  const items = [
+  const tabData = [
     {
       key: "0",
       label: "Quà",
@@ -77,7 +79,6 @@ const StudentChest = () => {
     setLoading(true);
     ArchiveAPI.getGift(filter).then((response) => {
       dispatch(SetGiftArchive(response.data.data));
-      console.log(response.data.data);
       setLoading(false);
     });
   };
@@ -115,7 +116,7 @@ const StudentChest = () => {
     ArchiveAPI.detailArchiveGift(id).then((response) => {
       setNote(response.data.note);
       setName(response.data.name);
-      setQuantity("Số lượng: " + response.data.quantity);
+      dispatch(SetArchiveCountGift(response.data.quantity));
     });
   };
 
@@ -123,151 +124,121 @@ const StudentChest = () => {
     ArchiveAPI.detailArchiveChest(id).then((response) => {
       setNote(response.data.note);
       setName(response.data.name);
-      setQuantity("Số lượng: " + response.data.quantity);
+      dispatch(SetArchiveCountGift(response.data.quantity));
     });
   };
 
+  const quantityArchive = useAppSelector(GetArchiveCountGift);
+
   return (
-    <>
+    <section className="student__chest">
       <Spin spinning={loading}></Spin>
-      <div
-        className="dialog-transaction"
-        style={{ minWidth: "800px", Height: "1000px" }}
-      >
-        <Card>
-          <div className="bar-transaction" />
-          <Row
-            style={{
-              padding: "5px 15px 0px 15px",
-            }}
-          >
-            <Col span={12}>
-              <div className="tag-backgroup">
-                <b className="text-title"></b>
-              </div>
-            </Col>
-            <Col span={12} className="col-title-balo">
-              <div>
-                <b className="title-balo">
-                  <img
-                    className="img-balo"
-                    height={"30px"}
-                    src={require("../../../assets/images/balo-student.png")}
-                    alt="balo"
-                  />
-                  TÚI ĐỒ
-                </b>
-              </div>
+      <div className="chest__menu">
+        <div className="chest__menu__logo">
+          <ShoppingOutlined className="icon__store" />
+          Túi đồ
+        </div>
+      </div>
+      <Row className="row-content">
+        <Col span={7} className="chest-transaction">
+          <Row className="row-items">
+            <Col span={4}>
+              {showAdditionalInfo && quantityArchive !== 0 ? (
+                <div className="chess-square-note">
+                  <div className="item">
+                    <img
+                      src={require("../../../assets/images/ui-student/avata-item.png")}
+                      alt=""
+                    />
+                  </div>
+                  <span className="name-item">{name}</span>
+                  <span className="quantity-item">
+                    Số lượng: {quantityArchive}
+                  </span>
+                  <span className="quantity-item">{note}</span>
+                  <div className="div-button">
+                    {filter.type === 3 ? (
+                      <OpenChest chest={archiveChest} />
+                    ) : (
+                      <UsingGift archivegift={archiveGift} filter={filter} />
+                    )}
+                  </div>
+                </div>
+              ) : null}
             </Col>
           </Row>
-          <Row className="row-content">
-            <Col span={7} className="chest-transaction">
-              <Row className="row-items">
-                <Col span={4}>
-                  {showAdditionalInfo ? (
-                    <div className="chess-square-note">
-                      <div className="item">
-                        <img
-                          src={require("../../../assets/images/ui-student/avata-item.png")}
-                          alt=""
-                        />
-                      </div>
-                      <span className="name-item">{name}</span>
-                      <span className="quantity-item">{quantity}</span>
-                      <hr
-                        style={{
-                          height: "2px",
-                          width: "85%",
-                          backgroundColor: "black",
-                        }}
-                      />
-                      <span className="quantity-item">{note}</span>
-                      <div className="div-button">
-                        {filter.type === 3 ? (
-                          <OpenChest chest={archiveChest} />
-                        ) : (
-                          <UsingGift
-                            archivegift={archiveGift}
-                            filter={filter}
-                          />
-                        )}
-                      </div>
+        </Col>
+
+        <Col span={14}>
+          <Row className="row-chest">
+            {filter.type === 0 &&
+              dataGift.map((data, id) => (
+                <Col key={id} span={4}>
+                  <Tooltip title={data.name}>
+                    <div
+                      className="chess-square"
+                      onClick={() => {
+                        detailArchive(data.idGift);
+                        setArchiveGift(data);
+                        setShowAdditionalInfo(true);
+                      }}
+                    >
+                      <ImageRenderer image={data.image} />
+                      <div className="quantity-gift">{data.quantity}</div>
                     </div>
-                  ) : null}
+                  </Tooltip>
                 </Col>
-              </Row>
-            </Col>
+              ))}
+            {(filter.type === 1 || filter.type === 2) &&
+              dataArchive.map((data, id) => (
+                <Col key={id} span={4}>
+                  <Tooltip title={data.name}>
+                    <div
+                      className="chess-square"
+                      onClick={() => {
+                        detailArchive(data.idGift);
+                        setArchiveGift(data);
+                        setShowAdditionalInfo(true);
+                      }}
+                    >
+                      <ImageRenderer image={data.image} />
+                      <div className="quantity-gift">{data.quantity}</div>
+                    </div>
+                  </Tooltip>
+                </Col>
+              ))}
 
-            <Col span={14}>
-              <Row className="row-chest">
-                {filter.type === 0 &&
-                  dataGift.map((data, id) => (
-                    <Col key={id} span={4}>
-                      <Tooltip title={data.name}>
-                        <div
-                          className="chess-square"
-                          onClick={() => {
-                            detailArchive(data.idGift);
-                            setArchiveGift(data);
-                            setShowAdditionalInfo(true);
-                          }}
-                        >
-                          <ImageRenderer image={data.image} />
-                          <div className="quantity-gift">{data.quantity}</div>
-                        </div>
-                      </Tooltip>
-                    </Col>
-                  ))}
-                {(filter.type === 1 || filter.type === 2) &&
-                  dataArchive.map((data, id) => (
-                    <Col key={id} span={4}>
-                      <Tooltip title={data.name}>
-                        <div
-                          className="chess-square"
-                          onClick={() => {
-                            detailArchive(data.idGift);
-                            setArchiveGift(data);
-                            setShowAdditionalInfo(true);
-                          }}
-                        >
-                          <ImageRenderer image={data.image} />
-                          <div className="quantity-gift">{data.quantity}</div>
-                        </div>
-                      </Tooltip>
-                    </Col>
-                  ))}
-
-                {filter.type === 3 &&
-                  dataChest.map((data, id) => (
-                    <Col key={id} span={4}>
-                      <Tooltip title={data.name}>
-                        <div
-                          className="chess-square"
-                          onClick={() => {
-                            detailArchiveChest(data.chestId);
-                            setArchiveChest(data);
-                            setShowAdditionalInfo(true);
-                          }}
-                        >
-                          <ImageRenderer image={data.image} />
-                          <div className="quantity-gift">{data.quantity}</div>
-                        </div>
-                      </Tooltip>
-                    </Col>
-                  ))}
-              </Row>
-            </Col>
+            {filter.type === 3 &&
+              dataChest.map((data, id) => (
+                <Col key={id} span={4}>
+                  <Tooltip title={data.name}>
+                    <div
+                      className="chess-square"
+                      onClick={() => {
+                        detailArchiveChest(data.chestId);
+                        setArchiveChest(data);
+                        setShowAdditionalInfo(true);
+                      }}
+                    >
+                      <ImageRenderer image={data.image} />
+                      <div className="quantity-gift">{data.quantity}</div>
+                    </div>
+                  </Tooltip>
+                </Col>
+              ))}
+          </Row>
+        </Col>
+        <div className="chest__tab">
+          <div className="chest__tab__list">
             <Tabs
               defaultActiveKey="0"
-              tabPosition={tabPosition}
-              items={items}
+              items={tabData}
               onChange={handleTabChange}
-              style={{ color: "white", fontWeight: "700" }}
             />
-          </Row>
-        </Card>
-      </div>
-    </>
+          </div>
+        </div>
+      </Row>
+    </section>
   );
 };
 export default StudentChest;

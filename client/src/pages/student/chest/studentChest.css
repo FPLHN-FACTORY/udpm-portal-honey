@@ -1,3 +1,4 @@
+/*
 .dialog-transaction .chess-square {
   border-style: ridge;
   background: #464239;
@@ -95,11 +96,11 @@ w-chest .dialog-transaction .row-content {
   width: 0px;
 }
 
-/* .dialog-transaction .bar-transaction {
+ .dialog-transaction .bar-transaction {
   background-image: url("../../../assets/images/bar.jpg");
   border-bottom-left-radius: 0px;
   height: 25px;
-} */
+} 
 
 .dialog-transaction .item {
   display: flex;
@@ -138,12 +139,12 @@ w-chest .dialog-transaction .row-content {
   line-height: 30px;
 }
 
-/* .dialog-transaction .col-title {
+ .dialog-transaction .col-title {
   border-right: 2px solid #837463;
   padding-right: 10px;
   padding-left: 14px;
   text-align: center;
-} */
+} 
 
 .dialog-transaction .title-balo {
   font-weight: 800;
@@ -171,7 +172,7 @@ w-chest .dialog-transaction .row-content {
 
 .dialog-transaction .tag-backgroup {
   padding: 0px 15px;
-  /* background-color: rgba(0, 0, 0, 0.11); */
+   background-color: rgba(0, 0, 0, 0.11); 
 }
 
 .dialog-transaction .div-button {
@@ -179,3 +180,4 @@ w-chest .dialog-transaction .row-content {
   text-align: center;
   margin-top: 260px;
 }
+*/
