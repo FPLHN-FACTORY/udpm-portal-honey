@@ -31,4 +31,6 @@ public class StudentCreateRequestConversionRequest {
     private String note;
 
     private String idArchive;
+
+    private Integer quantity;
 }

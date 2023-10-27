@@ -9,3 +9,16 @@
   justify-content: center;
   display: flex;
 }
+.quantity-gift {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.quantity-gift-inside {
+  background: none !important;
+  width: 70px;
+}
+.quantity-gift-inside input {
+  color: white !important;
+}
