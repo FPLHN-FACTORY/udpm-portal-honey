@@ -7,6 +7,7 @@ import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import TextArea from "antd/es/input/TextArea";
 import "./index.css";
 import { SemesterAPI } from "../../../apis/censor/semester/semester.api";
+import { GiftDetail } from "../../../apis/censor/gift/gift-detail.api";
 
 const ModalThem = (props) => {
   const onFinishFailed = () => {
@@ -24,6 +25,22 @@ const ModalThem = (props) => {
 
   const [timeType, setTimeType] = useState("vĩnh viễn");
   const [listSemester, setListSemester] = useState([]);
+
+  const [categoryQuantities, setCategoryQuantities] = useState({});
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const handleCategoryChange = (selectedValues) => {
+    const selectedCategories = listCategory.filter((category) =>
+      selectedValues.includes(category.id)
+    );
+    setSelectedCategories(selectedCategories.map((category) => category.id));
+    const newCategoryQuantities = {};
+    selectedCategories.forEach((category) => {
+      newCategoryQuantities[category.name] = 0;
+    });
+
+    setCategoryQuantities(newCategoryQuantities);
+  };
 
   const handleFileInputChange = (event) => {
     var selectedFile = event.target.files[0];
@@ -172,6 +189,22 @@ const ModalThem = (props) => {
           semesterId: semesterId,
         })
           .then((result) => {
+            selectedCategories.forEach((categoryId) => {
+              const category = listCategory.find(
+                (item) => item.id === categoryId
+              );
+              const honeyValue = categoryQuantities[category.name];
+
+              GiftDetail.create({
+                giftId: result.data.data.id,
+                categoryId: categoryId,
+                honey: honeyValue,
+              })
+                .then((giftDetailResult) => {})
+                .catch((err) => {
+                  message.error("Lỗi khi thêm mới GiftDetail: " + err.message);
+                });
+            });
             dispatch(AddGift(result.data.data));
             message.success("Thành công!");
             setModalOpen(false);
@@ -323,7 +356,11 @@ const ModalThem = (props) => {
             },
           ]}
         >
-          <Select placeholder="Chọn cấp bậc">
+          <Select
+            mode="multiple"
+            placeholder="Chọn cấp bậc"
+            onChange={handleCategoryChange}
+          >
             {listCategory.map((category) => (
               <Option key={category.id} value={category.id}>
                 {category.name}
@@ -331,21 +368,37 @@ const ModalThem = (props) => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item
-          label="Số mật ong quy đổi"
-          name="honey"
-          rules={[
-            {
-              required: true,
-              message: "Điểm Quà không để trống",
-            },
-            {
-              validator: validateHoney,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+
+        {selectedCategories.map((categoryId) => {
+          const category = listCategory.find((item) => item.id === categoryId);
+
+          return (
+            <Form.Item
+              label={`Số mật ${category.name}`}
+              name={`honey_${category.name}`}
+              key={category.id}
+              rules={[
+                {
+                  required: true,
+                  message: `Vui lòng nhập số mật ${category.name}`,
+                },
+                {
+                  validator: validateHoney,
+                },
+              ]}
+            >
+              <Input
+                type="number"
+                value={categoryQuantities[category.name]}
+                onChange={(e) => {
+                  const newQuantities = { ...categoryQuantities };
+                  newQuantities[category.name] = e.target.value;
+                  setCategoryQuantities(newQuantities);
+                }}
+              />
+            </Form.Item>
+          );
+        })}
         <Form.Item
           label="Thời gian"
           name="timeType"

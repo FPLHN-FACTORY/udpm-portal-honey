@@ -37,12 +37,10 @@ public class Gift extends PrimaryEntity {
 
     private Long fromDate;
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String honeyCategoryId;
-
-    private Integer honey;
 
     private String note;
+
+    private Integer limitQuantity;
 
     @Column(length = EntityProperties.LENGTH_ID)
     private String semesterId;
