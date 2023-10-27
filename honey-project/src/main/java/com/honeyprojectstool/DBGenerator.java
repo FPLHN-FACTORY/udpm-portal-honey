@@ -54,7 +54,6 @@ public class DBGenerator implements CommandLineRunner {
 
     public void run(String... args) throws Exception {
 
-
         Category category1 = new Category();
         category1.setName("GOLD");
         category1.setCategoryStatus(CategoryStatus.ACCEPT);
@@ -124,7 +123,6 @@ public class DBGenerator implements CommandLineRunner {
         gift1.setStatus(StatusGift.FREE);
         gift1.setType(TypeGift.QUA_TANG);
         gift1.setSemesterId(semester.getId());
-        gift1.setHoneyCategoryId(category1.getId());
         gift1.setId(giftRepository.save(gift1).getId());
 //        gift1.setNote("Nguyễn Thúy Hằng lớp IT17326 môn font-end ");
 
@@ -134,7 +132,6 @@ public class DBGenerator implements CommandLineRunner {
         gift2.setStatus(StatusGift.FREE);
         gift2.setType(TypeGift.QUA_TANG);
         gift2.setSemesterId(semester.getId());
-        gift2.setHoneyCategoryId(category1.getId());
         gift2.setId(giftRepository.save(gift2).getId());
 //        gift2.setNote("Nguyễn Thúy Hằng lớp IT17326 môn font-end ");
 
@@ -144,7 +141,6 @@ public class DBGenerator implements CommandLineRunner {
         gift3.setStatus(StatusGift.ACCEPT);
         gift3.setType(TypeGift.VAT_PHAM);
         gift3.setSemesterId(semester.getId());
-        gift3.setHoneyCategoryId(category2.getId());
         gift3.setId(giftRepository.save(gift3).getId());
 //        gift3.setNote("Nguyễn Thúy Hằng lớp IT17326 môn font-end ");
 
@@ -154,7 +150,6 @@ public class DBGenerator implements CommandLineRunner {
         gift4.setStatus(StatusGift.ACCEPT);
         gift4.setType(TypeGift.DUNG_CU);
         gift4.setSemesterId(semester.getId());
-        gift4.setHoneyCategoryId(category2.getId());
         gift4.setId(giftRepository.save(gift4).getId());
 //        gift4.setNote("Nguyễn Thúy Hằng lớp IT17326 môn font-end ");
 
@@ -164,7 +159,6 @@ public class DBGenerator implements CommandLineRunner {
         gift5.setStatus(StatusGift.ACCEPT);
         gift5.setType(TypeGift.VAT_PHAM);
         gift5.setSemesterId(semester.getId());
-        gift5.setHoneyCategoryId(category3.getId());
         gift5.setId(giftRepository.save(gift5).getId());
 
         Gift gift6 = new Gift();
@@ -173,7 +167,6 @@ public class DBGenerator implements CommandLineRunner {
         gift6.setStatus(StatusGift.ACCEPT);
         gift6.setType(TypeGift.VAT_PHAM);
         gift6.setSemesterId(semester.getId());
-        gift6.setHoneyCategoryId(category3.getId());
         gift6.setId(giftRepository.save(gift6).getId());
 
         Gift gift7 = new Gift();
@@ -182,7 +175,6 @@ public class DBGenerator implements CommandLineRunner {
         gift7.setStatus(StatusGift.ACCEPT);
         gift7.setType(TypeGift.VAT_PHAM);
         gift7.setSemesterId(semester.getId());
-        gift7.setHoneyCategoryId(category3.getId());
         gift7.setId(giftRepository.save(gift7).getId());
 
         UserSemester userSemester1 = new UserSemester();
@@ -196,6 +188,7 @@ public class DBGenerator implements CommandLineRunner {
         userSemester2.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
         userSemester2.setTotalHoney(3100);
         userSemester2.setCategoryId(category2.getId());
+
 
 
         Conversion conversion1 = new Conversion();
@@ -265,6 +258,7 @@ public class DBGenerator implements CommandLineRunner {
         history6.setStudentId("59b9fb7e-9065-4102-f03c-08dbce69e594");
         history6.setTeacherId("1243F96A-42BD-49B3-8E45-08DBB2F9FEB4");
         history6.setId(historyRepository.save(history6).getId());
+
 
         Auction auction = new Auction();
         auction.setName("Phiên đấu giá biển số");
