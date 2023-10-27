@@ -4,15 +4,17 @@ import { useAppDispatch } from "../../../app/hooks";
 import { UpdateGift } from "../../../app/reducers/gift/gift.reducer";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
-import TextArea from "antd/es/input/TextArea";
 import { SemesterAPI } from "../../../apis/censor/semester/semester.api";
 import moment from "moment";
+import { GiftDetail } from "../../../apis/censor/gift/gift-detail.api";
+import "./index.css";
 
 const ModalDetailGift = (props) => {
   const onFinishFailed = () => {
     message.error("Error");
   };
 
+  const { TextArea } = Input;
   const { Option } = Select;
   const { visible, onCancel, onUpdate, gift, fetchData } = props;
   const [form] = Form.useForm();
@@ -23,7 +25,20 @@ const ModalDetailGift = (props) => {
   const [listSemester, setListSemester] = useState([]);
   const [timeType, setTimeType] = useState(null);
 
+  const [categoryQuantities, setCategoryQuantities] = useState({});
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
   useEffect(() => {
+    GiftDetail.fetchAll(gift.id).then((response) => {
+      const detailData = response.data.data;
+      const categoryIds = detailData.map((item) => item.categoryId);
+      const honeyValues = detailData.reduce((acc, item) => {
+        acc[item.categoryId] = item.honey;
+        return acc;
+      }, {});
+      setSelectedCategories(categoryIds);
+      setCategoryQuantities(honeyValues);
+    });
     if (gift.image) {
       const byteArray = gift.image.split(",").map(Number);
       const uint8Array = new Uint8Array(byteArray);
@@ -51,11 +66,31 @@ const ModalDetailGift = (props) => {
     }
   }, [gift]);
 
+  const handleCategoryChange = (selectedValues) => {
+    const selectedCategoriesGift = listCategory.filter((category) =>
+      selectedValues.includes(category.id)
+    );
+    setSelectedCategories(
+      selectedCategoriesGift.map((category) => category.id)
+    );
+    const newCategoryQuantities = {};
+    selectedCategories.forEach((category) => {
+      newCategoryQuantities[category.name] = 0;
+    });
+
+    setCategoryQuantities(newCategoryQuantities);
+  };
+
   const handleCancel = () => {
     onCancel();
     form.resetFields();
   };
 
+  const handleCategoryQuantityChange = (categoryId, value) => {
+    const newQuantities = { ...categoryQuantities };
+    newQuantities[categoryId] = value;
+    setCategoryQuantities(newQuantities);
+  };
   const handleFileInputChange = (event) => {
     const selectedFile = event.target.files[0];
     setImage(selectedFile);
@@ -195,9 +230,6 @@ const ModalDetailGift = (props) => {
     code: gift && gift.code ? gift.code : "",
     status: gift && gift.status !== null ? gift.status : 0,
     type: gift && gift.type ? gift.type : 0,
-    honey: gift && gift.honey !== null ? gift.honey : 0,
-    honeyCategoryId:
-      gift && gift.honeyCategoryId !== null ? gift.honeyCategoryId : null,
     note: gift && gift.note ? gift.note : "",
     timeType:
       gift.semesterId && gift.fromDate && gift.toDate
@@ -319,39 +351,48 @@ const ModalDetailGift = (props) => {
             <Option value={2}>Dụng cụ</Option>
           </Select>
         </Form.Item>
-        <Form.Item
-          label="Loại mật ong"
-          name="honeyCategoryId"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng chọn cấp",
-            },
-          ]}
-        >
-          <Select placeholder="Chọn cấp bậc">
-            {listCategory.map((category) => (
-              <Option key={category.id} value={category.id}>
-                {category.name}
-              </Option>
+
+        <div className="select-section">
+          <span className="select-asterisk">*</span>
+          <span className="select-label">Chọn cấp bậc : </span>
+          <Select
+            className="select-custom"
+            mode="tags"
+            placeholder="Chọn cấp bậc"
+            onChange={(value) => handleCategoryChange(value)}
+            value={selectedCategories}
+            maxTagCount={3}
+            showSearch
+            filterOption={(input, option) =>
+              option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {listCategory.map((item) => (
+              <Select.Option key={item.id} value={item.id}>
+                {item.name}
+              </Select.Option>
             ))}
           </Select>
-        </Form.Item>
-        <Form.Item
-          label="Số mật ong"
-          name="honey"
-          rules={[
-            {
-              required: true,
-              message: "Điểm Quà không để trống",
-            },
-            {
-              validator: validateHoney,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+        </div>
+        {selectedCategories.map((categoryId) => {
+          const category = listCategory.find((item) => item.id === categoryId);
+          return (
+            <div className="input-matcate">
+              <label className="label" htmlFor={`honey_${category.name}`}>
+                <span className="select-asterisk">*</span> Số mật{" "}
+                {category.name} :
+              </label>
+              <Input
+                type="number"
+                id={`honey_${category.name}`}
+                value={categoryQuantities[category.id] || ""}
+                onChange={(e) => {
+                  handleCategoryQuantityChange(category.id, e.target.value);
+                }}
+              />
+            </div>
+          );
+        })}
         <Form.Item
           label="Thời gian"
           name="timeType"

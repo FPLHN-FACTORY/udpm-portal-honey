@@ -7,7 +7,6 @@ import {
   GetArchiveCountGift,
   SetArchiveCountGift,
 } from "../../../app/reducers/archive-gift/archive-count-gift.reducer";
-import UsingGift from "./StudentUsingGift";
 import {
   GetArchiveGift,
   SetArchiveGift,
@@ -96,7 +95,7 @@ const ToolChest = memo(() => {
         <div className="chest__item__detail">
           <div className="chest__detail__header">
             <div className="chest__detail__image">
-              <ImageRenderer image={dataTool.image} />
+              <ImageRenderer image={archiveGift.image} />
             </div>
             <div class="chest__detail__body">
               <h3>{name}</h3>
@@ -105,9 +104,6 @@ const ToolChest = memo(() => {
           </div>
           <div className="chest__detail__text">
             <span>{note}</span>
-          </div>
-          <div className="chest__detail__button">
-            <UsingGift archivegift={archiveGift} filter={{ type: 2 }} />
           </div>
         </div>
       ) : null}
