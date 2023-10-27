@@ -106,9 +106,6 @@ const ToolChest = memo(() => {
           <div className="chest__detail__text">
             <span>{note}</span>
           </div>
-          <div className="chest__detail__button">
-            <UsingGift archivegift={archiveGift} filter={{ type: 2 }} />
-          </div>
         </div>
       ) : null}
     </section>

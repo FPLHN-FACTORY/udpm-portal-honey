@@ -21,9 +21,6 @@ const UsingGift = (props) => {
     ArchiveAPI.getGift(filter).then((response) => {
       dispatch(SetGiftArchive(response.data.data));
     });
-    ArchiveAPI.getArchive(filter).then((response) => {
-      dispatch(SetArchiveGift(response.data.data));
-    });
     ArchiveAPI.detailArchiveGift(archivegift.idGift).then((response) => {
       let quantity = parseInt(response.data.quantity) - 1;
       console.log(typeof response.data.quantity);
@@ -72,7 +69,8 @@ const UsingGift = (props) => {
         title="Sử dụng quà tặng"
         visible={isModalOpen}
         onOk={handleOk}
-        onCancel={handleCancel}>
+        onCancel={handleCancel}
+      >
         <Form form={form}>
           <b>
             <span style={{ color: "red" }}>* </span> Mã môn học
@@ -84,7 +82,8 @@ const UsingGift = (props) => {
                 required: true,
                 message: "Vui lòng nhập mã môn học!",
               },
-            ]}>
+            ]}
+          >
             <Input />
           </Form.Item>
           <b>
@@ -97,7 +96,8 @@ const UsingGift = (props) => {
                 required: true,
                 message: "Vui lòng nhập mã lớp!",
               },
-            ]}>
+            ]}
+          >
             <Input />
           </Form.Item>
           <b>
@@ -114,7 +114,8 @@ const UsingGift = (props) => {
                 type: "email",
                 message: "Email không hợp lệ!",
               },
-            ]}>
+            ]}
+          >
             <Input />
           </Form.Item>
         </Form>

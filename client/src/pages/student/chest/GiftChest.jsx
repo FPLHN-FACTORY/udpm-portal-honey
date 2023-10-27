@@ -35,7 +35,7 @@ const GiftChest = memo(() => {
     return (
       <img
         src={imageUrl}
-        style={{ width: "40px", height: "40px" }}
+        style={{ width: "100px", height: "100px" }}
         alt="Hình ảnh"
       />
     );
