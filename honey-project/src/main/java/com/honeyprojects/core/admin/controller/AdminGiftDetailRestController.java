@@ -1,6 +1,7 @@
 package com.honeyprojects.core.admin.controller;
 
 import com.honeyprojects.core.admin.model.request.AdminAddGiftDetailRequest;
+import com.honeyprojects.core.admin.model.request.AdminUpdateGiftDetailRequest;
 import com.honeyprojects.core.admin.service.AdminGiftDetailService;
 import com.honeyprojects.core.common.base.ResponseObject;
 import jakarta.validation.Valid;
@@ -22,4 +23,15 @@ public class AdminGiftDetailRestController {
     public ResponseObject getList(@RequestParam String idGift){
         return new ResponseObject(service.listGiftDetailByGiftId(idGift));
     }
+
+    @PutMapping("/{id}")
+    public ResponseObject updateGiftDetail(@Valid @ModelAttribute AdminUpdateGiftDetailRequest request, @PathVariable String id){
+        return new ResponseObject(service.update(request,id));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteGiftDetail(@PathVariable String id){
+        service.deleteById(id);
+    }
+
 }

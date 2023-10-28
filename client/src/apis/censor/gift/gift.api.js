@@ -19,6 +19,9 @@ export class GiftAPI {
     if (!isNaN(data.quantity) && data.quantity !== null) {
       formData.append("quantity", data.quantity);
     }
+    if (!isNaN(data.limitQuantity) && data.limitQuantity !== null) {
+      formData.append("limitQuantity", data.limitQuantity);
+    }
     formData.append("status", data.status);
     formData.append("type", data.type);
     if (data.fromDate !== null && data.toDate !== null) {
@@ -45,6 +48,9 @@ export class GiftAPI {
     }
     if (!isNaN(data.quantity) && data.quantity !== null) {
       formData.append("quantity", data.quantity);
+    }
+    if (!isNaN(data.limitQuantity) && data.limitQuantity !== null) {
+      formData.append("limitQuantity", data.limitQuantity);
     }
     formData.append("status", data.status);
     formData.append("type", data.type);
