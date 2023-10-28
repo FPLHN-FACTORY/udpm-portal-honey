@@ -31,7 +31,7 @@ function ImageRenderer({ image }) {
     return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
   }
 }
-const Items = memo(({ filteredItem, fillPoint }) => {
+const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
   const [selectedConversion, setSelectedConversion] = useState(null);
   const [fillUserApi, setFillUserApi] = useState([]);
   const [quantity, setQuantity] = useState(1);
@@ -96,9 +96,7 @@ const Items = memo(({ filteredItem, fillPoint }) => {
       honeyPoint: parseInt(selectedConversion ? selectedConversion.honey : 0),
       giftId: selectedConversion ? selectedConversion.id : 0,
       nameGift: selectedConversion.name,
-      honeyCategoryId: selectedConversion
-        ? selectedConversion.honeyCategoryId
-        : 0,
+      categoryId: selectedConversion ? selectedConversion.categoryId : 0,
       idArchive: fillUserApi.idUser,
       quantity: quantity,
     };
@@ -111,11 +109,18 @@ const Items = memo(({ filteredItem, fillPoint }) => {
         if (response.data.success) {
           message.success("Đổi quà thành công");
           // window.location.reload();
-          if (selectedConversion && initialQuantity !== null) {
+          if (
+            selectedConversion &&
+            selectedConversion.status === 0 &&
+            selectedConversion.quantity !== null
+          ) {
             setSelectedConversion({
               ...selectedConversion,
               quantity: initialQuantity - quantity,
             });
+          }
+          if (selectedConversion.status === 0) {
+            updatePoints(fillPoint.point - selectedConversion.honey * quantity);
           }
         } else {
           message.error("Bạn không đủ điểm để đổi quà trong ranh này!");
