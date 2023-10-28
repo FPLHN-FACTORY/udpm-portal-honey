@@ -1,6 +1,9 @@
 package com.honeyprojects.core.admin.service.impl;
 
-import com.honeyprojects.core.admin.model.request.*;
+import com.honeyprojects.core.admin.model.request.AdminCreateHoneyRequest;
+import com.honeyprojects.core.admin.model.request.AdminCreateNotificationDetailRandomRequest;
+import com.honeyprojects.core.admin.model.request.AdminNotificationRandomRequest;
+import com.honeyprojects.core.admin.model.request.AdminRandomPointRequest;
 import com.honeyprojects.core.admin.model.response.*;
 import com.honeyprojects.core.admin.repository.*;
 import com.honeyprojects.core.admin.service.AdRandomAddPointService;
@@ -252,7 +255,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
         // Tạo hàng tiêu đề và đặt các tiêu đề cột
         Row headerRow = sheet.createRow(0);
-        String[] headers = {"STT", "Tên đăng nhập", "Email"};
+        String[] headers = {"STT", "Tên đăng nhập"};
         for (int i = 0; i < headers.length; i++) {
             Cell headerCell = headerRow.createCell(i);
             headerCell.setCellValue(headers[i]);
@@ -321,12 +324,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             // Dòng thứ 2 - cách viết đúng định dạng quà tặng
             Row formatGiftRow = sheet.createRow(1);
             Cell formatGiftCell = formatGiftRow.createCell(1);
-            formatGiftCell.setCellValue("Định dạng vật phẩm: số-lượng tên-vật-phẩm, ..., số-lượng tên-vật-phẩm");
-
-            // Dòng thứ 3 - cách viết đúng định dạng mật ong
-            Row formatHoneyRow = sheet.createRow(2);
-            Cell formatHoneyCell = formatHoneyRow.createCell(1);
-            formatHoneyCell.setCellValue("Định dạng mật ong: số-lượng - loại-điểm,..., số-lượng - loại-điểm");
+            formatGiftCell.setCellValue("Định dạng vật phẩm và mật ong: số-lượng tên-vật-phẩm, ..., số-lượng tên-vật-phẩm");
 
             // Tạo một kiểu cho các ô định dạng
             CellStyle formatStyle = workbook.createCellStyle();
@@ -338,11 +336,10 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 //            formatStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
             formatStyle.setFont(formatFont);
             formatGiftCell.setCellStyle(formatStyle);
-            formatHoneyCell.setCellStyle(formatStyle);
 
             // Tạo hàng tiêu đề và đặt các tiêu đề cột
-            Row headerRow = sheet.createRow(4);
-            String[] headers = {"STT", "Mã sinh viên", "Vật phẩm", "Mật ong", "Danh sách tên vật phẩm", "Danh sách loại mật ong"};
+            Row headerRow = sheet.createRow(3);
+            String[] headers = {"Mã sinh viên", "Vật phẩm", "Mật ong"};
             int columnCount = headers.length;
 
             for (int i = 0; i < columnCount; i++) {
@@ -360,30 +357,30 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             emptyHeaderFont.setColor(IndexedColors.RED.getIndex());
             emptyHeaderStyle.setFont(emptyHeaderFont);
 
-            // Danh sách tên vật phẩm
-            List<String> lstGift = adGiftRepository.getAllNameByStatus();
-
-            // Danh sách tên thể loại mật ong
-            List<String> lstCategoryHoney = adminCategoryRepository.getAllNameCategoryByStatus();
-
-            // Ghi danh sách tên vật phẩm và danh sách tên thể loại mật ong cùng lúc
-            int rowIndex = 5; // Bắt đầu từ hàng thứ hai cho dữ liệu
-
-            int maxItemCount = Math.max(lstGift.size(), lstCategoryHoney.size());
-
-            for (int i = 0; i < maxItemCount; i++) {
-                Row dataRow = sheet.createRow(rowIndex);
-
-                if (i < lstGift.size()) {
-                    dataRow.createCell(columnCount - 2).setCellValue(lstGift.get(i)); // Cột trước cuối là danh sách tên vật phẩm
-                }
-
-                if (i < lstCategoryHoney.size()) {
-                    dataRow.createCell(columnCount - 1).setCellValue(lstCategoryHoney.get(i)); // Cột cuối là danh sách loại mật ong
-                }
-
-                rowIndex++;
-            }
+//            // Danh sách tên vật phẩm
+//            List<String> lstGift = adGiftRepository.getAllNameByStatus();
+//
+//            // Danh sách tên thể loại mật ong
+//            List<String> lstCategoryHoney = adminCategoryRepository.getAllNameCategoryByStatus();
+//
+//            // Ghi danh sách tên vật phẩm và danh sách tên thể loại mật ong cùng lúc
+//            int rowIndex = 5; // Bắt đầu từ hàng thứ hai cho dữ liệu
+//
+//            int maxItemCount = Math.max(lstGift.size(), lstCategoryHoney.size());
+//
+//            for (int i = 0; i < maxItemCount; i++) {
+//                Row dataRow = sheet.createRow(rowIndex);
+//
+//                if (i < lstGift.size()) {
+//                    dataRow.createCell(columnCount - 2).setCellValue(lstGift.get(i)); // Cột trước cuối là danh sách tên vật phẩm
+//                }
+//
+//                if (i < lstCategoryHoney.size()) {
+//                    dataRow.createCell(columnCount - 1).setCellValue(lstCategoryHoney.get(i)); // Cột cuối là danh sách loại mật ong
+//                }
+//
+//                rowIndex++;
+//            }
 
             // Lưu workbook vào tệp Excel tại đường dẫn đã xác định
             try (FileOutputStream outputStream = new FileOutputStream(outputPath)) {
@@ -403,54 +400,82 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     private static final int COLUMN_WIDTH = 15 * 256;
 
     @Override
-    public List<String> importExcel(MultipartFile file) {
-        List<String> simpleResponseList = new ArrayList<>();
-        try {
-            // Đọc tệp Excel từ đối tượng MultipartFile
-            InputStream inputStream = file.getInputStream();
-            Workbook workbook = new XSSFWorkbook(inputStream);
+    public AdminAddPointBO importExcel(MultipartFile file) throws IOException {
+//        List<String> simpleResponseList = new ArrayList<>();
+//        try {
+//            // Đọc tệp Excel từ đối tượng MultipartFile
+//            InputStream inputStream = file.getInputStream();
+//            Workbook workbook = new XSSFWorkbook(inputStream);
+//
+//            // Lấy bảng tính đầu tiên từ tệp Excel (ở đây giả sử chỉ có một bảng tính)
+//            Sheet sheet = workbook.getSheetAt(0);
+//
+//            // Xác định cột chứa địa chỉ email (ví dụ: cột "Email")
+//            Row headerRow = sheet.getRow(0);
+//            int emailColumnIndex = -1;
+//            for (Cell cell : headerRow) {
+//                String columnName = cell.getStringCellValue();
+//                if ("Email".equalsIgnoreCase(columnName)) {
+//                    emailColumnIndex = cell.getColumnIndex();
+//                    break;
+//                }
+//            }
+//
+//            // Duyệt qua từng dòng của bảng tính (bỏ qua hàng đầu tiên chứa tiêu đề)
+//            for (Row row : sheet) {
+//                if (row.getRowNum() == 0) {
+//                    continue; // Bỏ qua hàng đầu tiên (tiêu đề)
+//                }
+//
+//                // Trích xuất giá trị địa chỉ email từ cột tương ứng
+//                Cell emailCell = row.getCell(emailColumnIndex);
+//                String email = (emailCell != null) ? emailCell.getStringCellValue() : "";
+//
+//                // Tìm sinh viên bằng email và thêm vào list
+//                if (email.equals("")) {
+//                    continue;
+//                } else {
+//                    SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(email);
+//                    simpleResponseList.add(simpleResponse.getId());
+//                }
+//            }
+//
+//            // Đóng tệp Excel và trả về danh sách địa chỉ email
+//            workbook.close();
+//            inputStream.close();
+//            return simpleResponseList;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+        // Lấy đối tượng InputStream từ tệp Excel được tải lên
+        InputStream inputStream = file.getInputStream();
 
-            // Lấy bảng tính đầu tiên từ tệp Excel (ở đây giả sử chỉ có một bảng tính)
-            Sheet sheet = workbook.getSheetAt(0);
+        // Tạo một Workbook (bảng tính) từ InputStream sử dụng thư viện Apache POI
+        Workbook workbook = new XSSFWorkbook(inputStream);
 
-            // Xác định cột chứa địa chỉ email (ví dụ: cột "Email")
-            Row headerRow = sheet.getRow(0);
-            int emailColumnIndex = -1;
-            for (Cell cell : headerRow) {
-                String columnName = cell.getStringCellValue();
-                if ("Email".equalsIgnoreCase(columnName)) {
-                    emailColumnIndex = cell.getColumnIndex();
-                    break;
-                }
-            }
+        // Lấy bảng tính đầu tiên từ Workbook
+        Sheet sheet = workbook.getSheetAt(0);
 
-            // Duyệt qua từng dòng của bảng tính (bỏ qua hàng đầu tiên chứa tiêu đề)
-            for (Row row : sheet) {
-                if (row.getRowNum() == 0) {
-                    continue; // Bỏ qua hàng đầu tiên (tiêu đề)
-                }
+        // Đọc dữ liệu từ bảng tính và tạo danh sách các đối tượng AdminAddItemDTO
+        List<AdminAddPointDTO> lstUserImportDTO = StreamSupport.stream(sheet.spliterator(), false)
+                .skip(1) // Bỏ qua 2 dòng đầu tiên
+                .filter(row -> !ExcelUtils.checkNullLCells(row, 1))
+                .map(row -> processRowPoint(row))
+                .collect(Collectors.toList());
 
-                // Trích xuất giá trị địa chỉ email từ cột tương ứng
-                Cell emailCell = row.getCell(emailColumnIndex);
-                String email = (emailCell != null) ? emailCell.getStringCellValue() : "";
+        // Nhóm dữ liệu theo trạng thái lỗi (error) và đếm số lượng mỗi trạng thái
+        Map<Boolean, Long> importStatusCounts = lstUserImportDTO.stream()
+                .collect(Collectors.groupingBy(AdminAddPointDTO::isError, Collectors.counting()));
 
-                // Tìm sinh viên bằng email và thêm vào list
-                if (email.equals("")) {
-                    continue;
-                } else {
-                    SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(email);
-                    simpleResponseList.add(simpleResponse.getId());
-                }
-            }
+        // Tạo đối tượng AdminAddItemBO để lưu trữ thông tin bản xem trước
+        AdminAddPointBO adminAddPointBO = new AdminAddPointBO();
+        adminAddPointBO.setLstAdminAddPointDTO(lstUserImportDTO);
+        adminAddPointBO.setTotal(Long.parseLong(String.valueOf(lstUserImportDTO.size())));
+        adminAddPointBO.setTotalError(importStatusCounts.getOrDefault(true, 0L));
+        adminAddPointBO.setTotalSuccess(importStatusCounts.getOrDefault(false, 0L));
 
-            // Đóng tệp Excel và trả về danh sách địa chỉ email
-            workbook.close();
-            inputStream.close();
-            return simpleResponseList;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return adminAddPointBO;
     }
 
     @Override
@@ -466,7 +491,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
         // Đọc dữ liệu từ bảng tính và tạo danh sách các đối tượng AdminAddItemDTO
         List<AdminAddItemDTO> lstUserImportDTO = StreamSupport.stream(sheet.spliterator(), false)
-                .skip(1) // Bỏ qua 2 dòng đầu tiên
+                .skip(4) // Bỏ qua 2 dòng đầu tiên
                 .filter(row -> !ExcelUtils.checkNullLCells(row, 1))
                 .map(row -> processRow(row))
                 .collect(Collectors.toList());
@@ -585,11 +610,9 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         return studentNotificationDetailRepository.save(notificationDetail);
     }
 
-    private AdminAddItemDTO processRow(Row row) {
-        AdminAddItemDTO userDTO = new AdminAddItemDTO();
+    private AdminAddPointDTO processRowPoint(Row row) {
+        AdminAddPointDTO userDTO = new AdminAddPointDTO();
         String userName = ExcelUtils.getCellString(row.getCell(1));
-        String listGift = ExcelUtils.getCellString(row.getCell(2));
-        String listHoney = ExcelUtils.getCellString(row.getCell(3));
 
         // Tạo địa chỉ email giả định từ tên đăng nhập
         String emailSimple = userName + "@fpt.edu.vn";
@@ -613,14 +636,60 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             hasError = true;
         }
 
+        // Xác định trạng thái thành công hoặc lỗi và cung cấp thông báo
+        if (!hasError) {
+            userDTO.setImportMessage("SUCCESS");
+            userDTO.setError(false);
+        }
+
+        // Đặt các thuộc tính của đối tượng AdminAddItemDTO
+        userDTO.setId(response != null ? response.getId() : null);
+        userDTO.setUserName(userName != null ? userName : null);
+        userDTO.setEmail(response != null ? response.getEmail() : null);
+
+        return userDTO;
+    }
+
+    private AdminAddItemDTO processRow(Row row) {
+        AdminAddItemDTO userDTO = new AdminAddItemDTO();
+        String userName = ExcelUtils.getCellString(row.getCell(0));
+        String listGift = ExcelUtils.getCellString(row.getCell(1));
+        String listHoney = ExcelUtils.getCellString(row.getCell(2));
+
+        // Tạo địa chỉ email giả định từ tên đăng nhập
+        String emailSimple = userName + "@fpt.edu.vn";
+
+        // Gọi API để kiểm tra sự tồn tại của người dùng
+        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
+
+        // Biến để kiểm tra sự tồn tại của lỗi
+        boolean hasError = false;
+
+        // Kiểm tra dữ liệu và xác định trạng thái lỗi (error)
+        if (DataUtils.isNullObject(userName)) {
+            userDTO.setImportMessage("Sinh viên không được để trống");
+            userDTO.setError(true);
+            hasError = true;
+        }
+
+        if (DataUtils.isNullObject(response)) {
+            userDTO.setImportMessage("Sinh viên không tồn tại");
+            userDTO.setError(true);
+            hasError = true;
+        }
+
+        String regexFormat = "^\\d+\\s+[^-,]*(,\\s*\\d+\\s+[^-,]*)?$";
+//                             "^(\\d+\\s+[^-]+)(,\\s*\\d+\\s+[^-]+)*$";
+
         int check = 0;
         if (DataUtils.isNullObject(listGift)) {
             check++;
         } else {
-            String regexGift = "^\\d+\\s+[^,]*(,\\s*\\d+\\s+[^,]*)?$";
-            if (!listGift.trim().matches(regexGift)) {
-                userDTO.setImportMessage("Định dạng vật phẩm không hợp lệ. Phải là 'số-lượng tên-vật-phẩm,..., số-lượng tên-vật-phẩm");
+//            String regexGift = "^\\d+\\s+[^,]*(,\\s*\\d+\\s+[^,]*)?$";
+            if (!listGift.trim().matches(regexFormat)) {
+                userDTO.setImportMessage("Định dạng vật phẩm không hợp lệ");
                 userDTO.setError(true);
+                check++;
                 hasError = true;
             } else {
                 // Xử lý danh sách vật phẩm và kiểm tra
@@ -635,12 +704,14 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                         if (numberItem < 1) {
                             userDTO.setImportMessage("Số lượng Vật phẩm không được nhỏ hơn 1");
                             userDTO.setError(true);
+                            check++;
                             hasError = true;
                             break;
                         }
                         if (DataUtils.isNullObject(idGift)) {
                             userDTO.setImportMessage("Vật phẩm " + nameItem + " không tồn tại");
                             userDTO.setError(true);
+                            check++;
                             hasError = true;
                             break;
                         }
@@ -652,10 +723,11 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         if (DataUtils.isNullObject(listHoney)) {
             check++;
         } else {
-            String regexHoney = "^(\\d+\\s*-\\s*[a-zA-Z]+)(,\\s*\\d+\\s*-\\s*[a-zA-Z]+)*$";
-            if (!listHoney.trim().matches(regexHoney)) {
-                userDTO.setImportMessage("Định dạng mật ong không hợp lệ. Phải là 'số-lượng - loại-điểm,..., số-lượng - loại-điểm");
+//            String regexHoney = "^(\\d+\\s*-\\s*[a-zA-Z]+)(,\\s*\\d+\\s*-\\s*[a-zA-Z]+)*$";
+            if (!listHoney.trim().matches(regexFormat)) {
+                userDTO.setImportMessage("Định dạng mật ong không hợp lệ");
                 userDTO.setError(true);
+                check++;
                 hasError = true;
             } else {
                 // Xử lý danh sách mật ong và kiểm tra
@@ -669,6 +741,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                         if (DataUtils.isNullObject(categoryResponse) || DataUtils.isNullObject(categoryResponse.getId())) {
                             userDTO.setImportMessage("Loại mật ong " + categoryPoint + " không tồn tại");
                             userDTO.setError(true);
+                            check++;
                             hasError = true;
                             break;
                         }
@@ -677,7 +750,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             }
         }
 
-        if (check == 2) {
+        if (check > 1) {
             userDTO.setImportMessage("Vật phẩm và mật ong không được để trống");
             userDTO.setError(true);
             hasError = true;

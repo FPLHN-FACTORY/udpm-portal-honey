@@ -21,7 +21,7 @@ public interface AdRandomAddPointService {
 
     Boolean previewDataExportExcel();
 
-    List<String> importExcel(MultipartFile file);
+    AdminAddPointBO importExcel(MultipartFile file) throws IOException;
 
     AdminAddItemBO previewDataImportExcel(MultipartFile file) throws IOException;
 
