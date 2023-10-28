@@ -2,9 +2,7 @@ import { DownloadOutlined, InboxOutlined } from "@ant-design/icons";
 import { Button, Modal, Upload, message } from "antd";
 import React, { useState } from "react";
 import { RandomAddPointAPI } from "../../../apis/censor/random-add-point/random-add-point.api";
-import {
-  SetImport,
-} from "../../../app/reducers/import/import.reducer";
+import { SetImport } from "../../../app/reducers/import/import.reducer";
 import { useAppDispatch } from "../../../app/hooks";
 
 export default function ModalUpLoadFile(props) {
