@@ -163,3 +163,10 @@
 .detail-button:hover .icon {
   color: black;
 }
+.errorImageMes{
+  padding-left: 120px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}

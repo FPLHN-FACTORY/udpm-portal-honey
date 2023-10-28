@@ -30,10 +30,6 @@ public class AdminUpdateGiftRequest {
 
     private MultipartFile image;
 
-    private String honeyCategoryId;
-
-    private Integer honey;
-
     private String note;
 
     private Long toDate;
@@ -58,8 +54,6 @@ public class AdminUpdateGiftRequest {
             byte[] imageBytes = this.getImage().getBytes();
             gift.setImage(imageBytes);
         }
-        gift.setHoneyCategoryId(this.getHoneyCategoryId());
-        gift.setHoney(this.getHoney());
         gift.setNote(this.getNote());
         gift.setToDate(this.getToDate());
         gift.setFromDate(this.getFromDate());

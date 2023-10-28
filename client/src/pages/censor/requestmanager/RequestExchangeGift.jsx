@@ -46,7 +46,7 @@ const statusHistory = (status) => {
   }
 };
 
-export default function ListRequest() {
+export default function RequestExchangeGift() {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const columns = [
@@ -133,7 +133,7 @@ export default function ListRequest() {
         setLoading(true);
         const fetchData = async (filter) => {
           try {
-            const response = await RequestManagerAPI.listRequest(filter);
+            const response = await RequestManagerAPI.getExchangeGifts(filter);
             const listHistory = await Promise.all(
               response.data.data.map(async (data) => {
                 try {
@@ -208,7 +208,7 @@ export default function ListRequest() {
         console.log(response.data);
         if (response.data.success) {
           fetchData(dispatch, filter);
-          if (status === 1) message.success("Đã xác nhận yêu cầu cộng điểm!");
+          if (status === 1) message.success("Đã xác nhận yêu cầu đổi quà!");
           if (status === 2) message.error("Hủy yêu cầu thành công!");
           setType(response.data.data.type);
         }
@@ -224,7 +224,7 @@ export default function ListRequest() {
   return (
     <Spin spinning={loading}>
       <div className="request-manager">
-        <TabsRequest selectIndex={1} type={type} />
+        {/* <TabsRequest selectIndex={1} type={type} /> */}
         <Card className="mb-2 py-1">
           <Form onFinish={onFinishSearch}>
             <Space size={"large"}>
@@ -260,7 +260,7 @@ export default function ListRequest() {
                   placeholder="Trạng thái"
                   options={[
                     { value: null, label: "Tất cả" },
-                    ...[0, 3].map((value) => {
+                    ...[0,3].map((value) => {
                       return {
                         value: value,
                         label: statusHistory(value),
@@ -272,14 +272,13 @@ export default function ListRequest() {
               <Button
                 htmlType="submit"
                 type="primary"
-                className="mr-10 search-button"
-              >
+                className="mr-10 search-button">
                 Lọc
               </Button>
             </Space>
           </Form>
         </Card>
-        <Card title="Yêu cầu cộng điểm">
+        <Card title="Yêu cầu đổi quà">
           <Table
             columns={columns}
             dataSource={data}
@@ -288,7 +287,7 @@ export default function ListRequest() {
             expandable={{
               expandedRowRender: (record) => (
                 <p>
-                  <b style={{ color: "#EEB30D" }}>Lý do cộng: </b>
+                  <b style={{ color: "#EEB30D" }}>Lý do đổi: </b>
                   {record.note}
                 </p>
               ),

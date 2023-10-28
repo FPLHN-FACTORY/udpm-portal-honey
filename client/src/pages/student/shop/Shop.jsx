@@ -100,11 +100,13 @@ const Shop = memo(() => {
   const tabData = [
     {
       title: "Vật phẩm",
-      content: <Items filteredItem={filteredItem} />,
+      content: <Items filteredItem={filteredItem} fillPoint={fillPoint} />,
     },
     {
-      title: "Đổi quà",
-      content: <Gift filteredConversions={filteredConversions} />,
+      title: "Quà",
+      content: (
+        <Gift filteredConversions={filteredConversions} fillPoint={fillPoint} />
+      ),
     },
   ];
 

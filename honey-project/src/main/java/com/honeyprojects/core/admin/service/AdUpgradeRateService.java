@@ -17,5 +17,5 @@ public interface AdUpgradeRateService {
 
     Optional<UpgradeRate> findById(String s);
 
-    void delete(UpgradeRate entity);
+    void delete(String id);
 }

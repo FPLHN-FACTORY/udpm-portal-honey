@@ -1,15 +1,10 @@
 package com.honeyprojects.core.admin.controller;
 
 import com.honeyprojects.core.admin.model.request.AdminUpgradeRateRequest;
-import com.honeyprojects.core.admin.model.response.AdminUpgradeRateResponse;
 import com.honeyprojects.core.admin.service.AdUpgradeRateService;
-import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.ResponseObject;
-import com.honeyprojects.entity.UpgradeRate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/censor/upgrade-rate")
@@ -37,9 +32,6 @@ public class AdminUpgradeRateController {
 
     @PutMapping("delete/{id}")
     public void delete(@PathVariable("id") String id){
-        Optional<UpgradeRate> opt = adUpgradeRateService.findById(id);
-        if(opt.isPresent()){
-          adUpgradeRateService.delete(opt.get());
-        }
+          adUpgradeRateService.delete(id);
     }
 }
