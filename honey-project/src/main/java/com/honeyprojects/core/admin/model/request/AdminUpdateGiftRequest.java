@@ -28,6 +28,8 @@ public class AdminUpdateGiftRequest {
 
     private Integer quantity;
 
+    private Integer limitQuantity;
+
     private MultipartFile image;
 
     private String note;
@@ -49,6 +51,8 @@ public class AdminUpdateGiftRequest {
         }
 
         gift.setQuantity(this.getQuantity());
+
+        gift.setLimitQuantity(this.getLimitQuantity());
 
         if (this.getImage() != null) {
             byte[] imageBytes = this.getImage().getBytes();
