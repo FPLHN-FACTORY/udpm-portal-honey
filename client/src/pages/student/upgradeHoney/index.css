@@ -30,6 +30,13 @@
 
 }
 
+.upgrate__chest__choose {
+    width: 60%;
+    border-radius: 8px;
+    background-color: #fff;
+    height: 100%
+}
+
 .upgrate__list {
     margin-top: 5px;
     padding: 0 10px 10px 10px;
@@ -82,7 +89,8 @@
     align-items: center;
     transition: transform 0.3s;
     border-radius: 5px;
-    border: 1px dashed #26a387;  border: 1px dashed #26a387;
+    border: 1px dashed #26a387;
+    border: 1px dashed #26a387;
     margin-bottom: 5px;
     margin-right: 5px;
 
@@ -206,9 +214,8 @@
 .upgrate__honey__chest {
     width: 100%;
     height: 48%;
-    border-radius: 8px;
-    background-color: #fff;
     margin-bottom: 10px;
+    display: flex;
     text-align: center;
 }
 
@@ -243,7 +250,8 @@
     padding: 0;
     z-index: 2;
     height: 140px;
-    width: 17%;
+    width: 30%;
+    transition: transform 1s ease-in-out, opacity 1s ease-in-out;
 
 }
 
@@ -266,7 +274,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.35);
+    background: rgba(0, 0, 0, 0.3);
     border-radius: 5px;
     z-index: 10;
     transition: all 1s;
@@ -317,9 +325,6 @@
     z-index: 20;
     line-height: 140px;
     vertical-align: middle;
-}
-
-.upgrate__chest__name {
     font-size: 18px;
     text-shadow: 0 0 10px #000;
     color: #fff;
@@ -327,6 +332,11 @@
     font-family: 'Capriola', sans-serif;
     transform: scale(0.9);
     transition: 1s transform;
+    opacity: 0;
+}
+
+.upgrate__chest__wrapper:hover a {
+    opacity: 1;
 }
 
 .update__honey__history {
@@ -455,3 +465,27 @@
     transform: scale(0.92);
 }
 
+.upgrate__select__honey {
+    padding: 10px 20px;
+    color: #26a387;
+
+}
+
+.upgrate__select__honey span {
+    font-weight: 600;
+}
+
+.upgrate__select__honey .select__honey:where(.css-dev-only-do-not-override-14wwjjs).ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover .ant-select-selector {
+    border: 1px solid #26a387;
+    outline: none;
+}
+
+.upgrate__select__honey .select__honey:where(.css-dev-only-do-not-override-14wwjjs).ant-select-single.ant-select-lg .ant-select-selector {
+    border: 1px solid #26a387;
+    border-radius: 5px;
+}
+
+.upgrate__select__honey .choose__quantity:where(.css-dev-only-do-not-override-14wwjjs).ant-input{
+    border: 1px solid #26a387;
+    border-radius: 5px;
+}
