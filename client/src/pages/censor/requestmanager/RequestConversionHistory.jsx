@@ -81,12 +81,19 @@ export default function RequestConversionHistory() {
     }
   };
 
-  const changeStatusConversion = (idStudent, idGift, idHistory, status) => {
+  const changeStatusConversion = (
+    idStudent,
+    idGift,
+    idHistory,
+    status,
+    quantity
+  ) => {
     RequestManagerAPI.changeStatusConversion(
       idStudent,
       idGift,
       idHistory,
-      status
+      status,
+      quantity
     )
       .then((response) => {
         if (response.data.success) {
@@ -126,6 +133,11 @@ export default function RequestConversionHistory() {
       title: "Loại quà",
       dataIndex: "nameGift",
       key: "nameGift",
+    },
+    {
+      title: "Số lượng",
+      dataIndex: "quantity",
+      key: "quantity",
     },
     {
       title: "Điểm trừ",
@@ -182,7 +194,8 @@ export default function RequestConversionHistory() {
                     values.studentId,
                     values.giftId,
                     values.id,
-                    1
+                    1,
+                    values.quantity
                   );
                 }}
               />

@@ -101,6 +101,7 @@ const UpgrateHoneyIndex = memo(() => {
                     borderRadius: "5px",
                     color: "#26a387",
                     fontWeight: "600",
+                    fontSize:"14px"
                   }}
                 />
               </div>
@@ -174,6 +175,8 @@ const UpgrateHoneyIndex = memo(() => {
                     borderRadius: "5px",
                     color: "#26a387",
                     fontWeight: "600",
+                    fontSize:"14px"
+
                   }}
                 />
               </div>

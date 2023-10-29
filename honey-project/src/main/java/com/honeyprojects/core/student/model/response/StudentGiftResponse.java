@@ -28,12 +28,18 @@ public interface StudentGiftResponse extends IsIdentified {
     @Value("#{target.honey}")
     Integer getHoney();
 
-    @Value("#{target.honey_category_id}")
-    String getHoneyCategoryId();
+    @Value("#{target.category_id}")
+    String getCategoryId();
 
     @Value("#{target.image}")
     String getImage();
 
     @Value("#{target.note}")
     String getNote();
+
+//    @Value("#{target.to_date}")
+//    String getToDate();
+//
+//    @Value("#{target.from_date}")
+//    String getFromDate();
 }

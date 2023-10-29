@@ -43,7 +43,7 @@ public class AdminRandomAddPointController {
     }
 
     @PostMapping("/create/import")
-    public ResponseObject createImportRandomPoint(@RequestParam("file") MultipartFile file) {
+    public ResponseObject createImportRandomPoint(@RequestParam("file") MultipartFile file) throws IOException {
         return new ResponseObject(adRandomAddPointService.importExcel(file));
     }
 

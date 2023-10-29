@@ -25,7 +25,7 @@ const GiftChest = memo(() => {
     fetchGift();
   }, []);
 
-  function ImageRenderer({ image }) {
+  function ImageRenderer({ image, quantity }) {
     const byteArray = image ? image.split(",").map(Number) : [];
     const base64ImageData = btoa(
       String.fromCharCode.apply(null, new Uint8Array(byteArray))
@@ -33,11 +33,26 @@ const GiftChest = memo(() => {
     const imageUrl = `data:image/jpeg;base64,${base64ImageData}`;
 
     return (
-      <img
-        src={imageUrl}
-        style={{ width: "40px", height: "40px" }}
-        alt="Hình ảnh"
-      />
+      <div style={{ position: "relative" }}>
+        <img
+          src={imageUrl}
+          style={{ width: "100%", height: "100%" }}
+          alt="Hình ảnh"
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+            
+            color: "white",
+            padding: "2px 4px",
+            borderRadius: "4px",
+          }}
+        >
+          {quantity}
+        </div>
+      </div>
     );
   }
 
@@ -62,7 +77,6 @@ const GiftChest = memo(() => {
   };
 
   const quantity = useAppSelector(GetArchiveCountGift);
-  console.log(quantity);
 
   return (
     <section className="item__chest">
@@ -82,8 +96,7 @@ const GiftChest = memo(() => {
                 }}
               >
                 <div className="chest__card__image">
-                  <ImageRenderer image={data.image} />
-                  <div className="quantity-gift">{data.quantity}</div>
+                  <ImageRenderer image={data.image} quantity={data.quantity} />
                 </div>
                 <div className="chest__card__body">
                   <h3>{data.name}</h3>

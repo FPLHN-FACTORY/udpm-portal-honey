@@ -21,24 +21,22 @@ import java.util.List;
 @Primary
 public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
     @Query(value = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, COUNT(g.id) AS quantity, ag.id, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
+                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.quantity, ag.id, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
                     FROM gift g
                     JOIN archive_gift ag ON g.id = ag.gift_id
                     JOIN archive a ON ag.archive_id = a.id 
                     WHERE (a.student_id = :#{#req.idStudent})
                     AND (:#{#req.status} IS NULL OR g.status = :#{#req.status})
-                    AND (:#{#req.type} IS NULL OR g.type = :#{#req.type})
-                    GROUP BY g.id;
+                    AND (:#{#req.type} IS NULL OR g.type = :#{#req.type});
             """, nativeQuery = true)
     Page<StudentArchiveResponse> getAllGiftArchive(@Param("req") StudentArchiveFilterRequest req, Pageable pageable);
 
     @Query(value = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, COUNT(c.id) AS quantity, ag.id, c.id AS chestId, c.name
+                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.quantity, ag.id, c.id AS chestId, c.name
                     FROM chest c 
             		JOIN archive_gift ag ON ag.chest_id = c.id
             		JOIN archive a ON ag.archive_id = a.id
-            		WHERE (a.student_id = :#{#filterRequest.idStudent}) 
-            		GROUP BY c.id;
+            		WHERE (a.student_id = :#{#filterRequest.idStudent});
             """, nativeQuery = true)
     Page<StudentArchiveGetChestResponse> getChestArchive(StudentArchiveFilterRequest filterRequest, Pageable pageable);
 
@@ -50,24 +48,22 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
     List<String> listGiftId(@Param("req") StudentArchiveOpenChestRequest req);
 
     @Query(value = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.id, COUNT(g.id) AS quantity, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
+                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.id, ag.quantity, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
                     FROM gift g 
                     JOIN archive_gift ag ON ag.gift_id = g.id 
                     JOIN archive a ON ag.archive_id = a.id 
                     WHERE (a.student_id = :#{#req.idStudent})
                     AND (:#{#req.status} IS NULL OR g.status = :#{#req.status})
                     AND (:#{#req.type} IS NULL OR g.type = :#{#req.type})
-                    GROUP BY g.id
             """, nativeQuery = true)
     Page<StudentGetListGiftResponse> getListGift(StudentArchiveFilterRequest req, Pageable pageable);
 
     @Query(value = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, COUNT(g.id) AS quantity, ag.id, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
+                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.quantity, ag.id, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
                     FROM gift g JOIN archive_gift ag ON ag.gift_id = g.id 
                     JOIN  archive a ON ag.archive_id = a.id 
                     WHERE (a.student_id = :#{#req.idStudent})
-                    AND (g.id = :#{#req.idGift})
-                    GROUP BY g.id;
+                    AND (g.id = :#{#req.idGift});
             """, nativeQuery = true)
     StudentArchiveResponse detailArchiveGift(@Param("req") StudentGetArchiveGiftRequest req);
 

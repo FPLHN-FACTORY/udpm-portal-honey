@@ -86,9 +86,7 @@ function DashboardAuthUser({ children }) {
           "90"
         ),
         getItem(
-          <Link to={"/censor/request-manager/exchange-gifts"}>
-            Yêu cầu đổi quà
-          </Link>,
+          <Link to={"/censor/request-buy-gift/history"}>Yêu cầu đổi quà</Link>,
           "100"
         ),
         getItem(
