@@ -19,11 +19,10 @@ export class ArchiveAPI {
     });
   };
 
-  static getChest = (filter) => {
+  static getChest = () => {
     return request({
       method: "GET",
       url: `/${this.COMPONENT_NAME}/list-chest`,
-      params: filter,
     });
   };
 
@@ -79,7 +78,7 @@ export class ArchiveAPI {
     });
   };
 
-  static findAllUser = (id,idCategory) => {
+  static findAllUser = (id, idCategory) => {
     return request({
       method: "GET",
       url: `/${this.COMPONENT_NAME}/find-all-user?id=${id}&idCategory=${idCategory}`,

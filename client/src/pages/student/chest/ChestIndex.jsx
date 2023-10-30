@@ -1,10 +1,5 @@
-import { Card, Col, Row, Tabs } from "antd";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
-import React, { memo, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import React, { memo } from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "./chest-index.css";
 import { ShoppingOutlined } from "@ant-design/icons";
 import ItemsChest from "./ItemsChest";
@@ -13,19 +8,15 @@ import ToolChest from "./ToolChest";
 import Chest from "./Chest";
 
 const ChestIndex = memo(() => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
-  const [mode, setMode] = useState("top");
 
   const handleTabClick = (index) => {
     setActiveTab(index);
   };
 
-
   const tabData = [
-    { title: "Vật phẩm", content: <ItemsChest /> },
     { title: "Quà", content: <GiftChest /> },
+    { title: "Vật phẩm", content: <ItemsChest /> },
     { title: "Dụng cụ", content: <ToolChest /> },
     { title: "Rương", content: <Chest /> },
   ];

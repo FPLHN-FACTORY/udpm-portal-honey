@@ -19,10 +19,11 @@ export class GiftAPI {
     if (!isNaN(data.quantity) && data.quantity !== null) {
       formData.append("quantity", data.quantity);
     }
+    if (!isNaN(data.limitQuantity) && data.limitQuantity !== null) {
+      formData.append("limitQuantity", data.limitQuantity);
+    }
     formData.append("status", data.status);
     formData.append("type", data.type);
-    formData.append("honeyCategoryId", data.honeyCategoryId);
-    formData.append("honey", data.honey);
     if (data.fromDate !== null && data.toDate !== null) {
       formData.append("fromDate", data.fromDate);
       formData.append("toDate", data.toDate);
@@ -48,11 +49,12 @@ export class GiftAPI {
     if (!isNaN(data.quantity) && data.quantity !== null) {
       formData.append("quantity", data.quantity);
     }
+    if (!isNaN(data.limitQuantity) && data.limitQuantity !== null) {
+      formData.append("limitQuantity", data.limitQuantity);
+    }
     formData.append("status", data.status);
     formData.append("type", data.type);
-    formData.append("honeyCategoryId", data.honeyCategoryId);
-    formData.append("honey", data.honey);
-    formData.append("note", data.note);
+
     if (data.fromDate !== null && data.toDate !== null) {
       formData.append("fromDate", data.fromDate);
       formData.append("toDate", data.toDate);

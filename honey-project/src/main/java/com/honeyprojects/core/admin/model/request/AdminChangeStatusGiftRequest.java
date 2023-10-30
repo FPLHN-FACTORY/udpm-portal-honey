@@ -17,5 +17,6 @@ public class AdminChangeStatusGiftRequest {
 
     String note;
 
+    Integer quantity;
 
 }

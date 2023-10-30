@@ -38,15 +38,15 @@ const { Option } = Select;
 
 export default function UpgradeRate() {
   const [auction, setAuction] = useState(null);
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState(null);
   const { id } = useParams();
   const [current, setCurrent] = useState(1);
   const [total, setTotal] = useState(0);
   const dispatch = useAppDispatch();
   const [modalCreate, setModalCreate] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
-  const [originalHoneyId, setOriginalHoneyId] = useState("");
-  const [destinationHoneyId, setDestinationHoneyId] = useState("");
+  const [originalHoneyId, setOriginalHoneyId] = useState(null);
+  const [destinationHoneyId, setDestinationHoneyId] = useState(null);
   const [listCategory, setListCategory] = useState([]);
   const [currentRecord, setCurrentRecord] = useState(null);
 
@@ -119,9 +119,9 @@ export default function UpgradeRate() {
   };
 
   const buttonClear = async () => {
-    setDestinationHoneyId("");
-    setStatus("");
-    setOriginalHoneyId("");
+    setDestinationHoneyId(null);
+    setStatus(null);
+    setOriginalHoneyId(null);
     setCurrent(1);
     await fetchData();
   };
@@ -246,7 +246,7 @@ export default function UpgradeRate() {
                 }}
                 style={{ width: "100%", marginRight: "10px" }}
               >
-                <Option value="">Tất cả</Option>
+                <Option>Tất cả</Option>
                 {listCategory.map((item) => {
                   return <Option value={item.id}>{item.name}</Option>;
                 })}
@@ -262,7 +262,7 @@ export default function UpgradeRate() {
                 }}
                 style={{ width: "100%", marginRight: "10px" }}
               >
-                <Option value="">Tất cả</Option>
+                <Option>Tất cả</Option>
                 {listCategory.map((item) => {
                   return <Option value={item.id}>{item.name}</Option>;
                 })}
@@ -282,7 +282,7 @@ export default function UpgradeRate() {
                 }}
               >
                 <Option
-                  value={""}
+                  value={null}
                   style={{
                     fontSize: "13px",
                   }}

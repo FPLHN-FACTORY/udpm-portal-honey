@@ -11,8 +11,7 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
-import { DeleteOutlined } from "@ant-design/icons";
-import { EditOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import ModalDetailGift from "./ModalDetailGift";
 import ModalAma from "./ModalAddGift";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -93,7 +92,7 @@ export default function IndexGift() {
             />
           );
         } else {
-          return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
+          return <div>Chưa có ảnh</div>;
         }
       },
     },
@@ -130,11 +129,6 @@ export default function IndexGift() {
             return "Không xác định";
         }
       },
-    },
-    {
-      title: "Điểm",
-      dataIndex: "honey",
-      key: "honey",
     },
     {
       title: () => <div>Hành động</div>,

@@ -45,4 +45,10 @@ public class History extends PrimaryEntity {
 
     private TypeHistory type;
 
+    private String className;
+
+    private String subject;
+
+    private Integer quantity;
+
 }

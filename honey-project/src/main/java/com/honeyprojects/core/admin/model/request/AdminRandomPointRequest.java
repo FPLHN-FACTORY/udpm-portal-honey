@@ -15,7 +15,7 @@ public class AdminRandomPointRequest {
     private Integer minPoint;
     private Integer maxPoint;
 //    private Integer numberStudent;
-    private Integer Type;
+//    private Integer Type;
     private String chestId;
     private List<String> listCategoryPoint;
     private List<String> listStudentPoint;

@@ -16,7 +16,7 @@ public interface GiftRepository extends JpaRepository<Gift, String> {
     public static final String NAME = "BaseGiftRepository";
 
     @Query(value = """
-        SELECT u.id, g.code, g.name, g.image, g.honey, g.quantity, g.status, g.type, g.created_date, g.from_date, g.last_modified_date, g.to_date, g.honey_category_id, g.semester_id, g.note
+        SELECT u.id, g.code, g.name, g.image, g.honey, g.quantity, g.status, g.type, g.created_date, g.from_date, g.last_modified_date, g.to_date, g.honey_category_id, g.semester_id, g.note, g.limit_quantity
          FROM gift g 
          LEFT JOIN upgrade_rate_gift u ON g.id = u.id_gift 
          LEFT JOIN upgrade_rate u1 ON u.id_upgrade_rate = u1.id

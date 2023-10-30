@@ -29,6 +29,10 @@ const Shop = memo(() => {
     });
   };
 
+  const updatePoints = (newPoints) => {
+    setFillPoint({ point: newPoints });
+  };
+
   const getPoint = (data) => {
     ResquestConversion.getPointHoney(data)
       .then((response) => {
@@ -49,7 +53,7 @@ const Shop = memo(() => {
   useEffect(() => {
     if (categoryType) {
       const filteredData = fillGift.filter(
-        (gift) => gift.honeyCategoryId === categoryType
+        (gift) => gift.categoryId === categoryType
       );
       setFilteredConversions(filteredData);
     } else {
@@ -60,7 +64,7 @@ const Shop = memo(() => {
   useEffect(() => {
     if (categoryType) {
       const filteredData = fillGiftItem.filter(
-        (gift) => gift.honeyCategoryId === categoryType
+        (gift) => gift.categoryId === categoryType
       );
       setFilteredItem(filteredData);
     } else {
@@ -100,11 +104,23 @@ const Shop = memo(() => {
   const tabData = [
     {
       title: "Vật phẩm",
-      content: <Items filteredItem={filteredItem} />,
+      content: (
+        <Items
+          filteredItem={filteredItem}
+          fillPoint={fillPoint}
+          updatePoints={updatePoints}
+        />
+      ),
     },
     {
-      title: "Đổi quà",
-      content: <Gift filteredConversions={filteredConversions} />,
+      title: "Quà",
+      content: (
+        <Gift
+          filteredConversions={filteredConversions}
+          fillPoint={fillPoint}
+          updatePoints={updatePoints}
+        />
+      ),
     },
   ];
 

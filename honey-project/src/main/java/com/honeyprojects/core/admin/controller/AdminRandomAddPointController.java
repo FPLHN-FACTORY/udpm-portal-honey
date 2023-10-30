@@ -43,7 +43,7 @@ public class AdminRandomAddPointController {
     }
 
     @PostMapping("/create/import")
-    public ResponseObject createImportRandomPoint(@RequestParam("file") MultipartFile file) {
+    public ResponseObject createImportRandomPoint(@RequestParam("file") MultipartFile file) throws IOException {
         return new ResponseObject(adRandomAddPointService.importExcel(file));
     }
 
@@ -85,6 +85,11 @@ public class AdminRandomAddPointController {
     @GetMapping("/get-all-name-chest")
     public ResponseObject getAllNameChest() {
         return new ResponseObject(adRandomAddPointService.getAllNameChest());
+    }
+
+    @PostMapping("/add/chest/{name}")
+    public ResponseObject addChest(@PathVariable String name) {
+        return new ResponseObject(adRandomAddPointService.addChest(name));
     }
 
 }
