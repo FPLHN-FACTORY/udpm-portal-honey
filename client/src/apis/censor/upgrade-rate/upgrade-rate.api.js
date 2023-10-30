@@ -26,6 +26,13 @@ export class UpgradeApi {
     });
   };
 
+  static getAllCensorExist = () => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}` + `/get-all-gift-exist`,
+    });
+  };
+
   static update = (data, id) => {
     return request({
       method: "PUT",

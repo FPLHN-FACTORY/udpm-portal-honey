@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Modal, Form, Input, Select, Button, Radio, message } from "antd";
+import { Modal, Form, Input, Button, Radio, message } from "antd";
 import { UpdateUpgradeRate } from "../../../app/reducers/upgrade-rate/upgrade-rate.reducer";
 import { UpgradeApi } from "../../../apis/censor/upgrade-rate/upgrade-rate.api";
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
 import {
   GetCategory,
   SetCategory,
 } from "../../../app/reducers/category/category.reducer";
-
+import {
+  GetGift,
+  SetGift,
+} from "../../../app/reducers/gift/gift.reducer";
 const { Option } = Select;
 
 const ModalUpdateUpgradeRate = ({
@@ -16,20 +21,31 @@ const ModalUpdateUpgradeRate = ({
   currentItem,
   fetchAllData,
 }) => {
+  const animatedComponents = makeAnimated();
   const dispatch = useDispatch();
   const listCategory = useSelector(GetCategory);
+  const listGift = useSelector(GetGift);
 
   const [form] = Form.useForm();
   const [originalHoneyId, setOriginalHoneyId] = useState("");
   const [destinationHoneyId, setDestinationHoneyId] = useState("");
+  const [quantityOriginalHoney, setQuantityOriginalHoney] = useState("");
+  const [quantityDestinationHoney, setQuantityDestinationHoney] = useState("");
+  const [idGifts, setIdGifts] = useState([]);
 
   useEffect(() => {
     if (visible) {
       fetchAllCategory();
     }
   }, [visible]);
+
+  useEffect(() => {
+    featAllGift();
+  }, [visible]);
+
   useEffect(() => {
     if (visible && currentItem) {
+      console.log("🚀 ~ file: modal-update.jsx:47 ~ useEffect ~ currentItem:", currentItem)
       const originalHoney = listCategory.find(
         (category) => category.name === currentItem.originalHoneyName
       );
@@ -43,10 +59,12 @@ const ModalUpdateUpgradeRate = ({
       if (destinationHoney) {
         setDestinationHoneyId(destinationHoney.id);
       }
-
+      
       form.setFieldsValue({
         originalHoney: originalHoneyId,
         destinationHoney: destinationHoneyId,
+        quantityOriginalHoney: quantityOriginalHoney,
+        quantityDestinationHoney: quantityDestinationHoney,
         ratio: currentItem.ratio,
         status: currentItem.status,
         code: currentItem.code,
@@ -58,6 +76,16 @@ const ModalUpdateUpgradeRate = ({
     UpgradeApi.getALLCategory()
       .then((response) => {
         dispatch(SetCategory(response.data.data));
+      })
+      .catch((error) => {
+        message.error(error);
+      });
+  };
+
+  const featAllGift = async () => {
+    UpgradeApi.getAllCensorExist()
+      .then((response) => {
+        dispatch(SetGift(response.data.data));
       })
       .catch((error) => {
         message.error(error);

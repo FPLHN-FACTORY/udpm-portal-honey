@@ -140,9 +140,19 @@ export default function UpgradeRate() {
       key: "originalHoneyName",
     },
     {
+      title: "Số lượng mật ban đầu",
+      dataIndex: "quantityOriginalHoney",
+      key: "quantityOriginalHoney",
+    },
+    {
       title: "Mật sau khi nâng cấp",
       dataIndex: "destinationHoneyName",
       key: "destinationHoneyName",
+    },
+    {
+      title: "Số lượng mật tạo được",
+      dataIndex: "quantityDestinationHoney",
+      key: "quantityDestinationHoney",
     },
     {
       title: "Tỉ lệ",
@@ -165,7 +175,7 @@ export default function UpgradeRate() {
             textAlign: "center",
           }}
         >
-          {status === 0 ? "Mở" : "Đóng"}
+          {status === 0 ? "Hoạt động" : "Không hoạt động"}
         </Tag>
       ),
     },
@@ -285,7 +295,7 @@ export default function UpgradeRate() {
                     fontSize: "13px",
                   }}
                 >
-                  Mở
+                  Hoạt động
                 </Option>
                 <Option
                   value={1}
@@ -293,7 +303,7 @@ export default function UpgradeRate() {
                     fontSize: "13px",
                   }}
                 >
-                  Đóng
+                  Không hoạt động
                 </Option>
               </Select>
             </Col>
