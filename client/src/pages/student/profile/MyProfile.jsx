@@ -7,8 +7,10 @@ import { GetUser, SetUser } from "../../../app/reducers/users/users.reducer";
 import { GetHoney, SetHoney } from "../../../app/reducers/honey/honey.reducer";
 import TransactionHistory from "../transaction/TransactionHistory";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const MyProfile = memo(() => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   function ImageRenderer({ image }) {
@@ -58,20 +60,17 @@ const MyProfile = memo(() => {
   return (
     <section
       className="student"
-      style={{ height: isCategoryVisible ? "auto" : "495px" }}
-    >
+      style={{ height: isCategoryVisible ? "auto" : "495px" }}>
       <div className="wrapper"></div>
       <div
         className="student__profile"
-        style={{ height: isCategoryVisible ? "auto" : "100%" }}
-      >
+        style={{ height: isCategoryVisible ? "auto" : "100%" }}>
         <Card
           className="student__card "
           style={{
             position: isCategoryVisible ? "fixed" : "relative",
             top: isCategoryVisible ? "0" : "0",
-          }}
-        >
+          }}>
           <div className="student__card__image">
             <img alt="image" className="infor__image" src={data.picture} />
           </div>
@@ -81,11 +80,22 @@ const MyProfile = memo(() => {
           </div>
           <div className="category__button">
             <button
+              onClick={() => {
+                navigate("/student/history");
+              }}
+              className="show"
+              id="show__more"
+              style={{ borderRadius: "10px" }}>
+              Lịch sử
+            </button>
+            <button
               className="show"
               id="show__more"
               onClick={toggleCategoryVisibility}
-              style={{ borderRadius: isCategoryVisible ? "10px" : "100px" }}
-            >
+              style={{
+                borderRadius: "10px",
+                marginLeft: "10px",
+              }}>
               {isCategoryVisible ? "Ẩn" : "Xem thêm"}
             </button>
           </div>
@@ -96,8 +106,7 @@ const MyProfile = memo(() => {
       <div
         className={
           isCategoryVisible ? "category__slide hidden" : "category__slide"
-        }
-      >
+        }>
         {dataHoney.map((item) => (
           <Col span={8}>
             <div class="category__item">
@@ -119,7 +128,7 @@ const MyProfile = memo(() => {
       {/* ----category hiển thị theo dạng grid */}
       <div className={isCategoryVisible ? "category" : "category hidden"}>
         {dataHoney.map((item) => (
-          <Col md={8}  sm={12}>
+          <Col md={8} sm={12}>
             <div class="category__item">
               <div className="category__image">
                 <ImageRenderer image={item.image} />

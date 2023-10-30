@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface TeacherArchiveRepository extends ArchiveRepository {
 
-    Optional<Archive> findAllByStudentId(String studentId);
+    Optional<Archive> findByStudentId(String studentId);
 }
