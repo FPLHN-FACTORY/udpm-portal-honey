@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../app/hooks";
-import {
-  AddChest,
-  UpdateChest,
-} from "../../../app/reducers/chest/chest.reducer";
+import { AddChest } from "../../../app/reducers/chest/chest.reducer";
 import { Input, Modal, message } from "antd";
-import { ChestAPI } from "../../../apis/censor/chest/chest.api";
 import { RandomAddPointAPI } from "../../../apis/censor/random-add-point/random-add-point.api";
+import { ChestAPI } from "../../../apis/censor/chest/chest.api";
 
 export default function ModalAddChest(props) {
   const { modalOpen, setModalOpen, chest } = props;
@@ -18,11 +15,13 @@ export default function ModalAddChest(props) {
 
   const getAllNameChest = () => {
     RandomAddPointAPI.getAllNameChest().then((result) => {
+      console.log(result.data.data);
       setListNameChest(result.data.data);
     });
   };
 
   useEffect(() => {
+    getAllNameChest();
     if (chest) {
       setItemName(chest.name);
     }
@@ -34,10 +33,10 @@ export default function ModalAddChest(props) {
       nameChest: "",
     };
 
-    if (chest.name.trim() === "") {
+    if (itemName.trim() === "") {
       errors.nameChest = "Không được để trống tên";
-    } else if (listNameChest.includes(chest.name)) {
-      errors.nameChest = "Không được để trống tên";
+    } else if (listNameChest.includes(itemName)) {
+      errors.nameChest = "Tên rương đã tồn tại";
     }
 
     for (const key in errors) {
@@ -47,22 +46,19 @@ export default function ModalAddChest(props) {
     }
 
     setErrorChest(errors.nameChest);
-
     return check;
   };
 
   const onSaveSuccess = (result) => {
-    if (chest === null) {
-      dispatch(AddChest(result.data.data));
-    } else {
-      dispatch(UpdateChest(result.data.data));
-    }
+    dispatch(AddChest(result.data.data));
     message.success("Thành công!");
     setModalOpen(false);
   };
 
   const onSaveError = (err) => {
-    message.error("Lỗi: " + err.message);
+    if (err && err.message) {
+      message.error("Lỗi: " + err.message);
+    }
   };
 
   const onCancel = () => {
@@ -70,17 +66,15 @@ export default function ModalAddChest(props) {
   };
 
   const onSaveButtonClick = () => {
-    const formValues = {
-      name: itemName,
-    };
+    const check = handleValidate();
 
-    if (chest === null) {
+    if (check < 1) {
+      const formValues = {
+        name: itemName,
+      };
       ChestAPI.create(formValues).then(onSaveSuccess).catch(onSaveError);
     } else {
-      console.log(formValues);
-      ChestAPI.update(formValues, chest.id)
-        .then(onSaveSuccess)
-        .catch(onSaveError);
+      onSaveError();
     }
   };
 
@@ -105,9 +99,11 @@ export default function ModalAddChest(props) {
                 <label className="ant-form-item-label">Tên:</label>
                 <div className="ant-form-item-control">
                   <Input
+                    maxLength={100}
                     value={itemName}
                     onChange={(e) => setItemName(e.target.value)}
                   />
+                  <span>{errorChest}</span>
                 </div>
               </div>
             </div>

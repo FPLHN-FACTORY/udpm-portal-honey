@@ -12,6 +12,8 @@ const ModalThem = (props) => {
   const [image, setImage] = useState([]);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
   const [errorImage, setErrorImage] = useState([]);
+  const [categoryName, setCategoryName] = useState("");
+  const [errorCategoryName, setErrorCategoryName] = useState("");
 
   const { fetchData } = props;
 
@@ -25,21 +27,28 @@ const ModalThem = (props) => {
     var selectedFile = event.target.files[0];
     if (selectedFile) {
       var FileUploadName = selectedFile.name;
-      if (FileUploadName == '') {
+      if (FileUploadName == "") {
         setErrorImage("Bạn chưa chọn ảnh");
         setSelectedImageUrl("");
         setImage([]);
       } else {
         const fileSize = selectedFile.size;
-        const checkFileSize = Math.round((fileSize / 1024));
+        const checkFileSize = Math.round(fileSize / 1024);
         if (checkFileSize > 100) {
           setErrorImage("Ảnh không thể lớn hơn 1 mb");
           setSelectedImageUrl("");
           setImage([]);
         } else {
-          var Extension = FileUploadName.substring(FileUploadName.lastIndexOf('.') + 1).toLowerCase();
-          if (Extension == "gif" || Extension == "png" || Extension == "bmp"
-            || Extension == "jpeg" || Extension == "jpg") {
+          var Extension = FileUploadName.substring(
+            FileUploadName.lastIndexOf(".") + 1
+          ).toLowerCase();
+          if (
+            Extension == "gif" ||
+            Extension == "png" ||
+            Extension == "bmp" ||
+            Extension == "jpeg" ||
+            Extension == "jpg"
+          ) {
             setImage(selectedFile);
             var imageUrl = URL.createObjectURL(selectedFile);
             setSelectedImageUrl(imageUrl);
@@ -68,20 +77,38 @@ const ModalThem = (props) => {
       .validateFields()
       .then((formValues) => {
         const isNameExists = listCategory.some(
-          (listCategory) => listCategory.name === formValues.name
+          (listCategory) => listCategory.name === categoryName
         );
+        let check = 0;
         if (selectedImageUrl.length === 0) {
           setErrorImage("Ảnh không được để trống");
-          return;
+          check++;
         } else {
           setErrorImage("");
         }
-        if (isNameExists) {
-          message.error("Tên thể loại không được trùng");
-          return;
+
+        if (categoryName.trim().length === 0) {
+          setErrorCategoryName("Tên thể loại không được để trống");
+          check++;
         } else {
+          if (categoryName.trim().length > 100) {
+            setErrorCategoryName("Tên thể loại không quá 100 ký tự");
+            check++;
+          } else if (isNameExists) {
+            setErrorCategoryName("Tên thể loại không được trùng");
+            check++;
+          } else {
+            setErrorCategoryName("");
+          }
+        }
+
+        if (check === 0) {
           if (category === null) {
-            CategoryAPI.create({ ...formValues, image: image })
+            CategoryAPI.create({
+              ...formValues,
+              image: image,
+              name: categoryName,
+            })
               .then((result) => {
                 dispatch(AddCategory(result.data.data));
                 message.success("Thành công!");
@@ -89,7 +116,7 @@ const ModalThem = (props) => {
                 form.resetFields();
                 const newCategory = {
                   id: result.data.data.id,
-                  name: result.data.data.name,
+                  name: categoryName,
                   image: image,
                 };
                 onSave && onSave(newCategory);
@@ -169,17 +196,12 @@ const ModalThem = (props) => {
             onChange={(event) => handleFileInputChange(event)}
           />
           <span className="error errorImageMes">{errorImage}</span>
-          <Form.Item
-            label="Tên"
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: "Tên bài viết không để trống",
-              },
-            ]}
-          >
-            <Input />
+          <Form.Item label="Tên">
+            <Input
+              value={categoryName}
+              onChange={(e) => setCategoryName(e.target.value)}
+            />
+            <p className="error">{errorCategoryName}</p>
           </Form.Item>
           <Form.Item
             label="Phê duyệt"
@@ -203,7 +225,7 @@ const ModalThem = (props) => {
             rules={[
               {
                 required: true,
-                message: "Vui lòng chọn tùy chọn phê duyệt",
+                message: "Vui lòng chọn tùy chọn giao dịch",
               },
             ]}
           >

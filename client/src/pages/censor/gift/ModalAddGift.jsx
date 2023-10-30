@@ -161,6 +161,7 @@ const ModalThem = (props) => {
     form
       .validateFields()
       .then((formValues) => {
+        console.log(formValues.note);
         let quantity = null;
         let limitSL = null;
         let fromDate = null;
@@ -290,6 +291,7 @@ const ModalThem = (props) => {
           quantityLimit: 1,
           limitSoLuong: 1,
           timeType: "vĩnh viễn",
+          note: "",
         }}
         autoComplete="off"
       >
@@ -548,18 +550,8 @@ const ModalThem = (props) => {
             <Input type="number" />
           </Form.Item>
         )}
-        <Form.Item
-          label="Ghi chú"
-          name="note"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập mô tả",
-            },
-          ]}
-        >
+        <Form.Item label="Ghi chú" name="note">
           <TextArea
-            name="note"
             cols="30"
             rows="10"
             style={{ width: "350px", height: "100px" }}

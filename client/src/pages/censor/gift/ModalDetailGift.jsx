@@ -28,6 +28,7 @@ const ModalDetailGift = (props) => {
 
   const [categoryQuantities, setCategoryQuantities] = useState({});
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     GiftDetail.fetchAll(gift.id).then((response) => {
@@ -197,6 +198,27 @@ const ModalDetailGift = (props) => {
           updatedFromDate = new Date(formValues.start).getTime();
           updatedToDate = new Date(formValues.end).getTime();
           updatedSemesterId = null;
+        }
+        const newFieldErrors = {};
+
+        selectedCategories.forEach((categoryId) => {
+          const category = listCategory.find((item) => item.id === categoryId);
+          const honeyValue = categoryQuantities[category.id] || "";
+
+          if (honeyValue === "" || honeyValue < 0) {
+            newFieldErrors[category.id] = true;
+          } else {
+            newFieldErrors[category.id] = false;
+          }
+        });
+
+        setFieldErrors(newFieldErrors);
+
+        const hasErrors = Object.values(newFieldErrors).some(
+          (hasError) => hasError
+        );
+        if (hasErrors) {
+          return;
         }
         GiftAPI.update(
           {
@@ -444,8 +466,12 @@ const ModalDetailGift = (props) => {
         </div>
         {selectedCategories.map((categoryId) => {
           const category = listCategory.find((item) => item.id === categoryId);
+
+          const honeyValue = categoryQuantities[category.id] || "";
+
+          const isInvalid = honeyValue === "" || honeyValue <= 0;
           return (
-            <div className="input-matcate">
+            <div className="input-matcate" key={categoryId}>
               <label className="label" htmlFor={`honey_${category.name}`}>
                 <span className="select-asterisk">*</span> Số mật{" "}
                 {category.name} :
@@ -453,11 +479,16 @@ const ModalDetailGift = (props) => {
               <Input
                 type="number"
                 id={`honey_${category.name}`}
-                value={categoryQuantities[category.id] || ""}
-                onChange={(e) => {
-                  handleCategoryQuantityChange(category.id, e.target.value);
-                }}
+                value={honeyValue}
+                onChange={(e) =>
+                  handleCategoryQuantityChange(category.id, e.target.value)
+                }
               />
+              {isInvalid && (
+                <p style={{ color: "red" }}>
+                  Số mật phải lớn hơn 0 và không được để trống.
+                </p>
+              )}
             </div>
           );
         })}
@@ -595,16 +626,7 @@ const ModalDetailGift = (props) => {
             <Input type="number" />
           </Form.Item>
         ) : null}
-        <Form.Item
-          label="Ghi chú"
-          name="note"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập mô tả",
-            },
-          ]}
-        >
+        <Form.Item label="Ghi chú" name="note">
           <TextArea
             cols="30"
             rows="10"
