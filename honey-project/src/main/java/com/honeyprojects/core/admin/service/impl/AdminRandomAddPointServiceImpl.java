@@ -63,6 +63,9 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     private StudentNotificationDetailRepository studentNotificationDetailRepository;
 
     @Autowired
+    private AdChestRepository chestRepository;
+
+    @Autowired
     private ConvertRequestApiidentity convertRequestApiidentity;
 
     @Override
@@ -678,7 +681,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             hasError = true;
         }
 
-        String regexFormat = "^\\d+\\s+[^-,]*(,\\s*\\d+\\s+[^-,]*)?$";
+        String regexFormat = "^(\\d+\\s+[^-,]+)(,\\s*\\d+\\s+[^-,]+)*$";
 //                             "^(\\d+\\s+[^-]+)(,\\s*\\d+\\s+[^-]+)*$";
 
         int check = 0;
@@ -802,5 +805,13 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     @Override
     public List<String> getAllNameChest() {
         return adRandomAddPointRepository.getAllNameChest();
+    }
+
+    @Override
+    @Transactional
+    public Chest addChest(String name) {
+        Chest chest = new Chest();
+        chest.setName(name);
+        return chestRepository.save(chest);
     }
 }

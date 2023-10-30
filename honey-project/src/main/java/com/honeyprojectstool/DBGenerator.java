@@ -37,7 +37,6 @@ public class DBGenerator implements CommandLineRunner {
     @Autowired
     private SemesterRepository semesterRepository;
 
-
     @Autowired
     private ConversionRepository conversionRepository;
 
@@ -53,6 +52,7 @@ public class DBGenerator implements CommandLineRunner {
 
 
     public void run(String... args) throws Exception {
+
 
         Category category1 = new Category();
         category1.setName("GOLD");
@@ -188,7 +188,6 @@ public class DBGenerator implements CommandLineRunner {
         userSemester2.setStudentId("FCB1D931-CB71-4F12-94D6-08DBB66B2F92");
         userSemester2.setTotalHoney(3100);
         userSemester2.setCategoryId(category2.getId());
-
 
 
         Conversion conversion1 = new Conversion();
