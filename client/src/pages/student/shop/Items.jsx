@@ -40,6 +40,7 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
   const [cardBackgroundColor, setCardBackgroundColor] = useState("#F8DA95");
 
   const [initialQuantity, setInitialQuantity] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (selectedConversion) {
@@ -130,6 +131,14 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
         console.log(error);
       });
   };
+  const handleQuantityChange = (value) => {
+    if (isNaN(value) || value <= 0) {
+      setError("Giá trị không hợp lệ");
+    } else {
+      setError(null); // Xóa lỗi nếu giá trị hợp lệ
+      setQuantity(value);
+    }
+  };
 
   return (
     <section className="shop__gift">
@@ -214,9 +223,28 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
               max={1000}
               defaultValue={1}
               value={quantity}
-              onChange={(value) => setQuantity(value)}
+              onChange={handleQuantityChange}
             />
           </div>
+          {error && (
+            <div
+              className="error-message"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <span
+                style={{
+                  color: "white",
+                  fontWeight: 700,
+                }}
+              >
+                {error}
+              </span>
+            </div>
+          )}
           <Button className="detail__button" onClick={onSubmitCreate}>
             Mua vật phẩm
           </Button>
