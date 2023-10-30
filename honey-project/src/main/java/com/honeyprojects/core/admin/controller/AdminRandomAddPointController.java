@@ -87,4 +87,9 @@ public class AdminRandomAddPointController {
         return new ResponseObject(adRandomAddPointService.getAllNameChest());
     }
 
+    @PostMapping("/add/chest/{name}")
+    public ResponseObject addChest(@PathVariable String name) {
+        return new ResponseObject(adRandomAddPointService.addChest(name));
+    }
+
 }

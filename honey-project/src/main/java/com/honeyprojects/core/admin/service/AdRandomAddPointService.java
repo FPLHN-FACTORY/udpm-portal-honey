@@ -1,8 +1,10 @@
 package com.honeyprojects.core.admin.service;
 
+import com.honeyprojects.core.admin.model.request.AdminCreateChestRequest;
 import com.honeyprojects.core.admin.model.request.AdminRandomPointRequest;
 import com.honeyprojects.core.admin.model.response.*;
 import com.honeyprojects.core.common.response.SimpleResponse;
+import com.honeyprojects.entity.Chest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -36,4 +38,6 @@ public interface AdRandomAddPointService {
     Boolean deleteChestGidt(String idChest, String idGift);
 
     List<String> getAllNameChest();
+
+    Chest addChest(String name);
 }

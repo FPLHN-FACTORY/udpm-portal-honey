@@ -8,10 +8,9 @@ import { GetGift, SetGift } from "../../../app/reducers/gift/gift.reducer";
 
 export default function ModalAddChestGift(props) {
   const { chest } = props;
-  const dispatch = useAppDispatch();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
+  const dispatch = useAppDispatch();
   const columns = [
     {
       title: "Code",
@@ -30,24 +29,22 @@ export default function ModalAddChestGift(props) {
     });
   };
 
-  const handleOnclick = () => {
-    setModalOpen(true);
-    fetchData();
-  };
-
   const handleCancel = () => {
     setSelectedRowKeys([]);
     setModalOpen(false);
   };
-
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
     type: "checkbox",
+  };
+
+  const handleOnclick = () => {
+    setModalOpen(true);
+    fetchData();
   };
 
   const handleOk = () => {
@@ -60,7 +57,7 @@ export default function ModalAddChestGift(props) {
         fetchData();
         message.success("Thêm thành công.");
       })
-      .catch(() => {
+      .catch((error) => {
         message.error("Thêm không thành công.");
       });
   };

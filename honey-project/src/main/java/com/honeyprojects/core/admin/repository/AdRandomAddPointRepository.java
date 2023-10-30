@@ -71,7 +71,7 @@ public interface AdRandomAddPointRepository extends HoneyRepository {
     String getArchiveByIdStudent(String idStudent);
 
     @Query(value = """
-            select name
+            select DISTINCT name
             from chest
             """, nativeQuery = true)
     List<String> getAllNameChest();
