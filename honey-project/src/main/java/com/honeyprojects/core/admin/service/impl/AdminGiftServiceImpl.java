@@ -4,12 +4,12 @@ import com.honeyprojects.core.admin.model.request.AdminCreateGiftRequest;
 import com.honeyprojects.core.admin.model.request.AdminGiftRequest;
 import com.honeyprojects.core.admin.model.request.AdminUpdateGiftRequest;
 import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
+import com.honeyprojects.core.admin.model.response.CensorGiftSelectResponse;
 import com.honeyprojects.core.admin.repository.AdGiftRepository;
 import com.honeyprojects.core.admin.service.AdminGiftService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.infrastructure.contant.StatusGift;
-import com.honeyprojects.infrastructure.contant.TypeGift;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -69,5 +69,14 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         Optional<Gift> optional = adGiftRepository.findById(id);
         optional.get().setStatus(StatusGift.KHONG_HOAT_DONG);
         return adGiftRepository.save(optional.get());
+    }
+    @Override
+    public Optional<Gift> findById(String s) {
+        return adGiftRepository.findById(s);
+    }
+
+    @Override
+    public List<CensorGiftSelectResponse> getAllGiftExist() {
+        return adGiftRepository.getAllGiftExist();
     }
 }

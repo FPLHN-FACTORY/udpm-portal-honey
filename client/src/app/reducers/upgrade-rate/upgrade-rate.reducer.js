@@ -23,6 +23,13 @@ export const UpgradeRateSlice = createSlice({
       if (index !== -1) {
         state[index].originalHoney = updateAuction.originalHoney;
         state[index].destinationHoney = updateAuction.destinationHoney;
+        state[index].quantityOriginalHoney = updateAuction.quantityOriginalHoney;
+        state[index].quantityDestinationHoney = updateAuction.quantityDestinationHoney;
+        const idLstGift = [];
+        for (let gift of updateAuction.idGifts) {
+          idLstGift.push(gift.value);
+        }
+        state[index].idGifts = idLstGift;
         state[index].status = updateAuction.status;
         state[index].ratio = updateAuction.ratio;
       }
