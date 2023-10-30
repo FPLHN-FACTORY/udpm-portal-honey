@@ -52,6 +52,8 @@ import ChestIndex from "./pages/student/chest/ChestIndex";
 import UpgrateHoneyIndex from "./pages/student/upgradeHoney/UpgrateHoneyIndex";
 import StudentBuyItem from "./pages/student/BuyItem/StudentBuyItem";
 import RequestExchangeGift from "./pages/censor/requestmanager/RequestExchangeGift";
+import DashboardPresident from "./layout/president/DashboardPresident";
+import AddItem from "./pages/president/add-item/AddItem";
 
 function App() {
   const token =
@@ -470,6 +472,17 @@ function App() {
                   <DashboardAuthUser>
                     <Shop />
                   </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            {/* Màn president */}
+            <Route
+              path="/president/add-item"
+              element={
+                <AuthGuard>
+                  <DashboardPresident>
+                    <AddItem />
+                  </DashboardPresident>
                 </AuthGuard>
               }
             />
