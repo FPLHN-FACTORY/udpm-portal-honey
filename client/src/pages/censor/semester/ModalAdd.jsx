@@ -14,6 +14,9 @@ const ModalAdd = (props) => {
   const [itemName, setItemName] = useState("");
   const [toDate, setToDate] = useState("");
   const [fromDate, setFromDate] = useState("");
+  const [errorItemName, setErrorItemName] = useState("");
+  const [errorFromDate, setErrorFromDate] = useState("");
+  const [errorToDate, setErrorToDate] = useState("");
 
   const dispatch = useAppDispatch();
 
@@ -44,13 +47,30 @@ const ModalAdd = (props) => {
   };
 
   const onSaveButtonClick = () => {
-    if (
-      itemName.trim() === "" ||
-      toDate.trim() === "" ||
-      fromDate.trim() === ""
-    ) {
-      message.error("Vui lòng điền đầy đủ thông tin.");
-      return;
+    let check = 0;
+
+    if (itemName.trim().length === 0) {
+      setErrorItemName("Tên học kỳ không được để trống");
+      check++;
+    } else {
+      if (itemName.trim().length > 225) {
+        setErrorItemName("Tên học kỳ không quá 100 ký tự");
+        check++;
+      } else {
+        setErrorItemName("");
+      }
+    }
+    if (toDate.trim().length === 0) {
+      setErrorToDate("Ngày bắt đầu không được để trống");
+      check++;
+    } else {
+      setErrorToDate("");
+    }
+    if (fromDate.trim().length === 0) {
+      setErrorFromDate("Ngày kết thúc không được để trống");
+      check++;
+    } else {
+      setErrorFromDate("");
     }
 
     const startDate = new Date(toDate);
@@ -66,14 +86,15 @@ const ModalAdd = (props) => {
       toDate: startDate.getTime(),
       fromDate: endDate.getTime(),
     };
-
-    if (semester === null) {
-      SemesterAPI.create(formValues).then(onSaveSuccess).catch(onSaveError);
-    } else {
-      SemesterAPI.update(formValues, semester.id)
-        .then(onSaveSuccess)
-        .catch(onSaveError);
-      console.log(semester.id);
+    if (check === 0) {
+      if (semester === null) {
+        SemesterAPI.create(formValues).then(onSaveSuccess).catch(onSaveError);
+      } else {
+        SemesterAPI.update(formValues, semester.id)
+          .then(onSaveSuccess)
+          .catch(onSaveError);
+        console.log(semester.id);
+      }
     }
   };
 
@@ -101,6 +122,7 @@ const ModalAdd = (props) => {
                     value={itemName}
                     onChange={(e) => setItemName(e.target.value)}
                   />
+                  <p className="error">{errorItemName}</p>
                 </div>
               </div>
 
@@ -112,6 +134,7 @@ const ModalAdd = (props) => {
                     value={toDate}
                     onChange={(e) => setToDate(e.target.value)}
                   />
+                  <p className="error">{errorToDate}</p>
                 </div>
               </div>
 
@@ -123,6 +146,7 @@ const ModalAdd = (props) => {
                     value={fromDate}
                     onChange={(e) => setFromDate(e.target.value)}
                   />
+                  <p className="error">{errorFromDate}</p>
                 </div>
               </div>
             </div>
