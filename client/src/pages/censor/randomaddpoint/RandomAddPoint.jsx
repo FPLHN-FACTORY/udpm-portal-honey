@@ -51,9 +51,8 @@ export default function RandomAddPoint() {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [detailChest, setDetailChest] = useState();
   const [nameFile, setNameFile] = useState("");
-  const [chest, setChest] = useState({ id: "", name: "", percent: "" });
+  const [chestDetail, setChestDetail] = useState();
   const [activeTabKey, setActiveTabKey] = useState("1");
   const [selectedChest, setSelectedChest] = useState("");
   const [errorMinPoint, setErrorMinPoint] = useState("");
@@ -123,7 +122,7 @@ export default function RandomAddPoint() {
         });
       RandomAddPointAPI.getChestById(e)
         .then((respone) => {
-          setChest(respone.data.data);
+          setChestDetail(respone.data.data);
         })
         .catch((err) => {
           message.error("Lỗi: " + err.message);
@@ -493,7 +492,8 @@ export default function RandomAddPoint() {
             </Col>
           </Row>
           {activeTabKey === "1" &&
-            dataRandomPoint.listStudentPoint.length > 0 && (
+            dataPreview.lstAdminAddPointDTO &&
+            dataPreview.lstAdminAddPointDTO.length > 0 && (
               <Card
                 style={{ borderTop: "5px solid #1c315e", marginTop: "32px" }}
               >
@@ -523,7 +523,7 @@ export default function RandomAddPoint() {
                   </div>
                 </Space>
                 <Table
-                  dataSource={dataRandomPoint.listStudentPoint}
+                  dataSource={dataPreview.lstAdminAddPointDTO}
                   columns={columsPreview}
                   pagination={false}
                 />
@@ -603,7 +603,7 @@ export default function RandomAddPoint() {
                     <Tooltip title="Thêm rương">
                       <Button
                         onClick={() => {
-                          setDetailChest(null);
+                          setChestDetail(null);
                           setShowModal(true);
                         }}
                       >
@@ -633,7 +633,8 @@ export default function RandomAddPoint() {
             </Card>
           </Row>
           {activeTabKey === "2" &&
-            dataRandomItem.listStudentPoint.length > 0 && (
+            dataPreview.lstAdminAddPointDTO &&
+            dataPreview.lstAdminAddPointDTO.length > 0 && (
               <Card
                 style={{ borderTop: "5px solid #1c315e", marginTop: "32px" }}
               >
@@ -663,7 +664,7 @@ export default function RandomAddPoint() {
                   </div>
                 </Space>
                 <Table
-                  dataSource={dataRandomItem.listStudentPoint}
+                  dataSource={dataPreview.lstAdminAddPointDTO}
                   columns={columsPreview}
                   pagination={false}
                 />
@@ -689,7 +690,7 @@ export default function RandomAddPoint() {
           <Popconfirm
             title="Xóa rương"
             description="Bạn có chắc chắn muốn xóa?"
-            onConfirm={() => handleDeleteChestGif(chest.id, record.id)}
+            onConfirm={() => handleDeleteChestGif(chestDetail.id, record.id)}
             color="cyan"
             okText="Yes"
             cancelText="No"
@@ -711,8 +712,8 @@ export default function RandomAddPoint() {
         <ModalAddChest
           modalOpen={showModal}
           setModalOpen={setShowModal}
-          chest={detailChest}
-          SetChest={setDetailChest}
+          chest={chestDetail}
+          setChest={setChestDetail}
         />
       )}
       <Spin spinning={loading}>
@@ -743,7 +744,7 @@ export default function RandomAddPoint() {
                 }}
               >
                 <ModalAddChestGift
-                  chest={chest}
+                  chest={chestDetail}
                   icon={<PlusCircleOutlined />}
                 />
               </Space>
