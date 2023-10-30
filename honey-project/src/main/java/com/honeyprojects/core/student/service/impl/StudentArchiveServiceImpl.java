@@ -92,11 +92,20 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
         Optional<Archive> archive = archiveRepository.findByStudentId(udpmHoney.getIdUser());
         List<ArchiveGift> archiveGiftList = new ArrayList<>();
         for (String giftId : listGiftId) {
-            ArchiveGift archiveGift = new ArchiveGift();
-            archiveGift.setGiftId(giftId);
-            archiveGift.setArchiveId(archive.get().getId());
-            archiveGift.setChestId(null);
-            archiveGiftList.add(archiveGift);
+            Optional<ArchiveGift> existingArchiveGift = studentGiftArchiveRepository.findByGiftId(giftId);
+            if (existingArchiveGift.isPresent()) {
+                ArchiveGift archiveGiftExist = existingArchiveGift.get();
+                archiveGiftExist.setQuantity(archiveGiftExist.getQuantity() + 1);
+                archiveGiftExist.setChestId(null);
+                archiveGiftList.add(archiveGiftExist);
+            } else {
+                ArchiveGift archiveGift = new ArchiveGift();
+                archiveGift.setGiftId(giftId);
+                archiveGift.setArchiveId(archive.get().getId());
+                archiveGift.setQuantity(1);
+                archiveGift.setChestId(null);
+                archiveGiftList.add(archiveGift);
+            }
         }
         studentGiftArchiveRepository.saveAll(archiveGiftList);
         return archiveGiftList;

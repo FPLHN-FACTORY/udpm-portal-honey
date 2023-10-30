@@ -4,10 +4,6 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useState } from "react";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 import {
-  GetArchiveCountGift,
-  SetArchiveCountGift,
-} from "../../../app/reducers/archive-gift/archive-count-gift.reducer";
-import {
   GetArchiveChest,
   SetArchiveChest,
 } from "../../../app/reducers/archive-gift/archive-chest.reducer";
@@ -57,11 +53,8 @@ const Chest = memo(() => {
     ArchiveAPI.detailArchiveChest(id).then((response) => {
       setNote(response.data.note);
       setName(response.data.name);
-      dispatch(SetArchiveCountGift(response.data.quantity));
     });
   };
-
-  const quantity = useAppSelector(GetArchiveCountGift);
 
   return (
     <section className="item__chest">
@@ -82,7 +75,7 @@ const Chest = memo(() => {
               >
                 <div className="chest__card__image">
                   <ImageRenderer image={data.image} />
-                  <div className="quantity-gift">{data.quantity}</div>
+                  <div className="quantity-gift">1</div>
                 </div>
                 <div className="chest__card__body">
                   <h3>{data.name}</h3>
@@ -100,14 +93,17 @@ const Chest = memo(() => {
             </div>
             <div class="chest__detail__body">
               <h3>{name}</h3>
-              <span>Số lượng: {quantity}</span>
+              <span>Số lượng: 1</span>
             </div>
           </div>
           <div className="chest__detail__text">
             <span>{note}</span>
           </div>
           <div className="chest__detail__button">
-            <OpenChest chest={archiveChest} />
+            <OpenChest
+              chest={archiveChest}
+              closeAdditionalInfo={() => setShowAdditionalInfo(false)}
+            />
           </div>
         </div>
       ) : null}
