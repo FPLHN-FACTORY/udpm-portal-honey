@@ -6,6 +6,8 @@ import {
   SetSemester,
 } from "../../../app/reducers/semester/semester.reducer";
 import { SemesterAPI } from "../../../apis/censor/semester/semester.api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const DeleteConfirm = (props) => {
   const dispatch = useAppDispatch();
@@ -49,8 +51,12 @@ const DeleteConfirm = (props) => {
         <Button
           type="primary"
           className="bg-red-400 text-white hover:bg-red-300"
+          style={{
+            backgroundColor: "red",
+            color: "white",
+          }}
         >
-          <DeleteOutlined style={{ fontSize: "15px" }} />
+          <FontAwesomeIcon icon={faTrash} />
         </Button>
       </Tooltip>
     </Popconfirm>

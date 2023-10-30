@@ -13,7 +13,6 @@ public class AdminUpgradeRateController {
     AdUpgradeRateService adUpgradeRateService;
     @GetMapping("")
     public ResponseObject getUpgradeRate(AdminUpgradeRateRequest searchParams){
-        System.out.println("----------------"+adUpgradeRateService.getUpgradeRate(searchParams).getData().size());
         return new ResponseObject(adUpgradeRateService.getUpgradeRate(searchParams));
     }
     @GetMapping("/search")

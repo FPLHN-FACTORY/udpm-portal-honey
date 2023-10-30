@@ -51,7 +51,6 @@ const ModalDetail = (props) => {
       setSelectedImageUrl("");
     }
   };
-  console.log(category);
   const dispatch = useAppDispatch();
   form.setFieldsValue(category);
 

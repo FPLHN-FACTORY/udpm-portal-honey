@@ -64,32 +64,29 @@ export default function IndexGift() {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
+      align: "center",
       render: (text, record, index) => index + 1,
     },
     {
       title: "Ảnh",
       dataIndex: "image",
       key: "image",
+      align: "center",
       render: (image) => {
         if (image) {
-          // Chuyển đổi chuỗi byte thành mảng byte
           const byteArray = image.split(",").map(Number);
-
-          // Tạo một Uint8Array từ mảng byte
           const uint8Array = new Uint8Array(byteArray);
-
-          // Chuyển đổi Uint8Array thành Blob
           const blob = new Blob([uint8Array], { type: "image/jpeg" });
-
-          // Tạo URL dữ liệu từ Blob
           const imageUrl = URL.createObjectURL(blob);
 
           return (
-            <img
-              src={imageUrl}
-              style={{ width: "40px", height: "40px" }}
-              alt="Hình ảnh"
-            />
+            <div style={{ textAlign: "center" }}>
+              <img
+                src={imageUrl}
+                style={{ width: "40px", height: "40px", margin: "auto" }}
+                alt="Hình ảnh"
+              />
+            </div>
           );
         } else {
           return <div>Chưa có ảnh</div>;
@@ -100,23 +97,27 @@ export default function IndexGift() {
       title: "Mã",
       dataIndex: "code",
       key: "code",
+      align: "center",
       render: (text) => <span>{text}</span>,
     },
     {
       title: "Tên phần quà",
       dataIndex: "name",
       key: "name",
+      align: "center",
     },
     {
       title: "Số lượng",
       dataIndex: "quantity",
       key: "quantity",
+      align: "center",
       render: (quantity) => (quantity !== null ? quantity : "vô hạn"),
     },
     {
       title: "Kiểu",
       dataIndex: "type",
       key: "type",
+      align: "center",
       render: (type) => {
         switch (type) {
           case 0:
@@ -133,6 +134,7 @@ export default function IndexGift() {
     {
       title: () => <div>Hành động</div>,
       key: "action",
+      align: "center",
       render: (_, record) => (
         <Space size="small">
           <Tooltip title="Cập nhật">
