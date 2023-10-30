@@ -7,6 +7,7 @@ import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import TextArea from "antd/es/input/TextArea";
 import "./index.css";
 import { SemesterAPI } from "../../../apis/censor/semester/semester.api";
+import { GiftDetail } from "../../../apis/censor/gift/gift-detail.api";
 
 const ModalThem = (props) => {
   const onFinishFailed = () => {
@@ -19,31 +20,55 @@ const ModalThem = (props) => {
   const [errorImage, setErrorImage] = useState([]);
   const [image, setImage] = useState([]);
   const [quantityValue, setQuantityValue] = useState(0);
+  const [limitQuantityValue, setLimitQuantityValue] = useState(0);
   const [listCategory, setListCategory] = useState([]);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
 
   const [timeType, setTimeType] = useState("vĩnh viễn");
   const [listSemester, setListSemester] = useState([]);
 
+  const [categoryQuantities, setCategoryQuantities] = useState({});
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const handleCategoryChange = (selectedValues) => {
+    const selectedCategories = listCategory.filter((category) =>
+      selectedValues.includes(category.id)
+    );
+    setSelectedCategories(selectedCategories.map((category) => category.id));
+    const newCategoryQuantities = {};
+    selectedCategories.forEach((category) => {
+      newCategoryQuantities[category.name] = 0;
+    });
+
+    setCategoryQuantities(newCategoryQuantities);
+  };
+
   const handleFileInputChange = (event) => {
     var selectedFile = event.target.files[0];
     if (selectedFile) {
       var FileUploadName = selectedFile.name;
-      if (FileUploadName == '') {
+      if (FileUploadName == "") {
         setErrorImage("Bạn chưa chọn ảnh");
         setSelectedImageUrl("");
         setImage([]);
       } else {
         const fileSize = selectedFile.size;
-        const checkFileSize = Math.round((fileSize / 1024));
+        const checkFileSize = Math.round(fileSize / 1024);
         if (checkFileSize > 100) {
           setErrorImage("Ảnh không thể lớn hơn 1 mb");
           setSelectedImageUrl("");
           setImage([]);
         } else {
-          var Extension = FileUploadName.substring(FileUploadName.lastIndexOf('.') + 1).toLowerCase();
-          if (Extension == "gif" || Extension == "png" || Extension == "bmp"
-            || Extension == "jpeg" || Extension == "jpg") {
+          var Extension = FileUploadName.substring(
+            FileUploadName.lastIndexOf(".") + 1
+          ).toLowerCase();
+          if (
+            Extension == "gif" ||
+            Extension == "png" ||
+            Extension == "bmp" ||
+            Extension == "jpeg" ||
+            Extension == "jpg"
+          ) {
             setImage(selectedFile);
             var imageUrl = URL.createObjectURL(selectedFile);
             setSelectedImageUrl(imageUrl);
@@ -70,6 +95,12 @@ const ModalThem = (props) => {
       setQuantityValue(0);
       form.setFieldsValue({ quantityLimit: 1 });
     }
+    if (gift && gift.limitQuantity !== null) {
+      setLimitQuantityValue(1);
+    } else {
+      setLimitQuantityValue(0);
+      form.setFieldsValue({ limitSoLuong: 1 });
+    }
   }, [gift]);
 
   const fetchCategory = () => {
@@ -92,8 +123,16 @@ const ModalThem = (props) => {
     return Promise.resolve();
   };
 
+  const validateLimitQuantity = (rule, value) => {
+    const limitQuantityValue = form.getFieldValue("limitQuantity");
+    if (limitQuantityValue === 1 && (!value || value <= 0)) {
+      return Promise.reject("Số lượng phải lớn hơn 0.");
+    }
+    return Promise.resolve();
+  };
+
   const validateHoney = (rule, value) => {
-    if(!/^\d*$/.test(value)){
+    if (!/^\d*$/.test(value)) {
       return Promise.reject("Điểm số phải là số.");
     }
     if (!value || value <= 0) {
@@ -101,13 +140,6 @@ const ModalThem = (props) => {
     }
     return Promise.resolve();
   };
-
-  // const validateImage = (rule, value) => {
-  //   if (!value) {
-  //     return Promise.reject("Vui lòng chọn một hình ảnh.");
-  //   }
-  //   return Promise.resolve();
-  // };
 
   const validateStartDate = (rule, value) => {
     const endDate = form.getFieldValue("end");
@@ -130,11 +162,15 @@ const ModalThem = (props) => {
       .validateFields()
       .then((formValues) => {
         let quantity = null;
+        let limitSL = null;
         let fromDate = null;
         let toDate = null;
         let semesterId = null;
         if (quantityValue === 1) {
           quantity = parseInt(formValues.quantityLimit, 10);
+        }
+        if (limitQuantityValue === 1) {
+          limitSL = parseInt(formValues.limitSoLuong, 10);
         }
 
         if (timeType === "học kì") {
@@ -157,6 +193,10 @@ const ModalThem = (props) => {
           message.error("Vui lòng nhập số lượng giới hạn hợp lệ.");
           return;
         }
+        if (isNaN(limitSL) && limitQuantityValue === 1) {
+          message.error("Vui lòng nhập số lượng giới hạn hợp lệ.");
+          return;
+        }
         if (selectedImageUrl.length === 0) {
           setErrorImage("Ảnh không được để trống");
           return;
@@ -167,11 +207,28 @@ const ModalThem = (props) => {
           ...formValues,
           image: image,
           quantity: quantity,
+          limitQuantity: limitSL,
           fromDate: timeType === "vĩnh viễn" ? null : fromDate,
           toDate: timeType === "vĩnh viễn" ? null : toDate,
           semesterId: semesterId,
         })
           .then((result) => {
+            selectedCategories.forEach((categoryId) => {
+              const category = listCategory.find(
+                (item) => item.id === categoryId
+              );
+              const honeyValue = categoryQuantities[category.name];
+
+              GiftDetail.create({
+                giftId: result.data.data.id,
+                categoryId: categoryId,
+                honey: honeyValue,
+              })
+                .then((giftDetailResult) => {})
+                .catch((err) => {
+                  message.error("Lỗi khi thêm mới GiftDetail: " + err.message);
+                });
+            });
             dispatch(AddGift(result.data.data));
             message.success("Thành công!");
             setModalOpen(false);
@@ -182,6 +239,7 @@ const ModalThem = (props) => {
               status: result.data.data.status,
               image: image,
               quantity: quantity,
+              limitQuantity: limitSL,
               type: result.data.data.type,
               honey: result.data.data.honey,
               honeyCategoryId: result.data.data.honeyCategoryId,
@@ -228,7 +286,9 @@ const ModalThem = (props) => {
         initialValues={{
           remember: true,
           quantity: quantityValue,
+          limitQuantity: limitQuantityValue,
           quantityLimit: 1,
+          limitSoLuong: 1,
           timeType: "vĩnh viễn",
         }}
         autoComplete="off"
@@ -323,7 +383,11 @@ const ModalThem = (props) => {
             },
           ]}
         >
-          <Select placeholder="Chọn cấp bậc">
+          <Select
+            mode="multiple"
+            placeholder="Chọn cấp bậc"
+            onChange={handleCategoryChange}
+          >
             {listCategory.map((category) => (
               <Option key={category.id} value={category.id}>
                 {category.name}
@@ -331,21 +395,37 @@ const ModalThem = (props) => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item
-          label="Số mật ong quy đổi"
-          name="honey"
-          rules={[
-            {
-              required: true,
-              message: "Điểm Quà không để trống",
-            },
-            {
-              validator: validateHoney,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+
+        {selectedCategories.map((categoryId) => {
+          const category = listCategory.find((item) => item.id === categoryId);
+
+          return (
+            <Form.Item
+              label={`Số mật ${category.name}`}
+              name={`honey_${category.name}`}
+              key={category.id}
+              rules={[
+                {
+                  required: true,
+                  message: `Vui lòng nhập số mật ${category.name}`,
+                },
+                {
+                  validator: validateHoney,
+                },
+              ]}
+            >
+              <Input
+                type="number"
+                value={categoryQuantities[category.name]}
+                onChange={(e) => {
+                  const newQuantities = { ...categoryQuantities };
+                  newQuantities[category.name] = e.target.value;
+                  setCategoryQuantities(newQuantities);
+                }}
+              />
+            </Form.Item>
+          );
+        })}
         <Form.Item
           label="Thời gian"
           name="timeType"
@@ -436,6 +516,38 @@ const ModalThem = (props) => {
             <Radio value={0}>Không phê duyệt</Radio>
           </Radio.Group>
         </Form.Item>
+        <Form.Item
+          label="Cộng dồn"
+          name="limitQuantity"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng chọn tùy chọn số lượng",
+            },
+          ]}
+        >
+          <Radio.Group onChange={(e) => setLimitQuantityValue(e.target.value)}>
+            <Radio value={0}>không cho phép</Radio>
+            <Radio value={1}>Cho phép</Radio>
+          </Radio.Group>
+        </Form.Item>
+        {form.getFieldValue("limitQuantity") === 1 && (
+          <Form.Item
+            label="Số lượng tối đa"
+            name="limitSoLuong"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập số lượng giới hạn cho phép",
+              },
+              {
+                validator: validateLimitQuantity,
+              },
+            ]}
+          >
+            <Input type="number" />
+          </Form.Item>
+        )}
         <Form.Item
           label="Ghi chú"
           name="note"

@@ -27,8 +27,6 @@ import ModalAddChest from "./ModalAddChest";
 import ModalAddChestGift from "./ModalAddChestGift";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GetChest, SetChest } from "../../../app/reducers/chest/chest.reducer";
-import ModalUpLoadFile from "./ModalUploadFile";
-import ModalConfirm from "./ModalConfirm";
 
 const initialDataRandomPoint = {
   minPoint: null,
@@ -52,12 +50,9 @@ export default function RandomAddPoint() {
   const [dataPreview, setDataPreview] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [openUpload, setOpenUpload] = useState(false);
-  const [openConfirm, setOpenConfirm] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [detailChest, setDetailChest] = useState();
   const [nameFile, setNameFile] = useState("");
-  const [nameFileUpload, setNameFileUpload] = useState("");
   const [chest, setChest] = useState({ id: "", name: "", percent: "" });
   const [activeTabKey, setActiveTabKey] = useState("1");
   const [selectedChest, setSelectedChest] = useState("");
@@ -204,20 +199,31 @@ export default function RandomAddPoint() {
       listCategoryPoint: "",
     };
 
-    if (dataRandomPoint.maxPoint === null) {
-      errors.maxPoint = "Không được để trống số mật tối đa";
-    } else if (dataRandomPoint.maxPoint < 0) {
-      errors.maxPoint = "Số mật tối đa phải > -1";
-    } else if (dataRandomPoint.maxPoint < dataRandomPoint.minPoint) {
-      errors.maxPoint = "Số mật tối đa phải lớn hơn số mật tối thiểu";
+    if (dataRandomPoint.minPoint === null) {
+      // errors.minPoint = "Không được để trống số mật tối thiếu";
+      setDataRandomPoint({ ...dataRandomPoint, minPoint: 0 });
+    }
+    if (dataRandomPoint.minPoint < 1) {
+      errors.minPoint = "Số mật tối thiếu phải > 0";
+    } else if (dataRandomPoint.minPoint > 10000) {
+      errors.minPoint = "Số mật tối thiếu phải < 10000";
+    } else if (
+      dataRandomPoint.minPoint > dataRandomPoint.maxPoint ||
+      dataRandomPoint.minPoint === dataRandomPoint.maxPoint
+    ) {
+      errors.minPoint = "Số mật tối thiếu phải nhỏ hơn số mật tối đa";
     }
 
-    if (dataRandomPoint.minPoint === null) {
-      errors.minPoint = "Không được để trống số mật tối thiếu";
-    } else if (dataRandomPoint.minPoint < 0) {
-      errors.minPoint = "Số mật tối thiếu phải > -1";
-    } else if (dataRandomPoint.minPoint > dataRandomPoint.maxPoint) {
-      errors.minPoint = "Số mật tối thiếu phải nhỏ hơn số mật tối đa";
+    if (dataRandomPoint.maxPoint === null) {
+      // errors.maxPoint = "Không được để trống số mật tối đa";
+      setDataRandomPoint({ ...dataRandomPoint, maxPoint: 0 });
+    }
+    if (dataRandomPoint.maxPoint < 1) {
+      errors.maxPoint = "Số mật tối đa phải > 0";
+    } else if (dataRandomPoint.maxPoint < dataRandomPoint.minPoint) {
+      errors.maxPoint = "Số mật tối đa phải lớn hơn số mật tối thiểu";
+    } else if (dataRandomPoint.maxPoint > 10000) {
+      errors.maxPoint = "Số mật tối đa phải < 10000";
     }
 
     // if (dataRandomPoint.numberStudent === null) {
@@ -254,6 +260,7 @@ export default function RandomAddPoint() {
           message.success("Tạo ngẫu nhiên mật ong thành công");
           setDataRandomPoint(initialDataRandomPoint);
           setDataRandomItem(initialDataRandomItem);
+          setDataPreview([]);
           setNameFile("");
           setSelectedCategories([]);
         })
@@ -278,6 +285,7 @@ export default function RandomAddPoint() {
           message.success("Tạo ngẫu nhiên vật phẩm thành công");
           setDataRandomPoint(initialDataRandomPoint);
           setDataRandomItem(initialDataRandomItem);
+          setDataPreview([]);
           setNameFile("");
           setSelectedChest("");
         })
@@ -295,11 +303,10 @@ export default function RandomAddPoint() {
 
   const handleTabChange = (key) => {
     setActiveTabKey(key);
-  };
-
-  const handleClostPreview = () => {
     setDataPreview([]);
-    setNameFileUpload("");
+    setNameFile("");
+    setDataRandomPoint(initialDataRandomPoint);
+    setDataRandomItem(initialDataRandomItem);
   };
 
   const columsPreview = [
@@ -312,30 +319,6 @@ export default function RandomAddPoint() {
           <span style={{ color: "orange" }}>không có dữ liệu</span>
         ) : (
           <span>{record.userName}</span>
-        );
-      },
-    },
-    {
-      title: "Vật phẩm",
-      dataIndex: "lstGift",
-      key: "lstGift",
-      render: (_, record) => {
-        return record.lstGift === null ? (
-          <span style={{ color: "orange" }}>không có dữ liệu</span>
-        ) : (
-          <span>{record.lstGift}</span>
-        );
-      },
-    },
-    {
-      title: "Mật ong",
-      dataIndex: "lstHoney",
-      key: "lstHoney",
-      render: (_, record) => {
-        return record.lstHoney === null ? (
-          <span style={{ color: "orange" }}>không có dữ liệu</span>
-        ) : (
-          <span>{record.lstHoney}</span>
         );
       },
     },
@@ -403,6 +386,7 @@ export default function RandomAddPoint() {
                   setListStudentItem={setDataRandomItem}
                   nameFile={nameFile}
                   setNameFile={setNameFile}
+                  setDataPreview={setDataPreview}
                 />
               )}
               <Button
@@ -438,77 +422,113 @@ export default function RandomAddPoint() {
                 <span className="error">{errorListCategory}</span>
               </Card>
             </Col>
-            <Col span={10}>
+            <Col span={12}>
               <Card
                 title="Khoảng mật ong"
                 style={{ borderTop: "5px solid #1c315e" }}
               >
-                <Space
-                  style={{
-                    justifyContent: "space_between",
-                    display: "flex",
-                  }}
-                >
-                  <span>Từ</span>
-                  <Space
-                    style={{
-                      justifyContent: "space_between",
-                      display: "flex",
-                      float: "left",
-                    }}
-                  >
-                    <div>
-                      <Input
-                        style={{ width: "100%" }}
-                        type="number"
-                        min={0}
-                        value={
-                          dataRandomPoint.minPoint !== null
-                            ? dataRandomPoint.minPoint
-                            : ""
-                        }
-                        onChange={(e) =>
-                          setDataRandomPoint({
-                            ...dataRandomPoint,
-                            minPoint: Number(e.target.value),
-                          })
-                        }
-                      />
-                      <span className="error">{errorMinPoint}</span>
-                    </div>
-                  </Space>
-                  <span>Đến</span>
-                  <Space
-                    style={{
-                      justifyContent: "space_between",
-                      display: "flex",
-                      float: "left",
-                    }}
-                  >
-                    <div>
-                      <Input
-                        type="number"
-                        style={{ width: "100%" }}
-                        min={0}
-                        value={
-                          dataRandomPoint.maxPoint !== null
-                            ? dataRandomPoint.maxPoint
-                            : ""
-                        }
-                        onChange={(e) =>
-                          setDataRandomPoint({
-                            ...dataRandomPoint,
-                            maxPoint: Number(e.target.value),
-                          })
-                        }
-                      />
-                      <span className="error">{errorMaxPoint}</span>
-                    </div>
-                  </Space>
-                </Space>
+                <Row gutter={16}>
+                  <Col span={12}>
+                    <Space
+                      style={{
+                        justifyContent: "space_between",
+                        display: "flex",
+                        float: "left",
+                      }}
+                    >
+                      <span>Từ</span>
+                      <div>
+                        <Input
+                          style={{ width: "100%" }}
+                          type="number"
+                          min={0}
+                          value={
+                            dataRandomPoint.minPoint !== null
+                              ? dataRandomPoint.minPoint
+                              : 0
+                          }
+                          onChange={(e) =>
+                            setDataRandomPoint({
+                              ...dataRandomPoint,
+                              minPoint: Number(e.target.value),
+                            })
+                          }
+                        />
+                        <span className="error">{errorMinPoint}</span>
+                      </div>
+                    </Space>
+                  </Col>
+                  <Col span={12}>
+                    <Space
+                      style={{
+                        justifyContent: "space_between",
+                        display: "flex",
+                        float: "left",
+                      }}
+                    >
+                      <span>Đến</span>
+                      <div>
+                        <Input
+                          type="number"
+                          style={{ width: "100%" }}
+                          min={0}
+                          value={
+                            dataRandomPoint.maxPoint !== null
+                              ? dataRandomPoint.maxPoint
+                              : 0
+                          }
+                          onChange={(e) =>
+                            setDataRandomPoint({
+                              ...dataRandomPoint,
+                              maxPoint: Number(e.target.value),
+                            })
+                          }
+                        />
+                        <span className="error">{errorMaxPoint}</span>
+                      </div>
+                    </Space>
+                  </Col>
+                </Row>
               </Card>
             </Col>
           </Row>
+          {activeTabKey === "1" &&
+            dataRandomPoint.listStudentPoint.length > 0 && (
+              <Card
+                style={{ borderTop: "5px solid #1c315e", marginTop: "32px" }}
+              >
+                <Space
+                  style={{
+                    justifyContent: "space-between",
+                    display: "flex",
+                    marginBottom: "24px",
+                  }}
+                >
+                  <div>
+                    <b style={{ fontSize: "25px" }}>Dữ liệu import</b>
+                  </div>
+                  <div>
+                    <span>
+                      {dataPreview && (
+                        <b style={{ fontSize: "15px" }}>
+                          <span style={{ color: "#FFCC00" }}>Tổng: </span>
+                          {dataPreview.total} -
+                          <span style={{ color: "green" }}> Thành công: </span>
+                          {dataPreview.totalSuccess} -
+                          <span style={{ color: "red" }}> Lỗi: </span>
+                          {dataPreview.totalError}
+                        </b>
+                      )}
+                    </span>
+                  </div>
+                </Space>
+                <Table
+                  dataSource={dataRandomPoint.listStudentPoint}
+                  columns={columsPreview}
+                  pagination={false}
+                />
+              </Card>
+            )}
         </div>
       ),
     },
@@ -557,6 +577,7 @@ export default function RandomAddPoint() {
                   setListStudentItem={setDataRandomItem}
                   nameFile={nameFile}
                   setNameFile={setNameFile}
+                  setDataPreview={setDataPreview}
                 />
               )}
               <Button
@@ -611,97 +632,43 @@ export default function RandomAddPoint() {
               <span className="error">{errorChestId}</span>
             </Card>
           </Row>
-        </div>
-      ),
-    },
-    {
-      key: "3",
-      label: "Phát vật phẩm",
-      children: (
-        <div>
-          <Space
-            style={{
-              justifyContent: "space-between",
-              display: "flex",
-              marginBottom: "16px",
-            }}
-          >
-            <span style={{ fontSize: "18px" }}>
-              <b>Phát vật phẩm</b>
-            </span>
-            <Space
-              style={{
-                justifyContent: "space-between",
-                display: "flex",
-              }}
-            >
-              <Button
-                className="button-css"
-                htmlFor="file-input"
-                style={{
-                  display: "inline-block",
-                  padding: "10px",
-                  zIndex: 2,
-                }}
-                onClick={() => setOpenUpload(true)}
+          {activeTabKey === "2" &&
+            dataRandomItem.listStudentPoint.length > 0 && (
+              <Card
+                style={{ borderTop: "5px solid #1c315e", marginTop: "32px" }}
               >
-                <VerticalAlignBottomOutlined />
-                Upload File
-              </Button>
-              {openUpload && (
-                <ModalUpLoadFile
-                  openUpload={openUpload}
-                  setOpenUpload={setOpenUpload}
-                  setLoading={setLoading}
-                  setDataPreview={setDataPreview}
-                  nameFileUpload={nameFileUpload}
-                  setNameFileUpload={setNameFileUpload}
+                <Space
+                  style={{
+                    justifyContent: "space-between",
+                    display: "flex",
+                    marginBottom: "24px",
+                  }}
+                >
+                  <div>
+                    <b style={{ fontSize: "25px" }}>Dữ liệu import</b>
+                  </div>
+                  <div>
+                    <span>
+                      {dataPreview && (
+                        <b style={{ fontSize: "15px" }}>
+                          <span style={{ color: "#FFCC00" }}>Tổng: </span>
+                          {dataPreview.total} -
+                          <span style={{ color: "green" }}> Thành công: </span>
+                          {dataPreview.totalSuccess} -
+                          <span style={{ color: "red" }}> Lỗi: </span>
+                          {dataPreview.totalError}
+                        </b>
+                      )}
+                    </span>
+                  </div>
+                </Space>
+                <Table
+                  dataSource={dataRandomItem.listStudentPoint}
+                  columns={columsPreview}
+                  pagination={false}
                 />
-              )}
-            </Space>
-          </Space>
-          {dataPreview.length > 0 && (
-            <Card style={{ borderTop: "5px solid #FFCC00" }}>
-              <Row style={{ marginBottom: "32px" }}>
-                <b style={{ fontSize: "25px" }}>Dữ liệu import</b>
-              </Row>
-              <Table
-                dataSource={dataPreview}
-                columns={columsPreview}
-                pagination={false}
-              />
-              <Space
-                style={{
-                  justifyContent: "right",
-                  display: "flex",
-                  marginTop: "32px",
-                }}
-              >
-                <Button
-                  className="button-css"
-                  onClick={() => handleClostPreview()}
-                >
-                  Đóng
-                </Button>
-
-                <Button
-                  className="button-css"
-                  onClick={() => setOpenConfirm(true)}
-                >
-                  Thêm
-                </Button>
-                {openConfirm && (
-                  <ModalConfirm
-                    dataPreview={dataPreview}
-                    openConfirm={openConfirm}
-                    setOpenConfirm={setOpenConfirm}
-                    setDataPreview={setDataPreview}
-                    setNameFileUpload={setNameFileUpload}
-                  />
-                )}
-              </Space>
-            </Card>
-          )}
+              </Card>
+            )}
         </div>
       ),
     },
@@ -781,14 +748,12 @@ export default function RandomAddPoint() {
                 />
               </Space>
             </Space>
-            {/* {dataRandomItem.chestId !== "" && ( */}
             <Table
               rowSelection={rowSelection}
               rowKey="id"
               columns={colums}
               dataSource={listGiftByChest}
             />
-            {/* )} */}
           </Card>
         )}
       </Spin>

@@ -34,11 +34,9 @@ public class AdminCreateGiftRequest extends PageableRequest {
 
     private Integer quantity;
 
+    private Integer limitQuantity;
+
     private MultipartFile image;
-
-    private String honeyCategoryId;
-
-    private Integer honey;
 
     private String note;
 
@@ -59,6 +57,7 @@ public class AdminCreateGiftRequest extends PageableRequest {
             gift.setStatus(StatusGift.values()[this.getStatus()]);
         }
         gift.setQuantity(this.getQuantity());
+        gift.setLimitQuantity(this.getLimitQuantity());
         if (this.getType() != null) {
             gift.setType(TypeGift.values()[this.getType()]);
         }
@@ -66,8 +65,6 @@ public class AdminCreateGiftRequest extends PageableRequest {
             byte[] imageBytes = this.getImage().getBytes();
             gift.setImage(imageBytes);
         }
-        gift.setHoneyCategoryId(this.getHoneyCategoryId());
-        gift.setHoney(this.getHoney());
         gift.setNote(this.getNote());
         gift.setToDate(this.getToDate());
         gift.setFromDate(this.getFromDate());

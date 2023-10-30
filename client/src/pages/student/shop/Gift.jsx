@@ -31,7 +31,7 @@ function ImageRenderer({ image }) {
     return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
   }
 }
-const Gift = memo(({ filteredConversions, fillPoint }) => {
+const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
   const [selectedConversion, setSelectedConversion] = useState(null);
   const [fillUserApi, setFillUserApi] = useState([]);
   const [quantity, setQuantity] = useState(1);
@@ -45,7 +45,6 @@ const Gift = memo(({ filteredConversions, fillPoint }) => {
 
   useEffect(() => {
     if (selectedConversion) {
-      // Khi selectedConversion thay đổi, cập nhật initialQuantity
       setInitialQuantity(selectedConversion.quantity);
     }
   }, [selectedConversion]);
@@ -97,9 +96,7 @@ const Gift = memo(({ filteredConversions, fillPoint }) => {
       honeyPoint: parseInt(selectedConversion ? selectedConversion.honey : 0),
       giftId: selectedConversion ? selectedConversion.id : 0,
       nameGift: selectedConversion.name,
-      honeyCategoryId: selectedConversion
-        ? selectedConversion.honeyCategoryId
-        : 0,
+      categoryId: selectedConversion ? selectedConversion.categoryId : 0,
       idArchive: fillUserApi.idUser,
       quantity: quantity,
     };
@@ -111,12 +108,18 @@ const Gift = memo(({ filteredConversions, fillPoint }) => {
       .then((response) => {
         if (response.data.success) {
           message.success("Đổi quà thành công");
-          // window.location.reload();
-          if (selectedConversion && initialQuantity !== null) {
+          if (
+            selectedConversion &&
+            initialQuantity !== null &&
+            selectedConversion.status === 0
+          ) {
             setSelectedConversion({
               ...selectedConversion,
               quantity: initialQuantity - quantity,
             });
+          }
+          if (selectedConversion.status === 0) {
+            updatePoints(fillPoint.point - selectedConversion.honey * quantity);
           }
         } else {
           message.error("Bạn không đủ điểm để đổi quà trong ranh này!");
