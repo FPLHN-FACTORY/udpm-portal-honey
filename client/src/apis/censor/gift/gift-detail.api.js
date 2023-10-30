@@ -22,15 +22,20 @@ export class GiftDetail {
     });
   };
 
-  //   static update = (data, id) => {
-  //     const formData = new FormData();
-  //     formData.append("giftId", data.giftId);
-  //     formData.append("categoryId", data.categoryId);
-  //     formData.append("honey", data.honey);
-  //     return request({
-  //       method: "PUT",
-  //       url: `/${this.COMPONENT_NAME}/${id}`,
-  //       data: formData,
-  //     });
-  //   };
+  static update = (data, id) => {
+    const formData = new FormData();
+    formData.append("honey", data.honey);
+    return request({
+      method: "PUT",
+      url: `/${this.COMPONENT_NAME}/${id}`,
+      data: formData,
+    });
+  };
+
+  static delete = (id) => {
+    return request({
+      method: "DELETE",
+      url: `/${this.COMPONENT_NAME}/delete/${id}`,
+    });
+  };
 }

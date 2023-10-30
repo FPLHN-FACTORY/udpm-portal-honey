@@ -9,15 +9,10 @@ import lombok.ToString;
 @Setter
 @ToString
 public class AdminUpdateGiftDetailRequest {
-    private String giftId;
-
-    private String categoryId;
 
     private  Integer honey;
 
     public GiftDetail dtoToEntity(GiftDetail giftDetail){
-        giftDetail.setGiftId(this.getGiftId());
-        giftDetail.setCategoryId(this.getCategoryId());
         giftDetail.setHoney(this.getHoney());
         return giftDetail;
     }

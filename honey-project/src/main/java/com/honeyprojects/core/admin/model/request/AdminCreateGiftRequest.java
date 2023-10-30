@@ -34,6 +34,8 @@ public class AdminCreateGiftRequest extends PageableRequest {
 
     private Integer quantity;
 
+    private Integer limitQuantity;
+
     private MultipartFile image;
 
     private String note;
@@ -55,6 +57,7 @@ public class AdminCreateGiftRequest extends PageableRequest {
             gift.setStatus(StatusGift.values()[this.getStatus()]);
         }
         gift.setQuantity(this.getQuantity());
+        gift.setLimitQuantity(this.getLimitQuantity());
         if (this.getType() != null) {
             gift.setType(TypeGift.values()[this.getType()]);
         }

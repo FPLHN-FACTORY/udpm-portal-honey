@@ -15,6 +15,7 @@ export default function ModalImportExcel(props) {
     setListStudentItem,
     nameFile,
     setNameFile,
+    setDataPreview,
   } = props;
 
   const [file, setFile] = useState(null);
@@ -38,13 +39,14 @@ export default function ModalImportExcel(props) {
       setLoading(true);
       RandomAddPointAPI.createImportExcel(formData)
         .then((response) => {
+          setDataPreview(response.data.data);
           setListStudentPoint({
             ...dataRandomPoint,
-            listStudentPoint: response.data.data,
+            listStudentPoint: response.data.data.lstAdminAddPointDTO,
           });
           setListStudentItem({
             ...dataRandomItem,
-            listStudentPoint: response.data.data,
+            listStudentPoint: response.data.data.lstAdminAddPointDTO,
           });
           // stompClient.send("/action/create-notification", {}, {});
           message.success("Import excel thành công");

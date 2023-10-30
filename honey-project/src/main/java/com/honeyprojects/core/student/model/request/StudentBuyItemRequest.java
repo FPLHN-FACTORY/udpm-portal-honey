@@ -21,7 +21,7 @@ public class StudentBuyItemRequest {
     private String nameGift;
 
     @NotBlank
-    private String honeyCategoryId;
+    private String categoryId;
 
     @NotBlank
     private String honeyId;

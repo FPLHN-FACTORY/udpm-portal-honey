@@ -63,11 +63,11 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
 
     @Override
     public History addBuyItem(StudentBuyItemRequest createRequest) {
-        Category category = categoryRepository.findById(createRequest.getHoneyCategoryId()).orElse(null);
+        Category category = categoryRepository.findById(createRequest.getCategoryId()).orElse(null);
         Gift gift = giftRepository.findById(createRequest.getGiftId()).orElse(null);
 
 
-        Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(createRequest.getStudentId(), createRequest.getHoneyCategoryId());
+        Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(createRequest.getStudentId(), createRequest.getCategoryId());
         History history = new History();
         ArchiveGift archiveGift = new ArchiveGift();
         Archive archive = new Archive();
@@ -78,7 +78,7 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
             // Nếu Honey chưa tồn tại, tạo mới
             honey = new Honey();
             honey.setStudentId(createRequest.getStudentId());
-            honey.setHoneyCategoryId(createRequest.getHoneyCategoryId());
+            honey.setHoneyCategoryId(createRequest.getCategoryId());
             honey.setUserSemesterId(idUs);
             honey.setHoneyPoint(createRequest.getHoneyPoint());
             honey = honeyRepository.save(honey);

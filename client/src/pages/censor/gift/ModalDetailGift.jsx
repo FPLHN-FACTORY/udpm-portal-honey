@@ -20,6 +20,7 @@ const ModalDetailGift = (props) => {
   const [form] = Form.useForm();
   const [image, setImage] = useState(null);
   const [isLimitedQuantity, setIsLimitedQuantity] = useState(true);
+  const [isLimitedQuantity2, setIsLimitedQuantity2] = useState(true);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
   const [listCategory, setListCategory] = useState([]);
   const [listSemester, setListSemester] = useState([]);
@@ -27,6 +28,7 @@ const ModalDetailGift = (props) => {
 
   const [categoryQuantities, setCategoryQuantities] = useState({});
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     GiftDetail.fetchAll(gift.id).then((response) => {
@@ -64,18 +66,22 @@ const ModalDetailGift = (props) => {
       setIsLimitedQuantity(false);
       form.setFieldsValue({ quantityLimit: 1 });
     }
+    if (gift && gift.limitQuantity !== null) {
+      setIsLimitedQuantity2(true);
+    } else {
+      setIsLimitedQuantity2(false);
+      form.setFieldsValue({ limitSoLuong: 1 });
+    }
   }, [gift]);
 
   const handleCategoryChange = (selectedValues) => {
-    const selectedCategoriesGift = listCategory.filter((category) =>
-      selectedValues.includes(category.id)
-    );
-    setSelectedCategories(
-      selectedCategoriesGift.map((category) => category.id)
-    );
-    const newCategoryQuantities = {};
+    setSelectedCategories(selectedValues);
+
+    const newCategoryQuantities = { ...categoryQuantities };
     selectedCategories.forEach((category) => {
-      newCategoryQuantities[category.name] = 0;
+      if (!selectedValues.includes(category)) {
+        delete newCategoryQuantities[category];
+      }
     });
 
     setCategoryQuantities(newCategoryQuantities);
@@ -123,6 +129,13 @@ const ModalDetailGift = (props) => {
     }
     return Promise.resolve();
   };
+  const validateLimitQuantity = (rule, value) => {
+    const limitQuantityValue = form.getFieldValue("limitQuantity");
+    if (limitQuantityValue === 1 && (!value || value <= 0)) {
+      return Promise.reject("Số lượng phải lớn hơn 0.");
+    }
+    return Promise.resolve();
+  };
 
   const validateStartDate = (rule, value) => {
     const endDate = form.getFieldValue("end");
@@ -140,18 +153,10 @@ const ModalDetailGift = (props) => {
     return Promise.resolve();
   };
 
-  const validateHoney = (rule, value) => {
-    if (!value || value <= 0) {
-      return Promise.reject("Điểm (điểm số) phải lớn hơn 0.");
-    }
-    return Promise.resolve();
-  };
-
   const onFinish = () => {
     form
       .validateFields()
       .then((formValues) => {
-        console.log(formValues);
         let quantity;
         if (isLimitedQuantity) {
           quantity = parseInt(formValues.quantityLimit);
@@ -159,6 +164,15 @@ const ModalDetailGift = (props) => {
           quantity =
             formValues.quantity !== undefined
               ? parseInt(formValues.quantity)
+              : null;
+        }
+        let limitSL;
+        if (isLimitedQuantity2) {
+          limitSL = parseInt(formValues.limitSoLuong);
+        } else {
+          limitSL =
+            formValues.limitQuantity !== undefined
+              ? parseInt(formValues.limitQuantity)
               : null;
         }
 
@@ -185,6 +199,27 @@ const ModalDetailGift = (props) => {
           updatedToDate = new Date(formValues.end).getTime();
           updatedSemesterId = null;
         }
+        const newFieldErrors = {};
+
+        selectedCategories.forEach((categoryId) => {
+          const category = listCategory.find((item) => item.id === categoryId);
+          const honeyValue = categoryQuantities[category.id] || "";
+
+          if (honeyValue === "" || honeyValue < 0) {
+            newFieldErrors[category.id] = true;
+          } else {
+            newFieldErrors[category.id] = false;
+          }
+        });
+
+        setFieldErrors(newFieldErrors);
+
+        const hasErrors = Object.values(newFieldErrors).some(
+          (hasError) => hasError
+        );
+        if (hasErrors) {
+          return;
+        }
         GiftAPI.update(
           {
             ...formValues,
@@ -192,6 +227,7 @@ const ModalDetailGift = (props) => {
             id: gift ? gift.id : null,
             status: formValues.status,
             quantity: quantity,
+            limitQuantity: limitSL,
             type: formValues.type,
             honey: formValues.honey,
             honeyCategoryId: formValues.honeyCategoryId,
@@ -203,6 +239,56 @@ const ModalDetailGift = (props) => {
           gift ? gift.id : null
         )
           .then((response) => {
+            const selectedCategoryIds = selectedCategories;
+            const honeyValues = { ...categoryQuantities };
+
+            GiftDetail.fetchAll(gift.id).then((response) => {
+              const detailData = response.data.data;
+              const categoryIdsInDetail = detailData.map(
+                (item) => item.categoryId
+              );
+              const categoryIdsToDelete = categoryIdsInDetail.filter(
+                (categoryId) => !selectedCategoryIds.includes(categoryId)
+              );
+
+              categoryIdsToDelete.forEach((categoryId) => {
+                const detailItem = detailData.find(
+                  (item) => item.categoryId === categoryId
+                );
+
+                if (detailItem) {
+                  GiftDetail.delete(detailItem.id)
+                    .then(() => {})
+                    .catch((err) => {
+                      message.error("Lỗi khi xóa: " + err.message);
+                    });
+                }
+              });
+              selectedCategoryIds.forEach((categoryId) => {
+                const honey = honeyValues[categoryId];
+                const existingItem = detailData.find(
+                  (item) => item.categoryId === categoryId
+                );
+
+                if (existingItem) {
+                  GiftDetail.update({ honey }, existingItem.id)
+                    .then(() => {})
+                    .catch((err) => {
+                      message.error("Lỗi khi cập nhật: " + err.message);
+                    });
+                } else {
+                  GiftDetail.create({
+                    giftId: gift.id,
+                    categoryId,
+                    honey,
+                  })
+                    .then(() => {})
+                    .catch((err) => {
+                      message.error("Lỗi khi thêm mới: " + err.message);
+                    });
+                }
+              });
+            });
             dispatch(UpdateGift(response.data.data));
             message.success("Cập nhật thành công!");
             onUpdate();
@@ -226,6 +312,10 @@ const ModalDetailGift = (props) => {
     image: gift && gift.image !== null ? gift.image : null,
     quantity: gift && gift.quantity !== null ? gift.quantity : null,
     quantityLimit: gift && gift.quantity !== null ? gift.quantity : null,
+    limitQuantity:
+      gift && gift.limitQuantity !== null ? gift.limitQuantity : null,
+    limitSoLuong:
+      gift && gift.limitQuantity !== null ? gift.limitQuantity : null,
     name: gift && gift.name ? gift.name : "",
     code: gift && gift.code ? gift.code : "",
     status: gift && gift.status !== null ? gift.status : 0,
@@ -376,8 +466,12 @@ const ModalDetailGift = (props) => {
         </div>
         {selectedCategories.map((categoryId) => {
           const category = listCategory.find((item) => item.id === categoryId);
+
+          const honeyValue = categoryQuantities[category.id] || "";
+
+          const isInvalid = honeyValue === "" || honeyValue <= 0;
           return (
-            <div className="input-matcate">
+            <div className="input-matcate" key={categoryId}>
               <label className="label" htmlFor={`honey_${category.name}`}>
                 <span className="select-asterisk">*</span> Số mật{" "}
                 {category.name} :
@@ -385,11 +479,16 @@ const ModalDetailGift = (props) => {
               <Input
                 type="number"
                 id={`honey_${category.name}`}
-                value={categoryQuantities[category.id] || ""}
-                onChange={(e) => {
-                  handleCategoryQuantityChange(category.id, e.target.value);
-                }}
+                value={honeyValue}
+                onChange={(e) =>
+                  handleCategoryQuantityChange(category.id, e.target.value)
+                }
               />
+              {isInvalid && (
+                <p style={{ color: "red" }}>
+                  Số mật phải lớn hơn 0 và không được để trống.
+                </p>
+              )}
             </div>
           );
         })}
@@ -486,16 +585,48 @@ const ModalDetailGift = (props) => {
             <Radio value={1}>Cần phê duyệt</Radio>
           </Radio.Group>
         </Form.Item>
-        <Form.Item
-          label="Ghi chú"
-          name="note"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập mô tả",
-            },
-          ]}
-        >
+        <Form.Item label="Cộng dồn" name="limitQuantity">
+          <Radio.Group
+            onChange={(e) => {
+              setIsLimitedQuantity2(e.target.value !== null);
+              if (!e.target.value) {
+                form.setFieldsValue({ limitSoLuong: null });
+              }
+            }}
+          >
+            <Radio
+              value={null}
+              defaultChecked={gift && gift.limitQuantity === null}
+            >
+              Không cho phép
+            </Radio>
+            <Radio
+              value={
+                gift && gift.limitQuantity !== null ? gift.limitQuantity : 1
+              }
+            >
+              Cho phép
+            </Radio>
+          </Radio.Group>
+        </Form.Item>
+        {isLimitedQuantity2 ? (
+          <Form.Item
+            label="Số lượng tối đa"
+            name="limitSoLuong"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập số lượng giới hạn",
+              },
+              {
+                validator: validateLimitQuantity,
+              },
+            ]}
+          >
+            <Input type="number" />
+          </Form.Item>
+        ) : null}
+        <Form.Item label="Ghi chú" name="note">
           <TextArea
             cols="30"
             rows="10"

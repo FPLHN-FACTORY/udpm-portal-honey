@@ -19,6 +19,9 @@ public interface AdminGiftResponse extends IsIdentified {
     @Value("#{target.quantity}")
     Integer getQuantity();
 
+    @Value("#{target.limit_quantity}")
+    Integer getLimitQuantity();
+
     @Value("#{target.status}")
     Integer getStatus();
 
