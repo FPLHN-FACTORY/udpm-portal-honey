@@ -89,32 +89,4 @@ public interface AdRandomAddPointRepository extends HoneyRepository {
             where g.name like :#{#name} and g.status in (0, 1)
             """,nativeQuery = true)
     String getIdGiftByName(String name);
-
-//    @Query(value = """
-//            SELECT c.id, c.name, c.code
-//            FROM category c WHERE c.name = :#{#nameCategory}
-//            """, nativeQuery = true)
-//    AdminCategoryResponse getCategoryByName(String nameCategory);
-
-//    @Query(value = """
-//            SELECT DISTINCT type
-//            FROM gift
-//            ORDER BY type ASC
-//            """, nativeQuery = true)
-//    List<Integer> getAllTypeGift();
-
-//    @Query(value = """
-//            SELECT *
-//            FROM gift
-//            WHERE type = :#{#typeNumber}
-//            ORDER BY type ASC
-//            """, nativeQuery = true)
-//    List<AdminGiftResponse> getGiftByType(Integer typeNumber);
-
-//    @Query(value = """
-//            SELECT DISTINCT *
-//            FROM archive
-//            WHERE student_id = :#{#idStudent}
-//            """, nativeQuery = true)
-//    Archive getArchiveByIdStudent(String idStudent);
 }
