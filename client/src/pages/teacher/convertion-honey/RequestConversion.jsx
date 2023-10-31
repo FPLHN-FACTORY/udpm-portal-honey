@@ -79,6 +79,11 @@ export default function RequestConversion() {
       key: "mon",
     },
     {
+      title: "Số lượng",
+      dataIndex: "quantity",
+      key: "quantity",
+    },
+    {
       title: "Ngày tạo",
       dataIndex: "createdDate",
       key: "createdDate",

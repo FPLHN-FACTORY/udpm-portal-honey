@@ -22,6 +22,8 @@ import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.Message;
+import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.TypeGift;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.util.ConvertRequestApiidentity;
@@ -104,6 +106,7 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
 
         Archive archive = new Archive();
         archive.setStudentId(request.getIdStudent());
+        archive.setStatus(Status.HOAT_DONG);
         if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && history.getType().equals(TypeHistory.DOI_QUA)) {
             Honey honey = honeyRepository.findById(history.getHoneyId()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
             honey.setHoneyPoint(honey.getHoneyPoint() - (history.getHoneyPoint() * request.getQuantity()));
@@ -116,7 +119,7 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
 
                 Archive getArchive = archiveRepository.findByStudentId(request.getIdStudent()).orElse(archive);
                 archiveRepository.save(getArchive);
-            ArchiveGift archiveGift1 = giftArchiveRepository.findByGiftId(request.getIdGift()).orElse(null);
+            ArchiveGift archiveGift1 = giftArchiveRepository.findByGiftIdAndArchiveId(request.getIdGift(),getArchive.getId());
             if(archiveGift1 != null){
                 int currentQuantity = archiveGift1.getQuantity();
                 int additionalQuantity = request.getQuantity();
@@ -209,6 +212,11 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
     public PageableObject<CensorTransactionRequestResponse> getListRequestsByStatus(AdminHistoryApprovedSearchRequest searchParams) {
         Pageable pageable = PageRequest.of(searchParams.getPage(), searchParams.getSize());
         return new PageableObject<>(historyRepository.getListRequestsByStatus(searchParams, pageable));
+    }
+
+    @Override
+    public Integer getPointByIdStudentAndIdCategory(String studentId, String honeyCategoryId) {
+        return honeyRepository.getPointByIdStudentAndIdCategory(studentId,honeyCategoryId);
     }
 }
 

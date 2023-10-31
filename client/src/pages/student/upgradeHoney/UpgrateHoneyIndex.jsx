@@ -1,4 +1,4 @@
-import { Card, Col, Row, Tabs, Select, Input } from "antd";
+import { Card, Col, Input, Row, Select, Tabs } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -11,6 +11,12 @@ import React, { memo, useEffect } from "react";
 import "./index.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { UpgradeRateApi } from "../../../apis/student/upgrade-rate/upgrade-rate.api";
+import {
+  GetArchive,
+  SetArchive,
+} from "../../../app/reducers/archive/archive.reducer";
 
 const UpgrateHoneyIndex = memo(() => {
   const data = [
@@ -78,6 +84,20 @@ const UpgrateHoneyIndex = memo(() => {
   //   image: "https://lienquan.garena.vn/kg/images/item-6.png",
   // }));
   const dataBox = Array.from({ length: 15 }, (_, index) => index + 1);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    fechArchive();
+  }, []);
+
+  const fechArchive = () => {
+    UpgradeRateApi.getArchiveByStudent().then((response) => {
+      dispatch(SetArchive(response.data.data));
+    });
+  };
+
+  const dataArchive = useAppSelector(GetArchive);
+
   return (
     <section className="upgrate__honey">
       <div className="upgrate__honey__item">
@@ -86,7 +106,7 @@ const UpgrateHoneyIndex = memo(() => {
             <div className="upgrate__honey__filter">
               <div className="upgrate__honey__text">
                 {" "}
-                Chọn loại mật để nâng cấp{" "}
+                Chọn loại mật ong để nâng cấp{" "}
               </div>
               <div className="upgrate__search">
                 <SearchOutlined />

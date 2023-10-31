@@ -34,8 +34,7 @@ const ChestIndex = memo(() => {
             <div
               key={index}
               className={`tab__detail ${index === activeTab ? "active" : ""}`}
-              onClick={() => handleTabClick(index)}
-            >
+              onClick={() => handleTabClick(index)}>
               {tab.title}
             </div>
           ))}

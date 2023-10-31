@@ -114,6 +114,7 @@ const ModalDetailGift = (props) => {
       setListCategory(response.data.data);
     });
   };
+
   const fetchSemester = () => {
     SemesterAPI.fetchAllSemester().then((response) => {
       setListSemester(response.data.data);
@@ -203,6 +204,7 @@ const ModalDetailGift = (props) => {
 
         selectedCategories.forEach((categoryId) => {
           const category = listCategory.find((item) => item.id === categoryId);
+
           const honeyValue = categoryQuantities[category.id] || "";
 
           if (honeyValue === "" || honeyValue < 0) {
@@ -464,33 +466,38 @@ const ModalDetailGift = (props) => {
             ))}
           </Select>
         </div>
-        {selectedCategories.map((categoryId) => {
-          const category = listCategory.find((item) => item.id === categoryId);
-
-          const honeyValue = categoryQuantities[category.id] || "";
-
+        {listCategory.map((category) => {
+          const categoryId = category.id;
+          const honeyValue =
+            categoryId in categoryQuantities
+              ? categoryQuantities[categoryId]
+              : "";
           const isInvalid = honeyValue === "" || honeyValue <= 0;
-          return (
-            <div className="input-matcate" key={categoryId}>
-              <label className="label" htmlFor={`honey_${category.name}`}>
-                <span className="select-asterisk">*</span> Số mật{" "}
-                {category.name} :
-              </label>
-              <Input
-                type="number"
-                id={`honey_${category.name}`}
-                value={honeyValue}
-                onChange={(e) =>
-                  handleCategoryQuantityChange(category.id, e.target.value)
-                }
-              />
-              {isInvalid && (
-                <p style={{ color: "red" }}>
-                  Số mật phải lớn hơn 0 và không được để trống.
-                </p>
-              )}
-            </div>
-          );
+
+          if (selectedCategories.includes(categoryId)) {
+            return (
+              <div className="input-matcate" key={categoryId}>
+                <label className="label" htmlFor={`honey_${category.name}`}>
+                  <span className="select-asterisk">*</span> Số mật{" "}
+                  {category.name} :
+                </label>
+                <Input
+                  type="number"
+                  id={`honey_${category.name}`}
+                  value={honeyValue}
+                  onChange={(e) =>
+                    handleCategoryQuantityChange(categoryId, e.target.value)
+                  }
+                />
+                {isInvalid && (
+                  <p style={{ color: "red" }}>
+                    Số mật phải lớn hơn 0 và không được để trống.
+                  </p>
+                )}
+              </div>
+            );
+          }
+          return null;
         })}
         <Form.Item
           label="Thời gian"

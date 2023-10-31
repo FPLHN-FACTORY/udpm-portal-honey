@@ -65,12 +65,6 @@ export default function AddPoint() {
       if (response.data.success) {
         setStudent(response.data.data);
         getHoney(response.data.data.id, categorySelected);
-        console.log(
-          "id user: ",
-          response.data.data.id,
-          ": id cate :",
-          categorySelected
-        );
       } else {
         setStudent({});
         formSearch.setFields([
@@ -108,9 +102,6 @@ export default function AddPoint() {
           message.error("Gửi yêu cầu thất bại!");
         }
       })
-      .catch((error) => {
-        console.log(error);
-      });
     setLoading(false);
   };
 
@@ -124,7 +115,6 @@ export default function AddPoint() {
           setHoneyStudent({ point: 0 });
         }
       })
-      .catch((error) => console.log(error))
       .finally(() => {
         setLoading(false);
       });

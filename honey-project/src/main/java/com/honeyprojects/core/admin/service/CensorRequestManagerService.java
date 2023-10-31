@@ -11,6 +11,7 @@ import com.honeyprojects.core.admin.model.response.CensorUserApiResponse;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.entity.History;
+import com.honeyprojects.entity.Honey;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -44,4 +45,6 @@ public interface CensorRequestManagerService {
     PageableObject<CensorTransactionRequestResponse> getListRequests(AdminHistoryApprovedSearchRequest searchParams);
 
     PageableObject<CensorTransactionRequestResponse> getListRequestsByStatus(AdminHistoryApprovedSearchRequest searchParams);
+
+    Integer getPointByIdStudentAndIdCategory(String studentId, String honeyCategoryId);
 }

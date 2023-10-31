@@ -112,12 +112,14 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
             StringBuilder content = new StringBuilder("Gói quà [ ");
             notificationDetail.setContent(content.append(gift.getName())
                     .append((" ] đã được phê duyệt.\n"))
-                    .append("Môn: ")
+                    .append(" Môn: ")
                     .append(history.getSubject())
-                    .append("Lớp: ")
+                    .append(" Lớp: ")
                     .append(history.getClassName())
                     .append(" | Giảng viên: ")
                     .append(teacher.getName())
+                    .append(" Số lượng: ")
+                    .append(history.getQuantity())
                     .toString());
             notificationDetailRepository.save(notificationDetail);
         }
@@ -135,12 +137,20 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
         Archive newArchive = new Archive();
         newArchive.setStudentId(history.getStudentId());
         Archive archive = archiveRepository
-                .findAllByStudentId(history.getStudentId()).orElse(newArchive);
+                .findByStudentId(history.getStudentId()).orElse(newArchive);
         archiveRepository.save(archive);
 
-        ArchiveGift archiveGift = new ArchiveGift();
+
+        ArchiveGift archiveGift = archiveGiftRepository
+                .findByArchiveIdAndGiftId(archive.getId(), history.getGiftId())
+                .orElse(new ArchiveGift());
         archiveGift.setGiftId(history.getGiftId());
         archiveGift.setArchiveId(archive.getId());
+        if (archiveGift.getQuantity() != null){
+            archiveGift.setQuantity(archiveGift.getQuantity()+ history.getQuantity());
+        }else {
+            archiveGift.setQuantity(history.getQuantity());
+        }
         Notification notification = new Notification();
         notification.setStudentId(history.getStudentId());
         notification.setTitle("Yêu cầu mở quà");
@@ -154,12 +164,13 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
                 .append((" ] bị từ chối.\n"))
                 .append("Môn: ")
                 .append(history.getSubject())
-                .append("Lớp: ")
+                .append(" Số lượng: ")
+                .append(history.getQuantity())
+                .append(" Lớp: ")
                 .append(history.getClassName())
                 .append(" | Giảng viên: ")
                 .append(teacher.getName())
-                .append("\n")
-                .append("LÝ DO: ")
+                .append(" LÝ DO: ")
                 .append(note)
                 .toString());
         notificationDetailRepository.save(notificationDetail);

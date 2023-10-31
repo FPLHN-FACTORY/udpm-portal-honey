@@ -16,4 +16,6 @@ public class StudentRequestChangeGift {
     private String maLop;
 
     private String maMon;
+
+    private Integer quantity;
 }

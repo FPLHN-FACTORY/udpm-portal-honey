@@ -29,25 +29,19 @@ const UsingGift = (props) => {
   const confirm = (e) => {
     deleteGift();
   };
-  const cancel = (e) => {
-    message.error("Click on No");
-  };
 
   return (
     <Popconfirm
       title="Sử dụng"
       description="Bạn có chắc chắn muốn sử dụng?"
       onConfirm={confirm}
-      onCancel={cancel}
       color="cyan"
       okText="Yes"
-      cancelText="No"
-    >
+      cancelText="No">
       <Tooltip title="Sử dụng">
         <Button
           type="primary"
-          className="bg-red-400 text-white hover:bg-red-300"
-        >
+          className="bg-red-400 text-white hover:bg-red-300">
           <PlusCircleOutlined style={{ fontSize: "15px" }} />
         </Button>
       </Tooltip>
