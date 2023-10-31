@@ -360,31 +360,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             emptyHeaderFont.setColor(IndexedColors.RED.getIndex());
             emptyHeaderStyle.setFont(emptyHeaderFont);
 
-//            // Danh sách tên vật phẩm
-//            List<String> lstGift = adGiftRepository.getAllNameByStatus();
-//
-//            // Danh sách tên thể loại mật ong
-//            List<String> lstCategoryHoney = adminCategoryRepository.getAllNameCategoryByStatus();
-//
-//            // Ghi danh sách tên vật phẩm và danh sách tên thể loại mật ong cùng lúc
-//            int rowIndex = 5; // Bắt đầu từ hàng thứ hai cho dữ liệu
-//
-//            int maxItemCount = Math.max(lstGift.size(), lstCategoryHoney.size());
-//
-//            for (int i = 0; i < maxItemCount; i++) {
-//                Row dataRow = sheet.createRow(rowIndex);
-//
-//                if (i < lstGift.size()) {
-//                    dataRow.createCell(columnCount - 2).setCellValue(lstGift.get(i)); // Cột trước cuối là danh sách tên vật phẩm
-//                }
-//
-//                if (i < lstCategoryHoney.size()) {
-//                    dataRow.createCell(columnCount - 1).setCellValue(lstCategoryHoney.get(i)); // Cột cuối là danh sách loại mật ong
-//                }
-//
-//                rowIndex++;
-//            }
-
             // Lưu workbook vào tệp Excel tại đường dẫn đã xác định
             try (FileOutputStream outputStream = new FileOutputStream(outputPath)) {
                 workbook.write(outputStream);
@@ -404,53 +379,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
     @Override
     public AdminAddPointBO importExcel(MultipartFile file) throws IOException {
-//        List<String> simpleResponseList = new ArrayList<>();
-//        try {
-//            // Đọc tệp Excel từ đối tượng MultipartFile
-//            InputStream inputStream = file.getInputStream();
-//            Workbook workbook = new XSSFWorkbook(inputStream);
-//
-//            // Lấy bảng tính đầu tiên từ tệp Excel (ở đây giả sử chỉ có một bảng tính)
-//            Sheet sheet = workbook.getSheetAt(0);
-//
-//            // Xác định cột chứa địa chỉ email (ví dụ: cột "Email")
-//            Row headerRow = sheet.getRow(0);
-//            int emailColumnIndex = -1;
-//            for (Cell cell : headerRow) {
-//                String columnName = cell.getStringCellValue();
-//                if ("Email".equalsIgnoreCase(columnName)) {
-//                    emailColumnIndex = cell.getColumnIndex();
-//                    break;
-//                }
-//            }
-//
-//            // Duyệt qua từng dòng của bảng tính (bỏ qua hàng đầu tiên chứa tiêu đề)
-//            for (Row row : sheet) {
-//                if (row.getRowNum() == 0) {
-//                    continue; // Bỏ qua hàng đầu tiên (tiêu đề)
-//                }
-//
-//                // Trích xuất giá trị địa chỉ email từ cột tương ứng
-//                Cell emailCell = row.getCell(emailColumnIndex);
-//                String email = (emailCell != null) ? emailCell.getStringCellValue() : "";
-//
-//                // Tìm sinh viên bằng email và thêm vào list
-//                if (email.equals("")) {
-//                    continue;
-//                } else {
-//                    SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(email);
-//                    simpleResponseList.add(simpleResponse.getId());
-//                }
-//            }
-//
-//            // Đóng tệp Excel và trả về danh sách địa chỉ email
-//            workbook.close();
-//            inputStream.close();
-//            return simpleResponseList;
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
         // Lấy đối tượng InputStream từ tệp Excel được tải lên
         InputStream inputStream = file.getInputStream();
 

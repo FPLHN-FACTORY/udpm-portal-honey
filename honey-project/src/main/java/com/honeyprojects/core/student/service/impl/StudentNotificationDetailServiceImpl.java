@@ -76,19 +76,15 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
                     archive.setStudentId(idStudent);
                     archive.setStatus(Status.HOAT_DONG);
                     adArchiveRepository.save(archive);
-                    for (int i = 0; i < detail.getQuantity(); i++) {
-                        // Tạo một bản ghi ArchiveGift mới và lưu vào cơ sở dữ liệu
-                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archive.getId(), null, idGift);
-                        ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
-                        adArchiveGiftRepository.save(archiveGift);
-                    }
+                    // Tạo một bản ghi ArchiveGift mới và lưu vào cơ sở dữ liệu
+                    AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archive.getId(), null, idGift, detail.getQuantity());
+                    ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
+                    adArchiveGiftRepository.save(archiveGift);
                 } else {
-                    for (int i = 0; i < detail.getQuantity(); i++) {
-                        // Tạo một bản ghi ArchiveGift mới và lưu vào cơ sở dữ liệu
-                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, null, idGift);
-                        ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
-                        adArchiveGiftRepository.save(archiveGift);
-                    }
+                    // Tạo một bản ghi ArchiveGift mới và lưu vào cơ sở dữ liệu
+                    AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, null, idGift, detail.getQuantity());
+                    ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
+                    adArchiveGiftRepository.save(archiveGift);
                 }
             }
 
