@@ -2,6 +2,7 @@ package com.honeyprojects.core.president.controller;
 
 import com.honeyprojects.core.admin.model.response.AdminAddItemDTO;
 import com.honeyprojects.core.common.base.ResponseObject;
+import com.honeyprojects.core.president.model.response.PresidentAddItemDTO;
 import com.honeyprojects.core.president.service.PresidentAddItemToStudentService;
 import com.honeyprojects.core.teacher.model.response.TeacherExcelAddPoinBO;
 import com.honeyprojects.core.teacher.service.TeacherExcelAddPointService;
@@ -25,18 +26,18 @@ public class PresidentAddItemToStudentController {
     @Autowired
     private PresidentAddItemToStudentService presidentAddItemToStudentService;
 
-    @PostMapping("/create/export")
+    @PostMapping("/export")
     public ResponseObject exportTemplate() {
         return new ResponseObject(presidentAddItemToStudentService.exportExcel());
     }
 
-    @PostMapping("/create/preview-data")
+    @PostMapping("/preview-data")
     public ResponseObject previewData(@RequestParam("file") MultipartFile file) throws IOException {
         return new ResponseObject(presidentAddItemToStudentService.previewDataImportExcel(file));
     }
 
-    @PostMapping("/create/import-data")
-    public void importData(@RequestBody List<AdminAddItemDTO> lstAdminAddItemDTO) throws IOException {
-        presidentAddItemToStudentService.importData(lstAdminAddItemDTO);
+    @PostMapping("/import-data")
+    public void importData(@RequestBody List<PresidentAddItemDTO> lstPresidentAddItemDTO) throws IOException {
+        presidentAddItemToStudentService.importData(lstPresidentAddItemDTO);
     }
 }

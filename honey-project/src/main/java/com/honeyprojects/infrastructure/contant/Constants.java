@@ -38,4 +38,6 @@ public class Constants {
 
     public static String CONTENT_NOTIFICATION_SYSTEM = "Hệ thống đã tặng cho bạn: ";
 
+    // Đặt một constant cho cỡ cột
+    public static final int COLUMN_WIDTH = 15 * 256;
 }

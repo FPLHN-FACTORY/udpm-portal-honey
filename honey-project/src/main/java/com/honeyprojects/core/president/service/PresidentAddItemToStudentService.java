@@ -2,6 +2,8 @@ package com.honeyprojects.core.president.service;
 
 import com.honeyprojects.core.admin.model.response.AdminAddItemBO;
 import com.honeyprojects.core.admin.model.response.AdminAddItemDTO;
+import com.honeyprojects.core.president.model.response.PresidentAddItemBO;
+import com.honeyprojects.core.president.model.response.PresidentAddItemDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -11,7 +13,7 @@ public interface PresidentAddItemToStudentService {
 
     Boolean exportExcel();
 
-    AdminAddItemBO previewDataImportExcel(MultipartFile file) throws IOException;
+    PresidentAddItemBO previewDataImportExcel(MultipartFile file) throws IOException;
 
-    void importData(List<AdminAddItemDTO> lstAddItemDTO) throws IOException;
+    void importData(List<PresidentAddItemDTO> lstAddItemDTO) throws IOException;
 }
