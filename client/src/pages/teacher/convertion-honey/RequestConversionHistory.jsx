@@ -28,6 +28,8 @@ import {
   SetHistory,
 } from "../../../app/reducers/history/history.reducer";
 import moment from "moment";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilter, faRectangleList } from "@fortawesome/free-solid-svg-icons";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -64,6 +66,16 @@ export default function RequestConversionHistory() {
       title: "Lớp",
       dataIndex: "lop",
       key: "lop",
+    },
+    {
+      title: "Môn",
+      dataIndex: "mon",
+      key: "mon",
+    },
+    {
+      title: "Số lượng",
+      dataIndex: "quantity",
+      key: "quantity",
     },
     {
       title: "Ngày tạo",
@@ -153,9 +165,24 @@ export default function RequestConversionHistory() {
   return (
     <Spin spinning={loading}>
       <div className="add-point">
-        <Card className="mb-2 py-1">
+        <Card
+          className="mb-2"
+          style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+          {" "}
+          <FontAwesomeIcon
+            icon={faFilter}
+            size="2px"
+            style={{ fontSize: "26px" }}
+          />{" "}
+          <span
+            style={{
+              fontSize: "18px",
+              fontWeight: "500",
+            }}>
+            Bộ lọc
+          </span>
           <Form onFinish={onFinishSearch}>
-            <Space size={"large"}>
+            <Space size={"large"} style={{ marginTop: "15px" }}>
               <Form.Item name="email" className="search-input">
                 <Input
                   style={{ width: "300px" }}
@@ -220,7 +247,21 @@ export default function RequestConversionHistory() {
             </Space>
           </Form>
         </Card>
-        <Card title="Danh sách yêu cầu">
+        <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+          <Space
+            style={{
+              justifyContent: "space-between",
+              marginBottom: "16px",
+            }}>
+            <div>
+              <span style={{ fontSize: "18px" }}>
+                <FontAwesomeIcon icon={faRectangleList} size="xl" />
+                <b style={{ marginLeft: "5px", fontWeight: "500" }}>
+                  Danh sách yêu cầu
+                </b>
+              </span>
+            </div>
+          </Space>
           <Table
             columns={columns}
             dataSource={data}

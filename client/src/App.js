@@ -22,7 +22,6 @@ import Semester from "./pages/censor/semester";
 import ConversionHome from "./pages/censor/convertion/convertionHome";
 import IndexGift from "./pages/censor/gift/indexGift";
 import AddRequestConversion from "./pages/student/RequestConversion/AddRequestConversion";
-import AddRequestConversionHistory from "./pages/student/RequestConversion/AddRequestConversionHistory";
 import TransactionPage from "./pages/student/transaction/TransactionPage";
 import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction";
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
@@ -52,6 +51,8 @@ import ChestIndex from "./pages/student/chest/ChestIndex";
 import UpgrateHoneyIndex from "./pages/student/upgradeHoney/UpgrateHoneyIndex";
 import StudentBuyItem from "./pages/student/BuyItem/StudentBuyItem";
 import RequestExchangeGift from "./pages/censor/requestmanager/RequestExchangeGift";
+import StudentHistory from "./pages/student/history/StudentHistory";
+import StudentRequest from "./pages/student/history/StudentRequest";
 
 function App() {
   const token =
@@ -342,11 +343,21 @@ function App() {
               }
             />
             <Route
-              path="/student/create-conversion/history"
+              path="/student/history"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
-                    <AddRequestConversionHistory />
+                    <StudentHistory />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/request"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <StudentRequest />
                   </DashboardAuthUser>
                 </AuthGuard>
               }

@@ -44,12 +44,11 @@ const GiftChest = memo(() => {
             position: "absolute",
             bottom: 0,
             right: 0,
-            
+
             color: "white",
             padding: "2px 4px",
             borderRadius: "4px",
-          }}
-        >
+          }}>
           {quantity}
         </div>
       </div>
@@ -93,8 +92,7 @@ const GiftChest = memo(() => {
                   detailArchive(data.idGift);
                   setArchiveGift(data);
                   setShowAdditionalInfo(true);
-                }}
-              >
+                }}>
                 <div className="chest__card__image">
                   <ImageRenderer image={data.image} quantity={data.quantity} />
                 </div>
@@ -106,7 +104,7 @@ const GiftChest = memo(() => {
           </Col>
         ))}
       </div>
-      {showAdditionalInfo ? (
+      {showAdditionalInfo && quantity >= 0 ? (
         <div className="chest__item__detail">
           <div className="chest__detail__header">
             <div className="chest__detail__image">
