@@ -17,10 +17,12 @@ const ModalAdd = (props) => {
   const [errorItemName, setErrorItemName] = useState("");
   const [errorFromDate, setErrorFromDate] = useState("");
   const [errorToDate, setErrorToDate] = useState("");
+  const [list, setList] = useState([]);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    listsemester();
     if (semester) {
       setItemName(semester.name);
       setToDate(moment(semester.toDate).format("YYYY-MM-DD"));
@@ -36,6 +38,12 @@ const ModalAdd = (props) => {
     }
     message.success("Thành công!");
     setModalOpen(false);
+  };
+
+  const listsemester = () => {
+    SemesterAPI.fetchAllSemester().then((result) => {
+      setList(result.data.data);
+    });
   };
 
   const onSaveError = (err) => {
@@ -78,7 +86,46 @@ const ModalAdd = (props) => {
 
     if (startDate >= endDate) {
       message.error("Ngày bắt đầu phải nhỏ hơn ngày kết thúc.");
+      check++;
       return;
+    }
+
+    if (semester) {
+      for (const existingSemester of list) {
+        const existingStartDate = new Date(existingSemester.fromDate);
+        const existingEndDate = new Date(existingSemester.toDate);
+
+        if (
+          (startDate >= existingStartDate && startDate <= existingEndDate) ||
+          (endDate >= existingStartDate && endDate <= existingEndDate)
+        ) {
+          message.error(
+            "Thời gian học kỳ mới không thể trùng hoặc nằm trong khoảng của học kỳ khác."
+          );
+          check++;
+          return;
+        }
+      }
+    } else {
+      for (const existingSemester of list) {
+        const existingStartDate = new Date(existingSemester.fromDate);
+        const existingEndDate = new Date(existingSemester.toDate);
+
+        if (startDate >= existingStartDate && endDate <= existingEndDate) {
+          message.error(
+            "Học kỳ mới không được nằm trong khoảng thời gian của học kỳ khác."
+          );
+          check++;
+          return;
+        }
+        if (startDate <= existingStartDate && endDate >= existingEndDate) {
+          message.error(
+            "Học kỳ mới không được chứa khoảng thời gian của học kỳ hiện tại."
+          );
+          check++;
+          return;
+        }
+      }
     }
 
     const formValues = {
@@ -86,6 +133,7 @@ const ModalAdd = (props) => {
       toDate: startDate.getTime(),
       fromDate: endDate.getTime(),
     };
+
     if (check === 0) {
       if (semester === null) {
         SemesterAPI.create(formValues).then(onSaveSuccess).catch(onSaveError);
@@ -93,7 +141,6 @@ const ModalAdd = (props) => {
         SemesterAPI.update(formValues, semester.id)
           .then(onSaveSuccess)
           .catch(onSaveError);
-        console.log(semester.id);
       }
     }
   };

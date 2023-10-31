@@ -13,14 +13,14 @@ import java.util.List;
 public interface AdSemesterRepository extends SemesterRepository {
 
     @Query(value = """
-            SELECT s.id, s.name, s.code, s.last_modified_date, s.to_date, s.from_date FROM semester s
+            SELECT s.id, s.name, s.code, s.last_modified_date, s.to_date, s.from_date, s.status FROM semester s
             ORDER BY s.last_modified_date DESC
             """, nativeQuery = true
     )
     List<AdminSemesterResponse> getAllListSemester();
 
     @Query(value = """
-            SELECT ROW_NUMBER() OVER(ORDER BY s.created_date DESC) AS stt, s.id , s.code, s.name, s.last_modified_date, s.to_date, s.from_date
+            SELECT ROW_NUMBER() OVER(ORDER BY s.created_date DESC) AS stt, s.id , s.code, s.name, s.last_modified_date, s.to_date,s.status,  s.from_date
             FROM semester s
              WHERE ( ( :#{#request.search} IS NULL
                       OR :#{#request.search} LIKE '' 
@@ -29,7 +29,7 @@ public interface AdSemesterRepository extends SemesterRepository {
                     OR :#{#request.search} LIKE '' 
                     OR s.name LIKE %:#{#request.search}% ) )
             """, countQuery = """
-            SELECT ROW_NUMBER() OVER(ORDER BY s.created_date DESC) AS stt, s.id, s.code, s.name, s.last_modified_date, s.to_date, s.from_date
+            SELECT ROW_NUMBER() OVER(ORDER BY s.created_date DESC) AS stt, s.id, s.code, s.name, s.last_modified_date,s.status, s.to_date, s.from_date
             FROM semester s
              WHERE ( ( :#{#request.search} IS NULL
                       OR :#{#request.search} LIKE '' 
