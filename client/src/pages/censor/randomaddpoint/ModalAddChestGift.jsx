@@ -7,7 +7,7 @@ import { AddChestGift } from "../../../app/reducers/chest-gift/chest-gift.reduce
 import { GetGift, SetGift } from "../../../app/reducers/gift/gift.reducer";
 
 export default function ModalAddChestGift(props) {
-  const { chest } = props;
+  const { chest, handleFetchGiftByChest, selectedChest } = props;
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const dispatch = useAppDispatch();
@@ -32,6 +32,7 @@ export default function ModalAddChestGift(props) {
   const handleCancel = () => {
     setSelectedRowKeys([]);
     setModalOpen(false);
+    handleFetchGiftByChest(selectedChest);
   };
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -45,6 +46,7 @@ export default function ModalAddChestGift(props) {
   const handleOnclick = () => {
     setModalOpen(true);
     fetchData();
+    handleFetchGiftByChest(selectedChest);
   };
 
   const handleOk = () => {
@@ -55,11 +57,16 @@ export default function ModalAddChestGift(props) {
       .then((response) => {
         dispatch(AddChestGift(response.config.data));
         fetchData();
+        handleFetchGiftByChest(selectedChest);
+        setSelectedRowKeys([]);
         message.success("Thêm thành công.");
       })
       .catch((error) => {
+        handleFetchGiftByChest(selectedChest);
+        setSelectedRowKeys([]);
         message.error("Thêm không thành công.");
       });
+    setModalOpen(false);
   };
   const data = useAppSelector(GetGift);
   return (

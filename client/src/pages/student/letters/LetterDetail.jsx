@@ -1,11 +1,11 @@
-import { Button, Card, Col, Row, Space, message } from "antd";
+import { Button, Space, message } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 import React, { memo, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useAppDispatch } from "../../../app/hooks";
 import "./letter-detail.css";
 import { useState } from "react";
-import { ArrowLeftOutlined, ClockCircleOutlined } from "@ant-design/icons";
+import { ClockCircleOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { NotificationDetailAPI } from "../../../apis/student/notificaton-detail/notification-detail.api";
 import { NotificationAPI } from "../../../apis/student/notification/notification.api";
@@ -55,9 +55,7 @@ const LetterDetail = memo(() => {
       });
     NotificationDetailAPI.updateStatus(id)
       .then((response) => {})
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
     navigate(`/student/letter`);
   };
 
@@ -111,14 +109,15 @@ const LetterDetail = memo(() => {
                 {formatTime(notification.createdDate)}
               </p>
             </div>
-
-            <Button
-              className="item__button"
-              onClick={() => handleReceiving(dataReceiving, id)}
-              disabled={notification.status === "DA_NHAN" ? true : false}
-            >
-              {notification.status === "DA_NHAN" ? "Đã nhận" : "Nhận quà"}
-            </Button>
+            {notification.type === "HE_THONG" && (
+              <Button
+                className="item__button"
+                onClick={() => handleReceiving(dataReceiving, id)}
+                disabled={notification.status === "DA_NHAN" ? true : false}
+              >
+                {notification.status === "DA_NHAN" ? "Đã nhận" : "Nhận quà"}
+              </Button>
+            )}
           </Space>
 
           <div className="letter__detail__content">

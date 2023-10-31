@@ -1,7 +1,6 @@
 import { Button, Card, Row, Space, Spin, Table } from "antd";
 import React, { useState } from "react";
 import ModalConfirm from "./ModalConfirm";
-import { Link } from "react-router-dom";
 
 export default function ListDataImport() {
   const [open, setOpen] = useState(false);
