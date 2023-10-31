@@ -19,6 +19,7 @@ import archiveChestReducer from "./reducers/archive-gift/archive-chest.reducer";
 import archiveCountGiftReducer from "./reducers/archive-gift/archive-count-gift.reducer";
 import countNotificationReducer from "./reducers/notification/count-notification.reducer";
 import upgradeRateReducer from "./reducers/upgrade-rate/upgrade-rate.reducer";
+import archiveReducer from "./reducers/archive/archive.reducer";
 
 export const store = configureStore({
   reducer: {
@@ -42,6 +43,7 @@ export const store = configureStore({
     archiveCountGift: archiveCountGiftReducer,
     countNotification: countNotificationReducer,
     upgradeRate: upgradeRateReducer,
+    archive: archiveReducer,
   },
 });
 

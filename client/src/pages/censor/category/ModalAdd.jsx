@@ -150,8 +150,8 @@ const ModalThem = (props) => {
     form.resetFields();
   };
   const initialValues = {
-    categoryStatus: 1,
-    transactionRights: 0,
+    categoryStatus: "1",
+    transactionRights: "0",
   };
 
   return (

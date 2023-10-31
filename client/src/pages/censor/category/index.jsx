@@ -16,6 +16,8 @@ import {
   FormOutlined,
   DeleteOutlined,
   SearchOutlined,
+  CheckOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
@@ -79,12 +81,14 @@ export default function Index() {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
+      align: "center",
       render: (text, record, index) => index + 1,
     },
     {
       title: "Ảnh",
       dataIndex: "image",
       key: "image",
+      align: "center",
       render: (image) => {
         if (image) {
           // Chuyển đổi chuỗi byte thành mảng byte
@@ -115,40 +119,61 @@ export default function Index() {
       title: "Mã",
       dataIndex: "code",
       key: "code",
+      align: "center",
       render: (text) => <span>{text}</span>,
     },
     {
-      title: "Loại mật",
+      title: "Loại mật ong",
       dataIndex: "name",
       key: "name",
+      align: "center",
     },
     {
-      title: "Trạng thái",
+      title: "Phê duyệt",
       dataIndex: "categoryStatus",
       key: "categoryStatus",
+      align: "center",
       render: (text) => {
         if (text === "0") {
-          return <span>Không phê duyệt</span>;
+          return (
+            <span style={{ color: "red" }}>
+              <CloseOutlined />
+            </span>
+          );
         } else {
-          return <span>Phê duyệt</span>;
+          return (
+            <span style={{ color: "green" }}>
+              <CheckOutlined />
+            </span>
+          );
         }
       },
     },
     {
-      title: "Quy đổi",
+      title: "Giao dịch",
       dataIndex: "categoryStatus",
       key: "categoryStatus",
+      align: "center",
       render: (text) => {
         if (text === "1") {
-          return <span>Được giao dịch</span>;
+          return (
+            <span style={{ color: "green" }}>
+              <CheckOutlined />
+            </span>
+          );
         } else {
-          return <span>Không giao dịch</span>;
+          return (
+            <span style={{ color: "red" }}>
+              <CloseOutlined />
+            </span>
+          );
         }
       },
     },
     {
       title: () => <div>Hành động</div>,
       key: "action",
+      align: "center",
       render: (_, record) => (
         <Space size="small">
           <ModalDetail

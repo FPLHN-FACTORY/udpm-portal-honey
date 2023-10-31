@@ -16,9 +16,6 @@ import lombok.Setter;
 public class Archive extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_ID)
-    private String clubId;
-
-    @Column(length = EntityProperties.LENGTH_ID)
     private String studentId;
 
     private Status status;

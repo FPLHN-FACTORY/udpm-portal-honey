@@ -74,7 +74,6 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
                 if (archiveId == null) {
                     Archive archive = new Archive();
                     archive.setStudentId(idStudent);
-                    archive.setClubId(null);
                     archive.setStatus(Status.HOAT_DONG);
                     adArchiveRepository.save(archive);
                     for (int i = 0; i < detail.getQuantity(); i++) {

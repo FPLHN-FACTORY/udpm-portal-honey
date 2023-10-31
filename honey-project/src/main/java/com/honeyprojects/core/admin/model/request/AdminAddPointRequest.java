@@ -12,6 +12,7 @@ import org.springframework.format.annotation.NumberFormat;
 @Setter
 @ToString
 public class AdminAddPointRequest {
+
     private String honeyId;
 
     @NotNull
