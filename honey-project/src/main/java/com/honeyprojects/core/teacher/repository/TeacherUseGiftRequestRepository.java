@@ -17,7 +17,7 @@ import java.util.List;
 public interface TeacherUseGiftRequestRepository extends HistoryRepository {
 
     @Query(value = """
-            select ROW_NUMBER() over (ORDER BY h.created_date desc ) as stt,h.id,
+            select ROW_NUMBER() over (ORDER BY h.created_date desc ) as stt,h.id,h.quantity,
             h.student_id, g.name as nameGift, h.class_name as lop,h.subject as mon, h.created_date, h.status as status
              from history h
              join gift g on g.id = h.gift_id
@@ -33,7 +33,7 @@ public interface TeacherUseGiftRequestRepository extends HistoryRepository {
     @Query("""
     select h.className from History h
     where h.status = :status and h.type = :type
-    group by h.nameGift
+    group by h.className
     """)
     List<String> filterClass(HoneyStatus status, TypeHistory type);
     @Query("""

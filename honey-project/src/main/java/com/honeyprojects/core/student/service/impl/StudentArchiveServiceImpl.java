@@ -73,6 +73,7 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
         ArchiveGift archiveGift = archiveGiftRepository.findById(request.getArchiveGiftId()).orElse(null);
         if (archiveGift != null) {
             History history = new History();
+            history.setQuantity(request.getQuantity());
             history.setStudentId(udpmHoney.getIdUser());
             history.setTeacherId(teacher.getId());
             history.setClassName(request.getMaLop());
@@ -81,6 +82,12 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
             history.setStatus(HoneyStatus.CHO_PHE_DUYET);
             history.setGiftId(archiveGift.getGiftId());
             historyRepository.save(history);
+            archiveGift.setQuantity(archiveGift.getQuantity() - request.getQuantity());
+            if (archiveGift.getQuantity() <= 0) {
+                archiveGiftRepository.delete(archiveGift);
+            } else {
+                archiveGiftRepository.save(archiveGift);
+            }
             return archiveGift;
         }
         return null;
