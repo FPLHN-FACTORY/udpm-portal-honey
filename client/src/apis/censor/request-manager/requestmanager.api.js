@@ -109,4 +109,12 @@ export class RequestManagerAPI {
       params: { type: type },
     });
   };
+
+  static getPoint = (studentId, honeyCategoryId) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/get-point-by-idStudent-idCategory`,
+      params: { studentId, honeyCategoryId },
+    });
+  };
 }

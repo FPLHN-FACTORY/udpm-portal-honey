@@ -38,6 +38,7 @@ export default function RequestConversionHistory() {
   const [totalPages, setTotalPages] = useState([]);
   const [filter, setFilter] = useState({ page: 0 });
   const [fillUserApi, setFillUserApi] = useState([]);
+  const [fillPoint, setFillPoint] = useState(0);
   const [type, setType] = useState();
   const fechUserApiById = () => {
     ResquestConversion.getUserAPiByid().then((response) => {
@@ -61,14 +62,20 @@ export default function RequestConversionHistory() {
     });
   };
 
+  const fechFillPoint = (idStudent, idCategory) => {
+    RequestManagerAPI.getPoint(idStudent, idCategory).then((response) => {
+      setFillPoint(response.data.data);
+    });
+  };
+
   const fechCategory = () => {
     CategoryAPI.fetchAll().then((response) => {
       setFillCategory(response.data.data.data);
     });
   };
   useEffect(() => {
-    fechData(filter);
     fechCategory();
+    fechData(filter);
   }, [filter]);
 
   const onFinishSearch = (value) => {
@@ -108,6 +115,34 @@ export default function RequestConversionHistory() {
         message.error(error);
       });
   };
+  const handCheckvalide = async (values) => {
+    try {
+      // Gọi hàm fechFillPoint và đợi cho đến khi hoàn thành
+      const response = await RequestManagerAPI.getPoint(
+        values.studentId,
+        values.categoryId
+      );
+      const newFillPoint = response.data.data;
+
+      const totalPoint = values.quantity * values.honeyPoint;
+      if (totalPoint > newFillPoint) {
+        message.error("Bạn Không còn đủ điểm để mua quà!");
+        console.log(totalPoint + "==" + newFillPoint);
+      } else {
+        console.log(totalPoint + "==" + newFillPoint);
+        changeStatusConversion(
+          values.studentId,
+          values.giftId,
+          values.id,
+          1,
+          values.quantity
+        );
+      }
+    } catch (error) {
+      console.error("Lỗi khi gọi API: ", error);
+      message.error("Đã xảy ra lỗi khi kiểm tra điểm.");
+    }
+  };
 
   const columns = [
     {
@@ -118,7 +153,7 @@ export default function RequestConversionHistory() {
     },
     {
       title: "Tên sinh viên",
-      dataIndex: "studentId", // Thay userId bằng trường dữ liệu người dùng bạn muốn hiển thị
+      dataIndex: "studentId",
       key: "studentId",
       render: (text) => <span>{`${fillUserApi.name}`}</span>,
     },
@@ -128,7 +163,6 @@ export default function RequestConversionHistory() {
       dataIndex: "nameCategory",
       key: "nameCategory",
     },
-
     {
       title: "Loại quà",
       dataIndex: "nameGift",
@@ -187,30 +221,26 @@ export default function RequestConversionHistory() {
             style={{ fontSize: "19px", textAlign: "center", color: "green" }}
           >
             {console.log(values)}
+
             {values.status !== 1 && values.status !== 2 && (
               <CheckCircleFilled
+                onClick={() => {
+                  handCheckvalide(values);
+                }}
+              />
+            )}
+
+            {values.status !== 1 && values.status !== 2 && (
+              <CloseCircleFilled
+                style={{ fontSize: "19px", margin: "0px 10px", color: "red" }}
                 onClick={() => {
                   changeStatusConversion(
                     values.studentId,
                     values.giftId,
                     values.id,
-                    1,
-                    values.quantity
+                    2
                   );
                 }}
-              />
-            )}
-            {values.status !== 1 && values.status !== 2 && (
-              <CloseCircleFilled
-                style={{ fontSize: "19px", margin: "0px 10px", color: "red" }}
-                onClick={() =>
-                  changeStatusConversion(
-                    values.studentId,
-                    values.giftId,
-                    values.id,
-                    2
-                  )
-                }
               />
             )}
           </div>

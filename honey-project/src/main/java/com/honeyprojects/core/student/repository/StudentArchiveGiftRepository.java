@@ -9,5 +9,8 @@ import java.util.Optional;
 
 @Repository
 public interface StudentArchiveGiftRepository extends ArchiveGiftRepository {
+
+    ArchiveGift findByGiftIdAndArchiveId(String idGift, String idArchive);
+
     Optional<ArchiveGift> findByGiftId(String idGift);
 }
