@@ -1,4 +1,4 @@
-import { Col, Tooltip } from "antd";
+import { Col } from "antd";
 import React, { memo, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useState } from "react";
@@ -21,19 +21,18 @@ const Chest = memo(() => {
     fetchGift();
   }, []);
 
-  function ImageRenderer({ image }) {
-    const byteArray = image ? image.split(",").map(Number) : [];
-    const base64ImageData = btoa(
-      String.fromCharCode.apply(null, new Uint8Array(byteArray))
-    );
-    const imageUrl = `data:image/jpeg;base64,${base64ImageData}`;
+  function ImageRenderer({ image, quantity }) {
+    const imageUrl = `https://github.com/cuongnq189/react-basic/assets/92096173/92d1478c-d8a7-4d67-b5e5-0224c241f83d`;
 
     return (
-      <img
-        src={imageUrl}
-        style={{ width: "40px", height: "40px" }}
-        alt="Hình ảnh"
-      />
+      <div style={{ position: "relative" }}>
+        <img
+          src={imageUrl}
+          style={{ width: "100%", height: "100%" }}
+          alt="Hình ảnh"
+        />
+        <div className="quantity-item">{quantity}</div>
+      </div>
     );
   }
 
@@ -61,27 +60,24 @@ const Chest = memo(() => {
       <div className="item__chest__list" gutter={16}>
         {dataChest.map((data, index) => (
           <Col span={6} key={index}>
-            <Tooltip title={data.name}>
-              <div
-                className={`item__chest__card ${
-                  index === isActive ? "active__item" : ""
-                }`}
-                onClick={() => {
-                  handleTabClick(index);
-                  detailArchiveChest(data.chestId);
-                  setArchiveChest(data);
-                  setShowAdditionalInfo(true);
-                }}
-              >
-                <div className="chest__card__image">
-                  <ImageRenderer image={data.image} />
-                  <div className="quantity-gift">1</div>
-                </div>
-                <div className="chest__card__body">
-                  <h3>{data.name}</h3>
-                </div>
+            <div
+              className={`item__chest__card ${
+                index === isActive ? "active__item" : ""
+              }`}
+              onClick={() => {
+                handleTabClick(index);
+                detailArchiveChest(data.chestId);
+                setArchiveChest(data);
+                setShowAdditionalInfo(true);
+              }}
+            >
+              <div className="chest__card__image">
+                <ImageRenderer quantity={1} />
               </div>
-            </Tooltip>
+              <div className="chest__card__body">
+                <h3>{data.name}</h3>
+              </div>
+            </div>
           </Col>
         ))}
       </div>
@@ -89,7 +85,10 @@ const Chest = memo(() => {
         <div className="chest__item__detail">
           <div className="chest__detail__header">
             <div className="chest__detail__image">
-              <ImageRenderer image={dataChest.image} />
+              <img
+                src="https://github.com/cuongnq189/react-basic/assets/92096173/92d1478c-d8a7-4d67-b5e5-0224c241f83d"
+                atl="image"
+              />
             </div>
             <div class="chest__detail__body">
               <h3>{name}</h3>

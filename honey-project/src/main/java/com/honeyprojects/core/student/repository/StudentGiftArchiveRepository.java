@@ -73,13 +73,12 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
     StudentArchiveResponse detailArchiveGift(@Param("req") StudentGetArchiveGiftRequest req);
 
     @Query(value = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, COUNT(c.id) AS quantity, ag.id, c.id AS chestId, c.name
+                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.id, c.id AS chestId, c.name
                     FROM chest c 
                     JOIN archive_gift ag ON ag.chest_id = c.id
                     JOIN archive a ON ag.archive_id = a.id
                     WHERE (a.student_id = :#{#req.idStudent})
-                    AND (c.id = :#{#req.idChest})
-                    GROUP BY c.id;
+                    AND (c.id = :#{#req.idChest});
             """, nativeQuery = true)
     StudentArchiveGetChestResponse detailArchiveChest(@Param("req") StudentGetArchiveChestRequest req);
 
