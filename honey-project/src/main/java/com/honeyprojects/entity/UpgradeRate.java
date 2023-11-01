@@ -21,6 +21,12 @@ public class UpgradeRate extends PrimaryEntity {
     private String code;
 
     @Column()
+    private Integer quantityOriginalHoney;
+
+    @Column()
+    private Integer quantityDestinationHoney;
+
+    @Column()
     private String originalHoney;
 
     @Column()
@@ -28,7 +34,7 @@ public class UpgradeRate extends PrimaryEntity {
 
     @Column()
     private Double ratio;
-
+    @Column()
     private Status status;
 
 }

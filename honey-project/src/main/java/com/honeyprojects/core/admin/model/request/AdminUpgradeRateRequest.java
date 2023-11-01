@@ -10,5 +10,4 @@ public class AdminUpgradeRateRequest extends PageableRequest {
     private String originalHoneyId;
     private String destinationHoneyId;
     private String status;
-    private String ratio;
 }

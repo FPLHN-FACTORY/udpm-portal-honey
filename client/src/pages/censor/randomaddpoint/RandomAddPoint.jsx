@@ -45,15 +45,13 @@ export default function RandomAddPoint() {
   const dispatch = useAppDispatch();
   const [category, setCategory] = useState([]);
   const [listGiftByChest, setListGiftByChest] = useState([]);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [dataPreview, setDataPreview] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [detailChest, setDetailChest] = useState();
   const [nameFile, setNameFile] = useState("");
-  const [chest, setChest] = useState({ id: "", name: "", percent: "" });
+  const [chestDetail, setChestDetail] = useState();
   const [activeTabKey, setActiveTabKey] = useState("1");
   const [selectedChest, setSelectedChest] = useState("");
   const [errorMinPoint, setErrorMinPoint] = useState("");
@@ -106,24 +104,30 @@ export default function RandomAddPoint() {
     });
   };
 
+  const handleFetchGiftByChest = (value) => {
+    RandomAddPointAPI.getAllGiftByChest(value)
+      .then((respone) => {
+        setListGiftByChest(respone.data.data);
+        const listItemIds = respone.data.data.map((item) => item.id);
+        setDataRandomItem({
+          ...dataRandomItem,
+          chestId: value,
+          listItem: listItemIds,
+        });
+      })
+      .catch((err) => {
+        message.error("Lỗi: " + err.message);
+      });
+  };
+
   const handleChangeChest = (e) => {
     const value = e === undefined ? "" : e;
     setLoading(true);
     if (value !== "") {
-      setDataRandomItem({
-        ...dataRandomItem,
-        chestId: value,
-      });
-      RandomAddPointAPI.getAllGiftByChest(e)
-        .then((respone) => {
-          setListGiftByChest(respone.data.data);
-        })
-        .catch((err) => {
-          message.error("Lỗi: " + err.message);
-        });
+      handleFetchGiftByChest(value);
       RandomAddPointAPI.getChestById(e)
         .then((respone) => {
-          setChest(respone.data.data);
+          setChestDetail(respone.data.data);
         })
         .catch((err) => {
           message.error("Lỗi: " + err.message);
@@ -139,24 +143,11 @@ export default function RandomAddPoint() {
     setLoading(false);
   };
 
-  const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-    setDataRandomItem((prevState) => ({
-      ...prevState,
-      listItem: newSelectedRowKeys,
-    }));
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-    type: "checkbox",
-  };
-
-  const handleDeleteChestGif = (chestId, giftId) => {
+  const handleDeleteChestGif = (chestId, giftId, selectedChest) => {
     setLoading(true);
     RandomAddPointAPI.deleteChestGift(chestId, giftId)
       .then(() => {
+        handleFetchGiftByChest(selectedChest);
         message.success("Xóa thành công.");
       })
       .catch(() => {
@@ -195,12 +186,10 @@ export default function RandomAddPoint() {
     const errors = {
       minPoint: "",
       maxPoint: "",
-      // numberStudent: "",
       listCategoryPoint: "",
     };
 
     if (dataRandomPoint.minPoint === null) {
-      // errors.minPoint = "Không được để trống số mật tối thiếu";
       setDataRandomPoint({ ...dataRandomPoint, minPoint: 0 });
     }
     if (dataRandomPoint.minPoint < 1) {
@@ -215,7 +204,6 @@ export default function RandomAddPoint() {
     }
 
     if (dataRandomPoint.maxPoint === null) {
-      // errors.maxPoint = "Không được để trống số mật tối đa";
       setDataRandomPoint({ ...dataRandomPoint, maxPoint: 0 });
     }
     if (dataRandomPoint.maxPoint < 1) {
@@ -225,12 +213,6 @@ export default function RandomAddPoint() {
     } else if (dataRandomPoint.maxPoint > 10000) {
       errors.maxPoint = "Số mật tối đa phải < 10000";
     }
-
-    // if (dataRandomPoint.numberStudent === null) {
-    //   errors.numberStudent = "Không được để trống số lượng";
-    // } else if (dataRandomPoint.numberStudent < 1) {
-    //   errors.numberStudent = "Số lượng phải > 0";
-    // }
 
     if (dataRandomPoint.listCategoryPoint.length < 1) {
       errors.listCategoryPoint = "Không được để trống thể loại";
@@ -244,7 +226,6 @@ export default function RandomAddPoint() {
 
     setErrorMinPoint(errors.minPoint);
     setErrorMaxPoint(errors.maxPoint);
-    // setErrorNumberStudent(errors.numberStudent);
     setErrorListCategory(errors.listCategoryPoint);
 
     return check;
@@ -293,12 +274,16 @@ export default function RandomAddPoint() {
           message.error("Tạo ngẫu nhiên vật phẩm thất bại");
         });
       setLoading(false);
-      setSelectedRowKeys([]);
     } else {
       message.error(
         "Tạo ngẫu nhiên vật phẩm thất bại, bạn cần nhập đủ các dữ liệu"
       );
     }
+  };
+
+  const handleSelectChest = (value) => {
+    setSelectedChest(value);
+    handleChangeChest(value);
   };
 
   const handleTabChange = (key) => {
@@ -391,6 +376,7 @@ export default function RandomAddPoint() {
               )}
               <Button
                 className="button-css"
+                disabled={dataPreview.totalError > 0 ? true : false}
                 onClick={() => handleCreateRandomPoint(dataRandomPoint)}
               >
                 <CheckCircleOutlined />
@@ -493,7 +479,8 @@ export default function RandomAddPoint() {
             </Col>
           </Row>
           {activeTabKey === "1" &&
-            dataRandomPoint.listStudentPoint.length > 0 && (
+            dataPreview.lstAdminAddPointDTO &&
+            dataPreview.lstAdminAddPointDTO.length > 0 && (
               <Card
                 style={{ borderTop: "5px solid #1c315e", marginTop: "32px" }}
               >
@@ -523,7 +510,7 @@ export default function RandomAddPoint() {
                   </div>
                 </Space>
                 <Table
-                  dataSource={dataRandomPoint.listStudentPoint}
+                  dataSource={dataPreview.lstAdminAddPointDTO}
                   columns={columsPreview}
                   pagination={false}
                 />
@@ -582,6 +569,7 @@ export default function RandomAddPoint() {
               )}
               <Button
                 className="button-css"
+                disabled={dataPreview.totalError > 0 ? true : false}
                 onClick={() => handleCreateRandomItem(dataRandomItem)}
               >
                 <CheckCircleOutlined />
@@ -603,7 +591,7 @@ export default function RandomAddPoint() {
                     <Tooltip title="Thêm rương">
                       <Button
                         onClick={() => {
-                          setDetailChest(null);
+                          setChestDetail(null);
                           setShowModal(true);
                         }}
                       >
@@ -623,17 +611,15 @@ export default function RandomAddPoint() {
                 }}
                 value={selectedChest}
                 options={optionChest}
-                onChange={(value) => {
-                  setSelectedChest(value);
-                  handleChangeChest(value);
-                }}
+                onChange={(value) => handleSelectChest(value)}
                 allowClear
               />
               <span className="error">{errorChestId}</span>
             </Card>
           </Row>
           {activeTabKey === "2" &&
-            dataRandomItem.listStudentPoint.length > 0 && (
+            dataPreview.lstAdminAddPointDTO &&
+            dataPreview.lstAdminAddPointDTO.length > 0 && (
               <Card
                 style={{ borderTop: "5px solid #1c315e", marginTop: "32px" }}
               >
@@ -663,7 +649,7 @@ export default function RandomAddPoint() {
                   </div>
                 </Space>
                 <Table
-                  dataSource={dataRandomItem.listStudentPoint}
+                  dataSource={dataPreview.lstAdminAddPointDTO}
                   columns={columsPreview}
                   pagination={false}
                 />
@@ -689,7 +675,9 @@ export default function RandomAddPoint() {
           <Popconfirm
             title="Xóa rương"
             description="Bạn có chắc chắn muốn xóa?"
-            onConfirm={() => handleDeleteChestGif(chest.id, record.id)}
+            onConfirm={() =>
+              handleDeleteChestGif(chestDetail.id, record.id, selectedChest)
+            }
             color="cyan"
             okText="Yes"
             cancelText="No"
@@ -711,8 +699,8 @@ export default function RandomAddPoint() {
         <ModalAddChest
           modalOpen={showModal}
           setModalOpen={setShowModal}
-          chest={detailChest}
-          SetChest={setDetailChest}
+          chest={chestDetail}
+          setChest={setChestDetail}
         />
       )}
       <Spin spinning={loading}>
@@ -743,17 +731,14 @@ export default function RandomAddPoint() {
                 }}
               >
                 <ModalAddChestGift
-                  chest={chest}
+                  handleFetchGiftByChest={handleFetchGiftByChest}
+                  selectedChest={selectedChest}
+                  chest={chestDetail}
                   icon={<PlusCircleOutlined />}
                 />
               </Space>
             </Space>
-            <Table
-              rowSelection={rowSelection}
-              rowKey="id"
-              columns={colums}
-              dataSource={listGiftByChest}
-            />
+            <Table rowKey="id" columns={colums} dataSource={listGiftByChest} />
           </Card>
         )}
       </Spin>

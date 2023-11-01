@@ -39,16 +39,18 @@ export default function ModalImportExcel(props) {
       setLoading(true);
       RandomAddPointAPI.createImportExcel(formData)
         .then((response) => {
-          setDataPreview(response.data.data);
+          const idList = response.data.data.lstAdminAddPointDTO.map(
+            (item) => item.id
+          );
           setListStudentPoint({
             ...dataRandomPoint,
-            listStudentPoint: response.data.data.lstAdminAddPointDTO,
+            listStudentPoint: idList,
           });
           setListStudentItem({
             ...dataRandomItem,
-            listStudentPoint: response.data.data.lstAdminAddPointDTO,
+            listStudentPoint: idList,
           });
-          // stompClient.send("/action/create-notification", {}, {});
+          setDataPreview(response.data.data);
           message.success("Import excel thành công");
         })
         .catch(() => {
@@ -57,6 +59,7 @@ export default function ModalImportExcel(props) {
     } else {
       message.error("Import excel thất bại");
     }
+    setNameFile("");
     setLoading(false);
     setOpen(false);
   };
@@ -70,6 +73,7 @@ export default function ModalImportExcel(props) {
     setNameFile("");
     setListStudentPoint([]);
     setListStudentItem([]);
+    setFile(null);
     setOpen(false);
   };
   return (

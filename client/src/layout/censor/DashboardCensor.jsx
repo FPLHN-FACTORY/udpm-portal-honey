@@ -26,6 +26,7 @@ import {
   faPlusCircle,
   faScaleUnbalanced,
   faStar,
+  faToolbox,
 } from "@fortawesome/free-solid-svg-icons";
 const { Header: AntHeader, Content } = Layout;
 
@@ -55,52 +56,41 @@ function DashboardAuthUser({ children }) {
       "1",
       <FontAwesomeIcon icon={faKaaba} />
     ),
-    // getItem(
-    //   <Link to="/censor/conversion">Quy đổi</Link>,
-    //   "2",
-    //   <FontAwesomeIcon icon={faMoneyBillTransfer} />
-    // ),
     getItem(
       <Link to="/censor/semester">Quản lý học kỳ</Link>,
-      "3",
+      "2",
       <FontAwesomeIcon icon={faPenRuler} />
     ),
     getItem(
       <Link to="/censor/gift">Quản lý vật phẩm</Link>,
-      "4",
+      "3",
       <FontAwesomeIcon icon={faGift} />
     ),
-    getItem("Cộng mật ong", "5", <FontAwesomeIcon icon={faPlusCircle} />, [
-      getItem(<Link to={"/censor/add-point"}>Cộng mật ong</Link>, "6"),
-      getItem(<Link to={"/censor/add-point/history"}>Lịch sử</Link>, "7"),
+    getItem("Cộng mật ong", "4", <FontAwesomeIcon icon={faPlusCircle} />, [
+      getItem(<Link to={"/censor/add-point"}>Cộng mật ong</Link>, "5"),
+      getItem(<Link to={"/censor/add-point/history"}>Lịch sử</Link>, "6"),
     ]),
     getItem(
       "Quản lý yêu cầu",
-      "80",
+      "7",
       <FontAwesomeIcon icon={faCodePullRequest} />,
       [
+        getItem(<Link to={"/censor/request-manager"}>Yêu cầu</Link>, "8"),
         getItem(
-          <Link to={"/censor/request-manager/list-request"}>
-            Yêu cầu cộng điểm
-          </Link>,
-          "90"
-        ),
-        getItem(
-          <Link to={"/censor/request-buy-gift/history"}>Yêu cầu đổi quà</Link>,
-          "100"
-        ),
-        getItem(
-          <Link to={"/censor/request-manager/approved-history"}>
-            Lịch sử phê duyệt
-          </Link>,
-          "110"
+          <Link to={"/censor/request-manager/approved-history"}>Lịch sử</Link>,
+          "9"
         ),
       ]
     ),
     getItem(
-      <Link to="/censor/request-manager/random-add-point">Tặng mật ong</Link>,
-      "1",
+      <Link to="/censor/request-manager/random-add-point">Tặng vật phẩm</Link>,
+      "10",
       <FontAwesomeIcon icon={faCommentsDollar} />
+    ),
+    getItem(
+      <Link to="/censor/chest">Quản lý rương</Link>,
+      "11",
+      <FontAwesomeIcon icon={faToolbox} />
     ),
     getItem(
       <Link to="/censor/auction-management">Quản lý phòng đấu giá</Link>,

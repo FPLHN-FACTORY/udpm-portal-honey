@@ -1,7 +1,12 @@
 package com.honeyprojects.core.admin.service.impl;
 
 import com.honeyprojects.core.admin.model.request.AdminUpgradeRateRequest;
+import com.honeyprojects.core.admin.model.request.CensorAddUpgradeRateRequest;
 import com.honeyprojects.core.admin.model.response.AdminUpgradeRateResponse;
+import com.honeyprojects.core.admin.model.response.CensorGiftSelectResponse;
+import com.honeyprojects.core.admin.model.dto.CensorUpgradeRateGiftDTO;
+import com.honeyprojects.core.admin.repository.AdGiftRepository;
+import com.honeyprojects.core.admin.repository.AdUpgradeRateGiftRepository;
 import com.honeyprojects.core.admin.repository.AdUpgradeRateRepository;
 import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
 import com.honeyprojects.core.admin.service.AdUpgradeRateService;
@@ -10,10 +15,13 @@ import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.UpgradeRate;
 import com.honeyprojects.infrastructure.contant.Status;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,19 +29,41 @@ import java.util.Optional;
 public class AdUpgradeRateServiceImpl implements AdUpgradeRateService {
     AdUpgradeRateRepository adUpgradeRateRepository;
 
+    AdUpgradeRateGiftRepository adUpgradeRateGiftRepository;
+
     AdminCategoryRepository adminCategoryRepository;
+
+    private AdGiftRepository adGiftRepository;
     @Override
     public PageableObject<AdminUpgradeRateResponse> getUpgradeRate(AdminUpgradeRateRequest searchParams) {
         Pageable pageable = PageRequest.of(searchParams.getPage(), searchParams.getSize());
-        return new PageableObject<>(adUpgradeRateRepository.getUpgradeRate(searchParams, pageable));
+        Page<AdminUpgradeRateResponse> rsPage = adUpgradeRateRepository.getUpgradeRate(searchParams, pageable);
+        if(rsPage.hasContent()){
+            for (AdminUpgradeRateResponse adminUpgradeRateResponse:
+            rsPage.getContent()) {
+                List<CensorGiftSelectResponse> lstCensorGiftSelectResponses =  adGiftRepository.getGiftsExistByUpgradeRateGiftId(adminUpgradeRateResponse.getId());
+                List<CensorUpgradeRateGiftDTO> lstCensorUpgradeRateGiftDTOS = new ArrayList<>();
+                for (CensorGiftSelectResponse censorGiftSelectResponse:
+                        lstCensorGiftSelectResponses) {
+                    CensorUpgradeRateGiftDTO censorUpgradeRateGiftDTO = new CensorUpgradeRateGiftDTO();
+                    censorUpgradeRateGiftDTO.setId(censorGiftSelectResponse.getId());
+                    censorUpgradeRateGiftDTO.setName(censorGiftSelectResponse.getName());
+                    lstCensorUpgradeRateGiftDTOS.add(censorUpgradeRateGiftDTO);
+                }
+              adminUpgradeRateResponse.setListUpgrateRateGiftDTO(lstCensorUpgradeRateGiftDTOS);
+            }
+        }
+        return new PageableObject<>(rsPage);
     }
     @Override
-    public UpgradeRate save(AdminUpgradeRateRequest params) {
+    public UpgradeRate save(CensorAddUpgradeRateRequest params) {
         UpgradeRate entity = new UpgradeRate();
         boolean check = true;
         long entityCount = adUpgradeRateRepository.count();
         entity.setCode("UR" + (entityCount + 1));
         entity.setStatus(Status.HOAT_DONG);
+        entity.setQuantityDestinationHoney(params.getQuantityDestinationHoney());
+        entity.setQuantityOriginalHoney(params.getQuantityOriginalHoney());
         entity.setRatio(Double.valueOf(params.getRatio()));
         Optional<Category> optionalCategory1 = adminCategoryRepository.findById(params.getOriginalHoneyId());
         if (optionalCategory1.isPresent()){
@@ -52,7 +82,7 @@ public class AdUpgradeRateServiceImpl implements AdUpgradeRateService {
         }else return null;
     }
     @Override
-    public UpgradeRate update(AdminUpgradeRateRequest params, String id) {
+    public UpgradeRate update(CensorAddUpgradeRateRequest params, String id) {
         Optional<UpgradeRate> entity = adUpgradeRateRepository.findById(id);
         if(entity.isPresent()){
             boolean check = true;

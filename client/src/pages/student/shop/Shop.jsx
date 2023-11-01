@@ -23,9 +23,6 @@ const Shop = memo(() => {
   const fechCategory = () => {
     ResquestConversion.fetchAllCategory().then((response) => {
       setFillCategory(response.data.data);
-      if (response.data.data != null) {
-        setCategoryType(response.data.data[0].id);
-      }
     });
   };
 
@@ -68,9 +65,16 @@ const Shop = memo(() => {
       );
       setFilteredItem(filteredData);
     } else {
-      setFilteredItem(fillGiftItem);
+      if (!categoryType && fillCategory.length > 0) {
+        setCategoryType(fillCategory[0].id);
+        const data = {
+          categoryId: fillCategory[0].id,
+          studentId: fillUserApi.idUser,
+        };
+        getPoint(data);
+      }
     }
-  }, [categoryType, fillGiftItem]);
+  }, [categoryType, fillGiftItem, fillCategory, fillUserApi]);
 
   useEffect(() => {
     ResquestConversion.fetchAllGift().then((response) => {

@@ -1,6 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { Button, Pagination, Space, Table, Card, Input, Tooltip } from "antd";
+import {
+  Button,
+  Pagination,
+  Space,
+  Table,
+  Card,
+  Input,
+  Tooltip,
+  Tag,
+} from "antd";
 import {
   PlusOutlined,
   EditOutlined,
@@ -10,9 +19,7 @@ import {
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { SemesterAPI } from "../../../apis/censor/semester/semester.api";
-import {
-  Spin,
-} from "antd";
+import { Spin } from "antd";
 import {
   GetSemester,
   SetSemester,
@@ -21,6 +28,8 @@ import ModalAdd from "./ModalAdd";
 import ModalDetail from "./ModalDetail";
 import DeleteConfirm from "./delete";
 import "./index.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
 export default function Semester() {
   const [showModal, setShowModal] = useState(false);
@@ -47,12 +56,14 @@ export default function Semester() {
     SemesterAPI.fetchAll({
       search: search,
       page: current - 1,
-    }).then((response) => {
-      dispatch(SetSemester(response.data.data.data));
-      setTotal(response.data.data.totalPages);
-    }).finally(() => {
-      setLoading(false);
-    });
+    })
+      .then((response) => {
+        dispatch(SetSemester(response.data.data.data));
+        setTotal(response.data.data.totalPages);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const data = useAppSelector(GetSemester);
@@ -70,23 +81,27 @@ export default function Semester() {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
+      align: "center",
       render: (text, record, index) => index + 1,
     },
     {
       title: "Mã",
       dataIndex: "code",
       key: "code",
+      align: "center",
       render: (text) => <span>{text}</span>,
     },
     {
       title: "Tên kỳ học",
       dataIndex: "name",
       key: "name",
+      align: "center",
     },
     {
       title: "Ngày bắt đầu",
       dataIndex: "toDate",
       key: "toDate",
+      align: "center",
       render: (text) => {
         const readableDate = convertToReadableDate(text);
         return readableDate;
@@ -96,14 +111,36 @@ export default function Semester() {
       title: "Ngày kết thúc",
       dataIndex: "fromDate",
       key: "fromDate",
+      align: "center",
       render: (text) => {
         const readableDate = convertToReadableDate(text);
         return readableDate;
       },
     },
     {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      align: "center",
+      render: (text) => (
+        <Tag
+          color={text === 0 ? "green" : "red"}
+          style={{
+            fontSize: "14px",
+            padding: "5px 10px",
+            borderRadius: "10px",
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          {text === 0 ? "Mở" : "Đóng"}
+        </Tag>
+      ),
+    },
+    {
       title: () => <div>Hành động</div>,
       key: "action",
+      align: "center",
       render: (_, record) => (
         <Space size="small">
           <Tooltip title="Cập nhật">
@@ -113,11 +150,14 @@ export default function Semester() {
                 setDetailSemester(record);
                 setShowModal(true);
               }}
+              style={{
+                backgroundColor: "yellowgreen",
+                color: "white",
+              }}
             >
-              <EditOutlined className="icon" />
+              <FontAwesomeIcon icon={faPenToSquare} />
             </Button>
           </Tooltip>
-          <ModalDetail semester={record} icon={<FormOutlined />} />
           <DeleteConfirm
             semester={record}
             id={record.id}
@@ -188,7 +228,7 @@ export default function Semester() {
           </div>
 
           <div className="mt-5">
-            <Table 
+            <Table
               columns={columns}
               dataSource={data}
               rowKey="id"

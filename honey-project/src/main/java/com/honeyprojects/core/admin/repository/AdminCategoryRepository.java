@@ -49,15 +49,11 @@ public interface AdminCategoryRepository extends CategoryRepository {
     Page<AdminCategoryResponse> getAllCategoryByAdmin(Pageable pageable, @Param("request") AdminCategoryRequest request);
 
     @Query(value = """
-            SELECT c.id, c.name, c.code, c.last_modified_date ,c.category_status ,c.image, c.transaction_rights  FROM category c
+            SELECT c.id, c.name, c.code, c.last_modified_date ,c.category_status ,c.image, c.transaction_rights  
+            FROM category c 
+            WHERE c.category_status # 0
             ORDER BY c.last_modified_date DESC
             """, nativeQuery = true)
     List<AdminCategoryResponse> getAllListCategory();
 
-    @Query(value = """
-            SELECT c.name FROM category c
-            WHERE ( c.category_status in (1, 2))
-            ORDER BY c.last_modified_date DESC
-            """, nativeQuery = true)
-    List<String> getAllNameCategoryByStatus();
 }

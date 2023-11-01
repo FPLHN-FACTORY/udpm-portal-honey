@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { message, Modal, Form, Input } from "antd";
+import { message, Modal, Form, Input, InputNumber, Slider } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 import { SetGiftArchive } from "../../../app/reducers/archive-gift/gift-archive.reducer";
@@ -21,7 +21,7 @@ const UsingGift = (props) => {
       dispatch(SetGiftArchive(response.data.data));
     });
     ArchiveAPI.detailArchiveGift(archivegift.idGift).then((response) => {
-      let quantity = parseInt(response.data.quantity) - 1;
+      let quantity = parseInt(response.data.quantity);
       dispatch(SetArchiveCountGift(quantity));
     });
   };
@@ -30,7 +30,11 @@ const UsingGift = (props) => {
     form
       .validateFields()
       .then((values) => {
-        const data = { ...values, archiveGiftId: archivegift.id };
+        const data = {
+          ...values,
+          archiveGiftId: archivegift.id,
+          quantity: soLuong,
+        };
         ArchiveAPI.openGift(data)
           .then((result) => {
             if (result.data.success) {
@@ -60,6 +64,8 @@ const UsingGift = (props) => {
     setIsModalOpen(false);
   };
 
+  const [soLuong, setSoLuong] = useState(1);
+
   return (
     <div>
       <div onClick={showModal}>Sử dụng</div>
@@ -67,9 +73,18 @@ const UsingGift = (props) => {
         title="Sử dụng quà tặng"
         visible={isModalOpen}
         onOk={handleOk}
-        onCancel={handleCancel}
-      >
+        onCancel={handleCancel}>
         <Form form={form}>
+          <b>
+            <span style={{ color: "red" }}>* </span> Số lượng
+          </b>
+          <Slider
+            value={soLuong}
+            onChange={(e) => {
+              setSoLuong(e);
+            }}
+            max={parseInt(archivegift.quantity)}
+          />
           <b>
             <span style={{ color: "red" }}>* </span> Mã môn học
           </b>
@@ -80,8 +95,7 @@ const UsingGift = (props) => {
                 required: true,
                 message: "Vui lòng nhập mã môn học!",
               },
-            ]}
-          >
+            ]}>
             <Input />
           </Form.Item>
           <b>
@@ -94,8 +108,7 @@ const UsingGift = (props) => {
                 required: true,
                 message: "Vui lòng nhập mã lớp!",
               },
-            ]}
-          >
+            ]}>
             <Input />
           </Form.Item>
           <b>
@@ -112,8 +125,7 @@ const UsingGift = (props) => {
                 type: "email",
                 message: "Email không hợp lệ!",
               },
-            ]}
-          >
+            ]}>
             <Input />
           </Form.Item>
         </Form>

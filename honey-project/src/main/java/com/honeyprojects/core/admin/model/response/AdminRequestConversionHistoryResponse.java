@@ -8,6 +8,9 @@ public interface AdminRequestConversionHistoryResponse extends IsIdentified {
     @Value("#{target.student_id}")
     String getStudentId();
 
+//    @Value("#{target.student_id}")
+    String getCategoryId();
+
     @Value("#{target.name_gift}")
     String getNameGift();
 

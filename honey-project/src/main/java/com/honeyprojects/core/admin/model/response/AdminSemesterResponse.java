@@ -17,4 +17,7 @@ public interface AdminSemesterResponse extends IsIdentified {
     @Value("#{target.from_date}")
     Long getFromDate();
 
+    @Value("#{target.status}")
+    Long getStatus();
+
 }

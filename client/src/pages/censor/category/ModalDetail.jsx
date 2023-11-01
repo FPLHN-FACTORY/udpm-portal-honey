@@ -14,16 +14,9 @@ const ModalDetail = (props) => {
 
   useEffect(() => {
     if (category.image) {
-      // Chuyển đổi chuỗi byte thành mảng byte
       const byteArray = category.image.split(",").map(Number);
-
-      // Tạo một Uint8Array từ mảng byte
       const uint8Array = new Uint8Array(byteArray);
-
-      // Chuyển đổi Uint8Array thành Blob
       const blob = new Blob([uint8Array], { type: "image/jpeg" });
-
-      // Tạo URL dữ liệu từ Blob
       const imageUrl = URL.createObjectURL(blob);
 
       setSelectedImageUrl(imageUrl);
@@ -51,7 +44,6 @@ const ModalDetail = (props) => {
       setSelectedImageUrl("");
     }
   };
-  console.log(category);
   const dispatch = useAppDispatch();
   form.setFieldsValue(category);
 
@@ -146,14 +138,14 @@ const ModalDetail = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={"0"}>Không phê duyệt</Radio>
-              <Radio value={"1"}>Cần phê duyệt</Radio>
+              <Radio value={"1"}>Không phê duyệt</Radio>
+              <Radio value={"2"}>Cần phê duyệt</Radio>
             </Radio.Group>
           </Form.Item>
 
           <Form.Item
             label="Giao dịch"
-            name="categoryStatus"
+            name="transactionRights"
             rules={[
               {
                 required: true,
@@ -162,8 +154,8 @@ const ModalDetail = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={"1"}>Được giao dịch</Radio>
-              <Radio value={"2"}>Không giao dịch</Radio>
+              <Radio value={"0"}>Được giao dịch</Radio>
+              <Radio value={"1"}>Không giao dịch</Radio>
             </Radio.Group>
           </Form.Item>
 

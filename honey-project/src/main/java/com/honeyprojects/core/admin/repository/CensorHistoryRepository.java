@@ -5,6 +5,7 @@ import com.honeyprojects.core.admin.model.request.CensorSearchHistoryRequest;
 import com.honeyprojects.core.admin.model.response.CensorAddHoneyRequestResponse;
 import com.honeyprojects.core.admin.model.response.CensorDetailRequestResponse;
 import com.honeyprojects.core.admin.model.response.CensorTransactionRequestResponse;
+import com.honeyprojects.entity.Honey;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.repository.HistoryRepository;
@@ -153,6 +154,5 @@ public interface CensorHistoryRepository extends HistoryRepository {
             """, nativeQuery = true)
     Page<CensorTransactionRequestResponse> getExchangeGiftByStatus(@Param("searchParams") AdminHistoryApprovedSearchRequest searchParams,
                                                                     Pageable pageable);
-
 
 }

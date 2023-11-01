@@ -15,7 +15,6 @@ import moment from "moment";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
-import TabsRequest from "./TabsRequest";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -25,8 +24,6 @@ const statusHistory = (status) => {
       return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
     case 2:
       return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
-    case 3:
-      return <Tag color="cyan">Gửi lại yêu cầu</Tag>; // Màu xanh dương nhạt
     default:
       return <Tag>Không xác định</Tag>;
   }
@@ -38,6 +35,7 @@ export default function RequestConversionHistory() {
   const [totalPages, setTotalPages] = useState([]);
   const [filter, setFilter] = useState({ page: 0 });
   const [fillUserApi, setFillUserApi] = useState([]);
+  const [fillPoint, setFillPoint] = useState(0);
   const [type, setType] = useState();
   const fechUserApiById = () => {
     ResquestConversion.getUserAPiByid().then((response) => {
@@ -46,7 +44,6 @@ export default function RequestConversionHistory() {
         khoa: "17.3",
         phone: "0763104018",
       });
-      console.log(response.data.data.idUser);
     });
   };
 
@@ -61,14 +58,20 @@ export default function RequestConversionHistory() {
     });
   };
 
+  const fechFillPoint = (idStudent, idCategory) => {
+    RequestManagerAPI.getPoint(idStudent, idCategory).then((response) => {
+      setFillPoint(response.data.data);
+    });
+  };
+
   const fechCategory = () => {
     CategoryAPI.fetchAll().then((response) => {
       setFillCategory(response.data.data.data);
     });
   };
   useEffect(() => {
-    fechData(filter);
     fechCategory();
+    fechData(filter);
   }, [filter]);
 
   const onFinishSearch = (value) => {
@@ -94,19 +97,36 @@ export default function RequestConversionHistory() {
       idHistory,
       status,
       quantity
-    )
-      .then((response) => {
-        if (response.data.success) {
-          if (status === 1) message.success("Đã xác nhận yêu cầu cộng điểm!");
-          if (status === 2) message.error("Hủy yêu cầu thành công!");
-          setType(response.data.data.type);
-        }
-        // message.success("Phê duyệt thành công");
-        fechData();
-      })
-      .catch((error) => {
-        message.error(error);
-      });
+    ).then((response) => {
+      if (response.data.success) {
+        if (status === 1) message.success("Đã xác nhận yêu cầu mua vật phẩm!");
+        if (status === 2) message.error("Hủy yêu cầu thành công!");
+        setType(response.data.data.type);
+      }
+      // message.success("Phê duyệt thành công");
+      fechData();
+    });
+  };
+  const handCheckvalide = async (values) => {
+    // Gọi hàm fechFillPoint và đợi cho đến khi hoàn thành
+    const response = await RequestManagerAPI.getPoint(
+      values.studentId,
+      values.categoryId
+    );
+    const newFillPoint = response.data.data;
+
+    const totalPoint = values.quantity * values.honeyPoint;
+    if (totalPoint > newFillPoint) {
+      message.error("Bạn Không còn đủ điểm để mua quà!");
+    } else {
+      changeStatusConversion(
+        values.studentId,
+        values.giftId,
+        values.id,
+        1,
+        values.quantity
+      );
+    }
   };
 
   const columns = [
@@ -118,7 +138,7 @@ export default function RequestConversionHistory() {
     },
     {
       title: "Tên sinh viên",
-      dataIndex: "studentId", // Thay userId bằng trường dữ liệu người dùng bạn muốn hiển thị
+      dataIndex: "studentId",
       key: "studentId",
       render: (text) => <span>{`${fillUserApi.name}`}</span>,
     },
@@ -128,7 +148,6 @@ export default function RequestConversionHistory() {
       dataIndex: "nameCategory",
       key: "nameCategory",
     },
-
     {
       title: "Loại quà",
       dataIndex: "nameGift",
@@ -187,30 +206,26 @@ export default function RequestConversionHistory() {
             style={{ fontSize: "19px", textAlign: "center", color: "green" }}
           >
             {console.log(values)}
+
             {values.status !== 1 && values.status !== 2 && (
               <CheckCircleFilled
+                onClick={() => {
+                  handCheckvalide(values);
+                }}
+              />
+            )}
+
+            {values.status !== 1 && values.status !== 2 && (
+              <CloseCircleFilled
+                style={{ fontSize: "19px", margin: "0px 10px", color: "red" }}
                 onClick={() => {
                   changeStatusConversion(
                     values.studentId,
                     values.giftId,
                     values.id,
-                    1,
-                    values.quantity
+                    2
                   );
                 }}
-              />
-            )}
-            {values.status !== 1 && values.status !== 2 && (
-              <CloseCircleFilled
-                style={{ fontSize: "19px", margin: "0px 10px", color: "red" }}
-                onClick={() =>
-                  changeStatusConversion(
-                    values.studentId,
-                    values.giftId,
-                    values.id,
-                    2
-                  )
-                }
               />
             )}
           </div>
@@ -218,10 +233,8 @@ export default function RequestConversionHistory() {
       ),
     },
   ];
-  console.log(fillUserApi.name);
   return (
     <>
-      <TabsRequest selectIndex={1} type={type} />
       <Card className="mb-2 py-1">
         <Form onFinish={onFinishSearch}>
           <Space size={"large"}>
@@ -238,10 +251,10 @@ export default function RequestConversionHistory() {
                 ]}
               />
             </Form.Item>
-
             <Button
               htmlType="submit"
               type="primary"
+              className="mr-10 search-button"
               style={{ marginBottom: "25px" }}
             >
               Lọc
@@ -249,18 +262,11 @@ export default function RequestConversionHistory() {
           </Space>
         </Form>
       </Card>
-
       <Card title="Danh sách yêu cầu đồi quà">
         <div className="mt-5">
           <Table
             columns={columns}
             rowKey="id"
-            expandable={{
-              expandedRowRender: (record) => (
-                <p style={{ margin: 0 }}>{record.note}</p>
-              ),
-              rowExpandable: (record) => record.note !== "Not Expandable",
-            }}
             dataSource={getHistory}
             pagination={false}
           />

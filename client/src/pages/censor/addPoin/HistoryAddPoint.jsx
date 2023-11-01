@@ -7,7 +7,6 @@ import {
   Select,
   Space,
   Table,
-  Tag,
   message,
 } from "antd";
 import React, { useEffect, useState } from "react";
@@ -25,24 +24,24 @@ import {
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
 
-const statusHistory = (status) => {
-  switch (status) {
-    case 1:
-      return (
-        <Tag style={{ width: "80px", textAlign: "center" }} color="green">
-         Gửi thành công
-        </Tag>
-      ); // Màu xanh lá cây
-    case 2:
-      return (
-        <Tag style={{ width: "80px", textAlign: "center" }} color="volcano">
-         Gửi thất bại
-        </Tag>
-      ); // Màu đỏ
-    default:
-      return <Tag>Không xác định</Tag>;
-  }
-};
+// const statusHistory = (status) => {
+//   switch (status) {
+//     case 1:
+//       return (
+//         <Tag style={{ width: "80px", textAlign: "center" }} color="green">
+//           Gửi thành công
+//         </Tag>
+//       ); // Màu xanh lá cây
+//     case 2:
+//       return (
+//         <Tag style={{ width: "80px", textAlign: "center" }} color="volcano">
+//           Gửi thất bại
+//         </Tag>
+//       ); // Màu đỏ
+//     default:
+//       return <Tag>Không xác định</Tag>;
+//   }
+// };
 
 export default function HistoryAddPoint() {
   const dispatch = useAppDispatch();
@@ -51,37 +50,43 @@ export default function HistoryAddPoint() {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
+      align: "center",
     },
     {
       title: "Tên sinh viên",
       dataIndex: "nameStudent",
       key: "nameStudent",
+      align: "center",
     },
     {
       title: "Loại điểm",
       dataIndex: "nameCategory",
       key: "nameCategory",
+      align: "center",
     },
     {
       title: "Số điểm",
       dataIndex: "honeyPoint",
       key: "honeyPoint",
+      align: "center",
     },
     {
       title: "Ngày tạo",
       dataIndex: "createdDate",
       key: "createdDate",
+      align: "center",
     },
     {
       title: "Lý do",
       dataIndex: "note",
       key: "note",
+      align: "center",
     },
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-    },
+    // {
+    //   title: "Trạng thái",
+    //   dataIndex: "status",
+    //   key: "status",
+    // },
   ];
 
   const [totalPage, setTotalPage] = useState(1);
@@ -132,7 +137,7 @@ export default function HistoryAddPoint() {
     return {
       ...data,
       key: data.id,
-      status: statusHistory(data.status),
+      // status: statusHistory(data.status),
       createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
       acction: { idHistory: data.id, status: data.status },
     };
@@ -197,7 +202,8 @@ export default function HistoryAddPoint() {
             <Button
               htmlType="submit"
               type="primary"
-              className="mr-10 search-button">
+              className="mr-10 search-button"
+            >
               Lọc
             </Button>
           </Space>

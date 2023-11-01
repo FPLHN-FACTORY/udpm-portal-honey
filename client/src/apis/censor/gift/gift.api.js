@@ -54,7 +54,7 @@ export class GiftAPI {
     }
     formData.append("status", data.status);
     formData.append("type", data.type);
-    formData.append("note", data.note);
+
     if (data.fromDate !== null && data.toDate !== null) {
       formData.append("fromDate", data.fromDate);
       formData.append("toDate", data.toDate);

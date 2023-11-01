@@ -4,6 +4,7 @@ import com.honeyprojects.core.admin.model.request.AdminCategoryRequest;
 import com.honeyprojects.core.admin.model.request.AdminGiftRequest;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
+import com.honeyprojects.core.admin.model.response.CensorGiftSelectResponse;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.repository.GiftRepository;
 import org.springframework.data.domain.Page;
@@ -53,4 +54,13 @@ public interface AdGiftRepository extends GiftRepository {
             """, nativeQuery = true )
     List<String> getAllNameByStatus();
 
+    @Query(value = """
+             SELECT g.id, g.name FROM gift g where g.status in (0,1) ORDER BY g.last_modified_date DESC
+            """, nativeQuery = true )
+    List<CensorGiftSelectResponse> getAllGiftExist();
+
+    @Query(value = """
+              SELECT g.id, g.name FROM gift g LEFT JOIN upgrade_rate_gift u ON g.id = u.id_gift WHERE u.id_upgrade_rate = :id AND g.status in (0,1) ORDER BY g.last_modified_date DESC
+            """, nativeQuery = true )
+    List<CensorGiftSelectResponse> getGiftsExistByUpgradeRateGiftId(@Param("id") String id);
 }

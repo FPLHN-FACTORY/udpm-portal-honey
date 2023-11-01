@@ -22,6 +22,7 @@ import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.util.ConvertRequestApiidentity;
@@ -71,6 +72,7 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
         ArchiveGift archiveGift = new ArchiveGift();
         Archive archive = new Archive();
         archive.setStudentId(createRequest.getStudentId());
+        archive.setStatus(Status.HOAT_DONG);
         int defaultHoneyPoint = 0;
         if (honey == null) {
             String idUs = userSemesterRepository.getSemesterByStudent(createRequest.getStudentId());
@@ -110,7 +112,7 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
 
             Archive getArchive = archiveRepository.findByStudentId(createRequest.getStudentId()).orElse(archive);
             archiveRepository.save(getArchive);
-            ArchiveGift archiveGift1 = giftArchiveRepository.findByGiftId(createRequest.getGiftId()).orElse(null);
+            ArchiveGift archiveGift1 = giftArchiveRepository.findByGiftIdAndArchiveId(createRequest.getGiftId(),getArchive.getId());
             if(archiveGift1 != null){
                 int currentQuantity = archiveGift1.getQuantity();
                 int additionalQuantity = createRequest.getQuantity();
