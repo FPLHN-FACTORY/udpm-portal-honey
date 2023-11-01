@@ -93,7 +93,7 @@ const GiftChest = memo(() => {
           </Col>
         ))}
       </div>
-      {showAdditionalInfo ? (
+      {showAdditionalInfo && quantity >= 0 ? (
         <div className="chest__item__detail">
           <div className="chest__detail__header">
             <div className="chest__detail__image">
