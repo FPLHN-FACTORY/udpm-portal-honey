@@ -43,8 +43,6 @@ const statusHistory = (status) => {
       return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
     case 2:
       return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
-    case 3:
-      return <Tag color="cyan">Gửi lại yêu cầu</Tag>; // Màu xanh dương nhạt
     default:
       return <Tag>Không xác định</Tag>;
   }
@@ -212,7 +210,7 @@ export default function RequestAddPoint() {
         console.log(response.data);
         if (response.data.success) {
           fetchData(dispatch, filter);
-          if (status === 1) message.success("Đã xác nhận yêu cầu cộng điểm!");
+          if (status === 1) message.success("Đã xác nhận yêu cầu cộng mật ong!");
           if (status === 2) message.error("Hủy yêu cầu thành công!");
           setType(response.data.data.type);
         }
@@ -228,7 +226,6 @@ export default function RequestAddPoint() {
   return (
     <Spin spinning={loading}>
       <div className="request-manager">
-        {/* <TabsRequest selectIndex={1} type={type} /> */}
         <Card className="mb-2 py-1">
           <Form onFinish={onFinishSearch}>
             <Space size={"large"}>

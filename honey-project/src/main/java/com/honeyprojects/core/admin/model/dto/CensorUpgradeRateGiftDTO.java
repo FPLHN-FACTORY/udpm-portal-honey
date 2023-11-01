@@ -1,12 +1,15 @@
 package com.honeyprojects.core.admin.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+
 public class CensorUpgradeRateGiftDTO{
     private String id;
 
