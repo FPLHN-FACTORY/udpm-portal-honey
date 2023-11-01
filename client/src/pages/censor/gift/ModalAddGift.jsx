@@ -264,7 +264,7 @@ const ModalThem = (props) => {
 
   return (
     <Modal
-      title={"Thêm mới quà tặng"}
+      title={"Thêm mới vật phẩm"}
       visible={modalOpen}
       onCancel={onCancel}
       footer={null}

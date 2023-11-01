@@ -101,24 +101,20 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
             if (idUs == null) return null;
             Honey honey = new Honey();
             honey.setStatus(Status.HOAT_DONG);
-            honey.setHoneyPoint(0);
+            honey.setHoneyPoint(addPointRequest.getHoneyPoint());
             honey.setStudentId(addPointRequest.getStudentId());
             honey.setHoneyCategoryId(addPointRequest.getCategoryId());
             honey.setUserSemesterId(idUs);
+            honeyRepository.save(honey);
             history.setHoneyId(honeyRepository.save(honey).getId());
 
         } else {
             Honey honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();
             history.setHoneyId(honey.getId());
-        }
-        history.setStudentId(addPointRequest.getStudentId());
-
-        Optional<Honey>idHoney = honeyRepository.findById(addPointRequest.getHoneyId());
-        if(idHoney.isPresent()) {
-            Honey honey = idHoney.get();
             honey.setHoneyPoint(addPointRequest.getHoneyPoint() + honey.getHoneyPoint());
             honeyRepository.save(honey);
         }
+        history.setStudentId(addPointRequest.getStudentId());
         return historyRepository.save(history);
     }
 

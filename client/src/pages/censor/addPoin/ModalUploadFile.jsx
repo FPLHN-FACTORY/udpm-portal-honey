@@ -58,8 +58,10 @@ export default function ModalUpLoadFile(props) {
   };
   const handleRemoveFile = () => {
     setNameFileUpload("");
+    setFile(null);
     setOpenUpload(false);
   };
+
   return (
     <div>
       <Modal

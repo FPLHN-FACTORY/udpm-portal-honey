@@ -1,16 +1,16 @@
 package com.honeyprojects.core.admin.model.dto;
 
-import com.honeyprojects.core.admin.model.dto.CensorUpgradeRateGiftDTO;
-import com.honeyprojects.core.admin.model.response.AdminUpgradeRateResponse;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class CensorUpgradeRateDTO {
     private String stt;
 

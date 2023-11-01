@@ -15,7 +15,6 @@ export default function ModalAddChest(props) {
 
   const getAllNameChest = () => {
     RandomAddPointAPI.getAllNameChest().then((result) => {
-      console.log(result.data.data);
       setListNameChest(result.data.data);
     });
   };

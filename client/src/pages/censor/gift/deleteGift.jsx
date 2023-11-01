@@ -20,7 +20,6 @@ const DeleteConfirm = (props) => {
   };
 
   const deleteGift = (id) => {
-    // console.log('id'+id);
     form
       .validateFields()
       .then((formValues) => {

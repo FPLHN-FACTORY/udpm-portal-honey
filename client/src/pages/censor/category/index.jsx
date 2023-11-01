@@ -91,27 +91,21 @@ export default function Index() {
       align: "center",
       render: (image) => {
         if (image) {
-          // Chuyển đổi chuỗi byte thành mảng byte
           const byteArray = image.split(",").map(Number);
-
-          // Tạo một Uint8Array từ mảng byte
           const uint8Array = new Uint8Array(byteArray);
-
-          // Chuyển đổi Uint8Array thành Blob
           const blob = new Blob([uint8Array], { type: "image/jpeg" });
-
-          // Tạo URL dữ liệu từ Blob
           const imageUrl = URL.createObjectURL(blob);
-
           return (
-            <img
-              src={imageUrl}
-              style={{ width: "40px", height: "40px" }}
-              alt="Hình ảnh"
-            />
+            <div style={{ textAlign: "center" }}>
+              <img
+                src={imageUrl}
+                style={{ width: "40px", height: "40px", margin: "auto" }}
+                alt="Hình ảnh"
+              />
+            </div>
           );
         } else {
-          return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
+          return <div>Chưa có ảnh</div>;
         }
       },
     },

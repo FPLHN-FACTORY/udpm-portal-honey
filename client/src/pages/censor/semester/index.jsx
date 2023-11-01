@@ -1,6 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { Button, Pagination, Space, Table, Card, Input, Tooltip } from "antd";
+import {
+  Button,
+  Pagination,
+  Space,
+  Table,
+  Card,
+  Input,
+  Tooltip,
+  Tag,
+} from "antd";
 import {
   PlusOutlined,
   EditOutlined,
@@ -107,6 +116,26 @@ export default function Semester() {
         const readableDate = convertToReadableDate(text);
         return readableDate;
       },
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      align: "center",
+      render: (text) => (
+        <Tag
+          color={text === 0 ? "green" : "red"}
+          style={{
+            fontSize: "14px",
+            padding: "5px 10px",
+            borderRadius: "10px",
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          {text === 0 ? "Mở" : "Đóng"}
+        </Tag>
+      ),
     },
     {
       title: () => <div>Hành động</div>,

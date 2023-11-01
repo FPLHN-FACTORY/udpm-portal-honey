@@ -22,6 +22,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -53,8 +54,6 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     public PageableObject<StudentArchiveResponse> getAllGiftArchive(StudentArchiveFilterRequest filterRequest) {
         Pageable pageable = PageRequest.of(filterRequest.getPage(), filterRequest.getSize());
         filterRequest.setIdStudent(udpmHoney.getIdUser());
-        System.out.println("--------------------");
-        System.out.println(udpmHoney.getIdUser());
         return new PageableObject<>(studentGiftArchiveRepository.getAllGiftArchive(filterRequest, pageable));
     }
 
