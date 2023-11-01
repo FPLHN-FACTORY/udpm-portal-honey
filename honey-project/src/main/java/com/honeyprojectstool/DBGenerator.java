@@ -14,6 +14,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 
 @SpringBootApplication
@@ -78,8 +79,11 @@ public class DBGenerator implements CommandLineRunner {
         Semester semester = new Semester();
         semester.setCode("SE1");
         semester.setName("Summer 2023");
-        semester.setToDate(2007194000000L);
-        semester.setFromDate(1681600400000L);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, 3);
+        semester.setToDate(calendar.getTimeInMillis());
+        semester.setFromDate(Calendar.getInstance().getTimeInMillis());
+        semester.setStatus(Status.HOAT_DONG);
         semester.setId(semesterRepository.save(semester).getId());
 
         Honey honey1 = new Honey();

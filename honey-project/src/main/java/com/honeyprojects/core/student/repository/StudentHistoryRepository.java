@@ -1,5 +1,7 @@
 package com.honeyprojects.core.student.repository;
 
+import com.honeyprojects.core.student.model.param.StudentSumHistoryParam;
+import com.honeyprojects.core.student.model.request.StudentRequestChangeGift;
 import com.honeyprojects.core.student.model.request.StudentSearchHistoryRequest;
 import com.honeyprojects.core.student.model.response.StudentHistoryResponse;
 import com.honeyprojects.repository.HistoryRepository;
@@ -26,5 +28,11 @@ public interface StudentHistoryRepository extends HistoryRepository {
         """, nativeQuery = true)
     Page<StudentHistoryResponse> getHistory(@Param("searchParams") StudentSearchHistoryRequest searchParams,
                                             Pageable pageable);
+
+    @Query("select sum(h.quantity) from History h where h.status <> 2 and h.type = 3" +
+           "and h.giftId = :#{#param.giftId} and lower(h.className) = lower(:#{#param.className}) " +
+           "and lower(h.subject) = lower(:#{#param.subject}) " +
+           "and h.createdDate between :#{#param.formSemester} and :#{#param.toSemester}")
+    Integer getTotalUseGift(StudentSumHistoryParam param);
 
 }

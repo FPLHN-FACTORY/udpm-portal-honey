@@ -9,6 +9,7 @@ import com.honeyprojects.core.teacher.repository.*;
 import com.honeyprojects.core.teacher.service.TeacherUseGiftRequest;
 import com.honeyprojects.entity.*;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.NotificationType;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import jakarta.transaction.Transactional;
@@ -74,6 +75,7 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
         Notification notification = new Notification();
         notification.setStudentId(history.getStudentId());
         notification.setTitle("Yêu cầu mở quà");
+        notification.setType(NotificationType.TEACHER);
         notificationRepository.save(notification);
 
         NotificationDetail notificationDetail = new NotificationDetail();
@@ -104,6 +106,7 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
             Notification notification = new Notification();
             notification.setStudentId(history.getStudentId());
             notification.setTitle("Yêu cầu mở quà");
+            notification.setType(NotificationType.TEACHER);
             notificationRepository.save(notification);
 
             NotificationDetail notificationDetail = new NotificationDetail();
@@ -146,14 +149,15 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
                 .orElse(new ArchiveGift());
         archiveGift.setGiftId(history.getGiftId());
         archiveGift.setArchiveId(archive.getId());
-        if (archiveGift.getQuantity() != null){
-            archiveGift.setQuantity(archiveGift.getQuantity()+ history.getQuantity());
-        }else {
+        if (archiveGift.getQuantity() != null) {
+            archiveGift.setQuantity(archiveGift.getQuantity() + history.getQuantity());
+        } else {
             archiveGift.setQuantity(history.getQuantity());
         }
         Notification notification = new Notification();
         notification.setStudentId(history.getStudentId());
         notification.setTitle("Yêu cầu mở quà");
+        notification.setType(NotificationType.TEACHER);
         notificationRepository.save(notification);
 
         NotificationDetail notificationDetail = new NotificationDetail();
