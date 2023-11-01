@@ -56,11 +56,6 @@ function DashboardAuthUser({ children }) {
       "1",
       <FontAwesomeIcon icon={faKaaba} />
     ),
-    // getItem(
-    //   <Link to="/censor/conversion">Quy đổi</Link>,
-    //   "2",
-    //   <FontAwesomeIcon icon={faMoneyBillTransfer} />
-    // ),
     getItem(
       <Link to="/censor/semester">Quản lý học kỳ</Link>,
       "2",
@@ -80,42 +75,31 @@ function DashboardAuthUser({ children }) {
       "7",
       <FontAwesomeIcon icon={faCodePullRequest} />,
       [
+        getItem(<Link to={"/censor/request-manager"}>Yêu cầu</Link>, "8"),
         getItem(
-          <Link to={"/censor/request-manager/list-request"}>
-            Yêu cầu cộng điểm
-          </Link>,
-          "8"
-        ),
-        getItem(
-          <Link to={"/censor/request-buy-gift/history"}>Yêu cầu đổi quà</Link>,
+          <Link to={"/censor/request-manager/approved-history"}>Lịch sử</Link>,
           "9"
-        ),
-        getItem(
-          <Link to={"/censor/request-manager/approved-history"}>
-            Lịch sử phê duyệt
-          </Link>,
-          "10"
         ),
       ]
     ),
     getItem(
       <Link to="/censor/request-manager/random-add-point">Tặng vật phẩm</Link>,
-      "11",
+      "10",
       <FontAwesomeIcon icon={faCommentsDollar} />
     ),
     getItem(
       <Link to="/censor/chest">Quản lý rương</Link>,
-      "12",
+      "11",
       <FontAwesomeIcon icon={faToolbox} />
     ),
     getItem(
       <Link to="/censor/auction-management">Quản lý phòng đấu giá</Link>,
-      "13",
+      "12",
       <FontAwesomeIcon icon={faScaleUnbalanced} />
     ),
     getItem(
       <Link to="/censor/upgrade-rate">Quản lý tỉ lệ nâng cấp</Link>,
-      "14",
+      "13",
       <FontAwesomeIcon icon={faStar} />
     ),
   ];

@@ -9,13 +9,13 @@ import {
   Input,
   InputNumber,
   Row,
-  Segmented,
   Space,
   Spin,
   Table,
   Tag,
   Tooltip,
   message,
+  Select,
 } from "antd";
 import { SearchOutlined, SendOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -91,17 +91,16 @@ export default function AddPoint() {
 
   const addPoint = (data) => {
     setLoading(true);
-    AddPointAPI.addPoint(data)
-      .then((response) => {
-        if (response.data.success) {
-          message.success("Đã gửi yêu cầu!");
-          formAddPoint.resetFields();
-          formSearch.resetFields();
-          setStudent({});
-        } else {
-          message.error("Gửi yêu cầu thất bại!");
-        }
-      })
+    AddPointAPI.addPoint(data).then((response) => {
+      if (response.data.success) {
+        message.success("Thành công!");
+        formAddPoint.resetFields();
+        formSearch.resetFields();
+        setStudent({});
+      } else {
+        message.error("Thất bại!");
+      }
+    });
     setLoading(false);
   };
 
@@ -230,24 +229,7 @@ export default function AddPoint() {
           </Form>
         </Card>
         {Object.keys(student).length > 0 ? (
-          <Card
-            className="content-card"
-            title="Thông tin sinh viên"
-            extra={
-              <Segmented
-                className="font-bold select-category"
-                onChange={(value) => {
-                  setCategorySelected(value);
-                  getHoney(student.id, value);
-                }}
-                value={categorySelected}
-                options={listCategory.map((category) => ({
-                  label: category.name,
-                  value: category.id,
-                }))}
-              />
-            }
-          >
+          <Card className="content-card" title="Thông tin sinh viên">
             <Row className="mx-10">
               <Col
                 className="py-25"
@@ -257,7 +239,7 @@ export default function AddPoint() {
                 <Row className="font-semibold">
                   <Col span={24}>
                     <div>
-                      User name:{" "}
+                      Tài khoản:{" "}
                       <Tag style={{ fontSize: "14px" }}>{student.userName}</Tag>
                     </div>
                     <div className="mt-25">
@@ -279,6 +261,38 @@ export default function AddPoint() {
               </Col>
               <Col className="py-25" span={12} style={{ paddingLeft: "25px" }}>
                 <Form form={formAddPoint} onFinish={onFinishAdd}>
+                  <Row>
+                    <Col span={8} className=" font-semibold">
+                      <div>Loại mật ong:</div>
+                    </Col>
+                    <Col span={16} className="mb-2">
+                      <Select
+                        showSearch
+                        style={{
+                          width: 200,
+                        }}
+                        onChange={(value) => {
+                          setCategorySelected(value);
+                          getHoney(student.id, value);
+                        }}
+                        placeholder="Search to Select"
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                          (option?.label ?? "").includes(input)
+                        }
+                        filterSort={(optionA, optionB) =>
+                          (optionA?.label ?? "")
+                            .toLowerCase()
+                            .localeCompare((optionB?.label ?? "").toLowerCase())
+                        }
+                        options={listCategory.map((category) => ({
+                          label: category.name,
+                          value: category.id,
+                        }))}
+                        defaultValue={listCategory[0].id}
+                      />
+                    </Col>
+                  </Row>
                   <Row>
                     <Col span={8} className=" font-semibold">
                       <div>Số điểm:</div>

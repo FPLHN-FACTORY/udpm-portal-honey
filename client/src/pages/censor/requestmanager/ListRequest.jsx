@@ -33,7 +33,6 @@ import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import { type } from "@testing-library/user-event/dist/type";
 
 const statusHistory = (status) => {
   switch (status) {
