@@ -175,7 +175,7 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
         Sheet sheet = workbook.getSheetAt(0);
 
         // Đọc dữ liệu từ bảng tính và tạo danh sách các đối tượng AdminAddItemDTO
-        List<AdminAddItemDTO> lstUserImportDTO = StreamSupport.stream(sheet.spliterator(), false)
+        List<PresidentAddItemDTO> lstUserImportDTO = StreamSupport.stream(sheet.spliterator(), false)
                 .skip(4) // Bỏ qua 2 dòng đầu tiên
                 .filter(row -> !ExcelUtils.checkNullLCells(row, 1))
                 .map(row -> processRow(row))
@@ -183,11 +183,11 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
 
         // Nhóm dữ liệu theo trạng thái lỗi (error) và đếm số lượng mỗi trạng thái
         Map<Boolean, Long> importStatusCounts = lstUserImportDTO.stream()
-                .collect(Collectors.groupingBy(AdminAddItemDTO::isError, Collectors.counting()));
+                .collect(Collectors.groupingBy(PresidentAddItemDTO::isError, Collectors.counting()));
 
         // Tạo đối tượng AdminAddItemBO để lưu trữ thông tin bản xem trước
         PresidentAddItemBO presidentAddItemBO = new PresidentAddItemBO();
-        presidentAddItemBO.setLstAdminAddItemDTO(lstUserImportDTO);
+        presidentAddItemBO.setLstPresidentAddItemDTO(lstUserImportDTO);
         presidentAddItemBO.setTotal(Long.parseLong(String.valueOf(lstUserImportDTO.size())));
         presidentAddItemBO.setTotalError(importStatusCounts.getOrDefault(true, 0L));
         presidentAddItemBO.setTotalSuccess(importStatusCounts.getOrDefault(false, 0L));
@@ -195,8 +195,8 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
         return presidentAddItemBO;
     }
 
-    private AdminAddItemDTO processRow(Row row) {
-        AdminAddItemDTO userDTO = new AdminAddItemDTO();
+    private PresidentAddItemDTO processRow(Row row) {
+        PresidentAddItemDTO userDTO = new PresidentAddItemDTO();
         String userName = ExcelUtils.getCellString(row.getCell(0));
         String listGift = ExcelUtils.getCellString(row.getCell(1));
         String listHoney = ExcelUtils.getCellString(row.getCell(2));
@@ -310,7 +310,6 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
         // Đặt các thuộc tính của đối tượng AdminAddItemDTO
         userDTO.setId(response != null ? response.getId() : null);
         userDTO.setUserName(userName != null ? userName : null);
-        userDTO.setEmail(response != null ? response.getEmail() : null);
         userDTO.setLstGift(listGift != null ? listGift : null);
         userDTO.setLstHoney(listHoney != null ? listHoney : null);
 

@@ -1,11 +1,8 @@
 package com.honeyprojects.core.president.controller;
 
-import com.honeyprojects.core.admin.model.response.AdminAddItemDTO;
 import com.honeyprojects.core.common.base.ResponseObject;
 import com.honeyprojects.core.president.model.response.PresidentAddItemDTO;
 import com.honeyprojects.core.president.service.PresidentAddItemToStudentService;
-import com.honeyprojects.core.teacher.model.response.TeacherExcelAddPoinBO;
-import com.honeyprojects.core.teacher.service.TeacherExcelAddPointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,28 +1,26 @@
 import { DownloadOutlined, InboxOutlined } from "@ant-design/icons";
 import { Button, Modal, Upload, message } from "antd";
 import React, { useState } from "react";
-import "./index.css";
-import { RandomAddPointAPI } from "../../../apis/censor/random-add-point/random-add-point.api";
+import { AddItemExcelAPI } from "../../../apis/president/add-item/add-item-excel.api";
+import { SetImport } from "../../../app/reducers/import/import.reducer";
+import { useAppDispatch } from "../../../app/hooks";
 
-export default function ModalImportExcel(props) {
+export default function ModalUpLoadFile(props) {
   const {
-    open,
-    setOpen,
+    openUpload,
+    setOpenUpload,
     setLoading,
-    dataRandomPoint,
-    dataRandomItem,
-    setListStudentPoint,
-    setListStudentItem,
-    nameFile,
-    setNameFile,
+    nameFileUpload,
+    setNameFileUpload,
     setDataPreview,
   } = props;
 
   const [file, setFile] = useState(null);
+  const dispatch = useAppDispatch();
 
   const handleExportExcel = () => {
     setLoading(true);
-    RandomAddPointAPI.createExportExcel()
+    AddItemExcelAPI.exportExcel()
       .then(() => {
         message.success("Export excel thành công");
       })
@@ -37,23 +35,13 @@ export default function ModalImportExcel(props) {
       const formData = new FormData();
       formData.append("file", file.file.originFileObj);
       setLoading(true);
-      RandomAddPointAPI.createImportExcel(formData)
+      AddItemExcelAPI.previewDataExportExcel(formData)
         .then((response) => {
           console.log("====================================");
           console.log(response);
           console.log("====================================");
-          const idList = response.data.data.lstAdminAddPointDTO.map(
-            (item) => item.id
-          );
-          setListStudentPoint({
-            ...dataRandomPoint,
-            listStudentPoint: idList,
-          });
-          setListStudentItem({
-            ...dataRandomItem,
-            listStudentPoint: idList,
-          });
-          setDataPreview(response.data.data);
+          setDataPreview(response.data.data.lstPresidentAddItemDTO);
+          dispatch(SetImport(response.data.data));
           message.success("Import excel thành công");
         })
         .catch(() => {
@@ -62,30 +50,26 @@ export default function ModalImportExcel(props) {
     } else {
       message.error("Import excel thất bại");
     }
-    setNameFile("");
     setLoading(false);
-    setOpen(false);
+    setNameFileUpload("");
+    setOpenUpload(false);
   };
 
   const handleOnChangeFile = (e) => {
-    setNameFile(e.file.name);
+    setNameFileUpload(e.file.name);
     setFile(e);
   };
-
   const handleRemoveFile = () => {
-    setNameFile("");
-    setListStudentPoint([]);
-    setListStudentItem([]);
-    setFile(null);
-    setOpen(false);
+    setNameFileUpload("");
+    setOpenUpload(false);
   };
   return (
     <div>
       <Modal
-        title="Import Excel"
-        open={open}
-        onOk={() => setOpen(false)}
-        onCancel={() => setOpen(false)}
+        title="Upload file import"
+        open={openUpload}
+        onOk={() => setOpenUpload(false)}
+        onCancel={() => setOpenUpload(false)}
         footer={[
           <Button key="back" danger onClick={() => handleRemoveFile()}>
             Hủy
@@ -110,7 +94,7 @@ export default function ModalImportExcel(props) {
             accept=".xlsx,.xls"
             onChange={(e) => handleOnChangeFile(e)}
           >
-            {nameFile === "" ? (
+            {nameFileUpload === "" ? (
               <div>
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined />
@@ -118,7 +102,7 @@ export default function ModalImportExcel(props) {
                 <p className="ant-upload-text">Nhấn vào đây để tải lên file</p>
               </div>
             ) : (
-              nameFile
+              nameFileUpload
             )}
           </Upload.Dragger>
         </div>
