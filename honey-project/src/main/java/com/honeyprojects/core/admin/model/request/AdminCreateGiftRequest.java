@@ -25,7 +25,7 @@ public class AdminCreateGiftRequest extends PageableRequest {
     private String code;
 
     @NotBlank(message = "tên không được để trống")
-    @Size(min = 0, max = 250)
+    @Size(min = 0, max = 100)
     private String name;
 
     private Integer type;

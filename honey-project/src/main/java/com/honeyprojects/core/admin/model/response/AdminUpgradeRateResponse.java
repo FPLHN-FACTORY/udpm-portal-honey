@@ -1,13 +1,9 @@
 package com.honeyprojects.core.admin.model.response;
 
-import com.honeyprojects.core.admin.model.dto.CensorUpgradeRateGiftDTO;
 import com.honeyprojects.entity.base.IsIdentified;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.List;
-
 public interface AdminUpgradeRateResponse extends IsIdentified {
-
 
     String getStt();
 
@@ -33,7 +29,4 @@ public interface AdminUpgradeRateResponse extends IsIdentified {
     @Value("#{target.status}")
     Integer getStatus();
 
-    List<CensorUpgradeRateGiftDTO> getListUpgrateRateGiftDTO();
-
-    void setListUpgrateRateGiftDTO(List<CensorUpgradeRateGiftDTO> listUpgrateRateGiftDTO);
 }
