@@ -1,5 +1,7 @@
 package com.honeyprojects.infrastructure.contant;
 
+import com.honeyprojects.util.PropertiesReader;
+
 public enum Message {
 
     SUCCESS("Success"),
