@@ -2,11 +2,11 @@ import { request } from "../../../helper/request.helper";
 export class AddItemExcelAPI {
   static COMPONENT_NAME = "president";
 
-  static importExcel = (file) => {
+  static importExcel = (dataPreview) => {
     return request({
       method: "POST",
       url: `${this.COMPONENT_NAME}/import-data`,
-      data: file,
+      data: dataPreview,
     });
   };
 

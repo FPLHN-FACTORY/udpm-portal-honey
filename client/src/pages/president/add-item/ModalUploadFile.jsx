@@ -2,7 +2,7 @@ import { DownloadOutlined, InboxOutlined } from "@ant-design/icons";
 import { Button, Modal, Upload, message } from "antd";
 import React, { useState } from "react";
 import { AddItemExcelAPI } from "../../../apis/president/add-item/add-item-excel.api";
-import { SetImport } from "../../../app/reducers/import/import.reducer";
+import { SetImport } from "../../../app/reducers/import/import.president.reducer";
 import { useAppDispatch } from "../../../app/hooks";
 
 export default function ModalUpLoadFile(props) {
@@ -37,9 +37,6 @@ export default function ModalUpLoadFile(props) {
       setLoading(true);
       AddItemExcelAPI.previewDataExportExcel(formData)
         .then((response) => {
-          console.log("====================================");
-          console.log(response);
-          console.log("====================================");
           setDataPreview(response.data.data.lstPresidentAddItemDTO);
           dispatch(SetImport(response.data.data));
           message.success("Import excel thành công");
@@ -74,7 +71,7 @@ export default function ModalUpLoadFile(props) {
           <Button key="back" danger onClick={() => handleRemoveFile()}>
             Hủy
           </Button>,
-          <Button key="submit" onClick={() => handleExportExcel()}>
+          <Button key="download" onClick={() => handleExportExcel()}>
             <DownloadOutlined />
             Tải file mẫu
           </Button>,

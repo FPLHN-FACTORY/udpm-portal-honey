@@ -1,23 +1,17 @@
 package com.honeyprojects.core.president.service.impl;
 
-import com.honeyprojects.core.admin.model.request.AdminCreateNotificationDetailRandomRequest;
-import com.honeyprojects.core.admin.model.request.AdminNotificationRandomRequest;
-import com.honeyprojects.core.admin.model.response.AdminAddItemDTO;
-import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.president.model.request.PresidentCreateNotificationDetailAddItemRequest;
 import com.honeyprojects.core.president.model.request.PresidentNotificationAddItemRequest;
 import com.honeyprojects.core.president.model.response.PresidentAddItemBO;
 import com.honeyprojects.core.president.model.response.PresidentAddItemDTO;
 import com.honeyprojects.core.president.model.response.PresidentCategoryResponse;
+import com.honeyprojects.core.president.model.response.PresidentGiftResponse;
 import com.honeyprojects.core.president.repository.PresidentAddItemRepository;
-import com.honeyprojects.core.president.repository.PresidentCategoryRepository;
 import com.honeyprojects.core.president.repository.PresidentGiftRepository;
 import com.honeyprojects.core.president.repository.PresidentNotificationRepository;
 import com.honeyprojects.core.president.service.PresidentAddItemToStudentService;
 import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
-import com.honeyprojects.entity.Category;
-import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.Notification;
 import com.honeyprojects.entity.NotificationDetail;
 import com.honeyprojects.infrastructure.contant.Constants;
@@ -46,10 +40,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -70,7 +67,6 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
 
     @Autowired
     private StudentNotificationDetailRepository studentNotificationDetailRepository;
-
 
 
     @Override
@@ -176,7 +172,7 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
 
         // Đọc dữ liệu từ bảng tính và tạo danh sách các đối tượng AdminAddItemDTO
         List<PresidentAddItemDTO> lstUserImportDTO = StreamSupport.stream(sheet.spliterator(), false)
-                .skip(4) // Bỏ qua 2 dòng đầu tiên
+                .skip(3) // Bỏ qua 3 dòng đầu tiên
                 .filter(row -> !ExcelUtils.checkNullLCells(row, 1))
                 .map(row -> processRow(row))
                 .collect(Collectors.toList());
@@ -216,21 +212,16 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
             userDTO.setError(true);
             hasError = true;
         }
-
         if (DataUtils.isNullObject(response)) {
             userDTO.setImportMessage("Sinh viên không tồn tại");
             userDTO.setError(true);
             hasError = true;
         }
-
         String regexFormat = "^(\\d+\\s+[^-,]+)(,\\s*\\d+\\s+[^-,]+)*$";
-//                             "^(\\d+\\s+[^-]+)(,\\s*\\d+\\s+[^-]+)*$";
-
         int check = 0;
         if (DataUtils.isNullObject(listGift)) {
             check++;
         } else {
-//            String regexGift = "^\\d+\\s+[^,]*(,\\s*\\d+\\s+[^,]*)?$";
             if (!listGift.trim().matches(regexFormat)) {
                 userDTO.setImportMessage("Định dạng vật phẩm không hợp lệ");
                 userDTO.setError(true);
@@ -238,37 +229,82 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                 hasError = true;
             } else {
                 // Xử lý danh sách vật phẩm và kiểm tra
+//                String[] partsGift = listGift.split(", ");
+//                for (String part : partsGift) {
+//                    String[] subParts = part.split(" ", 2);
+//                    if (subParts.length == 2) {
+//                        String numberItemStr = subParts[0];
+//                        String nameItem = subParts[1];
+//                        Integer numberItem = Integer.parseInt(numberItemStr);
+//                        PresidentGiftResponse gift = presidentAddItemRepository.getGiftByName(nameItem);
+//                        if (numberItem < 1) {
+//                            userDTO.setImportMessage("Số lượng vật phẩm không được nhỏ hơn 1");
+//                            userDTO.setError(true);
+//                            check++;
+//                            hasError = true;
+//                            break;
+//                        }
+//                        if (DataUtils.isNullObject(gift)) {
+//                            userDTO.setImportMessage("Vật phẩm " + nameItem + " không tồn tại");
+//                            userDTO.setError(true);
+//                            check++;
+//                            hasError = true;
+//                            break;
+//                        }
+//                    }
+//                }
                 String[] partsGift = listGift.split(", ");
+                Map<String, Integer> giftMap = new HashMap<>();
+                Map<String, Integer> nameToNumberMap = new HashMap();
+
                 for (String part : partsGift) {
                     String[] subParts = part.split(" ", 2);
                     if (subParts.length == 2) {
                         String numberItemStr = subParts[0];
                         String nameItem = subParts[1];
                         Integer numberItem = Integer.parseInt(numberItemStr);
-                        String idGift = presidentAddItemRepository.getIdGiftByName(nameItem);
+
                         if (numberItem < 1) {
-                            userDTO.setImportMessage("Số lượng Vật phẩm không được nhỏ hơn 1");
+                            userDTO.setImportMessage("Số lượng vật phẩm không được nhỏ hơn 1");
                             userDTO.setError(true);
                             check++;
                             hasError = true;
                             break;
                         }
-                        if (DataUtils.isNullObject(idGift)) {
-                            userDTO.setImportMessage("Vật phẩm " + nameItem + " không tồn tại");
-                            userDTO.setError(true);
-                            check++;
-                            hasError = true;
-                            break;
-                        }
+
+                        // Lưu trữ số lượng quà dựa trên tên quà
+                        giftMap.put(nameItem, numberItem);
+                        nameToNumberMap.put(nameItem, numberItem);
                     }
                 }
+
+                List<PresidentGiftResponse> gifts = presidentAddItemRepository.getGiftsByNames(giftMap.keySet());
+
+                for (PresidentGiftResponse gift : gifts) {
+                    String nameItem = gift.getName();
+                    if (!giftMap.containsKey(nameItem)) {
+                        userDTO.setImportMessage("Vật phẩm " + nameItem + " không tồn tại");
+                        userDTO.setError(true);
+                        check++;
+                        hasError = true;
+                        break;
+                    }
+                    Integer numberItem = nameToNumberMap.get(nameItem);
+                    if (numberItem < 1) {
+                        userDTO.setImportMessage("Số lượng vật phẩm không được nhỏ hơn 1");
+                        userDTO.setError(true);
+                        check++;
+                        hasError = true;
+                        break;
+                    }
+                }
+
             }
         }
 
         if (DataUtils.isNullObject(listHoney)) {
             check++;
         } else {
-//            String regexHoney = "^(\\d+\\s*-\\s*[a-zA-Z]+)(,\\s*\\d+\\s*-\\s*[a-zA-Z]+)*$";
             if (!listHoney.trim().matches(regexFormat)) {
                 userDTO.setImportMessage("Định dạng mật ong không hợp lệ");
                 userDTO.setError(true);
@@ -276,30 +312,77 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                 hasError = true;
             } else {
                 // Xử lý danh sách mật ong và kiểm tra
+//                String[] partsHoney = listHoney.split(", ");
+//                for (String part : partsHoney) {
+//                    String[] subParts = part.split(" ", 2);
+//                    if (subParts.length == 2) {
+//                        String numberPoint = subParts[0].trim();
+//                        String categoryPoint = subParts[1].trim().replace("-", "");
+//                        PresidentCategoryResponse categoryResponse = presidentAddItemRepository.getCategoryByName(categoryPoint.trim());
+//                        if (DataUtils.isNullObject(categoryResponse) || DataUtils.isNullObject(categoryResponse.getId())) {
+//                            userDTO.setImportMessage("Loại mật ong " + categoryPoint + " không tồn tại");
+//                            userDTO.setError(true);
+//                            check++;
+//                            hasError = true;
+//                            break;
+//                        }
+//                    }
+//                }
                 String[] partsHoney = listHoney.split(", ");
+                Map<String, Integer> honeyMap = new HashMap<>();
+                Map<String, Integer> nameToNumberMap = new HashMap();
+
                 for (String part : partsHoney) {
                     String[] subParts = part.split(" ", 2);
                     if (subParts.length == 2) {
-                        String numberPoint = subParts[0].trim();
+                        String numberPointStr = subParts[0].trim();
                         String categoryPoint = subParts[1].trim().replace("-", "");
-                        PresidentCategoryResponse categoryResponse = presidentAddItemRepository.getCategoryByName(categoryPoint.trim());
-                        if (DataUtils.isNullObject(categoryResponse) || DataUtils.isNullObject(categoryResponse.getId())) {
-                            userDTO.setImportMessage("Loại mật ong " + categoryPoint + " không tồn tại");
+                        Integer numberPoint = Integer.parseInt(numberPointStr);
+
+                        if (numberPoint < 1) {
+                            userDTO.setImportMessage("Số lượng mật ong không được nhỏ hơn 1");
                             userDTO.setError(true);
                             check++;
                             hasError = true;
                             break;
                         }
+
+                        // Lưu trữ số lượng mật ong dựa trên loại mật ong
+                        honeyMap.put(categoryPoint, numberPoint);
+                        nameToNumberMap.put(categoryPoint, numberPoint);
                     }
                 }
+
+                List<PresidentCategoryResponse> categories = presidentAddItemRepository.getCategoriesByNames(honeyMap.keySet());
+
+                for (PresidentCategoryResponse category : categories) {
+                    String categoryPoint = category.getName();
+                    if (!honeyMap.containsKey(categoryPoint)) {
+                        userDTO.setImportMessage("Loại mật ong " + categoryPoint + " không tồn tại");
+                        userDTO.setError(true);
+                        check++;
+                        hasError = true;
+                        break;
+                    }
+                    Integer numberPoint = nameToNumberMap.get(categoryPoint);
+                    if (numberPoint < 1) {
+                        userDTO.setImportMessage("Số lượng mật ong không được nhỏ hơn 1");
+                        userDTO.setError(true);
+                        check++;
+                        hasError = true;
+                        break;
+                    }
+                }
+
+
             }
         }
 
-        if (check > 1) {
-            userDTO.setImportMessage("Vật phẩm và mật ong không được để trống");
-            userDTO.setError(true);
-            hasError = true;
-        }
+//        if (check > 1) {
+//            userDTO.setImportMessage("Vật phẩm và mật ong không được để trống");
+//            userDTO.setError(true);
+//            hasError = true;
+//        }
 
         // Xác định trạng thái thành công hoặc lỗi và cung cấp thông báo
         if (!hasError) {
@@ -342,55 +425,83 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                     continue;
                 } else {
                     // Xử lý vật phẩm (gift)
+//                    String[] partsGift = userDTO.getLstGift().split(", ");
+//                    for (String part : partsGift) {
+//                        String[] subParts = part.split(" ", 2);
+//                        if (subParts.length == 2) {
+//                            String numberItemStr = subParts[0];
+//                            String nameItem = subParts[1];
+//                            Integer numberItem = Integer.parseInt(numberItemStr);
+//                            // Lấy id của vật phẩm từ cơ sở dữ liệu
+//                            PresidentGiftResponse gift = presidentAddItemRepository.getGiftByName(nameItem);
+//                            if (DataUtils.isNullObject(gift)) {
+//                                continue;
+//                            } else {
+//                                createNotificationDetailItem(gift, notification.getId(), numberItem);
+//                                continue;
+//                            }
+//                        }
+//                    }
                     String[] partsGift = userDTO.getLstGift().split(", ");
+                    Map<String, Integer> giftMap = new HashMap<>();
+
                     for (String part : partsGift) {
                         String[] subParts = part.split(" ", 2);
                         if (subParts.length == 2) {
                             String numberItemStr = subParts[0];
                             String nameItem = subParts[1];
                             Integer numberItem = Integer.parseInt(numberItemStr);
-
-                            // Lấy id của vật phẩm từ cơ sở dữ liệu
-                            String idGift = presidentAddItemRepository.getIdGiftByName(nameItem);
-                            if (idGift == null) {
-                                continue;
-                            } else {
-                                Optional<Gift> giftOptional = presidentGiftRepository.findById(idGift);
-                                if (giftOptional.isPresent()) {
-                                    Gift gift = giftOptional.get();
-                                    createNotificationDetailItem(gift, notification.getId(), numberItem);
-                                } else {
-                                    continue;
-                                }
-                            }
+                            // Lưu trữ số lượng quà dựa trên tên quà
+                            giftMap.put(nameItem, numberItem);
                         }
                     }
+
+                    List<PresidentGiftResponse> gifts = presidentAddItemRepository.getGiftsByNames(giftMap.keySet());
+
+                    for (PresidentGiftResponse gift : gifts) {
+                        String nameItem = gift.getName();
+                        createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
+                    }
+
                 }
 
                 // Xử lý điểm mật ong (honey)
                 if (userDTO.getLstHoney() == null) {
                     continue;
                 } else {
+//                    String[] partsHoney = userDTO.getLstHoney().split(", ");
+//                    for (String part : partsHoney) {
+//                        String[] subParts = part.split(" ", 2);
+//                        if (subParts.length == 2) {
+//                            String numberPoint = subParts[0].trim();
+//                            String categoryPoint = subParts[1].trim().replace("-", "");
+////                             Lấy thông tin về loại điểm mật ong từ cơ sở dữ liệu
+//                            PresidentCategoryResponse categoryResponse = presidentAddItemRepository.getCategoryByName(categoryPoint.trim());
+//                            if (!DataUtils.isNullObject(categoryResponse)) {
+//                                createNotificationDetailHoney(categoryResponse, notification.getId(), Integer.parseInt(numberPoint));
+//                            } else {
+//                                continue;
+//                            }
+//                        }
+//                    }
                     String[] partsHoney = userDTO.getLstHoney().split(", ");
+                    Map<String, Integer> honeyMap = new HashMap<>();
+
                     for (String part : partsHoney) {
                         String[] subParts = part.split(" ", 2);
                         if (subParts.length == 2) {
-                            String numberPoint = subParts[0].trim();
+                            String numberPointStr = subParts[0].trim();
                             String categoryPoint = subParts[1].trim().replace("-", "");
-
-                            // Lấy thông tin về loại điểm mật ong từ cơ sở dữ liệu
-                            PresidentCategoryResponse categoryResponse = presidentAddItemRepository.getCategoryByName(categoryPoint.trim());
-                            if (!DataUtils.isNullObject(categoryResponse)) {
-                                Category category = new Category();
-                                category.setCode(categoryResponse.getCode());
-                                category.setCategoryStatus(categoryResponse.getCategoryStatus());
-                                category.setImage(categoryResponse.getImage());
-                                category.setTransactionRights(categoryResponse.getTransactionRights());
-                                category.setName(categoryResponse.getName());
-                                createNotificationDetailHoney(category, notification.getId(), Integer.parseInt(numberPoint));
-                            } else {
-                                continue;
-                            }
+                            Integer numberPoint = Integer.parseInt(numberPointStr);
+                            // Lưu trữ số lượng điểm mật ong dựa trên tên loại điểm
+                            honeyMap.put(categoryPoint, numberPoint);
+                        }
+                    }
+                    List<PresidentCategoryResponse> categories = presidentAddItemRepository.getCategoriesByNames(honeyMap.keySet());
+                    for (PresidentCategoryResponse category : categories) {
+                        String categoryPoint = category.getName();
+                        if (honeyMap.containsKey(categoryPoint)) {
+                            createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
                         }
                     }
                 }
@@ -405,15 +516,15 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
         return presidentNotificationRepository.save(notification);
     }
 
-    private NotificationDetail createNotificationDetailHoney(Category category, String idNotification, Integer quantity) {
-        String content = Constants.CONTENT_NOTIFICATION_SYSTEM + " Mật ong - " + category.getName() + " - Số lượng: " + quantity;
-        PresidentCreateNotificationDetailAddItemRequest detailRandomRequest = new PresidentCreateNotificationDetailAddItemRequest(content, category.getId(), idNotification, NotificationDetailType.NOTIFICATION_DETAIL_HONEY, quantity);
+    private NotificationDetail createNotificationDetailHoney(PresidentCategoryResponse categoryResponse, String idNotification, Integer quantity) {
+        String content = Constants.CONTENT_NOTIFICATION_SYSTEM + " Mật ong - " + categoryResponse.getName() + " - Số lượng: " + quantity;
+        PresidentCreateNotificationDetailAddItemRequest detailRandomRequest = new PresidentCreateNotificationDetailAddItemRequest(content, categoryResponse.getId(), idNotification, NotificationDetailType.NOTIFICATION_DETAIL_HONEY, quantity);
         NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
         return studentNotificationDetailRepository.save(notificationDetail);
     }
 
-    private NotificationDetail createNotificationDetailItem(Gift gift, String idNotification, Integer quantity) {
-        String content = Constants.CONTENT_NOTIFICATION_SYSTEM + "Vật phẩm - " + gift.getName() + " - số lượng: " + quantity;
+    private NotificationDetail createNotificationDetailItem(PresidentGiftResponse gift, String idNotification, Integer quantity) {
+        String content = Constants.CONTENT_NOTIFICATION_SYSTEM + "Vật phẩm - " + gift.getName() + " - Số lượng: " + quantity;
         PresidentCreateNotificationDetailAddItemRequest detailRandomRequest = new PresidentCreateNotificationDetailAddItemRequest(content, gift.getId(), idNotification, NotificationDetailType.NOTIFICATION_DETAIL_GIFT, quantity);
         NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
         return studentNotificationDetailRepository.save(notificationDetail);

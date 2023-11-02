@@ -20,7 +20,7 @@ import archiveCountGiftReducer from "./reducers/archive-gift/archive-count-gift.
 import countNotificationReducer from "./reducers/notification/count-notification.reducer";
 import upgradeRateReducer from "./reducers/upgrade-rate/upgrade-rate.reducer";
 import archiveReducer from "./reducers/archive/archive.reducer";
-
+import importPresidentReducer from "./reducers/import/import.president.reducer";
 export const store = configureStore({
   reducer: {
     gift: giftReducer,
@@ -38,6 +38,7 @@ export const store = configureStore({
     archiveGift: archiveGiftReducer,
     chestGift: chestGiftReducer,
     import: importReducer,
+    importPresident: importPresidentReducer,
     giftArchive: giftArchiveReducer,
     archiveChest: archiveChestReducer,
     archiveCountGift: archiveCountGiftReducer,

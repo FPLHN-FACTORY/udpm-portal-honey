@@ -23,9 +23,9 @@ import {
   GetCategory,
   SetCategory,
 } from "../../../app/reducers/category/category.reducer";
-import { AddPointAPI } from "../../../apis/censor/add-point/add-point.api";
+import { AddItemAPI } from "../../../apis/president/add-item/add-item.api";
 import ModalUpLoadFile from "./ModalUploadFile";
-import { GetImport } from "../../../app/reducers/import/import.reducer";
+import { GetImport } from "../../../app/reducers/import/import.president.reducer";
 import ModalConfirm from "./ModalConfirm";
 
 export default function AddItem() {
@@ -49,7 +49,7 @@ export default function AddItem() {
 
   useEffect(() => {
     setLoading(true);
-    AddPointAPI.getCategory()
+    AddItemAPI.getCategory()
       .then((response) => {
         setCategorySelected(response.data.data[0].id);
         dispatch(SetCategory(response.data.data));
@@ -61,7 +61,7 @@ export default function AddItem() {
 
   const onFinishSearch = (value) => {
     setLoading(true);
-    AddPointAPI.searchStudent(value.code.trim()).then((response) => {
+    AddItemAPI.searchStudent(value.code.trim()).then((response) => {
       if (response.data.success) {
         setStudent(response.data.data);
         getHoney(response.data.data.id, categorySelected);
@@ -91,23 +91,22 @@ export default function AddItem() {
 
   const addPoint = (data) => {
     setLoading(true);
-    AddPointAPI.addPoint(data)
-      .then((response) => {
-        if (response.data.success) {
-          message.success("Đã gửi yêu cầu!");
-          formAddPoint.resetFields();
-          formSearch.resetFields();
-          setStudent({});
-        } else {
-          message.error("Gửi yêu cầu thất bại!");
-        }
-      })
+    AddItemAPI.addPoint(data).then((response) => {
+      if (response.data.success) {
+        message.success("Đã gửi yêu cầu!");
+        formAddPoint.resetFields();
+        formSearch.resetFields();
+        setStudent({});
+      } else {
+        message.error("Gửi yêu cầu thất bại!");
+      }
+    });
     setLoading(false);
   };
 
   const getHoney = (studentId, categoryId) => {
     setLoading(true);
-    AddPointAPI.getHoney(studentId, categoryId)
+    AddItemAPI.getHoney(studentId, categoryId)
       .then((response) => {
         if (response.data.success) {
           setHoneyStudent(response.data.data);
@@ -194,13 +193,13 @@ export default function AddItem() {
             </Button>
             <Form.Item
               name="code"
-              rules={[
-                {
-                  required: true,
-                  whitespace: true,
-                  message: "Vui lòng nhập mã sinh viên",
-                },
-              ]}
+              // rules={[
+              //   {
+              //     required: true,
+              //     whitespace: true,
+              //     message: "Vui lòng nhập mã sinh viên",
+              //   },
+              // ]}
               className="search-input"
             >
               <Input
