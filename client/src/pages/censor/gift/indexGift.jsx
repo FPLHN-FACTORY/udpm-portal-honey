@@ -73,7 +73,7 @@ export default function IndexGift() {
     GiftAPI.delete(id)
       .then(() => {
         fetchData();
-        message.success("Xóa quà thành công!");
+        message.success("Xóa vật phẩm thành công!");
       })
       .catch((error) => {
         message.error("Lỗi xóa quà: " + error.message);
@@ -127,7 +127,7 @@ export default function IndexGift() {
       render: (text) => <span>{text}</span>,
     },
     {
-      title: "Tên phần quà",
+      title: "Tên vật phẩm",
       dataIndex: "name",
       key: "name",
       align: "center",
@@ -230,7 +230,7 @@ export default function IndexGift() {
         okText="Xóa"
         cancelText="Hủy"
       >
-        Bạn có chắc chắn muốn xóa quà này?
+        Bạn có chắc chắn muốn xóa vật phẩm này?
       </Modal>
       <Card style={{ borderTop: "5px solid #FFCC00" }}>
         <div className="filter__auction">
@@ -316,7 +316,7 @@ export default function IndexGift() {
           <div className="flex flex-row-reverse">
             <div>
               <span>
-                <Tooltip title="Thêm quà">
+                <Tooltip title="Thêm vật phẩm">
                   <button
                     className="add-button1"
                     onClick={() => {
@@ -326,7 +326,7 @@ export default function IndexGift() {
                     style={{ marginBottom: "20px" }}
                   >
                     <PlusOutlined className="mr-1" />
-                    Thêm quà
+                    Thêm vật phẩm
                   </button>
                 </Tooltip>
               </span>

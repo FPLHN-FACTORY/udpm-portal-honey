@@ -180,7 +180,6 @@ const ModalThem = (props) => {
     form
       .validateFields()
       .then((formValues) => {
-        console.log(formValues.note);
         let quantity = null;
         let limitSL = null;
         let fromDate = null;
@@ -340,11 +339,11 @@ const ModalThem = (props) => {
             },
             {
               min: 4,
-              message: "Tên Quà phải tối thiểu 4 kí tự",
+              message: "Tên vật phẩm phải tối thiểu 4 kí tự",
             },
             {
               max: 100,
-              message: "Tên Quà phải tối đa 100 kí tự",
+              message: "Tên vật phẩm phải tối đa 100 kí tự",
             },
           ]}
         >
@@ -544,7 +543,6 @@ const ModalThem = (props) => {
             <Radio value={0}>Không phê duyệt</Radio>
           </Radio.Group>
         </Form.Item>
-        {console.log(form.getFieldValue("type"))}
         <Form.Item
           label="Cộng dồn"
           name="limitQuantity"
