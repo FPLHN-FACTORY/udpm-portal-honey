@@ -8,12 +8,16 @@ import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
 import com.honeyprojects.core.admin.service.AdminCategoryService;
 import com.honeyprojects.core.common.base.PageableObject;
+import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.CategoryTransaction;
 import com.honeyprojects.infrastructure.contant.Message;
 import com.honeyprojects.infrastructure.contant.TypeCategory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
+import com.honeyprojects.infrastructure.logger.entity.LoggerFunction;
+import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
+import com.honeyprojects.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +35,15 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
 
     @Autowired
     private AdminCategoryRepository adminCategoryRepository;
+
+    @Autowired
+    private RabbitProducer rabbitProducer;
+
+    @Autowired
+    private LoggerUtil loggerUtil;
+
+    @Autowired
+    private UdpmHoney udpmHoney;
 
     @Override
     public PageableObject<AdminCategoryResponse> getAllCategoryByAdmin(AdminCategoryRequest request) {
@@ -54,6 +67,15 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     public Category addCategory(AdminCreateCategoryRequest request) throws IOException {
         Category ca = request.dtoToEntity(new Category());
         adminCategoryRepository.save(ca);
+        try {
+            LoggerFunction loggerFunction = new LoggerFunction();
+            loggerFunction.setContent("Thể loại '" + ca.getName() + " - " + ca.getCode() + "' được thêm vào hệ thống.");
+            loggerFunction.setPathFile("file.csv");
+            loggerFunction.setUserName(udpmHoney.getEmail());
+            rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerFunction));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return ca;
     }
 
