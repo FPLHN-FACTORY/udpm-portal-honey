@@ -47,6 +47,8 @@ import UpgrateHoneyIndex from "./pages/student/upgradeHoney/UpgrateHoneyIndex";
 import StudentHistory from "./pages/student/history/StudentHistory";
 import StudentRequest from "./pages/student/history/StudentRequest";
 import TabsRequest from "./pages/censor/requestmanager/TabsRequest";
+import DashboardPresident from "./layout/president/DashboardPresident";
+import AddItem from "./pages/president/add-item/AddItem";
 
 function App() {
   const token =
@@ -445,6 +447,17 @@ function App() {
                   <DashboardAuthUser>
                     <Shop />
                   </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            {/* Màn president */}
+            <Route
+              path="/president/add-item"
+              element={
+                <AuthGuard>
+                  <DashboardPresident>
+                    <AddItem />
+                  </DashboardPresident>
                 </AuthGuard>
               }
             />

@@ -1,12 +1,11 @@
 import { Button, Modal, Space, message } from "antd";
-import { RandomAddPointAPI } from "../../../apis/censor/random-add-point/random-add-point.api";
+import { AddItemExcelAPI } from "../../../apis/president/add-item/add-item-excel.api";
 import {
   connectStompClient,
   getStompClient,
 } from "../../../helper/stomp-client/config";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../app/hooks";
-import { SetCountNotification } from "../../../app/reducers/notification/count-notification.reducer";
 import { getToken } from "../../../helper/userToken";
 
 export default function ModalConfirm(props) {
@@ -54,7 +53,7 @@ export default function ModalConfirm(props) {
     const headers = {
       Authorization: "Bearer " + bearerToken,
     };
-    RandomAddPointAPI.createImportData(dataPreview)
+    AddItemExcelAPI.importExcel(dataPreview)
       .then(() => {
         stompClient.send("/action/create-notification-user", headers, {});
 

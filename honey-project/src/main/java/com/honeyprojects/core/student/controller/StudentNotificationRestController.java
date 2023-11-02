@@ -32,15 +32,15 @@ public class StudentNotificationRestController extends BaseController {
     @Autowired
     private WebSocketSessionManager webSocketSessionManager;
 
+    @Autowired
+    private StudentNotificationService studentNotificationService;
+
     @MessageMapping("/create-notification-user")
     @SendTo("/portal-honey/create-notification-user")
     private ResponseObject notificationUser(StompHeaderAccessor headerAccessor) {
         return new ResponseObject(studentNotificationService.countNotification(
                 webSocketSessionManager.getSessionInfo(headerAccessor.getSessionId()).getId()));
     }
-
-    @Autowired
-    private StudentNotificationService studentNotificationService;
 
     @GetMapping("")
     public ResponseObject getAllNotification(final StudentNotificationRequest request) {
