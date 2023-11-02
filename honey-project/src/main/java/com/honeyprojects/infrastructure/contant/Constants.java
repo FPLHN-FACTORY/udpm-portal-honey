@@ -10,13 +10,13 @@ public class Constants {
 
     public static final String ENCODING_UTF8 = "UTF-8";
 
-    public class FileProperties{
-        private FileProperties(){
-
+    public class FileProperties {
+        private FileProperties() {
         }
 
         public static final String PROPERTIES_APPLICATION = "application.properties";
         public static final String PROPERTIES_VALIDATION = "messages.properties";
+        public static final String PROPERTIES_CONFIGURATIONS = "configurations.properties";
     }
 
     public static final String REGEX_EMAIL_FE = "\\w+@fe.edu.vn";
