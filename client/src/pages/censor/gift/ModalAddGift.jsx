@@ -23,6 +23,7 @@ const ModalThem = (props) => {
   const [limitQuantityValue, setLimitQuantityValue] = useState(0);
   const [listCategory, setListCategory] = useState([]);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
+  const [selectType, setSelectType] = useState();
 
   const [timeType, setTimeType] = useState("vĩnh viễn");
   const [listSemester, setListSemester] = useState([]);
@@ -155,6 +156,24 @@ const ModalThem = (props) => {
       return Promise.reject("Thời gian kết thúc phải sau thời gian bắt đầu.");
     }
     return Promise.resolve();
+  };
+
+  const handleTypeChange = (selectedType) => {
+    setSelectType(selectedType);
+    if (selectedType === 0) {
+      form.setFieldsValue({
+        status: 0,
+      });
+    } else if (selectedType === 1) {
+      form.setFieldsValue({
+        limitQuantity: 0,
+      });
+    } else if (selectedType === 2) {
+      form.setFieldsValue({
+        status: 0,
+        limitQuantity: 0,
+      });
+    }
   };
 
   const onFinish = () => {
@@ -323,6 +342,10 @@ const ModalThem = (props) => {
               min: 4,
               message: "Tên Quà phải tối thiểu 4 kí tự",
             },
+            {
+              max: 100,
+              message: "Tên Quà phải tối đa 100 kí tự",
+            },
           ]}
         >
           <Input />
@@ -369,10 +392,10 @@ const ModalThem = (props) => {
             },
           ]}
         >
-          <Select placeholder="Chọn loại">
+          <Select onChange={handleTypeChange} placeholder="Chọn loại">
             <Option value={0}>Quà tặng</Option>
             <Option value={1}>Vật phẩm nâng cấp</Option>
-            <Option value={2}>Dụng cụ</Option>
+            <Option value={2}>Danh hiệu</Option>
           </Select>
         </Form.Item>
         <Form.Item
@@ -512,12 +535,16 @@ const ModalThem = (props) => {
               message: "Vui lòng chọn tùy chọn phê duyệt",
             },
           ]}
+          style={{
+            display: selectType === 0 || selectType === 2 ? "none" : "block",
+          }}
         >
           <Radio.Group>
             <Radio value={1}>Cần phê duyệt</Radio>
             <Radio value={0}>Không phê duyệt</Radio>
           </Radio.Group>
         </Form.Item>
+        {console.log(form.getFieldValue("type"))}
         <Form.Item
           label="Cộng dồn"
           name="limitQuantity"
@@ -527,9 +554,12 @@ const ModalThem = (props) => {
               message: "Vui lòng chọn tùy chọn số lượng",
             },
           ]}
+          style={{
+            display: selectType === 1 || selectType === 2 ? "none" : "block",
+          }}
         >
           <Radio.Group onChange={(e) => setLimitQuantityValue(e.target.value)}>
-            <Radio value={0}>không cho phép</Radio>
+            <Radio value={0}>Không cho phép</Radio>
             <Radio value={1}>Cho phép</Radio>
           </Radio.Group>
         </Form.Item>

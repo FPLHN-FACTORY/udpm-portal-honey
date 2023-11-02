@@ -1,9 +1,12 @@
 import {
   Button,
   Card,
+  Col,
   Input,
   Modal,
   Pagination,
+  Row,
+  Select,
   Space,
   Table,
   Tooltip,
@@ -17,7 +20,13 @@ import ModalAma from "./ModalAddGift";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GetGift, SetGift } from "../../../app/reducers/gift/gift.reducer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPenToSquare,
+  faTrash,
+  faFilter,
+} from "@fortawesome/free-solid-svg-icons";
+import { Option } from "antd/es/mentions";
+import { CategoryAPI } from "../../../apis/censor/category/category.api";
 
 export default function IndexGift() {
   const [showModal, setShowModal] = useState(false);
@@ -26,20 +35,37 @@ export default function IndexGift() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [search, setSearch] = useState("");
   const [total, setTotal] = useState(0);
+  const [listCategorySearch, setListCategorySearch] = useState([]);
+  const [honeyCategoryId, setHoneyCategoryId] = useState("");
   const dispatch = useAppDispatch();
   const [showModalDetail, setShowModalDetail] = useState(false);
 
   useEffect(() => {
+    fetchAllCate();
     fetchData();
   }, [current]);
 
   const fetchData = () => {
     GiftAPI.fetchAll({
       search: search,
+      categoryId: honeyCategoryId,
       page: current - 1,
     }).then((response) => {
       dispatch(SetGift(response.data.data.data));
       setTotal(response.data.data.totalPages);
+    });
+  };
+
+  const buttonClear = () => {
+    setSearch("");
+    setHoneyCategoryId("");
+    setCurrent(1);
+    fetchData();
+  };
+
+  const fetchAllCate = () => {
+    CategoryAPI.fetchAllCategory().then((response) => {
+      setListCategorySearch(response.data.data);
     });
   };
 
@@ -206,29 +232,83 @@ export default function IndexGift() {
       >
         Bạn có chắc chắn muốn xóa quà này?
       </Modal>
-      <Card className="mb-2">
-        <form class="flex items-center">
-          <div class="relative w-full mr-6">
-            <Input
-              style={{ borderRadius: "10px", width: "40%" }}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Tìm kiếm tên hoặc mã..."
-            />
-            <button
-              type="button"
-              className="search-button1"
-              icon={<SearchOutlined />}
-              onClick={() => {
-                setCurrent(1);
-                fetchData();
-              }}
-              style={{ borderRadius: "10px", marginLeft: "20px" }}
-            >
-              Tìm kiếm
-            </button>
-          </div>
-        </form>
+      <Card style={{ borderTop: "5px solid #FFCC00" }}>
+        <div className="filter__auction">
+          <FontAwesomeIcon
+            icon={faFilter}
+            size="2px"
+            style={{ fontSize: "26px" }}
+          />{" "}
+          <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span>
+          <Row gutter={24} style={{ marginBottom: "15px", paddingTop: "20px" }}>
+            <Col span={8}>
+              <span>Tên hoặc mã gift:</span>{" "}
+              <Input
+                type="text"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                }}
+                style={{ height: "30px" }}
+              />
+            </Col>
+            <Col span={8}>
+              <span>Thể loại:</span>
+              {""}
+              <Select
+                style={{ width: "100%", marginRight: "10px" }}
+                value={honeyCategoryId}
+                onChange={(value) => {
+                  setHoneyCategoryId(value);
+                }}
+              >
+                <Option value="">Tất cả</Option>
+                {listCategorySearch.map((item) => {
+                  return <Option value={item.id}>{item.name}</Option>;
+                })}
+              </Select>
+            </Col>
+          </Row>
+        </div>
+        <Space
+          style={{
+            justifyContent: "center",
+            display: "flex",
+            marginBottom: "16px",
+          }}
+        >
+          <Row>
+            <Col span={12}>
+              <Button
+                onClick={() => {
+                  setCurrent(1);
+                  fetchData();
+                }}
+                style={{
+                  marginRight: "8px",
+                  backgroundColor: "rgb(55, 137, 220)",
+                  color: "white",
+                }}
+              >
+                Tìm kiếm
+              </Button>
+            </Col>
+            <Col span={12}>
+              <Button
+                onClick={buttonClear}
+                style={{
+                  marginLeft: "8px",
+                  backgroundColor: "#FF9900",
+                  color: "white",
+                  outline: "none",
+                  border: "none",
+                }}
+              >
+                Làm mới
+              </Button>
+            </Col>
+          </Row>
+        </Space>
       </Card>
 
       <Card>
