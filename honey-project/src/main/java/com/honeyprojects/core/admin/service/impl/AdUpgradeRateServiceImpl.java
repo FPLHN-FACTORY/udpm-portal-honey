@@ -4,7 +4,6 @@ import com.honeyprojects.core.admin.model.request.AdminUpgradeRateRequest;
 import com.honeyprojects.core.admin.model.request.CensorAddUpgradeRateRequest;
 import com.honeyprojects.core.admin.model.response.AdminUpgradeRateResponse;
 import com.honeyprojects.core.admin.model.response.CensorGiftSelectResponse;
-import com.honeyprojects.core.admin.model.dto.CensorUpgradeRateGiftDTO;
 import com.honeyprojects.core.admin.repository.AdGiftRepository;
 import com.honeyprojects.core.admin.repository.AdUpgradeRateGiftRepository;
 import com.honeyprojects.core.admin.repository.AdUpgradeRateRepository;
@@ -38,21 +37,21 @@ public class AdUpgradeRateServiceImpl implements AdUpgradeRateService {
     public PageableObject<AdminUpgradeRateResponse> getUpgradeRate(AdminUpgradeRateRequest searchParams) {
         Pageable pageable = PageRequest.of(searchParams.getPage(), searchParams.getSize());
         Page<AdminUpgradeRateResponse> rsPage = adUpgradeRateRepository.getUpgradeRate(searchParams, pageable);
-        if(rsPage.hasContent()){
-            for (AdminUpgradeRateResponse adminUpgradeRateResponse:
-            rsPage.getContent()) {
-                List<CensorGiftSelectResponse> lstCensorGiftSelectResponses =  adGiftRepository.getGiftsExistByUpgradeRateGiftId(adminUpgradeRateResponse.getId());
-                List<CensorUpgradeRateGiftDTO> lstCensorUpgradeRateGiftDTOS = new ArrayList<>();
-                for (CensorGiftSelectResponse censorGiftSelectResponse:
-                        lstCensorGiftSelectResponses) {
-                    CensorUpgradeRateGiftDTO censorUpgradeRateGiftDTO = new CensorUpgradeRateGiftDTO();
-                    censorUpgradeRateGiftDTO.setId(censorGiftSelectResponse.getId());
-                    censorUpgradeRateGiftDTO.setName(censorGiftSelectResponse.getName());
-                    lstCensorUpgradeRateGiftDTOS.add(censorUpgradeRateGiftDTO);
-                }
-              adminUpgradeRateResponse.setListUpgrateRateGiftDTO(lstCensorUpgradeRateGiftDTOS);
-            }
-        }
+//        if(rsPage.hasContent()){
+//            for (AdminUpgradeRateResponse adminUpgradeRateResponse:
+//            rsPage.getContent()) {
+//                List<CensorGiftSelectResponse> lstCensorGiftSelectResponses =  adGiftRepository.getGiftsExistByUpgradeRateGiftId(adminUpgradeRateResponse.getId());
+//                List<CensorUpgradeRateGiftDTO> lstCensorUpgradeRateGiftDTOS = new ArrayList<>();
+//                for (CensorGiftSelectResponse censorGiftSelectResponse:
+//                        lstCensorGiftSelectResponses) {
+//                    CensorUpgradeRateGiftDTO censorUpgradeRateGiftDTO = new CensorUpgradeRateGiftDTO();
+//                    censorUpgradeRateGiftDTO.setId(censorGiftSelectResponse.getId());
+//                    censorUpgradeRateGiftDTO.setName(censorGiftSelectResponse.getName());
+//                    lstCensorUpgradeRateGiftDTOS.add(censorUpgradeRateGiftDTO);
+//                }
+//              adminUpgradeRateResponse.setListUpgrateRateGiftDTO(lstCensorUpgradeRateGiftDTOS);
+//            }
+//        }
         return new PageableObject<>(rsPage);
     }
     @Override

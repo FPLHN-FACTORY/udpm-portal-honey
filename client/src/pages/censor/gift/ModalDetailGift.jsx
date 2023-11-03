@@ -387,7 +387,11 @@ const ModalDetailGift = (props) => {
             },
             {
               min: 4,
-              message: "Tên Quà phải tối thiểu 4 kí tự",
+              message: "Tên vật phẩm phải tối thiểu 4 kí tự",
+            },
+            {
+              max: 100,
+              message: "Tên vật phẩm phải tối đa 100 kí tự",
             },
           ]}
         >
