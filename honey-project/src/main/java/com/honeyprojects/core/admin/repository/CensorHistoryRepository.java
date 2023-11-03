@@ -79,6 +79,7 @@ public interface CensorHistoryRepository extends HistoryRepository {
             WHERE h.status = :#{#searchParams.status}
             AND (:#{#searchParams.idCategory} IS NULL OR c.id = :#{#searchParams.idCategory}) 
             AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent}) 
+            AND h.type = 0
             """, nativeQuery = true)
     Page<CensorTransactionRequestResponse> getHistoryApprovedByStatus(@Param("searchParams") AdminHistoryApprovedSearchRequest searchParams,
                                                                  Pageable pageable);
@@ -121,6 +122,7 @@ public interface CensorHistoryRepository extends HistoryRepository {
             WHERE h.status IN (1,2) AND :#{#searchParams.status} IS NULL
             AND (:#{#searchParams.idCategory} IS NULL OR c.id = :#{#searchParams.idCategory}) 
             AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent}) 
+            AND h.type = 0
             """, nativeQuery = true)
     Page<CensorTransactionRequestResponse> getHistoryApprovedAllStatus(@Param("searchParams") AdminHistoryApprovedSearchRequest searchParams,
                                                               Pageable pageable);

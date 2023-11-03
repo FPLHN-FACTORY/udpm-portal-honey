@@ -47,6 +47,7 @@ import UpgrateHoneyIndex from "./pages/student/upgradeHoney/UpgrateHoneyIndex";
 import StudentHistory from "./pages/student/history/StudentHistory";
 import StudentRequest from "./pages/student/history/StudentRequest";
 import TabsRequest from "./pages/censor/requestmanager/TabsRequest";
+import ListHistory from "./pages/censor/requestmanager/ListHistory";
 
 function App() {
   const token =
@@ -169,7 +170,7 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardCensor>
-                    <RequestApprovedHistory />
+                    <ListHistory />
                   </DashboardCensor>
                 </AuthGuard>
               }
