@@ -125,7 +125,7 @@ function DashboardAuthUser({ children }) {
   };
   const hanlderClickDauGia = () => {
     playSound();
-    navigate("/student/auction-room");
+    navigate("/student/auction-new");
   };
   const hanlderClickNangCap = () => {
     playSound();

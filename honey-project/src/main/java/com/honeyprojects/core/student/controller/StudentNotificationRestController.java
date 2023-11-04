@@ -65,4 +65,5 @@ public class StudentNotificationRestController extends BaseController {
         studentNotificationService.deleteNotification(id);
     }
 
+
 }

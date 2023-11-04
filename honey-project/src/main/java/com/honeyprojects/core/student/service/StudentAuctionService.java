@@ -1,18 +1,20 @@
 package com.honeyprojects.core.student.service;
 
+import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.student.model.request.auction.StudentAuctionCreateRequest;
-import com.honeyprojects.core.student.model.request.auction.StudentAuctionFilterRequest;
+import com.honeyprojects.core.student.model.request.auction.StudentAuctionRoomFilterRequest;
 import com.honeyprojects.core.student.model.response.StudentAuctionResponse;
 import com.honeyprojects.entity.Auction;
-
-import java.util.List;
+import com.honeyprojects.infrastructure.configws.modelmessage.MessageAuction;
 
 public interface StudentAuctionService {
 
-    List<StudentAuctionResponse> findAllRoomById(StudentAuctionFilterRequest rep);
-
     Auction getOneByid(String id);
 
-    Auction add (StudentAuctionCreateRequest request);
+    Auction add(StudentAuctionCreateRequest request);
+
+    Auction updateLastPrice(MessageAuction messageAuction);
+
+    PageableObject<StudentAuctionResponse> findAllAuctionRoom(StudentAuctionRoomFilterRequest request);
 
 }

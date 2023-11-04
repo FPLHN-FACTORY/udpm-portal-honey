@@ -23,9 +23,6 @@ import java.math.BigDecimal;
 @Table(name = "auction")
 public class Auction extends PrimaryEntity {
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String idRoom;
-
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
@@ -49,9 +46,6 @@ public class Auction extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_ID)
     private String honeyCategoryId;
-
-    @Column
-    private BigDecimal honey;
 
     private Status status;
 
