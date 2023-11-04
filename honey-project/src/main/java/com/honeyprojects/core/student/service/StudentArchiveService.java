@@ -31,6 +31,6 @@ public interface StudentArchiveService {
 
     StudentArchiveGetChestResponse detailArchiveChest(StudentGetArchiveChestRequest request);
 
-    List<StudentArchiveByUserResponse> findArchiveByUser(String idUser , String idCategory);
+    List<StudentArchiveByUserResponse> findArchiveByUser(String idUser );
 
 }

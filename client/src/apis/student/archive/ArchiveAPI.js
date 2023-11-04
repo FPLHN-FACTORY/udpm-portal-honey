@@ -79,10 +79,10 @@ export class ArchiveAPI {
     });
   };
 
-  static findAllUser = (id,idCategory) => {
+  static findAllUser = (id) => {
     return request({
       method: "GET",
-      url: `/${this.COMPONENT_NAME}/find-all-user?id=${id}&idCategory=${idCategory}`,
+      url: `/${this.COMPONENT_NAME}/find-all-user?id=${id}`,
     });
   };
 }

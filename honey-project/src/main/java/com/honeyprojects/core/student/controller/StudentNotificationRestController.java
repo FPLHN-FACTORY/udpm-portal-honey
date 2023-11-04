@@ -73,5 +73,4 @@ public class StudentNotificationRestController extends BaseController {
         studentNotificationService.updateAllStatus();
     }
 
-
 }

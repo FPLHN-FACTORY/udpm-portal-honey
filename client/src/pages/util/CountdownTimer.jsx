@@ -19,11 +19,13 @@ export const CountdownTimer = ({ initialTime }) => {
   };
 
   return (
-    <div>
+    <div className="">
       {countdown <= 0 ? (
-        <p>Đã đóng</p>
+        <span style={{ color: "#fffa37" }}>Đã đóng</span>
       ) : (
-        <p style={{ fontSize: "18px" }}>{formatTime(countdown)}</p>
+        <span style={{ color: "blue", fontWeight: "bold" }}>
+          {formatTime(countdown)}
+        </span>
       )}
     </div>
   );

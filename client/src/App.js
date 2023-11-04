@@ -39,9 +39,6 @@ import { getToken, setToken } from "./helper/userToken";
 import StudentChest from "./pages/student/chest/studentChest";
 import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
 import UpgradeHoney from "./pages/student/upgradeHoney/UpgradeHoney";
-import StudentAuctionRoom from "./pages/student/auction/StudentAuctionRoom";
-import StudentAuction from "./pages/student/auction/StudentAuction";
-import StudentAuctionRoomInside from "./pages/student/auction/StudentAuctionRoomInside";
 import RequestApprovedHistory from "./pages/censor/requestmanager/ApproveHistory";
 import ListRequest from "./pages/censor/requestmanager/ListRequest";
 import ConvertionHoney from "./pages/teacher/convertion-honey/RequestConversion";
@@ -49,6 +46,7 @@ import TeacherRequestConversionHistory from "./pages/teacher/convertion-honey/Re
 import LetterDetail from "./pages/student/letters/LetterDetail";
 import Letter from "./pages/student/letters/letter";
 import Shop from "./pages/student/shop/Shop";
+import StudentAuctionRoomNew from "./pages/student/auction/StudentAuctionRoomNew";
 
 function App() {
   const token =
@@ -315,27 +313,6 @@ function App() {
             />
 
             <Route
-              path="/student/auction-room"
-              element={
-                <AuthGuard>
-                  <DashboardAuthUser>
-                    <StudentAuctionRoom />
-                  </DashboardAuthUser>
-                </AuthGuard>
-              }
-            />
-
-            <Route
-              path="/student/auction-room-inside/:id"
-              element={
-                <AuthGuard>
-                  <DashboardAuthUser>
-                    <StudentAuctionRoomInside />
-                  </DashboardAuthUser>
-                </AuthGuard>
-              }
-            />
-            <Route
               path="/student/create-conversion/history"
               element={
                 <AuthGuard>
@@ -405,12 +382,13 @@ function App() {
                 </AuthGuard>
               }
             />
+
             <Route
-              path="/student/auction"
+              path="/student/auction-new"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
-                    <StudentAuction />
+                    <StudentAuctionRoomNew />
                   </DashboardAuthUser>
                 </AuthGuard>
               }

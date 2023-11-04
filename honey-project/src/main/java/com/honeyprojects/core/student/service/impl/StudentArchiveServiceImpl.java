@@ -136,8 +136,8 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     }
 
     @Override
-    public List<StudentArchiveByUserResponse> findArchiveByUser(String idUser , String idCategory) {
-        return archiveRepository.findArchiveByUser(idUser , idCategory);
+    public List<StudentArchiveByUserResponse> findArchiveByUser(String idUser) {
+        return archiveRepository.findArchiveByUser(idUser);
     }
 
 }

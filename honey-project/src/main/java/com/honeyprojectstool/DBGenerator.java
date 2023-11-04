@@ -292,26 +292,22 @@ public class DBGenerator implements CommandLineRunner {
         Auction auction = new Auction();
         auction.setName("Phiên đấu giá biển số");
         auction.setHoneyCategoryId(category1.getId());
-        auction.setHoney(new BigDecimal(200));
         auction.setStatus(Status.HOAT_DONG);
         auction.setId(auctionRepository.save(auction).getId());
 
         Auction auction1 = new Auction();
         auction1.setName("Phiên đấu giá biển số đầu tiên");
         auction1.setHoneyCategoryId(category2.getId());
-        auction1.setHoney(new BigDecimal(200));
         auction1.setStatus(Status.KHONG_HOAT_DONG);
         auction1.setId(auctionRepository.save(auction1).getId());
 
         Auction auction2 = new Auction();
         auction2.setName("Phiên đấu giá 01 ");
         auction2.setHoneyCategoryId(category3.getId());
-        auction2.setHoney(new BigDecimal(200));
         auction2.setStatus(Status.HOAT_DONG);
         auction2.setGiftId(gift7.getId());
         auction2.setFromDate(System.currentTimeMillis());
         auction2.setToDate(System.currentTimeMillis() + 8*3600*1000L);
-        auction2.setIdRoom(auction.getId());
         auction2.setJump(new BigDecimal(2000));
         auction2.setLastPrice(new BigDecimal(5000));
         auction2.setStartingPrice(new BigDecimal(2000));
@@ -320,12 +316,10 @@ public class DBGenerator implements CommandLineRunner {
         Auction auction3 = new Auction();
         auction3.setName("Phiên đấu giá 02");
         auction3.setHoneyCategoryId(category1.getId());
-        auction3.setHoney(new BigDecimal(200));
         auction3.setStatus(Status.HOAT_DONG);
         auction3.setGiftId(gift1.getId());
         auction3.setFromDate(System.currentTimeMillis());
         auction3.setToDate(System.currentTimeMillis() + 8*3600*1000L);
-        auction3.setIdRoom(auction.getId());
         auction3.setJump(new BigDecimal(5000));
         auction3.setLastPrice(new BigDecimal(200000));
         auction3.setStartingPrice(new BigDecimal(5000));

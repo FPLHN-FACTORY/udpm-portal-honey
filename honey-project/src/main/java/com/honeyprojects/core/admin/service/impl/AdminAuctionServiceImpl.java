@@ -47,7 +47,6 @@ public class AdminAuctionServiceImpl implements AdminAuctionService {
     public Auction addAuction(AdminCreateAuctionRequest request) {
         Auction auction = new Auction();
         auction.setName(request.getName());
-        auction.setHoney(new BigDecimal(request.getHoney()));
         auction.setHoneyCategoryId(request.getHoneyCategoryId());
         if (request.getStatus() == 0) {
             auction.setStatus(Status.HOAT_DONG);
@@ -66,7 +65,6 @@ public class AdminAuctionServiceImpl implements AdminAuctionService {
         }
         Auction auction = findAuctionById.get();
         auction.setName(request.getName());
-        auction.setHoney(new BigDecimal(request.getHoney()));
         auction.setHoneyCategoryId(request.getHoneyCategoryId());
 
         if (request.getStatus() == 0) {

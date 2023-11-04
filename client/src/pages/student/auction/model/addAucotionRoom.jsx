@@ -10,106 +10,35 @@ import {
   Space,
   message,
 } from "antd";
-import React, { useEffect, useState } from "react";
-import "./AuctionRoomInside.css";
-import { DollarOutlined, UserOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import {
-  AddAuction,
-  GetAuction,
-  SetAuction,
-} from "../../../app/reducers/auction/auction.reducer";
-import { StudentAuctionAPI } from "../../../apis/student/auction/auction.api";
-import { Base64Image } from "../../util/ByteArrayToImage";
-import { GetUser } from "../../../app/reducers/users/users.reducer";
-import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
-import { CountdownTimer } from "../../util/CountdownTimer";
+import { Base64Image } from "../../../util/ByteArrayToImage";
+import { useEffect, useState } from "react";
+import { useAppSelector } from "../../../../app/hooks";
+import { GetUser } from "../../../../app/reducers/users/users.reducer";
+import { ArchiveAPI } from "../../../../apis/student/archive/ArchiveAPI";
+import { StudentAuctionAPI } from "../../../../apis/student/auction/auction.api";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 
-export default function StudentAuctionRoomInside() {
-  const { id } = useParams();
+export default function ModalAddAuction({
+  visible,
+  onOK,
+  onCancel,
+  stompClientAll,
+}) {
   const [form] = Form.useForm();
-  const nav = useNavigate();
-  const dispatch = useAppDispatch();
   const user = useAppSelector(GetUser);
-
-  const [search, setSearch] = useState({
-    id: id,
-    name: "",
-    nameGift: "",
-    startingPrice: null,
-    lastPrice: null,
-    jump: null,
-    idCategory: "",
-  });
-
-  const [getOneAuction, setGetOneAuction] = useState(null);
-  const listAuctionRoom = useAppSelector(GetAuction);
   const [listArchiveUser, setListArchiveUser] = useState([]);
   const [archiveGift, setArchiveGift] = useState(null);
 
-  const loadData = () => {
-    setSearch({
-      ...search,
-      idCategory: getOneAuction.honeyCategoryId,
-    });
-    StudentAuctionAPI.fetchAllRoom(search).then((res) => {
-      dispatch(SetAuction(res.data.data));
-      console.log(res.data.data);
-    });
-  };
-
-  const getOneAuctionById = () => {
-    StudentAuctionAPI.getOne(id).then((res) => {
-      setGetOneAuction(res.data.data);
+  const loadListArchive = () => {
+    ArchiveAPI.findAllUser(user.idUser).then((res) => {
+      setListArchiveUser(res.data.data);
     });
   };
 
   useEffect(() => {
-    if (getOneAuction != null) {
-      loadData();
-    }
-    if (getOneAuction == null) {
-      getOneAuctionById();
-    }
-  }, [id, getOneAuction]);
-
-  const archiveData = () => {
-    ArchiveAPI.findAllUser(user.idUser, getOneAuction.honeyCategoryId).then(
-      (res) => {
-        setListArchiveUser(res.data.data);
-        console.log(res.data.data);
-      }
-    );
-  };
-
-  useEffect(() => {
-    if (getOneAuction != null) {
-      archiveData();
-    }
-  }, [user, getOneAuction]);
-
-  useEffect(() => {
-    getOneAuctionById();
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener("load", () => {
-      setGetOneAuction(null);
-    });
-  }, []);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+    loadListArchive();
+  }, [visible]);
 
   const handleSubmit = () => {
     form
@@ -120,16 +49,11 @@ export default function StudentAuctionRoomInside() {
             title: "Xác nhận",
             content: (
               <span>
-                {" "}
                 Bạn có muốn đấu giá{" "}
                 <span style={{ color: "blue", fontWeight: "bold" }}>
-                  {archiveGift.nameGift}
-                </span>{" "}
-                và mất{" "}
-                <span style={{ color: "red", fontWeight: "bold" }}>
-                  {getOneAuction.honey}
-                </span>{" "}
-                mật phí quản lý ?
+                  {archiveGift.nameGift}{" "}
+                </span>
+                không ?
               </span>
             ),
             okText: "Đồng ý",
@@ -141,7 +65,7 @@ export default function StudentAuctionRoomInside() {
       })
       .then((values) => {
         // Lấy giá trị từ form khi người dùng đã hoàn thành
-        const { startingPrice, time, honey, jump } = values;
+        const { startingPrice, time, jump } = values;
         if (startingPrice === undefined) {
           message.error("Vui lòng nhập giá trị khởi điểm hợp lệ.");
           return;
@@ -161,23 +85,21 @@ export default function StudentAuctionRoomInside() {
         }
         const dataUpload = {
           idUser: user.idUser,
-          idAuction: getOneAuction.id,
-          honey: getOneAuction.honey,
           idGift: archiveGift.idGift,
           jump: jump,
-          startingPrice: startingPrice.trim(),
+          startingPrice: startingPrice,
           time: time,
           name: archiveGift.nameGift,
           idCategory: archiveGift.idCategory,
         };
-
-        StudentAuctionAPI.addAuction(dataUpload).then((response) => {
-          console.log(response.data.data);
-          setIsModalOpen(false);
-          loadData();
-          setArchiveGift(null);
-          form.resetFields();
-        });
+        stompClientAll.send(
+          `/action/add-auction`,
+          {},
+          JSON.stringify(dataUpload)
+        );
+        onOK();
+        form.resetFields();
+        message.success("Tạo đấu giá thành công.");
       })
       .catch((errorInfo) => {
         console.log("Lỗi xảy ra:", errorInfo);
@@ -207,9 +129,9 @@ export default function StudentAuctionRoomInside() {
   return (
     <>
       <Modal
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        open={visible}
+        onOk={onOK}
+        onCancel={onCancel}
         footer={null}
         width={1000}
         closeIcon={<span className="custom-close-icon">X</span>}
@@ -237,7 +159,7 @@ export default function StudentAuctionRoomInside() {
                       <img
                         className="img-balo"
                         height={"30px"}
-                        src={require("../../../assets/images/balo-student.png")}
+                        src={require("../../../../assets/images/balo-student.png")}
                         alt="balo"
                       />
                       TÚI ĐỒ
@@ -254,7 +176,7 @@ export default function StudentAuctionRoomInside() {
                           <div>
                             <div className="item">
                               <img
-                                src={require("../../../assets/images/ui-student/avata-item.png")}
+                                src={require("../../../../assets/images/ui-student/avata-item.png")}
                                 alt=""
                               />
                             </div>
@@ -318,6 +240,7 @@ export default function StudentAuctionRoomInside() {
                         >
                           <Input type="number" className="input-auction" />
                         </Form.Item>
+
                         <Form.Item
                           label={
                             <span
@@ -344,43 +267,6 @@ export default function StudentAuctionRoomInside() {
                           </Radio.Group>
                         </Form.Item>
 
-                        <Form.Item
-                          label={
-                            <span
-                              style={{
-                                color: "white",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              Phí quản lý :
-                            </span>
-                          }
-                          colon={false}
-                          name="honey"
-                          initialValue={
-                            getOneAuction != null && getOneAuction.honey
-                          }
-                          style={{ marginRight: "auto", marginLeft: "0px" }}
-                        >
-                          <span
-                            style={{
-                              color: "#FFCC00",
-                              marginRight: "10px",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            {getOneAuction != null && getOneAuction.honey}
-                          </span>
-                          <span
-                            style={{
-                              color: "white",
-                              marginRight: "10px",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            mật
-                          </span>
-                        </Form.Item>
                         <div className="div-button">
                           <Button
                             type="primary"
@@ -450,113 +336,6 @@ export default function StudentAuctionRoomInside() {
           </Form>
         </div>
       </Modal>
-      <div className="auction-main-inside">
-        <Card title={""} className="cartAllConversion">
-          <div className="title">
-            <p style={{ fontSize: "20px", color: "#A55600" }}>
-              <img
-                src={require("../../../assets/images/honey.png")}
-                alt="Gift"
-                height={30}
-                width={30}
-              />
-              <span className="auction-text">Các phiên đấu giá</span>
-
-              <img
-                src={require("../../../assets/images/honey.png")}
-                alt="Gift"
-                height={30}
-                width={30}
-              />
-            </p>
-            <div>
-              {" "}
-              <img
-                src={require("../../../assets/images/ui-student/btn-add-auction-inside.png")}
-                alt="Gift"
-                height={30}
-                width={30}
-                className="btn-add-auction-inside"
-                onClick={showModal}
-              />
-            </div>
-          </div>
-
-          <Card className="cardGift">
-            <Row justify="start">
-              {listArchiveUser.length <= 0 ? (
-                <Col span={24} style={{ textAlign: "center" }}>
-                  <div className="item-cart-null">
-                    <img
-                      style={{
-                        width: "68%",
-                        marginTop: "30px",
-                      }}
-                      src="https://bizweb.dktcdn.net/100/333/755/themes/688335/assets/empty_cart.png?1647314197820"
-                      alt="Ảnh mặc định"
-                    />
-                    <span>
-                      Hiện không có phiên đấu giá vào vui lòng hãy tạo.
-                    </span>
-                  </div>
-                </Col>
-              ) : (
-                listAuctionRoom.map((response, index) => (
-                  <Col span={6} className="col-aucion">
-                    <div
-                      className="auction-room-inside"
-                      onClick={() => {
-                        nav("/student/auction");
-                      }}
-                    >
-                      <span className="user-online">
-                        <div />
-                        200 <UserOutlined style={{ fontSize: "20px" }} />
-                      </span>
-                      <span className="time">
-                        {" "}
-                        <CountdownTimer
-                          initialTime={response.toDate - new Date().getTime()}
-                        />{" "}
-                      </span>
-
-                      {response.image === null ? (
-                        <img
-                          style={{
-                            width: "45%",
-                            height: "60%",
-                            marginTop: "-60px",
-                            borderRadius: "50%",
-                          }}
-                          src="https://png.pngtree.com/png-vector/20191217/ourlarge/pngtree-bee-holding-a-hammer-illustration-vector-on-white-background-png-image_2079130.jpg"
-                          alt="Ảnh đấu giá"
-                        />
-                      ) : (
-                        <Base64Image
-                          base64String={response.image}
-                          css={{
-                            width: "45%",
-                            height: "60%",
-                            marginTop: "-60px",
-                            borderRadius: "50%",
-                          }}
-                        />
-                      )}
-                      <p className="name-gift-acution">{response.giftName}</p>
-                      <span className="price">
-                        {" "}
-                        <DollarOutlined />
-                        {response.startingPrice}-
-                        {response.lastPrice === null ? "?" : response.lastPrice}
-                      </span>
-                    </div>
-                  </Col>
-                ))
-              )}
-            </Row>
-          </Card>
-        </Card>
-      </div>
     </>
   );
 }
