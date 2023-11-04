@@ -1,4 +1,5 @@
-import { FormOutlined } from "@ant-design/icons";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Form, Input, Modal, Radio, Tooltip, message } from "antd";
 import { useEffect, useState } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
@@ -13,16 +14,9 @@ const ModalDetail = (props) => {
 
   useEffect(() => {
     if (category.image) {
-      // Chuyển đổi chuỗi byte thành mảng byte
       const byteArray = category.image.split(",").map(Number);
-
-      // Tạo một Uint8Array từ mảng byte
       const uint8Array = new Uint8Array(byteArray);
-
-      // Chuyển đổi Uint8Array thành Blob
       const blob = new Blob([uint8Array], { type: "image/jpeg" });
-
-      // Tạo URL dữ liệu từ Blob
       const imageUrl = URL.createObjectURL(blob);
 
       setSelectedImageUrl(imageUrl);
@@ -39,7 +33,6 @@ const ModalDetail = (props) => {
     setIsModalOpen(false);
   };
   form.setFieldsValue(category);
-  form.setFieldsValue(category);
 
   const handleFileInputChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -51,7 +44,6 @@ const ModalDetail = (props) => {
       setSelectedImageUrl("");
     }
   };
-
   const dispatch = useAppDispatch();
   form.setFieldsValue(category);
 
@@ -79,11 +71,13 @@ const ModalDetail = (props) => {
     <>
       <Tooltip title="Chi tiết">
         <Button
-          className="detail-button"
-          style={{ padding: "1px 0.7rem" }}
+          style={{
+            backgroundColor: "yellowgreen",
+            color: "white",
+          }}
           onClick={showModal}
         >
-          <FormOutlined className="icon" />
+          <FontAwesomeIcon icon={faPenToSquare} />
         </Button>
       </Tooltip>
       <Modal
@@ -144,8 +138,8 @@ const ModalDetail = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={"2"}>Cần phê duyệt</Radio>
               <Radio value={"1"}>Không phê duyệt</Radio>
+              <Radio value={"2"}>Cần phê duyệt</Radio>
             </Radio.Group>
           </Form.Item>
 

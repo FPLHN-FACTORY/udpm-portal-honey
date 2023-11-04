@@ -13,8 +13,8 @@ public interface StudentNotificationResponse extends IsIdentified {
     @Value("#{target.title}")
     String getTitle();
 
-    @Value("#{target.content}")
-    String getContent();
+//    @Value("#{target.content}")
+//    String getContent();
 
     @Value("#{target.status}")
     String getStatus();

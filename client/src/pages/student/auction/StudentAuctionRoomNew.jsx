@@ -241,8 +241,6 @@ export default function StudentAuctionRoomNew() {
           idUser: user.idUser,
         })
       );
-      form.resetFields();
-      message.success("Đấu giá thành công.");
     } else {
       message.error("Không có kết nối STOMP hoặc kết nối không hợp lệ.");
       return;
@@ -278,6 +276,8 @@ export default function StudentAuctionRoomNew() {
         (message) => {
           let data = JSON.parse(message.body);
           dispatch(UpdateAuction(data.data));
+          form.resetFields();
+          message.success("Đấu giá thành công.");
         }
       );
 

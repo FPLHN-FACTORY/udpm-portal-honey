@@ -42,6 +42,7 @@ public class StudentAuctionServiceImpl implements StudentAuctionService {
 
     @Override
     public Auction add(StudentAuctionCreateRequest request) {
+        System.out.println(request);
         long fromdate = System.currentTimeMillis();
         var auction = new Auction();
         auction.setJump(new BigDecimal(request.getJump()));

@@ -7,11 +7,10 @@ import { AddChestGift } from "../../../app/reducers/chest-gift/chest-gift.reduce
 import { GetGift, SetGift } from "../../../app/reducers/gift/gift.reducer";
 
 export default function ModalAddChestGift(props) {
-  const { chest } = props;
-  const dispatch = useAppDispatch();
+  const { chest, handleFetchGiftByChest, selectedChest } = props;
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
+  const dispatch = useAppDispatch();
   const columns = [
     {
       title: "Code",
@@ -30,24 +29,24 @@ export default function ModalAddChestGift(props) {
     });
   };
 
-  const handleOnclick = () => {
-    setModalOpen(true);
-    fetchData();
-  };
-
   const handleCancel = () => {
     setSelectedRowKeys([]);
     setModalOpen(false);
+    handleFetchGiftByChest(selectedChest);
   };
-
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
     type: "checkbox",
+  };
+
+  const handleOnclick = () => {
+    setModalOpen(true);
+    fetchData();
+    handleFetchGiftByChest(selectedChest);
   };
 
   const handleOk = () => {
@@ -58,11 +57,16 @@ export default function ModalAddChestGift(props) {
       .then((response) => {
         dispatch(AddChestGift(response.config.data));
         fetchData();
+        handleFetchGiftByChest(selectedChest);
+        setSelectedRowKeys([]);
         message.success("Thêm thành công.");
       })
-      .catch(() => {
+      .catch((error) => {
+        handleFetchGiftByChest(selectedChest);
+        setSelectedRowKeys([]);
         message.error("Thêm không thành công.");
       });
+    setModalOpen(false);
   };
   const data = useAppSelector(GetGift);
   return (

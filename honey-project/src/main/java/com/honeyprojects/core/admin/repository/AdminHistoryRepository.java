@@ -31,7 +31,7 @@ public interface AdminHistoryRepository extends HistoryRepository {
             FROM history h
             LEFT JOIN honey ho ON h.honey_id = ho.id
             LEFT JOIN category c ON c.id = ho.honey_category_id
-            WHERE (h.status = 0)
+            WHERE h.status in (0,3)
             AND (:#{#searchParams.idCategory} IS NULL OR c.id = :#{#searchParams.idCategory})
             AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent})
             AND h.type = 0 AND h.teacher_id = :#{#searchParams.idAdmin}

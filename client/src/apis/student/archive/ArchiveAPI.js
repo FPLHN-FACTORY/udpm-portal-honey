@@ -19,11 +19,10 @@ export class ArchiveAPI {
     });
   };
 
-  static getChest = (filter) => {
+  static getChest = () => {
     return request({
       method: "GET",
       url: `/${this.COMPONENT_NAME}/list-chest`,
-      params: filter,
     });
   };
 

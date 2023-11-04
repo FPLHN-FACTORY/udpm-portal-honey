@@ -24,13 +24,13 @@ public interface StudentArchiveRepository extends ArchiveRepository {
                 g.id AS idGift,
                 g.image AS image,
                 g.name AS nameGift,
-                g.honey_category_id AS idCategory
+                gd.category_id AS idCategory
             FROM archive_gift ag
             LEFT JOIN archive a ON ag.archive_id = a.id
             LEFT JOIN gift g ON ag.gift_id = g.id
+            LEFT JOIN gift_detail gd  ON gd.gift_id = g.id
             LEFT JOIN semester s on g.semester_id = s.id
             WHERE a.student_id = :idUser 
-            GROUP BY  g.id, g.image, g.name, a.last_modified_date
              """, nativeQuery = true)
     List<StudentArchiveByUserResponse> findArchiveByUser(@Param("idUser") String idUser);
 

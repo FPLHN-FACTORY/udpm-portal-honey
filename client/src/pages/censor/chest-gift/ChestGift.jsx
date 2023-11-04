@@ -4,7 +4,6 @@ import { Button, Pagination, Space, Table, Card, Input, Tooltip } from "antd";
 import {
   PlusOutlined,
   EditOutlined,
-  SearchOutlined,
   EyeOutlined,
   PlusCircleOutlined,
   DeleteOutlined,
@@ -16,6 +15,8 @@ import ModalAdd from "./ModalCreateChest";
 import ModalAddGiftToChest from "./ModalAddGiftsToChest";
 import ModalDetail from "./ModalDetailChestGift";
 import DeleteChest from "./ModalDeleteChestGift";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilter, faRectangleList } from "@fortawesome/free-solid-svg-icons";
 
 export default function ChestGift() {
   const dispatch = useAppDispatch();
@@ -43,6 +44,11 @@ export default function ChestGift() {
       dispatch(SetChest(response.data.data.data));
       setTotal(response.data.data.totalPages);
     });
+  };
+
+  const buttonClear = () => {
+    setSearch("");
+    fetchData();
   };
 
   const handleSearch = (e) => {
@@ -100,41 +106,79 @@ export default function ChestGift() {
           SetChest={setDetailChest}
         />
       )}
-      <Card className="mb-2">
-        <h1 className="text-xl">Tìm kiếm rương</h1>
+      <Card
+        className="mb-2"
+        style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}
+      >
+        <FontAwesomeIcon
+          icon={faFilter}
+          size="2px"
+          style={{ fontSize: "26px" }}
+        />{" "}
+        <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span>
         <form class="flex items-center" onSubmit={handleSearch}>
           <div class="relative w-full mr-6">
             <Input
-              style={{ borderRadius: "30px" }}
+              style={{ borderRadius: "30px", marginTop: "20px" }}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Nhập tên..."
             />
           </div>
-          <button
-            type="button"
-            className="search-button1"
-            icon={<SearchOutlined />}
-            style={{ marginTop: "20px" }}
-            onClick={() => {
-              setCurrent(1);
-              fetchData();
+          <Space
+            style={{
+              justifyContent: "center",
+              display: "flex",
+              marginBottom: "16px",
             }}
           >
-            Tìm kiếm
-          </button>
+            <button
+              type="button"
+              className="search-button1"
+              style={{ marginTop: "20px", backgroundColor: "#537fe7" }}
+              onClick={() => {
+                buttonClear();
+              }}
+            >
+              Làm mới
+            </button>
+            <button
+              type="button"
+              className="search-button1"
+              style={{ marginTop: "20px" }}
+              onClick={() => {
+                setCurrent(1);
+                fetchData();
+              }}
+            >
+              Tìm kiếm
+            </button>
+          </Space>
         </form>
       </Card>
 
-      <Card>
-        <div>
+      <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+        <Space
+          style={{
+            justifyContent: "space-between",
+            display: "flex",
+            marginBottom: "16px",
+          }}
+        >
+          <div>
+            <span style={{ fontSize: "18px" }}>
+              <FontAwesomeIcon icon={faRectangleList} size="xl" />
+              <b style={{ marginLeft: "5px", fontWeight: "500" }}>
+                Danh sách rương
+              </b>
+            </span>
+          </div>
           <div className="flex flex-row-reverse">
             <div>
               <span>
                 <Tooltip title="Tạo rương">
                   <button
                     className="add-button1"
-                    style={{ marginBottom: "20px" }}
                     onClick={() => {
                       setShowModal(true);
                       setDetailChest(null);
@@ -147,8 +191,7 @@ export default function ChestGift() {
               </span>
             </div>
           </div>
-        </div>
-
+        </Space>
         <div className="mt-5">
           <Table
             columns={columns}

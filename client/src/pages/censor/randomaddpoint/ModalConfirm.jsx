@@ -30,16 +30,6 @@ export default function ModalConfirm(props) {
       {},
       (frame) => {
         console.log("Kết nối STOMP đã được thiết lập.");
-        // stompClient.subscribe(
-        //   "/portal-honey/create-notification-user",
-        //   (message) => {
-        //     const data = JSON.parse(message.body).data;
-        //     console.log("====================================");
-        //     console.log(data);
-        //     console.log("====================================");
-        //     dispatch(SetCountNotification(data));
-        //   }
-        // );
       },
       (error) => {
         console.error("Lỗi trong quá trình kết nối STOMP:", error);

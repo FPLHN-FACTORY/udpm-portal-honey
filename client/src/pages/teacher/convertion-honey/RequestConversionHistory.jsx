@@ -1,44 +1,44 @@
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Card,
   Form,
   Input,
   Pagination,
+  Popconfirm,
   Select,
   Space,
+  Spin,
   Table,
   Tag,
+  Tooltip,
   message,
 } from "antd";
-import React, { useEffect, useState } from "react";
-import "../addpoint/index.css";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
+  SearchOutlined,
+  CheckCircleFilled,
+  CloseCircleFilled,
+} from "@ant-design/icons";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { AddPointAPI } from "../../../apis/teacher/add-point/add-point.api";
+import { TeacherUseGiftApi } from "../../../apis/teacher/convertion-honey/convertion-honey.api";
+import {
+  DeleteHistory,
   GetHistory,
   SetHistory,
 } from "../../../app/reducers/history/history.reducer";
-import { AddPointAPI } from "../../../apis/teacher/add-point/add-point.api";
-import {
-  GetCategory,
-  SetCategory,
-} from "../../../app/reducers/category/category.reducer";
-import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilter, faRectangleList } from "@fortawesome/free-solid-svg-icons";
 
 const statusHistory = (status) => {
   switch (status) {
-    case 1:
-      return (
-        <Tag style={{ width: "80px", textAlign: "center" }} color="green">
-          Đã phê duyệt
-        </Tag>
-      ); // Màu xanh lá cây
-    case 2:
-      return (
-        <Tag style={{ width: "80px", textAlign: "center" }} color="volcano">
-          Đã hủy
-        </Tag>
-      ); // Màu đỏ
+    case "0":
+      return <Tag color="geekblue">Chờ phê duyệt</Tag>; // Màu xanh dương
+    case "1":
+      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
+    case "2":
+      return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
     default:
       return <Tag>Không xác định</Tag>;
   }
@@ -53,29 +53,34 @@ export default function RequestConversionHistory() {
       key: "stt",
     },
     {
-      title: "Tên sinh viên",
-      dataIndex: "nameStudent",
-      key: "nameStudent",
+      title: "Email sinh viên",
+      dataIndex: "emailStudent",
+      key: "emailStudent",
     },
     {
-      title: "Loại điểm",
-      dataIndex: "nameCategory",
-      key: "nameCategory",
+      title: "Loại quà",
+      dataIndex: "nameGift",
+      key: "nameGift",
     },
     {
-      title: "Số điểm",
-      dataIndex: "honeyPoint",
-      key: "honeyPoint",
+      title: "Lớp",
+      dataIndex: "lop",
+      key: "lop",
+    },
+    {
+      title: "Môn",
+      dataIndex: "mon",
+      key: "mon",
+    },
+    {
+      title: "Số lượng",
+      dataIndex: "quantity",
+      key: "quantity",
     },
     {
       title: "Ngày tạo",
       dataIndex: "createdDate",
       key: "createdDate",
-    },
-    {
-      title: "Lý do",
-      dataIndex: "note",
-      key: "note",
     },
     {
       title: "Trạng thái",
@@ -85,48 +90,48 @@ export default function RequestConversionHistory() {
   ];
 
   const [totalPage, setTotalPage] = useState(1);
-  const [filter, setFilter] = useState({ page: 0 });
+  const [filter, setFilter] = useState({ page: 0, status: 1 });
+  const [loading, setLoading] = useState(false);
+  const [filterClass, setFilterClass] = useState([]);
+  const [filterGift, setFilterGift] = useState([]);
 
   useEffect(() => {
-    fetchData(dispatch, filter);
-  }, [dispatch, filter]);
+    TeacherUseGiftApi.getFilterClass().then((result) => {
+      setFilterClass(result.data.data);
+    });
+    TeacherUseGiftApi.getFilterGift().then((result) => {
+      setFilterGift(result.data.data);
+    });
+  }, []);
 
-  const fetchData = (dispatch, filter) => {
-    AddPointAPI.getCategory()
-      .then((response) => {
-        dispatch(SetCategory(response.data.data));
-      })
-      .catch((error) => {
-        message.error(error);
-      })
-      .finally(() => {
-        const fetchData = async (filter) => {
+  const fetchData = async (filter) => {
+    try {
+      setLoading(true);
+      const response = await TeacherUseGiftApi.getRequestUseGift(filter);
+      const listHistory = await Promise.all(
+        response.data.data.data.map(async (data) => {
           try {
-            const response = await AddPointAPI.getHistory(filter);
-            const listHistory = await Promise.all(
-              response.data.data.map(async (data) => {
-                try {
-                  const user = await AddPointAPI.getStudent(data.studentId);
-                  return {
-                    ...data,
-                    nameStudent: user.data.data.name,
-                    userName: user.data.data.userName,
-                  };
-                } catch (error) {
-                  console.error(error);
-                  return data;
-                }
-              })
-            );
-            dispatch(SetHistory(listHistory));
-            setTotalPage(response.data.totalPages);
+            const user = await AddPointAPI.getStudent(data.studentId);
+            return {
+              ...data,
+              emailStudent: user.data.data.email,
+            };
           } catch (error) {
             console.error(error);
+            return data;
           }
-        };
-        fetchData(filter);
-      });
+        })
+      );
+      dispatch(SetHistory(listHistory));
+      setTotalPage(response.data.data.totalPages);
+    } catch (error) {
+      console.error(error);
+    }
+    setLoading(false);
   };
+  useEffect(() => {
+    fetchData(filter);
+  }, []);
 
   const data = useAppSelector(GetHistory).map((data) => {
     return {
@@ -134,93 +139,147 @@ export default function RequestConversionHistory() {
       key: data.id,
       status: statusHistory(data.status),
       createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
-      acction: { idHistory: data.id, status: data.status },
+      acction: { idHistory: data.id },
     };
   });
-  const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
-    if (value.userName === undefined || value.userName.trim().length === 0) {
-      setFilter({
+    if (value.email === undefined || value.email.trim().length === 0) {
+      fetchData({
         ...filter,
-        idStudent: null,
-        idCategory: value.idCategory,
         status: value.status,
+        gift: value.gift,
+        lop: value.lop,
       });
     } else {
-      AddPointAPI.searchStudent(value.userName.trim())
-        .then((result) => {
-          if (result.data.success) {
-            setFilter({
-              ...filter,
-              idStudent: result.data.data.id,
-              idCategory: value.idCategory,
-              status: value.status,
-            });
-          } else {
-            message.error("Mã sinh viên không chính xác!");
-          }
-        })
-        .catch((error) => console.error(error));
+      fetchData({
+        ...filter,
+        status: value.status,
+        email: value.email,
+        gift: value.gift,
+        lop: value.lop,
+      });
     }
   };
 
   return (
-    <div className="add-point">
-      <Card className="mb-2 py-1">
-        <Form onFinish={onFinishSearch}>
-          <Space size={"large"}>
-            <Form.Item name="userName" className="search-input">
-              <Input
-                style={{ width: "300px" }}
-                size="small"
-                placeholder="Nhập mã sinh viên cần tìm"
-                prefix={<SearchOutlined />}
-              />
-            </Form.Item>
-            <Form.Item name={"idCategory"}>
-              <Select
-                style={{ width: "150px" }}
-                size="large"
-                placeholder="Loại điểm"
-                options={[
-                  { value: null, label: "Tất cả" },
-                  ...listCategory.map((category) => {
-                    return {
-                      value: category.id,
-                      label: category.name,
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
-            <Button
-              htmlType="submit"
-              type="primary"
-              className="mr-10 search-button">
-              Lọc
-            </Button>
+    <Spin spinning={loading}>
+      <div className="add-point">
+        <Card
+          className="mb-2"
+          style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+          {" "}
+          <FontAwesomeIcon
+            icon={faFilter}
+            size="2px"
+            style={{ fontSize: "26px" }}
+          />{" "}
+          <span
+            style={{
+              fontSize: "18px",
+              fontWeight: "500",
+            }}>
+            Bộ lọc
+          </span>
+          <Form onFinish={onFinishSearch}>
+            <Space size={"large"} style={{ marginTop: "15px" }}>
+              <Form.Item name="email" className="search-input">
+                <Input
+                  style={{ width: "300px" }}
+                  size="small"
+                  placeholder="Nhập email sinh viên cần tìm"
+                  prefix={<SearchOutlined />}
+                />
+              </Form.Item>
+              <Form.Item name={"gift"}>
+                <Select
+                  showSearch
+                  style={{ width: "150px" }}
+                  size="large"
+                  placeholder="Loại quà"
+                  options={[
+                    { value: null, label: "Tất cả" },
+                    ...filterGift.map((gift) => {
+                      return {
+                        value: gift.id,
+                        label: gift.name,
+                      };
+                    }),
+                  ]}
+                />
+              </Form.Item>
+              <Form.Item name={"lop"}>
+                <Select
+                  showSearch
+                  style={{ width: "150px" }}
+                  size="large"
+                  placeholder="Lớp"
+                  options={[
+                    { value: null, label: "Tất cả" },
+                    ...filterClass.map((fclass) => {
+                      return {
+                        value: fclass,
+                        label: fclass,
+                      };
+                    }),
+                  ]}
+                />
+              </Form.Item>
+              <Form.Item name={"status"}>
+                <Select
+                  defaultValue={filter.status}
+                  showSearch
+                  style={{ width: "150px" }}
+                  size="large"
+                  placeholder="Trạng thái"
+                  options={[
+                    { value: 1, label: statusHistory("1") },
+                    { value: 2, label: statusHistory("2") },
+                  ]}
+                />
+              </Form.Item>
+              <Button
+                htmlType="submit"
+                type="primary"
+                className="mr-10 search-button">
+                Lọc
+              </Button>
+            </Space>
+          </Form>
+        </Card>
+        <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+          <Space
+            style={{
+              justifyContent: "space-between",
+              marginBottom: "16px",
+            }}>
+            <div>
+              <span style={{ fontSize: "18px" }}>
+                <FontAwesomeIcon icon={faRectangleList} size="xl" />
+                <b style={{ marginLeft: "5px", fontWeight: "500" }}>
+                  Danh sách yêu cầu
+                </b>
+              </span>
+            </div>
           </Space>
-        </Form>
-      </Card>
-      <Card title="Lịch sử cộng điểm">
-        <Table
-          columns={columns}
-          dataSource={data}
-          rowKey="key"
-          pagination={false}
-        />
-        <div className="mt-10 text-center mb-10">
-          <Pagination
-            simple
-            current={filter.page + 1}
-            onChange={(page) => {
-              setFilter({ ...filter, page: page - 1 });
-            }}
-            total={totalPage * 10}
+          <Table
+            columns={columns}
+            dataSource={data}
+            rowKey="key"
+            pagination={false}
           />
-        </div>
-      </Card>
-    </div>
+          <div className="mt-10 text-center mb-10">
+            <Pagination
+              simple
+              current={filter.page + 1}
+              onChange={(page) => {
+                setFilter({ ...filter, page: page - 1 });
+              }}
+              total={totalPage * 10}
+            />
+          </div>
+        </Card>
+      </div>
+    </Spin>
   );
 }

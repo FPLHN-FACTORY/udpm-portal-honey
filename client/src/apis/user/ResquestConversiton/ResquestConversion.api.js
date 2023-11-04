@@ -25,6 +25,13 @@ export class ResquestConversion {
     });
   };
 
+  static fetchAllGift = () => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/list-gift`,
+    });
+  };
+
   static getPointHoney = (filter) => {
     return request({
       method: "GET",

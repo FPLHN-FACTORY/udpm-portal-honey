@@ -112,4 +112,11 @@ export class RandomAddPointAPI {
       url: `/${this.COMPONENT_NAME}/get-all-name-chest`,
     });
   };
+
+  static addChest = (name) => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}/add/chest/${name}`,
+    });
+  };
 }

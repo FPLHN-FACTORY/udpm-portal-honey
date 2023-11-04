@@ -10,6 +10,7 @@ import com.honeyprojects.core.admin.model.response.AdminPoinResponse;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.entity.History;
+import com.honeyprojects.entity.Honey;
 
 import java.util.List;
 

@@ -2,7 +2,6 @@ package com.honeyprojects.entity;
 
 import com.honeyprojects.entity.base.PrimaryEntity;
 import com.honeyprojects.infrastructure.contant.EntityProperties;
-import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TypeGift;
 import jakarta.persistence.Column;
@@ -38,12 +37,9 @@ public class Gift extends PrimaryEntity {
 
     private Long fromDate;
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String honeyCategoryId;
-
-    private Integer honey;
-
     private String note;
+
+    private Integer limitQuantity;
 
     @Column(length = EntityProperties.LENGTH_ID)
     private String semesterId;

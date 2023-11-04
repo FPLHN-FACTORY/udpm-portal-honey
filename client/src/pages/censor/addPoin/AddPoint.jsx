@@ -9,10 +9,13 @@ import {
   Input,
   InputNumber,
   Row,
-  Segmented,
+  Space,
   Spin,
+  Table,
   Tag,
+  Tooltip,
   message,
+  Select,
 } from "antd";
 import { SearchOutlined, SendOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -21,6 +24,9 @@ import {
   SetCategory,
 } from "../../../app/reducers/category/category.reducer";
 import { AddPointAPI } from "../../../apis/censor/add-point/add-point.api";
+import ModalUpLoadFile from "./ModalUploadFile";
+import { GetImport } from "../../../app/reducers/import/import.reducer";
+import ModalConfirm from "../randomaddpoint/ModalConfirm";
 
 export default function AddPoint() {
   const dispatch = useAppDispatch();
@@ -29,10 +35,17 @@ export default function AddPoint() {
   const [honeyStudent, setHoneyStudent] = useState({ honey: 0 });
   const [categorySelected, setCategorySelected] = useState();
 
+  const [dataPreview, setDataPreview] = useState([]);
+
   const [loading, setLoading] = useState(false);
+  const [openUpload, setOpenUpload] = useState(false);
+  const [openConfirm, setOpenConfirm] = useState(false);
 
   const [formSearch] = Form.useForm();
   const [formAddPoint] = Form.useForm();
+
+  const [nameFileUpload, setNameFileUpload] = useState("");
+  const previewImport = useAppSelector(GetImport);
 
   useEffect(() => {
     setLoading(true);
@@ -52,7 +65,6 @@ export default function AddPoint() {
       if (response.data.success) {
         setStudent(response.data.data);
         getHoney(response.data.data.id, categorySelected);
-        console.log('id user: ',response.data.data.id,': id cate :',categorySelected);  
       } else {
         setStudent({});
         formSearch.setFields([
@@ -79,20 +91,16 @@ export default function AddPoint() {
 
   const addPoint = (data) => {
     setLoading(true);
-    AddPointAPI.addPoint(data)
-      .then((response) => {
-        if (response.data.success) {
-          message.success("Đã gửi yêu cầu!");
-          formAddPoint.resetFields();
-          formSearch.resetFields();
-          setStudent({});
-        } else {
-          message.error("Gửi yêu cầu thất bại!");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    AddPointAPI.addPoint(data).then((response) => {
+      if (response.data.success) {
+        message.success("Thành công!");
+        formAddPoint.resetFields();
+        formSearch.resetFields();
+        setStudent({});
+      } else {
+        message.error("Thất bại!");
+      }
+    });
     setLoading(false);
   };
 
@@ -106,11 +114,70 @@ export default function AddPoint() {
           setHoneyStudent({ point: 0 });
         }
       })
-      .catch((error) => console.log(error))
       .finally(() => {
         setLoading(false);
       });
   };
+
+  const handleClostPreview = () => {
+    setDataPreview([]);
+    setNameFileUpload("");
+  };
+
+  const columsPreview = [
+    {
+      title: "Mã sinh viên",
+      dataIndex: "userName",
+      key: "username",
+      render: (_, record) => {
+        return record.userName === null ? (
+          <span style={{ color: "orange" }}>không có dữ liệu</span>
+        ) : (
+          <span>{record.userName}</span>
+        );
+      },
+    },
+    {
+      title: "Vật phẩm",
+      dataIndex: "lstGift",
+      key: "lstGift",
+      render: (_, record) => {
+        return record.lstGift === null ? (
+          <span style={{ color: "orange" }}>không có dữ liệu</span>
+        ) : (
+          <span>{record.lstGift}</span>
+        );
+      },
+    },
+    {
+      title: "Mật ong",
+      dataIndex: "lstHoney",
+      key: "lstHoney",
+      render: (_, record) => {
+        return record.lstHoney === null ? (
+          <span style={{ color: "orange" }}>không có dữ liệu</span>
+        ) : (
+          <span>{record.lstHoney}</span>
+        );
+      },
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "importMessage",
+      key: "importMessage",
+      render: (_, record) => {
+        return record.error === false ? (
+          <Tooltip title={record.importMessage}>
+            <span style={{ color: "green" }}>Thành công</span>
+          </Tooltip>
+        ) : (
+          <Tooltip title={record.importMessage}>
+            <span style={{ color: "red" }}>Thất bại</span>
+          </Tooltip>
+        );
+      },
+    },
+  ];
 
   return (
     <Spin spinning={loading}>
@@ -142,30 +209,27 @@ export default function AddPoint() {
               />
             </Form.Item>
 
-            <Button className="ml-auto import-button" type="primary">
+            <Button
+              className="ml-auto import-button"
+              type="primary"
+              onClick={() => setOpenUpload(true)}
+            >
               Import excel
             </Button>
+            {openUpload && (
+              <ModalUpLoadFile
+                openUpload={openUpload}
+                setOpenUpload={setOpenUpload}
+                setLoading={setLoading}
+                setDataPreview={setDataPreview}
+                nameFileUpload={nameFileUpload}
+                setNameFileUpload={setNameFileUpload}
+              />
+            )}
           </Form>
         </Card>
         {Object.keys(student).length > 0 ? (
-          <Card
-            className="content-card"
-            title="Thông tin sinh viên"
-            extra={
-              <Segmented
-                className="font-bold select-category"
-                onChange={(value) => {
-                  setCategorySelected(value);
-                  getHoney(student.id, value);
-                }}
-                value={categorySelected}
-                options={listCategory.map((category) => ({
-                  label: category.name,
-                  value: category.id,
-                }))}
-              />
-            }
-          >
+          <Card className="content-card" title="Thông tin sinh viên">
             <Row className="mx-10">
               <Col
                 className="py-25"
@@ -175,7 +239,7 @@ export default function AddPoint() {
                 <Row className="font-semibold">
                   <Col span={24}>
                     <div>
-                      User name:{" "}
+                      Tài khoản:{" "}
                       <Tag style={{ fontSize: "14px" }}>{student.userName}</Tag>
                     </div>
                     <div className="mt-25">
@@ -197,6 +261,38 @@ export default function AddPoint() {
               </Col>
               <Col className="py-25" span={12} style={{ paddingLeft: "25px" }}>
                 <Form form={formAddPoint} onFinish={onFinishAdd}>
+                  <Row>
+                    <Col span={8} className=" font-semibold">
+                      <div>Loại mật ong:</div>
+                    </Col>
+                    <Col span={16} className="mb-2">
+                      <Select
+                        showSearch
+                        style={{
+                          width: 200,
+                        }}
+                        onChange={(value) => {
+                          setCategorySelected(value);
+                          getHoney(student.id, value);
+                        }}
+                        placeholder="Search to Select"
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                          (option?.label ?? "").includes(input)
+                        }
+                        filterSort={(optionA, optionB) =>
+                          (optionA?.label ?? "")
+                            .toLowerCase()
+                            .localeCompare((optionB?.label ?? "").toLowerCase())
+                        }
+                        options={listCategory.map((category) => ({
+                          label: category.name,
+                          value: category.id,
+                        }))}
+                        defaultValue={listCategory[0].id}
+                      />
+                    </Col>
+                  </Row>
                   <Row>
                     <Col span={8} className=" font-semibold">
                       <div>Số điểm:</div>
@@ -265,6 +361,67 @@ export default function AddPoint() {
           </Card>
         )}
       </div>
+      {dataPreview.length > 0 && (
+        <Card style={{ borderTop: "5px solid #FFCC00", marginTop: "32px" }}>
+          <Space
+            style={{
+              justifyContent: "space-between",
+              display: "flex",
+              marginBottom: "24px",
+            }}
+          >
+            <div>
+              <b style={{ fontSize: "25px" }}>Dữ liệu import</b>
+            </div>
+            <div>
+              <span>
+                {previewImport && (
+                  <b style={{ fontSize: "15px" }}>
+                    <span style={{ color: "#FFCC00" }}>Tổng: </span>
+                    {previewImport.total} -
+                    <span style={{ color: "green" }}> Thành công: </span>
+                    {previewImport.totalSuccess} -
+                    <span style={{ color: "red" }}> Lỗi: </span>
+                    {previewImport.totalError}
+                  </b>
+                )}
+              </span>
+            </div>
+          </Space>
+          <Table
+            dataSource={dataPreview}
+            columns={columsPreview}
+            pagination={false}
+          />
+          <Space
+            style={{
+              justifyContent: "right",
+              display: "flex",
+              marginTop: "32px",
+            }}
+          >
+            <Button className="button-css" onClick={() => handleClostPreview()}>
+              Đóng
+            </Button>
+            <Button
+              disabled={previewImport.totalError < 1 ? false : true}
+              className="button-css"
+              onClick={() => setOpenConfirm(true)}
+            >
+              Thêm
+            </Button>
+            {openConfirm && (
+              <ModalConfirm
+                dataPreview={dataPreview}
+                openConfirm={openConfirm}
+                setOpenConfirm={setOpenConfirm}
+                setDataPreview={setDataPreview}
+                setNameFileUpload={setNameFileUpload}
+              />
+            )}
+          </Space>
+        </Card>
+      )}
     </Spin>
   );
 }

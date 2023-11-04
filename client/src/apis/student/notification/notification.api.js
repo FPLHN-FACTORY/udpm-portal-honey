@@ -11,6 +11,14 @@ export class NotificationAPI {
     });
   };
 
+  static fetchListNotification = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/list-notification`,
+      params: filter,
+    });
+  };
+
   static fetchCountNotification = () => {
     return request({
       method: "GET",

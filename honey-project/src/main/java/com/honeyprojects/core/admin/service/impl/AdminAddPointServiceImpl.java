@@ -28,21 +28,26 @@ import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AdminAddPointServiceImpl implements AdminAddPointService {
 
-
     @Autowired
     private AdminCategoryRepository categoryRepository;
+
     @Autowired
     private AdminHoneyRepository honeyRepository;
+
     @Autowired
     private AdminHistoryRepository historyRepository;
+
     @Autowired
     private AdSemesterRepository usRepository;
+
     @Autowired
     private UdpmHoney udpmHoney;
+
     @Autowired
     private ConvertRequestApiidentity requestApiidentity;
 
@@ -82,9 +87,7 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
 
     @Override
     public History addPoint(AdminAddPointRequest addPointRequest) {
-        //fake admin login
         String idAdmin = udpmHoney.getIdUser();
-        System.out.println(idAdmin);
         Long dateNow = Calendar.getInstance().getTimeInMillis();
         History history = new History();
         history.setStatus(HoneyStatus.DA_PHE_DUYET);
@@ -94,22 +97,23 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
         history.setType(TypeHistory.CONG_DIEM);
         history.setCreatedAt(dateNow);
         if (addPointRequest.getHoneyId() == null) {
-
             String idUs = usRepository.getUsByStudent(dateNow);
             if (idUs == null) return null;
             Honey honey = new Honey();
             honey.setStatus(Status.HOAT_DONG);
-            honey.setHoneyPoint(0);
+            honey.setHoneyPoint(addPointRequest.getHoneyPoint());
             honey.setStudentId(addPointRequest.getStudentId());
             honey.setHoneyCategoryId(addPointRequest.getCategoryId());
             honey.setUserSemesterId(idUs);
+            honeyRepository.save(honey);
             history.setHoneyId(honeyRepository.save(honey).getId());
 
         } else {
             Honey honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();
             history.setHoneyId(honey.getId());
+            honey.setHoneyPoint(addPointRequest.getHoneyPoint() + honey.getHoneyPoint());
+            honeyRepository.save(honey);
         }
-
         history.setStudentId(addPointRequest.getStudentId());
         return historyRepository.save(history);
     }

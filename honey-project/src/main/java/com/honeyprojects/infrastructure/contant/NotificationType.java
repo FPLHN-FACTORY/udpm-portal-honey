@@ -4,5 +4,6 @@ public enum NotificationType {
     CHO_PHE_DUYET,
     DA_PHE_DUYET,
     TU_CHOI,
-    HE_THONG
+    HE_THONG,
+    TEACHER,
 }

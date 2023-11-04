@@ -13,10 +13,11 @@ import {
 } from "antd";
 import {
   PlusOutlined,
-  EditOutlined,
   FormOutlined,
   DeleteOutlined,
   SearchOutlined,
+  CheckOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
@@ -27,6 +28,8 @@ import {
 import ModalThem from "./ModalAdd";
 import ModalDetail from "./ModalDetail";
 import "./index.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default function Index() {
   const [showModal, setShowModal] = useState(false);
@@ -78,35 +81,31 @@ export default function Index() {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
+      align: "center",
       render: (text, record, index) => index + 1,
     },
     {
       title: "Ảnh",
       dataIndex: "image",
       key: "image",
+      align: "center",
       render: (image) => {
         if (image) {
-          // Chuyển đổi chuỗi byte thành mảng byte
           const byteArray = image.split(",").map(Number);
-
-          // Tạo một Uint8Array từ mảng byte
           const uint8Array = new Uint8Array(byteArray);
-
-          // Chuyển đổi Uint8Array thành Blob
           const blob = new Blob([uint8Array], { type: "image/jpeg" });
-
-          // Tạo URL dữ liệu từ Blob
           const imageUrl = URL.createObjectURL(blob);
-
           return (
-            <img
-              src={imageUrl}
-              style={{ width: "40px", height: "40px" }}
-              alt="Hình ảnh"
-            />
+            <div style={{ textAlign: "center" }}>
+              <img
+                src={imageUrl}
+                style={{ width: "40px", height: "40px", margin: "auto" }}
+                alt="Hình ảnh"
+              />
+            </div>
           );
         } else {
-          return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
+          return <div>Chưa có ảnh</div>;
         }
       },
     },
@@ -114,55 +113,63 @@ export default function Index() {
       title: "Mã",
       dataIndex: "code",
       key: "code",
+      align: "center",
       render: (text) => <span>{text}</span>,
     },
     {
-      title: "Loại mật",
+      title: "Loại mật ong",
       dataIndex: "name",
       key: "name",
+      align: "center",
     },
     {
       title: "Phê duyệt",
       dataIndex: "categoryStatus",
       key: "categoryStatus",
+      align: "center",
       render: (text) => {
         if (text === "0") {
-          return <span>Không phê duyệt</span>;
+          return (
+            <span style={{ color: "red" }}>
+              <CloseOutlined />
+            </span>
+          );
         } else {
-          return <span>Phê duyệt</span>;
+          return (
+            <span style={{ color: "green" }}>
+              <CheckOutlined />
+            </span>
+          );
         }
       },
     },
     {
-      title: "Quy đổi",
-      dataIndex: "transactionRights",
-      key: "transactionRights",
+      title: "Giao dịch",
+      dataIndex: "categoryStatus",
+      key: "categoryStatus",
+      align: "center",
       render: (text) => {
-        if (text === "0") {
-          return <span>Được giao dịch</span>;
+        if (text === "1") {
+          return (
+            <span style={{ color: "green" }}>
+              <CheckOutlined />
+            </span>
+          );
         } else {
-          return <span>Không giao dịch</span>;
+          return (
+            <span style={{ color: "red" }}>
+              <CloseOutlined />
+            </span>
+          );
         }
       },
     },
     {
       title: () => <div>Hành động</div>,
       key: "action",
+      align: "center",
       render: (_, record) => (
         <Space size="small">
-          {/* <Tooltip title="Cập nhật">
-            <Button
-              className="update-button"
-              onClick={() => {
-                setDetailCategory(record);
-                setShowModal(true);
-                console.log(record);
-              }}
-            >
-              <EditOutlined className="icon" />
-            </Button>
-          </Tooltip> */}
-
           <ModalDetail
             category={record}
             fetchData={fetchData}
@@ -174,9 +181,12 @@ export default function Index() {
                 setDetailCategory(record);
                 setConfirmDelete(true);
               }}
-              className="detail-button"
+              style={{
+                backgroundColor: "red",
+                color: "white",
+              }}
             >
-              <DeleteOutlined className="icon" />
+              <FontAwesomeIcon icon={faTrash} />
             </Button>
           </Tooltip>
         </Space>

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Button, message, Modal, Form, Input } from "antd";
+import { message, Modal, Form, Input, InputNumber, Slider } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
-import { SetArchiveGift } from "../../../app/reducers/archive-gift/archive-gift.reducer";
-import { ResquestConversion } from "../../../apis/user/ResquestConversiton/ResquestConversion.api";
+import { SetGiftArchive } from "../../../app/reducers/archive-gift/gift-archive.reducer";
+import { SetArchiveCountGift } from "../../../app/reducers/archive-gift/archive-count-gift.reducer";
 
 const UsingGift = (props) => {
   const { archivegift, filter } = props;
@@ -17,16 +17,25 @@ const UsingGift = (props) => {
   };
 
   const fetchData = () => {
-    ArchiveAPI.getArchive(filter).then((response) => {
-      dispatch(SetArchiveGift(response.data.data));
+    ArchiveAPI.getGift(filter).then((response) => {
+      dispatch(SetGiftArchive(response.data.data));
+    });
+    ArchiveAPI.detailArchiveGift(archivegift.idGift).then((response) => {
+      let quantity = parseInt(response.data.quantity);
+      dispatch(SetArchiveCountGift(quantity));
     });
   };
 
   const handleOk = () => {
+    setLoading(true);
     form
       .validateFields()
       .then((values) => {
-        const data = { ...values, archiveGiftId: archivegift.id };
+        const data = {
+          ...values,
+          archiveGiftId: archivegift.id,
+          quantity: soLuong,
+        };
         ArchiveAPI.openGift(data)
           .then((result) => {
             if (result.data.success) {
@@ -35,12 +44,7 @@ const UsingGift = (props) => {
             }
           })
           .catch((error) => {
-            form.setFields([
-              {
-                name: "emailGV",
-                errors: [error.response.data.message],
-              },
-            ]);
+            message.error(error.response.data.message);
           })
           .finally(() => {
             fetchData();
@@ -49,6 +53,7 @@ const UsingGift = (props) => {
       .catch((errorInfo) => {
         console.log("Validation failed:", errorInfo);
       });
+    setLoading(false);
   };
 
   const handleCancel = () => {
@@ -56,17 +61,42 @@ const UsingGift = (props) => {
     setIsModalOpen(false);
   };
 
+  const [soLuong, setSoLuong] = useState(1);
+
+  const [loading, setLoading] = useState(false);
   return (
     <div>
-      <Button onClick={showModal} className="button-xac-nhan">
-        Sử dụng
-      </Button>
+      <div onClick={showModal}>Sử dụng</div>
       <Modal
         title="Sử dụng quà tặng"
         visible={isModalOpen}
         onOk={handleOk}
-        onCancel={handleCancel}>
+        onCancel={handleCancel}
+        okButtonProps={{ loading: loading }}>
         <Form form={form}>
+          <b>
+            <span style={{ color: "red" }}>* </span> Số lượng
+          </b>
+          <Slider
+            value={soLuong}
+            onChange={(e) => {
+              setSoLuong(e);
+            }}
+            max={parseInt(archivegift.quantity)}
+          />
+          <b>
+            <span style={{ color: "red" }}>* </span> Mã môn học
+          </b>
+          <Form.Item
+            name="maMon"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập mã môn học!",
+              },
+            ]}>
+            <Input />
+          </Form.Item>
           <b>
             <span style={{ color: "red" }}>* </span> Mã Lớp
           </b>

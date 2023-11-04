@@ -1,9 +1,15 @@
 package com.honeyprojects.core.admin.controller;
 
+import com.honeyprojects.core.admin.model.request.AdminChangeStatusGiftRequest;
+import com.honeyprojects.core.admin.model.request.AdminCreateConversionHistoryRequest;
+import com.honeyprojects.core.admin.model.request.CensorChangeStatusRequest;
+import com.honeyprojects.core.admin.model.request.CensorSearchHistoryRequest;
 import com.honeyprojects.core.admin.model.request.*;
+import com.honeyprojects.core.admin.model.response.AdminAddHoneyHistoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminRequestConversionHistoryResponse;
 import com.honeyprojects.core.admin.model.response.CensorAddHoneyRequestResponse;
 import com.honeyprojects.core.admin.model.response.CensorTransactionRequestResponse;
+import com.honeyprojects.core.admin.service.AdminAddPointService;
 import com.honeyprojects.core.admin.service.AdminRequestConversionService;
 import com.honeyprojects.core.admin.service.CensorRequestManagerService;
 import com.honeyprojects.core.common.base.PageableObject;
@@ -14,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -36,6 +43,12 @@ public class CensorRequestManagerRestController {
         return requestConversionService.getHistoryConversionAdmin(historyRequest);
     }
 
+    @GetMapping("/history-buy-gift")
+    public PageableObject<AdminRequestConversionHistoryResponse> getHistoryBuyItem(AdminCreateConversionHistoryRequest historyRequest) {
+        return requestConversionService.getHistoryBuyGiftAdmin(historyRequest);
+    }
+
+
     @GetMapping("/transaction")
     public PageableObject<CensorTransactionRequestResponse> getHistoryTransaction(CensorSearchHistoryRequest historyRequest) {
         return requestManagerService.getHistoryTransaction(historyRequest);
@@ -52,9 +65,10 @@ public class CensorRequestManagerRestController {
     }
 
     @PutMapping("/change-status-conversion")
-    public ResponseObject changeStatusConversion(@RequestBody CensorChangeStatusRequest request) {
+    public ResponseObject changeStatusConversion(@RequestBody AdminChangeStatusGiftRequest request) {
         return new ResponseObject(requestManagerService.changeStatusConversion(request));
     }
+
 
     //UserAPi
     @GetMapping("/user-api")
@@ -71,6 +85,11 @@ public class CensorRequestManagerRestController {
         return new ResponseObject(requestManagerService.countRequest(type));
     }
 
+    @GetMapping("/get-point-by-idStudent-idCategory")
+    public ResponseObject getPointByIdStudentAndIdCategory(@RequestParam("studentId") String studentId, @RequestParam("honeyCategoryId") String honeyCategoryId) {
+        return new ResponseObject(requestManagerService.getPointByIdStudentAndIdCategory(studentId,honeyCategoryId));
+    }
+
     @GetMapping("/approved-history")
     public PageableObject<CensorTransactionRequestResponse> historyApproved(AdminHistoryApprovedSearchRequest dataSearch) {
         if(dataSearch.getStatus()==null){
@@ -81,7 +100,18 @@ public class CensorRequestManagerRestController {
     }
 
     @GetMapping("/list-request")
-    public PageableObject<CensorTransactionRequestResponse> listRequest(AdminHistoryApprovedSearchRequest dataSearch) {
-        return requestManagerService.getHistoryApprovedByStatus(dataSearch);
+    public PageableObject<CensorTransactionRequestResponse> listRequests(AdminHistoryApprovedSearchRequest dataSearch) {
+        if (dataSearch.getStatus()==null){
+            return requestManagerService.getListRequests(dataSearch);
+        }else  return requestManagerService.getListRequestsByStatus(dataSearch);
+    }
+
+    @GetMapping("/exchange-gifts")
+    public PageableObject<CensorTransactionRequestResponse> exchangeGifts(AdminHistoryApprovedSearchRequest dataSearch) {
+        if(dataSearch.getStatus()==null){
+            return requestManagerService.getExchangeGiftAllStatus(dataSearch);
+        }else{
+            return requestManagerService.getExchangeGiftByStatus(dataSearch);
+        }
     }
 }

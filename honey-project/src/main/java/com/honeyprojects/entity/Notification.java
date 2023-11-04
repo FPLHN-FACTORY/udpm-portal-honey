@@ -26,5 +26,4 @@ public class Notification extends PrimaryEntity {
 
     private NotificationStatus status;
 
-
 }

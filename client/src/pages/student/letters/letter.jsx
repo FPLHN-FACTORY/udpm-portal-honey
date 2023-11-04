@@ -1,4 +1,4 @@
-import { Card, Col, Row } from "antd";
+import { Card, Col, Row, message } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ClockCircleOutlined, HeatMapOutlined } from "@ant-design/icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
@@ -6,7 +6,7 @@ import React, { memo, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./letter.css";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { NotificationAPI } from "../../../apis/student/notification/notification.api";
 import {
   GetNotification,
@@ -19,6 +19,7 @@ const Letter = memo(() => {
   const navigate = useNavigate();
   const [allRead, setAllRead] = useState(false);
   const [current, setCurrent] = useState(0);
+  const [crease, setCrease] = useState(false);
   const [notificationHasData, setNotificationHasData] = useState(false);
   const dataCountNotification = useAppSelector(GetCountNotification);
 
@@ -34,6 +35,7 @@ const Letter = memo(() => {
       dispatch(SetNotification(response.data.data.data));
 
       setCurrent(response.data.data.currentPage);
+      setCrease(true);
       if (response.data.data.totalPages - current <= 1) {
         setNotificationHasData(false);
       } else {
@@ -41,25 +43,35 @@ const Letter = memo(() => {
       }
     } catch (error) {}
   };
+
+  const fetchListNotification = () => {
+    NotificationAPI.fetchListNotification()
+      .then((response) => {
+        dispatch(SetNotification(response.data.data));
+        setCurrent(0);
+        setCrease(false);
+      })
+      .catch(() => {
+        message.warning("Không có thư để xem");
+      });
+  };
   const formatDate = (date) => {
     const d = new Date(date);
     const day = String(d.getDate()).padStart(2, "0");
     const month = String(d.getMonth() + 1).padStart(2, "0");
     const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
+    const hours = String(d.getHours()).padStart(2, "0");
+    const minutes = String(d.getMinutes()).padStart(2, "0");
+    const seconds = String(d.getSeconds()).padStart(2, "0");
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   };
+
   useEffect(() => {
-    NotificationAPI.fetchNotification({
-      page: current,
-    }).then((response) => {
-      dispatch(SetNotification(response.data.data.data));
-    });
     fetchNotification();
   }, [current, dataCountNotification]);
 
   const dataNotification = useAppSelector(GetNotification);
   console.log(dataNotification);
-
   // {
   //   /* ------------button đánh dấu đã đọc------------ */
   // }
@@ -74,49 +86,61 @@ const Letter = memo(() => {
       <div className="letter__list">
         <Col span={24}>
           {dataNotification.map((notification) => (
-            <div className="letter__item" key={notification.id}>
-              <div className="letter__item__image">
-                <img
-                  src={notification.image}
-                  alt="Ảnh"
-                  className="item__image"
-                />
-              </div>
-              <div className="letter__item__content">
-                <h4 className="letter__item__title">
-                  <a href={notification.link} className="item__title__link">
-                    {notification.title}
-                  </a>
-                </h4>
-                <br />
-                <div className="item__content">
-                  <p className="date">
-                    <ClockCircleOutlined className="icon__date" />
-                    {formatDate(notification.createdDate)}
-                  </p>
-                  <div className="item__content__detail">
+            <Link to={`/student/letter/detail/${notification.id}`}>
+              <div className="letter__item" key={notification.id}>
+                <div className="letter__item__image">
+                  <img
+                    src={notification.image}
+                    alt="Ảnh"
+                    className="item__image"
+                  />
+                </div>
+                <div className="letter__item__content">
+                  <h4 className="letter__item__title">
+                    <a href={notification.link} className="item__title__link">
+                      {notification.title}
+                    </a>
+                  </h4>
+                  <br />
+                  <div className="item__content">
+                    <p className="date">
+                      <ClockCircleOutlined className="icon__date" />
+                      {formatDate(notification.createdDate)}
+                    </p>
+                    {/* <div className="item__content__detail">
                     <p>{notification.content}</p>
+                  </div> */}
                   </div>
                 </div>
-              </div>
-              <div className="letter__item__button">
-                <a
-                  onClick={() => {
-                    navigate("/student/chest");
+                <div
+                  style={{
+                    width: "15px",
+                    height: "15px",
+                    borderRadius: "50%",
+                    backgroundColor: `${
+                      notification.status === "0" ? "#52c41a" : ""
+                    }`,
                   }}
-                  className="item__button"
-                >
-                  Xem ngay
-                </a>
+                ></div>
+                {/*  */}
               </div>
-            </div>
+            </Link>
           ))}
         </Col>
       </div>
       {/* ---------------button xem thêm------------------- */}
-      <div className="button__showmore">
-        <a className="item__button">Xem thêm</a>
-      </div>
+      {crease === true ? (
+        <div
+          className="button__showmore"
+          onClick={() => fetchListNotification()}
+        >
+          <span className="item__button">Xem thêm</span>
+        </div>
+      ) : (
+        <div className="button__showmore" onClick={() => fetchNotification()}>
+          <span className="item__button">Thu gọn</span>
+        </div>
+      )}
     </section>
   );
 });

@@ -33,12 +33,13 @@ import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import { type } from "@testing-library/user-event/dist/type";
 
 const statusHistory = (status) => {
   switch (status) {
     case 0:
-      return <Tag color="geekblue">Chờ phê duyệt</Tag>; // Màu xạm
+      return <Tag color="geekblue">Chờ phê duyệt</Tag>;
+    case 3:
+      return <Tag color="cyan">Gửi lại chờ phê duyệt</Tag>;
     default:
       return <Tag>Không xác định</Tag>;
   }
@@ -82,11 +83,35 @@ export default function ListRequest() {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-    }
+    },
+    {
+      title: "Hành động",
+      dataIndex: "acction",
+      key: "acction",
+      render: (values) => (
+        <div style={{ fontSize: "19px", textAlign: "center", color: "green" }}>
+          {values.status !== 1 && values.status !== 2 && (
+            <CheckCircleFilled
+              onClick={() => changeStatus(values.idHistory, 1)}
+            />
+          )}
+
+          {values.status !== 1 && values.status !== 2 && (
+            <CloseCircleFilled
+              style={{ fontSize: "19px", margin: "0px 10px", color: "red" }}
+              onClick={() => changeStatus(values.idHistory, 2)}
+            />
+          )}
+          <Link to={"/censor/request-manager/detail/" + values.idHistory}>
+            <EyeFilled style={{ fontSize: "20px", color: "#3498db" }} />
+          </Link>
+        </div>
+      ),
+    },
   ];
 
   const [totalPage, setTotalPage] = useState(1);
-  const [filter, setFilter] = useState({ page: 0, status: 0 });
+  const [filter, setFilter] = useState({ page: 0, status: null });
   const [type, setType] = useState();
 
   useEffect(() => {
@@ -198,7 +223,7 @@ export default function ListRequest() {
   return (
     <Spin spinning={loading}>
       <div className="request-manager">
-        {/* <TabsRequest selectIndex={1} type={type} /> */}
+        <TabsRequest selectIndex={1} type={type} />
         <Card className="mb-2 py-1">
           <Form onFinish={onFinishSearch}>
             <Space size={"large"}>
@@ -227,14 +252,14 @@ export default function ListRequest() {
                   ]}
                 />
               </Form.Item>
-              {/* <Form.Item name={"status"} initialValue={0}>
+              <Form.Item name={"status"} initialValue={null}>
                 <Select
                   style={{ width: "150px" }}
                   size="large"
                   placeholder="Trạng thái"
                   options={[
-                    { value: 0, label: "Tất cả" },
-                    ...[0].map((value) => {
+                    { value: null, label: "Tất cả" },
+                    ...[0, 3].map((value) => {
                       return {
                         value: value,
                         label: statusHistory(value),
@@ -242,11 +267,12 @@ export default function ListRequest() {
                     }),
                   ]}
                 />
-              </Form.Item> */}
+              </Form.Item>
               <Button
                 htmlType="submit"
                 type="primary"
-                className="mr-10 search-button">
+                className="mr-10 search-button"
+              >
                 Lọc
               </Button>
             </Space>

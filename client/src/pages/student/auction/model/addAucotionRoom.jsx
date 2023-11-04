@@ -15,9 +15,6 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "../../../../app/hooks";
 import { GetUser } from "../../../../app/reducers/users/users.reducer";
 import { ArchiveAPI } from "../../../../apis/student/archive/ArchiveAPI";
-import { StudentAuctionAPI } from "../../../../apis/student/auction/auction.api";
-import SockJS from "sockjs-client";
-import { Stomp } from "@stomp/stompjs";
 
 export default function ModalAddAuction({
   visible,

@@ -152,7 +152,6 @@ export default function AuctionMangement() {
                 style={{
                   backgroundColor: "red",
                   color: "white",
-                  height: "35px",
                 }}
               >
                 <FontAwesomeIcon icon={faTrash} />
@@ -167,7 +166,6 @@ export default function AuctionMangement() {
               style={{
                 backgroundColor: "#0066CC",
                 color: "white",
-                height: "35px",
               }}
             >
               <FontAwesomeIcon icon={faPenToSquare} />
@@ -342,7 +340,7 @@ export default function AuctionMangement() {
                   backgroundColor: "#FF9900",
                   color: "white",
                   outline: "none",
-                  border: "none"
+                  border: "none",
                 }}
               >
                 Làm mới
