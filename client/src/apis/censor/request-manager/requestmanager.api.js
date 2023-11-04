@@ -10,7 +10,7 @@ export class RequestManagerAPI {
       url: `/${this.COMPONENT_NAME}/user-api`,
       params: { username: code },
     });
-  };
+  }; 
 
   static getHistoryConversion = (filter) => {
     return request({
