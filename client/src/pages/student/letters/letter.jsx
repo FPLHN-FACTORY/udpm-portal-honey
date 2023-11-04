@@ -1,4 +1,4 @@
-import { Card, Col, Row } from "antd";
+import { Card, Col, Row, message } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ClockCircleOutlined, HeatMapOutlined } from "@ant-design/icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
@@ -19,6 +19,7 @@ const Letter = memo(() => {
   const navigate = useNavigate();
   const [allRead, setAllRead] = useState(false);
   const [current, setCurrent] = useState(0);
+  const [crease, setCrease] = useState(false);
   const [notificationHasData, setNotificationHasData] = useState(false);
   const dataCountNotification = useAppSelector(GetCountNotification);
 
@@ -34,12 +35,25 @@ const Letter = memo(() => {
       dispatch(SetNotification(response.data.data.data));
 
       setCurrent(response.data.data.currentPage);
+      setCrease(true);
       if (response.data.data.totalPages - current <= 1) {
         setNotificationHasData(false);
       } else {
         setNotificationHasData(true);
       }
     } catch (error) {}
+  };
+
+  const fetchListNotification = () => {
+    NotificationAPI.fetchListNotification()
+      .then((response) => {
+        dispatch(SetNotification(response.data.data));
+        setCurrent(0);
+        setCrease(false);
+      })
+      .catch(() => {
+        message.warning("Không có thư để xem");
+      });
   };
   const formatDate = (date) => {
     const d = new Date(date);
@@ -72,47 +86,61 @@ const Letter = memo(() => {
       <div className="letter__list">
         <Col span={24}>
           {dataNotification.map((notification) => (
-            <div className="letter__item" key={notification.id}>
-              <div className="letter__item__image">
-                <img
-                  src={notification.image}
-                  alt="Ảnh"
-                  className="item__image"
-                />
-              </div>
-              <div className="letter__item__content">
-                <h4 className="letter__item__title">
-                  <a href={notification.link} className="item__title__link">
-                    {notification.title}
-                  </a>
-                </h4>
-                <br />
-                <div className="item__content">
-                  <p className="date">
-                    <ClockCircleOutlined className="icon__date" />
-                    {formatDate(notification.createdDate)}
-                  </p>
-                  {/* <div className="item__content__detail">
+            <Link to={`/student/letter/detail/${notification.id}`}>
+              <div className="letter__item" key={notification.id}>
+                <div className="letter__item__image">
+                  <img
+                    src={notification.image}
+                    alt="Ảnh"
+                    className="item__image"
+                  />
+                </div>
+                <div className="letter__item__content">
+                  <h4 className="letter__item__title">
+                    <a href={notification.link} className="item__title__link">
+                      {notification.title}
+                    </a>
+                  </h4>
+                  <br />
+                  <div className="item__content">
+                    <p className="date">
+                      <ClockCircleOutlined className="icon__date" />
+                      {formatDate(notification.createdDate)}
+                    </p>
+                    {/* <div className="item__content__detail">
                     <p>{notification.content}</p>
                   </div> */}
+                  </div>
                 </div>
+                <div
+                  style={{
+                    width: "15px",
+                    height: "15px",
+                    borderRadius: "50%",
+                    backgroundColor: `${
+                      notification.status === "0" ? "#52c41a" : ""
+                    }`,
+                  }}
+                ></div>
+                {/*  */}
               </div>
-              <div className="letter__item__button">
-                <Link
-                  to={`/student/letter/detail/${notification.id}`}
-                  className="item__button"
-                >
-                  {notification.status === "0" ? "Xem ngay" : "Đã xem"}
-                </Link>
-              </div>
-            </div>
+            </Link>
           ))}
         </Col>
       </div>
       {/* ---------------button xem thêm------------------- */}
-      <div className="button__showmore">
-        <a className="item__button">Xem thêm</a>
-      </div>
+      {crease === true ? (
+        <div
+          className="button__showmore"
+          onClick={() => fetchListNotification()}
+        >
+          <span className="item__button">Xem thêm</span>
+        </div>
+      ) : (
+        <div className="button__showmore" onClick={() => fetchNotification()}>
+          <span className="item__button">Thu gọn</span>
+        </div>
+      )}
     </section>
   );
 });

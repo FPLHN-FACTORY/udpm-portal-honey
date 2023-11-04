@@ -5,21 +5,13 @@ import com.honeyprojects.core.common.base.ResponseObject;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.student.model.request.StudentNotificationRequest;
 import com.honeyprojects.core.student.service.StudentNotificationService;
-import com.honeyprojects.infrastructure.configws.SessionWebSocketInfo;
 import com.honeyprojects.infrastructure.configws.WebSocketSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/student/notification")
@@ -45,6 +37,11 @@ public class StudentNotificationRestController extends BaseController {
     @GetMapping("")
     public ResponseObject getAllNotification(final StudentNotificationRequest request) {
         return new ResponseObject(studentNotificationService.fillAllNotification(udpmHoney.getIdUser(), request));
+    }
+
+    @GetMapping("/list-notification")
+    public ResponseObject getListNotification(final StudentNotificationRequest request) {
+        return new ResponseObject(studentNotificationService.fillListNotification(udpmHoney.getIdUser(), request));
     }
 
     @GetMapping("/count")
