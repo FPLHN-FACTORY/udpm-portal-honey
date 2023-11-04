@@ -7,21 +7,16 @@ import {
   Space,
   Table,
   Tag,
-  message,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { ResquestConversion } from "../../../apis/user/ResquestConversiton/ResquestConversion.api";
 import moment from "moment";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
-import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
-
 const statusHistory = (status) => {
   switch (status) {
-    case 0:
-      return <Tag color="geekblue">Chờ phê duyệt</Tag>; // Màu xanh dương
     case 1:
-      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
+      return <Tag color="green">Đổi thành công</Tag>; // Màu xanh lá cây
     case 2:
       return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
     default:
@@ -29,7 +24,7 @@ const statusHistory = (status) => {
   }
 };
 
-export default function RequestConversionHistory() {
+export default function BuyGiftHistory() {
   const [getHistory, setGetHistory] = useState([]);
   const [fillCategory, setFillCategory] = useState([]);
   const [totalPages, setTotalPages] = useState([]);
@@ -52,7 +47,7 @@ export default function RequestConversionHistory() {
   }, []);
 
   const fechData = (filter) => {
-    RequestManagerAPI.getHistoryConversion(filter).then((response) => {
+    RequestManagerAPI.getHistoryBuyGifft(filter).then((response) => {
       setGetHistory(response.data.data);
       setTotalPages(response.data.totalPages);
     });
@@ -83,52 +78,6 @@ export default function RequestConversionHistory() {
       });
     }
   };
-
-  const changeStatusConversion = (
-    idStudent,
-    idGift,
-    idHistory,
-    status,
-    quantity
-  ) => {
-    RequestManagerAPI.changeStatusConversion(
-      idStudent,
-      idGift,
-      idHistory,
-      status,
-      quantity
-    ).then((response) => {
-      if (response.data.success) {
-        if (status === 1) message.success("Đã xác nhận yêu cầu mua vật phẩm!");
-        if (status === 2) message.error("Hủy yêu cầu thành công!");
-        setType(response.data.data.type);
-      }
-      // message.success("Phê duyệt thành công");
-      fechData();
-    });
-  };
-  const handCheckvalide = async (values) => {
-    // Gọi hàm fechFillPoint và đợi cho đến khi hoàn thành
-    const response = await RequestManagerAPI.getPoint(
-      values.studentId,
-      values.categoryId
-    );
-    const newFillPoint = response.data.data;
-
-    const totalPoint = values.quantity * values.honeyPoint;
-    if (totalPoint > newFillPoint) {
-      message.error("Sinh viên Không còn đủ điểm để mua quà!");
-    } else {
-      changeStatusConversion(
-        values.studentId,
-        values.giftId,
-        values.id,
-        1,
-        values.quantity
-      );
-    }
-  };
-
   const columns = [
     {
       title: "STT",
@@ -190,46 +139,11 @@ export default function RequestConversionHistory() {
           {status === 0
             ? "Chờ phê duyệt"
             : status === 1
-            ? "Đã phê duyệt"
+            ? "Đổi thành công"
             : status === 2
             ? "Đã hủy"
             : "Không sác định"}
         </Tag>
-      ),
-    },
-    {
-      title: () => <div>Hành động</div>,
-      key: "action",
-      render: (_, values) => (
-        <Space size="small">
-          <div
-            style={{ fontSize: "19px", textAlign: "center", color: "green" }}
-          >
-            {console.log(values)}
-
-            {values.status !== 1 && values.status !== 2 && (
-              <CheckCircleFilled
-                onClick={() => {
-                  handCheckvalide(values);
-                }}
-              />
-            )}
-
-            {values.status !== 1 && values.status !== 2 && (
-              <CloseCircleFilled
-                style={{ fontSize: "19px", margin: "0px 10px", color: "red" }}
-                onClick={() => {
-                  changeStatusConversion(
-                    values.studentId,
-                    values.giftId,
-                    values.id,
-                    2
-                  );
-                }}
-              />
-            )}
-          </div>
-        </Space>
       ),
     },
   ];
@@ -251,6 +165,22 @@ export default function RequestConversionHistory() {
                 ]}
               />
             </Form.Item>
+            <Form.Item name={"status"} initialValue={null}>
+              <Select
+                style={{ width: "150px" }}
+                size="large"
+                placeholder="Trạng thái"
+                options={[
+                  { value: null, label: "Tất cả" },
+                  ...[1, 2].map((value) => {
+                    return {
+                      value: value,
+                      label: statusHistory(value),
+                    };
+                  }),
+                ]}
+              />
+            </Form.Item>
             <Button
               htmlType="submit"
               type="primary"
@@ -262,7 +192,7 @@ export default function RequestConversionHistory() {
           </Space>
         </Form>
       </Card>
-      <Card title="Danh sách yêu cầu đổi quà">
+      <Card title="Lịch sử đổi quà">
         <div className="mt-5">
           <Table
             columns={columns}

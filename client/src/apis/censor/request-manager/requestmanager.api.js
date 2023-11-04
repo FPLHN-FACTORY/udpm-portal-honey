@@ -20,6 +20,14 @@ export class RequestManagerAPI {
     });
   };
 
+  static getHistoryBuyGifft = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/history-buy-gift`,
+      params: filter,
+    });
+  };
+
   static getExchangeGifts = (filter) => {
     return request({
       method: "GET",
