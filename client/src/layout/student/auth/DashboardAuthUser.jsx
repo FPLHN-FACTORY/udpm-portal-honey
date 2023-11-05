@@ -140,6 +140,11 @@ function DashboardAuthUser({ children }) {
     navigate("/student/chest");
   };
 
+ const hanlderClickTonVinh = () => {
+    playSound();
+    navigate("/student/honor-student");
+  };
+
   //fake login
   const token1 =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU5YjlmYjdlLTkwNjUtNDEwMi1mMDNjLTA4ZGJjZTY5ZTU5NCIsIm5hbWUiOiJ0xrDhu59uZyBoaWhpIiwiZW1haWwiOiJ0dW9uZ3R2cGgyNjE0OUBmcHQuZWR1LnZuIiwidXNlck5hbWUiOiJ0xrDhu59uZyBoaWhpIiwicGljdHVyZSI6IkltYWdlcy9EZWZhdWx0LnBuZyIsImlkVHJhaW5pbmdGYWNpbGl0eSI6Ijc5NmE0ZmE0LThhYWItNDJjNC05ZjM1LTg3MGJiMDAwNWFmMSIsImxvY2FsSG9zdCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODg4OCIsInJvbGUiOlsiVEVBQ0hFUiIsIlNUVURFTlQiLCJBRE1JTiJdLCJyb2xlTmFtZXMiOlsiR2nhuqNuZyB2acOqbiIsIlNpbmggdmnDqm4iLCJRdeG6o24gdHLhu4sgdmnDqm4iXSwibmJmIjoxNjk3NTUwODY5LCJleHAiOjE3MDAxNDI4NjksImlhdCI6MTY5NzU1MDg2OSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDkwNTMiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0OTA1MyJ9.zjVKrdOUc5joBysdG2q8TWAppjZEQSCv4M3dz5I-SnU";
@@ -318,6 +323,8 @@ function DashboardAuthUser({ children }) {
                             : "btn-tat-am-thanh btn-student btn-icon"
                         }
                       />
+                      <button class="btn-cai-dat btn-student btn-icon" 
+                      onClick={hanlderClickTonVinh}/>
                     </div>
                   </Col>
                 </Row>
