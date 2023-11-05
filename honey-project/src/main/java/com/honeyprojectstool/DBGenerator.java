@@ -14,6 +14,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 
 @SpringBootApplication
@@ -50,6 +51,9 @@ public class DBGenerator implements CommandLineRunner {
     @Autowired
     private ArchiveGiftRepository archiveGiftRepository;
 
+    @Autowired
+    private GiftDetailRepository giftDetailRepository;
+
 
     public void run(String... args) throws Exception {
 
@@ -78,8 +82,11 @@ public class DBGenerator implements CommandLineRunner {
         Semester semester = new Semester();
         semester.setCode("SE1");
         semester.setName("Summer 2023");
-        semester.setToDate(2007194000000L);
-        semester.setFromDate(1681600400000L);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, 3);
+        semester.setToDate(calendar.getTimeInMillis());
+        semester.setFromDate(Calendar.getInstance().getTimeInMillis());
+        semester.setStatus(Status.HOAT_DONG);
         semester.setId(semesterRepository.save(semester).getId());
 
         Honey honey1 = new Honey();
@@ -262,26 +269,22 @@ public class DBGenerator implements CommandLineRunner {
         Auction auction = new Auction();
         auction.setName("Phiên đấu giá biển số");
         auction.setHoneyCategoryId(category1.getId());
-        auction.setHoney(new BigDecimal(200));
         auction.setStatus(Status.HOAT_DONG);
         auction.setId(auctionRepository.save(auction).getId());
 
         Auction auction1 = new Auction();
         auction1.setName("Phiên đấu giá biển số đầu tiên");
         auction1.setHoneyCategoryId(category2.getId());
-        auction1.setHoney(new BigDecimal(200));
         auction1.setStatus(Status.KHONG_HOAT_DONG);
         auction1.setId(auctionRepository.save(auction1).getId());
 
         Auction auction2 = new Auction();
         auction2.setName("Phiên đấu giá 01 ");
         auction2.setHoneyCategoryId(category3.getId());
-        auction2.setHoney(new BigDecimal(200));
         auction2.setStatus(Status.HOAT_DONG);
         auction2.setGiftId(gift7.getId());
         auction2.setFromDate(System.currentTimeMillis());
         auction2.setToDate(System.currentTimeMillis() + 8*3600*1000L);
-        auction2.setIdRoom(auction.getId());
         auction2.setJump(new BigDecimal(2000));
         auction2.setLastPrice(new BigDecimal(5000));
         auction2.setStartingPrice(new BigDecimal(2000));
@@ -290,12 +293,10 @@ public class DBGenerator implements CommandLineRunner {
         Auction auction3 = new Auction();
         auction3.setName("Phiên đấu giá 02");
         auction3.setHoneyCategoryId(category1.getId());
-        auction3.setHoney(new BigDecimal(200));
         auction3.setStatus(Status.HOAT_DONG);
         auction3.setGiftId(gift1.getId());
         auction3.setFromDate(System.currentTimeMillis());
         auction3.setToDate(System.currentTimeMillis() + 8*3600*1000L);
-        auction3.setIdRoom(auction.getId());
         auction3.setJump(new BigDecimal(5000));
         auction3.setLastPrice(new BigDecimal(200000));
         auction3.setStartingPrice(new BigDecimal(5000));
@@ -307,54 +308,90 @@ public class DBGenerator implements CommandLineRunner {
         archive.setStudentId(userSemester1.getStudentId());
         archiveRepository.save(archive);
 
+        ArchiveGift archiveGift = new ArchiveGift();
+        archiveGift.setArchiveId(archive.getId());
+        archiveGift.setNote("1231");
+        archiveGift.setGiftId(gift7.getId());
+        archiveGiftRepository.save(archiveGift);
+
         ArchiveGift archiveGift1 = new ArchiveGift();
         archiveGift1.setArchiveId(archive.getId());
         archiveGift1.setNote("1231");
         archiveGift1.setGiftId(gift7.getId());
-        archiveGift1.setQuantity(1);
         archiveGiftRepository.save(archiveGift1);
 
         ArchiveGift archiveGift2 = new ArchiveGift();
         archiveGift2.setArchiveId(archive.getId());
         archiveGift2.setNote("1231");
         archiveGift2.setGiftId(gift6.getId());
-        archiveGift2.setQuantity(2);
         archiveGiftRepository.save(archiveGift2);
 
         ArchiveGift archiveGift3 = new ArchiveGift();
         archiveGift3.setArchiveId(archive.getId());
         archiveGift3.setNote("1231");
         archiveGift3.setGiftId(gift5.getId());
-        archiveGift3.setQuantity(1);
         archiveGiftRepository.save(archiveGift3);
 
         ArchiveGift archiveGift4 = new ArchiveGift();
         archiveGift4.setArchiveId(archive.getId());
         archiveGift4.setNote("1231");
         archiveGift4.setGiftId(gift1.getId());
-        archiveGift4.setQuantity(1);
         archiveGiftRepository.save(archiveGift4);
 
         ArchiveGift archiveGift5 = new ArchiveGift();
         archiveGift5.setArchiveId(archive.getId());
         archiveGift5.setNote("1231");
         archiveGift5.setGiftId(gift2.getId());
-        archiveGift5.setQuantity(1);
         archiveGiftRepository.save(archiveGift5);
 
         ArchiveGift archiveGift6 = new ArchiveGift();
         archiveGift6.setArchiveId(archive.getId());
         archiveGift6.setNote("1231");
         archiveGift6.setGiftId(gift3.getId());
-        archiveGift6.setQuantity(1);
         archiveGiftRepository.save(archiveGift6);
 
         ArchiveGift archiveGift7 = new ArchiveGift();
         archiveGift7.setArchiveId(archive.getId());
         archiveGift7.setNote("1231");
         archiveGift7.setGiftId(gift4.getId());
-        archiveGift7.setQuantity(3);
         archiveGiftRepository.save(archiveGift7);
+
+        GiftDetail giftDetail1 =  new GiftDetail();
+        giftDetail1.setGiftId(gift1.getId());
+        giftDetail1.setCategoryId(category1.getId());
+
+        GiftDetail giftDetail2 =  new GiftDetail();
+        giftDetail2.setGiftId(gift2.getId());
+        giftDetail2.setCategoryId(category1.getId());
+
+        GiftDetail giftDetail3 =  new GiftDetail();
+        giftDetail3.setGiftId(gift3.getId());
+        giftDetail3.setCategoryId(category2.getId());
+
+        GiftDetail giftDetail4 =  new GiftDetail();
+        giftDetail4.setGiftId(gift4.getId());
+        giftDetail4.setCategoryId(category2.getId());
+
+        GiftDetail giftDetail5 =  new GiftDetail();
+        giftDetail5.setGiftId(gift5.getId());
+        giftDetail5.setCategoryId(category3.getId());
+
+        GiftDetail giftDetail6 =  new GiftDetail();
+        giftDetail6.setGiftId(gift6.getId());
+        giftDetail6.setCategoryId(category3.getId());
+
+        GiftDetail giftDetail7 =  new GiftDetail();
+        giftDetail7.setGiftId(gift7.getId());
+        giftDetail7.setCategoryId(category3.getId());
+
+        giftDetailRepository.save(giftDetail1);
+        giftDetailRepository.save(giftDetail2);
+        giftDetailRepository.save(giftDetail3);
+        giftDetailRepository.save(giftDetail4);
+        giftDetailRepository.save(giftDetail5);
+        giftDetailRepository.save(giftDetail6);
+        giftDetailRepository.save(giftDetail7);
+
     }
 
     public static void main(String[] args) {

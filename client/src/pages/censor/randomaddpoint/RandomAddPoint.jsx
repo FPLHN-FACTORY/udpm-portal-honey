@@ -328,7 +328,7 @@ export default function RandomAddPoint() {
   const items = [
     {
       key: "1",
-      label: "Ngãu nhiên mật ong",
+      label: "Ngẫu nhiên mật ong",
       children: (
         <div>
           <Space

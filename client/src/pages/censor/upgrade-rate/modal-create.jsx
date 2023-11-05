@@ -1,116 +1,80 @@
-import { Input, Modal, message, Button, Row, Col, Form } from "antd";
-import { useEffect } from "react";
-import { AddUpgradeRate } from "../../../app/reducers/upgrade-rate/upgrade-rate.reducer";
+import { Input, Modal, message, Button, Form, Select } from "antd";
 import { UpgradeApi } from "../../../apis/censor/upgrade-rate/upgrade-rate.api";
-import Select from 'react-select';
-import makeAnimated from 'react-select/animated';
 import {
   GetCategory,
-  SetCategory,
 } from "../../../app/reducers/category/category.reducer";
 import {
   GetGift,
-  SetGift,
 } from "../../../app/reducers/gift/gift.reducer";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useAppSelector } from "../../../app/hooks";
+import { useEffect, useState } from "react";
 
 const ModalCreateUpgradeRate = ({
   visible,
   onCancel,
   fetchAllData,
-  currentItem,
+  currentItem
 }) => {
   const [form] = Form.useForm();
-  const dispatch = useAppDispatch();
+  const [id, setId] = useState(null);
+  useEffect(() => {
+    form.setFieldsValue(null);
+    console.log(currentItem);
+    if (currentItem) {
+      const updatedCurrentItem = { 
+        originalHoney: currentItem.originalId,
+        destinationHoney: currentItem.destinationId,
+        idGifts: currentItem.giftId.split(", "),
+        ratio: currentItem.ratio,
+        quantityOriginal: currentItem.quantityOriginal,
+        quantityDestination: currentItem.quantityDestination,
+      };
+
+      if (currentItem.id) {
+        setId(currentItem.id);
+      }
+      console.log(updatedCurrentItem);
+      // form.setFieldsValue({ idGifts: updatedCurrentItem.giftName });
+      form.setFieldsValue(updatedCurrentItem);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const listCategory = useAppSelector(GetCategory);
   const listGift = useAppSelector(GetGift);
-  const animatedComponents = makeAnimated();
-  
-
-  // useEffect(() => {
-  //   if (visible === true) {
-  //     if (listCategory.length > 0) {
-  //       form.setFieldsValue({
-  //         originalHoney: listCategory[0].id,
-  //         destinationHoney: listCategory[0].id,
-  //       });
-  //     } else {
-  //       form.resetFields();
-  //     }
-  //   }
-  // }, [visible]);
-
-  // useEffect(() => {
-  //   if (visible === true) {
-  //     if (listGift.length > 0) {
-  //       form.setFieldsValue({
-  //         idGifts: listGift[0].id,
-  //       });
-  //     } else {
-  //       form.resetFields();
-  //     }
-  //   }
-  // }, [visible]);
-
-  useEffect(() => {
-    featAllCategory();
-  }, []);
-
-  useEffect(() => {
-    featAllGift();
-  }, []);
-
-  const featAllGift = async () => {
-    UpgradeApi.getAllCensorExist()
-      .then((response) => {
-        dispatch(SetGift(response.data.data));
-      })
-      .catch((error) => {
-        message.error(error);
-      });
-  };
-
-  const featAllCategory = async () => {
-    UpgradeApi.getALLCategory()
-      .then((response) => {
-        dispatch(SetCategory(response.data.data));
-      })
-      .catch((error) => {
-        message.error(error);
-      });
-  };
 
   const create = () => {
     form.validateFields().then((values) => {
-      console.log("🚀 ~ file: modal-create.jsx:85 ~ form.validateFields ~ values:", values)
-      const idLstGift = [];
-      if(values.idGifts && values.idGifts[0].value){
-        for (let gift of values.idGifts) {
-          idLstGift.push(gift.value);
-        }
-      }else return message.error("Danh sách vật phẩm dùng để nâng cấp không được để trống");
       let obj = {
-        originalHoneyId: values.originalHoney.value,
-        destinationHoneyId: values.destinationHoney.value,
-        quantityOriginalHoney: values.quantityOriginalHoney,
-        quantityDestinationHoney: values.quantityDestinationHoney,
-        idGifts : idLstGift,
+        upgradeRateId: id,
+        originalHoneyId: values.originalHoney,
+        destinationHoneyId: values.destinationHoney,
+        quantityOriginalHoney: values.quantityOriginal,
+        quantityDestinationHoney: values.quantityDestination,
+        idGifts : values.idGifts,
         ratio: values.ratio,
-        status: "0",
+        status: 0,
       };
+      console.log(obj);
+
       UpgradeApi.create(obj).then(
         (response) => {
-          message.success("Thêm thành công!");
-          let objCreate = {
-            ...response.data.data,
-          };
+          console.log(response.data.data);
+          if (response.data.data) {
+            if (id) {
+              message.success("Cập nhật thành công!");
+            } else {
+              message.success("Thêm mới thành công!");
+            }
+          } else {
+            if (id) {
+              message.success("Cập nhật Thất bại!");
+            } else {
+              message.success("Thêm mới Thất bại!");
+            }
+          }
           fetchAllData();
-          dispatch(AddUpgradeRate(objCreate));
           form.resetFields();
           onCancel();
-        },
-        (error) => {
-          message.error(error.response.data.message);
         }
       );
     });
@@ -126,7 +90,7 @@ const ModalCreateUpgradeRate = ({
         className="modal_show_detail"
       >
         <div style={{ paddingTop: "0", borderBottom: "1px solid black" }}>
-          <span style={{ fontSize: "18px" }}>Thêm mới nâng hạng</span>
+          <span style={{ fontSize: "18px" }}> {id ? "Cập nhật nâng hạng" : "Thêm mới nâng hạng"}</span>
         </div>
         <div style={{ marginTop: "15px" }}>
           <Form form={form} onFinish={create}
@@ -147,8 +111,9 @@ const ModalCreateUpgradeRate = ({
               ]}
             >
               <Select
-                style={{ width: "100%" }}
+                className="w-full"
                 size="large"
+                allowClear
                 options={listCategory.map((category) => ({
                   value: category.id,
                   label: category.name,
@@ -156,7 +121,7 @@ const ModalCreateUpgradeRate = ({
               />
             </Form.Item>
             <Form.Item
-              name="quantityOriginalHoney"
+              name="quantityOriginal"
               label="Số lượng điểm đầu"
               rules={[
                 {
@@ -165,7 +130,8 @@ const ModalCreateUpgradeRate = ({
                 }
               ]}
             >
-              <Input type="number" />
+              <Input
+                className="w-full" type="number" />
             </Form.Item>
             <Form.Item
               name="destinationHoney"
@@ -178,7 +144,7 @@ const ModalCreateUpgradeRate = ({
               ]}
             >
               <Select
-                style={{ width: "100%" }}
+                className="w-full"
                 size="large"
                 options={listCategory.map((category) => ({
                   value: category.id,
@@ -187,7 +153,7 @@ const ModalCreateUpgradeRate = ({
               />
             </Form.Item>
             <Form.Item
-              name="quantityDestinationHoney"
+              name="quantityDestination"
               label="Số lượng điểm cuối"
               rules={[
                 {
@@ -196,7 +162,8 @@ const ModalCreateUpgradeRate = ({
                 }
               ]}
             >
-              <Input type="number" />
+              <Input
+                className="w-full" type="number" />
             </Form.Item>
             <Form.Item
               name="idGifts"
@@ -206,9 +173,10 @@ const ModalCreateUpgradeRate = ({
               ]}
             >
               <Select
+                className="w-full"
                 closeMenuOnSelect={false}
-                components={animatedComponents}
-                isMulti
+                mode="multiple"
+                key={"idGifts"}
                 options={listGift.map((gift) => ({
                   value: gift.id,
                   label: gift.name,
@@ -225,13 +193,17 @@ const ModalCreateUpgradeRate = ({
                   message: "Tỉ lệ nâng cấp không được để trống",
                 },
                 {
-                  min: 0,
-                  max: 100,
-                  message: "Tỉ lệ nâng cấp từ 0 đến 100",
+                  validator: (rule, value) => {
+                    if (value >= 0 && value <= 100) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject('Tỉ lệ nâng cấp phải nằm trong khoảng từ 0 đến 100');
+                  },
                 },
               ]}
             >
-              <Input type="number" />
+              <Input
+                className="w-full" type="number" />
             </Form.Item>
             <div style={{ textAlign: "right" }}>
               <div style={{ paddingTop: "15px" }}>

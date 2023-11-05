@@ -25,6 +25,7 @@ export const AuctionSlice = createSlice({
         state[index].status = updateAuction.status;
         state[index].categoryId = updateAuction.categoryId;
         state[index].categoryName = updateAuction.categoryName;
+        state[index].lastPrice = updateAuction.lastPrice;
       }
     },
     ChangeAuctionStatus: (state, action) => {
@@ -45,6 +46,11 @@ export const AuctionSlice = createSlice({
 });
 
 export const GetAuction = (state) => state.auction;
-export const { SetAuction, AddAuction, DeleteAuction, UpdateAuction, ChangeAuctionStatus } =
-  AuctionSlice.actions;
+export const {
+  SetAuction,
+  AddAuction,
+  DeleteAuction,
+  UpdateAuction,
+  ChangeAuctionStatus,
+} = AuctionSlice.actions;
 export default AuctionSlice.reducer;

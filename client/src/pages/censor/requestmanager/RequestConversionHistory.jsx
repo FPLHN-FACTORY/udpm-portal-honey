@@ -117,7 +117,7 @@ export default function RequestConversionHistory() {
 
     const totalPoint = values.quantity * values.honeyPoint;
     if (totalPoint > newFillPoint) {
-      message.error("Bạn Không còn đủ điểm để mua quà!");
+      message.error("Sinh viên Không còn đủ điểm để mua quà!");
     } else {
       changeStatusConversion(
         values.studentId,
@@ -262,7 +262,7 @@ export default function RequestConversionHistory() {
           </Space>
         </Form>
       </Card>
-      <Card title="Danh sách yêu cầu đồi quà">
+      <Card title="Danh sách yêu cầu đổi quà">
         <div className="mt-5">
           <Table
             columns={columns}

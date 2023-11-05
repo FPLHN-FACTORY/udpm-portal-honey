@@ -27,6 +27,7 @@ const UsingGift = (props) => {
   };
 
   const handleOk = () => {
+    setLoading(true);
     form
       .validateFields()
       .then((values) => {
@@ -43,12 +44,7 @@ const UsingGift = (props) => {
             }
           })
           .catch((error) => {
-            form.setFields([
-              {
-                name: "emailGV",
-                errors: [error.response.data.message],
-              },
-            ]);
+            message.error(error.response.data.message);
           })
           .finally(() => {
             fetchData();
@@ -57,6 +53,7 @@ const UsingGift = (props) => {
       .catch((errorInfo) => {
         console.log("Validation failed:", errorInfo);
       });
+    setLoading(false);
   };
 
   const handleCancel = () => {
@@ -66,6 +63,7 @@ const UsingGift = (props) => {
 
   const [soLuong, setSoLuong] = useState(1);
 
+  const [loading, setLoading] = useState(false);
   return (
     <div>
       <div onClick={showModal}>Sử dụng</div>
@@ -73,7 +71,8 @@ const UsingGift = (props) => {
         title="Sử dụng quà tặng"
         visible={isModalOpen}
         onOk={handleOk}
-        onCancel={handleCancel}>
+        onCancel={handleCancel}
+        okButtonProps={{ loading: loading }}>
         <Form form={form}>
           <b>
             <span style={{ color: "red" }}>* </span> Số lượng

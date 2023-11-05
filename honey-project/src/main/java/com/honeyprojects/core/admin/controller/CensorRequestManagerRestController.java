@@ -43,6 +43,12 @@ public class CensorRequestManagerRestController {
         return requestConversionService.getHistoryConversionAdmin(historyRequest);
     }
 
+    @GetMapping("/history-buy-gift")
+    public PageableObject<AdminRequestConversionHistoryResponse> getHistoryBuyItem(AdminCreateConversionHistoryRequest historyRequest) {
+        return requestConversionService.getHistoryBuyGiftAdmin(historyRequest);
+    }
+
+
     @GetMapping("/transaction")
     public PageableObject<CensorTransactionRequestResponse> getHistoryTransaction(CensorSearchHistoryRequest historyRequest) {
         return requestManagerService.getHistoryTransaction(historyRequest);

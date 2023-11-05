@@ -79,13 +79,14 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
       message.error("Vui lòng chọn một mục trong danh sách chọn");
       return;
     } else if (
-      (selectedConversion ? selectedConversion.honey : 0) > fillPoint.point
+      (selectedConversion ? selectedConversion.honey * quantity : 0) >
+      fillPoint.point
     ) {
       message.error("Bạn không đủ điểm để đổi quà trong ranh này.");
       return;
     }
     if (selectedConversion.quantity != null) {
-      if (quantity > initialQuantity) {
+      if (quantity > selectedConversion.quantity) {
         message.error("Quà không còn đủ số lượng bạn cần");
         return;
       }
@@ -109,7 +110,6 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
       .then((response) => {
         if (response.data.success) {
           message.success("Đổi quà thành công");
-          // window.location.reload();
           if (
             selectedConversion &&
             selectedConversion.status === 0 &&
@@ -135,7 +135,7 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
     if (isNaN(value) || value <= 0) {
       setError("Giá trị không hợp lệ");
     } else {
-      setError(null); // Xóa lỗi nếu giá trị hợp lệ
+      setError(null);
       setQuantity(value);
     }
   };

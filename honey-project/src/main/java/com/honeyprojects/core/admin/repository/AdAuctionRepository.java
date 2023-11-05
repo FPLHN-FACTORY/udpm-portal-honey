@@ -29,7 +29,6 @@ public interface AdAuctionRepository extends AuctionRepository {
             ROW_NUMBER() OVER(ORDER BY auc.last_modified_date DESC) AS stt,
             auc.id as id,
             auc.name as name,
-            auc.honey as honey,
             CASE
                     WHEN auc.status = 0 THEN 'HOAT_DONG'
                     WHEN auc.status = 1 THEN 'KHONG_HOAT_DONG'
@@ -84,7 +83,6 @@ public interface AdAuctionRepository extends AuctionRepository {
                 a.name,
                 cate.name AS category_name,
                 cate.id AS category_id,
-                a.honey,
                 CASE
                     WHEN a.status = 0 THEN 'HOAT_DONG'
                     WHEN a.status = 1 THEN 'KHONG_HOAT_DONG'

@@ -78,14 +78,14 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
       return;
     }
     if (
-      (selectedConversion.honey ? selectedConversion.honey : 0) >
+      (selectedConversion.honey ? selectedConversion.honey * quantity : 0) >
       fillPoint.point
     ) {
       message.error("Bạn không đủ điểm để đổi quà trong ranh này.");
       return;
     }
     if (selectedConversion.quantity != null) {
-      if (quantity > initialQuantity) {
+      if (quantity > selectedConversion.quantity) {
         message.error("Quà không còn đủ số lượng bạn cần");
         return;
       }
@@ -135,7 +135,7 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
     if (isNaN(value) || value <= 0) {
       setError("Giá trị không hợp lệ");
     } else {
-      setError(null); // Xóa lỗi nếu giá trị hợp lệ
+      setError(null);
       setQuantity(value);
     }
   };

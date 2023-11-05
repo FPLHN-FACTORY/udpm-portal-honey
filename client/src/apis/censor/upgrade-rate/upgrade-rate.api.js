@@ -14,7 +14,7 @@ export class UpgradeApi {
   static create = (data) => {
     return request({
       method: "POST",
-      url: `/${this.COMPONENT_NAME}` + `/add`,
+      url: `/${this.COMPONENT_NAME}/add-update`,
       data: data,
     });
   };
@@ -29,29 +29,30 @@ export class UpgradeApi {
   static getAllCensorExist = () => {
     return request({
       method: "GET",
-      url: `/${this.COMPONENT_NAME}` + `/get-all-gift-exist`,
+      url: `/${this.COMPONENT_NAME}/get-all-gift-exist`,
     });
   };
 
   static update = (data, id) => {
     return request({
       method: "PUT",
-      url: `/${this.COMPONENT_NAME}` + `/update/` + id,
+      url: `/${this.COMPONENT_NAME}/update/` + id,
       data: data,
     });
   };
 
-  static delete = (id) => {
+  static delete = (params) => {
     return request({
-      method: "PUT",
-      url: `/${this.COMPONENT_NAME}/delete/${id}`,
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/delete`,
+      params: params
     });
   };
 
   static changeStatus = (id) => {
     return request({
       method: "PUT",
-      url: `/${this.COMPONENT_NAME}` + `/change-status/` + id,
+      url: `/${this.COMPONENT_NAME}/change-status/` + id,
     });
   };
 }
