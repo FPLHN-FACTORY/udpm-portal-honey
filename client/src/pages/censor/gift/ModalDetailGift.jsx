@@ -587,6 +587,9 @@ const ModalDetailGift = (props) => {
               message: "Vui lòng chọn tùy chọn phê duyệt",
             },
           ]}
+          style={{
+            display: gift.type === 0 || gift.type === 2 ? "none" : "block",
+          }}
         >
           <Radio.Group
             value={gift !== null ? gift.status : undefined}
@@ -596,7 +599,14 @@ const ModalDetailGift = (props) => {
             <Radio value={1}>Cần phê duyệt</Radio>
           </Radio.Group>
         </Form.Item>
-        <Form.Item label="Cộng dồn" name="limitQuantity">
+
+        <Form.Item
+          label="Cộng dồn"
+          name="limitQuantity"
+          style={{
+            display: gift.type === 1 || gift.type === 2 ? "none" : "block",
+          }}
+        >
           <Radio.Group
             onChange={(e) => {
               setIsLimitedQuantity2(e.target.value !== null);
