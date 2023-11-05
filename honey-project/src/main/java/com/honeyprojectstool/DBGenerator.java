@@ -307,54 +307,54 @@ public class DBGenerator implements CommandLineRunner {
         archive.setStudentId(userSemester1.getStudentId());
         archiveRepository.save(archive);
 
-        ArchiveGift archiveGift = new ArchiveGift();
-        archiveGift.setArchiveId(archive.getId());
-        archiveGift.setNote("1231");
-        archiveGift.setGiftId(gift7.getId());
-        archiveGiftRepository.save(archiveGift);
-
         ArchiveGift archiveGift1 = new ArchiveGift();
         archiveGift1.setArchiveId(archive.getId());
         archiveGift1.setNote("1231");
         archiveGift1.setGiftId(gift7.getId());
+        archiveGift1.setQuantity(1);
         archiveGiftRepository.save(archiveGift1);
 
         ArchiveGift archiveGift2 = new ArchiveGift();
         archiveGift2.setArchiveId(archive.getId());
         archiveGift2.setNote("1231");
         archiveGift2.setGiftId(gift6.getId());
+        archiveGift2.setQuantity(2);
         archiveGiftRepository.save(archiveGift2);
 
         ArchiveGift archiveGift3 = new ArchiveGift();
         archiveGift3.setArchiveId(archive.getId());
         archiveGift3.setNote("1231");
         archiveGift3.setGiftId(gift5.getId());
+        archiveGift3.setQuantity(1);
         archiveGiftRepository.save(archiveGift3);
 
         ArchiveGift archiveGift4 = new ArchiveGift();
         archiveGift4.setArchiveId(archive.getId());
         archiveGift4.setNote("1231");
         archiveGift4.setGiftId(gift1.getId());
+        archiveGift4.setQuantity(1);
         archiveGiftRepository.save(archiveGift4);
 
         ArchiveGift archiveGift5 = new ArchiveGift();
         archiveGift5.setArchiveId(archive.getId());
         archiveGift5.setNote("1231");
         archiveGift5.setGiftId(gift2.getId());
+        archiveGift5.setQuantity(1);
         archiveGiftRepository.save(archiveGift5);
 
         ArchiveGift archiveGift6 = new ArchiveGift();
         archiveGift6.setArchiveId(archive.getId());
         archiveGift6.setNote("1231");
         archiveGift6.setGiftId(gift3.getId());
+        archiveGift6.setQuantity(1);
         archiveGiftRepository.save(archiveGift6);
 
         ArchiveGift archiveGift7 = new ArchiveGift();
         archiveGift7.setArchiveId(archive.getId());
         archiveGift7.setNote("1231");
         archiveGift7.setGiftId(gift4.getId());
+        archiveGift7.setQuantity(3);
         archiveGiftRepository.save(archiveGift7);
-
     }
 
     public static void main(String[] args) {
