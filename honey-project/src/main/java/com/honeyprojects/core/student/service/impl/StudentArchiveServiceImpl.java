@@ -49,7 +49,6 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     @Autowired
     private ConvertRequestApiidentity requestApiidentity;
 
-
     @Override
     public PageableObject<StudentArchiveResponse> getAllGiftArchive(StudentArchiveFilterRequest filterRequest) {
         Pageable pageable = PageRequest.of(filterRequest.getPage(), filterRequest.getSize());
@@ -76,17 +75,16 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
             Semester semester = semesterRepository.findByStatus(Status.HOAT_DONG)
                     .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
             StudentSumHistoryParam sumHistoryParam = new StudentSumHistoryParam(
-                    archiveGift.getGiftId(), request.getMaLop(), request.getMaMon(), semester.getFromDate(), semester.getToDate()
-            );
+                    archiveGift.getGiftId(), request.getMaLop(), request.getMaMon(), semester.getFromDate(),
+                    semester.getToDate());
             Integer total = historyRepository.getTotalUseGift(sumHistoryParam);
-            Gift gift = giftRepository.findById(archiveGift.getGiftId()).orElseThrow(() ->
-                    new RestApiException("Lỗi hệ thống vui lòng thử lại!")
-            );
+            Gift gift = giftRepository.findById(archiveGift.getGiftId())
+                    .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
             if (total == null) {
                 total = 0;
             }
             if (gift.getLimitQuantity() != null
-                && gift.getLimitQuantity() < (total + request.getQuantity())) {
+                    && gift.getLimitQuantity() < (total + request.getQuantity())) {
                 throw new RestApiException("Số lượng sử dụng quá giới hạn!");
             }
             History history = new History();
@@ -116,11 +114,20 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
         Optional<Archive> archive = archiveRepository.findByStudentId(udpmHoney.getIdUser());
         List<ArchiveGift> archiveGiftList = new ArrayList<>();
         for (String giftId : listGiftId) {
-            ArchiveGift archiveGift = new ArchiveGift();
-            archiveGift.setGiftId(giftId);
-            archiveGift.setArchiveId(archive.get().getId());
-            archiveGift.setChestId(null);
-            archiveGiftList.add(archiveGift);
+            Optional<ArchiveGift> existingArchiveGift = studentGiftArchiveRepository.findByGiftId(giftId);
+            if (existingArchiveGift.isPresent()) {
+                ArchiveGift archiveGiftExist = existingArchiveGift.get();
+                archiveGiftExist.setQuantity(archiveGiftExist.getQuantity() + 1);
+                archiveGiftExist.setChestId(null);
+                archiveGiftList.add(archiveGiftExist);
+            } else {
+                ArchiveGift archiveGift = new ArchiveGift();
+                archiveGift.setGiftId(giftId);
+                archiveGift.setArchiveId(archive.get().getId());
+                archiveGift.setQuantity(1);
+                archiveGift.setChestId(null);
+                archiveGiftList.add(archiveGift);
+            }
         }
         studentGiftArchiveRepository.saveAll(archiveGiftList);
         return archiveGiftList;
@@ -160,8 +167,7 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     }
 
     @Override
-    public List<StudentArchiveByUserResponse> findArchiveByUser(String idUser, String idCategory) {
-        return archiveRepository.findArchiveByUser(idUser, idCategory);
+    public List<StudentArchiveByUserResponse> findArchiveByUser(String idUser) {
+        return archiveRepository.findArchiveByUser(idUser);
     }
-
 }

@@ -73,8 +73,8 @@ public class StudentArchiveController {
     }
 
     @GetMapping("/find-all-user")
-    public ResponseObject findAllByUser(@RequestParam("id") String id , @RequestParam("idCategory") String idCategory) {
-        return new ResponseObject(service.findArchiveByUser(id, idCategory));
+    public ResponseObject findAllByUser(@RequestParam("id") String id) {
+        return new ResponseObject(service.findArchiveByUser(id));
     }
 
 }

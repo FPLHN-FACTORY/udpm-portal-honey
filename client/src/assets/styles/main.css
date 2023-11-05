@@ -1664,10 +1664,6 @@ ul.ant-menu.ant-menu-root.ant-menu-inline.ant-menu-light.left-nav li.ant-menu-it
   align-items: center;
 }
 
-.mb-24 {
-  margin-bottom: 24px;
-}
-
 .ant-table-thead>tr>th {
   color: #8c8c8c;
   font-weight: 700;
@@ -1697,10 +1693,6 @@ ul.ant-menu.ant-menu-root.ant-menu-inline.ant-menu-light.left-nav li.ant-menu-it
   padding: 16px 25px;
 }
 
-.avatar-sm {
-  width: 25px;
-}
-
 .ant-progress-project {
   display: flex;
   align-items: center;
@@ -1722,12 +1714,6 @@ ul.ant-menu.ant-menu-root.ant-menu-inline.ant-menu-light.left-nav li.ant-menu-it
   color: #8c8c8c;
 }
 
-.text-sm {
-  font-size: 12px;
-  color: #8c8c8c;
-  font-weight: 600;
-}
-
 .ant-progress-project .ant-progress {
   margin-right: 15px;
 }
@@ -1737,23 +1723,8 @@ ul.ant-menu.ant-menu-root.ant-menu-inline.ant-menu-light.left-nav li.ant-menu-it
   color: #8c8c8c;
 }
 
-.text-sm {
-  font-size: 12px;
-  color: #8c8c8c;
-  font-weight: 600;
-}
-
 .ant-progress-project .ant-progress-bg {
   height: 3px !important;
-}
-
-.ant-table-tbody>tr>td,
-.ant-table-thead>tr>th {
-  white-space: nowrap;
-}
-
-.h-full {
-  height: 100%;
 }
 
 @media (min-width: 1200px) {

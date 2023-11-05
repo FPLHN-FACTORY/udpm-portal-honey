@@ -6,8 +6,12 @@ import com.honeyprojects.core.student.model.request.StudentNotificationRequest;
 import com.honeyprojects.core.student.model.response.StudentNotificationResponse;
 import com.honeyprojects.entity.Notification;
 
+import java.util.List;
+
 public interface StudentNotificationService {
     PageableObject<StudentNotificationResponse> fillAllNotification(String idStudent, final StudentNotificationRequest request);
+
+    List<StudentNotificationResponse> fillListNotification(String idStudent, final StudentNotificationRequest request);
 
     int countNotification(String id);
 

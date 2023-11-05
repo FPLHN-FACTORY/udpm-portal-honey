@@ -8,4 +8,5 @@ import com.honeyprojects.core.common.base.PageableObject;
 public interface AdminRequestConversionService {
 
     PageableObject<AdminRequestConversionHistoryResponse> getHistoryConversionAdmin(AdminCreateConversionHistoryRequest request);
+    PageableObject<AdminRequestConversionHistoryResponse> getHistoryBuyGiftAdmin(AdminCreateConversionHistoryRequest request);
 }

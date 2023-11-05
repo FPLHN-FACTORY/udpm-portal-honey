@@ -22,9 +22,6 @@ public interface AdminAuctionResponse extends IsIdentified {
     @Value("#{target.category_id}")
     String getCategoryId();
 
-    @Value("#{target.honey}")
-    Long getHoney();
-
     @Value("#{target.status}")
     Status getStatus();
 }

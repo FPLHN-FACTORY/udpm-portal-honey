@@ -26,11 +26,6 @@ import { GetUser, SetUser } from "../../../app/reducers/users/users.reducer";
 import DialogTransaction from "../../../pages/student/transaction/DialogTransaction";
 import { NotificationAPI } from "../../../apis/student/notification/notification.api";
 import {
-  AddNotification,
-  GetNotification,
-  SetNotification,
-} from "../../../app/reducers/notification/notification.reducer";
-import {
   GetCountNotification,
   SetCountNotification,
 } from "../../../app/reducers/notification/count-notification.reducer";
@@ -130,7 +125,7 @@ function DashboardAuthUser({ children }) {
   };
   const hanlderClickDauGia = () => {
     playSound();
-    navigate("/student/auction-room");
+    navigate("/student/auction-new");
   };
   const hanlderClickNangCap = () => {
     playSound();

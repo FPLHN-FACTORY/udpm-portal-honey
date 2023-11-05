@@ -19,6 +19,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Autowired
     private WebSocketChannelInterceptor webSocketChannelInterceptor;
 
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/api/portal-honey-websocket-endpoint")
@@ -40,4 +41,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureClientOutboundChannel(ChannelRegistration registration) {
         registration.interceptors(webSocketChannelInterceptor);
     }
+
+
 }

@@ -10,12 +10,20 @@ export class RequestManagerAPI {
       url: `/${this.COMPONENT_NAME}/user-api`,
       params: { username: code },
     });
-  };
+  }; 
 
   static getHistoryConversion = (filter) => {
     return request({
       method: "GET",
       url: `/${this.COMPONENT_NAME}/history-request-conversion`,
+      params: filter,
+    });
+  };
+
+  static getHistoryBuyGifft = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/history-buy-gift`,
       params: filter,
     });
   };

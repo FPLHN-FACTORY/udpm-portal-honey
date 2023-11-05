@@ -7,6 +7,7 @@ import com.honeyprojects.core.student.model.request.StudentGetArchiveGiftRequest
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
 import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
+import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.repository.ArchiveGiftRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
@@ -16,10 +17,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Primary
 public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
+
+    Optional<ArchiveGift> findByGiftId(String giftId);
+
     @Query(value = """
                     SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.quantity, ag.id, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
                     FROM gift g
@@ -32,7 +37,7 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
     Page<StudentArchiveResponse> getAllGiftArchive(@Param("req") StudentArchiveFilterRequest req, Pageable pageable);
 
     @Query(value = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.quantity, ag.id, c.id AS chestId, c.name
+                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.id, c.id AS chestId, c.name
                     FROM chest c 
             		JOIN archive_gift ag ON ag.chest_id = c.id
             		JOIN archive a ON ag.archive_id = a.id
@@ -68,13 +73,12 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
     StudentArchiveResponse detailArchiveGift(@Param("req") StudentGetArchiveGiftRequest req);
 
     @Query(value = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, COUNT(c.id) AS quantity, ag.id, c.id AS chestId, c.name
+                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.id, c.id AS chestId, c.name
                     FROM chest c 
                     JOIN archive_gift ag ON ag.chest_id = c.id
                     JOIN archive a ON ag.archive_id = a.id
                     WHERE (a.student_id = :#{#req.idStudent})
-                    AND (c.id = :#{#req.idChest})
-                    GROUP BY c.id;
+                    AND (c.id = :#{#req.idChest});
             """, nativeQuery = true)
     StudentArchiveGetChestResponse detailArchiveChest(@Param("req") StudentGetArchiveChestRequest req);
 

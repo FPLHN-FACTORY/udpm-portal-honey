@@ -2,7 +2,11 @@
 .auction-main-inside .ant-card {
   background-image: url("../../../assets/images/bar-transaction.png");
 }
-.auction-room-inside {
+.menu-auction{
+  background-image: url("../../../assets/images/bar-transaction.png");
+  color: white;
+}
+.button-xac-nhan.auction-room-inside {
   cursor: pointer;
   /* width: 100%; */
   background-image: url("https://media.istockphoto.com/photos/light-brown-wood-texture-background-picture-id958689614?b=1&k=6&m=958689614&s=170667a&w=0&h=0VEJL0lKAlPV9ZRzqXfU-dyQlA403Mo84xpCwE7ercI=");
@@ -283,4 +287,25 @@ w-chest .modal-create-auction .row-content {
   padding: 5px;
   border-radius: 5px;
   margin-top: 18%;
+}
+.table-dau-gia .ant-card-body{
+  padding: 0;
+}
+.table-dau-gia .ant-table-wrapper{
+  width: 100%;
+}
+.table-dau-gia .ant-table-tbody{
+  background-image: url("../../../assets/images/bar-transaction.png")
+}
+.table-dau-gia .ant-pagination .ant-table-pagination{
+  justify-content: center !important;
+  text-align: center !important;
+  display: flex !important;
+
+}
+.table-dau-gia .ant-table-cell{
+  color: white;
+}
+.table-dau-gia .ant-table-cell-row-hover {
+  color: #000000 !important;
 }
