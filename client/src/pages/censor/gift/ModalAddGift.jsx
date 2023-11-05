@@ -243,11 +243,14 @@ const ModalThem = (props) => {
                 categoryId: categoryId,
                 honey: honeyValue,
               })
-                .then((giftDetailResult) => {})
+                .then(() => {
+                  fetchData();
+                })
                 .catch((err) => {
                   message.error("Lỗi khi thêm mới GiftDetail: " + err.message);
                 });
             });
+
             dispatch(AddGift(result.data.data));
             message.success("Thành công!");
             setModalOpen(false);
@@ -264,7 +267,6 @@ const ModalThem = (props) => {
               honeyCategoryId: result.data.data.honeyCategoryId,
             };
             onSave && onSave(newGift);
-            fetchData();
           })
           .catch((err) => {
             message.error("Lỗi: " + err.message);
