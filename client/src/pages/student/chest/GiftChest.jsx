@@ -1,4 +1,4 @@
-import { Col, Tooltip } from "antd";
+import { Col } from "antd";
 import React, { memo, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useState } from "react";
@@ -12,6 +12,7 @@ import {
   SetArchiveCountGift,
 } from "../../../app/reducers/archive-gift/archive-count-gift.reducer";
 import UsingGift from "./StudentUsingGift";
+import "./chest-index.css";
 
 const GiftChest = memo(() => {
   const dispatch = useAppDispatch();
@@ -39,18 +40,7 @@ const GiftChest = memo(() => {
           style={{ width: "100%", height: "100%" }}
           alt="Hình ảnh"
         />
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            right: 0,
-
-            color: "white",
-            padding: "2px 4px",
-            borderRadius: "4px",
-          }}>
-          {quantity}
-        </div>
+        <div className="quantity-item">{quantity}</div>
       </div>
     );
   }
@@ -82,25 +72,24 @@ const GiftChest = memo(() => {
       <div className="item__chest__list" gutter={16}>
         {dataGift.map((data, index) => (
           <Col span={6} key={index}>
-            <Tooltip title={data.name}>
-              <div
-                className={`item__chest__card ${
-                  index === isActive ? "active__item" : ""
-                }`}
-                onClick={() => {
-                  handleTabClick(index);
-                  detailArchive(data.idGift);
-                  setArchiveGift(data);
-                  setShowAdditionalInfo(true);
-                }}>
-                <div className="chest__card__image">
-                  <ImageRenderer image={data.image} quantity={data.quantity} />
-                </div>
-                <div className="chest__card__body">
-                  <h3>{data.name}</h3>
-                </div>
+            <div
+              className={`item__chest__card ${
+                index === isActive ? "active__item" : ""
+              }`}
+              onClick={() => {
+                handleTabClick(index);
+                detailArchive(data.idGift);
+                setArchiveGift(data);
+                setShowAdditionalInfo(true);
+              }}
+            >
+              <div className="chest__card__image">
+                <ImageRenderer image={data.image} quantity={data.quantity} />
               </div>
-            </Tooltip>
+              <div className="chest__card__body">
+                <h3>{data.name}</h3>
+              </div>
+            </div>
           </Col>
         ))}
       </div>

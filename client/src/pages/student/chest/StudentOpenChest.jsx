@@ -1,25 +1,36 @@
 import React from "react";
-import { Button, Popconfirm, Tooltip, message } from "antd";
+import { Popconfirm, message, notification } from "antd";
 import { ChestGiftAPI } from "../../../apis/censor/chest-gift/chest-gift.api";
-import { SetChestGift } from "../../../app/reducers/chest-gift/chest-gift.reducer";
 import { useAppDispatch } from "../../../app/hooks";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 
-import { DeleteArchiveChest } from "../../../app/reducers/archive-gift/archive-chest.reducer";
+import {
+  DeleteArchiveChest,
+  SetArchiveChest,
+} from "../../../app/reducers/archive-gift/archive-chest.reducer";
 
 const OpenChest = (props) => {
-  const { chest } = props;
+  const { chest, closeAdditionalInfo } = props;
   const dispatch = useAppDispatch();
 
-  const fetchData = async () => {
-    ChestGiftAPI.getChestGift(chest.chestId).then((response) => {
-      dispatch(SetChestGift(response.data.data));
+  const fetchData = () => {
+    ArchiveAPI.getChest().then((response) => {
+      dispatch(SetArchiveChest(response.data.data));
     });
   };
 
   const handelOk = () => {
     ArchiveAPI.openChest(chest.chestId).then(() => {
-      message.success("Sử dụng thành công.");
+      ChestGiftAPI.getChestGift(chest.chestId).then((response) => {
+        const openedGifts = response.data.data
+          .map((data) => data.name)
+          .join(", ");
+        notification.success({
+          message: "Thông báo.",
+          description: `Các gift đã được mở: ${openedGifts}`,
+        });
+      });
+      closeAdditionalInfo();
     });
     ArchiveAPI.update(chest.id).then((response) => {
       dispatch(DeleteArchiveChest(response.data.data));
@@ -41,9 +52,7 @@ const OpenChest = (props) => {
       okText="Yes"
       cancelText="No"
     >
-      <Tooltip title="Sử dụng">
-        <Button className="button-xac-nhan">Sử dụng</Button>
-      </Tooltip>
+      <div>Sử dụng</div>
     </Popconfirm>
   );
 };
