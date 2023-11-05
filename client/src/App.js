@@ -47,6 +47,8 @@ import UpgrateHoneyIndex from "./pages/student/upgradeHoney/UpgrateHoneyIndex";
 import StudentHistory from "./pages/student/history/StudentHistory";
 import StudentRequest from "./pages/student/history/StudentRequest";
 import TabsRequest from "./pages/censor/requestmanager/TabsRequest";
+import HonorsStudent from "./pages/student/honors/HonorsStudent";
+import TopStudent from "./pages/student/honors/TopStudent";
 
 function App() {
   const token =
@@ -444,6 +446,26 @@ function App() {
                 <AuthGuard>
                   <DashboardAuthUser>
                     <Shop />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+              <Route
+              path="/student/honor-student"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <HonorsStudent />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+              <Route
+              path="/student/top-student"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <TopStudent />
                   </DashboardAuthUser>
                 </AuthGuard>
               }
