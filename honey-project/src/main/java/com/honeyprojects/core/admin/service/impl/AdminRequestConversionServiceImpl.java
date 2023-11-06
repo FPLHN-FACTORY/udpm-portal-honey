@@ -21,4 +21,10 @@ public class AdminRequestConversionServiceImpl implements AdminRequestConversion
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         return new PageableObject<>( historyRepository.getHistory(request,pageable));
     }
+
+    @Override
+    public PageableObject<AdminRequestConversionHistoryResponse> getHistoryBuyGiftAdmin(AdminCreateConversionHistoryRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        return new PageableObject<>( historyRepository.getBuyGiftHistory(request,pageable));
+    }
 }

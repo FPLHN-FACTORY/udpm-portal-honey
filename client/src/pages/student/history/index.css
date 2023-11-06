@@ -13,7 +13,7 @@
 }
 
 .student__history .wapper__content {
-    height: 90%;
+    height: 80%;
     overflow: scroll;
 }
 
@@ -41,7 +41,7 @@
 
 .student__history .red:hover {
     height: 150px;
-    background: linear-gradient(150deg, rgba(254, 110, 85, 0.6) 24%, rgba(99, 13, 13, 0.5) 91%);
+    background: linear-gradient(150deg, rgba(254, 215, 85, 0.6) 24%, rgba(99, 72, 13, 0.5) 91%);
 }
 
 .student__history .green:hover {
@@ -64,7 +64,7 @@
 .student__history .student__history__point {
     font-family: 'VT323', monospace;
     color: white;
-    font-size: 50px;
+    font-size: 30px;
 }
 
 .student__history .student__history__text {
@@ -126,10 +126,35 @@
     margin-right: 10px;
 }
 
+.student__history .ant-select-selector {
+    font-family: 'VT323', monospace;
+    color: #FFF;
+    font-size: 25px;
+    border: 1px solid #FFF;
+    border-radius: 10px;
+    padding: 0px 20px;
+    cursor: pointer;
+    background: linear-gradient(150deg, rgba(53, 53, 53, 0.6) 24%, rgba(0, 0, 0, 0.5) 91%);
+    margin-right: 10px;
+    background-color: rgba(255, 0, 0, 0) !important;
+}
+
+.student__history .ant-select-selector:hover {
+    color: rgba(255, 249, 133, 0.849);
+}
+
 .student__history .button__notactive:hover {
     color: rgba(255, 249, 133, 0.849);
 }
 
 .student__history .button__active {
     background: linear-gradient(150deg, rgba(255, 180, 94, 0.8) 24%, rgba(153, 105, 0, 0.8) 91%);
+}
+
+.student__history .ant-select-arrow {
+    color: white;
+}
+
+.student__history .ant-select-open {
+    color: white;
 }

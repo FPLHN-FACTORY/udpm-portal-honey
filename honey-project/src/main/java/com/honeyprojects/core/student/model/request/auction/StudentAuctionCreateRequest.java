@@ -9,11 +9,7 @@ public class StudentAuctionCreateRequest {
 
     private String idUser;
 
-    private String idAuction;
-
     private String idGift;
-
-    private String honey;
 
     private String jump;
 

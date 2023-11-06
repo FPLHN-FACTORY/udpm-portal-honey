@@ -22,7 +22,5 @@ public interface StudentArchiveByUserResponse {
     @Value("#{target.idCategory}")
     String getIdCategory();
 
-    @Value("#{target.quantity}")
-    Integer getQuantity();
 
 }

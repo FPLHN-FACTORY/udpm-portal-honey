@@ -33,14 +33,13 @@ import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import { type } from "@testing-library/user-event/dist/type";
 
 const statusHistory = (status) => {
   switch (status) {
     case 0:
       return <Tag color="geekblue">Chờ phê duyệt</Tag>;
     case 3:
-      return <Tag color="cyan">Gửi lại chờ phê duyệt</Tag>; 
+      return <Tag color="cyan">Gửi lại chờ phê duyệt</Tag>;
     default:
       return <Tag>Không xác định</Tag>;
   }
@@ -112,7 +111,7 @@ export default function ListRequest() {
   ];
 
   const [totalPage, setTotalPage] = useState(1);
-  const [filter, setFilter] = useState({ page: 0, status: null});
+  const [filter, setFilter] = useState({ page: 0, status: null });
   const [type, setType] = useState();
 
   useEffect(() => {

@@ -13,11 +13,17 @@ public interface StudentAuctionResponse {
     @Value("#{target.id}")
     String getId();
 
-    @Value("#{target.idRoom}")
-    String getIdRoom();
-
     @Value("#{target.name}")
     String getName();
+
+    @Value("#{target.giftName}")
+    String getGiftName();
+
+    @Value("#{target.fromDate}")
+    Long getFromDate();
+
+    @Value("#{target.toDate}")
+    Long getToDate();
 
     @Value("#{target.starting_price}")
     BigDecimal getStartingPrice();
@@ -25,17 +31,8 @@ public interface StudentAuctionResponse {
     @Value("#{target.last_price}")
     BigDecimal getLastPrice();
 
-    @Value("#{target.honey}")
-    BigDecimal getHoney();
-
-    @Value("#{target.gift_id}")
-    String getGiftId();
-
-    @Value("#{target.honey_category_id}")
-    String getHoneyCategoryId();
-
-    @Value("#{target.gift_name}")
-    String getGiftName();
+    @Value("#{target.nameCategory}")
+    String getNameCategory();
 
     @Value("#{target.jump}")
     BigDecimal getJump();
@@ -43,12 +40,6 @@ public interface StudentAuctionResponse {
     @Value("#{target.status}")
     Status getStatus();
 
-    @Value("#{target.from_date}")
-    Long getFromDate();
-
-    @Value("#{target.to_date}")
-    Long getToDate();
-
-    @Value("#{target.image}")
-    byte[] getImage();
+    @Value("#{target.idCategory}")
+    String getIDCategory();
 }

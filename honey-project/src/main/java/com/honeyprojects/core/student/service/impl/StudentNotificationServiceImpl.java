@@ -31,6 +31,11 @@ public class StudentNotificationServiceImpl implements StudentNotificationServic
     }
 
     @Override
+    public List<StudentNotificationResponse> fillListNotification(String idStudent, StudentNotificationRequest request) {
+        return notificationRepository.getListNotification(idStudent, request);
+    }
+
+    @Override
     public int countNotification(String id) {
         return notificationRepository.countNotification(id);
     }

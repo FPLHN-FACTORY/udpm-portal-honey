@@ -16,44 +16,41 @@ import HistoryAddPoint from "./pages/teacher/addpoint/HistoryAddPoint";
 import HistoryAddPointCensor from "./pages/censor/addPoin/HistoryAddPoint";
 import ListRequestAddPoint from "./pages/teacher/addpoint/ListRequestAddPoint";
 import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
-import RequestManager from "./pages/censor/requestmanager/RequestManager";
 import RequestManagerDetail from "./pages/censor/requestmanager/RequestManagerDetail";
 import Semester from "./pages/censor/semester";
 import ConversionHome from "./pages/censor/convertion/convertionHome";
 import IndexGift from "./pages/censor/gift/indexGift";
 import AddRequestConversion from "./pages/student/RequestConversion/AddRequestConversion";
 import TransactionPage from "./pages/student/transaction/TransactionPage";
-import RequestTransaction from "./pages/censor/requestmanager/RequestTransaction";
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
 import StArchive from "./pages/student/archive/StArchive";
 import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
-import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
+// import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
 import ChestGift from "./pages/censor/chest-gift/ChestGift";
 import AuctionMangement from "./pages/censor/auction-management/AuctionManagement";
 import TestTransaction from "./pages/student/transaction/TestTransaction";
 import { getToken, setToken } from "./helper/userToken";
-import StudentChest from "./pages/student/chest/studentChest";
 import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
 import UpgradeHoney from "./pages/student/upgradeHoney/UpgradeHoney";
-import StudentAuctionRoom from "./pages/student/auction/StudentAuctionRoom";
-import StudentAuction from "./pages/student/auction/StudentAuction";
-import StudentAuctionRoomInside from "./pages/student/auction/StudentAuctionRoomInside";
 import RequestApprovedHistory from "./pages/censor/requestmanager/ApproveHistory";
-import ListRequest from "./pages/censor/requestmanager/ListRequest";
 import ConvertionHoney from "./pages/teacher/convertion-honey/RequestConversion";
 import TeacherRequestConversionHistory from "./pages/teacher/convertion-honey/RequestConversionHistory";
 import LetterDetail from "./pages/student/letters/LetterDetail";
 import Letter from "./pages/student/letters/letter";
 import UpgradeRate from "./pages/censor/upgrade-rate/upgrade-rate";
 import Shop from "./pages/student/shop/Shop";
+import StudentAuctionRoomNew from "./pages/student/auction/StudentAuctionRoomNew";
 import ChestIndex from "./pages/student/chest/ChestIndex";
 import UpgrateHoneyIndex from "./pages/student/upgradeHoney/UpgrateHoneyIndex";
-import StudentBuyItem from "./pages/student/BuyItem/StudentBuyItem";
-import RequestExchangeGift from "./pages/censor/requestmanager/RequestExchangeGift";
 import StudentHistory from "./pages/student/history/StudentHistory";
 import StudentRequest from "./pages/student/history/StudentRequest";
-
+import TabsRequest from "./pages/censor/requestmanager/TabsRequest";
+import ListHistory from "./pages/censor/requestmanager/ListHistory";
+import DashboardPresident from "./layout/president/DashboardPresident";
+import AddItem from "./pages/president/add-item/AddItem";
+import HonorsStudent from "./pages/student/honors/HonorsStudent";
+import TopStudent from "./pages/student/honors/TopStudent";
 function App() {
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU5YjlmYjdlLTkwNjUtNDEwMi1mMDNjLTA4ZGJjZTY5ZTU5NCIsIm5hbWUiOiJ0xrDhu59uZyBoaWhpIiwiZW1haWwiOiJ0dW9uZ3R2cGgyNjE0OUBmcHQuZWR1LnZuIiwidXNlck5hbWUiOiJ0xrDhu59uZyBoaWhpIiwicGljdHVyZSI6IkltYWdlcy9EZWZhdWx0LnBuZyIsImlkVHJhaW5pbmdGYWNpbGl0eSI6Ijc5NmE0ZmE0LThhYWItNDJjNC05ZjM1LTg3MGJiMDAwNWFmMSIsImxvY2FsSG9zdCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODg4OCIsInJvbGUiOlsiVEVBQ0hFUiIsIlNUVURFTlQiLCJBRE1JTiJdLCJyb2xlTmFtZXMiOlsiR2nhuqNuZyB2acOqbiIsIlNpbmggdmnDqm4iLCJRdeG6o24gdHLhu4sgdmnDqm4iXSwibmJmIjoxNjk3NTUwODY5LCJleHAiOjE3MDAxNDI4NjksImlhdCI6MTY5NzU1MDg2OSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDkwNTMiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0OTA1MyJ9.zjVKrdOUc5joBysdG2q8TWAppjZEQSCv4M3dz5I-SnU";
@@ -90,7 +87,7 @@ function App() {
                 </AuthGuard>
               }
             />
-            <Route
+            {/* <Route
               path="/censor/request-buy-gift/history"
               element={
                 <AuthGuard>
@@ -99,7 +96,7 @@ function App() {
                   </DashboardCensor>
                 </AuthGuard>
               }
-            />
+            /> */}
             <Route
               path="/censor/semester"
               element={
@@ -155,7 +152,7 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardCensor>
-                    <RequestManager />
+                    <TabsRequest />
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -175,37 +172,7 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardCensor>
-                    <RequestApprovedHistory />
-                  </DashboardCensor>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/censor/request-manager/list-request"
-              element={
-                <AuthGuard>
-                  <DashboardCensor>
-                    <ListRequest />
-                  </DashboardCensor>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/censor/request-manager/exchange-gifts"
-              element={
-                <AuthGuard>
-                  <DashboardCensor>
-                    <RequestExchangeGift />
-                  </DashboardCensor>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/censor/request-manager/transaction"
-              element={
-                <AuthGuard>
-                  <DashboardCensor>
-                    <RequestTransaction />
+                    <ListHistory />
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -322,28 +289,7 @@ function App() {
             />
 
             <Route
-              path="/student/auction-room"
-              element={
-                <AuthGuard>
-                  <DashboardAuthUser>
-                    <StudentAuctionRoom />
-                  </DashboardAuthUser>
-                </AuthGuard>
-              }
-            />
-
-            <Route
-              path="/student/auction-room-inside/:id"
-              element={
-                <AuthGuard>
-                  <DashboardAuthUser>
-                    <StudentAuctionRoomInside />
-                  </DashboardAuthUser>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/student/history"
+              path="/student/create-conversion/history"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
@@ -423,12 +369,13 @@ function App() {
                 </AuthGuard>
               }
             />
+
             <Route
-              path="/student/auction"
+              path="/student/auction-new"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
-                    <StudentAuction />
+                    <StudentAuctionRoomNew />
                   </DashboardAuthUser>
                 </AuthGuard>
               }
@@ -481,6 +428,37 @@ function App() {
                   <DashboardAuthUser>
                     <Shop />
                   </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/honor-student"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <HonorsStudent />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/student/top-student"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <TopStudent />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            {/* Màn president */}
+            <Route
+              path="/president/add-item"
+              element={
+                <AuthGuard>
+                  <DashboardPresident>
+                    <AddItem />
+                  </DashboardPresident>
                 </AuthGuard>
               }
             />

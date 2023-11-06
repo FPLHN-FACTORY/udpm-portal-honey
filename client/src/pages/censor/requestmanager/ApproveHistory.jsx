@@ -34,6 +34,7 @@ import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestm
 import { Link } from "react-router-dom";
 import moment from "moment";
 import { type } from "@testing-library/user-event/dist/type";
+import TabsHistory from "./TabsHistory";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -84,7 +85,7 @@ export default function RequestApprovedHistory() {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-    }
+    },
   ];
 
   const [totalPage, setTotalPage] = useState(1);
@@ -200,7 +201,7 @@ export default function RequestApprovedHistory() {
   return (
     <Spin spinning={loading}>
       <div className="request-manager">
-        {/* <TabsRequest selectIndex={1} type={type} /> */}
+        {/* <TabsHistory selectIndex={1} type={type} /> */}
         <Card className="mb-2 py-1">
           <Form onFinish={onFinishSearch}>
             <Space size={"large"}>
@@ -248,7 +249,8 @@ export default function RequestApprovedHistory() {
               <Button
                 htmlType="submit"
                 type="primary"
-                className="mr-10 search-button">
+                className="mr-10 search-button"
+              >
                 Lọc
               </Button>
             </Space>
