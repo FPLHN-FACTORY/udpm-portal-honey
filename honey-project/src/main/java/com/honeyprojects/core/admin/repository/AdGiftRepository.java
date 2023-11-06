@@ -74,4 +74,6 @@ public interface AdGiftRepository extends GiftRepository {
               SELECT g.id, g.name FROM gift g LEFT JOIN upgrade_rate_gift u ON g.id = u.id_gift WHERE u.id_upgrade_rate = :id AND g.status in (0,1) ORDER BY g.last_modified_date DESC
             """, nativeQuery = true )
     List<CensorGiftSelectResponse> getGiftsExistByUpgradeRateGiftId(@Param("id") String id);
+
+    List<Gift> findAllByIdIn(List<String> ids);
 }

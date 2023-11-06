@@ -13,4 +13,6 @@ public class SessionConstant {
     public static String EMAIL = "email";
 
     public static String USER_NAME = "userName";
+
+    public static String PICTURE = "picture";
 }
