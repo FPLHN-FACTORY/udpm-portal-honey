@@ -1,5 +1,6 @@
 package com.honeyprojects.infrastructure.security;
 
+import com.honeyprojects.infrastructure.contant.SessionConstant;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -51,11 +52,11 @@ public class JwtTokenProvider {
                 authorities.add(new SimpleGrantedAuthority(role));
             }
         }
-        httpSession.setAttribute("idUser", id);
-        httpSession.setAttribute("picture", picture);
-        httpSession.setAttribute("name", name);
-        httpSession.setAttribute("userName", userName);
-        httpSession.setAttribute("email", email);
+        httpSession.setAttribute(SessionConstant.ID_USER, id);
+        httpSession.setAttribute(SessionConstant.NAME, name);
+        httpSession.setAttribute(SessionConstant.USER_NAME, userName);
+        httpSession.setAttribute(SessionConstant.PICTURE, picture);
+        httpSession.setAttribute(SessionConstant.EMAIL, email);
         return new UsernamePasswordAuthenticationToken(null, token, authorities);
     }
 

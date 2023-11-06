@@ -20,4 +20,5 @@ public class LoggerFunction implements Serializable {
     private String ip;
     private String userName;
     private String pathFile;
+    private String author;
 }
