@@ -23,6 +23,7 @@ export class GiftAPI {
       formData.append("limitQuantity", data.limitQuantity);
     }
     formData.append("status", data.status);
+    formData.append("transactionGift", data.transactionGift);
     formData.append("type", data.type);
     if (data.fromDate !== null && data.toDate !== null) {
       formData.append("fromDate", data.fromDate);
@@ -54,6 +55,7 @@ export class GiftAPI {
     }
     formData.append("status", data.status);
     formData.append("type", data.type);
+    formData.append("transactionGift", data.transactionGift);
 
     if (data.fromDate !== null && data.toDate !== null) {
       formData.append("fromDate", data.fromDate);

@@ -20,7 +20,7 @@ public interface AdGiftRepository extends GiftRepository {
 
     @Query(value = """
             SELECT ROW_NUMBER() OVER(ORDER BY g.created_date DESC) AS stt, g.id, g.code, g.name,g.note,g.quantity,g.status,g.type,g.from_date, g.to_date, g.semester_id,g.limit_quantity, 
-            g.last_modified_date, g.image
+            g.transaction_gift ,g.last_modified_date, g.image
             FROM gift g JOIN gift_detail gd ON gd.gift_id = g.id
              WHERE (status =0 or status = 1) 
              AND ( ( :#{#request.categoryId} IS NULL 
@@ -36,7 +36,7 @@ public interface AdGiftRepository extends GiftRepository {
                 g.from_date, g.to_date, g.semester_id, g.limit_quantity,
                 g.last_modified_date, g.image
             """, countQuery = """
-            SELECT ROW_NUMBER() OVER(ORDER BY g.created_date DESC) AS stt, g.id, g.code, g.name,g.quantity,g.status,g.type, g.last_modified_date,g.limit_quantity, g.image, g.type,g.note,g.from_date, g.to_date, g.semester_id
+            SELECT ROW_NUMBER() OVER(ORDER BY g.created_date DESC) AS stt, g.id, g.code, g.name,g.quantity,g.status,g.type,g.transaction_gift , g.last_modified_date,g.limit_quantity, g.image, g.type,g.note,g.from_date, g.to_date, g.semester_id
             FROM gift g JOIN gift_detail gd ON gd.gift_id = g.id
              WHERE (status =0 or status = 1 ) AND ( ( :#{#request.categoryId} IS NULL 
              OR :#{#request.categoryId} LIKE '' 
@@ -54,7 +54,7 @@ public interface AdGiftRepository extends GiftRepository {
     Page<AdminGiftResponse> getAllGiftByAdmin(Pageable pageable, @Param("request") AdminGiftRequest request);
 
     @Query(value = """
-            SELECT g.id, g.name, g.code,g.quantity,g.status,g.type, g.from_date, g.to_date, g.semester_id,g.note, g.last_modified_date,g.limit_quantity, g.image FROM gift g where (status =0 or status = 1) 
+            SELECT g.id, g.name, g.code,g.quantity,g.status,g.type,g.transaction_gift , g.from_date, g.to_date, g.semester_id,g.note, g.last_modified_date,g.limit_quantity, g.image FROM gift g where (status =0 or status = 1) 
             ORDER BY g.last_modified_date DESC
             """, nativeQuery = true)
     List<AdminGiftResponse> getAllListResponse();
