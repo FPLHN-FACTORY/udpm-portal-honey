@@ -22,3 +22,20 @@
 .quantity-gift-inside input {
   color: white !important;
 }
+.btn-xac-nhan {
+  background-color: brown;
+  color: white;
+  border: inset;
+  margin-right: 30px;
+}
+
+.btn-huy {
+  background-color: rgb(108, 165, 42);
+  color: white;
+  border: inset;
+}
+
+.css-modal-confim-buy-gift .ant-modal-content {
+  background-color: rgba(139, 69, 19, 0);
+  border: inset;
+}
