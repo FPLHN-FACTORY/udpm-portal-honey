@@ -546,6 +546,22 @@ const ModalThem = (props) => {
           </Radio.Group>
         </Form.Item>
         <Form.Item
+          label="Giao dịch"
+          name="transactionGift"
+          initialValue={0}
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng chọn tùy chọn giao dịch",
+            },
+          ]}
+        >
+          <Radio.Group>
+            <Radio value={0}>Cho phép</Radio>
+            <Radio value={1}>Không cho phép</Radio>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item
           label="Cộng dồn"
           name="limitQuantity"
           rules={[

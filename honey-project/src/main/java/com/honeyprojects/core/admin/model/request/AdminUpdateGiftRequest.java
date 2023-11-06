@@ -2,6 +2,7 @@ package com.honeyprojects.core.admin.model.request;
 
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.infrastructure.contant.StatusGift;
+import com.honeyprojects.infrastructure.contant.TransactionGift;
 import com.honeyprojects.infrastructure.contant.TypeGift;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -26,6 +27,8 @@ public class AdminUpdateGiftRequest {
 
     private Integer status;
 
+    private Integer transactionGift;
+
     private Integer quantity;
 
     private Integer limitQuantity;
@@ -48,6 +51,9 @@ public class AdminUpdateGiftRequest {
         }
         if (this.getType() != null) {
             gift.setType(TypeGift.values()[this.getType()]);
+        }
+        if (this.getTransactionGift() != null) {
+            gift.setTransactionGift(TransactionGift.values()[this.getTransactionGift()]);
         }
 
         gift.setQuantity(this.getQuantity());
