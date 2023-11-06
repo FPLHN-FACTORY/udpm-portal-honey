@@ -3,6 +3,7 @@ package com.honeyprojects.entity;
 import com.honeyprojects.entity.base.PrimaryEntity;
 import com.honeyprojects.infrastructure.contant.EntityProperties;
 import com.honeyprojects.infrastructure.contant.StatusGift;
+import com.honeyprojects.infrastructure.contant.TransactionGift;
 import com.honeyprojects.infrastructure.contant.TypeGift;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,6 +31,8 @@ public class Gift extends PrimaryEntity {
     private StatusGift status;
 
     private TypeGift type;
+
+    private TransactionGift transactionGift;
 
     private Integer quantity;
 

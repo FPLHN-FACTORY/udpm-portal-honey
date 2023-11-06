@@ -25,6 +25,9 @@ public interface AdminGiftResponse extends IsIdentified {
     @Value("#{target.status}")
     Integer getStatus();
 
+    @Value("#{target.transaction_gift}")
+    Integer getTransactionGift();
+
     @Value("#{target.type}")
     Integer getType();
 

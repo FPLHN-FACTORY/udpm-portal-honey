@@ -2,10 +2,7 @@ package com.honeyprojects.core.admin.model.request;
 
 import com.honeyprojects.core.common.base.PageableRequest;
 import com.honeyprojects.entity.Gift;
-import com.honeyprojects.infrastructure.contant.CategoryStatus;
-import com.honeyprojects.infrastructure.contant.Status;
-import com.honeyprojects.infrastructure.contant.StatusGift;
-import com.honeyprojects.infrastructure.contant.TypeGift;
+import com.honeyprojects.infrastructure.contant.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -36,6 +33,8 @@ public class AdminCreateGiftRequest extends PageableRequest {
 
     private Integer limitQuantity;
 
+    private Integer transactionGift;
+
     private MultipartFile image;
 
     private String note;
@@ -60,6 +59,9 @@ public class AdminCreateGiftRequest extends PageableRequest {
         gift.setLimitQuantity(this.getLimitQuantity());
         if (this.getType() != null) {
             gift.setType(TypeGift.values()[this.getType()]);
+        }
+        if (this.getTransactionGift() != null) {
+            gift.setTransactionGift(TransactionGift.values()[this.getTransactionGift()]);
         }
         if (this.getImage() != null) {
             byte[] imageBytes = this.getImage().getBytes();

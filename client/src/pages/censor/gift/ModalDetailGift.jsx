@@ -322,6 +322,7 @@ const ModalDetailGift = (props) => {
     code: gift && gift.code ? gift.code : "",
     status: gift && gift.status !== null ? gift.status : 0,
     type: gift && gift.type ? gift.type : 0,
+    transactionGift: gift && gift.transactionGift ? gift.transactionGift : 0,
     note: gift && gift.note ? gift.note : "",
     timeType:
       gift.semesterId && gift.fromDate && gift.toDate
@@ -597,6 +598,23 @@ const ModalDetailGift = (props) => {
           >
             <Radio value={0}>Không phê duyệt</Radio>
             <Radio value={1}>Cần phê duyệt</Radio>
+          </Radio.Group>
+        </Form.Item>
+
+        <Form.Item
+          label="Giao dịch"
+          name="transactionGift"
+          initialValue={0}
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng chọn tùy chọn giao dịch",
+            },
+          ]}
+        >
+          <Radio.Group>
+            <Radio value={0}>Cho phép</Radio>
+            <Radio value={1}>Không cho phép</Radio>
           </Radio.Group>
         </Form.Item>
 
