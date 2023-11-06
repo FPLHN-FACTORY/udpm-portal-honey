@@ -33,6 +33,22 @@ const ModalUpdateUpgradeRate = ({
   const [quantityDestinationHoney, setQuantityDestinationHoney] = useState("");
   const [idGifts, setIdGifts] = useState([]);
 
+  const validateFieldsNumber = (rule, value) => {
+    if(value){
+      if(value<0){
+        return Promise.reject("Giá trị phải lớn hơn 0");
+      }else return Promise.resolve();
+    }else return Promise.resolve();
+  }
+
+  const validateFieldsRatio = (rule, value) => {
+    if(value){
+      if(value<0 || value>100){
+        return Promise.reject("Giá trị phải lớn hơn 0 và nhỏ hơn 100");
+      }else return Promise.resolve();
+    }else return Promise.resolve();
+  }
+
   useEffect(() => {
     if (visible) {
       fetchAllCategory();
@@ -175,8 +191,13 @@ const ModalUpdateUpgradeRate = ({
             name="ratio"
             label="Tỉ lệ nâng cấp"
             rules={[
-              { required: true, message: "Tỉ lệ nâng cấp không được để trống" },
-              { min: 0, max: 100, message: "Tỉ lệ nâng cấp từ 0 đến 100" },
+              { 
+                required: true, 
+                message: "Tỉ lệ nâng cấp không được để trống" 
+              },
+              {
+                validator: validateFieldsRatio,
+              }
             ]}
           >
             <Input type="number" />

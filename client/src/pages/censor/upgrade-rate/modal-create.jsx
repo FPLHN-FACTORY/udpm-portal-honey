@@ -25,7 +25,7 @@ const ModalCreateUpgradeRate = ({
   const listCategory = useAppSelector(GetCategory);
   const listGift = useAppSelector(GetGift);
   const animatedComponents = makeAnimated();
-  
+
 
   // useEffect(() => {
   //   if (visible === true) {
@@ -60,6 +60,22 @@ const ModalCreateUpgradeRate = ({
     featAllGift();
   }, []);
 
+  const validateFieldsNumber = (rule, value) => {
+    if(value){
+      if(value<0){
+        return Promise.reject("Giá trị phải lớn hơn 0");
+      }else return Promise.resolve();
+    }else return Promise.resolve();
+  }
+
+  const validateFieldsRatio = (rule, value) => {
+    if(value){
+      if(value<0 || value>100){
+        return Promise.reject("Giá trị phải lớn hơn 0 và nhỏ hơn 100");
+      }else return Promise.resolve();
+    }else return Promise.resolve();
+  }
+
   const featAllGift = async () => {
     UpgradeApi.getAllCensorExist()
       .then((response) => {
@@ -84,17 +100,17 @@ const ModalCreateUpgradeRate = ({
     form.validateFields().then((values) => {
       console.log("🚀 ~ file: modal-create.jsx:85 ~ form.validateFields ~ values:", values)
       const idLstGift = [];
-      if(values.idGifts && values.idGifts[0].value){
+      if (values.idGifts && values.idGifts[0].value) {
         for (let gift of values.idGifts) {
           idLstGift.push(gift.value);
         }
-      }else return message.error("Danh sách vật phẩm dùng để nâng cấp không được để trống");
+      } else return message.error("Danh sách vật phẩm dùng để nâng cấp không được để trống");
       let obj = {
         originalHoneyId: values.originalHoney.value,
         destinationHoneyId: values.destinationHoney.value,
         quantityOriginalHoney: values.quantityOriginalHoney,
         quantityDestinationHoney: values.quantityDestinationHoney,
-        idGifts : idLstGift,
+        idGifts: idLstGift,
         ratio: values.ratio,
         status: "0",
       };
@@ -143,7 +159,7 @@ const ModalCreateUpgradeRate = ({
               name="originalHoney"
               label="Loại điểm đầu"
               rules={[
-                { required: true, message: "Điểm đầu không được để trống" },
+                { required: true, message: "Điểm đầu không được để trống",},
               ]}
             >
               <Select
@@ -162,6 +178,9 @@ const ModalCreateUpgradeRate = ({
                 {
                   required: true,
                   message: "Số lượng điểm đầu không được để trống",
+                },
+                {
+                  validator: validateFieldsNumber,
                 }
               ]}
             >
@@ -193,6 +212,9 @@ const ModalCreateUpgradeRate = ({
                 {
                   required: true,
                   message: "Số lượng điểm cuối không được để trống",
+                },
+                {
+                  validator: validateFieldsNumber,
                 }
               ]}
             >
@@ -225,9 +247,7 @@ const ModalCreateUpgradeRate = ({
                   message: "Tỉ lệ nâng cấp không được để trống",
                 },
                 {
-                  min: 0,
-                  max: 100,
-                  message: "Tỉ lệ nâng cấp từ 0 đến 100",
+                  validator: validateFieldsRatio
                 },
               ]}
             >
