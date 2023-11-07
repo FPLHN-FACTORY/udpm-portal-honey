@@ -1,4 +1,4 @@
-import { Button, Col, InputNumber, message } from "antd";
+import { Button, Col, InputNumber, Modal, message } from "antd";
 import React, { memo, useEffect } from "react";
 import { useState } from "react";
 import "./item.css";
@@ -40,6 +40,17 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
   const [cardBackgroundColor, setCardBackgroundColor] = useState("#F8DA95");
   const [initialQuantity, setInitialQuantity] = useState(null);
   const [error, setError] = useState(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   useEffect(() => {
     fechUserApiById();
   }, []);
@@ -73,6 +84,7 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
   };
 
   const onSubmitCreate = () => {
+    handleCancel();
     if (!selectedConversion) {
       message.error("Vui lòng chọn một mục trong danh sách chọn");
       return;
@@ -141,6 +153,39 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
   };
   return (
     <section className="shop__gift">
+      <Modal
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        closeIcon={null}
+        footer={null}
+        width={350}
+        className="css-modal-confim-buy-gift"
+      >
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <span style={{ fontSize: "16px", color: "white", fontWeight: 700 }}>
+            Bạn có xác nhận mua quà không ?
+          </span>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "30px",
+          }}
+        >
+          <Button
+            type="primary"
+            className="btn-xac-nhan"
+            onClick={onSubmitCreate}
+          >
+            xác nhận
+          </Button>
+          <Button type="primary" className="btn-huy" onClick={handleCancel}>
+            Hủy
+          </Button>
+        </div>
+      </Modal>
       <div className="item__list" gutter={16}>
         {filteredConversions.map((item, index) => (
           <Col span={6} key={index}>
@@ -238,7 +283,7 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
               </span>
             </div>
           )}
-          <Button className="detail__button" onClick={onSubmitCreate}>
+          <Button className="detail__button" onClick={showModal}>
             Mua quà
           </Button>
         </div>

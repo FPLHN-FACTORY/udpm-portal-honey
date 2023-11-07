@@ -11,7 +11,6 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/teacher/list-students-add-point")
-@CrossOrigin(origins = {"*"})
 public class TeacherAddPointExcelCotroller {
 
     @Autowired

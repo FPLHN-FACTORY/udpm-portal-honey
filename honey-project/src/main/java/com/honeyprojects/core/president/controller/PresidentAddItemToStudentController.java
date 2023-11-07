@@ -17,7 +17,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/president")
-@CrossOrigin(origins = {"*"})
 public class PresidentAddItemToStudentController {
 
     @Autowired
