@@ -1,22 +1,16 @@
-import { Spin } from 'antd';
-import React from 'react';
-import { useAppSelector } from '../../app/hooks';
-import { SelectLoading } from '../../app/reducers/loading/loading.reducer';
-
+import React from "react";
 
 const GlobalLoading = () => {
-  const loadingState = useAppSelector(SelectLoading);
-  const [loading, setLoading] = React.useState(loadingState);
-
-  React.useEffect(() => {
-    setLoading(loadingState);
-  }, [loadingState]);
-
   return (
     <>
-      {loading && <div className="loading">
-        <Spin size="large"/>
-      </div>}
+      <div id="loading">
+        <div class="lds-roller">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
     </>
   );
 };
