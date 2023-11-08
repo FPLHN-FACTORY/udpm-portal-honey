@@ -61,10 +61,6 @@ body {
   font-size: 15px;
 }
 
-.ant-layout {
-  background: #f2f3f8 !important;
-}
-
 #layout_drawer {
   background: #fff !important;
 }
@@ -829,10 +825,6 @@ ul.ant-menu.ant-menu-root.ant-menu-inline.ant-menu-light.left-nav
   padding-right: 15px; */
 
   margin-top: 15px;
-}
-
-.ant-layout {
-  background: #fafafa;
 }
 
 .pageheader {

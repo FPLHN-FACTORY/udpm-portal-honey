@@ -54,7 +54,6 @@ const ModalCreateUpgradeRate = ({
         ratio: values.ratio,
         status: 0,
       };
-      console.log(obj);
 
       UpgradeApi.create(obj).then(
         (response) => {
