@@ -34,7 +34,7 @@ const ModalThem = (props) => {
       } else {
         const fileSize = selectedFile.size;
         const checkFileSize = Math.round(fileSize / 1024);
-        if (checkFileSize > 100) {
+        if (checkFileSize > 1) {
           setErrorImage("Ảnh không thể lớn hơn 1 mb");
           setSelectedImageUrl("");
           setImage([]);
@@ -52,6 +52,7 @@ const ModalThem = (props) => {
             setImage(selectedFile);
             var imageUrl = URL.createObjectURL(selectedFile);
             setSelectedImageUrl(imageUrl);
+            setErrorImage("");
           } else {
             setErrorImage("Chỉ nhận ảnh có type GIF, PNG, JPG, JPEG và BMP. ");
             setSelectedImageUrl("");
