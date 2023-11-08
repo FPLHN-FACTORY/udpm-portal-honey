@@ -74,6 +74,12 @@ const ModalDetailGift = (props) => {
     }
   }, [gift]);
 
+  const validateCategories = (value) => {
+    if (!value || value.length === 0) {
+      return "Vui lòng chọn ít nhất một cấp bậc.";
+    }
+    return null;
+  };
   const handleCategoryChange = (selectedValues) => {
     setSelectedCategories(selectedValues);
 
@@ -85,6 +91,10 @@ const ModalDetailGift = (props) => {
     });
 
     setCategoryQuantities(newCategoryQuantities);
+
+    // Perform custom validation here
+    const error = validateCategories(selectedValues);
+    setFieldErrors({ ...fieldErrors, selectedCategories: error });
   };
 
   const handleCancel = () => {
@@ -214,6 +224,10 @@ const ModalDetailGift = (props) => {
           }
         });
 
+        if (fieldErrors.selectedCategories) {
+          return;
+        }
+
         setFieldErrors(newFieldErrors);
 
         const hasErrors = Object.values(newFieldErrors).some(
@@ -337,7 +351,7 @@ const ModalDetailGift = (props) => {
 
   return (
     <Modal
-      title="Chi tiết thể loại"
+      title="Chi tiết vật phẩm"
       visible={visible}
       onCancel={handleCancel}
       footer={null}
@@ -471,6 +485,9 @@ const ModalDetailGift = (props) => {
             ))}
           </Select>
         </div>
+        <div style={{ color: "red", textAlign: "center", marginTop: "-2" }}>
+          {fieldErrors.selectedCategories}
+        </div>
         {listCategory.map((category) => {
           const categoryId = category.id;
           const honeyValue =
@@ -579,6 +596,7 @@ const ModalDetailGift = (props) => {
           </>
         )}
 
+        {console.log(gift.type)}
         <Form.Item
           label="Phê duyệt"
           name="status"

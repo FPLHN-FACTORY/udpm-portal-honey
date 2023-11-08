@@ -61,7 +61,7 @@ const ModalThem = (props) => {
         const fileSize = selectedFile.size;
         const checkFileSize = Math.round(fileSize / 1024);
         if (checkFileSize > 1) {
-          setErrorImage("Ảnh không thể lớn hơn 1 mb");
+          setErrorImage("Ảnh không thể lớn hơn 1 MB");
           setSelectedImageUrl("");
           setImage([]);
         } else {
@@ -184,6 +184,7 @@ const ModalThem = (props) => {
   };
 
   const onFinish = () => {
+    let check = 0;
     form
       .validateFields()
       .then((formValues) => {
@@ -220,10 +221,14 @@ const ModalThem = (props) => {
         }
         if (isNaN(quantity) && quantityValue === 1) {
           message.error("Vui lòng nhập số lượng giới hạn hợp lệ.");
-          return;
+          check++;
         }
         if (isNaN(limitSL) && limitQuantityValue === 1) {
           message.error("Vui lòng nhập số lượng giới hạn hợp lệ.");
+          check++;
+        }
+
+        if (check > 0) {
           return;
         }
         GiftAPI.create({
@@ -334,7 +339,7 @@ const ModalThem = (props) => {
           accept="image/*"
           onChange={(event) => handleFileInputChange(event)}
         />
-        <span className="error errorImageMes">{errorImage}</span>
+        {errorImage && <div style={{ color: "red" }}>{errorImage}</div>}
         <Form.Item
           label="Tên"
           name="name"
