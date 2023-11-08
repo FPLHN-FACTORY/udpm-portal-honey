@@ -47,13 +47,15 @@ const ModalThem = (props) => {
             Extension == "png" ||
             Extension == "bmp" ||
             Extension == "jpeg" ||
-            Extension == "jpg"
+            Extension == "jpg" ||
+            Extension == "webp"
           ) {
             setImage(selectedFile);
             var imageUrl = URL.createObjectURL(selectedFile);
             setSelectedImageUrl(imageUrl);
+            setErrorImage("");
           } else {
-            setErrorImage("Chỉ nhận ảnh có type GIF, PNG, JPG, JPEG và BMP. ");
+            setErrorImage("Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. ");
             setSelectedImageUrl("");
             setImage([]);
           }

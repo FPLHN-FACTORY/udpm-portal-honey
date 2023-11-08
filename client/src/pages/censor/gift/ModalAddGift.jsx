@@ -11,6 +11,11 @@ import { GiftDetail } from "../../../apis/censor/gift/gift-detail.api";
 
 const ModalThem = (props) => {
   const onFinishFailed = () => {
+    if (selectedImageUrl.length === 0) {
+      setErrorImage("Ảnh không được để trống");
+    } else {
+      setErrorImage("");
+    }
     message.error("Lỗi");
   };
 
@@ -68,13 +73,15 @@ const ModalThem = (props) => {
             Extension == "png" ||
             Extension == "bmp" ||
             Extension == "jpeg" ||
-            Extension == "jpg"
+            Extension == "jpg" ||
+            Extension == "webp"
           ) {
             setImage(selectedFile);
             var imageUrl = URL.createObjectURL(selectedFile);
             setSelectedImageUrl(imageUrl);
+            setErrorImage("");
           } else {
-            setErrorImage("Chỉ nhận ảnh có type GIF, PNG, JPG, JPEG và BMP. ");
+            setErrorImage("Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. ");
             setSelectedImageUrl("");
             setImage([]);
           }
@@ -185,6 +192,9 @@ const ModalThem = (props) => {
         let fromDate = null;
         let toDate = null;
         let semesterId = null;
+        if (selectedImageUrl.length === 0) {
+          return;
+        }
         if (quantityValue === 1) {
           quantity = parseInt(formValues.quantityLimit, 10);
         }
@@ -215,12 +225,6 @@ const ModalThem = (props) => {
         if (isNaN(limitSL) && limitQuantityValue === 1) {
           message.error("Vui lòng nhập số lượng giới hạn hợp lệ.");
           return;
-        }
-        if (selectedImageUrl.length === 0) {
-          setErrorImage("Ảnh không được để trống");
-          return;
-        } else {
-          setErrorImage("");
         }
         GiftAPI.create({
           ...formValues,
