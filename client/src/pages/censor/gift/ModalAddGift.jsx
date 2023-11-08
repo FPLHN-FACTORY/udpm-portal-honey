@@ -60,7 +60,7 @@ const ModalThem = (props) => {
       } else {
         const fileSize = selectedFile.size;
         const checkFileSize = Math.round(fileSize / 1024);
-        if (checkFileSize > 100) {
+        if (checkFileSize > 1) {
           setErrorImage("Ảnh không thể lớn hơn 1 mb");
           setSelectedImageUrl("");
           setImage([]);
