@@ -50,7 +50,7 @@ export default function ModalAddChestGift(props) {
   };
 
   const handleOk = () => {
-    if (selectedRowKeys > 0) {
+    if (selectedRowKeys.length > 0) {
       ChestGiftAPI.addGiftToChest({
         chestId: chest.id,
         listGift: selectedRowKeys,

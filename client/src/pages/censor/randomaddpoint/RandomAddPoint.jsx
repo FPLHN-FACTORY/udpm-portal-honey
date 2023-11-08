@@ -294,6 +294,7 @@ export default function RandomAddPoint() {
     setActiveTabKey(key);
     setDataPreview([]);
     setNameFile("");
+    setSelectedChest(null);
     setDataRandomPoint(initialDataRandomPoint);
     setDataRandomItem(initialDataRandomItem);
   };
