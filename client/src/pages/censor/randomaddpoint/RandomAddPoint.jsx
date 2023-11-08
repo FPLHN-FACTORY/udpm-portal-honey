@@ -201,6 +201,8 @@ export default function RandomAddPoint() {
       dataRandomPoint.minPoint === dataRandomPoint.maxPoint
     ) {
       errors.minPoint = "Số mật tối thiếu phải nhỏ hơn số mật tối đa";
+    } else if (!Number.isInteger(dataRandomPoint.minPoint)) {
+      errors.minPoint = "Số mật tối thiếu phải là số nguyên";
     }
 
     if (dataRandomPoint.maxPoint === null) {
@@ -212,6 +214,8 @@ export default function RandomAddPoint() {
       errors.maxPoint = "Số mật tối đa phải lớn hơn số mật tối thiểu";
     } else if (dataRandomPoint.maxPoint > 10000) {
       errors.maxPoint = "Số mật tối đa phải < 10000";
+    } else if (!Number.isInteger(dataRandomPoint.maxPoint)) {
+      errors.minPoint = "Số mật tối thiếu phải là số nguyên";
     }
 
     if (dataRandomPoint.listCategoryPoint.length < 1) {
