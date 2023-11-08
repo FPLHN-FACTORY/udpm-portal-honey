@@ -50,23 +50,27 @@ export default function ModalAddChestGift(props) {
   };
 
   const handleOk = () => {
-    ChestGiftAPI.addGiftToChest({
-      chestId: chest.id,
-      listGift: selectedRowKeys,
-    })
-      .then((response) => {
-        dispatch(AddChestGift(response.config.data));
-        fetchData();
-        handleFetchGiftByChest(selectedChest);
-        setSelectedRowKeys([]);
-        message.success("Thêm thành công.");
+    if (selectedRowKeys > 0) {
+      ChestGiftAPI.addGiftToChest({
+        chestId: chest.id,
+        listGift: selectedRowKeys,
       })
-      .catch((error) => {
-        handleFetchGiftByChest(selectedChest);
-        setSelectedRowKeys([]);
-        message.error("Thêm không thành công.");
-      });
-    setModalOpen(false);
+        .then((response) => {
+          dispatch(AddChestGift(response.config.data));
+          fetchData();
+          handleFetchGiftByChest(selectedChest);
+          setSelectedRowKeys([]);
+          message.success("Thêm thành công.");
+        })
+        .catch((error) => {
+          handleFetchGiftByChest(selectedChest);
+          setSelectedRowKeys([]);
+          message.error("Thêm không thành công.");
+        });
+      setModalOpen(false);
+    } else {
+      message.error("Bạn cần chọn vật phẩm để thêm");
+    }
   };
   const data = useAppSelector(GetGift);
   return (

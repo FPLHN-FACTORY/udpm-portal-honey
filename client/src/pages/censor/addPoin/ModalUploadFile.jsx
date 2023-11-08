@@ -37,15 +37,22 @@ export default function ModalUpLoadFile(props) {
       setLoading(true);
       RandomAddPointAPI.createPreviewImportExcel(formData)
         .then((response) => {
-          setDataPreview(response.data.data.lstAdminAddItemDTO);
-          dispatch(SetImport(response.data.data));
-          message.success("Import excel thành công");
+          if (response.data.data.total > 0) {
+            setDataPreview(response.data.data.lstAdminAddItemDTO);
+            dispatch(SetImport(response.data.data));
+            message.success("Import excel thành công");
+          } else {
+            message.error("Import excel thất bại");
+            setDataPreview([]);
+          }
         })
         .catch(() => {
           message.error("Import excel thất bại");
+          setDataPreview([]);
         });
     } else {
       message.error("Import excel thất bại");
+      setDataPreview([]);
     }
     setLoading(false);
     setNameFileUpload("");

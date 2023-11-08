@@ -328,7 +328,7 @@ export default function RandomAddPoint() {
   const items = [
     {
       key: "1",
-      label: "Ngẫu nhiên mật ong",
+      label: "Tặng ngẫu nhiên mật ong",
       children: (
         <div>
           <Space
@@ -521,7 +521,7 @@ export default function RandomAddPoint() {
     },
     {
       key: "2",
-      label: "Ngẫu nhiên vật phẩm",
+      label: "Tặng rương",
       children: (
         <div>
           <Space
@@ -532,7 +532,7 @@ export default function RandomAddPoint() {
             }}
           >
             <span style={{ fontSize: "18px" }}>
-              <b>Tặng ngẫu vật phẩm</b>
+              <b>Tặng rương</b>
             </span>
             <Space
               style={{
