@@ -1,142 +1,192 @@
-import { Tabs, Table } from "antd";
-import React, { memo, useEffect } from "react";
+import { Layout, Row, Avatar, Col } from "antd";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import "./index.css";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Content, Header } from "antd/es/layout/layout";
+import anh1 from "../../../assets/images/honor/background/background1.jpg"
+import anh2 from "../../../assets/images/honor/background/background2.jpg"
+import anh3 from "../../../assets/images/honor/background/background3.png"
+import anh4 from "../../../assets/images/honor/background/background4.png"
+import TopStudent from "./TopStudent";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
-const HonorsStudent = memo(() => {
-  const navigate = useNavigate();
+const HonorsStudent = (() => {
+// Danh sách các hình ảnh nền
+  const backgroundImages = [
+    `url(${anh1})`,
+    `url(${anh2})`,
+    `url(${anh3})`,
+    `url(${anh4})`,
+  ];
 
-  const hanlderClick = () => {
-    navigate("/student/top-student");
-  };
-  const data = [
-    {
-      stt: 1,
-      image:
-        "https://freenice.net/wp-content/uploads/2021/08/Anh-avatar-dep-facebook-zalo-cho-nu.jpg",
-      name: "An",
-      code: "ph12345",
-      rank: 1,
-      point: 1100,
-    },
-    {
-      stt: 2,
-      image:
-        "https://freenice.net/wp-content/uploads/2021/08/Anh-avatar-dep-facebook-zalo-cho-nu.jpg",
-      name: "An",
-      code: "ph12345",
-      rank: 2,
-      point: 1100,
-    },
-    {
-      stt: 3,
-      image:
-        "https://freenice.net/wp-content/uploads/2021/08/Anh-avatar-dep-facebook-zalo-cho-nu.jpg",
-      name: "An",
-      code: "ph12345",
-      rank: 3,
-      point: 1100,
-    },
-    {
-      stt: 4,
-      image:
-        "https://thuthuatnhanh.com/wp-content/uploads/2019/10/avatar-me-than-tuong-390x390.jpg",
-      name: "An",
-      code: "ph12345",
-      rank: 4,
-      point: 1100,
-    },
-    {
-      stt: 5,
-      image: "https://lienquan.garena.vn/kg/images/item-6.png",
-      name: "An",
-      code: "ph12345",
-      rank: 5,
-      point: 1100,
-    },
-    {
-      stt: 6,
-      image:
-        "https://thuthuatnhanh.com/wp-content/uploads/2019/10/avatar-me-than-tuong-390x390.jpg",
-      name: "An",
-      code: "ph12345",
-      rank: 6,
-      point: 1100,
-    },
-  ];
-  const columns = [
-    {
-      title: "STT",
-      dataIndex: "stt",
-      key: "stt",
-      className: "text-center",
-    },
-    {
-      title: "Ảnh",
-      dataIndex: "image",
-      key: "image",
-      className: "text-center",
-      render: (text, record) => (
-        <div
-          className={`
-        ${[1, 2, 3].includes(record.rank) ? "avarta__fire" : ""} `}
-        >
-          <img
-            src={record.image}
-            alt={record.name}
-            className={`transition ease-in-out delay-150 w-[40px] h-[40px] rounded-[50%] border-solid border-2 border-[#ffffff3d] hover:border-dashed hover:border-[#ffffff66] hover:border-2 hover:scale-[1.1]
-          ${
-            [1, 2, 3].includes(record.rank)
-              ? "absolute top-[25%] left-[8px]"
-              : ""
-          } `}
-          />
-        </div>
-      ),
-    },
-    {
-      title: "Tên SV",
-      dataIndex: "name",
-      key: "name",
-      className: "text-center",
-    },
-    {
-      title: "Mã SV",
-      dataIndex: "code",
-      key: "code",
-      className: "text-center",
-    },
-    {
-      title: "Hạng",
-      dataIndex: "rank",
-      key: "rank",
-      className: "text-center",
-    },
-    {
-      title: "Điểm",
-      dataIndex: "point",
-      key: "point",
-      className: "text-center",
-    },
-  ];
+  const [randomBackground, setRandomBackground] = useState('');
+
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * backgroundImages.length);
+    const randomBg = backgroundImages[randomIndex];
+
+    setRandomBackground(randomBg);
+    showTop3();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [isShow, setIsShow] = useState(true);
+
+  const closeTop3 = () => {
+    setIsShow(false);
+  }
+
+  const showTop3 = () => {
+    setIsShow(true);
+  }
 
   return (
-    <section className="honor__student p-[20px]">
-      <div className="text-center mb-[40px]">
-        <h2
-          className={`hover:text-[##ffac25] honor__title `}
-          onClick={() => {
-            hanlderClick();
-          }}
-        >
-          Vinh Danh Sinh Viên
-        </h2>
-      </div>
-      <div className="horor__table pl-[100px] pr-[100px]">
-        <Table dataSource={data} columns={columns} />;
-      </div>
-    </section>
+    <>
+      {isShow && <TopStudent isClose={closeTop3} isShow={showTop3}></TopStudent>}
+      <Layout className="honor__student p-[20px] bg-inherit" 
+      style={{ backgroundImage: randomBackground }}>
+        <Header className="mb-[40px] bg-inherit">
+          <h2
+            className={`text-center hover:text-[##ffac25] honor__title `}
+            onClick={() => {
+              showTop3();
+            }}
+          >
+            VINH DANH SINH VIÊN
+          {/* <div className="honor__title">
+            <span><img src="../../assets/img/logo.png" alt="" /></span>
+            <div>
+              <button className="close__honor" onClick={() => {window.history.back();}}>
+                Close
+              </button>
+            </div>
+          </div> */}
+          </h2>
+        </Header>
+        <Content className="horor__table pl-[100px] pr-[100px] min-h-screen">
+          <Row className="w-full">
+            <div className="live-leaderboard w-full">
+              <div className="live-leaderboard-table">
+                <div className="live-leaderboard-table-header">
+                  <div className="col-player-rank-header">STT</div>
+                  <div className="col-player-name-header">Tên Sv</div>
+                  <div className="col-player-name-header">Mã Sv</div>
+                  <div className="col-player-name-header">Thứ hạng</div>
+                  <div className="col-player-points-header">Điểm</div>
+                </div>
+                <div>
+                  
+                  <Link
+                    className="live-leaderboard-player-row">
+                    <div className="col-player-rank-header">
+                      <span className="col-player-text">1</span>
+                      <div className="sub-avatar-fire avatar-fire">
+                        <Avatar className="col-player-avatar"
+                          alt="avatar"
+                          size={50}
+                          src="https://thuthuatnhanh.com/wp-content/uploads/2019/10/avatar-me-than-tuong-390x390.jpg"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-player-name-header">
+                      <span className="col-player-text">Nguyễn Quốc Huy</span>
+                    </div>
+                    <div className="col-player-name-header">
+                      <span className="col-player-text">PH26782</span>
+                    </div>
+                    <div className="col-player-name-header">
+                      <span className="col-player-text">1</span>
+                    </div>
+                    <div className="col-player-points-header">
+                      <span className="col-player-text">13123</span>
+                    </div>
+                  </Link>
+                  
+                  <Link
+                    className="live-leaderboard-player-row">
+                    <div className="col-player-rank-header">
+                      <span className="col-player-text">1</span>
+                      <div className="sub-avatar-fire avatar-fire">
+                        <Avatar className="col-player-avatar"
+                          alt="avatar"
+                          size={50}
+                          src="https://thuthuatnhanh.com/wp-content/uploads/2019/10/avatar-me-than-tuong-390x390.jpg"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-player-name-header">
+                      <span className="col-player-text">Nguyễn Quốc Huy</span>
+                    </div>
+                    <div className="col-player-name-header">
+                      <span className="col-player-text">PH26782</span>
+                    </div>
+                    <div className="col-player-name-header">
+                      <span className="col-player-text">1</span>
+                    </div>
+                    <div className="col-player-points-header">
+                      <span className="col-player-text">13123</span>
+                    </div>
+                  </Link>
+                  
+                  <Link
+                    className="live-leaderboard-player-row">
+                    <div className="col-player-rank-header">
+                      <span className="col-player-text">1</span>
+                      <div className="sub-avatar-fire avatar-fire">
+                        <Avatar className="col-player-avatar"
+                          alt="avatar"
+                          size={50}
+                          src="https://thuthuatnhanh.com/wp-content/uploads/2019/10/avatar-me-than-tuong-390x390.jpg"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-player-name-header">
+                      <span className="col-player-text">Nguyễn Quốc Huy</span>
+                    </div>
+                    <div className="col-player-name-header">
+                      <span className="col-player-text">PH26782</span>
+                    </div>
+                    <div className="col-player-name-header">
+                      <span className="col-player-text">1</span>
+                    </div>
+                    <div className="col-player-points-header">
+                      <span className="col-player-text">13123</span>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </Row>
+          <div className="pagination__ui">
+            <Row>
+              <Col span={10} >
+                <button
+                  className="button button--left"
+                >
+                  <FontAwesomeIcon icon={faArrowLeft} />
+                  Previous page
+                </button>
+              </Col>
+              <Col span={4} className="d-flex align-items-center justify-content-center">
+                <h3 className="text-center rank__tilte text-white">
+                  1/100
+                </h3>
+              </Col>
+              <Col span={10} >
+                <button
+                  className="button button--right"
+                >
+                  Next page
+                  <FontAwesomeIcon icon={faArrowRight} />
+                </button>
+              </Col>
+            </Row>
+          </div>
+        </Content>
+      </Layout>
+    </>
   );
 });
 
