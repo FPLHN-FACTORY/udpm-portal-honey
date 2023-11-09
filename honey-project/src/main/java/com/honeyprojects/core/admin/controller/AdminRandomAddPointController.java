@@ -47,16 +47,19 @@ public class AdminRandomAddPointController {
         return new ResponseObject(adRandomAddPointService.importExcel(file));
     }
 
+    // màn cộng mật ong
     @PostMapping("/create/preview-data")
     public ResponseObject createPreviewImportPoint(@RequestParam("file") MultipartFile file) throws IOException {
         return new ResponseObject(adRandomAddPointService.previewDataImportExcel(file));
     }
 
-    @PostMapping("/export/preview-data")
+    // màn cộng mật ong
+    @PostMapping("/export/data")
     public ResponseObject previewDataExportExcel() {
         return new ResponseObject(adRandomAddPointService.previewDataExportExcel());
     }
 
+    // màn cộng mật ong
     @PostMapping("/create/import-data")
     public void createImportPoint(@RequestBody List<AdminAddItemDTO> lstAdminAddItemDTO) throws IOException {
         adRandomAddPointService.importData(lstAdminAddItemDTO);
@@ -79,7 +82,7 @@ public class AdminRandomAddPointController {
 
     @DeleteMapping("/delete/chest-gift")
     public ResponseObject deleteChestGift(@RequestParam("idChest") String idChest, @RequestParam("idGift") String idGift) {
-        return new ResponseObject(adRandomAddPointService.deleteChestGidt(idChest, idGift));
+        return new ResponseObject(adRandomAddPointService.deleteChestGift(idChest, idGift));
     }
 
     @GetMapping("/get-all-name-chest")

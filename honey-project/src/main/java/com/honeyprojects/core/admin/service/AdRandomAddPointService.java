@@ -21,10 +21,13 @@ public interface AdRandomAddPointService {
 
     Boolean exportExcel();
 
+    // màn cộng mật ong
     Boolean previewDataExportExcel();
 
+    // màn cộng mật ong
     AdminAddPointBO importExcel(MultipartFile file) throws IOException;
 
+    // màn cộng mật ong
     AdminAddItemBO previewDataImportExcel(MultipartFile file) throws IOException;
 
     void importData(List<AdminAddItemDTO> lstAddItemDTO) throws IOException;
@@ -35,7 +38,7 @@ public interface AdRandomAddPointService {
 
     AdminChestReponse getChestById(String idChest);
 
-    Boolean deleteChestGidt(String idChest, String idGift);
+    Boolean deleteChestGift(String idChest, String idGift);
 
     List<String> getAllNameChest();
 

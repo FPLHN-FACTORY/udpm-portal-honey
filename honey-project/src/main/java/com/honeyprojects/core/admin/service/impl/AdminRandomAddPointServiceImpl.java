@@ -8,6 +8,8 @@ import com.honeyprojects.core.admin.model.response.*;
 import com.honeyprojects.core.admin.repository.*;
 import com.honeyprojects.core.admin.service.AdRandomAddPointService;
 import com.honeyprojects.core.common.response.SimpleResponse;
+import com.honeyprojects.core.president.model.response.PresidentCategoryResponse;
+import com.honeyprojects.core.president.model.response.PresidentGiftResponse;
 import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
 import com.honeyprojects.entity.*;
 import com.honeyprojects.infrastructure.contant.Constants;
@@ -159,8 +161,8 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     continue;
                 } else {
                     Category category = categoryOptional.get();
-                    Notification notification = createNotification(honey.getStudentId());
-                    createNotificationDetailHoney(category, notification.getId(), randomPoint);
+//                    Notification notification = createNotification(honey.getStudentId());
+//                    createNotificationDetailHoney(category, notification.getId(), randomPoint);
                 }
             }
 
@@ -190,9 +192,9 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     if (optionalChestGift.isPresent()) {
                         ChestGift chestGift = optionalChestGift.get();
                         String idGift = chestGift.getGiftId();
-                        Gift gift = adGiftRepository.findById(idGift).get();
-                        Notification notification = createNotification(simple.getId());
-                        createNotificationDetailItem(gift, notification.getId(), 1);
+//                        Gift gift = adGiftRepository.findById(idGift).get();
+//                        Notification notification = createNotification(simple.getId());
+//                        createNotificationDetailItem(gift, notification.getId(), 1);
                     } else {
                         continue;
                     }
@@ -207,9 +209,9 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     if (optionalChestGift.isPresent()) {
                         ChestGift chestGift = optionalChestGift.get();
                         String idGift = chestGift.getGiftId();
-                        Gift gift = adGiftRepository.findById(idGift).get();
-                        Notification notification = createNotification(idStudent);
-                        createNotificationDetailItem(gift, notification.getId(), 1);
+//                        Gift gift = adGiftRepository.findById(idGift).get();
+//                        Notification notification = createNotification(idStudent);
+//                        createNotificationDetailItem(gift, notification.getId(), 1);
                     } else {
                         continue;
                     }
@@ -225,17 +227,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     public Boolean exportExcel() {
         // Lấy đường dẫn thư mục "Downloads" trong hệ thống
         String userHome = System.getProperty("user.home");
-        String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_random.xlsx";
-
-        File outputFile = new File(outputPath);
-
-        // Kiểm tra nếu tệp đã tồn tại, thì thêm số thứ tự vào tên tệp để tránh ghi đè tệp cũ
-        int count = 1;
-        while (outputFile.exists()) {
-            outputPath = userHome + File.separator + "Downloads" + File.separator + "file_random" + "(" + count + ")" + ".xlsx";
-            outputFile = new File(outputPath);
-            count++;
-        }
+        String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_random_honey" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
 
         // Tạo một workbook (bảng tính) mới cho tệp Excel
         Workbook workbook = new XSSFWorkbook();
@@ -283,11 +275,11 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     }
 
     @Override
-    public Boolean previewDataExportExcel() {
+    public Boolean previewDataExportExcel() {// màn cộng mật ong
         try {
             // Lấy đường dẫn thư mục "Downloads" trong hệ thống
             String userHome = System.getProperty("user.home");
-            String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_data" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
+            String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_add_item" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
 
             // Tạo một workbook (bảng tính) mới cho bản xem trước dữ liệu
             Workbook workbook = new XSSFWorkbook();
@@ -327,7 +319,8 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             // Dòng thứ 2 - cách viết đúng định dạng quà tặng
             Row formatGiftRow = sheet.createRow(1);
             Cell formatGiftCell = formatGiftRow.createCell(1);
-            formatGiftCell.setCellValue("Định dạng vật phẩm và mật ong: số-lượng tên-vật-phẩm, ..., số-lượng tên-vật-phẩm");
+            formatGiftCell.setCellValue("Định dạng vật phẩm và mật ong:  <số lượng> <tên vật phẩm>, ..., <số lượng> <loại mật ong> VD: " +
+                    "Cột vật phẩm: 10 Tinh hoa lam, ... - Cột mật ong: 10 GOLD, ...");
 
             // Tạo một kiểu cho các ô định dạng
             CellStyle formatStyle = workbook.createCellStyle();
@@ -422,7 +415,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
         // Đọc dữ liệu từ bảng tính và tạo danh sách các đối tượng AdminAddItemDTO
         List<AdminAddItemDTO> lstUserImportDTO = StreamSupport.stream(sheet.spliterator(), false)
-                .skip(4) // Bỏ qua 2 dòng đầu tiên
+                .skip(3) // Bỏ qua 4 dòng đầu tiên
                 .filter(row -> !ExcelUtils.checkNullLCells(row, 1))
                 .map(row -> processRow(row))
                 .collect(Collectors.toList());
@@ -460,36 +453,54 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 continue;
             } else {
                 // Nếu không có lỗi, tiến hành xử lý và lưu dữ liệu vào cơ sở dữ liệu, tạo thông báo
-
                 // Gọi API để lấy thông tin người dùng bằng địa chỉ email
-                SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(userDTO.getEmail());
+                String emailSimple = userDTO.getUserName() + "@fpt.edu.vn";
+                SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
                 Notification notification = createNotification(simpleResponse.getId());
                 if (userDTO.getLstGift() == null) {
                     continue;
                 } else {
                     // Xử lý vật phẩm (gift)
                     String[] partsGift = userDTO.getLstGift().split(", ");
+//                    for (String part : partsGift) {
+//                        String[] subParts = part.split(" ", 2);
+//                        if (subParts.length == 2) {
+//                            String numberItemStr = subParts[0];
+//                            String nameItem = subParts[1];
+//                            Integer numberItem = Integer.parseInt(numberItemStr);
+//
+//                            // Lấy id của vật phẩm từ cơ sở dữ liệu
+//                            String idGift = adRandomAddPointRepository.getIdGiftByName(nameItem);
+//                            if (idGift == null) {
+//                                continue;
+//                            } else {
+//                                Optional<Gift> giftOptional = adGiftRepository.findById(idGift);
+//                                if (giftOptional.isPresent()) {
+//                                    Gift gift = giftOptional.get();
+//                                    createNotificationDetailItem(gift, notification.getId(), numberItem);
+//                                } else {
+//                                    continue;
+//                                }
+//                            }
+//                        }
+//                    }
+                    Map<String, Integer> giftMap = new HashMap<>();
+
                     for (String part : partsGift) {
                         String[] subParts = part.split(" ", 2);
                         if (subParts.length == 2) {
                             String numberItemStr = subParts[0];
                             String nameItem = subParts[1];
                             Integer numberItem = Integer.parseInt(numberItemStr);
-
-                            // Lấy id của vật phẩm từ cơ sở dữ liệu
-                            String idGift = adRandomAddPointRepository.getIdGiftByName(nameItem);
-                            if (idGift == null) {
-                                continue;
-                            } else {
-                                Optional<Gift> giftOptional = adGiftRepository.findById(idGift);
-                                if (giftOptional.isPresent()) {
-                                    Gift gift = giftOptional.get();
-                                    createNotificationDetailItem(gift, notification.getId(), numberItem);
-                                } else {
-                                    continue;
-                                }
-                            }
+                            // Lưu trữ số lượng quà dựa trên tên quà
+                            giftMap.put(nameItem, numberItem);
                         }
+                    }
+                    List<AdminImportGiftResponse> gifts = adRandomAddPointRepository.getGiftsByNames(giftMap.keySet());
+
+                    for (AdminImportGiftResponse gift : gifts) {
+                        String nameItem = gift.getName();
+                        createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
                     }
                 }
 
@@ -498,21 +509,41 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     continue;
                 } else {
                     String[] partsHoney = userDTO.getLstHoney().split(", ");
+//                    for (String part : partsHoney) {
+//                        String[] subParts = part.split(" ", 2);
+//                        if (subParts.length == 2) {
+//                            String numberPoint = subParts[0].trim();
+//                            String categoryPoint = subParts[1].trim().replace("-", "");
+//
+//                            // Lấy thông tin về loại điểm mật ong từ cơ sở dữ liệu
+//                            AdminCategoryResponse categoryResponse = adRandomAddPointRepository.getCategoryByName(categoryPoint.trim());
+//                            Optional<Category> categoryOptional = adminCategoryRepository.findById(categoryResponse.getId());
+//                            if (categoryOptional.isPresent()) {
+//                                Category category = categoryOptional.get();
+//                                createNotificationDetailHoney(category, notification.getId(), Integer.parseInt(numberPoint));
+//                            } else {
+//                                continue;
+//                            }
+//                        }
+//                    }
+
+                    Map<String, Integer> honeyMap = new HashMap<>();
+
                     for (String part : partsHoney) {
                         String[] subParts = part.split(" ", 2);
                         if (subParts.length == 2) {
-                            String numberPoint = subParts[0].trim();
+                            String numberPointStr = subParts[0].trim();
                             String categoryPoint = subParts[1].trim().replace("-", "");
-
-                            // Lấy thông tin về loại điểm mật ong từ cơ sở dữ liệu
-                            AdminCategoryResponse categoryResponse = adRandomAddPointRepository.getCategoryByName(categoryPoint.trim());
-                            Optional<Category> categoryOptional = adminCategoryRepository.findById(categoryResponse.getId());
-                            if (categoryOptional.isPresent()) {
-                                Category category = categoryOptional.get();
-                                createNotificationDetailHoney(category, notification.getId(), Integer.parseInt(numberPoint));
-                            } else {
-                                continue;
-                            }
+                            Integer numberPoint = Integer.parseInt(numberPointStr);
+                            // Lưu trữ số lượng điểm mật ong dựa trên tên loại điểm
+                            honeyMap.put(categoryPoint, numberPoint);
+                        }
+                    }
+                    List<AdminImportCategoryResponse> categories = adRandomAddPointRepository.getCategoriesByNames(honeyMap.keySet());
+                    for (AdminImportCategoryResponse category : categories) {
+                        String categoryPoint = category.getName();
+                        if (honeyMap.containsKey(categoryPoint)) {
+                            createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
                         }
                     }
                 }
@@ -527,14 +558,14 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         return adNotificationRespository.save(notification);
     }
 
-    private NotificationDetail createNotificationDetailHoney(Category category, String idNotification, Integer quantity) {
+    private NotificationDetail createNotificationDetailHoney(AdminImportCategoryResponse category, String idNotification, Integer quantity) {
         String content = Constants.CONTENT_NOTIFICATION_SYSTEM + " Mật ong - " + category.getName() + " - Số lượng: " + quantity;
         AdminCreateNotificationDetailRandomRequest detailRandomRequest = new AdminCreateNotificationDetailRandomRequest(content, category.getId(), idNotification, NotificationDetailType.NOTIFICATION_DETAIL_HONEY, quantity);
         NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
         return studentNotificationDetailRepository.save(notificationDetail);
     }
 
-    private NotificationDetail createNotificationDetailItem(Gift gift, String idNotification, Integer quantity) {
+    private NotificationDetail createNotificationDetailItem(AdminImportGiftResponse gift, String idNotification, Integer quantity) {
         String content = Constants.CONTENT_NOTIFICATION_SYSTEM + "Vật phẩm - " + gift.getName() + " - số lượng: " + quantity;
         AdminCreateNotificationDetailRandomRequest detailRandomRequest = new AdminCreateNotificationDetailRandomRequest(content, gift.getId(), idNotification, NotificationDetailType.NOTIFICATION_DETAIL_GIFT, quantity);
         NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
@@ -586,66 +617,104 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         String userName = ExcelUtils.getCellString(row.getCell(0));
         String listGift = ExcelUtils.getCellString(row.getCell(1));
         String listHoney = ExcelUtils.getCellString(row.getCell(2));
-
         // Tạo địa chỉ email giả định từ tên đăng nhập
         String emailSimple = userName + "@fpt.edu.vn";
-
         // Gọi API để kiểm tra sự tồn tại của người dùng
         SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
-
         // Biến để kiểm tra sự tồn tại của lỗi
         boolean hasError = false;
-
         // Kiểm tra dữ liệu và xác định trạng thái lỗi (error)
         if (DataUtils.isNullObject(userName)) {
             userDTO.setImportMessage("Sinh viên không được để trống");
             userDTO.setError(true);
             hasError = true;
         }
-
         if (DataUtils.isNullObject(response)) {
             userDTO.setImportMessage("Sinh viên không tồn tại");
             userDTO.setError(true);
             hasError = true;
         }
-
+        if (DataUtils.isNullObject(listGift) && DataUtils.isNullObject(listHoney)) {
+            userDTO.setImportMessage("Không thể để trống vật phẩm và mật ong");
+            userDTO.setError(true);
+            hasError = true;
+        }
         String regexFormat = "^(\\d+\\s+[^-,]+)(,\\s*\\d+\\s+[^-,]+)*$";
-//                             "^(\\d+\\s+[^-]+)(,\\s*\\d+\\s+[^-]+)*$";
-
         int check = 0;
         if (DataUtils.isNullObject(listGift)) {
             check++;
         } else {
-//            String regexGift = "^\\d+\\s+[^,]*(,\\s*\\d+\\s+[^,]*)?$";
             if (!listGift.trim().matches(regexFormat)) {
                 userDTO.setImportMessage("Định dạng vật phẩm không hợp lệ");
                 userDTO.setError(true);
                 check++;
                 hasError = true;
             } else {
-                // Xử lý danh sách vật phẩm và kiểm tra
+//                // Xử lý danh sách vật phẩm và kiểm tra
+//                String[] partsGift = listGift.split(", ");
+//                for (String part : partsGift) {
+//                    String[] subParts = part.split(" ", 2);
+//                    if (subParts.length == 2) {
+//                        String numberItemStr = subParts[0];
+//                        String nameItem = subParts[1];
+//                        Integer numberItem = Integer.parseInt(numberItemStr);
+//                        String idGift = adRandomAddPointRepository.getIdGiftByName(nameItem);
+//                        if (numberItem < 1) {
+//                            userDTO.setImportMessage("Số lượng Vật phẩm không được nhỏ hơn 1");
+//                            userDTO.setError(true);
+//                            check++;
+//                            hasError = true;
+//                            break;
+//                        }
+//                        if (DataUtils.isNullObject(idGift)) {
+//                            userDTO.setImportMessage("Vật phẩm " + nameItem + " không tồn tại");
+//                            userDTO.setError(true);
+//                            check++;
+//                            hasError = true;
+//                            break;
+//                        }
+//                    }
+//                }
                 String[] partsGift = listGift.split(", ");
+                Map<String, Integer> giftMap = new HashMap<>();
+                Map<String, Integer> nameToNumberMap = new HashMap();
+
                 for (String part : partsGift) {
                     String[] subParts = part.split(" ", 2);
                     if (subParts.length == 2) {
                         String numberItemStr = subParts[0];
                         String nameItem = subParts[1];
                         Integer numberItem = Integer.parseInt(numberItemStr);
-                        String idGift = adRandomAddPointRepository.getIdGiftByName(nameItem);
+
                         if (numberItem < 1) {
-                            userDTO.setImportMessage("Số lượng Vật phẩm không được nhỏ hơn 1");
+                            userDTO.setImportMessage("Số lượng vật phẩm không được nhỏ hơn 1");
                             userDTO.setError(true);
                             check++;
                             hasError = true;
                             break;
                         }
-                        if (DataUtils.isNullObject(idGift)) {
-                            userDTO.setImportMessage("Vật phẩm " + nameItem + " không tồn tại");
-                            userDTO.setError(true);
-                            check++;
-                            hasError = true;
-                            break;
-                        }
+                        // Lưu trữ số lượng quà dựa trên tên quà
+                        giftMap.put(nameItem, numberItem);
+                        nameToNumberMap.put(nameItem, numberItem);
+                    }
+                }
+                List<AdminImportGiftResponse> gifts = adRandomAddPointRepository.getGiftsByNames(giftMap.keySet());
+                for (AdminImportGiftResponse gift : gifts) {
+                    String nameItem = gift.getName();
+                    if (!giftMap.containsKey(nameItem)) {
+                        userDTO.setImportMessage("Vật phẩm " + nameItem + " không tồn tại");
+                        userDTO.setError(true);
+                        check++;
+                        hasError = true;
+                        break;
+                    }
+                    Integer numberItem = nameToNumberMap.get(nameItem);
+                    if (numberItem < 1) {
+                        userDTO.setImportMessage("Số lượng vật phẩm không được nhỏ hơn 1");
+                        userDTO.setError(true);
+                        check++;
+                        hasError = true;
+                        break;
                     }
                 }
             }
@@ -654,52 +723,82 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         if (DataUtils.isNullObject(listHoney)) {
             check++;
         } else {
-//            String regexHoney = "^(\\d+\\s*-\\s*[a-zA-Z]+)(,\\s*\\d+\\s*-\\s*[a-zA-Z]+)*$";
             if (!listHoney.trim().matches(regexFormat)) {
                 userDTO.setImportMessage("Định dạng mật ong không hợp lệ");
                 userDTO.setError(true);
                 check++;
                 hasError = true;
             } else {
-                // Xử lý danh sách mật ong và kiểm tra
+//                // Xử lý danh sách mật ong và kiểm tra
+//                String[] partsHoney = listHoney.split(", ");
+//                for (String part : partsHoney) {
+//                    String[] subParts = part.split(" ", 2);
+//                    if (subParts.length == 2) {
+//                        String categoryPoint = subParts[1].trim().replace("-", "");
+//                        AdminCategoryResponse categoryResponse = adRandomAddPointRepository.getCategoryByName(categoryPoint.trim());
+//                        if (DataUtils.isNullObject(categoryResponse) || DataUtils.isNullObject(categoryResponse.getId())) {
+//                            userDTO.setImportMessage("Loại mật ong " + categoryPoint + " không tồn tại");
+//                            userDTO.setError(true);
+//                            check++;
+//                            hasError = true;
+//                            break;
+//                        }
+//                    }
+//                }
                 String[] partsHoney = listHoney.split(", ");
+                Map<String, Integer> honeyMap = new HashMap<>();
+                Map<String, Integer> nameToNumberMap = new HashMap();
                 for (String part : partsHoney) {
                     String[] subParts = part.split(" ", 2);
                     if (subParts.length == 2) {
-                        String numberPoint = subParts[0].trim();
+                        String numberPointStr = subParts[0].trim();
                         String categoryPoint = subParts[1].trim().replace("-", "");
-                        AdminCategoryResponse categoryResponse = adRandomAddPointRepository.getCategoryByName(categoryPoint.trim());
-                        if (DataUtils.isNullObject(categoryResponse) || DataUtils.isNullObject(categoryResponse.getId())) {
-                            userDTO.setImportMessage("Loại mật ong " + categoryPoint + " không tồn tại");
+                        Integer numberPoint = Integer.parseInt(numberPointStr);
+                        if (numberPoint < 1) {
+                            userDTO.setImportMessage("Số lượng mật ong không được nhỏ hơn 1");
                             userDTO.setError(true);
                             check++;
                             hasError = true;
                             break;
                         }
+                        // Lưu trữ số lượng mật ong dựa trên loại mật ong
+                        honeyMap.put(categoryPoint, numberPoint);
+                        nameToNumberMap.put(categoryPoint, numberPoint);
                     }
                 }
+                List<AdminImportCategoryResponse> categories = adRandomAddPointRepository.getCategoriesByNames(honeyMap.keySet());
+                for (AdminImportCategoryResponse category : categories) {
+                    String categoryPoint = category.getName();
+                    if (!honeyMap.containsKey(categoryPoint)) {
+                        userDTO.setImportMessage("Loại mật ong " + categoryPoint + " không tồn tại");
+                        userDTO.setError(true);
+                        check++;
+                        hasError = true;
+                        break;
+                    }
+                    Integer numberPoint = nameToNumberMap.get(categoryPoint);
+                    if (numberPoint < 1) {
+                        userDTO.setImportMessage("Số lượng mật ong không được nhỏ hơn 1");
+                        userDTO.setError(true);
+                        check++;
+                        hasError = true;
+                        break;
+                    }
+                }
+
             }
         }
-
-        if (check > 1) {
-            userDTO.setImportMessage("Vật phẩm và mật ong không được để trống");
-            userDTO.setError(true);
-            hasError = true;
-        }
-
         // Xác định trạng thái thành công hoặc lỗi và cung cấp thông báo
         if (!hasError) {
             userDTO.setImportMessage("SUCCESS");
             userDTO.setError(false);
         }
-
         // Đặt các thuộc tính của đối tượng AdminAddItemDTO
         userDTO.setId(response != null ? response.getId() : null);
         userDTO.setUserName(userName != null ? userName : null);
         userDTO.setEmail(response != null ? response.getEmail() : null);
         userDTO.setLstGift(listGift != null ? listGift : null);
         userDTO.setLstHoney(listHoney != null ? listHoney : null);
-
         return userDTO;
     }
 
@@ -719,7 +818,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     }
 
     @Override
-    public Boolean deleteChestGidt(String idChest, String idGift) {
+    public Boolean deleteChestGift(String idChest, String idGift) {
         String chestGift = adRandomAddPointRepository.getOptionalChestGift(idChest, idGift);
 
         if (chestGift != null) {

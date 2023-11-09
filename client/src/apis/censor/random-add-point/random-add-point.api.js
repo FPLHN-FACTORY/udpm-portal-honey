@@ -49,7 +49,7 @@ export class RandomAddPointAPI {
   static previewDataExportExcel = () => {
     return request({
       method: "POST",
-      url: `/${this.COMPONENT_NAME}/export/preview-data`,
+      url: `/${this.COMPONENT_NAME}/export/data`,
     });
   };
 
