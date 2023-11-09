@@ -3,6 +3,7 @@ package com.honeyprojects.core.admin.repository;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminChestGiftResponse;
 import com.honeyprojects.core.admin.model.response.AdminChestReponse;
+import com.honeyprojects.core.president.model.response.PresidentGiftResponse;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.repository.HoneyRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface AdRandomAddPointRepository extends HoneyRepository {
@@ -89,4 +91,11 @@ public interface AdRandomAddPointRepository extends HoneyRepository {
             where g.name like :#{#name} and g.status in (0, 1)
             """,nativeQuery = true)
     String getIdGiftByName(String name);
+
+    @Query(value = """
+            SELECT g.id, g.name
+            from gift g
+            where g.name in (:names)  and g.status in (0, 1)
+            """, nativeQuery = true)
+    List<PresidentGiftResponse> getGiftsByNames(Set<String> names);
 }

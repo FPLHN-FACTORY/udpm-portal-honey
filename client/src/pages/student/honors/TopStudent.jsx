@@ -1,205 +1,260 @@
-import React, { memo, useEffect, useRef, useState } from "react";
-import Confetti from "react-confetti";
-import "./index.css";
-import { useNavigate } from "react-router-dom";
-import { Card, Col, Row } from "antd";
+import React, { useEffect, useState } from "react";
+import "./topStudent.css";
+import { Avatar, Col, Layout, Row } from "antd";
+import huonChuongVang from "../../../assets/images/honor/background/huong-chuong-vang.png"
+import huonChuongBac from "../../../assets/images/honor/background/huong-chuong-bac.png"
+import huonChuongDong from "../../../assets/images/honor/background/huong-chuong-dong.png"
+import Fireworks from "@fireworks-js/react";
 
-const TopStudent = memo(() => {
-  const confettiRef = useRef();
-  const navigate = useNavigate();
-  const [imageSrcGolden, setImageSrcGolden] = useState(
-    "https://img.pikbest.com/origin/09/08/06/02WpIkbEsTDcS.png!sw800"
-  );
-  const [imageSrcSilver, setImageSrcSilver] = useState(
-    "https://png.pngtree.com/png-clipart/20231004/original/pngtree-silver-cupaward-best-picture-image_13190444.png"
-  );
-  const [imageSrcCopper, setImageSrcCopper] = useState(
-    "https://png.pngtree.com/png-clipart/20230621/original/pngtree-golden-trophy-design-vector-png-image_9194654.png"
-  );
-  const [showTitle, setShowTitle] = useState(false);
-  const [showInfo, setShowInfo] = useState(false);
-
-  const [showTitleSilver, setShowTitleSlive] = useState(false);
-  const [showInfoSliver, setShowInfoSlive] = useState(false);
-
-  const [showTitleGolden, setShowTitleGolden] = useState(false);
-  const [showInfoGolden, setShowInfoGolden] = useState(false);
-
-  const confettiOptions = {
-    width: 1100,
-    height: 450,
-    recycle: false,
-  };
-  const [countdown, setCountdown] = useState(20);
+const TopStudent = ({ isClose, isShow }) => {
 
   const closeTop3 = () => {
-    navigate("/student/honor-student");
-    console.log("Closing top 3");
+    const showTop3 = document.querySelector('.show__top3');
+    showTop3.style.transform = `translateY(-${window.innerHeight}px)`;
+  
+    const top3 = document.getElementById('top3');
+    top3.classList.remove('active');
+  
+    const top2 = document.getElementById('top2');
+    top2.classList.remove('active');
+  
+    const top1 = document.getElementById('top1');
+    top1.classList.remove('active');
+  
+    const showTop3Element = document.getElementById('show__top3');
+    showTop3Element.classList.remove('active');
+    setTimeout(() => {
+      isClose();
+    }, 3000);
   };
 
   useEffect(() => {
-    const countdownInterval = setInterval(() => {
-      setCountdown((prevCountdown) => prevCountdown - 1);
-      if (countdown === 0) {
+    
+    const showTop3Element = document.getElementById('show__top3');
+    showTop3Element.classList.add('active');
+    const timeout1 = setTimeout(() => {
+      document.getElementById("top3").classList.add("active");
+    }, 4000);
+
+    const timeout2 = setTimeout(() => {
+      document.getElementById("top2").classList.add("active");
+    }, 5000);
+
+    const timeout3 = setTimeout(() => {
+      document.getElementById("top1").classList.add("active");
+    }, 6000);
+
+    return () => {
+      clearTimeout(timeout1);
+      clearTimeout(timeout2);
+      clearTimeout(timeout3);
+    };
+  }, []);
+  const [time, setTime] = useState(10);
+
+  // Sử dụng hook useEffect để cập nhật thời gian mỗi giây
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (time > 0) {
+        setTime(time - 1);
+      } else {
+        console.log("aaaa");
+        clearInterval(timer);
         closeTop3();
-      }
-      if (countdown === 19) {
-        setImageSrcCopper("https://i.pinimg.com/236x/12/37/b3/1237b30268db9ee0c9cbe3a79b1ff8fa.jpg");
-      }
-      if (countdown === 17) {
-        setImageSrcSilver("https://freenice.net/wp-content/uploads/2021/08/Anh-avatar-dep-facebook-zalo-cho-nu.jpg");
-      }
-      if (countdown === 15) {
-        setImageSrcGolden("https://thuthuatnhanh.com/wp-content/uploads/2019/10/avatar-me-than-tuong-390x390.jpg");
-      }
-
-      if (countdown === 19) {
-        const titleTimeout = setTimeout(() => {
-          setShowTitle(true);
-        }, 1000);
-        const infoTimeout = setTimeout(() => {
-          setShowInfo(true);
-        }, 1000);
-
-        return () => {
-          clearTimeout(titleTimeout);
-          clearTimeout(infoTimeout);
-        };
-      }
-
-      if (countdown === 17) {
-        const titleTimeout = setTimeout(() => {
-          setShowTitleSlive(true);
-        }, 1000);
-        const infoTimeout = setTimeout(() => {
-          setShowInfoSlive(true);
-        }, 1000);
-
-        return () => {
-          clearTimeout(titleTimeout);
-          clearTimeout(infoTimeout);
-        };
-      }
-
-      if (countdown === 15) {
-        const titleTimeout = setTimeout(() => {
-          setShowTitleGolden(true);
-        }, 1000);
-        const infoTimeout = setTimeout(() => {
-          setShowInfoGolden(true);
-        }, 1000);
-
-        return () => {
-          clearTimeout(titleTimeout);
-          clearTimeout(infoTimeout);
-        };
       }
     }, 1000);
 
+    // Hủy bỏ interval khi component bị unmounted
     return () => {
-      clearInterval(countdownInterval);
-    };
-  }, [countdown]);
+      clearInterval(timer);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [time]);
+
+  const fireworksOptions = {
+    autoresize: true,
+    opacity: 0.5,
+    acceleration: 1.05,
+    friction: 0.97,
+    gravity: 1.5,
+    particles: 50,
+    traceLength: 3,
+    traceSpeed: 10,
+    explosion: 5,
+    intensity: 30,
+    flickering: 50,
+    lineStyle: 'round',
+    hue: {
+      min: 0,
+      max: 360
+    },
+    delay: {
+      min: 30,
+      max: 60
+    },
+    rocketsPoint: {
+      min: 50,
+      max: 50
+    },
+    lineWidth: {
+      explosion: {
+        min: 1,
+        max: 3
+      },
+      trace: {
+        min: 1,
+        max: 2
+      }
+    },
+    brightness: {
+      min: 50,
+      max: 80
+    },
+    decay: {
+      min: 0.015,
+      max: 0.03
+    },
+    mouse: {
+      click: false,
+      move: false,
+      max: 1
+    }
+  };
 
   return (
-    <section className="top__student">
-      <Confetti {...confettiOptions} ref={confettiRef} />
-      <div className="absolute flex justify-between mb-4 w-[100%] h-[20%] p-[20px]">
-        <div className="top__student__logo">
-          <img alt="" src="https://ap.poly.edu.vn/images/logo.png" />
-        </div>
+    <Layout id="show__top3" style={{ backgroundColor: "#222" }}>
+      <Layout className="z-30 show__top3 fixed top-0 w-full h-full showTop3"
+        style={{backgroundColor: "#222"}}
+      >
+    <Fireworks options={fireworksOptions} className="h-screen z-40 fixed w-full" />
+        
+    <div className="honor z-50">
+      <div className="honor__title d-flex justify-content-between mb-4 mx-5">
+        <span><img src="../../assets/img/logo.png" alt="" /></span>
         <div>
-          <button
-            className="close__honor"
-            onClick={() => {
-              closeTop3();
-            }}
-          >
-            {" "}
-            Close {countdown}s
+          <button className="close__honor" onClick={closeTop3}>
+            Close {time}s
           </button>
         </div>
       </div>
-      <div className="flex items-center justify-center absolute w-[75%] h-[70%] mt-[50px] pl-[300px]">
-        <Col span={8}>
-          <div class="item__top p-[10px]">
-            {showTitleSilver && (
-              <div class="item__top__tilte flex text-[#fff]">
-                <h1>2</h1>
-                <span>nd</span>
+      <Row
+        className="honor__body row justify-center items-center active"
+      >
+        <Col span={8} id="top2" className="honor__item honor__item--top3">
+          <div className="content">
+            <div className="back">
+              <div className="back-content delay--03">
+                <img
+                  className="w-100"
+                  src={huonChuongBac}
+                  alt=""
+                />
+                <div className="back-content__title">
+                  <h1>II</h1>
+                </div>
               </div>
-            )}
-            <div class="item__top__image pl-[10px]">
-              <img
-                src={imageSrcSilver}
-                alt=""
-                className="w-[100px] h-[100px] rounded-[50%]"
-              />
             </div>
-            {showInfoSliver && (
-              <div class="item__top__info text-[#fff] text-center">
-                <p className="text-[16px]">Nguyen Van An</p>
-                <p className="text-[16px]">PH77777</p>
+            <div className="front">
+              <div className="front-content align-items-start">
+                <div className="front-content__tilte">
+                  <h1 className="text-4xl">2</h1>
+                  <span>nd</span>
+                </div>
+                <div className="front-content__img">
+                  <Avatar className="w-full h-auto"
+                    src="https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg"
+                    alt=""
+                  />
+                </div>
+                <div className="front-content__infor d-flex flex-column">
+                  <span>Nguyễn Quốc Huy</span>
+                  <span>PH26782</span>
+                </div>
               </div>
-            )}
+            </div>
           </div>
         </Col>
-        <Col span={8}>
-          <div class="item__top p-[10px]">
-            {showTitleGolden && (
-              <div class="item__top__tilte flex text-[#fff]">
-                <h1>1</h1>
-                <span>st</span>
+        <Col span={8} id="top1" className="honor__item honor__item--top2">
+          <div className="content">
+            <div className="back">
+              <div className="back-content delay--02">
+                <img
+                  className="w-100"
+                  src={huonChuongVang}
+                  alt=""
+                />
+                <div className="back-content__title">
+                  <h1>I</h1>
+                </div>
               </div>
-            )}
-            <div class="item__top__image pl-[10px]">
-              <img
-                src={imageSrcGolden}
-                alt=""
-                className="w-[100px] h-[100px] rounded-[50%]"
-              />
             </div>
-            {showInfoGolden && (
-              <div class="item__top__info text-[#fff] text-center">
-                <p className="text-[16px]">Nguyen Van An</p>
-                <p className="text-[16px]">PH77777</p>
+            <div className="front">
+              <div className="front-content align-items-start">
+                <div className="front-content__tilte">
+                  <h1 className="text-4xl">1</h1>
+                  <span>nd</span>
+                </div>
+                <div className="front-content__img">
+                  <Avatar className="w-full h-auto"
+                    src="https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-male-avatar-simple-cartoon-design-png-image_1934458.jpg"
+                    alt=""
+                  />
+                </div>
+                <div className="front-content__infor d-flex flex-column">
+                  <span>Nguyễn Quốc Huy</span>
+                  <span>PH26782</span>
+                </div>
               </div>
-            )}
+            </div>
           </div>
         </Col>
-        <Col span={8}>
-          <div class="item__top p-[10px]">
-            {showTitle && (
-              <div class="item__top__tilte flex text-[#fff]">
-                <h1>3</h1>
-                <span>rd</span>
+        <Col span={8} id="top3" className="honor__item honor__item--top3">
+          <div className="content">
+            <div className="back">
+              <div className="back-content delay--05">
+                <img
+                  className="w-100"
+                  src={huonChuongDong}
+                  alt=""
+                />
+                <div className="back-content__title">
+                  <h1>III</h1>
+                </div>
               </div>
-            )}
-            <div class="item__top__image pl-[10px]">
-              <img
-                src={imageSrcCopper}
-                alt=""
-                className="w-[100px] h-[100px] rounded-[50%]"
-              />
             </div>
-            {showInfo && (
-              <div class="item__top__info text-[#fff] text-center">
-                <p className="text-[16px]">Nguyen Van An</p>
-                <p className="text-[16px]">PH77777</p>
+            <div className="front">
+              <div className="front-content align-items-start">
+                <div className="front-content__tilte">
+                  <h1 className="text-4xl">3</h1>
+                  <span>nd</span>
+                </div>
+                <div className="front-content__img">
+                  <Avatar className="w-full h-auto"
+                    src="https://png.pngtree.com/png-vector/20220817/ourmid/pngtree-cartoon-man-avatar-with-beard-vector-ilustration-png-image_6110777.png"
+                    alt=""
+                  />
+                </div>
+                <div className="front-content__infor d-flex flex-column">
+                  <span>Nguyễn Quốc Huy</span>
+                  <span>PH26782</span>
+                </div>
               </div>
-            )}
+            </div>
           </div>
         </Col>
-      </div>
-      <div className="flex justify-between absolute w-[100%] h-[10%] mt-[10px] left-0 bottom-0">
-        <div class="camera camera__right" title="Nhấn để chụp ảnh">
-          <div class="light__shadow"></div>
+      </Row>
+    </div>
+
+        <div className="flex justify-between absolute w-[100%] h-[10%] mt-[10px] left-0 bottom-0  z-50">
+          <div className="camera camera__right" title="Nhấn để chụp ảnh">
+            <div className="light__shadow"></div>
+          </div>
+          <div className="camera camera__left" title="Nhấn để chụp ảnh">
+            <div className="light__shadow"></div>
+          </div>
         </div>
-        <div class="camera camera__left" title="Nhấn để chụp ảnh">
-          <div class="light__shadow"></div>
-        </div>
-      </div>
-    </section>
+      </Layout>
+    </Layout>
   );
-});
+};
 export default TopStudent;

@@ -441,9 +441,9 @@ function App() {
               path="/student/honor-student"
               element={
                 <AuthGuard>
-                  <DashboardAuthUser>
+                  {/* <DashboardAuthUser> */}
                     <HonorsStudent />
-                  </DashboardAuthUser>
+                  {/* </DashboardAuthUser> */}
                 </AuthGuard>
               }
             />
@@ -451,9 +451,9 @@ function App() {
               path="/student/top-student"
               element={
                 <AuthGuard>
-                  <DashboardAuthUser>
+                  {/* <DashboardAuthUser> */}
                     <TopStudent />
-                  </DashboardAuthUser>
+                  {/* </DashboardAuthUser> */}
                 </AuthGuard>
               }
             />
