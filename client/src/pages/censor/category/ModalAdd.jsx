@@ -11,7 +11,7 @@ const ModalThem = (props) => {
   const [listCategory, setListCategory] = useState([]);
   const [image, setImage] = useState([]);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
-  const [errorImage, setErrorImage] = useState([]);
+  const [errorImage, setErrorImage] = useState("");
   const [categoryName, setCategoryName] = useState("");
   const [errorCategoryName, setErrorCategoryName] = useState("");
 
@@ -33,9 +33,9 @@ const ModalThem = (props) => {
         setImage([]);
       } else {
         const fileSize = selectedFile.size;
-        const checkFileSize = Math.round(fileSize / 1024);
+        const checkFileSize = Math.round((fileSize / 1024) / 1024);
         if (checkFileSize > 1) {
-          setErrorImage("Ảnh không thể lớn hơn 1 mb");
+          setErrorImage("Ảnh không thể lớn hơn 1 MB");
           setSelectedImageUrl("");
           setImage([]);
         } else {

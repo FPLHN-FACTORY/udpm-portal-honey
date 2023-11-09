@@ -11,6 +11,7 @@ const ModalDetail = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
   const [image, setImage] = useState(null);
+  const [errorImage, setErrorImage] = useState("");
 
   useEffect(() => {
     if (category.image) {
@@ -35,13 +36,43 @@ const ModalDetail = (props) => {
   form.setFieldsValue(category);
 
   const handleFileInputChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setImage(selectedFile);
+    var selectedFile = event.target.files[0];
     if (selectedFile) {
-      const imageUrl = URL.createObjectURL(selectedFile);
-      setSelectedImageUrl(imageUrl);
-    } else {
-      setSelectedImageUrl("");
+      var FileUploadName = selectedFile.name;
+      if (FileUploadName == "") {
+        setErrorImage("Bạn chưa chọn ảnh");
+        setSelectedImageUrl("");
+        setImage([]);
+      } else {
+        const fileSize = selectedFile.size;
+        const checkFileSize = Math.round((fileSize / 1024) / 1024);
+        if (checkFileSize > 1) {
+          setErrorImage("Ảnh không thể lớn hơn 1 MB");
+          setSelectedImageUrl("");
+          setImage([]);
+        } else {
+          var Extension = FileUploadName.substring(
+            FileUploadName.lastIndexOf(".") + 1
+          ).toLowerCase();
+          if (
+            Extension == "gif" ||
+            Extension == "png" ||
+            Extension == "bmp" ||
+            Extension == "jpeg" ||
+            Extension == "jpg" ||
+            Extension == "webp"
+          ) {
+            setImage(selectedFile);
+            var imageUrl = URL.createObjectURL(selectedFile);
+            setSelectedImageUrl(imageUrl);
+            setErrorImage("");
+          } else {
+            setErrorImage("Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. ");
+            setSelectedImageUrl("");
+            setImage([]);
+          }
+        }
+      }
     }
   };
   const dispatch = useAppDispatch();
@@ -51,6 +82,16 @@ const ModalDetail = (props) => {
     form
       .validateFields()
       .then((formValues) => {
+        let check = 0;
+        if (selectedImageUrl.length === 0) {
+          setErrorImage("Ảnh không được để trống");
+          check++;
+        } else {
+          setErrorImage("");
+        }
+        if(check>0){
+          return;
+        }
         CategoryAPI.update({ ...formValues, image: image }, category.id)
           .then((response) => {
             dispatch(UpdateCategory(response.data.data));

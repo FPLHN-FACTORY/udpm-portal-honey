@@ -91,7 +91,7 @@ export default function IndexGift() {
       dataIndex: "stt",
       key: "stt",
       align: "center",
-      render: (text, record, index) => index + 1,
+      render: (text, record, index) => ((current - 1) * 4 + (index + 1)),
     },
     {
       title: "Ảnh",

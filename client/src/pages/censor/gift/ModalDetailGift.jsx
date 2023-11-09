@@ -11,6 +11,11 @@ import "./index.css";
 
 const ModalDetailGift = (props) => {
   const onFinishFailed = () => {
+    if (selectedImageUrl.length === 0) {
+      setErrorImage("Ảnh không được để trống");
+    } else {
+      setErrorImage("");
+    }
     message.error("Error");
   };
 
@@ -25,7 +30,9 @@ const ModalDetailGift = (props) => {
   const [listCategory, setListCategory] = useState([]);
   const [listSemester, setListSemester] = useState([]);
   const [timeType, setTimeType] = useState(null);
-
+  const [errorImage, setErrorImage] = useState("");
+  let [selectType, setSelectType] = useState();
+  
   const [categoryQuantities, setCategoryQuantities] = useState({});
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [fieldErrors, setFieldErrors] = useState({});
@@ -73,6 +80,24 @@ const ModalDetailGift = (props) => {
       form.setFieldsValue({ limitSoLuong: 1 });
     }
   }, [gift]);
+  
+  const handleTypeChange = (selectedType) => {
+    setSelectType(selectedType);
+    if (selectedType === 0) {
+      form.setFieldsValue({
+        status: 0,
+      });
+    } else if (selectedType === 1) {
+      form.setFieldsValue({
+        limitQuantity: 0,
+      });
+    } else if (selectedType === 2) {
+      form.setFieldsValue({
+        status: 0,
+        limitQuantity: 0,
+      });
+    }
+  };
 
   const validateCategories = (value) => {
     if (!value || value.length === 0) {
@@ -80,6 +105,13 @@ const ModalDetailGift = (props) => {
     }
     return null;
   };
+  const changeSelectType = (value) =>{
+    if(value){
+      
+      initialValues.gift.type = value;
+    }
+  }
+
   const handleCategoryChange = (selectedValues) => {
     setSelectedCategories(selectedValues);
 
@@ -108,14 +140,44 @@ const ModalDetailGift = (props) => {
     setCategoryQuantities(newQuantities);
   };
   const handleFileInputChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setImage(selectedFile);
-
+    var selectedFile = event.target.files[0];
     if (selectedFile) {
-      const imageUrl = URL.createObjectURL(selectedFile);
-      setSelectedImageUrl(imageUrl);
-    } else {
-      setSelectedImageUrl("");
+      var FileUploadName = selectedFile.name;
+      if (FileUploadName == "") {
+        setErrorImage("Bạn chưa chọn ảnh");
+        setSelectedImageUrl("");
+        setImage([]);
+      } else {
+        const fileSize = selectedFile.size;
+        const checkFileSize = Math.round((fileSize / 1024) / 1024);
+        console.log("🚀 ~ file: ModalAddGift.jsx:65 ~ handleFileInputChange ~ checkFileSize:", checkFileSize)
+        if (checkFileSize > 1) {
+          setErrorImage("Ảnh không thể lớn hơn 1 MB");
+          setSelectedImageUrl("");
+          setImage([]);
+        } else {
+          var Extension = FileUploadName.substring(
+            FileUploadName.lastIndexOf(".") + 1
+          ).toLowerCase();
+          if (
+            Extension == "gif" ||
+            Extension == "png" ||
+            Extension == "bmp" ||
+            Extension == "jpeg" ||
+            Extension == "jpg" ||
+            Extension == "webp"
+          ) {
+            setImage(selectedFile);
+            var imageUrl = URL.createObjectURL(selectedFile);
+            setSelectedImageUrl(imageUrl);
+            setErrorImage("");
+          } else {
+            setErrorImage("Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. ");
+            setSelectedImageUrl("");
+            setImage([]);
+          }
+        }
+      }
     }
   };
 
@@ -169,6 +231,9 @@ const ModalDetailGift = (props) => {
       .validateFields()
       .then((formValues) => {
         let quantity;
+        if (selectedImageUrl.length === 0) {
+          return;
+        }
         if (isLimitedQuantity) {
           quantity = parseInt(formValues.quantityLimit);
         } else {
@@ -388,7 +453,7 @@ const ModalDetailGift = (props) => {
           accept="image/*"
           onChange={(event) => handleFileInputChange(event)}
         />
-
+        {errorImage && <div style={{ color: "red", paddingLeft: "100px" }}>{errorImage}</div>}
         <Form.Item label="Code" name="code">
           <Input disabled />
         </Form.Item>
@@ -456,13 +521,12 @@ const ModalDetailGift = (props) => {
             },
           ]}
         >
-          <Select placeholder="Chọn loại">
+          <Select placeholder="Chọn loại" onChange={handleTypeChange}>
             <Option value={0}>Quà tặng</Option>
             <Option value={1}>Vật phẩm nâng cấp</Option>
             <Option value={2}>Dụng cụ</Option>
           </Select>
         </Form.Item>
-
         <div className="select-section">
           <span className="select-asterisk">*</span>
           <span className="select-label">Chọn cấp bậc : </span>
@@ -629,13 +693,15 @@ const ModalDetailGift = (props) => {
               message: "Vui lòng chọn tùy chọn giao dịch",
             },
           ]}
+          style={{
+            display: selectType === 1 ? "block" : "none",
+          }}
         >
           <Radio.Group>
             <Radio value={0}>Cho phép</Radio>
             <Radio value={1}>Không cho phép</Radio>
           </Radio.Group>
         </Form.Item>
-
         <Form.Item
           label="Cộng dồn"
           name="limitQuantity"

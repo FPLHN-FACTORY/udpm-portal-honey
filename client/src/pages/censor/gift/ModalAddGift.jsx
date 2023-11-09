@@ -22,7 +22,7 @@ const ModalThem = (props) => {
   const { modalOpen, setModalOpen, gift, onSave, fetchData } = props;
   const [form] = Form.useForm();
   const { Option } = Select;
-  const [errorImage, setErrorImage] = useState([]);
+  const [errorImage, setErrorImage] = useState("");
   const [image, setImage] = useState([]);
   const [quantityValue, setQuantityValue] = useState(0);
   const [limitQuantityValue, setLimitQuantityValue] = useState(0);
@@ -59,7 +59,8 @@ const ModalThem = (props) => {
         setImage([]);
       } else {
         const fileSize = selectedFile.size;
-        const checkFileSize = Math.round(fileSize / 1024);
+        const checkFileSize = Math.round((fileSize / 1024) / 1024);
+        console.log("🚀 ~ file: ModalAddGift.jsx:65 ~ handleFileInputChange ~ checkFileSize:", checkFileSize)
         if (checkFileSize > 1) {
           setErrorImage("Ảnh không thể lớn hơn 1 MB");
           setSelectedImageUrl("");
@@ -339,7 +340,7 @@ const ModalThem = (props) => {
           accept="image/*"
           onChange={(event) => handleFileInputChange(event)}
         />
-        {errorImage && <div style={{ color: "red" }}>{errorImage}</div>}
+        {errorImage && <div style={{ color: "red", paddingLeft: "100px" }}>{errorImage}</div>}
         <Form.Item
           label="Tên"
           name="name"
@@ -564,6 +565,9 @@ const ModalThem = (props) => {
               message: "Vui lòng chọn tùy chọn giao dịch",
             },
           ]}
+          style={{
+            display: selectType === 1 ? "block" : "none",
+          }}
         >
           <Radio.Group>
             <Radio value={0}>Cho phép</Radio>
