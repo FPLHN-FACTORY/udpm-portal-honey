@@ -324,7 +324,7 @@ export default function Index() {
                     fontSize: "13px",
                   }}
                 >
-                  Có
+                  Được giao dịch
                 </Option>
                 <Option
                   value="1"
@@ -332,7 +332,7 @@ export default function Index() {
                     fontSize: "13px",
                   }}
                 >
-                  Không
+                  Không giao dịch
                 </Option>
               </Select>
             </Col>

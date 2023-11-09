@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   Form,
+  Input,
   Pagination,
   Select,
   Space,
@@ -14,7 +15,11 @@ import { ResquestConversion } from "../../../apis/user/ResquestConversiton/Resqu
 import moment from "moment";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
-import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
+import {
+  CheckCircleFilled,
+  CloseCircleFilled,
+  SearchOutlined,
+} from "@ant-design/icons";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -34,28 +39,37 @@ export default function RequestConversionHistory() {
   const [fillCategory, setFillCategory] = useState([]);
   const [totalPages, setTotalPages] = useState([]);
   const [filter, setFilter] = useState({ page: 0 });
-  const [fillUserApi, setFillUserApi] = useState([]);
   const [fillPoint, setFillPoint] = useState(0);
   const [type, setType] = useState();
-  const fechUserApiById = () => {
-    ResquestConversion.getUserAPiByid().then((response) => {
-      setFillUserApi({
-        ...response.data.data,
-        khoa: "17.3",
-        phone: "0763104018",
-      });
-    });
-  };
 
-  useEffect(() => {
-    fechUserApiById();
-  }, []);
-
-  const fechData = (filter) => {
-    RequestManagerAPI.getHistoryConversion(filter).then((response) => {
-      setGetHistory(response.data.data);
-      setTotalPages(response.data.totalPages);
-    });
+  const fetchData = (filter) => {
+    const fetchData = async (filter) => {
+      try {
+        const response = await RequestManagerAPI.getHistoryConversion(filter);
+        const listHistory = await Promise.all(
+          response.data.data.map(async (data) => {
+            try {
+              const user = await RequestManagerAPI.getUserAPiById(
+                data.studentId
+              );
+              return {
+                ...data,
+                studentName: user.data.data.name,
+                userName: user.data.data.userName,
+              };
+            } catch (error) {
+              console.error(error);
+              return data;
+            }
+          })
+        );
+        setGetHistory(listHistory);
+        setTotalPages(response.data.totalPages);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData(filter);
   };
 
   const fechFillPoint = (idStudent, idCategory) => {
@@ -65,22 +79,39 @@ export default function RequestConversionHistory() {
   };
 
   const fechCategory = () => {
-    CategoryAPI.fetchAll().then((response) => {
-      setFillCategory(response.data.data.data);
+    CategoryAPI.fetchAllCategory().then((response) => {
+      setFillCategory(response.data.data);
     });
   };
   useEffect(() => {
     fechCategory();
-    fechData(filter);
+    fetchData(filter);
   }, [filter]);
 
   const onFinishSearch = (value) => {
-    if (value.code === undefined || value.code.trim().length === 0) {
+    if (value.userName === undefined || value.userName.trim().length === 0) {
       setFilter({
         ...filter,
+        idStudent: null,
         idCategory: value.idCategory,
         status: value.status,
       });
+    } else {
+      RequestManagerAPI.getUserAPiByCode(value.userName.trim())
+        .then((result) => {
+          if (result.data.success) {
+            setFilter({
+              ...filter,
+              idStudent: result.data.data.id,
+              idCategory: value.idCategory,
+              status: value.status,
+            });
+          } else {
+            fetchData();
+            message.error("User name sinh viên không chính xác!");
+          }
+        })
+        .catch((error) => console.error(error));
     }
   };
 
@@ -104,7 +135,7 @@ export default function RequestConversionHistory() {
         setType(response.data.data.type);
       }
       // message.success("Phê duyệt thành công");
-      fechData();
+      fetchData();
     });
   };
   const handCheckvalide = async (values) => {
@@ -138,11 +169,14 @@ export default function RequestConversionHistory() {
     },
     {
       title: "Tên sinh viên",
-      dataIndex: "studentId",
-      key: "studentId",
-      render: (text) => <span>{`${fillUserApi.name}`}</span>,
+      dataIndex: "studentName",
+      key: "studentName",
     },
-
+    {
+      title: "Tên sinh viên",
+      dataIndex: "userName",
+      key: "userName",
+    },
     {
       title: "Loại điểm",
       dataIndex: "nameCategory",
@@ -238,6 +272,15 @@ export default function RequestConversionHistory() {
       <Card className="mb-2 py-1">
         <Form onFinish={onFinishSearch}>
           <Space size={"large"}>
+            <Form.Item name="userName" className="search-input">
+              <Input
+                style={{ width: "300px" }}
+                name="userName"
+                size="small"
+                placeholder="Nhập user name sinh viên cần tìm"
+                prefix={<SearchOutlined />}
+              />
+            </Form.Item>
             <Form.Item name={"idCategory"}>
               <Select
                 style={{ width: "150px" }}
