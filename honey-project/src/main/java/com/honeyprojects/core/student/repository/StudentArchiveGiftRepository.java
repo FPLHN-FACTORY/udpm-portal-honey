@@ -1,6 +1,5 @@
 package com.honeyprojects.core.student.repository;
 
-import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.repository.ArchiveGiftRepository;
 import org.springframework.stereotype.Repository;

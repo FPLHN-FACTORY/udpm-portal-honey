@@ -4,6 +4,7 @@ import com.honeyprojects.core.admin.model.request.AdminCreateArchiveGiftRequest;
 import com.honeyprojects.core.admin.model.request.AdminCreateHoneyRequest;
 import com.honeyprojects.core.admin.repository.*;
 import com.honeyprojects.core.student.model.response.StudentNotificationDetaiRespone;
+import com.honeyprojects.core.student.repository.StudentChestRepository;
 import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
 import com.honeyprojects.core.student.repository.StudentNotificationRepository;
 import com.honeyprojects.core.student.service.StudentNotificationDetailService;
@@ -42,6 +43,9 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
     @Autowired
     private StudentNotificationRepository adNotificationRespository;
 
+    @Autowired
+    private StudentChestRepository chestRepository;
+
     @Override
     public List<StudentNotificationDetaiRespone> getAllNotificationDetailByIdNotification(String idStudent, String idNotification) {
         return studentNotificationDetailRepository.getAllNotificationDetialByIdNotification(idStudent, idNotification);
@@ -54,6 +58,7 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
         } else {
             List<NotificationDetail> lstHoney = new ArrayList<>();
             List<NotificationDetail> lstGift = new ArrayList<>();
+            List<NotificationDetail> lstChest = new ArrayList<>();
             for (String s : lstIdNotificationDetail) {
                 Optional<NotificationDetail> notificationDetailOptional = studentNotificationDetailRepository.findById(s);
                 if (notificationDetailOptional.isPresent()) {
@@ -62,6 +67,8 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
                         lstGift.add(notificationDetail);
                     } else if (notificationDetail.getType().equals(NotificationDetailType.NOTIFICATION_DETAIL_HONEY)) {
                         lstHoney.add(notificationDetail);
+                    } else if (notificationDetail.getType().equals(NotificationDetailType.NOTIFICATION_DETAIL_CHEST)) {
+                        lstChest.add(notificationDetail);
                     }
                 } else {
                     continue;
@@ -72,10 +79,7 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
                 String idGift = detail.getIdObject();
                 String archiveId = adArchiveRepository.getIdArchiveByIdStudent(idStudent);
                 if (archiveId == null) {
-                    Archive archive = new Archive();
-                    archive.setStudentId(idStudent);
-                    archive.setStatus(Status.HOAT_DONG);
-                    adArchiveRepository.save(archive);
+                    Archive archive = createArchive(idStudent);
                     // Tạo một bản ghi ArchiveGift mới và lưu vào cơ sở dữ liệu
                     AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archive.getId(), null, idGift, detail.getQuantity());
                     ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
@@ -100,8 +104,33 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
                     adminHoneyRepository.save(honey);
                 }
             }
+
+            for (NotificationDetail detail : lstChest) {
+                Optional<Chest> optionalChest = chestRepository.findById(detail.getIdObject());
+                if (optionalChest.isPresent()) {
+                    Chest chest = optionalChest.get();
+                    String archiveId = adArchiveRepository.getIdArchiveByIdStudent(idStudent);
+                    if (archiveId == null) {
+                        Archive archive = createArchive(idStudent);
+                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archive.getId(), chest.getId(), null, detail.getQuantity());
+                        ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
+                        adArchiveGiftRepository.save(archiveGift);
+                    } else {
+                        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archiveId, chest.getId(), null, detail.getQuantity());
+                        ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
+                        adArchiveGiftRepository.save(archiveGift);
+                    }
+                }
+            }
             return true;
         }
+    }
+
+    public Archive createArchive(String idStudent) {
+        Archive archive = new Archive();
+        archive.setStudentId(idStudent);
+        archive.setStatus(Status.HOAT_DONG);
+        return adArchiveRepository.save(archive);
     }
 
     @Override
