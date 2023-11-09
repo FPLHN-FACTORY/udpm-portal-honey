@@ -181,20 +181,13 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 // Truy xuất danh sách tất cả sinh viên và gọi API để lấy thông tin
                 List<String> allStudent = adRandomAddPointRepository.getAllIdStudentInHoney();
                 List<SimpleResponse> simpleResponseList = convertRequestApiidentity.handleCallApiGetListUserByListId(allStudent);
-
                 // Duyệt qua danh sách sinh viên và tạo vật phẩm ngẫu nhiên cho từng sinh viên
                 for (SimpleResponse simple : simpleResponseList) {
-                    int indexRandom = random.nextInt(req.getListItem().size());
-                    String itemRandom = req.getListItem().get(indexRandom);
-                    String chestGiftId = adRandomAddPointRepository.getOptionalChestGift(req.getChestId(), itemRandom);
-                    Optional<ChestGift> optionalChestGift = adChestGiftRepository.findById(chestGiftId);
-                    System.out.println("NEXT");
-                    if (optionalChestGift.isPresent()) {
-                        ChestGift chestGift = optionalChestGift.get();
-                        String idGift = chestGift.getGiftId();
-//                        Gift gift = adGiftRepository.findById(idGift).get();
-//                        Notification notification = createNotification(simple.getId());
-//                        createNotificationDetailItem(gift, notification.getId(), 1);
+                    Optional<Chest> optionalChest = chestRepository.findById(req.getChestId());
+                    if (optionalChest.isPresent()) {
+                        Chest chest = optionalChest.get();
+                        Notification notification = createNotification(simple.getId());
+                        createNotificationDetailChest(chest, notification.getId(), 1);
                     } else {
                         continue;
                     }
@@ -202,16 +195,11 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             } else {
                 // Trường hợp có danh sách sinh viên cụ thể được chỉ định
                 for (String idStudent : req.getListStudentPoint()) {
-                    int indexRandom = random.nextInt(req.getListItem().size());
-                    String itemRandom = req.getListItem().get(indexRandom);
-                    String chestGiftId = adRandomAddPointRepository.getOptionalChestGift(req.getChestId(), itemRandom);
-                    Optional<ChestGift> optionalChestGift = adChestGiftRepository.findById(chestGiftId);
-                    if (optionalChestGift.isPresent()) {
-                        ChestGift chestGift = optionalChestGift.get();
-                        String idGift = chestGift.getGiftId();
-//                        Gift gift = adGiftRepository.findById(idGift).get();
-//                        Notification notification = createNotification(idStudent);
-//                        createNotificationDetailItem(gift, notification.getId(), 1);
+                    Optional<Chest> optionalChest = chestRepository.findById(req.getChestId());
+                    if (optionalChest.isPresent()) {
+                        Chest chest = optionalChest.get();
+                        Notification notification = createNotification(idStudent);
+                        createNotificationDetailChest(chest, notification.getId(), 1);
                     } else {
                         continue;
                     }
@@ -232,7 +220,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         // Tạo một workbook (bảng tính) mới cho tệp Excel
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Trang 1");
-
         // Thiết lập kiểu cho phần tiêu đề của bảng tính
         CellStyle headerStyle = workbook.createCellStyle();
         Font font = workbook.createFont();
@@ -242,12 +229,10 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         headerStyle.setFont(font);
         headerStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
         headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-
         headerStyle.setBorderTop(BorderStyle.THIN);
         headerStyle.setBorderBottom(BorderStyle.THIN);
         headerStyle.setBorderLeft(BorderStyle.THIN);
         headerStyle.setBorderRight(BorderStyle.THIN);
-
         // Tạo hàng tiêu đề và đặt các tiêu đề cột
         Row headerRow = sheet.createRow(0);
         String[] headers = {"STT", "Tên đăng nhập"};
@@ -256,12 +241,10 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             headerCell.setCellValue(headers[i]);
             headerCell.setCellStyle(headerStyle);
         }
-
         // Tự động điều chỉnh kích thước cột cho tiêu đề
         for (int i = 0; i < headers.length; i++) {
             sheet.autoSizeColumn(i);
         }
-
         try {
             // Lưu workbook vào tệp Excel tại đường dẫn đã xác định
             FileOutputStream outputStream = new FileOutputStream(outputPath);
@@ -284,7 +267,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             // Tạo một workbook (bảng tính) mới cho bản xem trước dữ liệu
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("Trang 1");
-
             // Thiết lập kiểu cho phần tiêu đề của bảng tính
             CellStyle headerStyle = workbook.createCellStyle();
             Font font = workbook.createFont();
@@ -294,17 +276,14 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             font.setColor(IndexedColors.WHITE.getIndex());
             headerStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
             headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-
             headerStyle.setBorderTop(BorderStyle.THIN);
             headerStyle.setBorderBottom(BorderStyle.THIN);
             headerStyle.setBorderLeft(BorderStyle.THIN);
             headerStyle.setBorderRight(BorderStyle.THIN);
-
             // Dòng thứ 1 - Chữ "Chú ý"
             Row noteRow = sheet.createRow(0);
             Cell noteCell = noteRow.createCell(0);
             noteCell.setCellValue("Chú ý");
-
             // Tạo một kiểu cho ô "Lưu ý"
             CellStyle noteStyle = workbook.createCellStyle();
             Font noteFont = workbook.createFont();
@@ -315,7 +294,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             noteStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
             noteStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
             noteCell.setCellStyle(noteStyle);
-
             // Dòng thứ 2 - cách viết đúng định dạng quà tặng
             Row formatGiftRow = sheet.createRow(1);
             Cell formatGiftCell = formatGiftRow.createCell(1);
@@ -332,27 +310,22 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 //            formatStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
             formatStyle.setFont(formatFont);
             formatGiftCell.setCellStyle(formatStyle);
-
             // Tạo hàng tiêu đề và đặt các tiêu đề cột
             Row headerRow = sheet.createRow(3);
             String[] headers = {"Mã sinh viên", "Vật phẩm", "Mật ong"};
             int columnCount = headers.length;
-
             for (int i = 0; i < columnCount; i++) {
                 Cell headerCell = headerRow.createCell(i);
                 headerCell.setCellValue(headers[i]);
                 headerCell.setCellStyle(headerStyle);
-
                 // Thiết lập cỡ cột
                 sheet.setColumnWidth(i, COLUMN_WIDTH); // Sử dụng một constant cho cỡ cột
             }
-
             // Tạo kiểu cho ô tiêu đề trống
             CellStyle emptyHeaderStyle = workbook.createCellStyle();
             Font emptyHeaderFont = workbook.createFont();
             emptyHeaderFont.setColor(IndexedColors.RED.getIndex());
             emptyHeaderStyle.setFont(emptyHeaderFont);
-
             // Lưu workbook vào tệp Excel tại đường dẫn đã xác định
             try (FileOutputStream outputStream = new FileOutputStream(outputPath)) {
                 workbook.write(outputStream);
@@ -374,31 +347,25 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     public AdminAddPointBO importExcel(MultipartFile file) throws IOException {
         // Lấy đối tượng InputStream từ tệp Excel được tải lên
         InputStream inputStream = file.getInputStream();
-
         // Tạo một Workbook (bảng tính) từ InputStream sử dụng thư viện Apache POI
         Workbook workbook = new XSSFWorkbook(inputStream);
-
         // Lấy bảng tính đầu tiên từ Workbook
         Sheet sheet = workbook.getSheetAt(0);
-
         // Đọc dữ liệu từ bảng tính và tạo danh sách các đối tượng AdminAddItemDTO
         List<AdminAddPointDTO> lstUserImportDTO = StreamSupport.stream(sheet.spliterator(), false)
                 .skip(1) // Bỏ qua 2 dòng đầu tiên
                 .filter(row -> !ExcelUtils.checkNullLCells(row, 1))
                 .map(row -> processRowPoint(row))
                 .collect(Collectors.toList());
-
         // Nhóm dữ liệu theo trạng thái lỗi (error) và đếm số lượng mỗi trạng thái
         Map<Boolean, Long> importStatusCounts = lstUserImportDTO.stream()
                 .collect(Collectors.groupingBy(AdminAddPointDTO::isError, Collectors.counting()));
-
         // Tạo đối tượng AdminAddItemBO để lưu trữ thông tin bản xem trước
         AdminAddPointBO adminAddPointBO = new AdminAddPointBO();
         adminAddPointBO.setLstAdminAddPointDTO(lstUserImportDTO);
         adminAddPointBO.setTotal(Long.parseLong(String.valueOf(lstUserImportDTO.size())));
         adminAddPointBO.setTotalError(importStatusCounts.getOrDefault(true, 0L));
         adminAddPointBO.setTotalSuccess(importStatusCounts.getOrDefault(false, 0L));
-
         return adminAddPointBO;
     }
 
@@ -406,31 +373,25 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     public AdminAddItemBO previewDataImportExcel(MultipartFile file) throws IOException {
         // Lấy đối tượng InputStream từ tệp Excel được tải lên
         InputStream inputStream = file.getInputStream();
-
         // Tạo một Workbook (bảng tính) từ InputStream sử dụng thư viện Apache POI
         Workbook workbook = new XSSFWorkbook(inputStream);
-
         // Lấy bảng tính đầu tiên từ Workbook
         Sheet sheet = workbook.getSheetAt(0);
-
         // Đọc dữ liệu từ bảng tính và tạo danh sách các đối tượng AdminAddItemDTO
         List<AdminAddItemDTO> lstUserImportDTO = StreamSupport.stream(sheet.spliterator(), false)
                 .skip(3) // Bỏ qua 4 dòng đầu tiên
                 .filter(row -> !ExcelUtils.checkNullLCells(row, 1))
                 .map(row -> processRow(row))
                 .collect(Collectors.toList());
-
         // Nhóm dữ liệu theo trạng thái lỗi (error) và đếm số lượng mỗi trạng thái
         Map<Boolean, Long> importStatusCounts = lstUserImportDTO.stream()
                 .collect(Collectors.groupingBy(AdminAddItemDTO::isError, Collectors.counting()));
-
         // Tạo đối tượng AdminAddItemBO để lưu trữ thông tin bản xem trước
         AdminAddItemBO adminAddItemBO = new AdminAddItemBO();
         adminAddItemBO.setLstAdminAddItemDTO(lstUserImportDTO);
         adminAddItemBO.setTotal(Long.parseLong(String.valueOf(lstUserImportDTO.size())));
         adminAddItemBO.setTotalError(importStatusCounts.getOrDefault(true, 0L));
         adminAddItemBO.setTotalSuccess(importStatusCounts.getOrDefault(false, 0L));
-
         return adminAddItemBO;
     }
 
@@ -572,43 +533,42 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         return studentNotificationDetailRepository.save(notificationDetail);
     }
 
+    private NotificationDetail createNotificationDetailChest(Chest chest, String idNotification, Integer quantity) {
+        String content = Constants.CONTENT_NOTIFICATION_SYSTEM + "Rương đồ: " + chest.getName() + " - số lượng: " + quantity;
+        AdminCreateNotificationDetailRandomRequest detailRandomRequest = new AdminCreateNotificationDetailRandomRequest(content, chest.getId(), idNotification, NotificationDetailType.NOTIFICATION_DETAIL_CHEST, quantity);
+        NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
+        return studentNotificationDetailRepository.save(notificationDetail);
+    }
+
     private AdminAddPointDTO processRowPoint(Row row) {
         AdminAddPointDTO userDTO = new AdminAddPointDTO();
         String userName = ExcelUtils.getCellString(row.getCell(1));
-
         // Tạo địa chỉ email giả định từ tên đăng nhập
         String emailSimple = userName + "@fpt.edu.vn";
-
         // Gọi API để kiểm tra sự tồn tại của người dùng
         SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
-
         // Biến để kiểm tra sự tồn tại của lỗi
         boolean hasError = false;
-
         // Kiểm tra dữ liệu và xác định trạng thái lỗi (error)
         if (DataUtils.isNullObject(userName)) {
             userDTO.setImportMessage("Sinh viên không được để trống");
             userDTO.setError(true);
             hasError = true;
         }
-
         if (DataUtils.isNullObject(response)) {
             userDTO.setImportMessage("Sinh viên không tồn tại");
             userDTO.setError(true);
             hasError = true;
         }
-
         // Xác định trạng thái thành công hoặc lỗi và cung cấp thông báo
         if (!hasError) {
             userDTO.setImportMessage("SUCCESS");
             userDTO.setError(false);
         }
-
         // Đặt các thuộc tính của đối tượng AdminAddItemDTO
         userDTO.setId(response != null ? response.getId() : null);
         userDTO.setUserName(userName != null ? userName : null);
         userDTO.setEmail(response != null ? response.getEmail() : null);
-
         return userDTO;
     }
 
@@ -719,7 +679,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 }
             }
         }
-
         if (DataUtils.isNullObject(listHoney)) {
             check++;
         } else {
