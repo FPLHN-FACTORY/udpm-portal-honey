@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class StudentArchiveServiceImpl implements StudentArchiveService {
@@ -109,28 +110,29 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     }
 
     @Override
-    public List<ArchiveGift> openChest(StudentArchiveOpenChestRequest request) {
+    public Gift openChest(StudentArchiveOpenChestRequest request) {
+        Random random = new Random();
         List<String> listGiftId = studentGiftArchiveRepository.listGiftId(request);
+        int indexRandom = random.nextInt(listGiftId.size());
+        String idRandom = listGiftId.get(indexRandom);
+        Gift giftRandom = giftRepository.findById(idRandom).get();
+
         Optional<Archive> archive = archiveRepository.findByStudentId(udpmHoney.getIdUser());
-        List<ArchiveGift> archiveGiftList = new ArrayList<>();
-        for (String giftId : listGiftId) {
-            Optional<ArchiveGift> existingArchiveGift = studentGiftArchiveRepository.findByGiftId(giftId);
-            if (existingArchiveGift.isPresent()) {
-                ArchiveGift archiveGiftExist = existingArchiveGift.get();
-                archiveGiftExist.setQuantity(archiveGiftExist.getQuantity() + 1);
-                archiveGiftExist.setChestId(null);
-                archiveGiftList.add(archiveGiftExist);
-            } else {
-                ArchiveGift archiveGift = new ArchiveGift();
-                archiveGift.setGiftId(giftId);
-                archiveGift.setArchiveId(archive.get().getId());
-                archiveGift.setQuantity(1);
-                archiveGift.setChestId(null);
-                archiveGiftList.add(archiveGift);
-            }
+        Optional<ArchiveGift> existingArchiveGift = studentGiftArchiveRepository.findByGiftId(idRandom);
+        if (existingArchiveGift.isPresent()) {
+            ArchiveGift archiveGiftExist = existingArchiveGift.get();
+            archiveGiftExist.setQuantity(archiveGiftExist.getQuantity() + 1);
+            archiveGiftExist.setChestId(null);
+            studentGiftArchiveRepository.save(archiveGiftExist);
+        } else {
+            ArchiveGift archiveGift = new ArchiveGift();
+            archiveGift.setGiftId(idRandom);
+            archiveGift.setArchiveId(archive.get().getId());
+            archiveGift.setQuantity(1);
+            archiveGift.setChestId(null);
+            studentGiftArchiveRepository.save(archiveGift);
         }
-        studentGiftArchiveRepository.saveAll(archiveGiftList);
-        return archiveGiftList;
+        return giftRandom;
     }
 
     @Override
