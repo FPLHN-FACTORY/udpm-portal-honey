@@ -11,7 +11,7 @@ const ModalThem = (props) => {
   const [listCategory, setListCategory] = useState([]);
   const [image, setImage] = useState([]);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
-  const [errorImage, setErrorImage] = useState([]);
+  const [errorImage, setErrorImage] = useState("");
   const [categoryName, setCategoryName] = useState("");
   const [errorCategoryName, setErrorCategoryName] = useState("");
 
@@ -33,9 +33,9 @@ const ModalThem = (props) => {
         setImage([]);
       } else {
         const fileSize = selectedFile.size;
-        const checkFileSize = Math.round(fileSize / 1024);
-        if (checkFileSize > 100) {
-          setErrorImage("Ảnh không thể lớn hơn 1 mb");
+        const checkFileSize = Math.round((fileSize / 1024) / 1024);
+        if (checkFileSize > 1) {
+          setErrorImage("Ảnh không thể lớn hơn 1 MB");
           setSelectedImageUrl("");
           setImage([]);
         } else {
@@ -47,13 +47,15 @@ const ModalThem = (props) => {
             Extension == "png" ||
             Extension == "bmp" ||
             Extension == "jpeg" ||
-            Extension == "jpg"
+            Extension == "jpg" ||
+            Extension == "webp"
           ) {
             setImage(selectedFile);
             var imageUrl = URL.createObjectURL(selectedFile);
             setSelectedImageUrl(imageUrl);
+            setErrorImage("");
           } else {
-            setErrorImage("Chỉ nhận ảnh có type GIF, PNG, JPG, JPEG và BMP. ");
+            setErrorImage("Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. ");
             setSelectedImageUrl("");
             setImage([]);
           }

@@ -21,7 +21,7 @@ const ModalCreateUpgradeRate = ({
     form.setFieldsValue(null);
     console.log(currentItem);
     if (currentItem) {
-      const updatedCurrentItem = { 
+      const updatedCurrentItem = {
         originalHoney: currentItem.originalId,
         destinationHoney: currentItem.destinationId,
         idGifts: currentItem.giftId.split(", "),
