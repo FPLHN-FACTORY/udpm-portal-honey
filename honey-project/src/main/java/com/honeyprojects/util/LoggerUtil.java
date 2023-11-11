@@ -98,7 +98,11 @@ public class LoggerUtil {
 
     public String getPathFileTeacher() {
         StringBuilder pathFile = new StringBuilder();
-        pathFile.append(getPathFileInProperties(ConfigurationsConstant.FOLDER_FILE_TEACHER) + getPathFileInProperties(ConfigurationsConstant.FILE_FILE_TEACHER));
+        String fileName = ConvertUtils.
+                replaceSpacesWithUnderscores(ConvertUtils.
+                        replaceSpecialCharacters(ConvertUtils.
+                                removeVietnameseChars(session.getAttribute(SessionConstant.ID_USER).toString())));
+        pathFile.append(getPathFileInProperties(ConfigurationsConstant.FOLDER_FILE_TEACHER) + fileName + ".csv");
         System.out.println("========= pathFile: " + pathFile.toString());
         return pathFile.toString();
     }
@@ -109,12 +113,12 @@ public class LoggerUtil {
         return pathFile.toString();
     }
 
-    public String getPathFileStudent(String studentName) {
+    public String getPathFileStudent() {
         StringBuilder pathFile = new StringBuilder();
         String fileName = ConvertUtils.
                 replaceSpacesWithUnderscores(ConvertUtils.
                         replaceSpecialCharacters(ConvertUtils.
-                                removeVietnameseChars(studentName)));
+                                removeVietnameseChars(session.getAttribute(SessionConstant.ID_USER).toString())));
         pathFile.append(getPathFileInProperties(ConfigurationsConstant.FOLDER_SINH_VIEN) + fileName + ".csv");
         System.out.println("========= pathFile: " + pathFile.toString());
         return pathFile.toString();

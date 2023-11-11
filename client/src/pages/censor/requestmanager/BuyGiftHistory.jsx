@@ -2,17 +2,20 @@ import {
   Button,
   Card,
   Form,
+  Input,
   Pagination,
   Select,
   Space,
   Table,
   Tag,
+  message,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { ResquestConversion } from "../../../apis/user/ResquestConversiton/ResquestConversion.api";
 import moment from "moment";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
+import { SearchOutlined } from "@ant-design/icons";
 const statusHistory = (status) => {
   switch (status) {
     case 1:
@@ -46,11 +49,34 @@ export default function BuyGiftHistory() {
     fechUserApiById();
   }, []);
 
-  const fechData = (filter) => {
-    RequestManagerAPI.getHistoryBuyGifft(filter).then((response) => {
-      setGetHistory(response.data.data);
-      setTotalPages(response.data.totalPages);
-    });
+  const fetchData = (filter) => {
+    const fetchData = async (filter) => {
+      try {
+        const response = await RequestManagerAPI.getHistoryBuyGifft(filter);
+        const listHistory = await Promise.all(
+          response.data.data.map(async (data) => {
+            try {
+              const user = await RequestManagerAPI.getUserAPiById(
+                data.studentId
+              );
+              return {
+                ...data,
+                studentName: user.data.data.name,
+                userName: user.data.data.userName,
+              };
+            } catch (error) {
+              console.error(error);
+              return data;
+            }
+          })
+        );
+        setGetHistory(listHistory);
+        setTotalPages(response.data.totalPages);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData(filter);
   };
 
   const fechFillPoint = (idStudent, idCategory) => {
@@ -60,22 +86,39 @@ export default function BuyGiftHistory() {
   };
 
   const fechCategory = () => {
-    CategoryAPI.fetchAll().then((response) => {
-      setFillCategory(response.data.data.data);
+    CategoryAPI.fetchAllCategory().then((response) => {
+      setFillCategory(response.data.data);
     });
   };
   useEffect(() => {
     fechCategory();
-    fechData(filter);
+    fetchData(filter);
   }, [filter]);
 
   const onFinishSearch = (value) => {
-    if (value.code === undefined || value.code.trim().length === 0) {
+    if (value.userName === undefined || value.userName.trim().length === 0) {
       setFilter({
         ...filter,
+        idStudent: null,
         idCategory: value.idCategory,
         status: value.status,
       });
+    } else {
+      RequestManagerAPI.getUserAPiByCode(value.userName.trim())
+        .then((result) => {
+          if (result.data.success) {
+            setFilter({
+              ...filter,
+              idStudent: result.data.data.id,
+              idCategory: value.idCategory,
+              status: value.status,
+            });
+          } else {
+            fetchData();
+            message.error("User name sinh viên không chính xác!");
+          }
+        })
+        .catch((error) => console.error(error));
     }
   };
   const columns = [
@@ -85,13 +128,17 @@ export default function BuyGiftHistory() {
       key: "stt",
       render: (text, record, index) => index + 1,
     },
+
     {
       title: "Tên sinh viên",
-      dataIndex: "studentId",
-      key: "studentId",
-      render: (text) => <span>{`${fillUserApi.name}`}</span>,
+      dataIndex: "studentName",
+      key: "studentName",
     },
-
+    {
+      title: "userName",
+      dataIndex: "userName",
+      key: "userName",
+    },
     {
       title: "Loại điểm",
       dataIndex: "nameCategory",
@@ -152,6 +199,15 @@ export default function BuyGiftHistory() {
       <Card className="mb-2 py-1">
         <Form onFinish={onFinishSearch}>
           <Space size={"large"}>
+            <Form.Item name="userName" className="search-input">
+              <Input
+                style={{ width: "300px" }}
+                name="userName"
+                size="small"
+                placeholder="Nhập user name sinh viên cần tìm"
+                prefix={<SearchOutlined />}
+              />
+            </Form.Item>
             <Form.Item name={"idCategory"}>
               <Select
                 style={{ width: "150px" }}
