@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class AdminSemesterServiceImpl implements AdminSemesterService {
@@ -53,15 +54,28 @@ public class AdminSemesterServiceImpl implements AdminSemesterService {
 
     @Override
     public Semester addSemester(AdminSemesterRequest request) {
-        Semester se = request.map(new Semester());
-        se.setStatus(Status.HOAT_DONG);
-        return adSemesterRepository.save(se);
+        Semester semester = new Semester();
+        int number = new Random().nextInt(1000);
+        String code = String.format("SE%04d", number);
+        semester.setCode(code);
+        semester.setName(request.getName());
+        semester.setToDate(request.getToDate());
+        semester.setFromDate(request.getFromDate());
+        semester.setStatus(request.getStatus());
+        return adSemesterRepository.save(semester);
     }
 
     @Override
     public Semester updateSemester(AdminSemesterRequest request, String id) {
-        Optional<Semester> optionalSemester = adSemesterRepository.findById(id);
-        return adSemesterRepository.save(request.map(optionalSemester.get()));
+        Semester semester = adSemesterRepository.findById(id).get();
+        int number = new Random().nextInt(1000);
+        String code = String.format("SE%04d", number);
+        semester.setCode(code);
+        semester.setName(request.getName());
+        semester.setToDate(request.getToDate());
+        semester.setFromDate(request.getFromDate());
+        semester.setStatus(request.getStatus());
+        return adSemesterRepository.save(semester);
     }
 
 }
