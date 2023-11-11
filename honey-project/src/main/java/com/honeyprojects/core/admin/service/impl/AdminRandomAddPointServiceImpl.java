@@ -14,10 +14,9 @@ import com.honeyprojects.infrastructure.contant.Constants;
 import com.honeyprojects.infrastructure.contant.NotificationDetailType;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
-import com.honeyprojects.util.ConvertRequestApiidentity;
-import com.honeyprojects.util.DataUtils;
-import com.honeyprojects.util.DateUtils;
-import com.honeyprojects.util.ExcelUtils;
+import com.honeyprojects.infrastructure.logger.entity.LoggerFunction;
+import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
+import com.honeyprojects.util.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +65,12 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     private AdChestRepository chestRepository;
 
     @Autowired
+    private LoggerUtil loggerUtil;
+
+    @Autowired
+    private RabbitProducer producer;
+
+    @Autowired
     private ConvertRequestApiidentity convertRequestApiidentity;
 
     @Override
@@ -97,6 +102,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     @Override
     public Boolean createRandomPoint(AdminRandomPointRequest adminRandomPointRequest) {
         Random random = new Random();
+        StringBuilder stringBuilder = new StringBuilder();
         try {
             List<Honey> honeyList = new ArrayList<>();
 
@@ -159,11 +165,13 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     continue;
                 } else {
                     Category category = categoryOptional.get();
+                    SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(honey.getStudentId());
                     Notification notification = createNotification(honey.getStudentId());
+                    stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được hệ thống tặng: " + randomPoint + " " + category.getName());
                     createNotificationDetailHoney(category, notification.getId(), randomPoint);
                 }
             }
-
+            createLogBug(stringBuilder);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -174,6 +182,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     @Override
     public Boolean createRandomItem(AdminRandomPointRequest req) {
         Random random = new Random();
+        StringBuilder stringBuilder = new StringBuilder();
         try {
             if (req.getListStudentPoint().isEmpty()) {
                 // Truy xuất danh sách tất cả sinh viên và gọi API để lấy thông tin
@@ -185,6 +194,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     if (optionalChest.isPresent()) {
                         Chest chest = optionalChest.get();
                         Notification notification = createNotification(simple.getId());
+                        stringBuilder.append("Sinh viên " + simple.getName() + " - " + simple.getUserName() + " được hệ thống tặng: 1 rương " + chest.getName() + ", ");
                         createNotificationDetailChest(chest, notification.getId(), 1);
                     } else {
                         continue;
@@ -194,15 +204,18 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 // Trường hợp có danh sách sinh viên cụ thể được chỉ định
                 for (String idStudent : req.getListStudentPoint()) {
                     Optional<Chest> optionalChest = chestRepository.findById(req.getChestId());
+                    SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(idStudent);
                     if (optionalChest.isPresent()) {
                         Chest chest = optionalChest.get();
                         Notification notification = createNotification(idStudent);
+                        stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được hệ thống tặng: 1 rương " + chest.getName() + ", ");
                         createNotificationDetailChest(chest, notification.getId(), 1);
                     } else {
                         continue;
                     }
                 }
             }
+            createLogBug(stringBuilder);
             return true;
         } catch (Exception e) {
             return false;
@@ -410,6 +423,8 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     }
 
     private void saveImportData(List<AdminAddItemDTO> lstImportUser) throws IOException {
+        System.out.println("==============");
+        StringBuilder stringBuilder = new StringBuilder();
         for (AdminAddItemDTO userDTO : lstImportUser) {
             // Duyệt qua danh sách đối tượng AdminAddItemDTO đã được kiểm tra lỗi
             if (userDTO.isError() == true) {
@@ -439,6 +454,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                                 Optional<Gift> giftOptional = adGiftRepository.findById(idGift);
                                 if (giftOptional.isPresent()) {
                                     Gift gift = giftOptional.get();
+                                    stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được hệ thống tặng: " + numberItem + " " + gift.getName() + ", ");
                                     createNotificationDetailItem(gift, notification.getId(), numberItem);
                                 } else {
                                     continue;
@@ -463,6 +479,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                             Optional<Category> categoryOptional = adminCategoryRepository.findById(categoryResponse.getId());
                             if (categoryOptional.isPresent()) {
                                 Category category = categoryOptional.get();
+                                stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được hệ thống tặng: " + numberPoint + " " + category.getName() + ", ");
                                 createNotificationDetailHoney(category, notification.getId(), Integer.parseInt(numberPoint));
                             } else {
                                 continue;
@@ -472,6 +489,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 }
             }
         }
+        createLogBug(stringBuilder);
     }
 
     private Notification createNotification(String idStudent) {
@@ -500,6 +518,18 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         AdminCreateNotificationDetailRandomRequest detailRandomRequest = new AdminCreateNotificationDetailRandomRequest(content, chest.getId(), idNotification, NotificationDetailType.NOTIFICATION_DETAIL_CHEST, quantity);
         NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
         return studentNotificationDetailRepository.save(notificationDetail);
+    }
+
+    private LoggerFunction createLogBug(StringBuilder stringBuilder) {
+        LoggerFunction loggerObject = new LoggerFunction();
+        loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
+        loggerObject.setContent(stringBuilder.toString());
+        try {
+            producer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return loggerObject;
     }
 
     private AdminAddPointDTO processRowPoint(Row row) {
@@ -659,8 +689,13 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     @Override
     public Boolean deleteChestGidt(String idChest, String idGift) {
         String chestGift = adRandomAddPointRepository.getOptionalChestGift(idChest, idGift);
+        StringBuilder stringBuilder = new StringBuilder();
+        Gift gift = adGiftRepository.findById(idGift).orElse(null);
+        Chest chest = chestRepository.findById(idChest).orElse(null);
         if (chestGift != null) {
+            stringBuilder.append("Vật phẩm: " + gift.getName() + " được bỏ ra khỏi rương " + chest.getName());
             adChestGiftRepository.deleteById(chestGift);
+            createLogBug(stringBuilder);
             return true;
         } else {
             return false;
