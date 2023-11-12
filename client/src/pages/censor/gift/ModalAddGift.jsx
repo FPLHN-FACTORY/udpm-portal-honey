@@ -8,6 +8,7 @@ import TextArea from "antd/es/input/TextArea";
 import "./index.css";
 import { SemesterAPI } from "../../../apis/censor/semester/semester.api";
 import { GiftDetail } from "../../../apis/censor/gift/gift-detail.api";
+import { formatDate } from "../../util/DateUtil";
 
 const ModalThem = (props) => {
   const onFinishFailed = () => {
@@ -59,8 +60,11 @@ const ModalThem = (props) => {
         setImage([]);
       } else {
         const fileSize = selectedFile.size;
-        const checkFileSize = Math.round((fileSize / 1024) / 1024);
-        console.log("🚀 ~ file: ModalAddGift.jsx:65 ~ handleFileInputChange ~ checkFileSize:", checkFileSize)
+        const checkFileSize = Math.round(fileSize / 1024 / 1024);
+        console.log(
+          "🚀 ~ file: ModalAddGift.jsx:65 ~ handleFileInputChange ~ checkFileSize:",
+          checkFileSize
+        );
         if (checkFileSize > 1) {
           setErrorImage("Ảnh không thể lớn hơn 1 MB");
           setSelectedImageUrl("");
@@ -82,7 +86,9 @@ const ModalThem = (props) => {
             setSelectedImageUrl(imageUrl);
             setErrorImage("");
           } else {
-            setErrorImage("Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. ");
+            setErrorImage(
+              "Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. "
+            );
             setSelectedImageUrl("");
             setImage([]);
           }
@@ -340,7 +346,9 @@ const ModalThem = (props) => {
           accept="image/*"
           onChange={(event) => handleFileInputChange(event)}
         />
-        {errorImage && <div style={{ color: "red", paddingLeft: "100px" }}>{errorImage}</div>}
+        {errorImage && (
+          <div style={{ color: "red", paddingLeft: "100px" }}>{errorImage}</div>
+        )}
         <Form.Item
           label="Tên"
           name="name"
@@ -495,7 +503,9 @@ const ModalThem = (props) => {
             <Select placeholder="Chọn học kì">
               {listSemester.map((semester) => (
                 <Option key={semester.id} value={semester.id}>
-                  {semester.name}
+                  {`${semester.name} (${formatDate(
+                    semester.fromDate
+                  )} - ${formatDate(semester.toDate)})`}
                 </Option>
               ))}
             </Select>

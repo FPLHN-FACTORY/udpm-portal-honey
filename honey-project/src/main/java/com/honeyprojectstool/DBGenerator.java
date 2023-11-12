@@ -86,7 +86,7 @@ public class DBGenerator implements CommandLineRunner {
         calendar.add(Calendar.MONTH, 3);
         semester.setToDate(calendar.getTimeInMillis());
         semester.setFromDate(Calendar.getInstance().getTimeInMillis());
-        semester.setStatus(Status.HOAT_DONG);
+        semester.setStatus(SemesterStatus.DANG_HOAT_DONG);
         semester.setId(semesterRepository.save(semester).getId());
 
         Honey honey1 = new Honey();
@@ -201,14 +201,12 @@ public class DBGenerator implements CommandLineRunner {
         conversion1.setCode("CV1");
         conversion1.setRatio(Double.valueOf(100));
         conversion1.setStatus(Status.HOAT_DONG);
-        conversion1.setGiftId(gift1.getId());
         conversion1.setId(conversionRepository.save(conversion1).getId());
 
         Conversion conversion2 = new Conversion();
         conversion2.setCode("CV2");
         conversion2.setRatio(Double.valueOf(200));
         conversion2.setStatus(Status.HOAT_DONG);
-        conversion2.setGiftId(gift2.getId());
         conversion2.setId(conversionRepository.save(conversion2).getId());
 
         History history1 = new History();

@@ -27,6 +27,7 @@ import {
   faScaleUnbalanced,
   faStar,
   faToolbox,
+  faExchangeAlt,
 } from "@fortawesome/free-solid-svg-icons";
 const { Header: AntHeader, Content } = Layout;
 
@@ -101,6 +102,11 @@ function DashboardAuthUser({ children }) {
       <Link to="/censor/upgrade-rate">Quản lý tỉ lệ nâng cấp</Link>,
       "13",
       <FontAwesomeIcon icon={faStar} />
+    ),
+    getItem(
+      <Link to="/censor/conversion">Quản lý quy đổi</Link>,
+      "14",
+      <FontAwesomeIcon icon={faExchangeAlt} />
     ),
   ];
   const toggleCollapse = () => {
