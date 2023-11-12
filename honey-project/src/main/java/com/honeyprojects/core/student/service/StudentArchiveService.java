@@ -7,6 +7,7 @@ import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
 import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
 import com.honeyprojects.core.student.model.response.archive.StudentArchiveByUserResponse;
 import com.honeyprojects.entity.ArchiveGift;
+import com.honeyprojects.entity.Gift;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface StudentArchiveService {
 
     ArchiveGift studentUsingGift(StudentRequestChangeGift request);
 
-    List<ArchiveGift> openChest(StudentArchiveOpenChestRequest request);
+    Gift openChest(StudentArchiveOpenChestRequest request);
 
     PageableObject<StudentArchiveGetChestResponse> getChestToArchive(StudentArchiveFilterRequest filterRequest);
 
@@ -31,6 +32,6 @@ public interface StudentArchiveService {
 
     StudentArchiveGetChestResponse detailArchiveChest(StudentGetArchiveChestRequest request);
 
-    List<StudentArchiveByUserResponse> findArchiveByUser(String idUser );
+    List<StudentArchiveByUserResponse> findArchiveByUser(String idUser);
 
 }

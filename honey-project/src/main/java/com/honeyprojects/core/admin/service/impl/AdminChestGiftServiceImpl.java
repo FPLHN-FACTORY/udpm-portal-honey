@@ -10,6 +10,9 @@ import com.honeyprojects.core.admin.service.AdminChestGiftService;
 import com.honeyprojects.entity.Chest;
 import com.honeyprojects.entity.ChestGift;
 import com.honeyprojects.entity.Gift;
+import com.honeyprojects.infrastructure.logger.entity.LoggerFunction;
+import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
+import com.honeyprojects.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,11 @@ public class AdminChestGiftServiceImpl implements AdminChestGiftService {
     private AdChestRepository chestRepository;
     @Autowired
     private AdGiftRepository adGiftRepository;
+    @Autowired
+    private LoggerUtil loggerUtil;
+
+    @Autowired
+    private RabbitProducer producer;
 
     @Override
     @Transactional
@@ -46,13 +54,24 @@ public class AdminChestGiftServiceImpl implements AdminChestGiftService {
     @Transactional
     public List<ChestGift> addGiftsToChest(AdminCreateChestGiftRequest request) {
         Optional<Chest> chest = chestRepository.findById(request.getChestId());
+        StringBuilder stringBuilder = new StringBuilder();
         if (chest.isPresent()) {
             List<ChestGift> listNew = new ArrayList<>();
             for (String giftId : request.getListGift()) {
+                Gift gift = adGiftRepository.findById(giftId).orElse(null);
                 ChestGift chestGift = new ChestGift();
                 chestGift.setChestId(chest.get().getId());
                 chestGift.setGiftId(giftId);
+                stringBuilder.append("Vật phẩm: " + gift.getName() + " được thêm vào rương " + chest.get().getName() + ", ");
                 listNew.add(chestGift);
+            }
+            LoggerFunction loggerObject = new LoggerFunction();
+            loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
+            loggerObject.setContent(stringBuilder.toString());
+            try {
+                producer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
             chestGiftRepository.saveAll(listNew);
             return listNew;
@@ -74,6 +93,7 @@ public class AdminChestGiftServiceImpl implements AdminChestGiftService {
         if (listChestGift.size() == 0 && listRequest.size() == 0) {
             return null;
         }
+        Chest chest = chestRepository.findById(request.getChestId()).orElse(null);
         List<ChestGift> listDelete = new ArrayList<>();
         listChestGift.forEach(item -> {
             listRequest.forEach(remove -> {
@@ -109,7 +129,7 @@ public class AdminChestGiftServiceImpl implements AdminChestGiftService {
             }
             chestGiftRepository.saveAll(chestGiftList);
             return chestGiftList;
-        }else {
+        } else {
             return null;
         }
     }

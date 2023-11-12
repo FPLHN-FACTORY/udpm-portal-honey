@@ -10,7 +10,7 @@ import "./index.css";
 import moment from "moment/moment";
 
 const ModalAdd = (props) => {
-  const { modalOpen, setModalOpen, semester } = props;
+  const { modalOpen, setModalOpen, semester, fetchAll } = props;
   const [itemName, setItemName] = useState("");
   const [toDate, setToDate] = useState("");
   const [fromDate, setFromDate] = useState("");
@@ -38,6 +38,7 @@ const ModalAdd = (props) => {
     }
     message.success("Thành công!");
     setModalOpen(false);
+    fetchAll();
   };
 
   const listsemester = () => {
@@ -56,7 +57,6 @@ const ModalAdd = (props) => {
 
   const onSaveButtonClick = () => {
     let check = 0;
-
     if (itemName.trim().length === 0) {
       setErrorItemName("Tên học kỳ không được để trống");
       check++;
