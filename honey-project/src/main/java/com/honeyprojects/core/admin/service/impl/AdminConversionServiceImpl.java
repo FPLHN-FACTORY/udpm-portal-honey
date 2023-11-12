@@ -52,7 +52,7 @@ public class AdminConversionServiceImpl implements AdminConversionService {
 
     @Override
     public PageableObject<AdminConversionResponse> getPage(AdminSearchConversionRequest request) {
-        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize());
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         return new PageableObject<>(adConversionRepository.getPageListResponse(pageable, request));
     }
 

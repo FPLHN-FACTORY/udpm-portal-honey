@@ -1,6 +1,4 @@
-import React from "react";
 import { Popconfirm, message, notification } from "antd";
-import { ChestGiftAPI } from "../../../apis/censor/chest-gift/chest-gift.api";
 import { useAppDispatch } from "../../../app/hooks";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 

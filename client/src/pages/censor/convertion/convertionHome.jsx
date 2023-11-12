@@ -9,7 +9,7 @@ import {
   Row,
   Button,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { EditOutlined, EyeOutlined, FormOutlined } from "@ant-design/icons";
 import { ConversionAPI } from "../../../apis/censor/conversion/conversion.api";
 import ModalDetailConversion from "./ModalDetail";
@@ -22,41 +22,42 @@ import {
   SetConversion,
 } from "../../../app/reducers/conversion/conversion.reducer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import { faFilter, faRectangleList } from "@fortawesome/free-solid-svg-icons";
 export default function ConversionHome() {
   const [totalPages, setTotalPages] = useState(0);
   const [current, setCurrent] = useState(1);
-  const [text, setText] = useState(1);
+  const [textSearch, setTextSearch] = useState("");
   const dispatch = useAppDispatch();
+
   useEffect(() => {
-    fetchDataConversion();
-  }, []);
-  const fetchDataConversion = () => {
-    ConversionAPI.fetchAllPage({
-      page: 1,
-      size: 10,
-      textSearch: text,
-    }).then((response) => {
+    ConversionAPI.fetchAllPage().then((response) => {
       dispatch(SetConversion(response.data.data.data));
       setTotalPages(response.data.data.totalPages);
     });
-  };
-  const buttonClear = () => {
-    // setDestinationHoneyId(null);
-    setCurrent(1);
+  }, [dispatch]);
+
+  useEffect(() => {
     fetchDataConversion();
-  };
-  const buttonSearch = () => {
-    setCurrent(1);
+  }, [current]);
+
+  const fetchDataConversion = () => {
     let filter = {
-      textSearch: text,
+      textSearch: textSearch,
       page: current - 1,
     };
+
     ConversionAPI.fetchAllPage(filter).then((response) => {
       dispatch(SetConversion(response.data.data.data));
       setTotalPages(response.data.data.totalPages);
     });
   };
+
+  const buttonClear = async () => {
+    setTextSearch("");
+    setCurrent(1);
+    await fetchDataConversion();
+  };
+
   const data = useAppSelector(GetConversion);
 
   const columns = [
@@ -111,9 +112,8 @@ export default function ConversionHome() {
               {""}
               <Input
                 style={{ borderRadius: "10px", width: "40%" }}
-                // value={searchByName}
-                onChange={(value) => {
-                  setText(value);
+                onChange={(e) => {
+                  setTextSearch(e.target.value);
                 }}
                 placeholder="Tìm kiếm theo mã"
               />
@@ -130,7 +130,10 @@ export default function ConversionHome() {
           <Row>
             <Col span={12}>
               <Button
-                onClick={buttonSearch}
+                onClick={() => {
+                  setCurrent(1);
+                  fetchDataConversion();
+                }}
                 style={{
                   marginRight: "8px",
                   backgroundColor: "rgb(55, 137, 220)",
@@ -157,7 +160,38 @@ export default function ConversionHome() {
           </Row>
         </Space>
       </Card>
-      <Card>
+
+      <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+        <Space
+          style={{
+            justifyContent: "space-between",
+            display: "flex",
+            marginBottom: "16px",
+          }}
+        >
+          <div>
+            <span style={{ fontSize: "18px" }}>
+              <FontAwesomeIcon icon={faRectangleList} size="xl" />
+              <b style={{ marginLeft: "5px", fontWeight: "500" }}>
+                Danh sách quy đổi
+              </b>
+            </span>
+          </div>
+          <div>
+            <div
+              className="flex flex-row-reverse"
+              style={{ float: "right", display: "flex" }}
+            >
+              <div>
+                <span>
+                  <Tooltip title="Thêm quà">
+                    <ModalAddConversion icon={<EyeOutlined />} />
+                  </Tooltip>
+                </span>
+              </div>
+            </div>
+          </div>
+        </Space>
         <div className="mt-5">
           <Table
             columns={columns}
