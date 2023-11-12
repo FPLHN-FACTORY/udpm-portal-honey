@@ -54,9 +54,6 @@ public class AdminSemesterServiceImpl implements AdminSemesterService {
 
     @Override
     public Semester addSemester(AdminSemesterRequest request) {
-        Semester se = request.map(new Semester());
-        se.setStatus(SemesterStatus.DANG_HOAT_DONG);
-        return adSemesterRepository.save(se);
         Semester semester = new Semester();
         int number = new Random().nextInt(1000);
         String code = String.format("SE%04d", number);
@@ -71,9 +68,7 @@ public class AdminSemesterServiceImpl implements AdminSemesterService {
     @Override
     public Semester updateSemester(AdminSemesterRequest request, String id) {
         Semester semester = adSemesterRepository.findById(id).get();
-        int number = new Random().nextInt(1000);
-        String code = String.format("SE%04d", number);
-        semester.setCode(code);
+        semester.setCode(request.getCode());
         semester.setName(request.getName());
         semester.setToDate(request.getToDate());
         semester.setFromDate(request.getFromDate());
