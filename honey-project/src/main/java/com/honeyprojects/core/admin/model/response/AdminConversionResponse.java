@@ -12,9 +12,6 @@ public interface AdminConversionResponse extends IsIdentified {
     @Value("#{target.ratio}")
     String getRatio();
 
-    @Value("#{target.gift_id}")
-    String getGiftId();
-
     @Value("#{target.category_id}")
     String getCategoryId();
 

@@ -82,7 +82,7 @@ public interface AdRandomAddPointRepository extends HoneyRepository {
     @Query(value = """
             SELECT  c.id, c.name 
             FROM category c
-            where c.name in (:names)
+            where c.name in (:names) c.category_status <> 0
             """, nativeQuery = true)
     List<AdminImportCategoryResponse> getCategoriesByNames(Set<String> names);
 

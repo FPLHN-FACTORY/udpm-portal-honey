@@ -107,25 +107,25 @@ const ModalAdd = (props) => {
         }
       }
     } else {
-      for (const existingSemester of list) {
-        const existingStartDate = new Date(existingSemester.fromDate);
-        const existingEndDate = new Date(existingSemester.toDate);
+      // for (const existingSemester of list) {
+      //   const existingStartDate = new Date(existingSemester.fromDate);
+      //   const existingEndDate = new Date(existingSemester.toDate);
 
-        if (startDate >= existingStartDate && endDate <= existingEndDate) {
-          message.error(
-            "Học kỳ mới không được nằm trong khoảng thời gian của học kỳ khác."
-          );
-          check++;
-          return;
-        }
-        if (startDate <= existingStartDate && endDate >= existingEndDate) {
-          message.error(
-            "Học kỳ mới không được chứa khoảng thời gian của học kỳ hiện tại."
-          );
-          check++;
-          return;
-        }
-      }
+      //   if (startDate >= existingStartDate && endDate <= existingEndDate) {
+      //     message.error(
+      //       "Học kỳ mới không được nằm trong khoảng thời gian của học kỳ khác."
+      //     );
+      //     check++;
+      //     return;
+      //   }
+      //   if (startDate <= existingStartDate && endDate >= existingEndDate) {
+      //     message.error(
+      //       "Học kỳ mới không được chứa khoảng thời gian của học kỳ hiện tại."
+      //     );
+      //     check++;
+      //     return;
+      //   }
+      // }
     }
 
     const formValues = {

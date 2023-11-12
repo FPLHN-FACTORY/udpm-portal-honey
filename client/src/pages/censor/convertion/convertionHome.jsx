@@ -1,4 +1,14 @@
-import { Card, Input, Pagination, Space, Table, Tooltip } from "antd";
+import {
+  Card,
+  Input,
+  Pagination,
+  Space,
+  Table,
+  Tooltip,
+  Col,
+  Row,
+  Button,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { EditOutlined, EyeOutlined, FormOutlined } from "@ant-design/icons";
 import { ConversionAPI } from "../../../apis/censor/conversion/conversion.api";
@@ -11,26 +21,42 @@ import {
   GetConversion,
   SetConversion,
 } from "../../../app/reducers/conversion/conversion.reducer";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
 export default function ConversionHome() {
-  const [listConversion, setListConversion] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
-  const [filter, setFilter] = useState({
-    page: 1,
-    size: 5,
-    textSearch: "",
-  });
+  const [current, setCurrent] = useState(1);
+  const [text, setText] = useState(1);
   const dispatch = useAppDispatch();
   useEffect(() => {
-    fetchDataConversion(filter);
-  }, [filter]);
-  const fetchDataConversion = (filter) => {
+    fetchDataConversion();
+  }, []);
+  const fetchDataConversion = () => {
+    ConversionAPI.fetchAllPage({
+      page: 1,
+      size: 10,
+      textSearch: text,
+    }).then((response) => {
+      dispatch(SetConversion(response.data.data.data));
+      setTotalPages(response.data.data.totalPages);
+    });
+  };
+  const buttonClear = () => {
+    // setDestinationHoneyId(null);
+    setCurrent(1);
+    fetchDataConversion();
+  };
+  const buttonSearch = () => {
+    setCurrent(1);
+    let filter = {
+      textSearch: text,
+      page: current - 1,
+    };
     ConversionAPI.fetchAllPage(filter).then((response) => {
       dispatch(SetConversion(response.data.data.data));
       setTotalPages(response.data.data.totalPages);
     });
   };
-
   const data = useAppSelector(GetConversion);
 
   const columns = [
@@ -50,7 +76,7 @@ export default function ConversionHome() {
       title: "Tỉ lệ",
       dataIndex: "ratio",
       key: "ratio",
-      render: (text) => <span>{`${text} / 0.25`}</span>,
+      render: (text) => <span>{`${text} / 1`}</span>,
     },
     {
       title: () => <div>Hành động</div>,
@@ -71,35 +97,66 @@ export default function ConversionHome() {
 
   return (
     <>
-      <Card className="mb-2">
-        <form class="flex items-center">
-          <div class="relative w-full mr-6">
-            <Input
-              style={{ borderRadius: "10px", width: "40%" }}
-              // value={searchByName}
-              onChange={(e) => {
-                setFilter({ ...filter, textSearch: e.target.value });
-              }}
-              placeholder="Tìm kiếm tên hoặc mã..."
-            />
-          </div>
-          <div>
-            <div
-              className="flex flex-row-reverse"
-              style={{ float: "right", display: "flex" }}
-            >
-              <div>
-                <span>
-                  <Tooltip>
-                    <ModalAddConversion icon={<EyeOutlined />} />
-                  </Tooltip>
-                </span>
-              </div>
-            </div>
-          </div>
-        </form>
+      <Card style={{ borderTop: "5px solid #FFCC00" }}>
+        <div className="filter__auction">
+          <FontAwesomeIcon
+            icon={faFilter}
+            size="2px"
+            style={{ fontSize: "26px" }}
+          />{" "}
+          <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span>
+          <Row gutter={24} style={{ marginBottom: "15px", paddingTop: "20px" }}>
+            <Col span={24}>
+              <span>Mã quy đổi: </span>
+              {""}
+              <Input
+                style={{ borderRadius: "10px", width: "40%" }}
+                // value={searchByName}
+                onChange={(value) => {
+                  setText(value);
+                }}
+                placeholder="Tìm kiếm theo mã"
+              />
+            </Col>
+          </Row>
+        </div>
+        <Space
+          style={{
+            justifyContent: "center",
+            display: "flex",
+            marginBottom: "16px",
+          }}
+        >
+          <Row>
+            <Col span={12}>
+              <Button
+                onClick={buttonSearch}
+                style={{
+                  marginRight: "8px",
+                  backgroundColor: "rgb(55, 137, 220)",
+                  color: "white",
+                }}
+              >
+                Tìm kiếm
+              </Button>
+            </Col>
+            <Col span={12}>
+              <Button
+                onClick={buttonClear}
+                style={{
+                  marginLeft: "8px",
+                  backgroundColor: "#FF9900",
+                  color: "white",
+                  outline: "none",
+                  border: "none",
+                }}
+              >
+                Làm mới
+              </Button>
+            </Col>
+          </Row>
+        </Space>
       </Card>
-
       <Card>
         <div className="mt-5">
           <Table
@@ -112,9 +169,9 @@ export default function ConversionHome() {
         <div className="mt-5 text-center">
           <Pagination
             simple
-            current={filter.page}
+            current={current}
             onChange={(page) => {
-              setFilter({ ...filter, page: page });
+              setCurrent(page);
             }}
             total={totalPages * 10}
           />

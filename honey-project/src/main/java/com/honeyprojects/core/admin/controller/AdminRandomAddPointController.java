@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/censor/random-add-point")
 public class AdminRandomAddPointController {
+
     @Autowired
     private AdRandomAddPointService adRandomAddPointService;
 
@@ -42,9 +43,9 @@ public class AdminRandomAddPointController {
         return new ResponseObject(adRandomAddPointService.exportExcel());
     }
 
-    @PostMapping("/create/import")
-    public ResponseObject createImportRandomPoint(@RequestParam("file") MultipartFile file) throws IOException {
-        return new ResponseObject(adRandomAddPointService.importExcel(file));
+    @PostMapping("/create/preview-data-random")
+    public ResponseObject previewDataRandom(@RequestParam("file") MultipartFile file) throws IOException {
+        return new ResponseObject(adRandomAddPointService.previewDataRandomExcel(file));
     }
 
     // màn cộng mật ong

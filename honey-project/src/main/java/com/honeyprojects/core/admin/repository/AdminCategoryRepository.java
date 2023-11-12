@@ -2,6 +2,7 @@ package com.honeyprojects.core.admin.repository;
 
 import com.honeyprojects.core.admin.model.request.AdminCategoryRequest;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
+import com.honeyprojects.core.admin.model.response.AdminImportCategoryResponse;
 import com.honeyprojects.repository.CategoryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -70,4 +71,11 @@ public interface AdminCategoryRepository extends CategoryRepository {
             """, nativeQuery = true)
     List<AdminCategoryResponse> getAllListCategory();
 
+    @Query(value = """
+            SELECT c.id, c.name
+            FROM category c 
+            WHERE c.category_status <> 0 AND c.id = :id
+            ORDER BY c.last_modified_date DESC
+            """, nativeQuery = true)
+    AdminImportCategoryResponse getOneCategoryResponse(String id);
 }

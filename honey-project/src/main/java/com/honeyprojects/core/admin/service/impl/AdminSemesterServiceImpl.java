@@ -3,11 +3,12 @@ package com.honeyprojects.core.admin.service.impl;
 import com.honeyprojects.core.admin.model.request.AdminSearchSemesterRequest;
 import com.honeyprojects.core.admin.model.request.AdminSemesterRequest;
 import com.honeyprojects.core.admin.model.response.AdminSemesterResponse;
+import com.honeyprojects.core.admin.model.response.SemesterJobResponse;
 import com.honeyprojects.core.admin.repository.AdSemesterRepository;
 import com.honeyprojects.core.admin.service.AdminSemesterService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Semester;
-import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.SemesterStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +35,6 @@ public class AdminSemesterServiceImpl implements AdminSemesterService {
         return new PageableObject<>(res);
     }
 
-
     @Override
     public Semester getOne(String id) {
         Optional<Semester> optionalSemester = adSemesterRepository.findById(id);
@@ -45,7 +45,7 @@ public class AdminSemesterServiceImpl implements AdminSemesterService {
     public Semester deleteSemester(String id) {
         Optional<Semester> optionalSemester = adSemesterRepository.findById(id);
         return optionalSemester.map(semester -> {
-            semester.setStatus(Status.KHONG_HOAT_DONG);
+            semester.setStatus(SemesterStatus.KHONG_HOAT_DONG);
             adSemesterRepository.save(semester);
             return semester;
         }).orElse(null);
@@ -54,7 +54,7 @@ public class AdminSemesterServiceImpl implements AdminSemesterService {
     @Override
     public Semester addSemester(AdminSemesterRequest request) {
         Semester se = request.map(new Semester());
-        se.setStatus(Status.HOAT_DONG);
+        se.setStatus(SemesterStatus.DANG_HOAT_DONG);
         return adSemesterRepository.save(se);
     }
 
@@ -62,6 +62,20 @@ public class AdminSemesterServiceImpl implements AdminSemesterService {
     public Semester updateSemester(AdminSemesterRequest request, String id) {
         Optional<Semester> optionalSemester = adSemesterRepository.findById(id);
         return adSemesterRepository.save(request.map(optionalSemester.get()));
+    }
+
+    @Override
+    public SemesterJobResponse findSemesterByStatus() {
+        return adSemesterRepository.getSemesterJobByStatus();
+    }
+
+    @Override
+    public void openNewSemester(Long newDate) {
+        SemesterJobResponse semesterJobResponse = adSemesterRepository.openNewSemester();
+        if (semesterJobResponse.getToDate() == newDate) {
+            Optional<Semester> optionalSemester = adSemesterRepository.findById(semesterJobResponse.getId());
+            optionalSemester.get().setStatus(SemesterStatus.DANG_HOAT_DONG);
+        }
     }
 
 }

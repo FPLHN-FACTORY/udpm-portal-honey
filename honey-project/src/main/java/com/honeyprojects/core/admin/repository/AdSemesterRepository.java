@@ -2,6 +2,8 @@ package com.honeyprojects.core.admin.repository;
 
 import com.honeyprojects.core.admin.model.request.AdminSearchSemesterRequest;
 import com.honeyprojects.core.admin.model.response.AdminSemesterResponse;
+import com.honeyprojects.core.admin.model.response.SemesterJobResponse;
+import com.honeyprojects.entity.Semester;
 import com.honeyprojects.repository.SemesterRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,5 +46,11 @@ public interface AdSemesterRepository extends SemesterRepository {
     @Query(value = "SELECT s.id FROM semester s WHERE :dateNow BETWEEN s.from_date AND s.to_date", nativeQuery = true)
     String getUsByStudent(@Param("dateNow") Long dateNow);
 
+    @Query(value = "SELECT s.id, s.to_date FROM semester s WHERE s.status = '0'"
+            , nativeQuery = true)
+    SemesterJobResponse getSemesterJobByStatus();
 
+    @Query(value = "SELECT s.id, s.from_date FROM semester s WHERE s.status = '2' ORDER BY s.from_date ASC LIMIT 1"
+            , nativeQuery = true)
+    SemesterJobResponse openNewSemester();
 }

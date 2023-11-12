@@ -38,6 +38,13 @@ public class Constants {
 
     public static String CONTENT_NOTIFICATION_SYSTEM = "Hệ thống đã tặng cho bạn: ";
 
+    public static String CONTENT_NOTIFICATION_MODULE_LAB_REPORT = "Xưởng dự án đã tặng bạn: ";
+
     // Đặt một constant cho cỡ cột
     public static final int COLUMN_WIDTH = 15 * 256;
+
+    public static final class MODULE {
+        public static final String MODULE_LAB_REPORT_APP = "MODULE_LAB_REPORT_APP";
+    }
+
 }

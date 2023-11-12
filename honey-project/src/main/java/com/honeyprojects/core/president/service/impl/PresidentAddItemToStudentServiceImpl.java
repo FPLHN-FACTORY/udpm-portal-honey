@@ -356,67 +356,65 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
     private void saveImportData(List<PresidentAddItemDTO> lstImportUser) throws IOException {
         for (PresidentAddItemDTO userDTO : lstImportUser) {
             // Duyệt qua danh sách đối tượng AdminAddItemDTO đã được kiểm tra lỗi
-            if (userDTO.isError() == true) {
+            if (userDTO.isError()) {
                 // Nếu đối tượng có lỗi, bỏ qua và tiếp tục với đối tượng tiếp theo trong danh sách
                 continue;
-            } else {
-                // Nếu không có lỗi, tiến hành xử lý và lưu dữ liệu vào cơ sở dữ liệu, tạo thông báo
-                // Gọi API để lấy thông tin người dùng bằng địa chỉ email
-                String emailSimple = userDTO.getUserName() + "@fpt.edu.vn";
-                SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
-                Notification notification = createNotification(simpleResponse.getId());
-                if (userDTO.getLstGift() == null) {
-                    continue;
-                } else {
-                    // Xử lý vật phẩm (gift)
-                    String[] partsGift = userDTO.getLstGift().split(", ");
-                    Map<String, Integer> giftMap = new HashMap<>();
+            }
 
-                    for (String part : partsGift) {
-                        String[] subParts = part.split(" ", 2);
-                        if (subParts.length == 2) {
-                            String numberItemStr = subParts[0];
-                            String nameItem = subParts[1];
-                            Integer numberItem = Integer.parseInt(numberItemStr);
-                            // Lưu trữ số lượng quà dựa trên tên quà
-                            giftMap.put(nameItem, numberItem);
-                        }
-                    }
-                    List<PresidentGiftResponse> gifts = presidentAddItemRepository.getGiftsByNames(giftMap.keySet());
+            // Gọi API để lấy thông tin người dùng bằng địa chỉ email
+            String emailSimple = userDTO.getUserName() + "@fpt.edu.vn";
+            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
+            Notification notification = createNotification(simpleResponse.getId());
 
-                    for (PresidentGiftResponse gift : gifts) {
-                        String nameItem = gift.getName();
-                        createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
+            // Xử lý vật phẩm (gift)
+            if (!DataUtils.isNullObject(userDTO.getLstGift())) {
+                String[] partsGift = userDTO.getLstGift().split(", ");
+                Map<String, Integer> giftMap = new HashMap<>();
+
+                for (String part : partsGift) {
+                    String[] subParts = part.split(" ", 2);
+                    if (subParts.length == 2) {
+                        String numberItemStr = subParts[0];
+                        String nameItem = subParts[1];
+                        Integer numberItem = Integer.parseInt(numberItemStr);
+                        // Lưu trữ số lượng quà dựa trên tên quà
+                        giftMap.put(nameItem, numberItem);
                     }
                 }
-                // Xử lý điểm mật ong (honey)
-                if (userDTO.getLstHoney() == null) {
-                    continue;
-                } else {
-                    String[] partsHoney = userDTO.getLstHoney().split(", ");
-                    Map<String, Integer> honeyMap = new HashMap<>();
+                List<PresidentGiftResponse> gifts = presidentAddItemRepository.getGiftsByNames(giftMap.keySet());
 
-                    for (String part : partsHoney) {
-                        String[] subParts = part.split(" ", 2);
-                        if (subParts.length == 2) {
-                            String numberPointStr = subParts[0].trim();
-                            String categoryPoint = subParts[1].trim().replace("-", "");
-                            Integer numberPoint = Integer.parseInt(numberPointStr);
-                            // Lưu trữ số lượng điểm mật ong dựa trên tên loại điểm
-                            honeyMap.put(categoryPoint, numberPoint);
-                        }
+                for (PresidentGiftResponse gift : gifts) {
+                    String nameItem = gift.getName();
+                    createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
+                }
+            }
+
+            // Xử lý điểm mật ong (honey)
+            if (!DataUtils.isNullObject(userDTO.getLstHoney())) {
+                String[] partsHoney = userDTO.getLstHoney().split(", ");
+                Map<String, Integer> honeyMap = new HashMap<>();
+
+                for (String part : partsHoney) {
+                    String[] subParts = part.split(" ", 2);
+                    if (subParts.length == 2) {
+                        String numberPointStr = subParts[0].trim();
+                        String categoryPoint = subParts[1].trim().replace("-", "");
+                        Integer numberPoint = Integer.parseInt(numberPointStr);
+                        // Lưu trữ số lượng điểm mật ong dựa trên tên loại điểm
+                        honeyMap.put(categoryPoint, numberPoint);
                     }
-                    List<PresidentCategoryResponse> categories = presidentAddItemRepository.getCategoriesByNames(honeyMap.keySet());
-                    for (PresidentCategoryResponse category : categories) {
-                        String categoryPoint = category.getName();
-                        if (honeyMap.containsKey(categoryPoint)) {
-                            createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
-                        }
+                }
+                List<PresidentCategoryResponse> categories = presidentAddItemRepository.getCategoriesByNames(honeyMap.keySet());
+                for (PresidentCategoryResponse category : categories) {
+                    String categoryPoint = category.getName();
+                    if (honeyMap.containsKey(categoryPoint)) {
+                        createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
                     }
                 }
             }
         }
     }
+
 
     private Notification createNotification(String idStudent) {
         String title = Constants.TITLE_NOTIFICATION_SYSTEM;

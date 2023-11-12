@@ -53,10 +53,10 @@ export class RandomAddPointAPI {
     });
   };
 
-  static createImportExcel = (importExcel) => {
+  static previewDataRandomExcel = (importExcel) => {
     return request({
       method: "POST",
-      url: `/${this.COMPONENT_NAME}/create/import`,
+      url: `/${this.COMPONENT_NAME}/create/preview-data-random`,
       data: importExcel,
     });
   };
