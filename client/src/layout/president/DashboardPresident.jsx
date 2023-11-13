@@ -13,9 +13,8 @@ import logo from "../../assets/images/logo/logo-udpm-3.png";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Layout, Drawer, Row, Menu, Col } from "antd";
-import Header from "../../components/user/auth/Header";
+import Header from "../../components/president/Header";
 import {
-  GiftFilled,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   PlusCircleFilled,
@@ -45,27 +44,7 @@ function DashboardPresident({ children }) {
   }
   const items = [
     getItem("Cộng mật ong", "0", <PlusCircleFilled />, [
-      getItem(<Link to={"/teacher/add-point"}>Tạo yêu cầu</Link>, "1"),
-      getItem(
-        <Link to={"/teacher/add-point/list-request"}>Danh sách yêu cầu</Link>,
-        "2"
-      ),
-
-      getItem(
-        <Link to={"/teacher/add-point/history"}>Lịch sử yêu cầu</Link>,
-        "3"
-      ),
-    ]),
-    getItem("Yêu cầu đổi quà", "4", <GiftFilled />, [
-      getItem(
-        <Link to={"/teacher/convertion-honey"}>Danh sách yêu cầu</Link>,
-        "5"
-      ),
-
-      getItem(
-        <Link to={"/teacher/request-conversion/history"}>Lịch sử yêu cầu</Link>,
-        "6"
-      ),
+      getItem(<Link to={"/president/add-item"}>Tạo yêu cầu</Link>, "1"),
     ]),
   ];
   const toggleCollapse = () => {
@@ -77,7 +56,8 @@ function DashboardPresident({ children }) {
       id="authe"
       className={`layout-dashboard ${
         pathname === "profile" ? "layout-profile" : ""
-      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}>
+      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
+    >
       <Drawer
         id="drawer_ui"
         title={false}
@@ -90,13 +70,15 @@ function DashboardPresident({ children }) {
         style={{ background: "#fff", overflowX: "hidden" }}
         className={`drawer-sidebar ${
           pathname === "rtl" ? "drawer-sidebar-rtl" : ""
-        } `}>
+        } `}
+      >
         <Layout
           id="layout_drawer"
           style={{ background: "#fff", overflowX: "hidden" }}
           className={` bg-white layout-dashboard ${
             pathname === "rtl" ? "layout-dashboard-rtl" : ""
-          }`}>
+          }`}
+        >
           <Row className="flex justify-center align-middle mt-5 pb-8">
             <div className="brand text-center">
               <Link to="/" className="active">
@@ -127,7 +109,8 @@ function DashboardPresident({ children }) {
             left: 0,
             zIndex: 999,
             height: "100%",
-          }}>
+          }}
+        >
           <Row
             className="flex justify-center align-middle  mt-5 pb-8"
             style={{ height: "80px" }}
@@ -161,7 +144,8 @@ function DashboardPresident({ children }) {
                 <Col span={12} className="flex items-center">
                   <button
                     className="buttonSlider desktop"
-                    onClick={toggleCollapse}>
+                    onClick={toggleCollapse}
+                  >
                     {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                   </button>
                   <button className="buttonSlider mobile" onClick={openDrawer}>
@@ -188,13 +172,15 @@ function DashboardPresident({ children }) {
         {collapsed ? (
           <Content
             className="content-ant"
-            style={{ paddingLeft: "6%", marginTop: "7%" }}>
+            style={{ paddingLeft: "6%", marginTop: "7%" }}
+          >
             {children}
           </Content>
         ) : (
           <Content
             className="content-ant"
-            style={{ paddingLeft: "19%", marginTop: "9%" }}>
+            style={{ paddingLeft: "19%", marginTop: "9%" }}
+          >
             {children}
           </Content>
         )}
