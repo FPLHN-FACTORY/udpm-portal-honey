@@ -14,10 +14,6 @@ public class AdminSemesterRequest extends PageableRequest {
 
     @NotBlank(message = "Name?")
     @Size(min = 0, max = 250, message = "Size name?")
-    private String code;
-
-    @NotBlank(message = "Name?")
-    @Size(min = 0, max = 250, message = "Size name?")
     private String name;
 
     @NotNull(message = "To date?")
