@@ -19,8 +19,6 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   PlusCircleFilled,
-  RetweetOutlined,
-  TransactionOutlined,
 } from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
 const { Header: AntHeader, Content } = Layout;

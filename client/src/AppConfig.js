@@ -3,6 +3,8 @@ export const AppConfig = {
   routerBase: "",
 };
 
+export const connectIdentity = "https://localhost:5000/";
+
 // export const ImageConfig = {
 //   apiUrl: "http://localhost:80/article/",
 //   routerBase: "",

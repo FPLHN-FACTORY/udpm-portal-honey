@@ -1,5 +1,6 @@
 package com.honeyprojects.infrastructure.security;
 
+import com.honeyprojects.infrastructure.apiconstants.ActorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,9 +31,11 @@ public class WebSecurityConfiguration {
                 .disable()
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .requestMatchers("/", "/api/authentication/**").permitAll();
-//                .requestMatchers("/api/intern/**").hasAuthority(ActorConstants.INTERN)
-//                .requestMatchers("/api/mentor/**").hasAuthority(ActorConstants.MENTOR)
+                .requestMatchers("/", "/api/authentication/**").permitAll()
+                .requestMatchers("/api/censor/**").hasAuthority(ActorConstants.ACTOR_ADMIN)
+                .requestMatchers("/api/student/**").hasAuthority(ActorConstants.ACTOR_STUDENT)
+                .requestMatchers("/api/teacher/**").hasAuthority(ActorConstants.ACTOR_TEACHER)
+                .requestMatchers("/api/president/**").hasAuthority(ActorConstants.ACTOR_PRESIDENT);
         return http.build();
     }
 

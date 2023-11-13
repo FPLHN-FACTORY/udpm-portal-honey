@@ -55,6 +55,12 @@ const ModalCreateUpgradeRate = ({
         status: 0,
       };
 
+      if (obj) {
+        if (obj.originalHoneyId >= obj.destinationHoneyId) {
+          message.error("Loại điểm đầu vào không thể giống loại điểm đầu cuối");
+          return;
+        }
+      }
       UpgradeApi.create(obj).then(
         (response) => {
           console.log(response.data.data);
@@ -126,7 +132,15 @@ const ModalCreateUpgradeRate = ({
                 {
                   required: true,
                   message: "Số lượng điểm đầu không được để trống",
-                }
+                },
+                {
+                  validator: (rule, value) => {
+                    if (value > 0) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject('Số lượng điểm đầu không được nhò hơn 0');
+                  },
+                },
               ]}
             >
               <Input
@@ -158,7 +172,15 @@ const ModalCreateUpgradeRate = ({
                 {
                   required: true,
                   message: "Số lượng điểm cuối không được để trống",
-                }
+                },
+                {
+                  validator: (rule, value) => {
+                    if (value > 0) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject('Số lượng điểm cuối không được nhò hơn 0');
+                  },
+                },
               ]}
             >
               <Input

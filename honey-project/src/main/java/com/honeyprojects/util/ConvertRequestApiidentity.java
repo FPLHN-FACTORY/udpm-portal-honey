@@ -7,6 +7,7 @@ import com.honeyprojects.infrastructure.apiconstants.ApiConstants;
 import com.honeyprojects.infrastructure.apiconstants.HonneyConstants;
 import com.honeyprojects.infrastructure.session.HoneySession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,8 +27,11 @@ public class ConvertRequestApiidentity {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${domain.identity}")
+    private String domainIdentity;
+
     public List<SimpleResponse> handleCallApiGetListUserByListId(List<String> listIdUser) {
-        String apiUrl = ApiConstants.API_GET_USER_BY_LIST_ID;
+        String apiUrl =  domainIdentity + ApiConstants.API_GET_USER_BY_LIST_ID;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -56,7 +60,7 @@ public class ConvertRequestApiidentity {
     }
 
     public List<SimpleResponse> handleCallApiGetUserByRoleAndModule(String roleCode) {
-        String apiUrl = ApiConstants.API_GET_ALL_USER_BY_ROLE_AND_MODULE;
+        String apiUrl =  domainIdentity + ApiConstants.API_GET_ALL_USER_BY_ROLE_AND_MODULE;
 
         HttpHeaders headers = new HttpHeaders();
         String authorizationToken = "Bearer " + honeySession.getToken();
@@ -74,7 +78,7 @@ public class ConvertRequestApiidentity {
     }
 
     public SimpleResponse handleCallApiGetUserById(String idUSer) {
-        String apiUrl = ApiConstants.API_GET_USER_BY_ID;
+        String apiUrl =  domainIdentity + ApiConstants.API_GET_USER_BY_ID;
         HttpHeaders headers = new HttpHeaders();
         String authorizationToken = "Bearer " + honeySession.getToken();
         headers.set("Authorization", authorizationToken);
@@ -90,7 +94,7 @@ public class ConvertRequestApiidentity {
     }
 
     public SimpleResponse handleCallApiGetUserByEmail(String email) {
-        String apiUrl = ApiConstants.API_GET_USER_BY_EMAIL;
+        String apiUrl =  domainIdentity + ApiConstants.API_GET_USER_BY_EMAIL;
         HttpHeaders headers = new HttpHeaders();
         String authorizationToken = "Bearer " + honeySession.getToken();
         headers.set("Authorization", authorizationToken);
