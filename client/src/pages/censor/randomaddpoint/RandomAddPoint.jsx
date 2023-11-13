@@ -267,7 +267,7 @@ export default function RandomAddPoint() {
       setLoading(true);
       RandomAddPointAPI.createRandomItem(dataRandomItem)
         .then(() => {
-          message.success("Tạo ngẫu nhiên vật phẩm thành công");
+          message.success("Phát rương thành công");
           setDataRandomPoint(initialDataRandomPoint);
           setDataRandomItem(initialDataRandomItem);
           setDataPreview([]);
@@ -275,13 +275,11 @@ export default function RandomAddPoint() {
           setSelectedChest("");
         })
         .catch(() => {
-          message.error("Tạo ngẫu nhiên vật phẩm thất bại");
+          message.error("Phát rương thất bại");
         });
       setLoading(false);
     } else {
-      message.error(
-        "Tạo ngẫu nhiên vật phẩm thất bại, bạn cần nhập đủ các dữ liệu"
-      );
+      message.error("Phát rương thất bại, bạn cần nhập đủ các dữ liệu");
     }
   };
 

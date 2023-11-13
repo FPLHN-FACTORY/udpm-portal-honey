@@ -91,8 +91,6 @@ public class LoggerUtil {
                 pathFile.append(getPathFileInProperties(ConfigurationsConstant.FILE_YEU_CAU));
             }
         }
-
-        System.out.println("========= pathFile: " + pathFile.toString());
         return pathFile.toString();
     }
 
@@ -103,13 +101,11 @@ public class LoggerUtil {
                         replaceSpecialCharacters(ConvertUtils.
                                 removeVietnameseChars(session.getAttribute(SessionConstant.ID_USER).toString())));
         pathFile.append(getPathFileInProperties(ConfigurationsConstant.FOLDER_FILE_TEACHER) + fileName + ".csv");
-        System.out.println("========= pathFile: " + pathFile.toString());
         return pathFile.toString();
     }
     public String getPathFileClub() {
         StringBuilder pathFile = new StringBuilder();
         pathFile.append(getPathFileInProperties(ConfigurationsConstant.FOLDER_CAU_LAP_BO) + getPathFileInProperties(ConfigurationsConstant.FILE_CAU_LAP_BO));
-        System.out.println("========= pathFile: " + pathFile.toString());
         return pathFile.toString();
     }
 
@@ -120,7 +116,6 @@ public class LoggerUtil {
                         replaceSpecialCharacters(ConvertUtils.
                                 removeVietnameseChars(session.getAttribute(SessionConstant.ID_USER).toString())));
         pathFile.append(getPathFileInProperties(ConfigurationsConstant.FOLDER_SINH_VIEN) + fileName + ".csv");
-        System.out.println("========= pathFile: " + pathFile.toString());
         return pathFile.toString();
     }
 

@@ -12,8 +12,6 @@ import {
 } from "antd";
 import {
   PlusOutlined,
-  EditOutlined,
-  FormOutlined,
   SearchOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
@@ -25,7 +23,6 @@ import {
   SetSemester,
 } from "../../../app/reducers/semester/semester.reducer";
 import ModalAdd from "./ModalAdd";
-import ModalDetail from "./ModalDetail";
 import DeleteConfirm from "./delete";
 import "./index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -176,6 +173,7 @@ export default function Semester() {
             modalOpen={showModal}
             setModalOpen={setShowModal}
             semester={detailSemester}
+            fetchAll={fetchData}
             SetSemester={setDetailSemester}
           />
         )}

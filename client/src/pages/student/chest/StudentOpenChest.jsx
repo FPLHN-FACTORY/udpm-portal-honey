@@ -1,6 +1,4 @@
-import React from "react";
 import { Popconfirm, message, notification } from "antd";
-import { ChestGiftAPI } from "../../../apis/censor/chest-gift/chest-gift.api";
 import { useAppDispatch } from "../../../app/hooks";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 
@@ -20,15 +18,11 @@ const OpenChest = (props) => {
   };
 
   const handelOk = () => {
-    ArchiveAPI.openChest(chest.chestId).then(() => {
-      ChestGiftAPI.getChestGift(chest.chestId).then((response) => {
-        const openedGifts = response.data.data
-          .map((data) => data.name)
-          .join(", ");
-        notification.success({
-          message: "Thông báo.",
-          description: `Các gift đã được mở: ${openedGifts}`,
-        });
+    ArchiveAPI.openChest(chest.chestId).then((response) => {
+      const nameGift = response.data.data.name;
+      notification.success({
+        message: "Thông báo.",
+        description: `Gift đã được mở: ${nameGift}`,
       });
       closeAdditionalInfo();
     });

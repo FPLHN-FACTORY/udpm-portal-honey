@@ -2,14 +2,12 @@ package com.honeyprojects.core.admin.controller;
 
 import com.honeyprojects.core.admin.model.request.AdminChangeStatusGiftRequest;
 import com.honeyprojects.core.admin.model.request.AdminCreateConversionHistoryRequest;
+import com.honeyprojects.core.admin.model.request.AdminHistoryApprovedSearchRequest;
 import com.honeyprojects.core.admin.model.request.CensorChangeStatusRequest;
 import com.honeyprojects.core.admin.model.request.CensorSearchHistoryRequest;
-import com.honeyprojects.core.admin.model.request.*;
-import com.honeyprojects.core.admin.model.response.AdminAddHoneyHistoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminRequestConversionHistoryResponse;
 import com.honeyprojects.core.admin.model.response.CensorAddHoneyRequestResponse;
 import com.honeyprojects.core.admin.model.response.CensorTransactionRequestResponse;
-import com.honeyprojects.core.admin.service.AdminAddPointService;
 import com.honeyprojects.core.admin.service.AdminRequestConversionService;
 import com.honeyprojects.core.admin.service.CensorRequestManagerService;
 import com.honeyprojects.core.common.base.PageableObject;
@@ -38,7 +36,7 @@ public class CensorRequestManagerRestController {
         return requestManagerService.getHistoryAddPoint(historyRequest);
     }
 
-        @GetMapping("/history-request-conversion")
+    @GetMapping("/history-request-conversion")
     public PageableObject<AdminRequestConversionHistoryResponse> getHistoryRequestConversion(AdminCreateConversionHistoryRequest historyRequest) {
         return requestConversionService.getHistoryConversionAdmin(historyRequest);
     }
@@ -75,6 +73,7 @@ public class CensorRequestManagerRestController {
     public ResponseObject getUserApiByCode(String username) {
         return new ResponseObject(requestManagerService.searchUser(username));
     }
+
     @GetMapping("/user-api/{id}")
     public ResponseObject getUserApiById(@PathVariable String id) {
         return new ResponseObject(requestManagerService.getUserById(id));
@@ -87,30 +86,30 @@ public class CensorRequestManagerRestController {
 
     @GetMapping("/get-point-by-idStudent-idCategory")
     public ResponseObject getPointByIdStudentAndIdCategory(@RequestParam("studentId") String studentId, @RequestParam("honeyCategoryId") String honeyCategoryId) {
-        return new ResponseObject(requestManagerService.getPointByIdStudentAndIdCategory(studentId,honeyCategoryId));
+        return new ResponseObject(requestManagerService.getPointByIdStudentAndIdCategory(studentId, honeyCategoryId));
     }
 
     @GetMapping("/approved-history")
     public PageableObject<CensorTransactionRequestResponse> historyApproved(AdminHistoryApprovedSearchRequest dataSearch) {
-        if(dataSearch.getStatus()==null){
+        if (dataSearch.getStatus() == null) {
             return requestManagerService.getHistoryApprovedAllStatus(dataSearch);
-        }else{
+        } else {
             return requestManagerService.getHistoryApprovedByStatus(dataSearch);
         }
     }
 
     @GetMapping("/list-request")
     public PageableObject<CensorTransactionRequestResponse> listRequests(AdminHistoryApprovedSearchRequest dataSearch) {
-        if (dataSearch.getStatus()==null){
+        if (dataSearch.getStatus() == null) {
             return requestManagerService.getListRequests(dataSearch);
-        }else  return requestManagerService.getListRequestsByStatus(dataSearch);
+        } else return requestManagerService.getListRequestsByStatus(dataSearch);
     }
 
     @GetMapping("/exchange-gifts")
     public PageableObject<CensorTransactionRequestResponse> exchangeGifts(AdminHistoryApprovedSearchRequest dataSearch) {
-        if(dataSearch.getStatus()==null){
+        if (dataSearch.getStatus() == null) {
             return requestManagerService.getExchangeGiftAllStatus(dataSearch);
-        }else{
+        } else {
             return requestManagerService.getExchangeGiftByStatus(dataSearch);
         }
     }
