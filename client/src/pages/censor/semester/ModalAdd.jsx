@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Input, message } from "antd";
+import { Modal, Input, message, Select } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { SemesterAPI } from "../../../apis/censor/semester/semester.api";
 import {
@@ -11,6 +11,7 @@ import moment from "moment/moment";
 
 const ModalAdd = (props) => {
   const { modalOpen, setModalOpen, semester, fetchAll } = props;
+
   const [itemName, setItemName] = useState("");
   const [toDate, setToDate] = useState("");
   const [fromDate, setFromDate] = useState("");
@@ -18,18 +19,18 @@ const ModalAdd = (props) => {
   const [errorFromDate, setErrorFromDate] = useState("");
   const [errorToDate, setErrorToDate] = useState("");
   const [list, setList] = useState([]);
-
+  const [status, setStatus] = useState("0");
   const dispatch = useAppDispatch();
-
+  const { Option } = Select;
   useEffect(() => {
     listsemester();
     if (semester) {
       setItemName(semester.name);
+      setStatus(semester.status);
       setToDate(moment(semester.toDate).format("YYYY-MM-DD"));
       setFromDate(moment(semester.fromDate).format("YYYY-MM-DD"));
     }
   }, [semester]);
-
   const onSaveSuccess = (result) => {
     if (semester === null) {
       dispatch(AddSemester(result.data.data));
@@ -47,8 +48,13 @@ const ModalAdd = (props) => {
     });
   };
 
-  const onSaveError = (err) => {
-    message.error("Lỗi: " + err.message);
+  const onSaveError = (error) => {
+    console.log("Error Response:", error.response); // Hiển thị thông tin lỗi
+    if (error.response && error.response.data && error.response.data.message) {
+      message.error(error.response.data.message);
+    } else {
+      message.error("Lỗi.");
+    }
   };
 
   const onCancel = () => {
@@ -81,8 +87,8 @@ const ModalAdd = (props) => {
       setErrorFromDate("");
     }
 
-    const startDate = new Date(toDate);
-    const endDate = new Date(fromDate);
+    const startDate = new Date(fromDate);
+    const endDate = new Date(toDate);
 
     if (startDate >= endDate) {
       message.error("Ngày bắt đầu phải nhỏ hơn ngày kết thúc.");
@@ -110,7 +116,6 @@ const ModalAdd = (props) => {
       // for (const existingSemester of list) {
       //   const existingStartDate = new Date(existingSemester.fromDate);
       //   const existingEndDate = new Date(existingSemester.toDate);
-
       //   if (startDate >= existingStartDate && endDate <= existingEndDate) {
       //     message.error(
       //       "Học kỳ mới không được nằm trong khoảng thời gian của học kỳ khác."
@@ -130,8 +135,9 @@ const ModalAdd = (props) => {
 
     const formValues = {
       name: itemName,
-      toDate: startDate.getTime(),
-      fromDate: endDate.getTime(),
+      toDate: endDate.getTime(),
+      fromDate: startDate.getTime(),
+      status: status,
     };
 
     if (check === 0) {
@@ -178,8 +184,8 @@ const ModalAdd = (props) => {
                 <div className="ant-form-item-control">
                   <Input
                     type="date"
-                    value={toDate}
-                    onChange={(e) => setToDate(e.target.value)}
+                    value={fromDate}
+                    onChange={(e) => setFromDate(e.target.value)}
                   />
                   <p className="error">{errorToDate}</p>
                 </div>
@@ -190,13 +196,23 @@ const ModalAdd = (props) => {
                 <div className="ant-form-item-control">
                   <Input
                     type="date"
-                    value={fromDate}
-                    onChange={(e) => setFromDate(e.target.value)}
+                    value={toDate}
+                    onChange={(e) => setToDate(e.target.value)}
                   />
                   <p className="error">{errorFromDate}</p>
                 </div>
               </div>
             </div>
+
+            <Select
+              value={status} // Giá trị mặc định
+              onChange={(value) => setStatus(value)}
+              style={{ width: "100%" }}
+              placeholder="Chọn trạng thái"
+            >
+              <Option value="0">Hoạt động</Option>
+              <Option value="2">Chưa hoạt động</Option>
+            </Select>
 
             <div className="ant-form-item">
               <div className="ant-form-item-control">
