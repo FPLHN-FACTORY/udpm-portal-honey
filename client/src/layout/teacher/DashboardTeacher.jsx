@@ -13,7 +13,7 @@ import logo from "../../assets/images/logo/logo-udpm-3.png";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Layout, Drawer, Row, Menu, Col } from "antd";
-import Header from "../../components/user/auth/Header";
+import Header from "../../components/teacher/Header";
 import {
   GiftFilled,
   MenuFoldOutlined,
