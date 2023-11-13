@@ -34,6 +34,7 @@ public class UpgradeRate extends PrimaryEntity {
 
     @Column()
     private Double ratio;
+
     @Column()
     private Status status;
 

@@ -65,7 +65,7 @@ public interface AdminCategoryRepository extends CategoryRepository {
     @Query(value = """
             SELECT c.id, c.name, c.code, c.last_modified_date ,c.category_status ,c.image, c.transaction_rights  
             FROM category c 
-            WHERE c.category_status # 0
+            WHERE c.category_status <> 0
             ORDER BY c.last_modified_date DESC
             """, nativeQuery = true)
     List<AdminCategoryResponse> getAllListCategory();
