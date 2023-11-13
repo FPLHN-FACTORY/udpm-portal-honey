@@ -33,7 +33,6 @@ import TestTransaction from "./pages/student/transaction/TestTransaction";
 import { getToken, setToken } from "./helper/userToken";
 import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
 import UpgradeHoney from "./pages/student/upgradeHoney/UpgradeHoney";
-import RequestApprovedHistory from "./pages/censor/requestmanager/ApproveHistory";
 import ConvertionHoney from "./pages/teacher/convertion-honey/RequestConversion";
 import TeacherRequestConversionHistory from "./pages/teacher/convertion-honey/RequestConversionHistory";
 import LetterDetail from "./pages/student/letters/LetterDetail";
@@ -305,6 +304,16 @@ function App() {
               }
             />
             <Route
+              path="/student/history"
+              element={
+                <AuthGuard>
+                  <DashboardAuthUser>
+                    <StudentHistory />
+                  </DashboardAuthUser>
+                </AuthGuard>
+              }
+            />
+            <Route
               path="/student/request"
               element={
                 <AuthGuard>
@@ -349,7 +358,6 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
-                    {/* <StudentChest /> */}
                     <ChestIndex />
                   </DashboardAuthUser>
                 </AuthGuard>
@@ -391,7 +399,6 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
-                    {/* <UpgradeHoney /> */}
                     <UpgrateHoneyIndex />
                   </DashboardAuthUser>
                 </AuthGuard>
