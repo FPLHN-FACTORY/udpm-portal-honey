@@ -6,4 +6,6 @@ public class ActorConstants {
     public static final String ACTOR_TEACHER = "TEACHER";
 
     public static final String ACTOR_STUDENT = "STUDENT";
+
+    public static final String ACTOR_PRESIDENT = "PRESIDENT";
 }

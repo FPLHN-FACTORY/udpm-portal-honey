@@ -2,7 +2,7 @@ import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppConfig } from "./AppConfig";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import NotFound from "./pages/404";
 import NotAuthorized from "./pages/401";
 import AuthGuard from "./guard/AuthGuard";
@@ -30,7 +30,7 @@ import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
 import ChestGift from "./pages/censor/chest-gift/ChestGift";
 import AuctionMangement from "./pages/censor/auction-management/AuctionManagement";
 import TestTransaction from "./pages/student/transaction/TestTransaction";
-import { getToken, setToken } from "./helper/userToken";
+import { deleteToken, getToken, setToken } from "./helper/userToken";
 import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
 import UpgradeHoney from "./pages/student/upgradeHoney/UpgradeHoney";
 import ConvertionHoney from "./pages/teacher/convertion-honey/RequestConversion";
@@ -52,14 +52,9 @@ import HonorsStudent from "./pages/student/honors/HonorsStudent";
 import TopStudent from "./pages/student/honors/TopStudent";
 import { SelectLoading } from "./app/reducers/loading/loading.reducer";
 import { useAppSelector } from "./app/hooks";
+import AuthorSwitch from "./pages/login/AuthorSwitch";
 function App() {
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU5YjlmYjdlLTkwNjUtNDEwMi1mMDNjLTA4ZGJjZTY5ZTU5NCIsIm5hbWUiOiJ0xrDhu59uZyBoaWhpIiwiZW1haWwiOiJ0dW9uZ3R2cGgyNjE0OUBmcHQuZWR1LnZuIiwidXNlck5hbWUiOiJ0xrDhu59uZyBoaWhpIiwicGljdHVyZSI6IkltYWdlcy9EZWZhdWx0LnBuZyIsImlkVHJhaW5pbmdGYWNpbGl0eSI6Ijc5NmE0ZmE0LThhYWItNDJjNC05ZjM1LTg3MGJiMDAwNWFmMSIsImxvY2FsSG9zdCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODg4OCIsInJvbGUiOlsiVEVBQ0hFUiIsIlNUVURFTlQiLCJBRE1JTiJdLCJyb2xlTmFtZXMiOlsiR2nhuqNuZyB2acOqbiIsIlNpbmggdmnDqm4iLCJRdeG6o24gdHLhu4sgdmnDqm4iXSwibmJmIjoxNjk3NTUwODY5LCJleHAiOjE3MDAxNDI4NjksImlhdCI6MTY5NzU1MDg2OSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDkwNTMiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0OTA1MyJ9.zjVKrdOUc5joBysdG2q8TWAppjZEQSCv4M3dz5I-SnU";
-  if (!getToken()) {
-    setToken(token);
-  }
   const data = useAppSelector(SelectLoading);
-
   return (
     <div className="App scroll-smooth md:scroll-auto font-sans">
       {data && <GlobalLoading />}
@@ -71,7 +66,14 @@ function App() {
             <Route path="/layout-guard-roles" element={<NotAuthorized />} />
             <Route
               path="/"
-              element={<Navigate replace to="/censor/category" />}
+              element={<Navigate replace to="/author-switch" />}
+            />
+            {/* Chọn quyền */}
+            <Route
+              path="/author-switch"
+              element={
+                  <AuthorSwitch></AuthorSwitch>
+              }
             />
             {/* Màn censor */}
             <Route

@@ -20,7 +20,7 @@ import {
 } from "../../../helper/stomp-client/config";
 import { Content, Footer } from "antd/es/layout/layout";
 import { useNavigate } from "react-router-dom";
-import { setToken } from "../../../helper/userToken";
+import { deleteToken } from "../../../helper/userToken";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GetUser, SetUser } from "../../../app/reducers/users/users.reducer";
 import DialogTransaction from "../../../pages/student/transaction/DialogTransaction";
@@ -145,12 +145,6 @@ function DashboardAuthUser({ children }) {
     navigate("/student/honor-student");
   };
 
-  //fake login
-  const token1 =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU5YjlmYjdlLTkwNjUtNDEwMi1mMDNjLTA4ZGJjZTY5ZTU5NCIsIm5hbWUiOiJ0xrDhu59uZyBoaWhpIiwiZW1haWwiOiJ0dW9uZ3R2cGgyNjE0OUBmcHQuZWR1LnZuIiwidXNlck5hbWUiOiJ0xrDhu59uZyBoaWhpIiwicGljdHVyZSI6IkltYWdlcy9EZWZhdWx0LnBuZyIsImlkVHJhaW5pbmdGYWNpbGl0eSI6Ijc5NmE0ZmE0LThhYWItNDJjNC05ZjM1LTg3MGJiMDAwNWFmMSIsImxvY2FsSG9zdCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODg4OCIsInJvbGUiOlsiVEVBQ0hFUiIsIlNUVURFTlQiLCJBRE1JTiJdLCJyb2xlTmFtZXMiOlsiR2nhuqNuZyB2acOqbiIsIlNpbmggdmnDqm4iLCJRdeG6o24gdHLhu4sgdmnDqm4iXSwibmJmIjoxNjk3NTUwODY5LCJleHAiOjE3MDAxNDI4NjksImlhdCI6MTY5NzU1MDg2OSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDkwNTMiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0OTA1MyJ9.zjVKrdOUc5joBysdG2q8TWAppjZEQSCv4M3dz5I-SnU";
-  const token2 =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIzNGM2MTNkLThhYTUtNDg2NS1iMWJkLTA4ZGJiNzQzZGQ3ZCIsIm5hbWUiOiJOZ3V54buFbiBWxINuIFR14bqlbiIsImVtYWlsIjoidHVhbm52cGgyNTU3N0BmcHQuZWR1LnZuIiwidXNlck5hbWUiOiJ0dWFubnZwaDI1NTc3IiwicGljdHVyZSI6IkltYWdlcy9EZWZhdWx0LnBuZyIsImlkVHJhaW5pbmdGYWNpbGl0eSI6Ijc5NmE0ZmE0LThhYWItNDJjNC05ZjM1LTg3MGJiMDAwNWFmMSIsImxvY2FsSG9zdCI6Imh0dHBzOi8vbG9jYWxob3N0OjMwMDAiLCJyb2xlIjoiUEFSVElDSVBBTlQiLCJyb2xlTmFtZXMiOiJUaMOtIHNpbmgiLCJuYmYiOjE2OTU4Mjk4MDEsImV4cCI6MTcyNzM2NTgwMSwiaWF0IjoxNjk1ODI5ODAxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0OTA1MyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjQ5MDUzIn0.1mm_fSj9CiJZSjS9J7RfLiOpHLJMmSQzkX_PZIpauSk";
-
   const [isSettingMenuOpen, setIsSettingMenuOpen] = useState(false);
   const hanlderClickCaiDat = () => {
     playSound();
@@ -159,15 +153,15 @@ function DashboardAuthUser({ children }) {
   const settingMenu = (
     <Menu onClick={hanlderClickCaiDat}>
       <Menu.Item
-        key="1"
+        key="logout"
         onClick={() => {
-          setToken(token1);
-          getProfile();
+          deleteToken();
+          navigate(`/author-switch`);
         }}
       >
-        Tài khoản 1
+        Đăng xuất
       </Menu.Item>
-      <Menu.Item
+      {/* <Menu.Item
         key="2"
         onClick={() => {
           setToken(token2);
@@ -175,7 +169,7 @@ function DashboardAuthUser({ children }) {
         }}
       >
         Tài khoản 2
-      </Menu.Item>
+      </Menu.Item> */}
     </Menu>
   );
   // ========================
@@ -281,8 +275,7 @@ function DashboardAuthUser({ children }) {
                       <button
                         onClick={hanlderClickCaiDat}
                         class="btn-cai-dat btn-student btn-icon"
-                      />
-                      {isSettingMenuOpen && (
+                      >
                         <Dropdown
                           overlay={settingMenu}
                           placement="bottomRight"
@@ -291,7 +284,7 @@ function DashboardAuthUser({ children }) {
                         >
                           <span />
                         </Dropdown>
-                      )}
+                      </button>
                       <button
                         onClick={hanlderClickHomThu}
                         class="btn-hom-thu btn-student btn-icon"

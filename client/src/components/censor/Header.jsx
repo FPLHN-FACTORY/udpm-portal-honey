@@ -2,25 +2,18 @@ import { useEffect, useState } from "react";
 import {
   Row,
   Col,
-  Breadcrumb,
   Badge,
   Dropdown,
-  Button,
   Avatar,
-  Input,
   List,
   Menu,
 } from "antd";
 
 import {
-  SearchOutlined,
-  MoreOutlined,
   BellFilled,
   ClockCircleFilled,
-  UserOutlined,
 } from "@ant-design/icons";
 
-import { Link, useNavigate } from "react-router-dom";
 import avtar from "../../assets/images/team-2.jpg";
 import tym from "../../assets/images/38064371 (2).jpg";
 import comment from "../../assets/images/38064371 (3).jpg";
@@ -28,8 +21,11 @@ import approved from "../../assets/images/check.png";
 import refuse from "../../assets/images/cancel.png";
 import evaluate from "../../assets/images/star.png";
 
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import moment from "moment";
+import SubMenu from "antd/es/menu/SubMenu";
+import { deleteToken, getToken } from "../../helper/userToken";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 // const data = [
 //   {
 //     id: 1,
@@ -72,8 +68,17 @@ function Header({ onSlidebar, onPress, name, subName }) {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [countNotification, setCountNotification] = useState(0);
-  const dispatch = useAppDispatch();
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const tokenValue = getToken();
+
+    if (tokenValue) {
+      setUser(jwtDecode(tokenValue))
+    }
+  }, [])
+
   // useEffect(() => {
   //   const fetchNotification = async () => {
   //     try {
@@ -153,8 +158,8 @@ function Header({ onSlidebar, onPress, name, subName }) {
                       className={`notification-item ${
                         hoveredItem === item.id ? "hovered" : ""
                       }`}
-                      onMouseEnter={() => handleItemHover(item.id)}
-                      onMouseLeave={() => handleItemHover(null)}
+                      // onMouseEnter={() => handleItemHover(item.id)}
+                      // onMouseLeave={() => handleItemHover(null)}
                       // onClick={() => handleItemClick(item)}
                     >
                       <List.Item.Meta
@@ -236,15 +241,27 @@ function Header({ onSlidebar, onPress, name, subName }) {
               </a>
             </Dropdown>
           </Badge>
-          <Link to="/sign-in" className="btn-sign-in">
-            <UserOutlined />
-            <span>Sign in</span>
-          </Link>
-          <Input
-            className="header-search"
-            placeholder="Type here..."
-            prefix={<SearchOutlined />}
-          />
+          {/* fake user login */}
+          
+          <Menu
+            mode="horizontal">
+            <SubMenu
+              title={
+                <span>
+                  <span>{user === null ? "Không có tài khoản" : user.name}</span>
+                </span>
+              }>
+              {user !== null &&
+                <Menu.Item key={"logout"} onClick={() => {
+                  deleteToken();
+                  navigate(`/author-switch`);
+                }}>
+                  Đăng xuất
+                </Menu.Item>
+              }
+            </SubMenu>
+          </Menu>
+          {/* fake user login */}
         </Col>
       </Row>
     </>
