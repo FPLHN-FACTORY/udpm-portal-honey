@@ -5,10 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class StudentArchiveUpgradeRateRequest {
+public class StudentUpgradeRateRequest {
 
     private String name;
-
-    private Integer type;
 
 }

@@ -16,6 +16,7 @@ export const request = axios.create({
 request.interceptors.request.use((config) => {
   store.dispatch(startLoading());
   const token = getToken();
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -29,6 +30,7 @@ request.interceptors.response.use(
   },
   (response) => response,
   (error) => {
+    store.dispatch(finishLoading());
     if (error.response.status === 404) {
       window.location.href = window.location.origin + "/404";
       return;
@@ -37,7 +39,6 @@ request.interceptors.response.use(
       window.location.href = window.location.origin + "/401";
       return;
     }
-    store.dispatch(finishLoading());
     return Promise.reject(error);
   }
 );
