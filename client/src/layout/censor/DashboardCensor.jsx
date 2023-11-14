@@ -10,7 +10,7 @@
   * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 import logo from "../../assets/images/logo/logo-udpm-3.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Layout, Drawer, Row, Menu, Col } from "antd";
 import Header from "../../components/censor/Header";
@@ -32,6 +32,8 @@ import {
 const { Header: AntHeader, Content } = Layout;
 
 function DashboardAuthUser({ children }) {
+  const location = useLocation();
+  const [selectedKey, setSelectedKey] = useState();
   const [visible, setVisible] = useState(false);
   const openDrawer = () => setVisible(!visible);
   const [count, setCount] = useState(250);
@@ -39,6 +41,10 @@ function DashboardAuthUser({ children }) {
     if (count === 70) setCount(250);
     else setCount(70);
   };
+
+  useEffect(() => {
+    setSelectedKey(location.pathname);
+  },[location])
 
   let { pathname } = useLocation();
   pathname = pathname.replace("/", "");
@@ -54,58 +60,58 @@ function DashboardAuthUser({ children }) {
   const items = [
     getItem(
       <Link to="/censor/category">Quản lý thể loại</Link>,
-      "1",
+      "/censor/category",
       <FontAwesomeIcon icon={faKaaba} />
     ),
     getItem(
       <Link to="/censor/semester">Quản lý học kỳ</Link>,
-      "2",
+      "/censor/semester",
       <FontAwesomeIcon icon={faPenRuler} />
     ),
     getItem(
       <Link to="/censor/gift">Quản lý vật phẩm</Link>,
-      "3",
+      "/censor/gift",
       <FontAwesomeIcon icon={faGift} />
     ),
-    getItem("Cộng mật ong", "4", <FontAwesomeIcon icon={faPlusCircle} />, [
-      getItem(<Link to={"/censor/add-point"}>Cộng mật ong</Link>, "5"),
-      getItem(<Link to={"/censor/add-point/history"}>Lịch sử</Link>, "6"),
+    getItem("Cộng mật ong", "Cộng mật ong", <FontAwesomeIcon icon={faPlusCircle} />, [
+      getItem(<Link to={"/censor/add-point"}>Cộng mật ong</Link>, "/censor/add-point"),
+      getItem(<Link to={"/censor/add-point/history"}>Lịch sử</Link>, "/censor/add-point/history"),
     ]),
     getItem(
       "Quản lý yêu cầu",
-      "7",
+      "Quản lý yêu cầu",
       <FontAwesomeIcon icon={faCodePullRequest} />,
       [
-        getItem(<Link to={"/censor/request-manager"}>Yêu cầu</Link>, "8"),
+        getItem(<Link to={"/censor/request-manager"}>Yêu cầu</Link>, "/censor/request-manager"),
         getItem(
           <Link to={"/censor/request-manager/approved-history"}>Lịch sử</Link>,
-          "9"
+          "/censor/request-manager/approved-history"
         ),
       ]
     ),
     getItem(
       <Link to="/censor/request-manager/random-add-point">Tặng vật phẩm</Link>,
-      "10",
+      "/censor/request-manager/random-add-point",
       <FontAwesomeIcon icon={faCommentsDollar} />
     ),
     getItem(
       <Link to="/censor/chest">Quản lý rương</Link>,
-      "11",
+      "/censor/chest",
       <FontAwesomeIcon icon={faToolbox} />
     ),
     getItem(
       <Link to="/censor/auction-management">Quản lý phòng đấu giá</Link>,
-      "12",
+      "/censor/auction-management",
       <FontAwesomeIcon icon={faScaleUnbalanced} />
     ),
     getItem(
       <Link to="/censor/upgrade-rate">Quản lý tỉ lệ nâng cấp</Link>,
-      "13",
+      "/censor/upgrade-rate",
       <FontAwesomeIcon icon={faStar} />
     ),
     getItem(
       <Link to="/censor/conversion">Quản lý quy đổi</Link>,
-      "14",
+      "/censor/conversion",
       <FontAwesomeIcon icon={faExchangeAlt} />
     ),
   ];
@@ -154,7 +160,7 @@ function DashboardAuthUser({ children }) {
               </Link>
             </div>
           </Row>
-          <Menu mode="inline" items={items} onClick={openDrawer} />
+          <Menu mode="inline" items={items} onClick={openDrawer}/>
         </Layout>
       </Drawer>
       <div className="bg-white">
@@ -178,7 +184,7 @@ function DashboardAuthUser({ children }) {
             style={{ height: "80px" }}
           />
 
-          <Menu mode="inline" items={items} />
+          <Menu mode="inline" items={items} selectedKeys={selectedKey}/>
         </Sider>
       </div>
       <Layout className="pb-14">
