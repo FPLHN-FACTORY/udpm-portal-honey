@@ -19,7 +19,6 @@ const ModalCreateUpgradeRate = ({
   const [id, setId] = useState(null);
   useEffect(() => {
     form.setFieldsValue(null);
-    console.log(currentItem);
     if (currentItem) {
       const updatedCurrentItem = {
         originalHoney: currentItem.originalId,
@@ -33,7 +32,6 @@ const ModalCreateUpgradeRate = ({
       if (currentItem.id) {
         setId(currentItem.id);
       }
-      console.log(updatedCurrentItem);
       // form.setFieldsValue({ idGifts: updatedCurrentItem.giftName });
       form.setFieldsValue(updatedCurrentItem);
     }
@@ -56,14 +54,13 @@ const ModalCreateUpgradeRate = ({
       };
 
       if (obj) {
-        if (obj.originalHoneyId >= obj.destinationHoneyId) {
+        if (obj.originalHoneyId === obj.destinationHoneyId) {
           message.error("Loại điểm đầu vào không thể giống loại điểm đầu cuối");
           return;
         }
       }
       UpgradeApi.create(obj).then(
         (response) => {
-          console.log(response.data.data);
           if (response.data.data) {
             if (id) {
               message.success("Cập nhật thành công!");
