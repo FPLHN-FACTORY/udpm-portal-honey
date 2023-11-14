@@ -19,7 +19,6 @@ import {
   faPenToSquare,
   faRectangleList,
   faPlus,
-  faCircleInfo,
   faArrowDownLong,
   faArrowRight,
   faLockOpen,
@@ -54,16 +53,15 @@ export default function UpgradeRate() {
   const [currentRecord, setCurrentRecord] = useState(null);
 
   useEffect(() => {
-    fetchData();
-    fetchCategory();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [current]);
-
-  useEffect(() => {
     fetchCategory();
     featAllGift();
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current]);
   const fetchData = () => {
     UpgradeApi.fetchAll({
       page: current - 1,
@@ -80,7 +78,6 @@ export default function UpgradeRate() {
   };
 
   const DeleteUpgradeRate = (record) => {
-    console.log({ status: record.status, id: record.id });
     UpgradeApi.delete({ status: record.status, id: record.id })
       .then((response) => {
         if (record.status === 1) {
@@ -574,6 +571,8 @@ export default function UpgradeRate() {
             pagination={false}
           />
           <br></br>
+          {
+            total > 1 && 
           <div className="pagination__box">
             <Pagination
               simple
@@ -584,6 +583,7 @@ export default function UpgradeRate() {
               total={total * 10}
             />
           </div>
+          }
         </div>
       </Card>
       {modalCreate && (

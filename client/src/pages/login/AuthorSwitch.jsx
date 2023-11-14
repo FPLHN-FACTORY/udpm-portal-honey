@@ -19,13 +19,13 @@ const AuthorSwitch = () => {
       if (isTokenValid(token)) {
         urlSearchParams.set("Token", token);
         navigate(`${location.pathname}?${urlSearchParams.toString()}`);
-        switchRole(getRolesUse());
+        // switchRole(getRolesUse());
         // setRolesUse("");
       }
     } else {
       if (isTokenValid(tokenValue)) {
         setToken(tokenValue);
-        switchRole(getRolesUse());
+        // switchRole(getRolesUse());
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

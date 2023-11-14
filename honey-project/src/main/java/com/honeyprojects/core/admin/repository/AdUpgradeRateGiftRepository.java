@@ -46,7 +46,6 @@ public interface AdUpgradeRateGiftRepository extends UpgradeRateGiftRepository {
         FROM honey_project.upgrade_rate ur
         JOIN honey_project.category c1 ON c1.id = ur.destination_honey
         JOIN honey_project.category c2 ON c2.id = ur.original_honey
-        LEFT JOIN gif_selected gs ON ur.id = gs.id_upgrade_rate
         WHERE (:#{#req.originalHoneyId} IS NULL OR c2.id = :#{#req.originalHoneyId})
         AND (:#{#req.destinationHoneyId} IS NULL OR c1.id = :#{#req.destinationHoneyId})
         AND (:#{#req.status} IS NULL OR ur.status = :#{#req.status})

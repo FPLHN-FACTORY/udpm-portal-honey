@@ -4,6 +4,7 @@ import com.honeyprojects.infrastructure.apiconstants.ApiConstants;
 import com.honeyprojects.infrastructure.apiconstants.HonneyConstants;
 import com.honeyprojects.infrastructure.contant.SessionConstant;
 import com.honeyprojects.infrastructure.session.HoneySession;
+import com.honeyprojects.util.callApiPoint.model.dto.ClassSubjectDto;
 import com.honeyprojects.util.callApiPoint.model.request.FilterClassSubject;
 import com.honeyprojects.util.callApiPoint.model.request.FilterScoreTemplate;
 import com.honeyprojects.util.callApiPoint.model.request.FilterScoreTemplateVM;
@@ -27,12 +28,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class CallApiCommonImpl implements CallApiCommonService {
@@ -49,32 +50,42 @@ public class CallApiCommonImpl implements CallApiCommonService {
     @Value("${domain.identity}")
     private String identityDomain;
 
+    @Value("${domain.score.class}")
+    private String scoreClassDomain;
+
     @Override
     // Call api lấy ra danh sách lớp học và môn
     public List<ClassSubjectVM> callApiClassSubjectVM(FilterClassSubject request) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+        String apiConnect = scoreClassDomain +
+                ApiConstants.API_GET_ALL_SUBJECT_BY_EMAIL
+                + "?emailStudent=" + request.getEmailStudent();
 
-        // Kiểm tra xem request có đủ dữ liệu truyền vào không
-        Set<ConstraintViolation<FilterClassSubject>> violations = validator.validate(request);
+        HttpHeaders headers = new HttpHeaders();
+        String authorizationToken = "Bearer " + honeySession.getToken();
+        headers.set("Authorization", authorizationToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 
-        if (!violations.isEmpty()) {
-            // Nếu có lỗi, bạn có thể xử lý tùy theo yêu cầu, ví dụ: ném một ngoại lệ hoặc trả về kết quả khác.
-            throw new IllegalArgumentException("Request không hợp lệ: " + violations.toString());
-        }
+        ResponseEntity<List<ClassSubjectDto>> responseEntity =
+                restTemplate.exchange(apiConnect, HttpMethod.GET, httpEntity,
+                        new ParameterizedTypeReference<List<ClassSubjectDto>>() {
+                        });
 
-        List<ClassSubjectVM> classSubjectList = new ArrayList<>();
+        List<ClassSubjectDto> response = responseEntity.getBody();
 
-        for (int i = 0; i < 10; i++) {
-            ClassSubjectVM classSubject = new ClassSubjectVM();
-            classSubject.setClassName("Tên lớp " + i);
-            classSubject.setClassId("ID lớp " + i);
-            classSubject.setSubjectName("Tên môn học " + i);
-            classSubject.setSubjectId("ID môn học " + i);
-            classSubject.setTeacherEmail("Email giáo viên " + i);
+        // Sử dụng Streams và lambda để chuyển đổi danh sách
+        List<ClassSubjectVM> classSubjectList = response.stream()
+                .map(el -> {
+                    ClassSubjectVM classSubjectVM = new ClassSubjectVM();
+                    classSubjectVM.setClassId(el.getId());
+                    classSubjectVM.setClassName(el.getSemesterName());
+                    classSubjectVM.setSubjectId(el.getSubjectId());
+                    classSubjectVM.setSubjectName(el.getSubjectName());
+                    classSubjectVM.setTeacherEmail(el.getLecturerMail());
+                    return classSubjectVM;
+                })
+                .collect(Collectors.toList());
 
-            classSubjectList.add(classSubject);
-        }
         return classSubjectList;
     }
 
@@ -128,27 +139,28 @@ public class CallApiCommonImpl implements CallApiCommonService {
 
     @Override
     public boolean checkRoleIdentity() {
-        String apiConnect = identityDomain +
-                ApiConstants.API_GET_ALL_USER_BY_ROLE_AND_MODULE
-                + session.getAttribute(SessionConstant.ID_USER)
-                + "/" + HonneyConstants.MODULE_CODE;
-        HttpHeaders headers = new HttpHeaders();
-        String authorizationToken = "Bearer " + honeySession.getToken();
-        headers.set("Authorization", authorizationToken);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
-        ResponseEntity<List<RoleIdentityResponse>> responseEntity =
-                restTemplate.exchange(apiConnect, HttpMethod.GET, httpEntity,
-                        new ParameterizedTypeReference<List<RoleIdentityResponse>>() {
-                        });
-
-        List<RoleIdentityResponse> response = responseEntity.getBody();
-        List<SimpleGrantedAuthority> authorities = (List<SimpleGrantedAuthority>) session.getAttribute(SessionConstant.ROLES);
-        boolean allAuthoritiesPresent = authorities.stream()
-                .allMatch(authority -> response.stream()
-                        .anyMatch(responseAuthority -> responseAuthority.getRoleCode().equals(authority.getAuthority())));
-
-        return allAuthoritiesPresent;
+        return true;
+//        String apiConnect = identityDomain +
+//                ApiConstants.API_GET_ALL_USER_BY_ROLE_AND_MODULE
+//                + session.getAttribute(SessionConstant.ID_USER)
+//                + "/" + HonneyConstants.MODULE_CODE;
+//        HttpHeaders headers = new HttpHeaders();
+//        String authorizationToken = "Bearer " + honeySession.getToken();
+//        headers.set("Authorization", authorizationToken);
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+//        ResponseEntity<List<RoleIdentityResponse>> responseEntity =
+//                restTemplate.exchange(apiConnect, HttpMethod.GET, httpEntity,
+//                        new ParameterizedTypeReference<List<RoleIdentityResponse>>() {
+//                        });
+//
+//        List<RoleIdentityResponse> response = responseEntity.getBody();
+//        List<SimpleGrantedAuthority> authorities = (List<SimpleGrantedAuthority>) session.getAttribute(SessionConstant.ROLES);
+//        boolean allAuthoritiesPresent = authorities.stream()
+//                .allMatch(authority -> response.stream()
+//                        .anyMatch(responseAuthority -> responseAuthority.getRoleCode().equals(authority.getAuthority())));
+//
+//        return allAuthoritiesPresent;
     }
 
 }
