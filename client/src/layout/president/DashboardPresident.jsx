@@ -10,7 +10,7 @@
   * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 import logo from "../../assets/images/logo/logo-udpm-3.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Layout, Drawer, Row, Menu, Col } from "antd";
 import Header from "../../components/president/Header";
@@ -23,6 +23,8 @@ import Sider from "antd/es/layout/Sider";
 const { Header: AntHeader, Content } = Layout;
 
 function DashboardPresident({ children }) {
+  const location = useLocation();
+  const [selectedKey, setSelectedKey] = useState();
   const [visible, setVisible] = useState(false);
   const openDrawer = () => setVisible(!visible);
   const [count, setCount] = useState(250);
@@ -30,6 +32,10 @@ function DashboardPresident({ children }) {
     if (count === 70) setCount(250);
     else setCount(70);
   };
+
+  useEffect(() => {
+    setSelectedKey(location.pathname);
+  },[location])
 
   let { pathname } = useLocation();
   pathname = pathname.replace("/", "");
@@ -43,8 +49,8 @@ function DashboardPresident({ children }) {
     };
   }
   const items = [
-    getItem("Cộng mật ong", "0", <PlusCircleFilled />, [
-      getItem(<Link to={"/president/add-item"}>Tạo yêu cầu</Link>, "1"),
+    getItem("Cộng mật ong", "Cộng mật ong", <PlusCircleFilled />, [
+      getItem(<Link to={"/president/add-item"}>Tạo yêu cầu</Link>, "/president/add-item"),
     ]),
   ];
   const toggleCollapse = () => {
@@ -116,7 +122,7 @@ function DashboardPresident({ children }) {
             style={{ height: "80px" }}
           />
 
-          <Menu mode="inline" items={items} />
+          <Menu mode="inline" items={items}  selectedKeys={selectedKey}/>
         </Sider>
       </div>
       <Layout className="pb-14">
