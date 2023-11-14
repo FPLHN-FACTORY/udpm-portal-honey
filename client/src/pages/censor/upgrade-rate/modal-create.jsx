@@ -55,7 +55,7 @@ const ModalCreateUpgradeRate = ({
 
       if (obj) {
         if (obj.originalHoneyId === obj.destinationHoneyId) {
-          message.error("Loại điểm đầu vào không thể giống loại điểm đầu cuối");
+          message.error("Loại mật đầu vào không thể giống loại mật nâng cấp");
           return;
         }
       }
@@ -107,9 +107,9 @@ const ModalCreateUpgradeRate = ({
             }}>
             <Form.Item
               name="originalHoney"
-              label="Loại điểm đầu"
+              label="Loại mật quy đổi"
               rules={[
-                { required: true, message: "Điểm đầu không được để trống" },
+                { required: true, message: "Loại mật quy đổi không được để trống" },
               ]}
             >
               <Select
@@ -124,18 +124,18 @@ const ModalCreateUpgradeRate = ({
             </Form.Item>
             <Form.Item
               name="quantityOriginal"
-              label="Số lượng điểm đầu"
+              label="Số lượng mật quy đổi"
               rules={[
                 {
                   required: true,
-                  message: "Số lượng điểm đầu không được để trống",
+                  message: "Số lượng mật quy đổi không được để trống",
                 },
                 {
                   validator: (rule, value) => {
                     if (value > 0) {
                       return Promise.resolve();
                     }
-                    return Promise.reject('Số lượng điểm đầu không được nhò hơn 0');
+                    return Promise.reject('Số lượng mật quy đổi không được nhò hơn 0');
                   },
                 },
               ]}
@@ -145,11 +145,11 @@ const ModalCreateUpgradeRate = ({
             </Form.Item>
             <Form.Item
               name="destinationHoney"
-              label="Loại điểm cuối"
+              label="Loại mật nâng cấp"
               rules={[
                 {
                   required: true,
-                  message: "Điểm cuối không được để trống",
+                  message: "mật nâng cấp không được để trống",
                 },
               ]}
             >
@@ -164,18 +164,18 @@ const ModalCreateUpgradeRate = ({
             </Form.Item>
             <Form.Item
               name="quantityDestination"
-              label="Số lượng điểm cuối"
+              label="Số lượng mật nâng cấp"
               rules={[
                 {
                   required: true,
-                  message: "Số lượng điểm cuối không được để trống",
+                  message: "Số lượng mật nâng cấp không được để trống",
                 },
                 {
                   validator: (rule, value) => {
                     if (value > 0) {
                       return Promise.resolve();
                     }
-                    return Promise.reject('Số lượng điểm cuối không được nhò hơn 0');
+                    return Promise.reject('Số lượng mật nâng cấp không được nhò hơn 0');
                   },
                 },
               ]}
@@ -185,9 +185,9 @@ const ModalCreateUpgradeRate = ({
             </Form.Item>
             <Form.Item
               name="idGifts"
-              label="Vật phẩm để nâng cấp"
+              label="Vật phẩm đi kèm"
               rules={[
-                { required: true, message: "Danh sách vật phẩm nâng cấp không được để trống" },
+                { required: true, message: "Danh sách vật phẩm đi kèm không được để trống" },
               ]}
             >
               <Select
