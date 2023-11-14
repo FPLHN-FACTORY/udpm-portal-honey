@@ -1,6 +1,7 @@
 package com.honeyprojects.infrastructure.security;
 
 import com.honeyprojects.infrastructure.contant.Constants;
+import com.honeyprojects.util.callApiPoint.service.CallApiCommonService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +25,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Autowired
+    public CallApiCommonService service;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws IOException, ServletException {
@@ -33,8 +37,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         if (jwtToken != null) {
             if (jwtTokenProvider.validateToken(jwtToken)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(jwtToken);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
                 session.setAttribute(Constants.TOKEN, jwtToken);
+                if (jwtTokenProvider.checkRoleIdentity()) {
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
         }
         filterChain.doFilter(request, response);

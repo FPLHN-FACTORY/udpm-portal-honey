@@ -86,7 +86,7 @@ public class DBGenerator implements CommandLineRunner {
         calendar.add(Calendar.MONTH, 3);
         semester.setToDate(calendar.getTimeInMillis());
         semester.setFromDate(Calendar.getInstance().getTimeInMillis());
-        semester.setStatus(Status.HOAT_DONG);
+        semester.setStatus(SemesterStatus.DANG_HOAT_DONG);
         semester.setId(semesterRepository.save(semester).getId());
 
         Honey honey1 = new Honey();
@@ -201,14 +201,12 @@ public class DBGenerator implements CommandLineRunner {
         conversion1.setCode("CV1");
         conversion1.setRatio(Double.valueOf(100));
         conversion1.setStatus(Status.HOAT_DONG);
-        conversion1.setGiftId(gift1.getId());
         conversion1.setId(conversionRepository.save(conversion1).getId());
 
         Conversion conversion2 = new Conversion();
         conversion2.setCode("CV2");
         conversion2.setRatio(Double.valueOf(200));
         conversion2.setStatus(Status.HOAT_DONG);
-        conversion2.setGiftId(gift2.getId());
         conversion2.setId(conversionRepository.save(conversion2).getId());
 
         History history1 = new History();
@@ -284,7 +282,7 @@ public class DBGenerator implements CommandLineRunner {
         auction2.setStatus(Status.HOAT_DONG);
         auction2.setGiftId(gift7.getId());
         auction2.setFromDate(System.currentTimeMillis());
-        auction2.setToDate(System.currentTimeMillis() + 8*3600*1000L);
+        auction2.setToDate(System.currentTimeMillis() + 8 * 3600 * 1000L);
         auction2.setJump(new BigDecimal(2000));
         auction2.setLastPrice(new BigDecimal(5000));
         auction2.setStartingPrice(new BigDecimal(2000));
@@ -296,14 +294,14 @@ public class DBGenerator implements CommandLineRunner {
         auction3.setStatus(Status.HOAT_DONG);
         auction3.setGiftId(gift1.getId());
         auction3.setFromDate(System.currentTimeMillis());
-        auction3.setToDate(System.currentTimeMillis() + 8*3600*1000L);
+        auction3.setToDate(System.currentTimeMillis() + 8 * 3600 * 1000L);
         auction3.setJump(new BigDecimal(5000));
         auction3.setLastPrice(new BigDecimal(200000));
         auction3.setStartingPrice(new BigDecimal(5000));
         auction3.setId(auctionRepository.save(auction3).getId());
 
         // todo
-        Archive archive =  new Archive();
+        Archive archive = new Archive();
         archive.setStatus(Status.HOAT_DONG);
         archive.setStudentId(userSemester1.getStudentId());
         archiveRepository.save(archive);
@@ -356,31 +354,31 @@ public class DBGenerator implements CommandLineRunner {
         archiveGift7.setGiftId(gift4.getId());
         archiveGiftRepository.save(archiveGift7);
 
-        GiftDetail giftDetail1 =  new GiftDetail();
+        GiftDetail giftDetail1 = new GiftDetail();
         giftDetail1.setGiftId(gift1.getId());
         giftDetail1.setCategoryId(category1.getId());
 
-        GiftDetail giftDetail2 =  new GiftDetail();
+        GiftDetail giftDetail2 = new GiftDetail();
         giftDetail2.setGiftId(gift2.getId());
         giftDetail2.setCategoryId(category1.getId());
 
-        GiftDetail giftDetail3 =  new GiftDetail();
+        GiftDetail giftDetail3 = new GiftDetail();
         giftDetail3.setGiftId(gift3.getId());
         giftDetail3.setCategoryId(category2.getId());
 
-        GiftDetail giftDetail4 =  new GiftDetail();
+        GiftDetail giftDetail4 = new GiftDetail();
         giftDetail4.setGiftId(gift4.getId());
         giftDetail4.setCategoryId(category2.getId());
 
-        GiftDetail giftDetail5 =  new GiftDetail();
+        GiftDetail giftDetail5 = new GiftDetail();
         giftDetail5.setGiftId(gift5.getId());
         giftDetail5.setCategoryId(category3.getId());
 
-        GiftDetail giftDetail6 =  new GiftDetail();
+        GiftDetail giftDetail6 = new GiftDetail();
         giftDetail6.setGiftId(gift6.getId());
         giftDetail6.setCategoryId(category3.getId());
 
-        GiftDetail giftDetail7 =  new GiftDetail();
+        GiftDetail giftDetail7 = new GiftDetail();
         giftDetail7.setGiftId(gift7.getId());
         giftDetail7.setCategoryId(category3.getId());
 

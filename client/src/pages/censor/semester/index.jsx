@@ -12,8 +12,6 @@ import {
 } from "antd";
 import {
   PlusOutlined,
-  EditOutlined,
-  FormOutlined,
   SearchOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
@@ -25,7 +23,6 @@ import {
   SetSemester,
 } from "../../../app/reducers/semester/semester.reducer";
 import ModalAdd from "./ModalAdd";
-import ModalDetail from "./ModalDetail";
 import DeleteConfirm from "./delete";
 import "./index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -99,8 +96,8 @@ export default function Semester() {
     },
     {
       title: "Ngày bắt đầu",
-      dataIndex: "toDate",
-      key: "toDate",
+      dataIndex: "fromDate",
+      key: "fromDate",
       align: "center",
       render: (text) => {
         const readableDate = convertToReadableDate(text);
@@ -109,8 +106,8 @@ export default function Semester() {
     },
     {
       title: "Ngày kết thúc",
-      dataIndex: "fromDate",
-      key: "fromDate",
+      dataIndex: "toDate",
+      key: "toDate",
       align: "center",
       render: (text) => {
         const readableDate = convertToReadableDate(text);
@@ -122,21 +119,44 @@ export default function Semester() {
       dataIndex: "status",
       key: "status",
       align: "center",
-      render: (text) => (
-        <Tag
-          color={text === 0 ? "green" : "red"}
-          style={{
-            fontSize: "14px",
-            padding: "5px 10px",
-            borderRadius: "10px",
-            width: "100%",
-            textAlign: "center",
-          }}
-        >
-          {text === 0 ? "Mở" : "Đóng"}
-        </Tag>
-      ),
+      render: (text) => {
+        let tagColor, tagText;
+
+        switch (text) {
+          case 0:
+            tagColor = "green";
+            tagText = "Đang hoạt động";
+            break;
+          case 1:
+            tagColor = "red";
+            tagText = "Đã kết thúc";
+            break;
+          case 2:
+            tagColor = "blue";
+            tagText = "Chưa hoạt động";
+            break;
+          default:
+            tagColor = "gray";
+            tagText = "Không xác định";
+        }
+
+        return (
+          <Tag
+            color={tagColor}
+            style={{
+              fontSize: "14px",
+              padding: "5px 10px",
+              borderRadius: "10px",
+              width: "100%",
+              textAlign: "center",
+            }}
+          >
+            {tagText}
+          </Tag>
+        );
+      },
     },
+
     {
       title: () => <div>Hành động</div>,
       key: "action",
@@ -176,6 +196,7 @@ export default function Semester() {
             modalOpen={showModal}
             setModalOpen={setShowModal}
             semester={detailSemester}
+            fetchAll={fetchData}
             SetSemester={setDetailSemester}
           />
         )}

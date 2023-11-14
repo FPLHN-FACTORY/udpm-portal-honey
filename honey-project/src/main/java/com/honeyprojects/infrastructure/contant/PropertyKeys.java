@@ -10,4 +10,5 @@ public class PropertyKeys {
     public static final String VERIFICATION_NOT_EXIST = "verification.not.exist";
     public static final String HISTORY_NOT_EXIST = "verification.not.exist";
     public static final String AUCTION_NOT_EXISTS = "auction.not.exist";
+    public static final String SEMESTER_ALREADY_EXIST = "semester.already.exist";
 }

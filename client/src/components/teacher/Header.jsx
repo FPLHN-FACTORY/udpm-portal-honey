@@ -2,70 +2,105 @@ import { useEffect, useState } from "react";
 import {
   Row,
   Col,
-  Breadcrumb,
   Badge,
   Dropdown,
-  Button,
   Avatar,
-  Input,
   List,
+  Menu,
 } from "antd";
 
 import {
-  SearchOutlined,
-  MoreOutlined,
   BellFilled,
   ClockCircleFilled,
-  UserOutlined,
 } from "@ant-design/icons";
 
-import { NavLink, Link } from "react-router-dom";
 import avtar from "../../assets/images/team-2.jpg";
-import anh1 from "../../assets/images/cancel.png";
-import anh2 from "../../assets/images/check.png";
-import anh3 from "../../assets/images/star.png";
-const data = [
-  {
-    id: 1,
-    title:
-      "New message from SophieNew message from SophieNew message from SophieNew message from Sophie",
-    description: (
-      <>
-        <ClockCircleFilled /> 2 days ago
-      </>
-    ),
-    avatar: avtar,
-    smallAvatar: anh1,
-  },
-  {
-    id: 2,
-    title: "New album by Travis Scott",
-    description: (
-      <>
-        <ClockCircleFilled /> 2 days ago
-      </>
-    ),
-    avatar: avtar,
-    smallAvatar: anh3,
-  },
-  {
-    id: 3,
-    title: "Payment completed",
-    description: (
-      <>
-        <ClockCircleFilled /> 2 days ago
-      </>
-    ),
-    avatar: avtar,
-    smallAvatar: anh2,
-  },
-];
+import tym from "../../assets/images/38064371 (2).jpg";
+import comment from "../../assets/images/38064371 (3).jpg";
+import approved from "../../assets/images/check.png";
+import refuse from "../../assets/images/cancel.png";
+import evaluate from "../../assets/images/star.png";
+
+import moment from "moment";
+import SubMenu from "antd/es/menu/SubMenu";
+import { deleteToken, getToken } from "../../helper/userToken";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+// const data = [
+//   {
+//     id: 1,
+//     title:
+//       "New message from SophieNew message from SophieNew message from SophieNew message from Sophie",
+//     description: (
+//       <>
+//         <ClockCircleFilled /> 2 days ago
+//       </>
+//     ),
+//     avatar: avtar,
+//     smallAvatar: anh1,
+//   },
+//   {
+//     id: 2,
+//     title: "New album by Travis Scott",
+//     description: (
+//       <>
+//         <ClockCircleFilled /> 2 days ago
+//       </>
+//     ),
+//     avatar: avtar,
+//     smallAvatar: anh1,
+//   },
+//   {
+//     id: 3,
+//     title: "Payment completed",
+//     description: (
+//       <>
+//         <ClockCircleFilled /> 2 days ago
+//       </>
+//     ),
+//     avatar: avtar,
+//     smallAvatar: anh2,
+//   },
+// ];
 
 function Header({ onSlidebar, onPress, name, subName }) {
   useEffect(() => window.scrollTo(0, 0));
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [countNotification, setCountNotification] = useState(0);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const tokenValue = getToken();
+
+    if (tokenValue) {
+      setUser(jwtDecode(tokenValue))
+    }
+  }, [])
+
+  // useEffect(() => {
+  //   const fetchNotification = async () => {
+  //     try {
+  //       const response = await NotificationAPI.fetchNotification();
+  //       dispatch(SetNotification(response.data.data.data));
+  //     } catch (error) {}
+  //   };
+
+  //   fetchNotification();
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchCountNotification = async () => {
+  //     try {
+  //       const response = await NotificationAPI.fetchCountNotification();
+  //       setCountNotification(response.data);
+  //     } catch (error) {}
+  //   };
+
+  //   fetchCountNotification();
+  // }, [dispatch]);
+  // const dataNotification = useAppSelector(GetNotification);
   const toggleNotifications = () => {
     setIsOpen(!isOpen);
   };
@@ -73,84 +108,124 @@ function Header({ onSlidebar, onPress, name, subName }) {
   const handleItemHover = (itemId) => {
     setHoveredItem(itemId);
   };
+  const AvatarMap = {
+    1: comment,
+    2: approved,
+    3: evaluate,
+    4: tym,
+    5: refuse,
+  };
 
-  const menu = (
-    <List
-      style={{ width: "300px" }}
-      className="header-notifications-dropdown"
-      itemLayout="horizontal"
-      dataSource={data}
-      renderItem={(item) => (
-        <List.Item
-          className={`notification-item ${
-            hoveredItem === item.id ? "hovered" : ""
-          }`}
-          onMouseEnter={() => handleItemHover(item.id)}
-          onMouseLeave={() => handleItemHover(null)}
-        >
-          <List.Item.Meta
-            avatar={
-              <div style={{ position: "relative", display: "inline-block" }}>
-                <Avatar
-                  shape="circle"
-                  src={item.avatar}
-                  style={{ width: "50px", height: "50px" }}
-                />
-                <Avatar
-                  shape="circle"
-                  src={item.smallAvatar}
-                  style={{
-                    width: "25px",
-                    height: "25px",
-                    position: "absolute",
-                    bottom: "-5px",
-                    right: 0,
-                  }}
-                />
-              </div>
-            }
-            title={item.title}
-            description={item.description}
-          />
-          {hoveredItem === item.id && (
-            <Button
-              shape="circle"
-              style={{ border: "none", boxShadow: "none", right: "0" }}
-              className="notification-options absolute "
-              icon={<MoreOutlined />}
-            />
-          )}
-        </List.Item>
-      )}
-    />
-  );
+  // const deleteNotification = async (id) => {
+  //   try {
+  //     const response = await NotificationAPI.delete(id);
+  //     if (response.status === 200) {
+  //       const updatedData = dataNotification.filter((item) => item.id !== id);
+  //       dispatch(SetNotification(updatedData));
+  //       const newResponse = await NotificationAPI.fetchNotification();
+  //       const newData = newResponse.data.data.data;
+  //       dispatch(SetNotification(newData));
+  //       const newCount = countNotification - 1;
+  //       setCountNotification(newCount);
+  //     }
+  //   } catch (error) {}
+  // };
+  // const handleItemClick = (item) => {
+  //   if (item.type === 5) {
+  //     navigate(`/my-article/${item.articlesId}`);
+  //   } else {
+  //     navigate(`/user/article/${item.articlesId}`);
+  //   }
+  // };
 
   return (
     <>
       <Row gutter={[24, 0]}>
         <Col span={6}>
-          <Breadcrumb className="p-0">
-            <Breadcrumb.Item>
-              <NavLink to="/">Pages</NavLink>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item style={{ textTransform: "capitalize" }}>
-              {name.replace("/", " / ")}
-            </Breadcrumb.Item>
-          </Breadcrumb>
-          <div className="ant-page-header-heading">
-            <span
-              className="ant-page-header-heading-title"
-              style={{ textTransform: "capitalize" }}
-            >
-              {subName.replace("/", " / ")}
-            </span>
-          </div>
         </Col>
         <Col span={18} className="header-control">
           {/* chuông */}
-          <Badge size="small" count={11}>
+          <Badge size="small" count={countNotification}>
             <Dropdown
-              overlay={menu}
+              overlay={
+                <List
+                  style={{ width: "300px" }}
+                  className="header-notifications-dropdown"
+                  itemLayout="horizontal"
+                  dataSource={9}
+                  renderItem={(item) => (
+                    <List.Item
+                      className={`notification-item ${
+                        hoveredItem === item.id ? "hovered" : ""
+                      }`}
+                      // onMouseEnter={() => handleItemHover(item.id)}
+                      // onMouseLeave={() => handleItemHover(null)}
+                      // onClick={() => handleItemClick(item)}
+                    >
+                      <List.Item.Meta
+                        avatar={
+                          <div
+                            style={{
+                              position: "relative",
+                              display: "inline-block",
+                            }}
+                          >
+                            <Avatar
+                              shape="circle"
+                              src={avtar}
+                              style={{ width: "50px", height: "50px" }}
+                            />
+                            <Avatar
+                              shape="circle"
+                              src={AvatarMap[item.type]}
+                              style={{
+                                width: "25px",
+                                height: "25px",
+                                position: "absolute",
+                                bottom: "-5px",
+                                right: 0,
+                              }}
+                            />
+                          </div>
+                        }
+                        title={item.contentActivity}
+                        description={
+                          <>
+                            <ClockCircleFilled />{" "}
+                            {moment(item.createdDate).format("DD/MM/YYYY")}
+                          </>
+                        }
+                      />
+                      {/* {hoveredItem === item.id && (
+                        <Dropdown
+                          overlay={
+                            <Menu>
+                              <Menu.Item
+                                key="delete"
+                                onClick={() => deleteNotification(item.id)}
+                              >
+                                <a href="# ">Xóa</a>
+                              </Menu.Item>
+                            </Menu>
+                          }
+                          trigger={["click"]}
+                        >
+                          <Button
+                            shape="circle"
+                            style={{
+                              border: "none",
+                              boxShadow: "none",
+                              right: "0",
+                            }}
+                            className="notification-options absolute "
+                            icon={<MoreOutlined />}
+                          />
+                        </Dropdown>
+                      )} */}
+                    </List.Item>
+                  )}
+                />
+              }
               trigger={["click"]}
               visible={isOpen}
               onVisibleChange={toggleNotifications}
@@ -166,15 +241,27 @@ function Header({ onSlidebar, onPress, name, subName }) {
               </a>
             </Dropdown>
           </Badge>
-          <Link to="/sign-in" className="btn-sign-in">
-            <UserOutlined />
-            <span>Sign in</span>
-          </Link>
-          <Input
-            className="header-search"
-            placeholder="Type here..."
-            prefix={<SearchOutlined />}
-          />
+          {/* fake user login */}
+          
+          <Menu
+            mode="horizontal">
+            <SubMenu
+              title={
+                <span>
+                  <span>{user === null ? "Không có tài khoản" : user.name}</span>
+                </span>
+              }>
+              {user !== null &&
+                <Menu.Item key={"logout"} onClick={() => {
+                  deleteToken();
+                  navigate(`/author-switch`);
+                }}>
+                  Đăng xuất
+                </Menu.Item>
+              }
+            </SubMenu>
+          </Menu>
+          {/* fake user login */}
         </Col>
       </Row>
     </>

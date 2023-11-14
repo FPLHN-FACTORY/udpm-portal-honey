@@ -7,6 +7,9 @@ import com.honeyprojects.core.admin.repository.AdChestRepository;
 import com.honeyprojects.core.admin.service.AdminChestService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Chest;
+import com.honeyprojects.infrastructure.logger.entity.LoggerFunction;
+import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
+import com.honeyprojects.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +25,12 @@ public class AdminChestServiceImpl implements AdminChestService {
     @Autowired
     private AdChestRepository chestRepository;
 
+    @Autowired
+    private LoggerUtil loggerUtil;
+
+    @Autowired
+    private RabbitProducer producer;
+
     @Override
     public PageableObject<AdminChestReponse> getAllChestByAdmin(AdminChestRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
@@ -34,6 +43,16 @@ public class AdminChestServiceImpl implements AdminChestService {
     public Chest addChest(AdminCreateChestRequest request) {
         Chest chest = new Chest();
         chest.setName(request.getName());
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Admin tạo thêm rương: " + request.getName());
+        LoggerFunction loggerObject = new LoggerFunction();
+        loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
+        loggerObject.setContent(stringBuilder.toString());
+        try {
+            producer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return chestRepository.save(chest);
     }
 

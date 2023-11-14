@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface StudentHoneyRepository extends HoneyRepository {
     @Query(value = """
@@ -30,6 +32,11 @@ public interface StudentHoneyRepository extends HoneyRepository {
             """, nativeQuery = true)
     StudentHoneyResponse getPoint(String categoryId,String studentId, Long dateNow);
 
-    @Query("SELECT h FROM Honey h WHERE h.studentId =:idUser")
-    Honey getOneByIdUser (@Param("idUser") String idUser);
+    @Query(value = """
+            SELECT *
+             FROM honey h
+             WHERE h.student_id = :id
+             """,
+            nativeQuery = true)
+    List<Honey> getListIdCategory(@Param("id") String id);
 }

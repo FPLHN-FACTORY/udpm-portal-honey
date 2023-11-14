@@ -50,7 +50,6 @@ public class    AdminConversionRestcontroller {
         return new ResponseObject(adminConversionService.getPage(request));
     }
 
-
     @GetMapping("/get-one/{id}")
     public ResponseObject getOne(@PathVariable String id){
         return new ResponseObject(adminConversionService.getOneConversion(id));
