@@ -10,7 +10,19 @@
   * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 import { useEffect, useState } from "react";
-import { Col, Dropdown, Layout, Menu, Row, Space, message } from "antd";
+import {
+  Col,
+  Dropdown,
+  Layout,
+  Menu,
+  Row,
+  Space,
+  message,
+  Button,
+  Modal,
+  Form,
+  Input,
+} from "antd";
 import { ProfileApi } from "../../../apis/student/profile/profileApi.api";
 import soundClick from "../../../assets/sounds/sound_click.mp3";
 import "./index.css";
@@ -29,8 +41,11 @@ import {
   GetCountNotification,
   SetCountNotification,
 } from "../../../app/reducers/notification/count-notification.reducer";
+import { v4 as uuidv4 } from "uuid";
+import { TransactionApi } from "../../../apis/student/transaction/transactionApi.api";
 
 function DashboardAuthUser({ children }) {
+  const data = useAppSelector(GetUser);
   const navigate = useNavigate();
   const [transaction, setTransaction] = useState();
   const dispatch = useAppDispatch();
@@ -52,11 +67,12 @@ function DashboardAuthUser({ children }) {
     getStompClient().connect({}, () => {
       ProfileApi.getUserLogin().then((response) => {
         getStompClient().subscribe(
-          `/user/${response.data.data.idUser}/transaction`,
+          `/portal-honey/${response.data.data.idUser}/transaction`,
           (result) => {
             if (!open) {
               const transactionReq = JSON.parse(result.body);
-              showRequestTransaction(transactionReq);
+              if (transactionReq.success)
+                showRequestTransaction(transactionReq.data);
             }
           }
         );
@@ -79,20 +95,18 @@ function DashboardAuthUser({ children }) {
           <b>{transactionReq.formUser}</b>
           <div>
             <button
-              className="tu-choi"
+              className="btn-tu-choi"
               onClick={() => {
                 message.destroy(transactionReq.idTransaction);
-              }}
-            >
+              }}>
               Từ chối
             </button>
             <button
-              className="chap-nhan"
+              className="btn-chap-nhan"
               onClick={() => {
                 message.destroy();
                 onsubmitTransaction(transactionReq);
-              }}
-            >
+              }}>
               Chấp nhận
             </button>
           </div>
@@ -104,9 +118,19 @@ function DashboardAuthUser({ children }) {
   }
 
   function onsubmitTransaction(transaction) {
-    setTransaction(transaction);
-    message.destroy(transaction.idTransaction);
-    setOpen(true);
+    const idTransaction = transaction.idTransaction;
+    ProfileApi.getUserLogin().then((response) => {
+      dispatch(SetUser(response.data.data));
+      const nameUser = response.data.data.name;
+      getStompClient().send(
+        `/action/accept-transaction/${idTransaction}`,
+        {},
+        JSON.stringify({ nameUser, idTransaction })
+      );
+      setTransaction(transaction);
+      message.destroy(idTransaction);
+      setOpen(true);
+    });
   }
 
   const [onMusic, setOnMusic] = useState(
@@ -132,7 +156,7 @@ function DashboardAuthUser({ children }) {
     navigate("/student/upgrade-honey");
   };
   const hanlderClickGiaoDich = () => {
-    navigate("/student/transaction");
+    setIsModalOpen(true);
     playSound();
   };
   const hanlderClickKhoDo = () => {
@@ -140,7 +164,7 @@ function DashboardAuthUser({ children }) {
     navigate("/student/chest");
   };
 
- const hanlderClickTonVinh = () => {
+  const hanlderClickTonVinh = () => {
     playSound();
     navigate("/student/honor-student");
   };
@@ -163,8 +187,7 @@ function DashboardAuthUser({ children }) {
         onClick={() => {
           setToken(token1);
           getProfile();
-        }}
-      >
+        }}>
         Tài khoản 1
       </Menu.Item>
       <Menu.Item
@@ -172,8 +195,7 @@ function DashboardAuthUser({ children }) {
         onClick={() => {
           setToken(token2);
           getProfile();
-        }}
-      >
+        }}>
         Tài khoản 2
       </Menu.Item>
     </Menu>
@@ -215,15 +237,108 @@ function DashboardAuthUser({ children }) {
     });
   };
 
-  const data = useAppSelector(GetUser);
+  const [formFindUser] = Form.useForm();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleCancel = () => {
+    formFindUser.resetFields();
+    setIsModalOpen(false);
+  };
+
+  const requestTransaction = (value) => {
+    const idTransaction = uuidv4();
+    TransactionApi.searchStudent(value).then(
+      (result) => {
+        if (result.data.success) {
+          const nameUser = data.name;
+          getStompClient().send(
+            "/action/send-transaction/" + result.data.data,
+            {},
+            JSON.stringify({ nameUser, idTransaction })
+          );
+          setIsModalOpen(false);
+          message.success("Đã gửi yêu cầu giao dịch!");
+          formFindUser.resetFields();
+          const subscription = getStompClient().subscribe(
+            `/portal-honey/transaction/${idTransaction}/accept`,
+            (result) => {
+              if (!open) {
+                const transactionReq = JSON.parse(result.body);
+                if (transactionReq.success) {
+                  setTransaction(transactionReq.data);
+                  message.destroy(idTransaction);
+                  setOpen(true);
+                }
+                subscription.unsubscribe();
+              }
+            }
+          );
+          setTimeout(() => {
+            subscription.unsubscribe();
+          }, 10000);
+        }
+      },
+      (error) => {
+        message.error(error.response.data.message);
+      }
+    );
+  };
 
   return (
     <div className="main-ui-student" style={{ display: "flex" }}>
+      <Modal
+        open={isModalOpen}
+        onOk={handleCancel}
+        onCancel={handleCancel}
+        closeIcon={<></>}
+        footer={null}
+        width={400}
+        className="css-modal-confim-buy-gift">
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Form
+            form={formFindUser}
+            onFinish={requestTransaction}
+            style={{ width: "90%" }}>
+            <h2
+              style={{
+                color: "white",
+                fontWeight: "bold",
+                marginBottom: "5px",
+                marginTop: "-5px",
+                textAlign: "center",
+              }}>
+              GIAO DỊCH
+            </h2>
+            <Form.Item
+              name={"email"}
+              rules={[
+                {
+                  required: true,
+                  whitespace: true,
+                  message: "Vui lòng nhập email sinh viên cần tìm!",
+                },
+              ]}>
+              <Input placeholder="Nhập email sinh viên!" />
+            </Form.Item>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}>
+              <Button htmlType="submit" type="primary" className="btn-xac-nhan">
+                Gửi yêu cầu
+              </Button>
+              <Button type="primary" className="btn-huy" onClick={handleCancel}>
+                Hủy
+              </Button>
+            </div>
+          </Form>
+        </div>
+      </Modal>
       {open && (
         <DialogTransaction
-          key={transaction.idTransaction}
-          open={open}
-          setClose={setOpen}
+          key={"transaction.idTransaction"}
+          open={true}
+          setOpen={setOpen}
           transaction={transaction}
         />
       )}
@@ -231,8 +346,7 @@ function DashboardAuthUser({ children }) {
         <div style={{ position: "relative" }}>
           <div
             className="card-close-container btn-student"
-            onClick={returnHome}
-          >
+            onClick={returnHome}>
             <img
               width={"50px"}
               src={require("../../../assets/images/ui-student/btn-close.png")}
@@ -251,8 +365,7 @@ function DashboardAuthUser({ children }) {
                   height: "70vh",
                   paddingRight: "60px",
                   paddingLeft: "60px",
-                }}
-              >
+                }}>
                 <Row>
                   <Col span={12}>
                     <div onClick={hanlderClickProfile} className="container">
@@ -287,16 +400,14 @@ function DashboardAuthUser({ children }) {
                           overlay={settingMenu}
                           placement="bottomRight"
                           visible={isSettingMenuOpen}
-                          onVisibleChange={() => {}}
-                        >
+                          onVisibleChange={() => {}}>
                           <span />
                         </Dropdown>
                       )}
                       <button
                         onClick={hanlderClickHomThu}
                         class="btn-hom-thu btn-student btn-icon"
-                        style={{ position: "relative" }}
-                      >
+                        style={{ position: "relative" }}>
                         <span
                           style={{
                             position: "absolute",
@@ -310,8 +421,7 @@ function DashboardAuthUser({ children }) {
                             height: "25px",
                             lineHeight: "25px",
                             color: "#ffffff",
-                          }}
-                        >
+                          }}>
                           {dataCountNotification}
                         </span>
                       </button>
@@ -323,8 +433,10 @@ function DashboardAuthUser({ children }) {
                             : "btn-tat-am-thanh btn-student btn-icon"
                         }
                       />
-                      <button class="btn-cai-dat btn-student btn-icon" 
-                      onClick={hanlderClickTonVinh}/>
+                      <button
+                        class="btn-cai-dat btn-student btn-icon"
+                        onClick={hanlderClickTonVinh}
+                      />
                     </div>
                   </Col>
                 </Row>
@@ -336,8 +448,7 @@ function DashboardAuthUser({ children }) {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "end",
-                }}
-              >
+                }}>
                 <button
                   onClick={hanlderClickDauGia}
                   className="btn-dau-gia btn-student"
