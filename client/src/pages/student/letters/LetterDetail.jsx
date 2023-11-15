@@ -1,7 +1,7 @@
 import { Button, Space, message } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
-import React, { memo, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useAppDispatch } from "../../../app/hooks";
 import "./letter-detail.css";
 import { useState } from "react";
@@ -9,9 +9,8 @@ import { ClockCircleOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { NotificationDetailAPI } from "../../../apis/student/notificaton-detail/notification-detail.api";
 import { NotificationAPI } from "../../../apis/student/notification/notification.api";
-import { connectStompClient, getStompClient } from "../../../helper/stomp-client/config";
 
-const LetterDetail = memo(() => {
+const LetterDetail = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -21,44 +20,9 @@ const LetterDetail = memo(() => {
   const dataReceiving = [];
   notificationDetail.map((n) => dataReceiving.push(n.notificationDetailId));
 
-  
-  useEffect(() => {
-    connectStompClient();
-  }, []);
-
-  const stompClient = getStompClient();
-
-  const connect = () => {
-    stompClient.connect(
-      {},
-      (frame) => {},
-      (error) => {
-        console.error("Lỗi trong quá trình kết nối STOMP:", error);
-      }
-    );
-  };
-  
-  useEffect(() => {
-    if (stompClient != null) {
-      connect();
-    }
-    return () => {
-      if (stompClient != null) {
-        getStompClient().disconnect();
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const fetchOneNotification = (id) => {
     NotificationAPI.readOne(id)
-      .then((response) => {
-        console.log("====================================");
-        console.log(response.data.data);
-        console.log("====================================");
-        if (response.data.data === true) {
-        }
-      })
+      .then((response) => {})
       .catch(() => {});
   };
 
@@ -177,6 +141,6 @@ const LetterDetail = memo(() => {
       </div>
     </section>
   );
-});
+};
 
 export default LetterDetail;

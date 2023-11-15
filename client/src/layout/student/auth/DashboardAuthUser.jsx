@@ -29,6 +29,7 @@ import {
   GetCountNotification,
   SetCountNotification,
 } from "../../../app/reducers/notification/count-notification.reducer";
+import { useLocation } from "react-router-dom";
 
 function DashboardAuthUser({ children }) {
   const navigate = useNavigate();
@@ -40,10 +41,16 @@ function DashboardAuthUser({ children }) {
       dispatch(SetCountNotification(response.data));
     } catch (error) {}
   };
-
+  const location = useLocation();
   useEffect(() => {
     fetchCountNotification();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (location.pathname === "/student") {
+      fetchCountNotification();
+    }
+  }, [location]);
 
   const dataCountNotification = useAppSelector(GetCountNotification);
 
@@ -140,7 +147,7 @@ function DashboardAuthUser({ children }) {
     navigate("/student/chest");
   };
 
- const hanlderClickTonVinh = () => {
+  const hanlderClickTonVinh = () => {
     playSound();
     navigate("/student/honor-student");
   };
@@ -316,8 +323,10 @@ function DashboardAuthUser({ children }) {
                             : "btn-tat-am-thanh btn-student btn-icon"
                         }
                       />
-                      <button class="btn-cai-dat btn-student btn-icon" 
-                      onClick={hanlderClickTonVinh}/>
+                      <button
+                        class="btn-cai-dat btn-student btn-icon"
+                        onClick={hanlderClickTonVinh}
+                      />
                     </div>
                   </Col>
                 </Row>
