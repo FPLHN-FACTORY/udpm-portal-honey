@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 
 public interface AdminAuctionResponse extends IsIdentified {
 
+    @Value("#{target.stt}")
     Integer getStt();
 
     @Value("#{target.id}")
@@ -16,12 +17,30 @@ public interface AdminAuctionResponse extends IsIdentified {
     @Value("#{target.name}")
     String getName();
 
-    @Value("#{target.category_name}")
-    String getCategoryName();
+    @Value("#{target.giftName}")
+    String getGiftName();
 
-    @Value("#{target.category_id}")
-    String getCategoryId();
+    @Value("#{target.fromDate}")
+    Long getFromDate();
+
+    @Value("#{target.toDate}")
+    Long getToDate();
+
+    @Value("#{target.starting_price}")
+    BigDecimal getStartingPrice();
+
+    @Value("#{target.last_price}")
+    BigDecimal getLastPrice();
+
+    @Value("#{target.nameCategory}")
+    String getNameCategory();
+
+    @Value("#{target.jump}")
+    BigDecimal getJump();
 
     @Value("#{target.status}")
     Status getStatus();
+
+    @Value("#{target.idCategory}")
+    String getIDCategory();
 }
