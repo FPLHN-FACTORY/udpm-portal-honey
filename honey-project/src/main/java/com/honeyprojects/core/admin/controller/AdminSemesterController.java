@@ -22,6 +22,7 @@ public class AdminSemesterController {
 
     @Autowired
     private AdminSemesterService adminSemesterService;
+
     @Autowired
     private AdminSemesterLogService adminSemesterLogService;
 
@@ -47,12 +48,12 @@ public class AdminSemesterController {
 
     @PostMapping("/add")
     public ResponseObject addSemester(@Valid @RequestBody AdminSemesterRequest request) {
-        return new ResponseObject(adminSemesterLogService.addSemester(request));
+        return new ResponseObject(adminSemesterService.addSemester(request));
     }
 
     @PutMapping("/{id}")
     public ResponseObject updateSemester(@RequestBody @Valid AdminSemesterRequest request, @PathVariable("id") String id) {
-        return new ResponseObject(adminSemesterLogService.updateSemester(request, id));
+        return new ResponseObject(adminSemesterService.updateSemester(request, id));
     }
 
 }

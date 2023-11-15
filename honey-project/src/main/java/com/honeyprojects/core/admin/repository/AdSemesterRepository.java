@@ -4,6 +4,7 @@ import com.honeyprojects.core.admin.model.request.AdminSearchSemesterRequest;
 import com.honeyprojects.core.admin.model.response.AdminSemesterResponse;
 import com.honeyprojects.core.admin.model.response.SemesterJobResponse;
 import com.honeyprojects.entity.Semester;
+import com.honeyprojects.infrastructure.contant.SemesterStatus;
 import com.honeyprojects.repository.SemesterRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,4 +54,6 @@ public interface AdSemesterRepository extends SemesterRepository {
     @Query(value = "SELECT s.id, s.from_date FROM semester s WHERE s.status = '2' ORDER BY s.from_date ASC LIMIT 1"
             , nativeQuery = true)
     SemesterJobResponse openNewSemester();
+
+    Semester findSemesterByStatus(SemesterStatus status);
 }

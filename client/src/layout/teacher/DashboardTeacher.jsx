@@ -10,10 +10,10 @@
   * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 import logo from "../../assets/images/logo/logo-udpm-3.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Layout, Drawer, Row, Menu, Col } from "antd";
-import Header from "../../components/user/auth/Header";
+import Header from "../../components/teacher/Header";
 import {
   GiftFilled,
   MenuFoldOutlined,
@@ -24,6 +24,8 @@ import Sider from "antd/es/layout/Sider";
 const { Header: AntHeader, Content } = Layout;
 
 function DashboardTeacher({ children }) {
+  const location = useLocation();
+  const [selectedKey, setSelectedKey] = useState();
   const [visible, setVisible] = useState(false);
   const openDrawer = () => setVisible(!visible);
   const [count, setCount] = useState(250);
@@ -31,6 +33,10 @@ function DashboardTeacher({ children }) {
     if (count === 70) setCount(250);
     else setCount(70);
   };
+
+  useEffect(() => {
+    setSelectedKey(location.pathname);
+  },[location])
 
   let { pathname } = useLocation();
   pathname = pathname.replace("/", "");
@@ -44,27 +50,27 @@ function DashboardTeacher({ children }) {
     };
   }
   const items = [
-    getItem("Cộng mật ong", "0", <PlusCircleFilled />, [
-      getItem(<Link to={"/teacher/add-point"}>Tạo yêu cầu</Link>, "1"),
+    getItem("Cộng mật ong", "Cộng mật ong", <PlusCircleFilled />, [
+      getItem(<Link to={"/teacher/add-point"}>Tạo yêu cầu</Link>, "/teacher/add-point"),
       getItem(
         <Link to={"/teacher/add-point/list-request"}>Danh sách yêu cầu</Link>,
-        "2"
+        "/teacher/add-point/list-request"
       ),
 
       getItem(
         <Link to={"/teacher/add-point/history"}>Lịch sử yêu cầu</Link>,
-        "3"
+        "/teacher/add-point/history"
       ),
     ]),
-    getItem("Yêu cầu đổi quà", "4", <GiftFilled />, [
+    getItem("Yêu cầu đổi quà", "Yêu cầu đổi quà", <GiftFilled />, [
       getItem(
         <Link to={"/teacher/convertion-honey"}>Danh sách yêu cầu</Link>,
-        "5"
+        "/teacher/convertion-honey"
       ),
 
       getItem(
         <Link to={"/teacher/request-conversion/history"}>Lịch sử yêu cầu</Link>,
-        "6"
+        "/teacher/request-conversion/history"
       ),
     ]),
   ];
@@ -133,7 +139,7 @@ function DashboardTeacher({ children }) {
             style={{ height: "80px" }}
           />
 
-          <Menu mode="inline" items={items} />
+          <Menu mode="inline" items={items}  selectedKeys={selectedKey}/>
         </Sider>
       </div>
       <Layout className="pb-14">
