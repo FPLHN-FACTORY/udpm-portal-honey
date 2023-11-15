@@ -43,7 +43,8 @@ public interface StudentUpgradeRateRepository extends UpgradeRateRepository {
              WHERE ( :#{#request.name} IS NULL 
                 OR :#{#request.name} LIKE ''
                 OR c1.name LIKE :#{#request.name} 
-                OR c2.name LIKE :#{#request.name} )              
+                OR c2.name LIKE :#{#request.name} )      
+                AND u.status = 0        
              GROUP BY u.id
              """,
             nativeQuery = true)

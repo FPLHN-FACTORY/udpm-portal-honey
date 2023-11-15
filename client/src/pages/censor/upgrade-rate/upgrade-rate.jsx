@@ -337,7 +337,6 @@ export default function UpgradeRate() {
                   style={{
                     backgroundColor: "red",
                     color: "white",
-                    height: "35px",
                   }}
                 >
                   <FontAwesomeIcon icon={faLock} />
@@ -358,7 +357,6 @@ export default function UpgradeRate() {
                   style={{
                     backgroundColor: "green",
                     color: "white",
-                    height: "35px",
                   }}
                 >
                   <FontAwesomeIcon icon={faLockOpen} />
@@ -370,9 +368,8 @@ export default function UpgradeRate() {
             <Button
               onClick={() => openModalDetail(record)}
               style={{
-                backgroundColor: "red",
+                backgroundColor: "#53d1ff",
                 color: "white",
-                height: "35px",
               }}
             >
               <FontAwesomeIcon icon={faEye} />
@@ -384,9 +381,8 @@ export default function UpgradeRate() {
                 buttonUpdate(record);
               }}
               style={{
-                backgroundColor: "#0066CC",
+                backgroundColor: "yellowgreen",
                 color: "white",
-                height: "35px",
               }}
             >
               <FontAwesomeIcon icon={faPenToSquare} />
@@ -571,19 +567,18 @@ export default function UpgradeRate() {
             pagination={false}
           />
           <br></br>
-          {
-            total > 1 && 
-          <div className="pagination__box">
-            <Pagination
-              simple
-              current={current}
-              onChange={(page) => {
-                setCurrent(page);
-              }}
-              total={total * 10}
-            />
-          </div>
-          }
+          {total > 1 && (
+            <div className="pagination__box">
+              <Pagination
+                simple
+                current={current}
+                onChange={(page) => {
+                  setCurrent(page);
+                }}
+                total={total * 10}
+              />
+            </div>
+          )}
         </div>
       </Card>
       {modalCreate && (

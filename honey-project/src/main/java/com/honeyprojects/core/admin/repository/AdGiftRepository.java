@@ -59,11 +59,7 @@ public interface AdGiftRepository extends GiftRepository {
             """, nativeQuery = true)
     List<AdminGiftResponse> getAllListResponse();
 
-    @Query(value = """
-            SELECT g.name FROM gift g where (g.status = 0 or g.status = 1) 
-            ORDER BY g.last_modified_date DESC
-            """, nativeQuery = true )
-    List<String> getAllNameByStatus();
+    List<AdminGiftResponse> findAllByType(@Param("type") Integer type);
 
     @Query(value = """
              SELECT g.id, g.name FROM gift g where g.status in (0,1) ORDER BY g.last_modified_date DESC
