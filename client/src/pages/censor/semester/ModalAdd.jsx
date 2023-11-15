@@ -48,15 +48,6 @@ const ModalAdd = (props) => {
     });
   };
 
-  const onSaveError = (error) => {
-    console.log("Error Response:", error.response); // Hiển thị thông tin lỗi
-    if (error.response && error.response.data && error.response.data.message) {
-      message.error(error.response.data.message);
-    } else {
-      message.error("Lỗi.");
-    }
-  };
-
   const onCancel = () => {
     setModalOpen(false);
   };
@@ -96,41 +87,23 @@ const ModalAdd = (props) => {
       return;
     }
 
-    if (semester) {
-      for (const existingSemester of list) {
-        const existingStartDate = new Date(existingSemester.fromDate);
-        const existingEndDate = new Date(existingSemester.toDate);
-
-        if (
-          (startDate >= existingStartDate && startDate <= existingEndDate) ||
-          (endDate >= existingStartDate && endDate <= existingEndDate)
-        ) {
-          message.error(
-            "Thời gian học kỳ mới không thể trùng hoặc nằm trong khoảng của học kỳ khác."
-          );
-          check++;
-          return;
-        }
+    for (const existingSemester of list) {
+      const existingStartDate = new Date(existingSemester.fromDate);
+      const existingEndDate = new Date(existingSemester.toDate);
+      if (startDate >= existingStartDate && endDate <= existingEndDate) {
+        message.error(
+          "Học kỳ mới không được nằm trong khoảng thời gian của học kỳ khác."
+        );
+        check++;
+        return;
       }
-    } else {
-      // for (const existingSemester of list) {
-      //   const existingStartDate = new Date(existingSemester.fromDate);
-      //   const existingEndDate = new Date(existingSemester.toDate);
-      //   if (startDate >= existingStartDate && endDate <= existingEndDate) {
-      //     message.error(
-      //       "Học kỳ mới không được nằm trong khoảng thời gian của học kỳ khác."
-      //     );
-      //     check++;
-      //     return;
-      //   }
-      //   if (startDate <= existingStartDate && endDate >= existingEndDate) {
-      //     message.error(
-      //       "Học kỳ mới không được chứa khoảng thời gian của học kỳ hiện tại."
-      //     );
-      //     check++;
-      //     return;
-      //   }
-      // }
+      if (startDate <= existingStartDate && endDate >= existingEndDate) {
+        message.error(
+          "Học kỳ mới không được chứa khoảng thời gian của học kỳ hiện tại."
+        );
+        check++;
+        return;
+      }
     }
 
     const formValues = {
@@ -142,11 +115,21 @@ const ModalAdd = (props) => {
 
     if (check === 0) {
       if (semester === null) {
-        SemesterAPI.create(formValues).then(onSaveSuccess).catch(onSaveError);
+        SemesterAPI.create(formValues).then(
+          (response) => {
+            onSaveSuccess(response);
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
       } else {
-        SemesterAPI.update(formValues, semester.id)
-          .then(onSaveSuccess)
-          .catch(onSaveError);
+        SemesterAPI.update(formValues, semester.id).then(
+          (response) => onSaveSuccess(response),
+          (error) => {
+            console.log(error);
+          }
+        );
       }
     }
   };
