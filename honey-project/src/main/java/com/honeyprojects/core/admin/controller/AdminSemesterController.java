@@ -2,7 +2,6 @@ package com.honeyprojects.core.admin.controller;
 
 import com.honeyprojects.core.admin.model.request.AdminSearchSemesterRequest;
 import com.honeyprojects.core.admin.model.request.AdminSemesterRequest;
-import com.honeyprojects.core.admin.service.AdminSemesterLogService;
 import com.honeyprojects.core.admin.service.AdminSemesterService;
 import com.honeyprojects.core.common.base.ResponseObject;
 import jakarta.validation.Valid;
@@ -22,9 +21,6 @@ public class AdminSemesterController {
 
     @Autowired
     private AdminSemesterService adminSemesterService;
-
-    @Autowired
-    private AdminSemesterLogService adminSemesterLogService;
 
     @GetMapping("")
     public ResponseObject getAllSemesterByAdmin(AdminSearchSemesterRequest request) {

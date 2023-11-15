@@ -2,7 +2,14 @@ import React, { useEffect } from "react";
 import { Col, Row, Tooltip } from "antd";
 
 import "./login.css";
-import { deleteToken, getRolesUse, getToken, isTokenValid, setRolesUse, setToken } from "../../helper/userToken";
+import {
+  deleteToken,
+  getRolesUse,
+  getToken,
+  isTokenValid,
+  setRolesUse,
+  setToken,
+} from "../../helper/userToken";
 import { connectIdentity } from "../../AppConfig";
 import { useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -28,8 +35,8 @@ const AuthorSwitch = () => {
         switchRole(getRolesUse());
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const swtichRole = (roleCode) => {
     if (tokenValue) {
@@ -49,7 +56,7 @@ const AuthorSwitch = () => {
           }
         }
         if (listRole.filter((el) => el.code === getRolesUse()).length <= 0) {
-          deleteToken()
+          deleteToken();
         }
       }
     }
@@ -59,7 +66,7 @@ const AuthorSwitch = () => {
       switchRole(roleCode);
       return;
     }
-    
+
     deleteToken();
     window.location.href = connectIdentity;
     setRolesUse(roleCode);
@@ -83,46 +90,63 @@ const AuthorSwitch = () => {
         navigate("/author-switch?Token=" + getToken());
         break;
     }
-  }
+  };
 
   return (
-    <div id="auth_switch" className="flex justify-center items-center min-h-screen " style={{ overflow: "hidden", background: '#eda736' }}>
-      <Row style={{}}
+    <div
+      id="auth_switch"
+      className="flex justify-center items-center min-h-screen "
+      style={{ overflow: "hidden", background: "#eda736" }}
+    >
+      <Row
+        style={{}}
         gutter={16}
         className="pl-7 pr-7 justify-around items-center cards w-full"
       >
-        <Tooltip title={ "Admin" } className=" card" >
-          <Col xl={5} lg={12}
+        <Tooltip title={"Admin"} className=" card">
+          <Col
+            xl={5}
+            lg={12}
             className="form-switch ease-in-out duration-300 rounded-md shadow-xl my-6 mx-6 cursor-pointer"
-            style={{background: "#fff"}}
-            onClick={() => swtichRole("ADMIN")} >
+            style={{ background: "#fff" }}
+            onClick={() => swtichRole("ADMIN")}
+          >
             Admin
           </Col>
-          </Tooltip>
-          <Tooltip title={ "Giảng viên" } className=" card">
-            <Col xl={5} lg={12}
+        </Tooltip>
+        <Tooltip title={"Giảng viên"} className=" card">
+          <Col
+            xl={5}
+            lg={12}
             className="form-switch ease-in-out duration-300 rounded-md shadow-xl my-6 mx-6 cursor-pointer"
-            style={{background: "#fff"}}
-            onClick={() => swtichRole("TEACHER")}>
+            style={{ background: "#fff" }}
+            onClick={() => swtichRole("TEACHER")}
+          >
             Giảng viên
-            </Col>
-            </Tooltip>
-          <Tooltip title={ "Sinh viên" } className=" card">
-            <Col xl={5} lg={12}
+          </Col>
+        </Tooltip>
+        <Tooltip title={"Sinh viên"} className=" card">
+          <Col
+            xl={5}
+            lg={12}
             className="form-switch ease-in-out duration-300 rounded-md shadow-xl my-6 mx-6 cursor-pointer"
-            style={{background: "#fff"}}
-            onClick={() => swtichRole("STUDENT")}>
+            style={{ background: "#fff" }}
+            onClick={() => swtichRole("STUDENT")}
+          >
             Sinh viên
-            </Col>
-            </Tooltip>
-          <Tooltip title={ "Chủ tịch" } className=" card">
-            <Col xl={5} lg={12}
+          </Col>
+        </Tooltip>
+        <Tooltip title={"Chủ tịch"} className=" card">
+          <Col
+            xl={5}
+            lg={12}
             className="form-switch ease-in-out duration-300 rounded-md shadow-xl my-6 mx-6 cursor-pointer"
-            style={{background: "#fff"}}
-            onClick={() => swtichRole("PRESIDENT")}>
+            style={{ background: "#fff" }}
+            onClick={() => swtichRole("PRESIDENT")}
+          >
             Chủ tịch
-            </Col>
-            </Tooltip>
+          </Col>
+        </Tooltip>
       </Row>
     </div>
   );
