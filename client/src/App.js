@@ -32,7 +32,6 @@ import AuctionMangement from "./pages/censor/auction-management/AuctionManagemen
 import TestTransaction from "./pages/student/transaction/TestTransaction";
 import { deleteToken, getToken, setToken } from "./helper/userToken";
 import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
-import UpgradeHoney from "./pages/student/upgradeHoney/UpgradeHoney";
 import ConvertionHoney from "./pages/teacher/convertion-honey/RequestConversion";
 import TeacherRequestConversionHistory from "./pages/teacher/convertion-honey/RequestConversionHistory";
 import LetterDetail from "./pages/student/letters/LetterDetail";
@@ -52,7 +51,9 @@ import HonorsStudent from "./pages/student/honors/HonorsStudent";
 import TopStudent from "./pages/student/honors/TopStudent";
 import { SelectLoading } from "./app/reducers/loading/loading.reducer";
 import { useAppSelector } from "./app/hooks";
+import Login from "./pages/login/Login";
 import AuthorSwitch from "./pages/login/AuthorSwitch";
+
 function App() {
   const data = useAppSelector(SelectLoading);
   return (
@@ -451,7 +452,7 @@ function App() {
               element={
                 <AuthGuard>
                   {/* <DashboardAuthUser> */}
-                    <HonorsStudent />
+                  <HonorsStudent />
                   {/* </DashboardAuthUser> */}
                 </AuthGuard>
               }
@@ -461,7 +462,7 @@ function App() {
               element={
                 <AuthGuard>
                   {/* <DashboardAuthUser> */}
-                    <TopStudent />
+                  <TopStudent />
                   {/* </DashboardAuthUser> */}
                 </AuthGuard>
               }
@@ -477,6 +478,7 @@ function App() {
                 </AuthGuard>
               }
             />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </Suspense>
       </BrowserRouter>

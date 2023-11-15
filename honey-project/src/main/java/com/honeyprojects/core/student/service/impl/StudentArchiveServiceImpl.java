@@ -13,6 +13,7 @@ import com.honeyprojects.core.student.repository.*;
 import com.honeyprojects.core.student.service.StudentArchiveService;
 import com.honeyprojects.entity.*;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.SemesterStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
@@ -73,7 +74,7 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
         }
         ArchiveGift archiveGift = archiveGiftRepository.findById(request.getArchiveGiftId()).orElse(null);
         if (archiveGift != null) {
-            Semester semester = semesterRepository.findByStatus(Status.HOAT_DONG)
+            Semester semester = semesterRepository.findByStatus(SemesterStatus.DANG_HOAT_DONG)
                     .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
             StudentSumHistoryParam sumHistoryParam = new StudentSumHistoryParam(
                     archiveGift.getGiftId(), request.getMaLop(), request.getMaMon(), semester.getFromDate(),

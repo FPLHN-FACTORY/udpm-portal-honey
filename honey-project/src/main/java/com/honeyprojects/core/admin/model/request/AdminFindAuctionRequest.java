@@ -9,11 +9,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AdminFindAuctionRequest extends PageableRequest {
+    private String nameGift;
 
-    private String name;
+    private String category;
 
-    private String status;
+    private String type;
 
-    private String honeyCategoryId;
+    private String startingPrice;
 
 }

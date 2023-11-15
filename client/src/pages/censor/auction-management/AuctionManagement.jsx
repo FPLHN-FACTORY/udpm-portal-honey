@@ -131,49 +131,6 @@ export default function AuctionMangement() {
         </Tag>
       ),
     },
-    {
-      title: "Hành động",
-      align: "center",
-      key: "action",
-      width: "10px",
-      render: (_, record) => (
-        <Space size="middle">
-          <Popconfirm
-            title="Đón phòng đấu giá"
-            description="Bạn có chắc chắn muốn đóng phòng này không?"
-            onConfirm={() => {
-              buttonDelete(record.id);
-            }}
-            okText="Có"
-            cancelText="Không"
-          >
-            <Tooltip title="Đóng phòng đấu giá">
-              <Button
-                style={{
-                  backgroundColor: "red",
-                  color: "white",
-                }}
-              >
-                <FontAwesomeIcon icon={faTrash} />
-              </Button>
-            </Tooltip>
-          </Popconfirm>
-          <Tooltip title="Sửa">
-            <Button
-              onClick={() => {
-                buttonUpdate(record);
-              }}
-              style={{
-                backgroundColor: "#0066CC",
-                color: "white",
-              }}
-            >
-              <FontAwesomeIcon icon={faPenToSquare} />
-            </Button>
-          </Tooltip>
-        </Space>
-      ),
-    },
   ];
 
   const buttonSearch = async () => {
@@ -220,18 +177,18 @@ export default function AuctionMangement() {
     setAuction(null);
   };
 
-  const buttonDelete = (id) => {
-    AuctionAPI.changeStatus(id).then(
-      (response) => {
-        message.success("Đóng thành công!");
-        dispatch(ChangeAuctionStatus(response.data.data));
-        fetchData();
-      },
-      (error) => {
-        message.error("Đóng thất bại!");
-      }
-    );
-  };
+  // const buttonDelete = (id) => {
+  //   AuctionAPI.changeStatus(id).then(
+  //     (response) => {
+  //       message.success("Đóng thành công!");
+  //       dispatch(ChangeAuctionStatus(response.data.data));
+  //       fetchData();
+  //     },
+  //     (error) => {
+  //       message.error("Đóng thất bại!");
+  //     }
+  //   );
+  // };
 
   return (
     <div>
@@ -366,8 +323,7 @@ export default function AuctionMangement() {
               </b>
             </span>
           </div>
-
-          <div>
+          {/* <div>
             <Button
               style={{
                 color: "white",
@@ -386,7 +342,7 @@ export default function AuctionMangement() {
               />
               Thêm phòng đấu giá
             </Button>
-          </div>
+          </div> */}
         </Space>
 
         <div

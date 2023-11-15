@@ -1,4 +1,4 @@
-import { Button, Col, Modal } from "antd";
+import { Button, Col, message, Modal } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightLong } from "@fortawesome/free-solid-svg-icons";
 import { SearchOutlined } from "@ant-design/icons";
@@ -33,8 +33,6 @@ const UpgrateHoneyIndex = memo(() => {
   const [condition, setCondition] = useState([]);
   const [gifts, setGifts] = useState([]);
   const [idUpgrade, setIdUpgrade] = useState(null);
-  const [openSuccess, setOpenSuccess] = useState(false);
-  const [openFail, setOpenFail] = useState(false);
   const [upgradeRateClicked, setUpgradeRateClicked] = useState(true);
   const [checkCondition, setcheckCondition] = useState(true);
   const [clickedItem, setClickedItem] = useState(null);
@@ -47,17 +45,18 @@ const UpgrateHoneyIndex = memo(() => {
   }, []);
 
   const fetchArchive = () => {
-    UpgradeRateApi.getArchiveByStudent({ type: 1, name: valueGift }).then(
-      (response) => {
-        response.data.data.map((item) => {
-          return {
-            ...item,
-            check: false,
-          };
-        });
-        dispatch(SetArchiveGift(response.data.data));
-      }
-    );
+    UpgradeRateApi.getArchiveByStudent({
+      type: 1,
+      name: valueGift ? valueGift.trim() : valueGift,
+    }).then((response) => {
+      response.data.data.map((item) => {
+        return {
+          ...item,
+          check: false,
+        };
+      });
+      dispatch(SetArchiveGift(response.data.data));
+    });
   };
   const dataArchive = useAppSelector(GetArchiveGift);
 
@@ -68,7 +67,9 @@ const UpgrateHoneyIndex = memo(() => {
   };
 
   const fechUpgradeRate = () => {
-    UpgradeRateApi.getUpgradeRate({ name: valueUpgrade }).then((response) => {
+    UpgradeRateApi.getUpgradeRate({
+      name: valueUpgrade ? valueUpgrade.trim() : valueUpgrade,
+    }).then((response) => {
       dispatch(SetUpgradeRate(response.data.data));
     });
   };
@@ -87,18 +88,25 @@ const UpgrateHoneyIndex = memo(() => {
   };
 
   const update = () => {
-    UpgradeRateApi.update({ idUpgrade: idUpgrade, idGift: gifts }).then(
-      (response) => {
+    UpgradeRateApi.update({ idUpgrade: idUpgrade, idGift: gifts })
+      .then((response) => {
         if (response.data.data === true) {
-          setOpenSuccess(true);
-        } else {
-          setOpenFail(true);
+          message.success("Nâng cấp thành công");
+        } else if (response.data.data === false) {
+          message.error("Nâng cấp thất bại");
         }
         fetchArchive();
         fechCondition(idUpgrade);
-      }
-    );
+        setGifts([]);
+      })
+      .catch((error) => {
+        fetchArchive();
+        fechCondition(idUpgrade);
+        setGifts([]);
+      });
   };
+
+  console.log(gifts);
 
   const handleClickIdUR = (id) => {
     fechCondition(id);
@@ -106,18 +114,17 @@ const UpgrateHoneyIndex = memo(() => {
     fetchArchive();
     setUpgradeRateClicked(false);
     setClickedItem(id);
+    setGifts([]);
   };
 
   const handleClickQuantity = (el) => {
-    if (!el.check) {
-      setGifts([...gifts, el.idGift]);
-    }
     const newDataArchive = dataArchive.map((item) => {
       if (
         item.id === el.id &&
         !el.check &&
         condition.some((conditionItem) => conditionItem.idGift === el.idGift)
       ) {
+        setGifts([...gifts, el.idGift]);
         return {
           ...item,
           quantity: item.quantity - 1,
@@ -174,194 +181,176 @@ const UpgrateHoneyIndex = memo(() => {
         ...item,
       };
     });
+    setcheckCondition(true);
     setCondition(conditionCheck);
   };
 
-  return (
-    <>
-      <Modal
-        title="Hưa ha ha ha thành công rồi "
-        centered
-        open={openSuccess}
-        onOk={() => setOpenSuccess(false)}
-        onCancel={() => setOpenSuccess(false)}
-        width={500}
-      >
-        <p>Nâng cấp thành công</p>
-      </Modal>
-      <Modal
-        title="Hưa ha ha ha xịt mất rồi"
-        centered
-        open={openFail}
-        onOk={() => setOpenFail(false)}
-        onCancel={() => setOpenFail(false)}
-        width={500}
-      >
-        <p>Nâng cấp thất bại</p>
-      </Modal>
-      <section className="upgrate__honey">
-        <div className="upgrate__honey__item">
-          <div className="upgrate__honey__header">
-            <div className="upgrate__honey__list">
-              <div className="upgrate__honey__filter">
-                <div className="upgrate__honey__text">
-                  {" "}
-                  Chọn loại mật ong để nâng cấp{" "}
-                </div>
-                <div className="upgrate__search">
-                  <SearchOutlined />
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Nhập tên..."
-                    value={valueUpgrade}
-                    onChange={(e) => setvalueUpgrade(e.target.value)}
-                    onKeyDown={handleKeyDownUpgrade}
-                    style={{
-                      border: "none",
-                      outline: "none",
-                      padding: "3px",
-                      borderRadius: "5px",
-                      color: "#26a387",
-                      fontWeight: "600",
-                      fontSize: "14px",
-                    }}
-                  />
-                </div>
-              </div>
+  const handleClickUpdate = () => {
+    if (upgradeRateClicked) {
+      message.warning("Bạn chưa chọn loại mật ong nâng nâng cấp");
+    } else if (dataArchive.length === 0 && checkCondition) {
+      message.warning("Bạn không đủ vật phẩm để nâng cấp");
+    } else if (checkCondition) {
+      message.warning("Bạn chưa chọn vật phẩm nâng cấp ");
+    } else if (dataArchive.length === 0) {
+      message.warning("Bạn không đủ vật phẩm để nâng cấp");
+    } else {
+      update();
+    }
+  };
 
-              <div className="upgrate__list">
-                {dataUpgradeRate.map((item) => (
-                  <Col
-                    span={24}
-                    onClick={() => handleClickIdUR(item.id)}
-                    className={clickedItem === item.id ? "clicked" : ""}
-                  >
-                    <div className="upgrate__honey__detail">
-                      <div className="upgrate__item__image">
-                        <ImageRenderer image={item.image2} />
-                      </div>
-                      <div className="upgrate__item__text">
-                        <div className="upgrate__text__name">
-                          {item.originalHoney} {item.originalHoneyName}
-                        </div>
-                      </div>
-                      <FontAwesomeIcon
-                        icon={faArrowRightLong}
-                        className="upgrate__icon"
-                      />
-                      <div className="upgrate__item__image">
-                        <ImageRenderer image={item.image1} />
-                      </div>
-                      <div className="upgrate__item__text">
-                        <div className="upgrate__text__name">
-                          {item.destinationHoney} {item.destinationHoneyName}
-                        </div>
-                      </div>
-                    </div>
-                  </Col>
-                ))}
+  return (
+    <section className="upgrate__honey">
+      <div className="upgrate__honey__item">
+        <div className="upgrate__honey__header">
+          <div className="upgrate__honey__list">
+            <div className="upgrate__honey__filter">
+              <div className="upgrate__honey__text">
+                {" "}
+                Chọn loại mật ong để nâng cấp{" "}
+              </div>
+              <div className="upgrate__search">
+                <SearchOutlined />
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Nhập tên..."
+                  value={valueUpgrade}
+                  onChange={(e) => setvalueUpgrade(e.target.value)}
+                  onKeyDown={handleKeyDownUpgrade}
+                  style={{
+                    border: "none",
+                    outline: "none",
+                    padding: "3px",
+                    borderRadius: "5px",
+                    color: "#26a387",
+                    fontWeight: "600",
+                    fontSize: "14px",
+                  }}
+                />
               </div>
             </div>
-          </div>
-          <div className="upgrate__honey__chest">
-            <div className="upgrate__chest__choose">
-              <div
-                className="upgrate__honey__filter"
-                style={{ paddingLeft: "20px", paddingRight: "20px" }}
-              >
-                <div className="upgrate__honey__text"> Túi đồ </div>
-                <div className="upgrate__search">
-                  <SearchOutlined />
-                  <input
-                    type="text"
-                    class="form-control"
-                    value={valueGift}
-                    onChange={(e) => setValueGift(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Nhập tên..."
-                    style={{
-                      border: "none",
-                      outline: "none",
-                      padding: "3px",
-                      borderRadius: "5px",
-                      color: "#26a387",
-                      fontWeight: "600",
-                      fontSize: "14px",
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="upgrate__chest__list">
-                {dataArchive.map((item) => (
-                  <div
-                    className={`upgrate__chest__wrapper ${
-                      upgradeRateClicked
-                        ? "cursor-not-allowed"
-                        : !condition.some(
-                            (conditionItem) =>
-                              conditionItem.idGift === item.idGift
-                          )
-                        ? "cursor-not-allowed"
-                        : item.check
-                        ? "cursor-not-allowed"
-                        : ""
-                    }`}
-                    onClick={() => handleClickQuantity(item)}
-                  >
-                    <div class="upgrate__chest__overlay"></div>
-                    <div className="upgrate__honey__image">
-                      <ImageRenderer image={item.image} />
+
+            <div className="upgrate__list">
+              {dataUpgradeRate.map((item) => (
+                <Col
+                  span={24}
+                  onClick={() => handleClickIdUR(item.id)}
+                  className={clickedItem === item.id ? "clicked" : ""}
+                >
+                  <div className="upgrate__honey__detail">
+                    <div className="upgrate__item__image">
+                      <ImageRenderer image={item.image2} />
                     </div>
-                    <div class="upgrate__chest__quantity">{item.quantity}</div>
-                    <div class="upgrate__chest__name">{item.name}</div>
+                    <div className="upgrate__item__text">
+                      <div className="upgrate__text__name">
+                        {item.originalHoney} {item.originalHoneyName}
+                      </div>
+                    </div>
+                    <FontAwesomeIcon
+                      icon={faArrowRightLong}
+                      className="upgrate__icon"
+                    />
+                    <div className="upgrate__item__image">
+                      <ImageRenderer image={item.image1} />
+                    </div>
+                    <div className="upgrate__item__text">
+                      <div className="upgrate__text__name">
+                        {item.destinationHoney} {item.destinationHoneyName}
+                      </div>
+                    </div>
                   </div>
-                ))}
-              </div>
+                </Col>
+              ))}
             </div>
           </div>
         </div>
-
-        <div className="upgrate__honey__choose">
-          <div className="upgrate__list__title"> Phôi nâng cấp </div>
-          <div className="upgrate__list__box">
-            {condition !== null &&
-              condition.map((item) => (
+        <div className="upgrate__honey__chest">
+          <div className="upgrate__chest__choose">
+            <div
+              className="upgrate__honey__filter"
+              style={{ paddingLeft: "20px", paddingRight: "20px" }}
+            >
+              <div className="upgrate__honey__text"> Túi đồ </div>
+              <div className="upgrate__search">
+                <SearchOutlined />
+                <input
+                  type="text"
+                  class="form-control"
+                  value={valueGift}
+                  onChange={(e) => setValueGift(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Nhập tên..."
+                  style={{
+                    border: "none",
+                    outline: "none",
+                    padding: "3px",
+                    borderRadius: "5px",
+                    color: "#26a387",
+                    fontWeight: "600",
+                    fontSize: "14px",
+                  }}
+                />
+              </div>
+            </div>
+            <div className="upgrate__chest__list">
+              {dataArchive.map((item) => (
                 <div
                   className={`upgrate__chest__wrapper ${
-                    item.check ? "" : "cursor-not-allowed"
+                    upgradeRateClicked
+                      ? "cursor-not-allowed"
+                      : !condition.some(
+                          (conditionItem) =>
+                            conditionItem.idGift === item.idGift
+                        )
+                      ? "cursor-not-allowed"
+                      : item.check
+                      ? "cursor-not-allowed"
+                      : ""
                   }`}
-                  onClick={() => handleClickCondition(item)}
+                  onClick={() => handleClickQuantity(item)}
                 >
-                  <div
-                    className={` ${
-                      item.check ? "" : "upgrate__condition__item"
-                    }`}
-                  ></div>
+                  <div class="upgrate__chest__overlay"></div>
                   <div className="upgrate__honey__image">
                     <ImageRenderer image={item.image} />
                   </div>
-                  <div class="upgrate__condition__name">{item.name}</div>
+                  <div class="upgrate__chest__quantity">{item.quantity}</div>
+                  <div class="upgrate__chest__name">{item.name}</div>
                 </div>
               ))}
-          </div>
-          <div className="div-button">
-            <Button
-              className={`use__button ${
-                upgradeRateClicked
-                  ? "cursor-not-allowed"
-                  : checkCondition
-                  ? "cursor-not-allowed"
-                  : ""
-              }`}
-              onClick={update}
-            >
-              <p className="button__text">Đập đồ</p>
-            </Button>
+            </div>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+
+      <div className="upgrate__honey__choose">
+        <div className="upgrate__list__title"> Phôi nâng cấp </div>
+        <div className="upgrate__list__box">
+          {condition !== null &&
+            condition.map((item) => (
+              <div
+                className={`upgrate__chest__wrapper ${
+                  item.check ? "" : "cursor-not-allowed"
+                }`}
+                onClick={() => handleClickCondition(item)}
+              >
+                <div
+                  className={` ${item.check ? "" : "upgrate__condition__item"}`}
+                ></div>
+                <div className="upgrate__honey__image">
+                  <ImageRenderer image={item.image} />
+                </div>
+                <div class="upgrate__condition__name">{item.name}</div>
+              </div>
+            ))}
+        </div>
+        <div className="div-button">
+          <Button className="use__button" onClick={() => handleClickUpdate()}>
+            <p className="button__text">Nâng cấp</p>
+          </Button>
+        </div>
+      </div>
+    </section>
   );
 });
 

@@ -19,7 +19,6 @@ import {
   faPenToSquare,
   faRectangleList,
   faPlus,
-  faCircleInfo,
   faArrowDownLong,
   faArrowRight,
   faLockOpen,
@@ -54,16 +53,15 @@ export default function UpgradeRate() {
   const [currentRecord, setCurrentRecord] = useState(null);
 
   useEffect(() => {
-    fetchData();
-    fetchCategory();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [current]);
-
-  useEffect(() => {
     fetchCategory();
     featAllGift();
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current]);
   const fetchData = () => {
     UpgradeApi.fetchAll({
       page: current - 1,
@@ -80,7 +78,6 @@ export default function UpgradeRate() {
   };
 
   const DeleteUpgradeRate = (record) => {
-    console.log({ status: record.status, id: record.id });
     UpgradeApi.delete({ status: record.status, id: record.id })
       .then((response) => {
         if (record.status === 1) {
@@ -340,7 +337,6 @@ export default function UpgradeRate() {
                   style={{
                     backgroundColor: "red",
                     color: "white",
-                    height: "35px",
                   }}
                 >
                   <FontAwesomeIcon icon={faLock} />
@@ -361,7 +357,6 @@ export default function UpgradeRate() {
                   style={{
                     backgroundColor: "green",
                     color: "white",
-                    height: "35px",
                   }}
                 >
                   <FontAwesomeIcon icon={faLockOpen} />
@@ -373,9 +368,8 @@ export default function UpgradeRate() {
             <Button
               onClick={() => openModalDetail(record)}
               style={{
-                backgroundColor: "red",
+                backgroundColor: "#53d1ff",
                 color: "white",
-                height: "35px",
               }}
             >
               <FontAwesomeIcon icon={faEye} />
@@ -387,9 +381,8 @@ export default function UpgradeRate() {
                 buttonUpdate(record);
               }}
               style={{
-                backgroundColor: "#0066CC",
+                backgroundColor: "yellowgreen",
                 color: "white",
-                height: "35px",
               }}
             >
               <FontAwesomeIcon icon={faPenToSquare} />
@@ -574,16 +567,18 @@ export default function UpgradeRate() {
             pagination={false}
           />
           <br></br>
-          <div className="pagination__box">
-            <Pagination
-              simple
-              current={current}
-              onChange={(page) => {
-                setCurrent(page);
-              }}
-              total={total * 10}
-            />
-          </div>
+          {total > 1 && (
+            <div className="pagination__box">
+              <Pagination
+                simple
+                current={current}
+                onChange={(page) => {
+                  setCurrent(page);
+                }}
+                total={total * 10}
+              />
+            </div>
+          )}
         </div>
       </Card>
       {modalCreate && (
