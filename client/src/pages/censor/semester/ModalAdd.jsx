@@ -188,7 +188,7 @@ const ModalAdd = (props) => {
             </div>
 
             <Select
-              value={status} // Giá trị mặc định
+              value={status === "0" ? "Hoạt động" : "Không hoạt động"} // Giá trị mặc định
               onChange={(value) => setStatus(value)}
               style={{ width: "100%" }}
               placeholder="Chọn trạng thái"
