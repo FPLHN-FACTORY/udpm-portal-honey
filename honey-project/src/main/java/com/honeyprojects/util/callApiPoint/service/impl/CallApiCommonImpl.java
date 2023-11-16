@@ -1,15 +1,12 @@
 package com.honeyprojects.util.callApiPoint.service.impl;
 
 import com.honeyprojects.infrastructure.apiconstants.ApiConstants;
-import com.honeyprojects.infrastructure.apiconstants.HonneyConstants;
-import com.honeyprojects.infrastructure.contant.SessionConstant;
 import com.honeyprojects.infrastructure.session.HoneySession;
 import com.honeyprojects.util.callApiPoint.model.dto.ClassSubjectDto;
 import com.honeyprojects.util.callApiPoint.model.request.FilterClassSubject;
 import com.honeyprojects.util.callApiPoint.model.request.FilterScoreTemplate;
 import com.honeyprojects.util.callApiPoint.model.request.FilterScoreTemplateVM;
 import com.honeyprojects.util.callApiPoint.model.response.ClassSubjectVM;
-import com.honeyprojects.util.callApiPoint.model.response.RoleIdentityResponse;
 import com.honeyprojects.util.callApiPoint.model.response.ScoreTemplate;
 import com.honeyprojects.util.callApiPoint.model.response.ScoreTemplateVM;
 import com.honeyprojects.util.callApiPoint.service.CallApiCommonService;
@@ -26,7 +23,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 

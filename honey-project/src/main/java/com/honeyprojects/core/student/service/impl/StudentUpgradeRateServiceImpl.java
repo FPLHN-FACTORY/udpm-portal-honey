@@ -63,7 +63,10 @@ public class StudentUpgradeRateServiceImpl implements StudentUpgradeRateService 
         Random random = new Random();
         Double rate = random.nextDouble();
         Double ratio = checkRatio.get().getRatio() / 100;
-        if (rate <= ratio) {
+        List<StudentConditionResponse> listCondition = studentUpgradeRateRepository.getListGiftCondition(request.getIdUpgrade());
+        List<ArchiveGift> listArchive = archiveGiftRepository.findAllByGiftIdIn(request.getIdGift());
+        List<ArchiveGift> listArchiveNew = new ArrayList<>();
+        if (rate <= ratio && listArchive.size() == listCondition.size()) {
             // update honey
             List<Honey> honey = new ArrayList<>();
             List<Honey> listCategories = honeyRepository.getListIdCategory(udpmHoney.getIdUser());
@@ -78,33 +81,30 @@ public class StudentUpgradeRateServiceImpl implements StudentUpgradeRateService 
             }
             honeyRepository.saveAll(honey);
             // update quantity archive
-            List<ArchiveGift> listArchiveNew = new ArrayList<>();
-            List<ArchiveGift> listArchive = archiveGiftRepository.findAllByGiftIdIn(request.getIdGift());
             for (ArchiveGift archiveGift : listArchive) {
-                if(archiveGift.getQuantity() > 1) {
+                if (archiveGift.getQuantity() > 1) {
                     archiveGift.setQuantity(archiveGift.getQuantity() - 1);
                     listArchiveNew.add(archiveGift);
-                }
-                else{
+                } else {
                     archiveGiftRepository.delete(archiveGift);
                 }
             }
             archiveGiftRepository.saveAll(listArchiveNew);
             return true;
-        } else {
-            List<ArchiveGift> listArchiveNew = new ArrayList<>();
-            List<ArchiveGift> listArchive = archiveGiftRepository.findAllByGiftIdIn(request.getIdGift());
+        } else if (rate > ratio && listArchive.size() == listCondition.size()) {
             for (ArchiveGift archiveGift : listArchive) {
-                if(archiveGift.getQuantity() > 1) {
+                if (archiveGift.getQuantity() > 1) {
                     archiveGift.setQuantity(archiveGift.getQuantity() - 1);
                     listArchiveNew.add(archiveGift);
-                }
-                else{
+                } else {
                     archiveGiftRepository.delete(archiveGift);
                 }
             }
             archiveGiftRepository.saveAll(listArchiveNew);
             return false;
+        }
+        else {
+            throw new RestApiException("Không đủ điều kiện nâng cấp");
         }
     }
 

@@ -7,7 +7,6 @@ import com.honeyprojects.core.teacher.model.request.TeacherConvertionHoneyReques
 import com.honeyprojects.core.teacher.repository.TeacherGetHoneyRepository;
 import com.honeyprojects.core.teacher.repository.TeacherGiftRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
-import com.honeyprojects.core.teacher.repository.TeacherShowConvertionRepository;
 import com.honeyprojects.core.teacher.service.TeacherConvertionHoneyService;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Honey;
@@ -36,8 +35,6 @@ public class TeacherConvertionHoneyServiceImpl implements TeacherConvertionHoney
     private UdpmHoney udpmHoney;
     @Autowired
     private TeacherGetHoneyRepository honeyRepository;
-    @Autowired
-    private TeacherShowConvertionRepository showConvertionRepository;
     @Autowired
     private TeacherGiftRepository giftRepository;
 
@@ -73,8 +70,8 @@ public class TeacherConvertionHoneyServiceImpl implements TeacherConvertionHoney
     @Override
     public PageableObject<AdminConversionResponse> listConvertion(String categoryId) {
         Pageable pageable = PageRequest.of(PaginationConstant.DEFAULT_PAGE, PaginationConstant.DEFAULT_SIZE);
-        Page<AdminConversionResponse> res = showConvertionRepository.getPageListResponse(pageable, categoryId);
-        return new PageableObject<>(res);
+//        Page<AdminConversionResponse> res = showConvertionRepository.getPageListResponse(pageable, categoryId);
+        return new PageableObject<>(null);
     }
 
 }

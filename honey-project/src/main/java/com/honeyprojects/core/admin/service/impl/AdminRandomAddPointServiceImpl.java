@@ -162,7 +162,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                         } else {
                             // Tạo một bản ghi Honey mới nếu không tìm thấy
                             AdminCreateHoneyRequest adminCreateHoneyRequest = new AdminCreateHoneyRequest();
-                            adminCreateHoneyRequest.setSemesterId(null);
                             adminCreateHoneyRequest.setStudentId(idS.getId());
                             adminCreateHoneyRequest.setCategoryId(idCategory);
                             adminCreateHoneyRequest.setHoneyPoint(0);
@@ -182,7 +181,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                         } else {
                             // Tạo một bản ghi Honey mới nếu không tìm thấy
                             AdminCreateHoneyRequest adminCreateHoneyRequest = new AdminCreateHoneyRequest();
-                            adminCreateHoneyRequest.setSemesterId(null);
                             adminCreateHoneyRequest.setStudentId(student);
                             adminCreateHoneyRequest.setCategoryId(idCategory);
                             adminCreateHoneyRequest.setHoneyPoint(0);
