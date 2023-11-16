@@ -178,26 +178,6 @@ export default function RequestApprovedHistory() {
     setLoading(false);
   };
 
-  const changeStatus = (idHistory, status) => {
-    setLoading(true);
-    RequestManagerAPI.changeStatus(idHistory, status)
-      .then((response) => {
-        console.log(response.data);
-        if (response.data.success) {
-          fetchData(dispatch, filter);
-          if (status === 1) message.success("Đã xác nhận yêu cầu cộng điểm!");
-          if (status === 2) message.error("Hủy yêu cầu thành công!");
-          setType(response.data.data.type);
-        }
-      })
-      .catch((error) => {
-        message.error(error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
   return (
     <Spin spinning={loading}>
       <div className="request-manager">
@@ -249,14 +229,13 @@ export default function RequestApprovedHistory() {
               <Button
                 htmlType="submit"
                 type="primary"
-                className="mr-10 search-button"
-              >
+                className="mr-10 search-button">
                 Lọc
               </Button>
             </Space>
           </Form>
         </Card>
-        <Card title="Yêu cầu cộng điểm">
+        <Card title="Lịch sử phê duyệt cộng điểm">
           <Table
             columns={columns}
             dataSource={data}

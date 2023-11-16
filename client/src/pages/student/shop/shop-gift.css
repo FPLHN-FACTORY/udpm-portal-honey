@@ -9,6 +9,7 @@
   justify-content: center;
   display: flex;
 }
+
 .quantity-gift {
   display: flex !important;
   align-items: center !important;
@@ -19,23 +20,29 @@
   background: none !important;
   width: 70px;
 }
+
 .quantity-gift-inside input {
   color: white !important;
 }
+
 .btn-xac-nhan {
-  background-color: brown;
+  background-color: rgb(108, 165, 42);
   color: white;
   border: inset;
   margin-right: 30px;
 }
 
 .btn-huy {
-  background-color: rgb(108, 165, 42);
+  background-color: brown;
   color: white;
   border: inset;
 }
 
 .css-modal-confim-buy-gift .ant-modal-content {
-  background-color: rgba(139, 69, 19, 0);
+  background-color: rgba(46, 46, 46, 0.4);
   border: inset;
+}
+
+.css-modal-confim-buy-gift .ant-modal-content .ant-modal-close {
+  display: none !important;
 }

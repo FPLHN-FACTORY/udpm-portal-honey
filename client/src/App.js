@@ -21,7 +21,6 @@ import Semester from "./pages/censor/semester";
 import ConversionHome from "./pages/censor/convertion/convertionHome";
 import IndexGift from "./pages/censor/gift/indexGift";
 import AddRequestConversion from "./pages/student/RequestConversion/AddRequestConversion";
-import TransactionPage from "./pages/student/transaction/TransactionPage";
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
 import StArchive from "./pages/student/archive/StArchive";
@@ -29,7 +28,6 @@ import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
 // import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
 import ChestGift from "./pages/censor/chest-gift/ChestGift";
 import AuctionMangement from "./pages/censor/auction-management/AuctionManagement";
-import TestTransaction from "./pages/student/transaction/TestTransaction";
 import { deleteToken, getToken, setToken } from "./helper/userToken";
 import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
 import UpgradeHoney from "./pages/student/upgradeHoney/UpgradeHoney";
@@ -73,9 +71,7 @@ function App() {
             {/* Chọn quyền */}
             <Route
               path="/author-switch"
-              element={
-                  <AuthorSwitch></AuthorSwitch>
-              }
+              element={<AuthorSwitch></AuthorSwitch>}
             />
             {/* Màn censor */}
             <Route
@@ -328,31 +324,11 @@ function App() {
               }
             />
             <Route
-              path="/student/transaction"
-              element={
-                <AuthGuard>
-                  <DashboardAuthUser>
-                    <TestTransaction />
-                  </DashboardAuthUser>
-                </AuthGuard>
-              }
-            />
-            <Route
               path="/student/buy-gift"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
                     <AddRequestConversion />
-                  </DashboardAuthUser>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/student/transaction/create"
-              element={
-                <AuthGuard>
-                  <DashboardAuthUser>
-                    <TransactionPage />
                   </DashboardAuthUser>
                 </AuthGuard>
               }
