@@ -29,7 +29,6 @@ public interface StudentArchiveRepository extends ArchiveRepository {
             LEFT JOIN archive a ON ag.archive_id = a.id
             LEFT JOIN gift g ON ag.gift_id = g.id
             LEFT JOIN gift_detail gd  ON gd.gift_id = g.id
-            LEFT JOIN semester s on g.semester_id = s.id
             WHERE a.student_id = :idUser 
              """, nativeQuery = true)
     List<StudentArchiveByUserResponse> findArchiveByUser(@Param("idUser") String idUser);
