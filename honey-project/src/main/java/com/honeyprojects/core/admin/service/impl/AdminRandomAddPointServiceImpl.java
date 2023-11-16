@@ -459,8 +459,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 // Nếu đối tượng có lỗi, bỏ qua và tiếp tục với đối tượng tiếp theo trong danh sách
                 continue;
             } else {
-                // Nếu không có lỗi, tiến hành xử lý và lưu dữ liệu vào cơ sở dữ liệu, tạo thông báo
-
                 // Gọi API để lấy thông tin người dùng bằng địa chỉ email
                 SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(userDTO.getEmail());
                 Notification notification = createNotification(simpleResponse.getId());

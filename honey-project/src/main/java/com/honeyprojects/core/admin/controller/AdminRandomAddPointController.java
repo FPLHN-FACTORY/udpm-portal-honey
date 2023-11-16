@@ -14,11 +14,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/censor/random-add-point")
 public class AdminRandomAddPointController {
+
     @Autowired
     private AdRandomAddPointService adRandomAddPointService;
 
     @GetMapping("/get-all-category")
-    public ResponseObject getAllCatrgory() {
+    public ResponseObject getAllCategory() {
         return new ResponseObject(adRandomAddPointService.getAllCategory());
     }
 
