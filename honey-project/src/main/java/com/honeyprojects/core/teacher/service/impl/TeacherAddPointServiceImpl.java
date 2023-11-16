@@ -13,7 +13,6 @@ import com.honeyprojects.core.teacher.model.response.TeacherPointResponse;
 import com.honeyprojects.core.teacher.repository.TeacherCategoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHoneyRepository;
-import com.honeyprojects.core.teacher.repository.TeacherSemesterRepository;
 import com.honeyprojects.core.teacher.service.TeacherAddPointService;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Honey;
@@ -35,14 +34,16 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
 
     @Autowired
     private TeacherCategoryRepository categoryRepository;
+
     @Autowired
     private TeacherHoneyRepository honeyRepository;
+
     @Autowired
     private TeacherHistoryRepository historyRepository;
-    @Autowired
-    private TeacherSemesterRepository usRepository;
+
     @Autowired
     private UdpmHoney udpmHoney;
+
     @Autowired
     private ConvertRequestApiidentity requestApiidentity;
 
@@ -98,14 +99,11 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
         history.setType(TypeHistory.CONG_DIEM);
         history.setCreatedAt(dateNow);
         if (addPointRequest.getHoneyId() == null) {
-            String idUs = usRepository.getUsByStudent(dateNow);
-            if (idUs == null) return null;
             Honey honey = new Honey();
             honey.setStatus(Status.HOAT_DONG);
             honey.setHoneyPoint(0);
             honey.setStudentId(addPointRequest.getStudentId());
             honey.setHoneyCategoryId(addPointRequest.getCategoryId());
-            honey.setUserSemesterId(idUs);
             history.setHoneyId(honeyRepository.save(honey).getId());
         } else {
             Honey honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();

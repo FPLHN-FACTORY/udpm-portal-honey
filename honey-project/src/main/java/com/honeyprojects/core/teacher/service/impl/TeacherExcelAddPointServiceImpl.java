@@ -9,7 +9,6 @@ import com.honeyprojects.core.teacher.model.response.TeacherPointResponse;
 import com.honeyprojects.core.teacher.repository.TeacherCategoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHoneyRepository;
-import com.honeyprojects.core.teacher.repository.TeacherSemesterRepository;
 import com.honeyprojects.core.teacher.service.TeacherExcelAddPointService;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.History;
@@ -46,9 +45,6 @@ public class TeacherExcelAddPointServiceImpl implements TeacherExcelAddPointServ
 
     @Autowired
     private TeacherHoneyRepository honeyRepository;
-
-    @Autowired
-    private TeacherSemesterRepository usRepository;
 
     @Autowired
     private TeacherHistoryRepository historyRepository;
@@ -118,14 +114,11 @@ public class TeacherExcelAddPointServiceImpl implements TeacherExcelAddPointServ
                 history.setType(TypeHistory.CONG_DIEM);
                 history.setCreatedAt(dateNow);
                 if (teacherPointResponse == null) {
-                    String idUs = usRepository.getUsByStudent(dateNow);
-                    if (idUs == null) return null;
                     Honey honey = new Honey();
                     honey.setStatus(Status.HOAT_DONG);
                     honey.setHoneyPoint(0);
                     honey.setStudentId(simpleResponse.getId());
                     honey.setHoneyCategoryId(category.getId());
-                    honey.setUserSemesterId(idUs);
                     history.setHoneyId(honeyRepository.save(honey).getId());
                 } else {
                     Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
@@ -297,14 +290,11 @@ public class TeacherExcelAddPointServiceImpl implements TeacherExcelAddPointServ
                     history.setType(TypeHistory.CONG_DIEM);
                     history.setCreatedAt(dateNow);
                     if (teacherPointResponse == null) {
-                        String idUs = usRepository.getUsByStudent(dateNow);
-                        if (idUs == null) return null;
                         Honey honey = new Honey();
                         honey.setStatus(Status.HOAT_DONG);
                         honey.setHoneyPoint(0);
                         honey.setStudentId(response.getStudentId());
                         honey.setHoneyCategoryId(response.getCategoryId());
-                        honey.setUserSemesterId(idUs);
                         history.setHoneyId(honeyRepository.save(honey).getId());
                     } else {
                         Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();

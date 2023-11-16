@@ -3,7 +3,6 @@ package com.honeyprojects.core.student.service.impl;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.student.model.request.StudentBuyItemRequest;
-import com.honeyprojects.core.student.model.request.StudentCreateRequestConversionRequest;
 import com.honeyprojects.core.student.model.request.StudentFilterHistoryRequest;
 import com.honeyprojects.core.student.model.response.StudentCreateResquestConversionResponse;
 import com.honeyprojects.core.student.model.response.StudentGiftResponse;
@@ -13,7 +12,6 @@ import com.honeyprojects.core.student.repository.StudentCategoryRepository;
 import com.honeyprojects.core.student.repository.StudentCreateRequestConversionRepository;
 import com.honeyprojects.core.student.repository.StudentGiftRepository;
 import com.honeyprojects.core.student.repository.StudentHoneyRepository;
-import com.honeyprojects.core.student.repository.StudentUserSemesterRepository;
 import com.honeyprojects.core.student.service.StudentBuyItemService;
 import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
@@ -21,7 +19,6 @@ import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Honey;
-import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.StatusGift;
@@ -42,9 +39,6 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
 
     @Autowired
     private StudentHoneyRepository honeyRepository;
-
-    @Autowired
-    private StudentUserSemesterRepository userSemesterRepository;
 
     @Autowired
     private ConvertRequestApiidentity convertRequestApiidentity;
@@ -75,13 +69,10 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
         archive.setStudentId(createRequest.getStudentId());
         archive.setStatus(Status.HOAT_DONG);
         if (honey == null) {
-            String idUs = userSemesterRepository.getSemesterByStudent(createRequest.getStudentId());
-            if (idUs == null) return null;
             // Nếu Honey chưa tồn tại, tạo mới
             honey = new Honey();
             honey.setStudentId(createRequest.getStudentId());
             honey.setHoneyCategoryId(createRequest.getCategoryId());
-            honey.setUserSemesterId(idUs);
             honey.setHoneyPoint(createRequest.getHoneyPoint());
             honey = honeyRepository.save(honey);
         } else {

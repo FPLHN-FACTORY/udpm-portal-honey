@@ -42,14 +42,14 @@ public class StudentNotificationServiceImpl implements StudentNotificationServic
 
     @Override
     @Transactional
-    public Notification updateStatus(String id) {
+    public Boolean updateStatus(String id) {
         Optional<Notification> optionalNotification = notificationRepository.findById(id);
         if (optionalNotification.get().getStatus() == NotificationStatus.CHUA_DOC) {
             optionalNotification.get().setStatus(NotificationStatus.DA_DOC_CHUA_NHAN_QUA);
-            return notificationRepository.save(optionalNotification.get());
-        } else {
-            return optionalNotification.get();
+            notificationRepository.save(optionalNotification.get());
+            return true;
         }
+        return false;
     }
 
     @Override

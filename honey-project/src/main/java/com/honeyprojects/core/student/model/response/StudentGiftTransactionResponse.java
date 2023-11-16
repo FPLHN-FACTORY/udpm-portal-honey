@@ -1,9 +1,9 @@
 package com.honeyprojects.core.student.model.response;
 
 import com.honeyprojects.entity.base.IsIdentified;
-import org.springframework.beans.factory.annotation.Value;
 
-public interface StudentCategoryResponse extends IsIdentified {
+public interface StudentGiftTransactionResponse extends IsIdentified {
     String getName();
     String getImage();
+    Integer getQuantity();
 }

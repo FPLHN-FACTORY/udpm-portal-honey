@@ -240,7 +240,7 @@ export default function Semester() {
                       }}
                     >
                       <PlusOutlined className="mr-1" />
-                      Thêm kỳ học
+                      Thêm học kỳ
                     </button>
                   </Tooltip>
                 </span>

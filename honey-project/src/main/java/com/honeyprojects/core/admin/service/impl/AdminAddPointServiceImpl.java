@@ -7,7 +7,6 @@ import com.honeyprojects.core.admin.model.request.AdminSearchHistoryRequest;
 import com.honeyprojects.core.admin.model.response.AdminAddHoneyHistoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminPoinResponse;
-import com.honeyprojects.core.admin.repository.AdSemesterRepository;
 import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
 import com.honeyprojects.core.admin.repository.AdminHistoryRepository;
 import com.honeyprojects.core.admin.repository.AdminHoneyRepository;
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AdminAddPointServiceImpl implements AdminAddPointService {
@@ -41,9 +39,6 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
 
     @Autowired
     private AdminHistoryRepository historyRepository;
-
-    @Autowired
-    private AdSemesterRepository usRepository;
 
     @Autowired
     private UdpmHoney udpmHoney;
@@ -97,14 +92,11 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
         history.setType(TypeHistory.CONG_DIEM);
         history.setCreatedAt(dateNow);
         if (addPointRequest.getHoneyId() == null) {
-            String idUs = usRepository.getUsByStudent(dateNow);
-            if (idUs == null) return null;
             Honey honey = new Honey();
             honey.setStatus(Status.HOAT_DONG);
             honey.setHoneyPoint(addPointRequest.getHoneyPoint());
             honey.setStudentId(addPointRequest.getStudentId());
             honey.setHoneyCategoryId(addPointRequest.getCategoryId());
-            honey.setUserSemesterId(idUs);
             honeyRepository.save(honey);
             history.setHoneyId(honeyRepository.save(honey).getId());
 
