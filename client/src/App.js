@@ -30,7 +30,6 @@ import ChestGift from "./pages/censor/chest-gift/ChestGift";
 import AuctionMangement from "./pages/censor/auction-management/AuctionManagement";
 import { deleteToken, getToken, setToken } from "./helper/userToken";
 import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
-import UpgradeHoney from "./pages/student/upgradeHoney/UpgradeHoney";
 import ConvertionHoney from "./pages/teacher/convertion-honey/RequestConversion";
 import TeacherRequestConversionHistory from "./pages/teacher/convertion-honey/RequestConversionHistory";
 import LetterDetail from "./pages/student/letters/LetterDetail";

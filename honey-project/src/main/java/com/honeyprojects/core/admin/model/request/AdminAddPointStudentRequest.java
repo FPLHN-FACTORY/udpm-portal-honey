@@ -12,5 +12,5 @@ public class AdminAddPointStudentRequest extends PageableRequest {
 
     private String email;
 
-    private Integer pointStudent;
+    private Double pointStudent;
 }

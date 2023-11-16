@@ -74,22 +74,22 @@ public interface AdRandomAddPointRepository extends HoneyRepository {
     String getArchiveByIdStudent(String idStudent);
 
     @Query(value = """
-            select DISTINCT name
-            from chest
+            SELECT DISTINCT c.name
+            FROM chest c
             """, nativeQuery = true)
     List<String> getAllNameChest();
 
     @Query(value = """
             SELECT  c.id, c.name 
             FROM category c
-            where c.name in (:names) c.category_status <> 0
+            WHERE c.name IN (:names) AND c.category_status <> 0
             """, nativeQuery = true)
     List<AdminImportCategoryResponse> getCategoriesByNames(Set<String> names);
 
     @Query(value = """
             SELECT g.id, g.name
-            from gift g
-            where g.name in (:names)  and g.status in (0, 1)
+            FROM gift g
+            WHERE g.name IN (:names) AND g.status in (0, 1)
             """, nativeQuery = true)
     List<AdminImportGiftResponse> getGiftsByNames(Set<String> names);
 

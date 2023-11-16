@@ -88,25 +88,25 @@ const UpgrateHoneyIndex = memo(() => {
   };
 
   const update = () => {
-    UpgradeRateApi.update({ idUpgrade: idUpgrade, idGift: gifts }).then(
-      (response) => {
-        if (response.status === 200) {
-          if (response.data.data === true) {
-            message.success("Nâng cấp thành công");
-          } else if (response.data.data === false) {
-            message.error("Nâng cấp thất bại");
-          }
-          fetchArchive();
-          fechCondition(idUpgrade);
-          setGifts([]);
-        } else {
-          message.warning(response.response.data.message);
-          fetchArchive();
-          fechCondition(idUpgrade);
+    UpgradeRateApi.update({ idUpgrade: idUpgrade, idGift: gifts })
+      .then((response) => {
+        if (response.data.data === true) {
+          message.success("Nâng cấp thành công");
+        } else if (response.data.data === false) {
+          message.error("Nâng cấp thất bại");
         }
-      }
-    );
+        fetchArchive();
+        fechCondition(idUpgrade);
+        setGifts([]);
+      })
+      .catch((error) => {
+        fetchArchive();
+        fechCondition(idUpgrade);
+        setGifts([]);
+      });
   };
+
+  console.log(gifts);
 
   const handleClickIdUR = (id) => {
     fechCondition(id);

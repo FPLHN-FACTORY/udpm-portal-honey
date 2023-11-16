@@ -8,7 +8,9 @@ import com.honeyprojects.core.teacher.model.response.TeacherUseGiftRequestRespon
 import com.honeyprojects.core.teacher.repository.*;
 import com.honeyprojects.core.teacher.service.TeacherUseGiftRequest;
 import com.honeyprojects.entity.*;
+import com.honeyprojects.infrastructure.contant.Constants;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.util.ConvertRequestApiidentity;
@@ -105,8 +107,9 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
 
             Notification notification = new Notification();
             notification.setStudentId(history.getStudentId());
-            notification.setTitle("Yêu cầu mở quà");
+            notification.setTitle(Constants.TITLE_NOTIFICATION_TEACHER);
             notification.setType(NotificationType.TEACHER);
+            notification.setStatus(NotificationStatus.CHUA_DOC);
             notificationRepository.save(notification);
 
             NotificationDetail notificationDetail = new NotificationDetail();

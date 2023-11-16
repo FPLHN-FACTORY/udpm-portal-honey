@@ -135,7 +135,7 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
             updatePoints(fillPoint.point - selectedConversion.honey * quantity);
           }
         } else {
-          message.error("Bạn không đủ điểm để đổi quà trong ranh này!");
+          message.error("Số lượng mật ong không đủ!");
         }
       })
       .catch((error) => {

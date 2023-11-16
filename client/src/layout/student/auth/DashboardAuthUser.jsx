@@ -41,6 +41,7 @@ import {
   GetCountNotification,
   SetCountNotification,
 } from "../../../app/reducers/notification/count-notification.reducer";
+import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { TransactionApi } from "../../../apis/student/transaction/transactionApi.api";
 
@@ -55,10 +56,16 @@ function DashboardAuthUser({ children }) {
       dispatch(SetCountNotification(response.data));
     } catch (error) {}
   };
-
+  const location = useLocation();
   useEffect(() => {
     fetchCountNotification();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (location.pathname === "/student") {
+      fetchCountNotification();
+    }
+  }, [location]);
 
   const dataCountNotification = useAppSelector(GetCountNotification);
 
