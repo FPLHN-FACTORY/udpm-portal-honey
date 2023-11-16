@@ -23,6 +23,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+
 
 @RestController
 @RequestMapping("/api/censor/request-manager")
@@ -37,7 +43,7 @@ public class CensorRequestManagerRestController {
     private CallApiCommonService callApiCommonService;
 
     @GetMapping
-    private void testCall(@RequestParam(name = "test") String test) {
+    private void testCall(@RequestParam(name = "test") String test) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, KeyManagementException {
         FilterClassSubject classSubject = new FilterClassSubject();
         classSubject.setEmailStudent(test);
         callApiCommonService.callApiClassSubjectVM(classSubject);
