@@ -7,10 +7,8 @@ import com.honeyprojects.core.admin.model.request.AdminNotificationRandomRequest
 import com.honeyprojects.core.admin.repository.AdNotificationRespository;
 import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
 import com.honeyprojects.core.admin.service.AdminAddPointStudentService;
-import com.honeyprojects.core.admin.service.AdminConversionService;
 import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
 import com.honeyprojects.entity.Category;
-import com.honeyprojects.entity.Conversion;
 import com.honeyprojects.entity.Notification;
 import com.honeyprojects.entity.NotificationDetail;
 import com.honeyprojects.infrastructure.contant.Constants;
@@ -25,9 +23,6 @@ import org.springframework.stereotype.Service;
 public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentService {
 
     @Autowired
-    private AdminConversionService adminConversionService;
-
-    @Autowired
     private AdminCategoryRepository adminCategoryRepository;
 
     @Autowired
@@ -39,27 +34,21 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
 
     @Override
     public Boolean addPointStudent(AdminAddPointStudentBO student) {
-        Conversion conversion = adminConversionService.getConversion(Constants.MODULE.MODULE_LAB_REPORT_APP);
-        if (student.getCode().equals(conversion.getCode())) {
             for (AdminAddPointStudentRequest adminAddPointStudentRequest :
                     student.getRequests()) {
                 Notification notification = createNotification(adminAddPointStudentRequest.getId());
                 if (!DataUtils.isNullObject(student.getRequests())) {
                     try {
-                        // Kiểm tra và chuyển đổi ratio thành số
-                        Double ratio = Double.valueOf(conversion.getRatio());
                         // Kiểm tra và chuyển đổi point thành số
                         Double point = Double.valueOf(adminAddPointStudentRequest.getPointStudent());
-                        Double numberPoint = ratio * point;
-                        Category category = adminCategoryRepository.findById(conversion.getCategoryId()).orElse(null);
-                        createNotificationDetailHoney(category, notification.getId(), numberPoint);
+//                        Category category = adminCategoryRepository.findById(conversion.getCategoryId()).orElse(null);
+//                        createNotificationDetailHoney(category, notification.getId(), point);
                     } catch (NumberFormatException e) {
                         // Xử lý nếu không thể chuyển đổi thành số
                         e.printStackTrace(); // hoặc log thông báo lỗi
                     }
                 }
             }
-        }
         return true;
     }
 

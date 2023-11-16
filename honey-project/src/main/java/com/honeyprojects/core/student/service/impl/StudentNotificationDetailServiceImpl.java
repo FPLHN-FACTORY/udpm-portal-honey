@@ -125,7 +125,7 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
                     stringBuilder.append(detail.getQuantity() + " mật ong: " + category.getName() + " được thêm vào túi đồ của sinh viên: " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + ", ");
                     adminHoneyRepository.save(honey);
                 } else {
-                    AdminCreateHoneyRequest adminCreateHoneyRequest = new AdminCreateHoneyRequest(detail.getIdObject(), idStudent, null, detail.getQuantity());
+                    AdminCreateHoneyRequest adminCreateHoneyRequest = new AdminCreateHoneyRequest(detail.getIdObject(), idStudent, detail.getQuantity());
                     Honey honey = adminCreateHoneyRequest.createHoney(new Honey());
                     Category category = studentCategoryRepository.findById(honey.getHoneyCategoryId()).orElse(null);
                     stringBuilder.append(detail.getQuantity() + " mật ong: " + category.getName() + " được thêm vào túi đồ của sinh viên: " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + ", ");

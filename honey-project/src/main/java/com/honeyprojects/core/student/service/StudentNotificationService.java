@@ -9,13 +9,15 @@ import com.honeyprojects.entity.Notification;
 import java.util.List;
 
 public interface StudentNotificationService {
+
     PageableObject<StudentNotificationResponse> fillAllNotification(String idStudent, final StudentNotificationRequest request);
 
     List<StudentNotificationResponse> fillListNotification(String idStudent, final StudentNotificationRequest request);
 
     int countNotification(String id);
 
-    Notification updateStatus(String id);
+    Boolean updateStatus(String id);
+
     Notification getOne(String id);
 
     void deleteNotification(String id);

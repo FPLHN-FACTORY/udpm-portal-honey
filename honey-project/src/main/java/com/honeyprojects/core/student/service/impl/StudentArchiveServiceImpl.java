@@ -4,17 +4,26 @@ import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.student.model.param.StudentSumHistoryParam;
-import com.honeyprojects.core.student.model.request.*;
+import com.honeyprojects.core.student.model.request.StudentArchiveFilterRequest;
+import com.honeyprojects.core.student.model.request.StudentArchiveOpenChestRequest;
+import com.honeyprojects.core.student.model.request.StudentGetArchiveChestRequest;
+import com.honeyprojects.core.student.model.request.StudentGetArchiveGiftRequest;
+import com.honeyprojects.core.student.model.request.StudentRequestChangeGift;
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
 import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
 import com.honeyprojects.core.student.model.response.archive.StudentArchiveByUserResponse;
-import com.honeyprojects.core.student.repository.*;
+import com.honeyprojects.core.student.repository.StudentArchiveRepository;
+import com.honeyprojects.core.student.repository.StudentGiftArchiveRepository;
+import com.honeyprojects.core.student.repository.StudentGiftRepository;
+import com.honeyprojects.core.student.repository.StudentHistoryRepository;
 import com.honeyprojects.core.student.service.StudentArchiveService;
-import com.honeyprojects.entity.*;
+import com.honeyprojects.entity.Archive;
+import com.honeyprojects.entity.ArchiveGift;
+import com.honeyprojects.entity.Gift;
+import com.honeyprojects.entity.History;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.SemesterStatus;
-import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.repository.ArchiveGiftRepository;
@@ -23,10 +32,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -36,18 +43,22 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
 
     @Autowired
     private StudentGiftArchiveRepository studentGiftArchiveRepository;
+
     @Autowired
     private UdpmHoney udpmHoney;
+
     @Autowired
     private StudentArchiveRepository archiveRepository;
+
     @Autowired
     private ArchiveGiftRepository archiveGiftRepository;
+
     @Autowired
     private StudentHistoryRepository historyRepository;
-    @Autowired
-    private StudentSemesterRepository semesterRepository;
+
     @Autowired
     private StudentGiftRepository giftRepository;
+
     @Autowired
     private ConvertRequestApiidentity requestApiidentity;
 
@@ -74,21 +85,21 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
         }
         ArchiveGift archiveGift = archiveGiftRepository.findById(request.getArchiveGiftId()).orElse(null);
         if (archiveGift != null) {
-            Semester semester = semesterRepository.findByStatus(SemesterStatus.DANG_HOAT_DONG)
-                    .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
-            StudentSumHistoryParam sumHistoryParam = new StudentSumHistoryParam(
-                    archiveGift.getGiftId(), request.getMaLop(), request.getMaMon(), semester.getFromDate(),
-                    semester.getToDate());
-            Integer total = historyRepository.getTotalUseGift(sumHistoryParam);
-            Gift gift = giftRepository.findById(archiveGift.getGiftId())
-                    .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
-            if (total == null) {
-                total = 0;
-            }
-            if (gift.getLimitQuantity() != null
-                    && gift.getLimitQuantity() < (total + request.getQuantity())) {
-                throw new RestApiException("Số lượng sử dụng quá giới hạn!");
-            }
+////            Semester semester = semesterRepository.findByStatus(SemesterStatus.DANG_HOAT_DONG)
+////                    .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
+////            StudentSumHistoryParam sumHistoryParam = new StudentSumHistoryParam(
+////                    archiveGift.getGiftId(), request.getMaLop(), request.getMaMon(), semester.getFromDate(),
+////                    semester.getToDate());
+////            Integer total = historyRepository.getTotalUseGift(sumHistoryParam);
+////            Gift gift = giftRepository.findById(archiveGift.getGiftId())
+////                    .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
+//            if (total == null) {
+//                total = 0;
+//            }
+//            if (gift.getLimitQuantity() != null
+//                    && gift.getLimitQuantity() < (total + request.getQuantity())) {
+//                throw new RestApiException("Số lượng sử dụng quá giới hạn!");
+//            }
             History history = new History();
             history.setQuantity(request.getQuantity());
             history.setStudentId(udpmHoney.getIdUser());
