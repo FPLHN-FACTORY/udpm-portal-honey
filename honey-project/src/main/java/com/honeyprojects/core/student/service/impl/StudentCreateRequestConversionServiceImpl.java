@@ -12,7 +12,6 @@ import com.honeyprojects.core.student.repository.StudentCategoryRepository;
 import com.honeyprojects.core.student.repository.StudentCreateRequestConversionRepository;
 import com.honeyprojects.core.student.repository.StudentGiftRepository;
 import com.honeyprojects.core.student.repository.StudentHoneyRepository;
-import com.honeyprojects.core.student.repository.StudentUserSemesterRepository;
 import com.honeyprojects.core.student.service.StudentCreateResquestConversionService;
 import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
@@ -20,7 +19,6 @@ import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Honey;
-import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.StatusGift;
@@ -41,9 +39,6 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
 
     @Autowired
     private StudentHoneyRepository honeyRepository;
-
-    @Autowired
-    private StudentUserSemesterRepository userSemesterRepository;
 
     @Autowired
     private ConvertRequestApiidentity convertRequestApiidentity;
@@ -75,15 +70,10 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
         archive.setStatus(Status.HOAT_DONG);
         int defaultHoneyPoint = 0;
         if (honey == null) {
-            String idUs = userSemesterRepository.getSemesterByStudent(createRequest.getStudentId());
-            if (idUs == null) {
-                return null;
-            }
             // Nếu Honey chưa tồn tại, tạo mới
             honey = new Honey();
             honey.setStudentId(createRequest.getStudentId());
             honey.setHoneyCategoryId(createRequest.getCategoryId());
-            honey.setUserSemesterId(idUs);
             honey.setHoneyPoint(createRequest.getHoneyPoint() != null ? createRequest.getHoneyPoint() : defaultHoneyPoint);
             honey = honeyRepository.save(honey);
         } else {
