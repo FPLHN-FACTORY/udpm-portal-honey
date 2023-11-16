@@ -14,4 +14,6 @@ public interface StudentArchiveUpgradeRateResponse extends IsIdentified {
     @Value("#{target.quantity}")
     String getQuantity();
 
+    @Value("#{target.idGift}")
+    String getIdGift();
 }

@@ -63,8 +63,8 @@ const ModalDetail = (props) => {
               <label className="ant-form-item-label">Ngày bắt đầu</label>
               <div className="ant-form-item-control">
                 <Input
-                  value={toDate}
-                  onChange={(e) => setToDate(e.target.value)}
+                  value={fromDate}
+                  onChange={(e) => setFromDate(e.target.value)}
                   type="date"
                 />
               </div>
@@ -74,8 +74,8 @@ const ModalDetail = (props) => {
               <label className="ant-form-item-label">Ngày kết thúc</label>
               <div className="ant-form-item-control">
                 <Input
-                  value={fromDate}
-                  onChange={(e) => setFromDate(e.target.value)}
+                  value={toDate}
+                  onChange={(e) => setToDate(e.target.value)}
                   type="date"
                 />
               </div>

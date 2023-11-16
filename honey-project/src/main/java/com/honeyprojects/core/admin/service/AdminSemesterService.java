@@ -3,6 +3,7 @@ package com.honeyprojects.core.admin.service;
 import com.honeyprojects.core.admin.model.request.AdminSearchSemesterRequest;
 import com.honeyprojects.core.admin.model.request.AdminSemesterRequest;
 import com.honeyprojects.core.admin.model.response.AdminSemesterResponse;
+import com.honeyprojects.core.admin.model.response.SemesterJobResponse;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Semester;
 
@@ -22,4 +23,7 @@ public interface AdminSemesterService {
 
     Semester updateSemester(AdminSemesterRequest request, String id);
 
+    SemesterJobResponse findSemesterByStatus();
+
+    void openNewSemester(Long newDate);
 }

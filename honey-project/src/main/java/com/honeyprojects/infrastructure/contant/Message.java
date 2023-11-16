@@ -15,6 +15,7 @@ public enum Message {
     VERIFICATION_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.VERIFICATION_NOT_EXIST)),
     HISTORY_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.VERIFICATION_NOT_EXIST)),
     CATEGORY_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.CATEGORY_NOT_EXIST)),
+    SEMESTER_ALREADY_EXIST(PropertiesReader.getProperty(PropertyKeys.SEMESTER_ALREADY_EXIST)),
     AUCTION_NOT_EXISTS(PropertiesReader.getProperty(PropertyKeys.AUCTION_NOT_EXISTS));
     private String message;
 

@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface StudentHoneyRepository extends HoneyRepository {
     @Query(value = """
@@ -26,10 +28,14 @@ public interface StudentHoneyRepository extends HoneyRepository {
             LEFT JOIN semester s ON h.user_semester_id = s.id
             where h.student_id = :studentId
             and h.honey_category_id = :categoryId
-            AND :dateNow BETWEEN s.from_date AND s.to_date
             """, nativeQuery = true)
-    StudentHoneyResponse getPoint(String categoryId,String studentId, Long dateNow);
+    StudentHoneyResponse getPoint(String categoryId,String studentId);
 
-    @Query("SELECT h FROM Honey h WHERE h.studentId =:idUser")
-    Honey getOneByIdUser (@Param("idUser") String idUser);
+    @Query(value = """
+            SELECT *
+             FROM honey h
+             WHERE h.student_id = :id
+             """,
+            nativeQuery = true)
+    List<Honey> getListIdCategory(@Param("id") String id);
 }

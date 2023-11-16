@@ -8,16 +8,22 @@ import TextArea from "antd/es/input/TextArea";
 import "./index.css";
 import { SemesterAPI } from "../../../apis/censor/semester/semester.api";
 import { GiftDetail } from "../../../apis/censor/gift/gift-detail.api";
+import { formatDate } from "../../util/DateUtil";
 
 const ModalThem = (props) => {
   const onFinishFailed = () => {
+    if (selectedImageUrl.length === 0) {
+      setErrorImage("Ảnh không được để trống");
+    } else {
+      setErrorImage("");
+    }
     message.error("Lỗi");
   };
 
   const { modalOpen, setModalOpen, gift, onSave, fetchData } = props;
   const [form] = Form.useForm();
   const { Option } = Select;
-  const [errorImage, setErrorImage] = useState([]);
+  const [errorImage, setErrorImage] = useState("");
   const [image, setImage] = useState([]);
   const [quantityValue, setQuantityValue] = useState(0);
   const [limitQuantityValue, setLimitQuantityValue] = useState(0);
@@ -54,9 +60,13 @@ const ModalThem = (props) => {
         setImage([]);
       } else {
         const fileSize = selectedFile.size;
-        const checkFileSize = Math.round(fileSize / 1024);
-        if (checkFileSize > 100) {
-          setErrorImage("Ảnh không thể lớn hơn 1 mb");
+        const checkFileSize = Math.round(fileSize / 1024 / 1024);
+        console.log(
+          "🚀 ~ file: ModalAddGift.jsx:65 ~ handleFileInputChange ~ checkFileSize:",
+          checkFileSize
+        );
+        if (checkFileSize > 1) {
+          setErrorImage("Ảnh không thể lớn hơn 1 MB");
           setSelectedImageUrl("");
           setImage([]);
         } else {
@@ -68,13 +78,17 @@ const ModalThem = (props) => {
             Extension == "png" ||
             Extension == "bmp" ||
             Extension == "jpeg" ||
-            Extension == "jpg"
+            Extension == "jpg" ||
+            Extension == "webp"
           ) {
             setImage(selectedFile);
             var imageUrl = URL.createObjectURL(selectedFile);
             setSelectedImageUrl(imageUrl);
+            setErrorImage("");
           } else {
-            setErrorImage("Chỉ nhận ảnh có type GIF, PNG, JPG, JPEG và BMP. ");
+            setErrorImage(
+              "Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. "
+            );
             setSelectedImageUrl("");
             setImage([]);
           }
@@ -177,6 +191,7 @@ const ModalThem = (props) => {
   };
 
   const onFinish = () => {
+    let check = 0;
     form
       .validateFields()
       .then((formValues) => {
@@ -185,6 +200,9 @@ const ModalThem = (props) => {
         let fromDate = null;
         let toDate = null;
         let semesterId = null;
+        if (selectedImageUrl.length === 0) {
+          return;
+        }
         if (quantityValue === 1) {
           quantity = parseInt(formValues.quantityLimit, 10);
         }
@@ -210,17 +228,15 @@ const ModalThem = (props) => {
         }
         if (isNaN(quantity) && quantityValue === 1) {
           message.error("Vui lòng nhập số lượng giới hạn hợp lệ.");
-          return;
+          check++;
         }
         if (isNaN(limitSL) && limitQuantityValue === 1) {
           message.error("Vui lòng nhập số lượng giới hạn hợp lệ.");
-          return;
+          check++;
         }
-        if (selectedImageUrl.length === 0) {
-          setErrorImage("Ảnh không được để trống");
+
+        if (check > 0) {
           return;
-        } else {
-          setErrorImage("");
         }
         GiftAPI.create({
           ...formValues,
@@ -330,7 +346,9 @@ const ModalThem = (props) => {
           accept="image/*"
           onChange={(event) => handleFileInputChange(event)}
         />
-        <span className="error errorImageMes">{errorImage}</span>
+        {errorImage && (
+          <div style={{ color: "red", paddingLeft: "100px" }}>{errorImage}</div>
+        )}
         <Form.Item
           label="Tên"
           name="name"
@@ -485,7 +503,9 @@ const ModalThem = (props) => {
             <Select placeholder="Chọn học kì">
               {listSemester.map((semester) => (
                 <Option key={semester.id} value={semester.id}>
-                  {semester.name}
+                  {`${semester.name} (${formatDate(
+                    semester.fromDate
+                  )} - ${formatDate(semester.toDate)})`}
                 </Option>
               ))}
             </Select>
@@ -555,6 +575,9 @@ const ModalThem = (props) => {
               message: "Vui lòng chọn tùy chọn giao dịch",
             },
           ]}
+          style={{
+            display: selectType === 1 ? "block" : "none",
+          }}
         >
           <Radio.Group>
             <Radio value={0}>Cho phép</Radio>

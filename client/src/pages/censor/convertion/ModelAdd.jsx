@@ -1,35 +1,26 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, Select, Tooltip, message } from "antd";
 import { useEffect, useState } from "react";
-import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { ConversionAPI } from "../../../apis/censor/conversion/conversion.api";
 import { useAppDispatch } from "../../../app/hooks";
-import { AddConversion } from "../../../app/reducers/conversion/conversion.reducer";
+import {
+  AddConversion,
+  SetConversion,
+} from "../../../app/reducers/conversion/conversion.reducer";
 import ModalAddCategory from "./ModalAddCategory";
-import ModalAddGift from "./ModalAddGift";
 
 const ModalAddConversion = ({ loadData }) => {
   const dispatch = useAppDispatch();
   const [showModal1, setShowModal] = useState(false);
   const [detailCategory, setDetailCategory] = useState();
-
-  const [showModalGift, setShowModalGift] = useState(false);
-  const [detailGift, setDetailGift] = useState();
-
   const [fillCategory, setFillCategory] = useState([]);
-  const [fillGift, setFillGift] = useState([]);
   const [selectCategory, setSelectCategory] = useState("");
-  const [selectGift, setSelectGift] = useState("");
-  const [pointGift, setPoinGift] = useState("");
   const [pointCategory, setPoinCategory] = useState("");
-  const [selectPointGift, setSelectPoinGift] = useState("");
-  const [selectPointCategory, setSelectPoinCategory] = useState("");
-
+  const [code, setCode] = useState("");
   const [fillName, setFillName] = useState({ nameCate: "", nameGift: "" });
 
   useEffect(() => {
     fechCategory();
-    fechGift();
   }, []);
 
   const fechCategory = () => {
@@ -38,43 +29,20 @@ const ModalAddConversion = ({ loadData }) => {
     });
   };
 
-  const fechGift = () => {
-    GiftAPI.fetchAllGift().then((response) => {
-      setFillGift(response.data.data);
-    });
-  };
-
-  const handleCategoryBlur = () => {
-    setSelectPoinCategory(pointCategory);
-  };
-
-  const handleGiftBlur = () => {
-    setSelectPoinGift(pointGift);
-  };
-
   const handleConversation = async () => {
-    if (!selectCategory || !pointCategory || !selectGift || !pointGift) {
+    if (!selectCategory || !pointCategory) {
       message.error("không được để trống");
       return;
     } else if (pointCategory < 0) {
       message.error("Điểm phải dương");
       return;
-    } else if (parseFloat(pointGift) !== 0.25) {
-      message.error("Quà mặc định phải là 0.25");
-      return;
     }
 
-    // const ratio = parseFloat(selectPointCategory) / parseFloat(selectPointGift);
-    const ratio = parseFloat(selectPointCategory);
-
-    const code = `${fillName.nameCate}/${fillName.nameGift}${parseInt(
-      Math.random() * 100000
-    )}`;
+    const ratio = parseFloat(pointCategory);
 
     const dataToSend = {
       ratio: ratio,
       code: code,
-      giftId: selectGift,
       categoryId: selectCategory,
     };
 
@@ -113,13 +81,6 @@ const ModalAddConversion = ({ loadData }) => {
         SetCategory={setDetailCategory}
       />
 
-      <ModalAddGift
-        modalOpen={showModalGift}
-        setModalOpen={setShowModalGift}
-        gift={detailGift}
-        setGift={setDetailGift}
-      />
-
       <Tooltip title="Add">
         <Button
           className="add-button"
@@ -131,7 +92,7 @@ const ModalAddConversion = ({ loadData }) => {
         </Button>
       </Tooltip>
       <Modal
-        title="Chi tiết thể loại"
+        title="Thêm mới quy đổi"
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
@@ -155,23 +116,34 @@ const ModalAddConversion = ({ loadData }) => {
           autoComplete="off"
         >
           <div>
-            <div style={{ marginTop: "20px" }}>
-              <div>
-                <div className="flex flex-row-reverse">
-                  <div>
-                    <Tooltip title="Thêm thể loại">
-                      <button
-                        onClick={() => {
-                          setShowModal(true);
-                          setDetailCategory(null);
-                        }}
-                        style={{ border: "none", background: "none" }}
-                      >
-                        <PlusOutlined className="mr-1" />
-                      </button>
-                    </Tooltip>
-                  </div>
-                </div>
+            <div style={{ marginBottom: "20px", marginTop: "30px" }}>
+              <div
+                style={{
+                  marginBottom: "18px",
+                }}
+              >
+                <span
+                  className="text-xl"
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "15px",
+                    marginRight: "18px",
+                  }}
+                >
+                  {" "}
+                  Code:
+                </span>
+
+                <Input
+                  style={{
+                    borderRadius: "10px",
+                    width: "58%",
+                    marginLeft: "20px",
+                  }}
+                  placeholder="Enter code"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                />
               </div>
               <span
                 className="text-xl"
@@ -188,7 +160,7 @@ const ModalAddConversion = ({ loadData }) => {
                 showSearch
                 placeholder=""
                 optionFilterProp="children"
-                style={{ width: "33%", marginRight: "20px" }}
+                style={{ width: "30%", marginRight: "20px" }}
                 size="large"
                 value={selectCategory}
                 onChange={(value, label) => {
@@ -203,13 +175,12 @@ const ModalAddConversion = ({ loadData }) => {
               <Input
                 style={{
                   borderRadius: "10px",
-                  width: "32%",
+                  width: "18%",
                   marginLeft: "20px",
                 }}
                 placeholder=""
                 value={pointCategory}
                 onChange={(e) => setPoinCategory(e.target.value)}
-                onBlur={handleCategoryBlur}
               />
               <span
                 className="text-xl"
@@ -219,98 +190,29 @@ const ModalAddConversion = ({ loadData }) => {
                 }}
               >
                 {" "}
-                Điểm
+                Mật ong
               </span>
             </div>
-
             <div>
               <div>
-                <div className="flex flex-row-reverse">
-                  <div>
-                    <span>
-                      <Tooltip title="Thêm quà">
-                        <button
-                          onClick={() => {
-                            setShowModal(true);
-                            setDetailGift(null);
-                          }}
-                          style={{ border: "none", background: "none" }}
-                        >
-                          <PlusOutlined className="mr-1" />
-                        </button>
-                      </Tooltip>
-                    </span>
-                  </div>
+                <div>
+                  <Tooltip title="Thêm thể loại">
+                    <button
+                      onClick={() => {
+                        setShowModal(true);
+                        setDetailCategory(null);
+                      }}
+                      style={{ border: "none", background: "none" }}
+                    >
+                      <PlusOutlined className="mr-1" />
+                    </button>
+                  </Tooltip>
                 </div>
               </div>
-              <span
-                className="text-xl"
-                style={{
-                  fontWeight: "bold",
-                  fontSize: "15px",
-                  marginRight: "10px",
-                  marginLeft: "36px",
-                }}
-              >
-                {" "}
-                Gift:
-              </span>
-              <Select
-                showSearch
-                placeholder=""
-                optionFilterProp="children"
-                style={{ width: "33%", marginRight: "20px" }}
-                size="large"
-                value={selectGift}
-                onChange={(value, label) => {
-                  setSelectGift(value);
-                  setFillName({ ...fillName, nameGift: label.label });
-                }}
-                options={fillGift.map((item) => {
-                  return { label: item.name, value: item.id };
-                })}
-              />
-              =
-              <Input
-                style={{
-                  borderRadius: "10px",
-                  width: "32%",
-                  marginLeft: "20px",
-                }}
-                placeholder=""
-                value={pointGift}
-                onChange={(e) => setPoinGift(e.target.value)}
-                onBlur={handleGiftBlur}
-              />
-              <span
-                className="text-xl"
-                style={{
-                  fontWeight: "bold",
-                  fontSize: "15px",
-                }}
-              >
-                {" "}
-                Điểm
-              </span>
             </div>
           </div>
-          <form style={{ paddingLeft: "80px" }}>
-            <div style={{ marginTop: "50px" }}>
-              <div style={{ display: "block", marginBottom: "50px" }}>
-                <span style={{ fontSize: "18px", marginRight: "100px" }}>
-                  {fillName.nameCate}
-                </span>
-                <span style={{ fontSize: "18px" }}>{pointCategory}</span>
-              </div>
-
-              <div style={{ display: "block", marginBottom: "60px" }}>
-                <span style={{ fontSize: "18px", marginRight: "100px" }}>
-                  {fillName.nameGift}
-                </span>
-                <span style={{ fontSize: "18px" }}>{pointGift}</span>
-              </div>
-            </div>
-            {selectPointCategory && selectPointGift && (
+          <form style={{ marginTop: "20px" }}>
+            {pointCategory && (
               <div>
                 <span
                   style={{
@@ -319,22 +221,14 @@ const ModalAddConversion = ({ loadData }) => {
                     marginRight: "20px",
                   }}
                 >
-                  Tỉ số thu được :
-                </span>
-                <span
-                  style={{
-                    fontSize: "18px",
-                    marginRight: "20px",
-                  }}
-                >
-                  {selectPointCategory}/{selectPointGift}
+                  Kết quả sau khi quy đổi:
                 </span>
                 <span
                   style={{
                     fontSize: "18px",
                   }}
                 >
-                  {fillName.nameCate}/{fillName.nameGift}
+                  {pointCategory} mật ong loại {fillName.nameCate} / 1 điểm
                 </span>
               </div>
             )}

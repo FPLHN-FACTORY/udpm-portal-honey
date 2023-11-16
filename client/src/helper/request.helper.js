@@ -8,6 +8,7 @@ import {
   startLoading,
 } from "../app/reducers/loading/loading.reducer";
 import { store } from "../app/store";
+import { message } from "antd";
 
 export const request = axios.create({
   baseURL: AppConfig.apiUrl,
@@ -16,6 +17,7 @@ export const request = axios.create({
 request.interceptors.request.use((config) => {
   store.dispatch(startLoading());
   const token = getToken();
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -23,12 +25,12 @@ request.interceptors.request.use((config) => {
 });
 
 request.interceptors.response.use(
-  (config) => {
+  (response) => {
     store.dispatch(finishLoading());
-    return config;
+    return response;
   },
-  (response) => response,
   (error) => {
+    store.dispatch(finishLoading());
     if (error.response.status === 404) {
       window.location.href = window.location.origin + "/404";
       return;
@@ -37,7 +39,9 @@ request.interceptors.response.use(
       window.location.href = window.location.origin + "/401";
       return;
     }
-    store.dispatch(finishLoading());
-    return Promise.reject(error);
+    if (error.response && error.response.status === 400) {
+      message.error(error.response.data.message);
+    }
+    throw error;
   }
 );

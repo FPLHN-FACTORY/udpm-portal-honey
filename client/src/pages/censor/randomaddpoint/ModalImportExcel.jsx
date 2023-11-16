@@ -37,7 +37,7 @@ export default function ModalImportExcel(props) {
       const formData = new FormData();
       formData.append("file", file.file.originFileObj);
       setLoading(true);
-      RandomAddPointAPI.createImportExcel(formData)
+      RandomAddPointAPI.previewDataRandomExcel(formData)
         .then((response) => {
           if (response.data.data.total > 0) {
             const idList = response.data.data.lstAdminAddPointDTO.map(

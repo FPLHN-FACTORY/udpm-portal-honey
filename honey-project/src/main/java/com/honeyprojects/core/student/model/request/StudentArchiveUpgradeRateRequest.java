@@ -7,6 +7,8 @@ import lombok.Setter;
 @Setter
 public class StudentArchiveUpgradeRateRequest {
 
+    private String name;
+
     private Integer type;
 
 }

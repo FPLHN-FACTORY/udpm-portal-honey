@@ -20,6 +20,7 @@ public interface AdRequestConversionHistoryRepository extends HistoryRepository 
                  on hn.honey_category_id = c.id 
                   WHERE (:#{#filter.status} IS NULL OR h.status = :#{#filter.status})
             AND (:#{#filter.idCategory} IS NULL OR c.id = :#{#filter.idCategory})
+            AND (:#{#filter.idStudent} IS NULL OR h.student_id = :#{#filter.idStudent})
             AND h.type = 2 AND h.status = 0 ORDER BY h.last_modified_date DESC
                 """, nativeQuery = true)
     Page<AdminRequestConversionHistoryResponse> getHistory(@Param("filter") AdminCreateConversionHistoryRequest filter,
@@ -32,6 +33,7 @@ public interface AdRequestConversionHistoryRepository extends HistoryRepository 
                  on hn.honey_category_id = c.id 
                   WHERE (:#{#filter.status} IS NULL OR h.status = :#{#filter.status})
             AND (:#{#filter.idCategory} IS NULL OR c.id = :#{#filter.idCategory})
+            AND (:#{#filter.idStudent} IS NULL OR h.student_id = :#{#filter.idStudent})
             AND h.type = 2 AND h.status in (1,2) ORDER BY h.last_modified_date DESC
                 """, nativeQuery = true)
     Page<AdminRequestConversionHistoryResponse> getBuyGiftHistory(@Param("filter") AdminCreateConversionHistoryRequest filter,
