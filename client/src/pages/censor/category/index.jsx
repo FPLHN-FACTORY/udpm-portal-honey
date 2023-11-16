@@ -147,7 +147,8 @@ export default function Index() {
       key: "categoryStatus",
       align: "center",
       render: (text) => {
-        if (text === "1") {
+        console.log(text);
+        if (text === "2") {
           return (
             <span style={{ color: "green" }}>
               <CheckOutlined />
@@ -279,7 +280,7 @@ export default function Index() {
                   Tất cả
                 </Option>
                 <Option
-                  value="1"
+                  value="2"
                   style={{
                     fontSize: "13px",
                   }}
@@ -287,7 +288,7 @@ export default function Index() {
                   Phê duyệt
                 </Option>
                 <Option
-                  value="2"
+                  value="1"
                   style={{
                     fontSize: "13px",
                   }}
@@ -303,7 +304,6 @@ export default function Index() {
                 value={transaction}
                 onChange={(value) => {
                   setTransaction(value);
-                  console.log(value);
                 }}
                 style={{
                   width: "100%",

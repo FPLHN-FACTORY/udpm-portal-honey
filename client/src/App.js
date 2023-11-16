@@ -17,7 +17,6 @@ import HistoryAddPointCensor from "./pages/censor/addPoin/HistoryAddPoint";
 import ListRequestAddPoint from "./pages/teacher/addpoint/ListRequestAddPoint";
 import RequestAddPoint from "./pages/censor/requestmanager/RequestAddPoint";
 import RequestManagerDetail from "./pages/censor/requestmanager/RequestManagerDetail";
-import Semester from "./pages/censor/semester";
 import ConversionHome from "./pages/censor/convertion/convertionHome";
 import IndexGift from "./pages/censor/gift/indexGift";
 import AddRequestConversion from "./pages/student/RequestConversion/AddRequestConversion";
@@ -101,16 +100,6 @@ function App() {
                 </AuthGuard>
               }
             /> */}
-            <Route
-              path="/censor/semester"
-              element={
-                <AuthGuard>
-                  <DashboardCensor>
-                    <Semester />
-                  </DashboardCensor>
-                </AuthGuard>
-              }
-            />
             <Route
               path="/censor/conversion"
               element={
