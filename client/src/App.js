@@ -2,7 +2,7 @@ import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppConfig } from "./AppConfig";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import NotFound from "./pages/404";
 import NotAuthorized from "./pages/401";
 import AuthGuard from "./guard/AuthGuard";
@@ -21,7 +21,6 @@ import Semester from "./pages/censor/semester";
 import ConversionHome from "./pages/censor/convertion/convertionHome";
 import IndexGift from "./pages/censor/gift/indexGift";
 import AddRequestConversion from "./pages/student/RequestConversion/AddRequestConversion";
-import TransactionPage from "./pages/student/transaction/TransactionPage";
 import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
 import StArchive from "./pages/student/archive/StArchive";
@@ -29,11 +28,8 @@ import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
 // import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
 import ChestGift from "./pages/censor/chest-gift/ChestGift";
 import AuctionMangement from "./pages/censor/auction-management/AuctionManagement";
-import TestTransaction from "./pages/student/transaction/TestTransaction";
-import { getToken, setToken } from "./helper/userToken";
+import { deleteToken, getToken, setToken } from "./helper/userToken";
 import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
-import UpgradeHoney from "./pages/student/upgradeHoney/UpgradeHoney";
-import RequestApprovedHistory from "./pages/censor/requestmanager/ApproveHistory";
 import ConvertionHoney from "./pages/teacher/convertion-honey/RequestConversion";
 import TeacherRequestConversionHistory from "./pages/teacher/convertion-honey/RequestConversionHistory";
 import LetterDetail from "./pages/student/letters/LetterDetail";
@@ -53,14 +49,11 @@ import HonorsStudent from "./pages/student/honors/HonorsStudent";
 import TopStudent from "./pages/student/honors/TopStudent";
 import { SelectLoading } from "./app/reducers/loading/loading.reducer";
 import { useAppSelector } from "./app/hooks";
-function App() {
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU5YjlmYjdlLTkwNjUtNDEwMi1mMDNjLTA4ZGJjZTY5ZTU5NCIsIm5hbWUiOiJ0xrDhu59uZyBoaWhpIiwiZW1haWwiOiJ0dW9uZ3R2cGgyNjE0OUBmcHQuZWR1LnZuIiwidXNlck5hbWUiOiJ0xrDhu59uZyBoaWhpIiwicGljdHVyZSI6IkltYWdlcy9EZWZhdWx0LnBuZyIsImlkVHJhaW5pbmdGYWNpbGl0eSI6Ijc5NmE0ZmE0LThhYWItNDJjNC05ZjM1LTg3MGJiMDAwNWFmMSIsImxvY2FsSG9zdCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODg4OCIsInJvbGUiOlsiVEVBQ0hFUiIsIlNUVURFTlQiLCJBRE1JTiJdLCJyb2xlTmFtZXMiOlsiR2nhuqNuZyB2acOqbiIsIlNpbmggdmnDqm4iLCJRdeG6o24gdHLhu4sgdmnDqm4iXSwibmJmIjoxNjk3NTUwODY5LCJleHAiOjE3MDAxNDI4NjksImlhdCI6MTY5NzU1MDg2OSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDkwNTMiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0OTA1MyJ9.zjVKrdOUc5joBysdG2q8TWAppjZEQSCv4M3dz5I-SnU";
-  if (!getToken()) {
-    setToken(token);
-  }
-  const data = useAppSelector(SelectLoading);
+import Login from "./pages/login/Login";
+import AuthorSwitch from "./pages/login/AuthorSwitch";
 
+function App() {
+  const data = useAppSelector(SelectLoading);
   return (
     <div className="App scroll-smooth md:scroll-auto font-sans">
       {data && <GlobalLoading />}
@@ -72,7 +65,12 @@ function App() {
             <Route path="/layout-guard-roles" element={<NotAuthorized />} />
             <Route
               path="/"
-              element={<Navigate replace to="/censor/category" />}
+              element={<Navigate replace to="/author-switch" />}
+            />
+            {/* Chọn quyền */}
+            <Route
+              path="/author-switch"
+              element={<AuthorSwitch></AuthorSwitch>}
             />
             {/* Màn censor */}
             <Route
@@ -305,21 +303,21 @@ function App() {
               }
             />
             <Route
-              path="/student/request"
+              path="/student/history"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
-                    <StudentRequest />
+                    <StudentHistory />
                   </DashboardAuthUser>
                 </AuthGuard>
               }
             />
             <Route
-              path="/student/transaction"
+              path="/student/request"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
-                    <TestTransaction />
+                    <StudentRequest />
                   </DashboardAuthUser>
                 </AuthGuard>
               }
@@ -335,21 +333,10 @@ function App() {
               }
             />
             <Route
-              path="/student/transaction/create"
-              element={
-                <AuthGuard>
-                  <DashboardAuthUser>
-                    <TransactionPage />
-                  </DashboardAuthUser>
-                </AuthGuard>
-              }
-            />
-            <Route
               path="/student/chest"
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
-                    {/* <StudentChest /> */}
                     <ChestIndex />
                   </DashboardAuthUser>
                 </AuthGuard>
@@ -391,7 +378,6 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardAuthUser>
-                    {/* <UpgradeHoney /> */}
                     <UpgrateHoneyIndex />
                   </DashboardAuthUser>
                 </AuthGuard>
@@ -441,9 +427,9 @@ function App() {
               path="/student/honor-student"
               element={
                 <AuthGuard>
-                  <DashboardAuthUser>
-                    <HonorsStudent />
-                  </DashboardAuthUser>
+                  {/* <DashboardAuthUser> */}
+                  <HonorsStudent />
+                  {/* </DashboardAuthUser> */}
                 </AuthGuard>
               }
             />
@@ -451,9 +437,9 @@ function App() {
               path="/student/top-student"
               element={
                 <AuthGuard>
-                  <DashboardAuthUser>
-                    <TopStudent />
-                  </DashboardAuthUser>
+                  {/* <DashboardAuthUser> */}
+                  <TopStudent />
+                  {/* </DashboardAuthUser> */}
                 </AuthGuard>
               }
             />
@@ -468,6 +454,7 @@ function App() {
                 </AuthGuard>
               }
             />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </Suspense>
       </BrowserRouter>

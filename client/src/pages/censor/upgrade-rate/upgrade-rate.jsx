@@ -19,7 +19,6 @@ import {
   faPenToSquare,
   faRectangleList,
   faPlus,
-  faCircleInfo,
   faArrowDownLong,
   faArrowRight,
   faLockOpen,
@@ -35,7 +34,10 @@ import {
 } from "../../../app/reducers/upgrade-rate/upgrade-rate.reducer";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import ModalCreateUpgradeRate from "./modal-create.jsx";
-import { GetCategory, SetCategory } from "../../../app/reducers/category/category.reducer";
+import {
+  GetCategory,
+  SetCategory,
+} from "../../../app/reducers/category/category.reducer";
 import { SetGift } from "../../../app/reducers/gift/gift.reducer";
 
 const { Option } = Select;
@@ -51,16 +53,15 @@ export default function UpgradeRate() {
   const [currentRecord, setCurrentRecord] = useState(null);
 
   useEffect(() => {
-    fetchData();
-    fetchCategory();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [current]);
-
-  useEffect(() => {
     fetchCategory();
     featAllGift();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current]);
   const fetchData = () => {
     UpgradeApi.fetchAll({
       page: current - 1,
@@ -77,8 +78,7 @@ export default function UpgradeRate() {
   };
 
   const DeleteUpgradeRate = (record) => {
-    console.log({status: record.status, id: record.id});
-    UpgradeApi.delete({status: record.status, id: record.id})
+    UpgradeApi.delete({ status: record.status, id: record.id })
       .then((response) => {
         if (record.status === 1) {
           message.success("Mở hoạt động thành công!");
@@ -143,7 +143,7 @@ export default function UpgradeRate() {
 
   const openModalDetail = (data) => {
     Modal.info({
-      title: 'Xem chi tiết',
+      title: "Xem chi tiết",
       maskClosable: true,
       width: 800,
       content: (
@@ -151,22 +151,32 @@ export default function UpgradeRate() {
           <Row>
             <Row className="w-full justify-between">
               <Col span={11}>
-                <Tooltip title="Loại mật ong cần nâng cấp" >
+                <Tooltip title="Loại mật ong cần nâng cấp">
                   <Card className="h-full">
                     <Row>
                       <Col span={14}>
-                        <span className="font-semibold text-lg">Loại mật mong muốn:</span>
+                        <span className="font-semibold text-lg">
+                          Loại mật ong:
+                        </span>
                       </Col>
                       <Col span={10}>
-                        <p className="font-normal text-lg"> {data.originalHoney}</p>
+                        <p className="font-normal text-lg">
+                          {" "}
+                          {data.originalHoney}
+                        </p>
                       </Col>
                     </Row>
                     <Row>
                       <Col span={14}>
-                        <span className="font-semibold text-lg">Số lượng mật ong:</span>
+                        <span className="font-semibold text-lg">
+                          Số lượng mật ong:
+                        </span>
                       </Col>
                       <Col span={10}>
-                        <p className="font-normal text-lg"> {data.quantityOriginal}</p>
+                        <p className="font-normal text-lg">
+                          {" "}
+                          {data.quantityOriginal}
+                        </p>
                       </Col>
                     </Row>
                   </Card>
@@ -180,10 +190,12 @@ export default function UpgradeRate() {
                   <Card className="h-full">
                     <Row>
                       <Col span={14}>
-                        <span className="font-semibold text-lg">Vật phẩm kèm theo:</span>
+                        <span className="font-semibold text-lg">
+                          Vật phẩm kèm theo:
+                        </span>
                       </Col>
                       <Col span={10}>
-                      <p className="font-normal text-lg"> {data.giftName}</p>
+                        <p className="font-normal text-lg"> {data.giftName}</p>
                       </Col>
                     </Row>
                   </Card>
@@ -192,30 +204,46 @@ export default function UpgradeRate() {
             </Row>
             <Row className="w-full flex justify-center items-center my-5">
               <span>
-                <FontAwesomeIcon className="font-black text-3xl" icon={faArrowDownLong} />
+                <FontAwesomeIcon
+                  className="font-black text-3xl"
+                  icon={faArrowDownLong}
+                />
                 <Tooltip title="Tỉ lệ thành công">
-                  <span className="font-normal text-lg absolute text-red-600">{data.ratio} %</span>
+                  <span className="font-normal text-lg absolute text-red-600">
+                    {data.ratio} %
+                  </span>
                 </Tooltip>
               </span>
             </Row>
             <Row className="w-full flex justify-center items-center">
-              <Col className="w-full flex justify-center items-center" span={24}>
+              <Col
+                className="w-full flex justify-center items-center"
+                span={24}
+              >
                 <Tooltip title="Loại mật ong nâng cấp">
                   <Card className="w-1/2">
                     <Row>
                       <Col span={14}>
-                        <span className="font-semibold text-lg">Loại mật nâng cấp:</span>
+                        <span className="font-semibold text-lg">
+                          Loại mật ong:
+                        </span>
                       </Col>
                       <Col span={10}>
-                      <p className="font-normal text-lg">{data.originalHoney}</p>
+                        <p className="font-normal text-lg">
+                          {data.destinationHoney}
+                        </p>
                       </Col>
                     </Row>
                     <Row>
                       <Col span={14}>
-                        <span className="font-semibold text-lg">Số lượng mật ong:</span>
+                        <span className="font-semibold text-lg">
+                          Số lượng mật ong:
+                        </span>
                       </Col>
                       <Col span={10}>
-                      <p className="font-normal text-lg">{data.quantityDestination}</p>
+                        <p className="font-normal text-lg">
+                          {data.quantityDestination}
+                        </p>
                       </Col>
                     </Row>
                   </Card>
@@ -227,7 +255,7 @@ export default function UpgradeRate() {
       ),
       onOk() {}, // Xử lý khi người dùng nhấn OK
     });
-  }
+  };
 
   const columns = [
     {
@@ -240,13 +268,23 @@ export default function UpgradeRate() {
       title: "Loại mật ong nâng cấp",
       dataIndex: "originalHoney",
       key: "originalHoney",
-      render: (text, record, index) => <>{ record.originalHoney } <FontAwesomeIcon icon={faArrowRight} /> { record.destinationHoney } </>,
+      render: (text, record, index) => (
+        <>
+          {record.originalHoney} <FontAwesomeIcon icon={faArrowRight} />{" "}
+          {record.destinationHoney}{" "}
+        </>
+      ),
     },
     {
       title: "Số lượng nâng cấp",
       dataIndex: "quantityOriginal",
       key: "quantityOriginal",
-      render: (text, record, index) => <>{ record.quantityOriginal } <FontAwesomeIcon icon={faArrowRight} /> { record.quantityDestination } </>,
+      render: (text, record, index) => (
+        <>
+          {record.quantityOriginal} <FontAwesomeIcon icon={faArrowRight} />{" "}
+          {record.quantityDestination}{" "}
+        </>
+      ),
     },
     {
       title: "Vật phẩm đi kèm",
@@ -257,9 +295,7 @@ export default function UpgradeRate() {
       title: "Tỉ lệ",
       dataIndex: "ratio",
       key: "ratio",
-      render: (text, record, index) => (
-        <span>{record.ratio}%</span>
-      )
+      render: (text, record, index) => <span>{record.ratio}%</span>,
     },
     {
       title: "Trạng thái",
@@ -287,28 +323,27 @@ export default function UpgradeRate() {
       key: "action",
       render: (_, record) => (
         <Space>
-          {record.status === 0 ? 
-          <Popconfirm
-            title="Đóng hoạt động"
-            onConfirm={() => {
-              DeleteUpgradeRate(record);
-            }}
-            okText="Có"
-            cancelText="Không"
-          >
-            <Tooltip title="Đóng hoạt động">
-              <Button
-                style={{
-                  backgroundColor: "red",
-                  color: "white",
-                  height: "35px",
-                }}
-              >
-                <FontAwesomeIcon icon={faLock} />
-              </Button>
-            </Tooltip>
-            </Popconfirm> : 
-            
+          {record.status === 0 ? (
+            <Popconfirm
+              title="Đóng hoạt động"
+              onConfirm={() => {
+                DeleteUpgradeRate(record);
+              }}
+              okText="Có"
+              cancelText="Không"
+            >
+              <Tooltip title="Đóng hoạt động">
+                <Button
+                  style={{
+                    backgroundColor: "red",
+                    color: "white",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faLock} />
+                </Button>
+              </Tooltip>
+            </Popconfirm>
+          ) : (
             <Popconfirm
               title="Mở hoạt động"
               onConfirm={() => {
@@ -322,35 +357,32 @@ export default function UpgradeRate() {
                   style={{
                     backgroundColor: "green",
                     color: "white",
-                    height: "35px",
                   }}
                 >
                   <FontAwesomeIcon icon={faLockOpen} />
                 </Button>
               </Tooltip>
             </Popconfirm>
-            }
+          )}
           <Tooltip title="Xem chi tiết">
             <Button
-                onClick={() => openModalDetail(record)}
-                style={{
-                  backgroundColor: "red",
-                  color: "white",
-                  height: "35px",
-                }}
-              >
-                <FontAwesomeIcon icon={faEye} />
-              </Button>
-            </Tooltip>
+              onClick={() => openModalDetail(record)}
+              style={{
+                backgroundColor: "#53d1ff",
+                color: "white",
+              }}
+            >
+              <FontAwesomeIcon icon={faEye} />
+            </Button>
+          </Tooltip>
           <Tooltip title="Sửa">
             <Button
               onClick={() => {
                 buttonUpdate(record);
               }}
               style={{
-                backgroundColor: "#0066CC",
+                backgroundColor: "yellowgreen",
                 color: "white",
-                height: "35px",
               }}
             >
               <FontAwesomeIcon icon={faPenToSquare} />
@@ -535,16 +567,18 @@ export default function UpgradeRate() {
             pagination={false}
           />
           <br></br>
-          <div className="pagination__box">
-            <Pagination
-              simple
-              current={current}
-              onChange={(page) => {
-                setCurrent(page);
-              }}
-              total={total * 10}
-            />
-          </div>
+          {total > 1 && (
+            <div className="pagination__box">
+              <Pagination
+                simple
+                current={current}
+                onChange={(page) => {
+                  setCurrent(page);
+                }}
+                total={total * 10}
+              />
+            </div>
+          )}
         </div>
       </Card>
       {modalCreate && (

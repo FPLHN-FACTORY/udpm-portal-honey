@@ -71,7 +71,6 @@ const Letter = memo(() => {
   }, [current, dataCountNotification]);
 
   const dataNotification = useAppSelector(GetNotification);
-  console.log(dataNotification);
   // {
   //   /* ------------button đánh dấu đã đọc------------ */
   // }

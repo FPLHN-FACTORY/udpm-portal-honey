@@ -201,6 +201,8 @@ export default function RandomAddPoint() {
       dataRandomPoint.minPoint === dataRandomPoint.maxPoint
     ) {
       errors.minPoint = "Số mật tối thiếu phải nhỏ hơn số mật tối đa";
+    } else if (!Number.isInteger(dataRandomPoint.minPoint)) {
+      errors.minPoint = "Số mật tối thiếu phải là số nguyên";
     }
 
     if (dataRandomPoint.maxPoint === null) {
@@ -212,6 +214,8 @@ export default function RandomAddPoint() {
       errors.maxPoint = "Số mật tối đa phải lớn hơn số mật tối thiểu";
     } else if (dataRandomPoint.maxPoint > 10000) {
       errors.maxPoint = "Số mật tối đa phải < 10000";
+    } else if (!Number.isInteger(dataRandomPoint.maxPoint)) {
+      errors.minPoint = "Số mật tối thiếu phải là số nguyên";
     }
 
     if (dataRandomPoint.listCategoryPoint.length < 1) {
@@ -263,7 +267,7 @@ export default function RandomAddPoint() {
       setLoading(true);
       RandomAddPointAPI.createRandomItem(dataRandomItem)
         .then(() => {
-          message.success("Tạo ngẫu nhiên vật phẩm thành công");
+          message.success("Phát rương thành công");
           setDataRandomPoint(initialDataRandomPoint);
           setDataRandomItem(initialDataRandomItem);
           setDataPreview([]);
@@ -271,13 +275,11 @@ export default function RandomAddPoint() {
           setSelectedChest("");
         })
         .catch(() => {
-          message.error("Tạo ngẫu nhiên vật phẩm thất bại");
+          message.error("Phát rương thất bại");
         });
       setLoading(false);
     } else {
-      message.error(
-        "Tạo ngẫu nhiên vật phẩm thất bại, bạn cần nhập đủ các dữ liệu"
-      );
+      message.error("Phát rương thất bại, bạn cần nhập đủ các dữ liệu");
     }
   };
 
@@ -290,6 +292,7 @@ export default function RandomAddPoint() {
     setActiveTabKey(key);
     setDataPreview([]);
     setNameFile("");
+    setSelectedChest(null);
     setDataRandomPoint(initialDataRandomPoint);
     setDataRandomItem(initialDataRandomItem);
   };
@@ -328,7 +331,7 @@ export default function RandomAddPoint() {
   const items = [
     {
       key: "1",
-      label: "Ngẫu nhiên mật ong",
+      label: "Tặng ngẫu nhiên mật ong",
       children: (
         <div>
           <Space
@@ -521,7 +524,7 @@ export default function RandomAddPoint() {
     },
     {
       key: "2",
-      label: "Ngẫu nhiên vật phẩm",
+      label: "Tặng rương",
       children: (
         <div>
           <Space
@@ -532,7 +535,7 @@ export default function RandomAddPoint() {
             }}
           >
             <span style={{ fontSize: "18px" }}>
-              <b>Tặng ngẫu vật phẩm</b>
+              <b>Tặng rương</b>
             </span>
             <Space
               style={{

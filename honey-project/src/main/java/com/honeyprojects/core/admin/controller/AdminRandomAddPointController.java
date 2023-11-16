@@ -5,7 +5,14 @@ import com.honeyprojects.core.admin.model.response.AdminAddItemDTO;
 import com.honeyprojects.core.admin.service.AdRandomAddPointService;
 import com.honeyprojects.core.common.base.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -43,21 +50,24 @@ public class AdminRandomAddPointController {
         return new ResponseObject(adRandomAddPointService.exportExcel());
     }
 
-    @PostMapping("/create/import")
-    public ResponseObject createImportRandomPoint(@RequestParam("file") MultipartFile file) throws IOException {
-        return new ResponseObject(adRandomAddPointService.importExcel(file));
+    @PostMapping("/create/preview-data-random")
+    public ResponseObject previewDataRandom(@RequestParam("file") MultipartFile file) throws IOException {
+        return new ResponseObject(adRandomAddPointService.previewDataRandomExcel(file));
     }
 
+    // màn cộng mật ong
     @PostMapping("/create/preview-data")
     public ResponseObject createPreviewImportPoint(@RequestParam("file") MultipartFile file) throws IOException {
         return new ResponseObject(adRandomAddPointService.previewDataImportExcel(file));
     }
 
-    @PostMapping("/export/preview-data")
+    // màn cộng mật ong
+    @PostMapping("/export/data")
     public ResponseObject previewDataExportExcel() {
         return new ResponseObject(adRandomAddPointService.previewDataExportExcel());
     }
 
+    // màn cộng mật ong
     @PostMapping("/create/import-data")
     public void createImportPoint(@RequestBody List<AdminAddItemDTO> lstAdminAddItemDTO) throws IOException {
         adRandomAddPointService.importData(lstAdminAddItemDTO);
@@ -80,7 +90,7 @@ public class AdminRandomAddPointController {
 
     @DeleteMapping("/delete/chest-gift")
     public ResponseObject deleteChestGift(@RequestParam("idChest") String idChest, @RequestParam("idGift") String idGift) {
-        return new ResponseObject(adRandomAddPointService.deleteChestGidt(idChest, idGift));
+        return new ResponseObject(adRandomAddPointService.deleteChestGift(idChest, idGift));
     }
 
     @GetMapping("/get-all-name-chest")
@@ -92,5 +102,4 @@ public class AdminRandomAddPointController {
     public ResponseObject addChest(@PathVariable String name) {
         return new ResponseObject(adRandomAddPointService.addChest(name));
     }
-
 }

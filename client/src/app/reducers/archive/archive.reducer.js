@@ -10,6 +10,15 @@ export const ArchiveSlice = createSlice({
       state = action.payload;
       return state;
     },
+    PutArchiveGift: (state, action) => {
+      const index = state.findIndex((el) => el.id === action.payload.id);
+      if (index > -1) {
+        state[index] = action.payload;
+      } else {
+        state.push(action.payload);
+      }
+      return state;
+    },
   },
 });
 export const GetArchive = (state) => state.archive;

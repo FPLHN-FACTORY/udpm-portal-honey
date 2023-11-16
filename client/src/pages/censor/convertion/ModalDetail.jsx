@@ -2,11 +2,9 @@ import { EyeFilled } from "@ant-design/icons";
 import { Button, Form, Input, Modal, Select, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
-import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 const ModalDetailConversion = (props) => {
   const { conversion } = props;
   const [fillCategory, setFillCategory] = useState([]);
-  const [fillGift, setFillGift] = useState([]);
   const [fillName, setFillName] = useState({ nameCate: "", nameGift: "" });
 
   const [form] = Form.useForm();
@@ -25,7 +23,6 @@ const ModalDetailConversion = (props) => {
 
   useEffect(() => {
     fechCategory();
-    fechGift();
   }, []);
 
   const fechCategory = () => {
@@ -34,21 +31,11 @@ const ModalDetailConversion = (props) => {
     });
   };
 
-  const fechGift = () => {
-    GiftAPI.fetchAllGift().then((response) => {
-      setFillGift(response.data.data);
-    });
-  };
   const getCategoryNameById = (categoryId) => {
     const category = fillCategory.find((item) => item.id === categoryId);
     return category ? category.name : "";
   };
 
-  // Function to get the name of the Gift based on its ID
-  const getGiftNameById = (giftId) => {
-    const gift = fillGift.find((item) => item.id === giftId);
-    return gift ? gift.name : "";
-  };
   return (
     <>
       <Tooltip title="Chi tiết">
@@ -83,6 +70,30 @@ const ModalDetailConversion = (props) => {
           autoComplete="off"
         >
           <div>
+            <div style={{ marginBottom: "20px", marginTop: "30px" }}>
+              <span
+                className="text-xl"
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "15px",
+                  marginRight: "18px",
+                }}
+              >
+                {" "}
+                Code:
+              </span>
+
+              <Input
+                style={{
+                  borderRadius: "10px",
+                  width: "58%",
+                  marginLeft: "20px",
+                }}
+                placeholder="Enter code"
+                defaultValue={conversion.code}
+                disabled
+              />
+            </div>
             <span
               className="text-xl"
               style={{
@@ -98,7 +109,7 @@ const ModalDetailConversion = (props) => {
               showSearch
               placeholder="Category"
               optionFilterProp="children"
-              style={{ width: "33%", marginRight: "20px" }}
+              style={{ width: "30%", marginRight: "20px" }}
               size="large"
               value={conversion.categoryId}
               onChange={(e, label) => {
@@ -107,16 +118,18 @@ const ModalDetailConversion = (props) => {
               options={fillCategory.map((item) => {
                 return { label: item.name, value: item.id };
               })}
+              disabled
             />
             =
             <Input
               style={{
                 borderRadius: "10px",
-                width: "32%",
+                width: "18%",
                 marginLeft: "20px",
               }}
               placeholder=""
               value={conversion.ratio}
+              disabled
             />
             <span
               className="text-xl"
@@ -126,61 +139,15 @@ const ModalDetailConversion = (props) => {
               }}
             >
               {" "}
-              Điểm
+              Mật ong
             </span>
           </div>
 
           <div style={{ marginTop: "20px" }}>
-            <span
-              className="text-xl"
-              style={{
-                fontWeight: "bold",
-                fontSize: "15px",
-                marginRight: "10px",
-                marginLeft: "36px",
-              }}
-            >
-              {" "}
-              Gift:
-            </span>
-            <Select
-              showSearch
-              placeholder="Gift"
-              optionFilterProp="children"
-              style={{ width: "33%", marginRight: "20px" }}
-              size="large"
-              value={conversion.giftId}
-              onChange={(value, label) => {
-                setFillName({ ...fillName, nameGift: label.label });
-              }}
-              options={fillGift.map((item) => {
-                return { label: item.name, value: item.id };
-              })}
-            />
-            =
-            <Input
-              style={{
-                borderRadius: "10px",
-                width: "32%",
-                marginLeft: "20px",
-              }}
-              placeholder=""
-              value={0.25}
-            />
-            <span
-              className="text-xl"
-              style={{
-                fontWeight: "bold",
-                fontSize: "15px",
-              }}
-            >
-              {" "}
-              Điểm
-            </span>
             <h3 style={{ color: "red", textAlign: "center" }}>
               # Đổi {conversion.ratio} mật{" "}
-              {getCategoryNameById(conversion.categoryId)} sẽ đổi được 0.25 điểm{" "}
-              {getGiftNameById(conversion.giftId)}
+              {getCategoryNameById(conversion.categoryId)} sẽ được quy đổi bằng
+              1 điểm
             </h3>
           </div>
           <Form.Item
@@ -193,7 +160,7 @@ const ModalDetailConversion = (props) => {
               type="primary"
               onClick={handleCancel}
               className="bg-#1d4ed8-400 text-white"
-              style={{ marginTop: "60px", marginLeft: "50px" }}
+              style={{ marginTop: "30px", marginLeft: "50px" }}
             >
               Đóng
             </Button>

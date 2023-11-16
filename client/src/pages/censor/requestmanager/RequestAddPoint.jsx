@@ -28,25 +28,10 @@ import {
   EyeFilled,
   SearchOutlined,
 } from "@ant-design/icons";
-import TabsRequest from "./TabsRequest";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import { type } from "@testing-library/user-event/dist/type";
-
-const statusHistory = (status) => {
-  switch (status) {
-    case 0:
-      return <Tag color="geekblue">Chờ phê duyệt</Tag>; // Màu xanh dương
-    case 1:
-      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
-    case 2:
-      return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
-    default:
-      return <Tag>Không xác định</Tag>;
-  }
-};
 
 export default function RequestAddPoint() {
   const [loading, setLoading] = useState(false);
@@ -81,11 +66,6 @@ export default function RequestAddPoint() {
       title: "Ngày tạo",
       dataIndex: "createdDate",
       key: "createdDate",
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
     },
     {
       title: "Hành động",
@@ -168,7 +148,6 @@ export default function RequestAddPoint() {
     return {
       ...data,
       key: data.id,
-      status: statusHistory(data.status),
       createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
       acction: { idHistory: data.id, status: data.status },
     };
@@ -196,6 +175,12 @@ export default function RequestAddPoint() {
             });
           } else {
             message.error("User name sinh viên không chính xác!");
+            setFilter({
+              ...filter,
+              idStudent: null,
+              idCategory: value.idCategory,
+              status: value.status,
+            });
           }
         })
         .catch((error) => console.error(error));
@@ -210,7 +195,8 @@ export default function RequestAddPoint() {
         console.log(response.data);
         if (response.data.success) {
           fetchData(dispatch, filter);
-          if (status === 1) message.success("Đã xác nhận yêu cầu cộng mật ong!");
+          if (status === 1)
+            message.success("Đã xác nhận yêu cầu cộng mật ong!");
           if (status === 2) message.error("Hủy yêu cầu thành công!");
           setType(response.data.data.type);
         }
@@ -249,22 +235,6 @@ export default function RequestAddPoint() {
                       return {
                         value: category.id,
                         label: category.name,
-                      };
-                    }),
-                  ]}
-                />
-              </Form.Item>
-              <Form.Item name={"status"} initialValue={0}>
-                <Select
-                  style={{ width: "150px" }}
-                  size="large"
-                  placeholder="Trạng thái"
-                  options={[
-                    { value: null, label: "Tất cả" },
-                    ...[0, 1, 2, 3].map((value) => {
-                      return {
-                        value: value,
-                        label: statusHistory(value),
                       };
                     }),
                   ]}

@@ -40,13 +40,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -74,7 +71,7 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
         try {
             // Lấy đường dẫn thư mục "Downloads" trong hệ thống
             String userHome = System.getProperty("user.home");
-            String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_data" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
+            String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_add_item" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
 
             // Tạo một workbook (bảng tính) mới cho bản xem trước dữ liệu
             Workbook workbook = new XSSFWorkbook();
@@ -114,7 +111,8 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
             // Dòng thứ 2 - cách viết đúng định dạng quà tặng
             Row formatGiftRow = sheet.createRow(1);
             Cell formatGiftCell = formatGiftRow.createCell(1);
-            formatGiftCell.setCellValue("Định dạng vật phẩm và mật ong: số-lượng tên-vật-phẩm, ..., số-lượng tên-vật-phẩm");
+            formatGiftCell.setCellValue("Định dạng vật phẩm và mật ong:  <số lượng> <tên vật phẩm>, ..., <số lượng> <loại mật ong> VD: " +
+                    "Cột vật phẩm: 10 Tinh hoa lam, ... - Cột mật ong: 10 GOLD, ...");
 
             // Tạo một kiểu cho các ô định dạng
             CellStyle formatStyle = workbook.createCellStyle();
@@ -172,7 +170,7 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
 
         // Đọc dữ liệu từ bảng tính và tạo danh sách các đối tượng AdminAddItemDTO
         List<PresidentAddItemDTO> lstUserImportDTO = StreamSupport.stream(sheet.spliterator(), false)
-                .skip(3) // Bỏ qua 3 dòng đầu tiên
+                .skip(3) // Bỏ qua 4 dòng đầu tiên
                 .filter(row -> !ExcelUtils.checkNullLCells(row, 1))
                 .map(row -> processRow(row))
                 .collect(Collectors.toList());
@@ -214,6 +212,11 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
         }
         if (DataUtils.isNullObject(response)) {
             userDTO.setImportMessage("Sinh viên không tồn tại");
+            userDTO.setError(true);
+            hasError = true;
+        }
+        if (DataUtils.isNullObject(listGift) && DataUtils.isNullObject(listHoney)) {
+            userDTO.setImportMessage("Không thể để trống vật phẩm và mật ong");
             userDTO.setError(true);
             hasError = true;
         }
@@ -323,8 +326,6 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                         break;
                     }
                 }
-
-
             }
         }
 
@@ -355,67 +356,65 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
     private void saveImportData(List<PresidentAddItemDTO> lstImportUser) throws IOException {
         for (PresidentAddItemDTO userDTO : lstImportUser) {
             // Duyệt qua danh sách đối tượng AdminAddItemDTO đã được kiểm tra lỗi
-            if (userDTO.isError() == true) {
+            if (userDTO.isError()) {
                 // Nếu đối tượng có lỗi, bỏ qua và tiếp tục với đối tượng tiếp theo trong danh sách
                 continue;
-            } else {
-                // Nếu không có lỗi, tiến hành xử lý và lưu dữ liệu vào cơ sở dữ liệu, tạo thông báo
-                // Gọi API để lấy thông tin người dùng bằng địa chỉ email
-                String emailSimple = userDTO.getUserName() + "@fpt.edu.vn";
-                SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
-                Notification notification = createNotification(simpleResponse.getId());
-                if (userDTO.getLstGift() == null) {
-                    continue;
-                } else {
-                    // Xử lý vật phẩm (gift)
-                    String[] partsGift = userDTO.getLstGift().split(", ");
-                    Map<String, Integer> giftMap = new HashMap<>();
+            }
 
-                    for (String part : partsGift) {
-                        String[] subParts = part.split(" ", 2);
-                        if (subParts.length == 2) {
-                            String numberItemStr = subParts[0];
-                            String nameItem = subParts[1];
-                            Integer numberItem = Integer.parseInt(numberItemStr);
-                            // Lưu trữ số lượng quà dựa trên tên quà
-                            giftMap.put(nameItem, numberItem);
-                        }
-                    }
-                    List<PresidentGiftResponse> gifts = presidentAddItemRepository.getGiftsByNames(giftMap.keySet());
+            // Gọi API để lấy thông tin người dùng bằng địa chỉ email
+            String emailSimple = userDTO.getUserName() + "@fpt.edu.vn";
+            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
+            Notification notification = createNotification(simpleResponse.getId());
 
-                    for (PresidentGiftResponse gift : gifts) {
-                        String nameItem = gift.getName();
-                        createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
+            // Xử lý vật phẩm (gift)
+            if (!DataUtils.isNullObject(userDTO.getLstGift())) {
+                String[] partsGift = userDTO.getLstGift().split(", ");
+                Map<String, Integer> giftMap = new HashMap<>();
+
+                for (String part : partsGift) {
+                    String[] subParts = part.split(" ", 2);
+                    if (subParts.length == 2) {
+                        String numberItemStr = subParts[0];
+                        String nameItem = subParts[1];
+                        Integer numberItem = Integer.parseInt(numberItemStr);
+                        // Lưu trữ số lượng quà dựa trên tên quà
+                        giftMap.put(nameItem, numberItem);
                     }
                 }
-                // Xử lý điểm mật ong (honey)
-                if (userDTO.getLstHoney() == null) {
-                    continue;
-                } else {
-                    String[] partsHoney = userDTO.getLstHoney().split(", ");
-                    Map<String, Integer> honeyMap = new HashMap<>();
+                List<PresidentGiftResponse> gifts = presidentAddItemRepository.getGiftsByNames(giftMap.keySet());
 
-                    for (String part : partsHoney) {
-                        String[] subParts = part.split(" ", 2);
-                        if (subParts.length == 2) {
-                            String numberPointStr = subParts[0].trim();
-                            String categoryPoint = subParts[1].trim().replace("-", "");
-                            Integer numberPoint = Integer.parseInt(numberPointStr);
-                            // Lưu trữ số lượng điểm mật ong dựa trên tên loại điểm
-                            honeyMap.put(categoryPoint, numberPoint);
-                        }
+                for (PresidentGiftResponse gift : gifts) {
+                    String nameItem = gift.getName();
+                    createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
+                }
+            }
+
+            // Xử lý điểm mật ong (honey)
+            if (!DataUtils.isNullObject(userDTO.getLstHoney())) {
+                String[] partsHoney = userDTO.getLstHoney().split(", ");
+                Map<String, Integer> honeyMap = new HashMap<>();
+
+                for (String part : partsHoney) {
+                    String[] subParts = part.split(" ", 2);
+                    if (subParts.length == 2) {
+                        String numberPointStr = subParts[0].trim();
+                        String categoryPoint = subParts[1].trim().replace("-", "");
+                        Integer numberPoint = Integer.parseInt(numberPointStr);
+                        // Lưu trữ số lượng điểm mật ong dựa trên tên loại điểm
+                        honeyMap.put(categoryPoint, numberPoint);
                     }
-                    List<PresidentCategoryResponse> categories = presidentAddItemRepository.getCategoriesByNames(honeyMap.keySet());
-                    for (PresidentCategoryResponse category : categories) {
-                        String categoryPoint = category.getName();
-                        if (honeyMap.containsKey(categoryPoint)) {
-                            createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
-                        }
+                }
+                List<PresidentCategoryResponse> categories = presidentAddItemRepository.getCategoriesByNames(honeyMap.keySet());
+                for (PresidentCategoryResponse category : categories) {
+                    String categoryPoint = category.getName();
+                    if (honeyMap.containsKey(categoryPoint)) {
+                        createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
                     }
                 }
             }
         }
     }
+
 
     private Notification createNotification(String idStudent) {
         String title = Constants.TITLE_NOTIFICATION_SYSTEM;

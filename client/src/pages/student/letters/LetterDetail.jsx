@@ -1,7 +1,7 @@
 import { Button, Space, message } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
-import React, { memo, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useAppDispatch } from "../../../app/hooks";
 import "./letter-detail.css";
 import { useState } from "react";
@@ -9,7 +9,8 @@ import { ClockCircleOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { NotificationDetailAPI } from "../../../apis/student/notificaton-detail/notification-detail.api";
 import { NotificationAPI } from "../../../apis/student/notification/notification.api";
-const LetterDetail = memo(() => {
+
+const LetterDetail = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -53,6 +54,7 @@ const LetterDetail = memo(() => {
       .catch(() => {
         message.error("Nhận quà thất bại");
       });
+
     NotificationDetailAPI.updateStatus(id)
       .then((response) => {})
       .catch((error) => {});
@@ -139,6 +141,6 @@ const LetterDetail = memo(() => {
       </div>
     </section>
   );
-});
+};
 
 export default LetterDetail;

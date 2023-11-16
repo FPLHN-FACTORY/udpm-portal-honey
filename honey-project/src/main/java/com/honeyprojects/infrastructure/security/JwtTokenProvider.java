@@ -1,6 +1,10 @@
 package com.honeyprojects.infrastructure.security;
 
+import com.honeyprojects.infrastructure.apiconstants.ApiConstants;
+import com.honeyprojects.infrastructure.apiconstants.HonneyConstants;
 import com.honeyprojects.infrastructure.contant.SessionConstant;
+import com.honeyprojects.infrastructure.session.HoneySession;
+import com.honeyprojects.util.callApiPoint.model.response.RoleIdentityResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -9,10 +13,17 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import java.security.Key;
 import java.util.ArrayList;
@@ -28,6 +39,19 @@ public class JwtTokenProvider {
 
     @Autowired
     private HttpSession httpSession;
+
+    @Autowired
+    private HoneySession honeySession;
+
+    @Autowired
+    private HttpSession session;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Value("${domain.identity}")
+    private String identityDomain;
+
 
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parserBuilder()
@@ -57,6 +81,7 @@ public class JwtTokenProvider {
         httpSession.setAttribute(SessionConstant.USER_NAME, userName);
         httpSession.setAttribute(SessionConstant.PICTURE, picture);
         httpSession.setAttribute(SessionConstant.EMAIL, email);
+        httpSession.setAttribute(SessionConstant.ROLES, authorities);
         return new UsernamePasswordAuthenticationToken(null, token, authorities);
     }
 
@@ -71,11 +96,37 @@ public class JwtTokenProvider {
             if (expirationDate.before(new Date())) {
                 return false;
             }
+            // check roles in identity
 
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public boolean checkRoleIdentity() {
+        return true;
+//        String apiConnect = identityDomain +
+//                ApiConstants.API_GET_ROLE_BY_USER_AND_MODULE
+//                + "/" + session.getAttribute(SessionConstant.ID_USER)
+//                + "/" + HonneyConstants.MODULE_CODE;
+//        HttpHeaders headers = new HttpHeaders();
+//        String authorizationToken = "Bearer " + honeySession.getToken();
+//        headers.set("Authorization", authorizationToken);
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+//        ResponseEntity<List<RoleIdentityResponse>> responseEntity =
+//                restTemplate.exchange(apiConnect, HttpMethod.GET, httpEntity,
+//                        new ParameterizedTypeReference<List<RoleIdentityResponse>>() {
+//                        });
+//
+//        List<RoleIdentityResponse> response = responseEntity.getBody();
+//        List<SimpleGrantedAuthority> authorities = (List<SimpleGrantedAuthority>) session.getAttribute(SessionConstant.ROLES);
+//        boolean allAuthoritiesPresent = authorities.stream()
+//                .allMatch(authority -> response.stream()
+//                        .anyMatch(responseAuthority -> responseAuthority.getRoleCode().equals(authority.getAuthority())));
+//
+//        return allAuthoritiesPresent;
     }
 }

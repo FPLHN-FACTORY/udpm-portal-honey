@@ -77,7 +77,7 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
 
             //lay ra honey cua nguoi nhan
             Honey honeyNhan = honeyRepository.getPoint(history.getStudentId(),
-                    honey.getHoneyCategoryId(), honey.getUserSemesterId());
+                    honey.getHoneyCategoryId());
             honeyRepository.save(honey);
             //kiem tra neu honey nguoi nhan khong ton tai se tao moi
             if (honeyNhan == null) {
@@ -85,7 +85,6 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
                 honeyNhan.setHoneyPoint(0);
                 honeyNhan.setHoneyCategoryId(honey.getHoneyCategoryId());
                 honeyNhan.setStudentId(history.getStudentId());
-                honeyNhan.setUserSemesterId(honey.getUserSemesterId());
             }
             //cong them honey cho nguoi nhan
             honeyNhan.setHoneyPoint(honeyNhan.getHoneyPoint() + history.getHoneyPoint());

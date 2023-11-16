@@ -3,7 +3,9 @@ package com.honeyprojects.core.admin.repository;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminChestGiftResponse;
 import com.honeyprojects.core.admin.model.response.AdminChestReponse;
-import com.honeyprojects.entity.Category;
+import com.honeyprojects.core.admin.model.response.AdminImportCategoryResponse;
+import com.honeyprojects.core.admin.model.response.AdminImportGiftResponse;
+import com.honeyprojects.core.president.model.response.PresidentCategoryResponse;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.repository.HoneyRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface AdRandomAddPointRepository extends HoneyRepository {
@@ -67,26 +70,27 @@ public interface AdRandomAddPointRepository extends HoneyRepository {
             select id
             from archive
             where student_id = :#{#idStudent}
-            """,nativeQuery = true)
+            """, nativeQuery = true)
     String getArchiveByIdStudent(String idStudent);
 
     @Query(value = """
-            select DISTINCT name
-            from chest
+            SELECT DISTINCT c.name
+            FROM chest c
             """, nativeQuery = true)
     List<String> getAllNameChest();
 
     @Query(value = """
-            SELECT  row_number()  OVER(ORDER BY created_date DESC) as stt, id, name, code, category_status, transaction_rights
-            FROM category
-            where name = :categoryPoint
-            """,nativeQuery = true)
-    AdminCategoryResponse getCategoryByName(String categoryPoint);
+            SELECT  c.id, c.name 
+            FROM category c
+            WHERE c.name IN (:names) AND c.category_status <> 0
+            """, nativeQuery = true)
+    List<AdminImportCategoryResponse> getCategoriesByNames(Set<String> names);
 
     @Query(value = """
-            SELECT g.id
-            from gift g
-            where g.name like :#{#name} and g.status in (0, 1)
-            """,nativeQuery = true)
-    String getIdGiftByName(String name);
+            SELECT g.id, g.name
+            FROM gift g
+            WHERE g.name IN (:names) AND g.status in (0, 1)
+            """, nativeQuery = true)
+    List<AdminImportGiftResponse> getGiftsByNames(Set<String> names);
+
 }

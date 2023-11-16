@@ -135,7 +135,7 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
             updatePoints(fillPoint.point - selectedConversion.honey * quantity);
           }
         } else {
-          message.error("Bạn không đủ điểm để đổi quà trong ranh này!");
+          message.error("Số lượng mật ong không đủ!");
         }
       })
       .catch((error) => {
@@ -160,8 +160,7 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
         closeIcon={null}
         footer={null}
         width={350}
-        className="css-modal-confim-buy-gift"
-      >
+        className="css-modal-confim-buy-gift">
         <div style={{ display: "flex", justifyContent: "center" }}>
           <span style={{ fontSize: "16px", color: "white", fontWeight: 700 }}>
             Bạn có xác nhận mua quà không ?
@@ -172,13 +171,11 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
             display: "flex",
             justifyContent: "center",
             marginTop: "30px",
-          }}
-        >
+          }}>
           <Button
             type="primary"
             className="btn-xac-nhan"
-            onClick={onSubmitCreate}
-          >
+            onClick={onSubmitCreate}>
             xác nhận
           </Button>
           <Button type="primary" className="btn-huy" onClick={handleCancel}>
@@ -199,8 +196,7 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
                   selectedCardIndex === index ? cardBackgroundColor : "",
                 boxShadow:
                   selectedCardIndex === index ? "0px 0px 10px gold" : "",
-              }}
-            >
+              }}>
               <div className="card__image">
                 <ImageRenderer image={item.image} />
               </div>
@@ -271,14 +267,12 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-              }}
-            >
+              }}>
               <span
                 style={{
                   color: "white",
                   fontWeight: 700,
-                }}
-              >
+                }}>
                 {error}
               </span>
             </div>

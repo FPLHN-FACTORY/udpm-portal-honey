@@ -193,6 +193,12 @@ export default function ListRequest() {
             });
           } else {
             message.error("User name sinh viên không chính xác!");
+            setFilter({
+              ...filter,
+              idStudent: null,
+              idCategory: value.idCategory,
+              status: value.status,
+            });
           }
         })
         .catch((error) => console.error(error));
@@ -271,8 +277,7 @@ export default function ListRequest() {
               <Button
                 htmlType="submit"
                 type="primary"
-                className="mr-10 search-button"
-              >
+                className="mr-10 search-button">
                 Lọc
               </Button>
             </Space>
