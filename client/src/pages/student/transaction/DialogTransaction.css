@@ -126,7 +126,14 @@
 .dialog-transaction .col-title-balo {
   padding-left: 14px;
   margin-bottom: 5px;
-  text-align: center;
+  text-align: left;
+  line-height: 30px;
+}
+
+.dialog-transaction .col-title-honey {
+  padding-left: 14px;
+  margin-bottom: 5px;
+  text-align: right;
   line-height: 30px;
 }
 
@@ -152,6 +159,22 @@
   filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.7));
 }
 
+.dialog-transaction .title-honey {
+  font-weight: 800;
+  color: #FFCC00;
+  font-size: 18px;
+  display: inline-block;
+  vertical-align: middle;
+  float: right;
+}
+
+.dialog-transaction .img-honey {
+  vertical-align: middle;
+  margin-right: 5px;
+  margin-top: -10px;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.7));
+}
+
 .dialog-transaction .button-khoa:hover {
   background-color: #535352 !important;
 }
@@ -173,6 +196,7 @@
   color: white;
   text-align: center;
   font-weight: 600;
+  width: 100px;
 }
 
 .dialog-transaction .input-honey:focus {
@@ -180,6 +204,15 @@
 }
 
 .dialog-transaction .honey-balo {
+  margin-top: -5px;
+  display: inline-block;
+  vertical-align: middle;
+  height: 35px;
+  margin-right: 5px;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.7));
+}
+
+.dialog-transaction .honey-honey {
   margin-top: -5px;
   display: inline-block;
   vertical-align: middle;
@@ -205,4 +238,25 @@
 
 .dialog-transaction .ant-modal-close {
   display: none;
+}
+
+.dialog-transaction .select-category .ant-select-selector {
+  background: none !important;
+  border: none;
+  padding: 0;
+}
+
+.dialog-transaction .select-category .ant-select-selection-item {
+  font-weight: bold;
+  color: #464239;
+}
+
+.css-modal-confim-transaction .ant-modal-content {
+  background-color: rgba(46, 46, 46, 0.4);
+  border: inset;
+  padding: 0;
+}
+
+.css-modal-confim-transaction .ant-modal-content .ant-modal-close {
+  display: none !important;
 }

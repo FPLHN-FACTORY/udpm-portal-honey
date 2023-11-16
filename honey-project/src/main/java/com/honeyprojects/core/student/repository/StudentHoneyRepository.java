@@ -28,9 +28,8 @@ public interface StudentHoneyRepository extends HoneyRepository {
             LEFT JOIN semester s ON h.user_semester_id = s.id
             where h.student_id = :studentId
             and h.honey_category_id = :categoryId
-            AND :dateNow BETWEEN s.from_date AND s.to_date
             """, nativeQuery = true)
-    StudentHoneyResponse getPoint(String categoryId,String studentId, Long dateNow);
+    StudentHoneyResponse getPoint(String categoryId,String studentId);
 
     @Query(value = """
             SELECT *
