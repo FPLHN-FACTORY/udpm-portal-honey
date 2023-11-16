@@ -36,6 +36,8 @@ public class Constants {
 
     public static String TITLE_NOTIFICATION_SYSTEM = "THÔNG BÁO TỪ HỆ THỐNG";
 
+    public static String TITLE_NOTIFICATION_TEACHER = "THÔNG BÁO TỪ GIẢNG VIÊN";
+
     public static String CONTENT_NOTIFICATION_SYSTEM = "Hệ thống đã tặng cho bạn: ";
 
     public static String CONTENT_NOTIFICATION_MODULE_LAB_REPORT = "Xưởng dự án đã tặng bạn: ";

@@ -22,15 +22,16 @@
 .quantity-gift-inside input {
   color: white !important;
 }
+
 .btn-xac-nhan {
-  background-color: brown;
+  background-color: rgb(108, 165, 42);
   color: white;
   border: inset;
   margin-right: 30px;
 }
 
 .btn-huy {
-  background-color: rgb(108, 165, 42);
+  background-color: brown;
   color: white;
   border: inset;
 }
