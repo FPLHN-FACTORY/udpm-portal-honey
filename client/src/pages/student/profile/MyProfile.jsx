@@ -5,7 +5,6 @@ import "./index.css";
 import { ProfileApi } from "../../../apis/student/profile/profileApi.api";
 import { GetUser, SetUser } from "../../../app/reducers/users/users.reducer";
 import { GetHoney, SetHoney } from "../../../app/reducers/honey/honey.reducer";
-import TransactionHistory from "../transaction/TransactionHistory";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 

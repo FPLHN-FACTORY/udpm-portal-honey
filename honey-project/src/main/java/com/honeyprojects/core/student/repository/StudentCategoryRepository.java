@@ -10,9 +10,9 @@ import java.util.List;
 @Repository
 public interface StudentCategoryRepository extends CategoryRepository {
     @Query(value = """
-            SELECT c.id, c.name, c.type FROM category c
+            SELECT c.id, c.name, c.image FROM category c
             join honey h on c.id = honey_category_id
-            WHERE c.category_status = 0 and h.student_id = :idUser
+            WHERE c.category_status <> 0 and h.student_id = :idUser and c.transaction_rights = 0
             """, nativeQuery = true)
     List<StudentCategoryResponse> getCategoryByIdUser(String idUser);
 }

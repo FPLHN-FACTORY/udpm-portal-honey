@@ -164,3 +164,37 @@
   display: block;
   background-size: 70px;
 }
+
+.message-request-transaction .btn-chap-nhan {
+  background-color: rgb(108, 165, 42);
+  color: white;
+  border: outset;
+  padding: 5px;
+}
+
+.message-request-transaction .btn-tu-choi {
+  background-color: brown;
+  color: white;
+  border: outset;
+  margin-right: 10px;
+  padding: 5px;
+}
+
+.message-request-transaction .btn-chap-nhan:hover {
+  background-color: rgb(70, 122, 14);
+  color: white;
+  border: inset;
+  padding: 5px;
+}
+
+.message-request-transaction .btn-tu-choi:hover {
+  background-color: rgb(192, 18, 18);
+  color: white;
+  border: inset;
+  margin-right: 10px;
+  padding: 5px;
+}
+
+.message-request-transaction>div {
+  margin-top: 5px;
+}

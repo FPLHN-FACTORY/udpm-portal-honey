@@ -8,10 +8,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class StudentTransactionRequest {
-    private String idCategory;
-    private Integer type;
-    private String idHoney;
-    private Integer honeyPoint;
-    private String idStudent;
-    private String note;
+    private String nameUser;
+    private String idTransaction;
 }
