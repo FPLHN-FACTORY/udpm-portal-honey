@@ -27,13 +27,13 @@ const ModalThem = (props) => {
     var selectedFile = event.target.files[0];
     if (selectedFile) {
       var FileUploadName = selectedFile.name;
-      if (FileUploadName == "") {
+      if (FileUploadName === "") {
         setErrorImage("Bạn chưa chọn ảnh");
         setSelectedImageUrl("");
         setImage([]);
       } else {
         const fileSize = selectedFile.size;
-        const checkFileSize = Math.round((fileSize / 1024) / 1024);
+        const checkFileSize = Math.round(fileSize / 1024 / 1024);
         if (checkFileSize > 1) {
           setErrorImage("Ảnh không thể lớn hơn 1 MB");
           setSelectedImageUrl("");
@@ -43,19 +43,21 @@ const ModalThem = (props) => {
             FileUploadName.lastIndexOf(".") + 1
           ).toLowerCase();
           if (
-            Extension == "gif" ||
-            Extension == "png" ||
-            Extension == "bmp" ||
-            Extension == "jpeg" ||
-            Extension == "jpg" ||
-            Extension == "webp"
+            Extension === "gif" ||
+            Extension === "png" ||
+            Extension === "bmp" ||
+            Extension === "jpeg" ||
+            Extension === "jpg" ||
+            Extension === "webp"
           ) {
             setImage(selectedFile);
             var imageUrl = URL.createObjectURL(selectedFile);
             setSelectedImageUrl(imageUrl);
             setErrorImage("");
           } else {
-            setErrorImage("Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. ");
+            setErrorImage(
+              "Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. "
+            );
             setSelectedImageUrl("");
             setImage([]);
           }
@@ -106,11 +108,12 @@ const ModalThem = (props) => {
 
         if (check === 0) {
           if (category === null) {
-            CategoryAPI.create({
+            const data = {
               ...formValues,
               image: image,
               name: categoryName,
-            })
+            };
+            CategoryAPI.create(data)
               .then((result) => {
                 dispatch(AddCategory(result.data.data));
                 message.success("Thành công!");

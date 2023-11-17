@@ -45,32 +45,32 @@ public class AdminCreateGiftRequest extends PageableRequest {
 
     private String semesterId;
 
-    public Gift dtoToEntity(Gift gift) throws IOException {
-        Random random = new Random();
-        int number = random.nextInt(1000);
-        String code = String.format("G%04d", number);
-
-        gift.setCode(code);
-        gift.setName(this.getName());
-        if (this.getStatus() != null) {
-            gift.setStatus(StatusGift.values()[this.getStatus()]);
-        }
-        gift.setQuantity(this.getQuantity());
-        gift.setLimitQuantity(this.getLimitQuantity());
-        if (this.getType() != null) {
-            gift.setType(TypeGift.values()[this.getType()]);
-        }
-        if (this.getTransactionGift() != null) {
-            gift.setTransactionGift(TransactionGift.values()[this.getTransactionGift()]);
-        }
-        if (this.getImage() != null) {
-            byte[] imageBytes = this.getImage().getBytes();
-            gift.setImage(imageBytes);
-        }
-        gift.setNote(this.getNote());
-        gift.setToDate(this.getToDate());
-        gift.setFromDate(this.getFromDate());
-        gift.setSemesterId(this.getSemesterId());
-        return gift;
-    }
+//    public Gift dtoToEntity(Gift gift) throws IOException {
+//        Random random = new Random();
+//        int number = random.nextInt(10000);
+//        String code = String.format("G%05d", number);
+//
+//        gift.setCode(code);
+//        gift.setName(this.getName());
+//        if (this.getStatus() != null) {
+//            gift.setStatus(StatusGift.values()[this.getStatus()]);
+//        }
+//        gift.setQuantity(this.getQuantity());
+//        gift.setLimitQuantity(this.getLimitQuantity());
+//        if (this.getType() != null) {
+//            gift.setType(TypeGift.values()[this.getType()]);
+//        }
+//        if (this.getTransactionGift() != null) {
+//            gift.setTransactionGift(TransactionGift.values()[this.getTransactionGift()]);
+//        }
+//        if (this.getImage() != null) {
+//            byte[] imageBytes = this.getImage().getBytes();
+//            gift.setImage(imageBytes);
+//        }
+//        gift.setNote(this.getNote());
+//        gift.setToDate(this.getToDate());
+//        gift.setFromDate(this.getFromDate());
+//        gift.setSemesterId(this.getSemesterId());
+//        return gift;
+//    }
 }

@@ -1,7 +1,7 @@
 package com.honeyprojects.infrastructure.contant;
 
 public enum StatusGift {
-    FREE,
-    ACCEPT,
+    FREE, // không yêu cầu phê duyệt
+    ACCEPT, // yêu cầu phê duyệt
     KHONG_HOAT_DONG
 }

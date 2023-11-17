@@ -110,14 +110,10 @@ export default function Index() {
       align: "center",
       render: (image) => {
         if (image) {
-          const byteArray = image.split(",").map(Number);
-          const uint8Array = new Uint8Array(byteArray);
-          const blob = new Blob([uint8Array], { type: "image/jpeg" });
-          const imageUrl = URL.createObjectURL(blob);
           return (
             <div style={{ textAlign: "center" }}>
               <img
-                src={imageUrl}
+                src={image}
                 style={{ width: "40px", height: "40px", margin: "auto" }}
                 alt="Hình ảnh"
               />

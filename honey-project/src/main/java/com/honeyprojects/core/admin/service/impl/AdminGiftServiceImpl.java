@@ -2,6 +2,7 @@ package com.honeyprojects.core.admin.service.impl;
 
 import com.honeyprojects.core.admin.model.request.AdminCreateGiftRequest;
 import com.honeyprojects.core.admin.model.request.AdminGiftRequest;
+import com.honeyprojects.core.admin.model.request.AdminUpdateCategoryRequest;
 import com.honeyprojects.core.admin.model.request.AdminUpdateGiftRequest;
 import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
 import com.honeyprojects.core.admin.model.response.CensorGiftSelectResponse;
@@ -10,9 +11,13 @@ import com.honeyprojects.core.admin.service.AdminGiftService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.entity.Gift;
+import com.honeyprojects.infrastructure.configution.CloudinaryUploadImages;
 import com.honeyprojects.infrastructure.contant.StatusGift;
+import com.honeyprojects.infrastructure.contant.TransactionGift;
+import com.honeyprojects.infrastructure.contant.TypeGift;
 import com.honeyprojects.infrastructure.logger.entity.LoggerFunction;
 import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
+import com.honeyprojects.util.CloudinaryUtils;
 import com.honeyprojects.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class AdminGiftServiceImpl implements AdminGiftService {
@@ -69,13 +75,33 @@ public class AdminGiftServiceImpl implements AdminGiftService {
 
     @Autowired
     private LoggerUtil loggerUtil;
+
+    @Autowired
+    private CloudinaryUploadImages cloudinaryUploadImages;
+
     @Override
     @Transactional
     public Gift addGift(AdminCreateGiftRequest request) throws IOException {
         StringBuilder contentLogger = new StringBuilder();
         LoggerFunction loggerObject = new LoggerFunction();
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
-        Gift gift = request.dtoToEntity(new Gift());
+        Random random = new Random();
+        int number = random.nextInt(10000);
+        String code = String.format("G%05d", number);
+
+        Gift gift = new Gift();
+        gift.setCode(code);
+        gift.setName(request.getName());
+        gift.setStatus(StatusGift.values()[request.getStatus()]);
+        gift.setQuantity(request.getQuantity());
+        gift.setLimitQuantity(request.getLimitQuantity());
+        gift.setType(TypeGift.values()[request.getType()]);
+        gift.setTransactionGift(TransactionGift.values()[request.getTransactionGift()]);
+        gift.setNote(request.getNote());
+        gift.setToDate(request.getToDate());
+        gift.setFromDate(request.getFromDate());
+        gift.setSemesterId(request.getSemesterId());
+        gift.setImage(cloudinaryUploadImages.uploadImage(request.getImage()));
         contentLogger.append("Lưu quà có id là '" + gift.getId() + "' . ");
         loggerObject.setContent(contentLogger.toString());
         try {
@@ -99,8 +125,23 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        request.dtoToEntity(existingGift);
+        existingGift.setName(request.getName());
+        existingGift.setStatus(StatusGift.values()[request.getStatus()]);
+        existingGift.setQuantity(request.getQuantity());
+        existingGift.setLimitQuantity(request.getLimitQuantity());
+        existingGift.setType(TypeGift.values()[request.getType()]);
+        existingGift.setTransactionGift(TransactionGift.values()[request.getTransactionGift()]);
+        existingGift.setNote(request.getNote());
+        existingGift.setToDate(request.getToDate());
+        existingGift.setFromDate(request.getFromDate());
+        existingGift.setSemesterId(request.getSemesterId());
+        existingGift.setImage(setImageToCloud(request, existingGift.getImage()));
         return adGiftRepository.save(existingGift);
+    }
+
+    public String setImageToCloud(AdminUpdateGiftRequest request, String image){
+        cloudinaryUploadImages.deleteImage(CloudinaryUtils.extractPublicId(image));
+        return cloudinaryUploadImages.uploadImage(request.getImage());
     }
 
     @Override
