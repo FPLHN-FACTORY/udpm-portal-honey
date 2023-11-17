@@ -82,6 +82,7 @@ export default function ModalAddChestGift(props) {
           onClick={() => handleOnclick()}
         >
           <PlusCircleOutlined className="icon" />
+          Thêm vật phẩm
         </Button>
       </Tooltip>
       <Modal

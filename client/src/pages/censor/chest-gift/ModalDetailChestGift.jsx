@@ -18,22 +18,22 @@ const ModalDetail = (props) => {
 
   const columns = [
     {
-      title: "Code",
+      title: "Mã",
       dataIndex: "code",
       key: "code",
     },
     {
-      title: "Name",
+      title: "Tên",
       dataIndex: "name",
       key: "name",
     },
     {
-      title: "To date",
+      title: "Ngày bắt đầu",
       dataIndex: "toDate",
       key: "toDate",
     },
     {
-      title: "From date",
+      title: "Ngày kết thúc",
       dataIndex: "fromDate",
       key: "fromDate",
     },

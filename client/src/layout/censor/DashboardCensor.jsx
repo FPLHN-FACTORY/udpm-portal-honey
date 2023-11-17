@@ -44,7 +44,7 @@ function DashboardAuthUser({ children }) {
 
   useEffect(() => {
     setSelectedKey(location.pathname);
-  },[location])
+  }, [location]);
 
   let { pathname } = useLocation();
   pathname = pathname.replace("/", "");
@@ -73,16 +73,30 @@ function DashboardAuthUser({ children }) {
       "/censor/gift",
       <FontAwesomeIcon icon={faGift} />
     ),
-    getItem("Cộng mật ong", "Cộng mật ong", <FontAwesomeIcon icon={faPlusCircle} />, [
-      getItem(<Link to={"/censor/add-point"}>Cộng mật ong</Link>, "/censor/add-point"),
-      getItem(<Link to={"/censor/add-point/history"}>Lịch sử</Link>, "/censor/add-point/history"),
-    ]),
+    getItem(
+      "Cộng mật ong",
+      "Cộng mật ong",
+      <FontAwesomeIcon icon={faPlusCircle} />,
+      [
+        getItem(
+          <Link to={"/censor/add-point"}>Cộng mật ong</Link>,
+          "/censor/add-point"
+        ),
+        getItem(
+          <Link to={"/censor/add-point/history"}>Lịch sử</Link>,
+          "/censor/add-point/history"
+        ),
+      ]
+    ),
     getItem(
       "Quản lý yêu cầu",
       "Quản lý yêu cầu",
       <FontAwesomeIcon icon={faCodePullRequest} />,
       [
-        getItem(<Link to={"/censor/request-manager"}>Yêu cầu</Link>, "/censor/request-manager"),
+        getItem(
+          <Link to={"/censor/request-manager"}>Yêu cầu</Link>,
+          "/censor/request-manager"
+        ),
         getItem(
           <Link to={"/censor/request-manager/approved-history"}>Lịch sử</Link>,
           "/censor/request-manager/approved-history"
@@ -160,7 +174,7 @@ function DashboardAuthUser({ children }) {
               </Link>
             </div>
           </Row>
-          <Menu mode="inline" items={items} onClick={openDrawer}/>
+          <Menu mode="inline" items={items} onClick={openDrawer} />
         </Layout>
       </Drawer>
       <div className="bg-white">
@@ -184,7 +198,7 @@ function DashboardAuthUser({ children }) {
             style={{ height: "80px" }}
           />
 
-          <Menu mode="inline" items={items} selectedKeys={selectedKey}/>
+          <Menu mode="inline" items={items} selectedKeys={selectedKey} />
         </Sider>
       </div>
       <Layout className="pb-14">

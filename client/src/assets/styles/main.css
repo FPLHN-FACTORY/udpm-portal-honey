@@ -70,7 +70,7 @@ body {
 }
 
 .layout-dashboard {
-  background: transparent;
+  /* background: transparent; */
   text-align: left;
   position: relative;
   overflow-x: hidden;
