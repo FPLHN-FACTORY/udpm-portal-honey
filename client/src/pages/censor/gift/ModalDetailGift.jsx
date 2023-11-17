@@ -32,7 +32,7 @@ const ModalDetailGift = (props) => {
   const [timeType, setTimeType] = useState(null);
   const [errorImage, setErrorImage] = useState("");
   let [selectType, setSelectType] = useState();
-  
+
   const [categoryQuantities, setCategoryQuantities] = useState({});
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [fieldErrors, setFieldErrors] = useState({});
@@ -49,12 +49,7 @@ const ModalDetailGift = (props) => {
       setCategoryQuantities(honeyValues);
     });
     if (gift.image) {
-      const byteArray = gift.image.split(",").map(Number);
-      const uint8Array = new Uint8Array(byteArray);
-      const blob = new Blob([uint8Array], { type: "image/jpeg" });
-      const imageUrl = URL.createObjectURL(blob);
-
-      setSelectedImageUrl(imageUrl);
+      setSelectedImageUrl(gift.image);
     }
     const timeType =
       gift.semesterId && gift.fromDate && gift.toDate
@@ -80,7 +75,7 @@ const ModalDetailGift = (props) => {
       form.setFieldsValue({ limitSoLuong: 1 });
     }
   }, [gift]);
-  
+
   const handleTypeChange = (selectedType) => {
     setSelectType(selectedType);
     if (selectedType === 0) {
@@ -105,12 +100,11 @@ const ModalDetailGift = (props) => {
     }
     return null;
   };
-  const changeSelectType = (value) =>{
-    if(value){
-      
+  const changeSelectType = (value) => {
+    if (value) {
       initialValues.gift.type = value;
     }
-  }
+  };
 
   const handleCategoryChange = (selectedValues) => {
     setSelectedCategories(selectedValues);
@@ -149,8 +143,11 @@ const ModalDetailGift = (props) => {
         setImage([]);
       } else {
         const fileSize = selectedFile.size;
-        const checkFileSize = Math.round((fileSize / 1024) / 1024);
-        console.log("🚀 ~ file: ModalAddGift.jsx:65 ~ handleFileInputChange ~ checkFileSize:", checkFileSize)
+        const checkFileSize = Math.round(fileSize / 1024 / 1024);
+        console.log(
+          "🚀 ~ file: ModalAddGift.jsx:65 ~ handleFileInputChange ~ checkFileSize:",
+          checkFileSize
+        );
         if (checkFileSize > 1) {
           setErrorImage("Ảnh không thể lớn hơn 1 MB");
           setSelectedImageUrl("");
@@ -172,7 +169,9 @@ const ModalDetailGift = (props) => {
             setSelectedImageUrl(imageUrl);
             setErrorImage("");
           } else {
-            setErrorImage("Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. ");
+            setErrorImage(
+              "Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. "
+            );
             setSelectedImageUrl("");
             setImage([]);
           }
@@ -453,7 +452,9 @@ const ModalDetailGift = (props) => {
           accept="image/*"
           onChange={(event) => handleFileInputChange(event)}
         />
-        {errorImage && <div style={{ color: "red", paddingLeft: "100px" }}>{errorImage}</div>}
+        {errorImage && (
+          <div style={{ color: "red", paddingLeft: "100px" }}>{errorImage}</div>
+        )}
         <Form.Item label="Code" name="code">
           <Input disabled />
         </Form.Item>

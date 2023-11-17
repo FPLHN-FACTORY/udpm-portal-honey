@@ -74,12 +74,12 @@ const ModalThem = (props) => {
             FileUploadName.lastIndexOf(".") + 1
           ).toLowerCase();
           if (
-            Extension == "gif" ||
-            Extension == "png" ||
-            Extension == "bmp" ||
-            Extension == "jpeg" ||
-            Extension == "jpg" ||
-            Extension == "webp"
+            Extension === "gif" ||
+            Extension === "png" ||
+            Extension === "bmp" ||
+            Extension === "jpeg" ||
+            Extension === "jpg" ||
+            Extension === "webp"
           ) {
             setImage(selectedFile);
             var imageUrl = URL.createObjectURL(selectedFile);
