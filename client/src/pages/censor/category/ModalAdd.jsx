@@ -34,8 +34,8 @@ const ModalThem = (props) => {
       } else {
         const fileSize = selectedFile.size;
         const checkFileSize = Math.round(fileSize / 1024 / 1024);
-        if (checkFileSize > 1) {
-          setErrorImage("Ảnh không thể lớn hơn 1 MB");
+        if (checkFileSize > 10) {
+          setErrorImage("Ảnh không thể lớn hơn 10 MB");
           setSelectedImageUrl("");
           setImage([]);
         } else {
@@ -108,12 +108,11 @@ const ModalThem = (props) => {
 
         if (check === 0) {
           if (category === null) {
-            const data = {
+            CategoryAPI.create({
               ...formValues,
               image: image,
               name: categoryName,
-            };
-            CategoryAPI.create(data)
+            })
               .then((result) => {
                 dispatch(AddCategory(result.data.data));
                 message.success("Thành công!");
@@ -156,7 +155,7 @@ const ModalThem = (props) => {
   };
   const initialValues = {
     categoryStatus: "1",
-    transactionRights: "0",
+    transactionRights: "1",
   };
 
   return (
@@ -219,8 +218,8 @@ const ModalThem = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={"0"}>Không phê duyệt</Radio>
-              <Radio value={"1"}>Cần phê duyệt</Radio>
+              <Radio value={"1"}>Không phê duyệt</Radio>
+              <Radio value={"2"}>Cần phê duyệt</Radio>
             </Radio.Group>
           </Form.Item>
 
@@ -235,8 +234,8 @@ const ModalThem = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={"1"}>Được giao dịch</Radio>
-              <Radio value={"2"}>Không giao dịch</Radio>
+              <Radio value={"1"}>Không giao dịch</Radio>
+              <Radio value={"0"}>Được giao dịch</Radio>
             </Radio.Group>
           </Form.Item>
 

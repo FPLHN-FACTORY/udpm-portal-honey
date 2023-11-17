@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import TextArea from "antd/es/input/TextArea";
 import "./index.css";
-import { SemesterAPI } from "../../../apis/censor/semester/semester.api";
 import { GiftDetail } from "../../../apis/censor/gift/gift-detail.api";
 import { formatDate } from "../../util/DateUtil";
 
@@ -32,7 +31,6 @@ const ModalThem = (props) => {
   const [selectType, setSelectType] = useState();
 
   const [timeType, setTimeType] = useState("vĩnh viễn");
-  const [listSemester, setListSemester] = useState([]);
 
   const [categoryQuantities, setCategoryQuantities] = useState({});
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -103,7 +101,6 @@ const ModalThem = (props) => {
 
   useEffect(() => {
     fetchCategory();
-    fetchSemester();
     if (gift && gift.quantity !== null) {
       setQuantityValue(1);
     } else {
@@ -121,12 +118,6 @@ const ModalThem = (props) => {
   const fetchCategory = () => {
     CategoryAPI.fetchAllCategory().then((response) => {
       setListCategory(response.data.data);
-    });
-  };
-
-  const fetchSemester = () => {
-    SemesterAPI.fetchAllSemester().then((response) => {
-      setListSemester(response.data.data);
     });
   };
 
@@ -199,7 +190,6 @@ const ModalThem = (props) => {
         let limitSL = null;
         let fromDate = null;
         let toDate = null;
-        let semesterId = null;
         if (selectedImageUrl.length === 0) {
           return;
         }
@@ -210,17 +200,7 @@ const ModalThem = (props) => {
           limitSL = parseInt(formValues.limitSoLuong, 10);
         }
 
-        if (timeType === "học kì") {
-          const selectedSemester = listSemester.find(
-            (semester) => semester.id === formValues.semester
-          );
-
-          if (selectedSemester) {
-            fromDate = selectedSemester.fromDate;
-            toDate = selectedSemester.toDate;
-            semesterId = selectedSemester.id;
-          }
-        } else if (timeType === "thời hạn") {
+        if (timeType === "thời hạn") {
           fromDate = formValues.start
             ? new Date(formValues.start).getTime()
             : null;
@@ -245,7 +225,6 @@ const ModalThem = (props) => {
           limitQuantity: limitSL,
           fromDate: timeType === "vĩnh viễn" ? null : fromDate,
           toDate: timeType === "vĩnh viễn" ? null : toDate,
-          semesterId: semesterId,
         })
           .then((result) => {
             selectedCategories.forEach((categoryId) => {
@@ -485,32 +464,9 @@ const ModalThem = (props) => {
             onChange={(e) => setTimeType(e.target.value)}
           >
             <Radio value={"vĩnh viễn"}>Vĩnh viễn</Radio>
-            <Radio value={"học kì"}>Học kì</Radio>
             <Radio value={"thời hạn"}>Thời hạn</Radio>
           </Radio.Group>
         </Form.Item>
-        {timeType === "học kì" && (
-          <Form.Item
-            label="Chọn học kì"
-            name="semester"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng chọn học kì",
-              },
-            ]}
-          >
-            <Select placeholder="Chọn học kì">
-              {listSemester.map((semester) => (
-                <Option key={semester.id} value={semester.id}>
-                  {`${semester.name} (${formatDate(
-                    semester.fromDate
-                  )} - ${formatDate(semester.toDate)})`}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-        )}
         {timeType === "thời hạn" && (
           <>
             <Form.Item

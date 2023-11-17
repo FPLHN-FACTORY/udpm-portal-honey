@@ -4,7 +4,6 @@ import { useAppDispatch } from "../../../app/hooks";
 import { UpdateGift } from "../../../app/reducers/gift/gift.reducer";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
-import { SemesterAPI } from "../../../apis/censor/semester/semester.api";
 import moment from "moment";
 import { GiftDetail } from "../../../apis/censor/gift/gift-detail.api";
 import "./index.css";
@@ -28,7 +27,6 @@ const ModalDetailGift = (props) => {
   const [isLimitedQuantity2, setIsLimitedQuantity2] = useState(true);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
   const [listCategory, setListCategory] = useState([]);
-  const [listSemester, setListSemester] = useState([]);
   const [timeType, setTimeType] = useState(null);
   const [errorImage, setErrorImage] = useState("");
   let [selectType, setSelectType] = useState();
@@ -51,17 +49,11 @@ const ModalDetailGift = (props) => {
     if (gift.image) {
       setSelectedImageUrl(gift.image);
     }
-    const timeType =
-      gift.semesterId && gift.fromDate && gift.toDate
-        ? "học kì"
-        : gift.fromDate && gift.toDate
-        ? "thời hạn"
-        : "vĩnh viễn";
+    const timeType = gift.fromDate && gift.toDate ? "thời hạn" : "vĩnh viễn";
 
     setTimeType(timeType);
 
     fetchCategory();
-    fetchSemester();
     if (gift && gift.quantity !== null) {
       setIsLimitedQuantity(true);
     } else {
@@ -186,12 +178,6 @@ const ModalDetailGift = (props) => {
     });
   };
 
-  const fetchSemester = () => {
-    SemesterAPI.fetchAllSemester().then((response) => {
-      setListSemester(response.data.data);
-    });
-  };
-
   const dispatch = useAppDispatch();
 
   const validateQuantity = (rule, value) => {
@@ -253,26 +239,13 @@ const ModalDetailGift = (props) => {
 
         let updatedFromDate = null;
         let updatedToDate = null;
-        let updatedSemesterId = null;
 
         if (formValues.timeType === "vĩnh viễn") {
           updatedFromDate = null;
           updatedToDate = null;
-          updatedSemesterId = null;
-        } else if (formValues.timeType === "học kì") {
-          const selectedSemester = listSemester.find(
-            (semester) => semester.id === formValues.semester
-          );
-
-          if (selectedSemester) {
-            updatedFromDate = selectedSemester.fromDate;
-            updatedToDate = selectedSemester.toDate;
-            updatedSemesterId = selectedSemester.id;
-          }
         } else if (formValues.timeType === "thời hạn") {
           updatedFromDate = new Date(formValues.start).getTime();
           updatedToDate = new Date(formValues.end).getTime();
-          updatedSemesterId = null;
         }
         const newFieldErrors = {};
 
@@ -314,7 +287,6 @@ const ModalDetailGift = (props) => {
             note: formValues.note,
             fromDate: updatedFromDate,
             toDate: updatedToDate,
-            semesterId: updatedSemesterId,
           },
           gift ? gift.id : null
         )
@@ -402,13 +374,7 @@ const ModalDetailGift = (props) => {
     type: gift && gift.type ? gift.type : 0,
     transactionGift: gift && gift.transactionGift ? gift.transactionGift : 0,
     note: gift && gift.note ? gift.note : "",
-    timeType:
-      gift.semesterId && gift.fromDate && gift.toDate
-        ? "học kì"
-        : gift.fromDate && gift.toDate
-        ? "thời hạn"
-        : "vĩnh viễn",
-    semester: gift.semesterId,
+    timeType: gift.fromDate && gift.toDate ? "thời hạn" : "vĩnh viễn",
     start: formattedFromDate,
     end: formattedToDate,
   };
@@ -601,30 +567,9 @@ const ModalDetailGift = (props) => {
             onChange={(e) => setTimeType(e.target.value)}
           >
             <Radio value="vĩnh viễn">Vĩnh viễn</Radio>
-            <Radio value="học kì">Học kì</Radio>
             <Radio value="thời hạn">Thời hạn</Radio>
           </Radio.Group>
         </Form.Item>
-        {timeType === "học kì" && (
-          <Form.Item
-            label="Chọn học kì"
-            name="semester"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng chọn học kì",
-              },
-            ]}
-          >
-            <Select placeholder="Chọn học kì">
-              {listSemester.map((semester) => (
-                <Option key={semester.id} value={semester.id}>
-                  {semester.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-        )}
         {timeType === "thời hạn" && (
           <>
             <Form.Item
