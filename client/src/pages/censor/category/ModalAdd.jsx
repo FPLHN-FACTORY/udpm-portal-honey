@@ -33,9 +33,9 @@ const ModalThem = (props) => {
         setImage([]);
       } else {
         const fileSize = selectedFile.size;
-        const checkFileSize = Math.round((fileSize / 1024) / 1024);
-        if (checkFileSize > 1) {
-          setErrorImage("Ảnh không thể lớn hơn 1 MB");
+        const checkFileSize = Math.round(fileSize / 1024 / 1024);
+        if (checkFileSize > 10) {
+          setErrorImage("Ảnh không thể lớn hơn 10 MB");
           setSelectedImageUrl("");
           setImage([]);
         } else {
@@ -55,7 +55,9 @@ const ModalThem = (props) => {
             setSelectedImageUrl(imageUrl);
             setErrorImage("");
           } else {
-            setErrorImage("Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. ");
+            setErrorImage(
+              "Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. "
+            );
             setSelectedImageUrl("");
             setImage([]);
           }
@@ -153,7 +155,7 @@ const ModalThem = (props) => {
   };
   const initialValues = {
     categoryStatus: "1",
-    transactionRights: "0",
+    transactionRights: "1",
   };
 
   return (
@@ -216,8 +218,8 @@ const ModalThem = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={"0"}>Không phê duyệt</Radio>
-              <Radio value={"1"}>Cần phê duyệt</Radio>
+              <Radio value={"1"}>Không phê duyệt</Radio>
+              <Radio value={"2"}>Cần phê duyệt</Radio>
             </Radio.Group>
           </Form.Item>
 
@@ -232,8 +234,8 @@ const ModalThem = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={"1"}>Được giao dịch</Radio>
-              <Radio value={"2"}>Không giao dịch</Radio>
+              <Radio value={"1"}>Không giao dịch</Radio>
+              <Radio value={"0"}>Được giao dịch</Radio>
             </Radio.Group>
           </Form.Item>
 

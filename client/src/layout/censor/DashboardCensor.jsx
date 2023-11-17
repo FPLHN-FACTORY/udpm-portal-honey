@@ -64,11 +64,6 @@ function DashboardAuthUser({ children }) {
       <FontAwesomeIcon icon={faKaaba} />
     ),
     getItem(
-      <Link to="/censor/semester">Quản lý học kỳ</Link>,
-      "/censor/semester",
-      <FontAwesomeIcon icon={faPenRuler} />
-    ),
-    getItem(
       <Link to="/censor/gift">Quản lý vật phẩm</Link>,
       "/censor/gift",
       <FontAwesomeIcon icon={faGift} />
