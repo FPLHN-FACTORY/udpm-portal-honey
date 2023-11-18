@@ -209,7 +209,7 @@ const ModalThem = (props) => {
           </Form.Item>
           <Form.Item
             label="Phê duyệt"
-            name="transactionRights"
+            name="categoryStatus"
             rules={[
               {
                 required: true,
@@ -225,7 +225,7 @@ const ModalThem = (props) => {
 
           <Form.Item
             label="Giao dịch"
-            name="categoryStatus"
+            name="transactionRights"
             rules={[
               {
                 required: true,

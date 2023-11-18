@@ -51,6 +51,7 @@ export default function Index() {
   useEffect(() => {
     CategoryAPI.fetchAll().then((response) => {
       dispatch(SetCategory(response.data.data.data));
+      console.log(response.data.data.data);
       setTotal(response.data.data.totalPages);
     });
   }, [dispatch]);
@@ -143,7 +144,6 @@ export default function Index() {
       key: "categoryStatus",
       align: "center",
       render: (text) => {
-        console.log(text);
         if (text === "2") {
           return (
             <span style={{ color: "green" }}>

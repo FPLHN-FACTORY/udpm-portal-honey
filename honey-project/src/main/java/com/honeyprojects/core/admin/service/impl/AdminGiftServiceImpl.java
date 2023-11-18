@@ -12,6 +12,7 @@ import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.infrastructure.configution.CloudinaryUploadImages;
+import com.honeyprojects.infrastructure.contant.ExpiryGift;
 import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TransactionGift;
 import com.honeyprojects.infrastructure.contant.TypeGift;
@@ -100,7 +101,7 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         gift.setNote(request.getNote());
         gift.setToDate(request.getToDate());
         gift.setFromDate(request.getFromDate());
-        gift.setSemesterId(request.getSemesterId());
+        gift.setExpiry(ExpiryGift.valueOf(request.getExpiry()));
         gift.setImage(cloudinaryUploadImages.uploadImage(request.getImage()));
         contentLogger.append("Lưu quà có id là '" + gift.getId() + "' . ");
         loggerObject.setContent(contentLogger.toString());
@@ -134,7 +135,7 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         existingGift.setNote(request.getNote());
         existingGift.setToDate(request.getToDate());
         existingGift.setFromDate(request.getFromDate());
-        existingGift.setSemesterId(request.getSemesterId());
+        existingGift.setExpiry(ExpiryGift.valueOf(request.getExpiry()));
         existingGift.setImage(setImageToCloud(request, existingGift.getImage()));
         return adGiftRepository.save(existingGift);
     }

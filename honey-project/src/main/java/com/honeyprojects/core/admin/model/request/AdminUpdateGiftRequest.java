@@ -43,31 +43,5 @@ public class AdminUpdateGiftRequest {
 
     private String semesterId;
 
-//    public Gift dtoToEntity(Gift gift) throws IOException {
-//        gift.setCode(this.getCode());
-//        gift.setName(this.getName());
-//        if (this.getStatus() != null) {
-//            gift.setStatus(StatusGift.values()[this.getStatus()]);
-//        }
-//        if (this.getType() != null) {
-//            gift.setType(TypeGift.values()[this.getType()]);
-//        }
-//        if (this.getTransactionGift() != null) {
-//            gift.setTransactionGift(TransactionGift.values()[this.getTransactionGift()]);
-//        }
-//
-//        gift.setQuantity(this.getQuantity());
-//
-//        gift.setLimitQuantity(this.getLimitQuantity());
-//
-//        if (this.getImage() != null) {
-//            byte[] imageBytes = this.getImage().getBytes();
-//            gift.setImage(imageBytes);
-//        }
-//        gift.setNote(this.getNote());
-//        gift.setToDate(this.getToDate());
-//        gift.setFromDate(this.getFromDate());
-//        gift.setSemesterId(this.getSemesterId());
-//        return gift;
-//    }
+    private String expiry;
 }
