@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+.student__history {
+    background-image: url("/src/assets/images/ui-student/backgroup_history.jpg");
+    height: 100%;
+    background-size: cover;
+}
+
+.student__history .wapper {
+    background-color: #00000040;
+    padding: 0px 20px;
+    height: 100%;
+}
+
+.student__history .wapper__content {
+    height: 80%;
+    overflow: scroll;
+}
+
+.student__history .wapper__content::-webkit-scrollbar {
+    width: 0px;
+}
+
+.student__history .content {
+    color: white;
+    border: 1px solid #DDD;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    flex: 0 0 100%;
+    transition: all 0.s;
+    margin-bottom: 15px;
+    height: 130px;
+    width: 100%;
+    background: linear-gradient(150deg, rgba(53, 53, 53, 0.6) 24%, rgba(0, 0, 0, 0.5) 91%);
+    cursor: pointer;
+}
+
+
+.student__history .red:hover {
+    height: 150px;
+    background: linear-gradient(150deg, rgba(254, 215, 85, 0.6) 24%, rgba(99, 72, 13, 0.5) 91%);
+}
+
+.student__history .green:hover {
+    background: linear-gradient(150deg, rgba(29, 146, 29, 0.6) 24%, rgba(10, 83, 4, 0.5) 91%);
+}
+
+.student__history .separator {
+    border: 1px solid #DDD;
+    margin-bottom: 15px;
+}
+
+.student__history .content__image {
+    border-radius: 50%;
+}
+
+.student__history .ant-image-mask {
+    border-radius: 50%;
+}
+
+.student__history .student__history__point {
+    font-family: 'VT323', monospace;
+    color: white;
+    font-size: 30px;
+}
+
+.student__history .student__history__text {
+    font-family: 'VT323', monospace;
+    font-size: 30px;
+}
+
+.student__history .green__text {
+    color: rgb(28, 224, 28);
+}
+
+.student__history .red__text {
+    color: #f33c36;
+}
+
+.student__history .ant-tabs-tab {
+    font-family: 'VT323', monospace;
+    color: #FFF;
+    font-size: 25px;
+    border: 1px solid #FFF;
+    border-radius: 10px;
+    padding: 0px 20px;
+    cursor: pointer;
+    background: linear-gradient(150deg, rgba(53, 53, 53, 0.6) 24%, rgba(0, 0, 0, 0.5) 91%);
+}
+
+.student__history .ant-tabs-nav::before {
+    border-bottom: none;
+}
+
+.student__history .ant-tabs-tab:hover {
+    background: linear-gradient(150deg, rgba(255, 247, 94, 0.6) 24%, rgba(153, 153, 0, 0.5) 91%);
+}
+
+.student__history .ant-tabs-ink-bar {
+    display: none;
+}
+
+.student__history .separator {
+    border: 1px solid #DDD;
+    margin-bottom: 15px;
+}
+
+.student__history .button-group {
+    display: flex;
+    margin-bottom: 15px;
+    padding-top: 15px;
+}
+
+.student__history .button {
+    font-family: 'VT323', monospace;
+    color: #FFF;
+    font-size: 25px;
+    border: 1px solid #FFF;
+    border-radius: 10px;
+    padding: 0px 20px;
+    cursor: pointer;
+    background: linear-gradient(150deg, rgba(53, 53, 53, 0.6) 24%, rgba(0, 0, 0, 0.5) 91%);
+    margin-right: 10px;
+}
+
+.student__history .ant-select-selector {
+    font-family: 'VT323', monospace;
+    color: #FFF;
+    font-size: 25px;
+    border: 1px solid #FFF;
+    border-radius: 10px;
+    padding: 0px 20px;
+    cursor: pointer;
+    background: linear-gradient(150deg, rgba(53, 53, 53, 0.6) 24%, rgba(0, 0, 0, 0.5) 91%);
+    margin-right: 10px;
+    background-color: rgba(255, 0, 0, 0) !important;
+}
+
+.student__history .ant-select-selector:hover {
+    color: rgba(255, 249, 133, 0.849);
+}
+
+.student__history .button__notactive:hover {
+    color: rgba(255, 249, 133, 0.849);
+}
+
+.student__history .button__active {
+    background: linear-gradient(150deg, rgba(255, 180, 94, 0.8) 24%, rgba(153, 105, 0, 0.8) 91%);
+}
+
+.student__history .ant-select-arrow {
+    color: white;
+}
+
+.student__history .ant-select-open {
+    color: white;
+}

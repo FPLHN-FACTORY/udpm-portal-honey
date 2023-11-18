@@ -1,0 +1,70 @@
+.image-container {
+  border: 2px dashed #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 150px;
+  width: 150px;
+  margin-left: 165px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 20px;
+  position: relative;
+  text-align: center;
+}
+.image-container img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.hidden-input {
+  display: none !important;
+}
+
+.errorImageMes {
+  padding-left: 120px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.custom-select-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.select-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  justify-content: center !important;
+  margin-left: 30px !important;
+}
+
+.select-asterisk {
+  color: red;
+  margin-right: 4px;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.select-custom {
+  width: 76% !important;
+  padding: 0;
+  margin-left: 7px !important;
+}
+.input-matcate input[type="number"] {
+  width: 73%;
+  margin-bottom: 20px;
+  margin-left: 7px !important;
+}
+.input-matcate {
+  margin-left: 12px !important;
+  text-align: left !important;
+  justify-content: left !important;
+}

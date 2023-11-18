@@ -1,15 +1,22 @@
 package com.honeyprojects.infrastructure.contant;
 
+import com.honeyprojects.util.PropertiesReader;
+
 public enum Message {
 
-    SUCCESS("Success");
+    SUCCESS("Success"),
 
 
-//    ERROR_UNKNOWN("Error Unknown"),
+// viết các lỗi ở đây
+    MA_NGUOI_NHAN_KHONG_HOP_LE("Người giao dịch không hợp lệ"),
 
+    HONEY_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.HONEY_NOT_EXIST)),
 
-//    CHUYEN_NGANH_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.CHUYEN_NGANH_NOT_EXIST)),
-
+    VERIFICATION_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.VERIFICATION_NOT_EXIST)),
+    HISTORY_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.VERIFICATION_NOT_EXIST)),
+    CATEGORY_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.CATEGORY_NOT_EXIST)),
+    SEMESTER_ALREADY_EXIST(PropertiesReader.getProperty(PropertyKeys.SEMESTER_ALREADY_EXIST)),
+    AUCTION_NOT_EXISTS(PropertiesReader.getProperty(PropertyKeys.AUCTION_NOT_EXISTS));
     private String message;
 
     Message(String message) {

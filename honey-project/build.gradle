@@ -32,8 +32,34 @@ dependencies {
     implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.0.2'
     implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '8.0.0.Final'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '1.2.0.RELEASE'
-    implementation 'com.sun.mail:jakarta.mail:1.6.7'
+    implementation group: 'jakarta.mail', name: 'jakarta.mail-api', version: '2.1.1'
+    implementation 'org.eclipse.angus:jakarta.mail:1.0.0'
     implementation group: 'log4j', name: 'log4j', version: '1.2.17'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    implementation 'com.nimbusds:nimbus-jose-jwt:9.0'
+    implementation group: 'org.apache.poi', name: 'poi', version: '4.1.2'
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.2'
+    //websocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: '2.7.8'
+    // log
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-csv
+    implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.8'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-amqp
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: '2.7.8'
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12
+    testImplementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
+    // quartz
+    implementation 'org.quartz-scheduler:quartz:2.3.2'
+    implementation 'org.springframework.boot:spring-boot-starter-quartz'
+// https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5
+    implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.2.1'
+
 }
 
 tasks.named('test') {

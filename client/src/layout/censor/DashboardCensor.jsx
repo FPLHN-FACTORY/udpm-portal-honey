@@ -10,20 +10,30 @@
   * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 import logo from "../../assets/images/logo/logo-udpm-3.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Layout, Drawer, Row, Menu, Col } from "antd";
 import Header from "../../components/censor/Header";
-import {
-  EditOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-
-} from "@ant-design/icons";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCodePullRequest,
+  faCommentsDollar,
+  faGift,
+  faKaaba,
+  faPenRuler,
+  faPlusCircle,
+  faScaleUnbalanced,
+  faStar,
+  faToolbox,
+  faExchangeAlt,
+} from "@fortawesome/free-solid-svg-icons";
 const { Header: AntHeader, Content } = Layout;
 
 function DashboardAuthUser({ children }) {
+  const location = useLocation();
+  const [selectedKey, setSelectedKey] = useState();
   const [visible, setVisible] = useState(false);
   const openDrawer = () => setVisible(!visible);
   const [count, setCount] = useState(250);
@@ -31,9 +41,10 @@ function DashboardAuthUser({ children }) {
     if (count === 70) setCount(250);
     else setCount(70);
   };
-  const [fixed, setFixed] = useState(false);
 
-  const handleFixedNavbar = (type) => setFixed(type);
+  useEffect(() => {
+    setSelectedKey(location.pathname);
+  }, [location]);
 
   let { pathname } = useLocation();
   pathname = pathname.replace("/", "");
@@ -48,9 +59,69 @@ function DashboardAuthUser({ children }) {
   }
   const items = [
     getItem(
-      <Link to="/censor/category">Nothing</Link>,
-      "1",
-      <EditOutlined />
+      <Link to="/censor/category">Quản lý thể loại</Link>,
+      "/censor/category",
+      <FontAwesomeIcon icon={faKaaba} />
+    ),
+    getItem(
+      <Link to="/censor/gift">Quản lý vật phẩm</Link>,
+      "/censor/gift",
+      <FontAwesomeIcon icon={faGift} />
+    ),
+    getItem(
+      "Cộng mật ong",
+      "Cộng mật ong",
+      <FontAwesomeIcon icon={faPlusCircle} />,
+      [
+        getItem(
+          <Link to={"/censor/add-point"}>Cộng mật ong</Link>,
+          "/censor/add-point"
+        ),
+        getItem(
+          <Link to={"/censor/add-point/history"}>Lịch sử</Link>,
+          "/censor/add-point/history"
+        ),
+      ]
+    ),
+    getItem(
+      "Quản lý yêu cầu",
+      "Quản lý yêu cầu",
+      <FontAwesomeIcon icon={faCodePullRequest} />,
+      [
+        getItem(
+          <Link to={"/censor/request-manager"}>Yêu cầu</Link>,
+          "/censor/request-manager"
+        ),
+        getItem(
+          <Link to={"/censor/request-manager/approved-history"}>Lịch sử</Link>,
+          "/censor/request-manager/approved-history"
+        ),
+      ]
+    ),
+    getItem(
+      <Link to="/censor/request-manager/random-add-point">Tặng vật phẩm</Link>,
+      "/censor/request-manager/random-add-point",
+      <FontAwesomeIcon icon={faCommentsDollar} />
+    ),
+    getItem(
+      <Link to="/censor/chest">Quản lý rương</Link>,
+      "/censor/chest",
+      <FontAwesomeIcon icon={faToolbox} />
+    ),
+    getItem(
+      <Link to="/censor/auction-management">Quản lý phòng đấu giá</Link>,
+      "/censor/auction-management",
+      <FontAwesomeIcon icon={faScaleUnbalanced} />
+    ),
+    getItem(
+      <Link to="/censor/upgrade-rate">Quản lý tỉ lệ nâng cấp</Link>,
+      "/censor/upgrade-rate",
+      <FontAwesomeIcon icon={faStar} />
+    ),
+    getItem(
+      <Link to="/censor/conversion">Quản lý quy đổi</Link>,
+      "/censor/conversion",
+      <FontAwesomeIcon icon={faExchangeAlt} />
     ),
   ];
   const toggleCollapse = () => {
@@ -59,6 +130,7 @@ function DashboardAuthUser({ children }) {
 
   return (
     <Layout
+      id="authe"
       className={`layout-dashboard ${
         pathname === "profile" ? "layout-profile" : ""
       } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
@@ -84,7 +156,7 @@ function DashboardAuthUser({ children }) {
             pathname === "rtl" ? "layout-dashboard-rtl" : ""
           }`}
         >
-          <Row className="flex justify-center align-middle  mt-5 pb-8">
+          <Row className="flex justify-center align-middle mt-5 pb-8">
             <div className="brand text-center">
               <Link to="/" className="active">
                 <img
@@ -108,50 +180,87 @@ function DashboardAuthUser({ children }) {
           collapsed={collapsed}
           width={250}
           className={`sider-primary ant-layout-sider-primary`}
-          style={{ background: "#fff", overflowX: "hidden" }}
+          style={{
+            background: "#fff",
+            position: "fixed",
+            left: 0,
+            zIndex: 999,
+            height: "100%",
+          }}
         >
-          <Row className="flex justify-center align-middle  mt-5 pb-8">
-            {!collapsed && (
-              <div className="brand text-center">
-                <Link to="/" className="active">
-                  <img
-                    src={logo}
-                    style={{
-                      height: "80px",
-                    }}
-                    alt="Logo"
-                  />
-                </Link>
-              </div>
-            )}
-          </Row>
+          <Row
+            className="flex justify-center align-middle  mt-5 pb-8"
+            style={{ height: "80px" }}
+          />
 
-          <Menu mode="inline" items={items} />
+          <Menu mode="inline" items={items} selectedKeys={selectedKey} />
         </Sider>
       </div>
       <Layout className="pb-14">
-        <AntHeader className={`${fixed ? "ant-header-fixed" : ""}`}>
-          <Row className="flex justify-between">
-            <Col span={2} className="flex justify-between items-center">
-              <button className="buttonSlider desktop" onClick={toggleCollapse}>
-                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              </button>
-              <button className="buttonSlider mobile" onClick={openDrawer}>
-                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              </button>
+        <AntHeader style={{ zIndex: 1000, position: "fixed", width: "100%" }}>
+          <Row>
+            <Col span={8}>
+              <Row>
+                {!collapsed ? (
+                  <Col span={12}>
+                    <div className="brand text-center">
+                      <Link to="/" className="active">
+                        <img
+                          src={logo}
+                          style={{
+                            height: "60px",
+                          }}
+                          alt="Logo"
+                        />
+                      </Link>
+                    </div>
+                  </Col>
+                ) : (
+                  <Col span={4}></Col>
+                )}
+                <Col span={12} className="flex items-center">
+                  <button
+                    className="buttonSlider desktop"
+                    onClick={toggleCollapse}
+                  >
+                    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                  </button>
+                  <button className="buttonSlider mobile" onClick={openDrawer}>
+                    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                  </button>
+                </Col>
+              </Row>
             </Col>
-            <Col span={22}>
-              <Header
-                onPress={openDrawer}
-                onSlidebar={onSlidebar}
-                name={pathname}
-                subName={pathname}
-                handleFixedNavbar={handleFixedNavbar}
-              />
+            <Col span={16}>
+              <Row>
+                <Col span={15}></Col>
+                <Col span={9}>
+                  <Header
+                    onPress={openDrawer}
+                    onSlidebar={onSlidebar}
+                    name={pathname}
+                    subName={pathname}
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
         </AntHeader>
-        <Content className="content-ant">{children}</Content>
+        {collapsed ? (
+          <Content
+            className="content-ant"
+            style={{ paddingLeft: "6%", marginTop: "7%" }}
+          >
+            {children}
+          </Content>
+        ) : (
+          <Content
+            className="content-ant"
+            style={{ paddingLeft: "19%", marginTop: "9%" }}
+          >
+            {children}
+          </Content>
+        )}
       </Layout>
     </Layout>
   );

@@ -1,0 +1,311 @@
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+.auction-main-inside .ant-card {
+  background-image: url("../../../assets/images/bar-transaction.png");
+}
+.menu-auction{
+  background-image: url("../../../assets/images/bar-transaction.png");
+  color: white;
+}
+.button-xac-nhan.auction-room-inside {
+  cursor: pointer;
+  /* width: 100%; */
+  background-image: url("https://media.istockphoto.com/photos/light-brown-wood-texture-background-picture-id958689614?b=1&k=6&m=958689614&s=170667a&w=0&h=0VEJL0lKAlPV9ZRzqXfU-dyQlA403Mo84xpCwE7ercI=");
+  height: 120px;
+  border: 4px solid #cd853f;
+  background-color: white;
+  border-style: inset;
+  text-align: center;
+  line-height: 70px;
+  border-radius: 50px;
+  margin: 20px;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+.col-aucion .auction-room-inside:hover {
+  background-color: rgb(236, 236, 236);
+}
+.auction-text {
+  font-family: "VT323", monospace;
+  font-size: 60px;
+  color: #f6c714;
+}
+.name-gift-acution {
+  font-size: 20px;
+  font-weight: 1000;
+  color: #c56600;
+}
+.user-online {
+  font-family: "VT323", monospace;
+  color: #c56600;
+  font-size: 25px;
+  margin-top: 30px;
+  left: 0;
+  position: absolute;
+  /* background-color: rgba(90, 86, 86, 0.25); */
+  padding: 5px;
+  border-radius: 10%;
+  line-height: 10px;
+  margin-left: 30px;
+  top: 0;
+}
+
+.user-online > div {
+  background-color: green;
+  width: 10px;
+  height: 10px;
+  /* margin-right: 5px; */
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.time {
+  font-family: "VT323", monospace;
+  color: #c56600;
+  font-size: 25px;
+  position: absolute;
+  right: 20px;
+  margin-top: 38px;
+  margin-right: 15px;
+  /* background-color: rgba(0, 0, 0, 0.25); */
+  padding: 5px;
+  border-radius: 10%;
+  line-height: 10px;
+  top: 0;
+}
+
+.price {
+  font-family: "VT323", monospace;
+  color: #c56600;
+  position: absolute;
+  font-size: 25px;
+  margin-right: 15px;
+  padding: 5px;
+  bottom: 0;
+}
+.btn-add-auction-inside {
+  float: right;
+}
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-create-auction .ant-card-body {
+  padding: 0;
+  background-image: url("../../../assets/images/bar-transaction.png");
+}
+
+.modal-create-auction .chess-square {
+  border-style: ridge;
+  background: #464239;
+  height: 100px;
+  width: 100px;
+  margin: 3px;
+}
+
+.modal-create-auction .chess-square-note {
+  border-style: ridge;
+  background: rgb(146, 144, 144);
+  height: 100%;
+  width: 580%;
+  margin: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.modal-create-auction .chess-square-note .name-item {
+  color: rgb(52, 45, 45);
+  font-weight: 1000;
+  font-size: 20px;
+  white-space: normal;
+}
+
+.modal-create-auction .chess-square-note .quantity-item {
+  color: rgb(52, 45, 45);
+  font-size: 15px;
+  display: block;
+  white-space: normal;
+  font-weight: bold;
+  color: rgb(255, 253, 253);
+}
+
+.modal-create-auction .chess-square-note .item {
+  border-style: ridge;
+  background: rgb(200, 197, 197);
+  height: 85px;
+  width: 80px;
+  margin: 3px;
+  display: block;
+  border-bottom: 7px solid #f6c714;
+}
+
+.modal-create-auction .chess-square:hover {
+  cursor: pointer;
+  background: #eeb20d52;
+}
+
+.modal-create-auction .row-chest {
+  overflow: auto;
+  scrollbar-width: 0px;
+  -ms-overflow-style: none;
+  padding-left: 10px;
+  max-height: 524px;
+  overflow-y: auto;
+}
+
+.modal-create-auction .my-10 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.modal-create-auction .text-title {
+  color: #504438;
+  font-size: 15px;
+  line-height: 30px;
+}
+w-chest .modal-create-auction .row-content {
+  padding-top: 0px;
+  padding-right: 15px;
+  padding-bottom: 5px;
+  padding-left: 15px;
+}
+
+.modal-create-auction .chest-transaction {
+  border-right: 2px solid #837463;
+  padding-right: 10px;
+}
+
+.modal-create-auction .row-chest::-webkit-scrollbar {
+  width: 0px;
+}
+
+.modal-create-auction .item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.modal-create-auction .button-xac-nhan {
+  border: 3px ridge !important;
+  width: 130px;
+  color: white;
+  margin-left: 10px;
+  margin-right: -10px;
+  background-color: #50873e;
+}
+
+.modal-create-auction .img-item {
+  padding: 5px;
+  width: 35px;
+  height: 35px;
+}
+
+.modal-create-auction .col-title-balo {
+  padding-left: 14px;
+  margin-bottom: 5px;
+  text-align: center;
+  line-height: 30px;
+}
+
+.modal-create-auction .title-balo {
+  font-weight: 800;
+  color: #4b5038;
+  font-size: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  float: left;
+}
+
+.modal-create-auction .img-balo {
+  vertical-align: middle;
+  margin-right: 10px;
+  margin-top: -10px;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.7));
+}
+
+.modal-create-auction .button-xac-nhan:hover {
+  background-color: #457436 !important;
+}
+
+.modal-create-auction .div-button {
+  margin: 10px;
+  text-align: center;
+  margin-top: 95px;
+}
+.custom-close-icon {
+  border-radius: 50% !important;
+  background-color: #6a4325;
+  color: #fff;
+  padding: 10px;
+  cursor: pointer;
+}
+.input-auction {
+  border: inset;
+  background-color: #464239;
+  height: 30px;
+  width: 97%;
+}
+.text-gia {
+  color: white;
+  font-weight: 700;
+  margin-right: 160px;
+  margin-top: 20px;
+}
+.text-thoi-han {
+  color: white;
+  font-weight: 700;
+  margin-right: 190px;
+  margin-top: 20px;
+}
+.text-phi-quan-ly {
+  color: white;
+  font-weight: 700;
+  margin-top: 20px;
+  margin-right: 110px;
+}
+
+.item-cart-null {
+  position: relative;
+  text-align: center; 
+  vertical-align: middle; 
+}
+
+.item-cart-null span {
+  position: absolute;
+  top: 50%; 
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5); 
+  padding: 5px;
+  border-radius: 5px;
+  margin-top: 18%;
+}
+.table-dau-gia .ant-card-body{
+  padding: 0;
+}
+.table-dau-gia .ant-table-wrapper{
+  width: 100%;
+}
+.table-dau-gia .ant-table-tbody{
+  background-image: url("../../../assets/images/bar-transaction.png")
+}
+.table-dau-gia .ant-pagination .ant-table-pagination{
+  justify-content: center !important;
+  text-align: center !important;
+  display: flex !important;
+
+}
+.table-dau-gia .ant-table-cell{
+  color: white;
+}
+.table-dau-gia .ant-table-cell-row-hover {
+  color: #000000 !important;
+}

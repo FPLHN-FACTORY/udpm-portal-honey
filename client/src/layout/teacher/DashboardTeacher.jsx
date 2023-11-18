@@ -9,23 +9,23 @@
   =========================================================
   * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-import logo from "../../../src/assets/images/logo/logo-udpm-3.png";
-import { useState } from "react";
+import logo from "../../assets/images/logo/logo-udpm-3.png";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Layout, Drawer, Row, Menu, Col } from "antd";
 import Header from "../../components/teacher/Header";
-import Footer from "../../components/teacher/Footer";
-import Draw from "../../components/teacher/Draw";
 import {
-  EditOutlined,
+  GiftFilled,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-
+  PlusCircleFilled,
 } from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
 const { Header: AntHeader, Content } = Layout;
 
-function DashboardAuthUser({ children }) {
+function DashboardTeacher({ children }) {
+  const location = useLocation();
+  const [selectedKey, setSelectedKey] = useState();
   const [visible, setVisible] = useState(false);
   const openDrawer = () => setVisible(!visible);
   const [count, setCount] = useState(250);
@@ -33,9 +33,10 @@ function DashboardAuthUser({ children }) {
     if (count === 70) setCount(250);
     else setCount(70);
   };
-  const [fixed, setFixed] = useState(false);
 
-  const handleFixedNavbar = (type) => setFixed(type);
+  useEffect(() => {
+    setSelectedKey(location.pathname);
+  },[location])
 
   let { pathname } = useLocation();
   pathname = pathname.replace("/", "");
@@ -49,11 +50,29 @@ function DashboardAuthUser({ children }) {
     };
   }
   const items = [
-    getItem(
-      <Link to="/user/create-article">Nothing</Link>,
-      "1",
-      <EditOutlined />
-    ),
+    getItem("Cộng mật ong", "Cộng mật ong", <PlusCircleFilled />, [
+      getItem(<Link to={"/teacher/add-point"}>Tạo yêu cầu</Link>, "/teacher/add-point"),
+      getItem(
+        <Link to={"/teacher/add-point/list-request"}>Danh sách yêu cầu</Link>,
+        "/teacher/add-point/list-request"
+      ),
+
+      getItem(
+        <Link to={"/teacher/add-point/history"}>Lịch sử yêu cầu</Link>,
+        "/teacher/add-point/history"
+      ),
+    ]),
+    getItem("Yêu cầu đổi quà", "Yêu cầu đổi quà", <GiftFilled />, [
+      getItem(
+        <Link to={"/teacher/convertion-honey"}>Danh sách yêu cầu</Link>,
+        "/teacher/convertion-honey"
+      ),
+
+      getItem(
+        <Link to={"/teacher/request-conversion/history"}>Lịch sử yêu cầu</Link>,
+        "/teacher/request-conversion/history"
+      ),
+    ]),
   ];
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
@@ -61,11 +80,12 @@ function DashboardAuthUser({ children }) {
 
   return (
     <Layout
+      id="authe"
       className={`layout-dashboard ${
         pathname === "profile" ? "layout-profile" : ""
-      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
-    >
+      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}>
       <Drawer
+        id="drawer_ui"
         title={false}
         placement={"left"}
         closable={false}
@@ -73,69 +93,119 @@ function DashboardAuthUser({ children }) {
         open={visible}
         key={"left"}
         width={250}
+        style={{ background: "#fff", overflowX: "hidden" }}
         className={`drawer-sidebar ${
           pathname === "rtl" ? "drawer-sidebar-rtl" : ""
-        } `}
-      >
+        } `}>
         <Layout
-          className={`layout-dashboard ${
+          id="layout_drawer"
+          style={{ background: "#fff", overflowX: "hidden" }}
+          className={` bg-white layout-dashboard ${
             pathname === "rtl" ? "layout-dashboard-rtl" : ""
-          }`}
-        >
-          <Draw />
-        </Layout>
-      </Drawer>
-      <Sider
-        trigger={null}
-        collapsible
-        collapsed={collapsed}
-        className={`sider-primary ant-layout-sider-primary`}
-        style={{ background: "transparent", overflowX: "hidden" }}
-      >
-        <Row className="flex justify-between pb-8">
-          {!collapsed && (
+          }`}>
+          <Row className="flex justify-center align-middle mt-5 pb-8">
             <div className="brand text-center">
               <Link to="/" className="active">
                 <img
                   src={logo}
                   style={{
-                    width: "140px",
                     height: "80px",
-                    marginLeft: "17px",
-                    marginTop: "-20px",
                   }}
                   alt="Logo"
                 />
               </Link>
             </div>
-          )}
-        </Row>
+          </Row>
+          <Menu mode="inline" items={items} onClick={openDrawer} />
+        </Layout>
+      </Drawer>
+      <div className="bg-white">
+        <Sider
+          id="sildebar_ui"
+          trigger={null}
+          collapsible
+          collapsed={collapsed}
+          width={250}
+          className={`sider-primary ant-layout-sider-primary`}
+          style={{
+            background: "#fff",
+            position: "fixed",
+            left: 0,
+            zIndex: 999,
+            height: "100%",
+          }}>
+          <Row
+            className="flex justify-center align-middle  mt-5 pb-8"
+            style={{ height: "80px" }}
+          />
 
-        <Menu mode="inline" items={items} />
-      </Sider>
-      <Layout>
-        <AntHeader className={`${fixed ? "ant-header-fixed" : ""}`}>
-          <Row className="flex justify-between">
-            <Col xs={1}>
-              <button className="buttonSlider" onClick={toggleCollapse}>
-                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              </button>
+          <Menu mode="inline" items={items}  selectedKeys={selectedKey}/>
+        </Sider>
+      </div>
+      <Layout className="pb-14">
+        <AntHeader style={{ zIndex: 1000, position: "fixed", width: "100%" }}>
+          <Row>
+            <Col span={8}>
+              <Row>
+                {!collapsed ? (
+                  <Col span={12}>
+                    <div className="brand text-center">
+                      <Link to="/" className="active">
+                        <img
+                          src={logo}
+                          style={{
+                            height: "60px",
+                          }}
+                          alt="Logo"
+                        />
+                      </Link>
+                    </div>
+                  </Col>
+                ) : (
+                  <Col span={4}></Col>
+                )}
+                <Col span={12} className="flex items-center">
+                  <button
+                    className="buttonSlider desktop"
+                    onClick={toggleCollapse}>
+                    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                  </button>
+                  <button className="buttonSlider mobile" onClick={openDrawer}>
+                    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                  </button>
+                </Col>
+              </Row>
             </Col>
-            <Col xs={23}>
-              <Header
-                onPress={openDrawer}
-                onSlidebar={onSlidebar}
-                name={pathname}
-                subName={pathname}
-                handleFixedNavbar={handleFixedNavbar}
-              />
+            <Col span={16}>
+              <Row>
+                <Col span={15}></Col>
+                <Col span={9}>
+                  <Header
+                    onPress={openDrawer}
+                    onSlidebar={onSlidebar}
+                    name={pathname}
+                    subName={pathname}
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
         </AntHeader>
-        <Content className="content-ant">{children}</Content>
-        <Footer />
+        {collapsed ? (
+          <Content
+            className="content-ant"
+            style={{ paddingLeft: "6%", marginTop: "7%" }}>
+            {children}
+          </Content>
+        ) : (
+          <Content
+            className="content-ant"
+            style={{ paddingLeft: "19%", marginTop: "9%" }}>
+            {children}
+          </Content>
+        )}
       </Layout>
     </Layout>
   );
 }
-export default DashboardAuthUser;
+export default DashboardTeacher;

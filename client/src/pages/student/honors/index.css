@@ -1,0 +1,351 @@
+@keyframes changeBackground {
+
+    0%,
+    100% {
+        background-image: url("../../../assets/images/honor/background/background1.jpg");
+    }
+
+    25% {
+        background-image: url("../../../assets/images/honor/background/background2.jpg");
+    }
+
+    50% {
+        background-image: url("../../../assets/images/honor/background/background3.png");
+    }
+
+    80% {
+        background-image: url("../../../assets/images/honor/background/background4.png");
+    }
+}
+
+.honor__student {
+    width: 100%;
+    min-height: 100%;
+    /* animation: changeBackground 100s infinite; */
+    /* background-image: url("../../../assets/images/honor/background/background1.jpg"); */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    position: relative;
+}
+
+.honor__title {
+    width: 100%;
+    font-weight: bolder;
+    text-shadow: 6px 3px 6px #222;
+    cursor: pointer;
+    -webkit-transition: color 0.2s ease-out;
+    transition: color 0.2s ease-out;
+    margin-top: 0;
+    font-weight: 500;
+    line-height: 1.2;
+    color: #ffffff;
+    font-size: 35px;
+    transition: transform 0.5s ease-in-out;
+}
+
+.honor__title:hover {
+    color: #ffac25;
+}
+
+
+.horor__table .ant-table-thead {
+    font-size: 20px;
+    font-weight: bolder;
+    color: #fff;
+    background-color: #000;
+    border-radius: 10px;
+}
+
+.horor__table .ant-table-wrapper .ant-table-thead tr th {
+    background-color: #000;
+    border-bottom: 1px solid #ffffff3d;
+    text-align: center;
+}
+
+.horor__table :where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper .ant-table-tbody>tr>td {
+    border-bottom: 1px solid #ffffff3d;
+}
+
+.horor__table :where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper .ant-table {
+    background-color: #0000004b;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.horor__table :where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper .ant-table-tbody>tr.ant-table-row:hover>td {
+    background-color: #ffffff3d;
+}
+
+.horor__table :where(.css-dev-only-do-not-override-14wwjjs).ant-pagination .ant-pagination-item-active {
+    background-color: #0000004b;
+    border-color: #ffffff3d;
+}
+
+.horor__table :where(.css-dev-only-do-not-override-14wwjjs).ant-pagination .ant-pagination-item-active a {
+    color: #ffffff;
+    text-shadow: 6px 3px 6px #222;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.horor__table :where(.css-dev-only-do-not-override-14wwjjs).ant-pagination .ant-pagination-disabled .ant-pagination-item-link {
+    color: #ffffff;
+    font-weight: bolder;
+    text-shadow: 6px 3px 6px #222;
+    font-size: 16px;
+}
+
+/* .avarta__fire {
+    width: 55px;
+    height: 55px;
+    position: relative;
+    background-image: url("../../../assets/images/honor/giphy.gif");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+} */
+
+@keyframes showTop3 {
+    0% {
+        opacity: 0.6;
+        transform: translateY(-600px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+.top__student {
+    width: 100%;
+    min-height: 100%;
+    background-image: url("https://img.freepik.com/premium-vector/golden-confetti-ribbon-falling-vector-golden-color-party-confetti-ribbon-falling-isolated-dark-background-festival-elements-vector-anniversary-birthday-celebration-element_585735-100.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.top__student__logo {
+    width: 20%;
+    height: 100%;
+}
+
+.top__student__logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.close__honor {
+    width: 140px;
+    height: 45px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: white;
+    font-weight: 700;
+}
+
+
+@keyframes borderAnimation {
+    0% {
+        border-color: transparent;
+    }
+
+    25% {
+        border-left-color: #ff9966;
+    }
+
+    50% {
+        border-top-color: #ff9966;
+    }
+
+    75% {
+        border-right-color: #ff9966;
+    }
+
+    100% {
+        border-bottom-color: #ff9966;
+    }
+}
+
+.item__top {
+    max-width: 150px;
+    height: 100%;
+    min-height:200px;
+    transform-style: preserve-3d;
+    transform: rotateY(0deg);
+    box-shadow: 0px 0px 10px 1px #000000ee;
+    border-radius: 15px;
+    transition: transform 0.2s ease;
+    box-shadow: 0 0 100px rgb(255 230 138 / 50%);
+    border: 2px solid transparent;
+    animation: borderAnimation 2s linear infinite;
+
+}
+
+.student__top1 {
+    height: 250px;
+    min-height:230px
+}
+
+@keyframes backContentImg {
+    0% {
+        transform: scale(1.3);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1.3);
+    }
+}
+
+.item__top__image img {
+    animation: backContentImg 1.3s infinite ease-in-out;
+}
+
+.camera {
+    background-image: url("../../../assets/images/honor/may-quay-phim-canon-xa45-removebg-preview.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 210px;
+    width: 210px;
+    position: absolute;
+    bottom: 10px;
+}
+
+.light__shadow {
+    width: 149px;
+    height: 149px;
+    box-shadow: 0 0 100px rgb(255 230 138 / 50%);
+    background-image: radial-gradient(circle,
+            rgba(255, 255, 255, 0.5),
+            rgb(255 230 138 / 32%),
+            rgb(255 230 138 / 10%));
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.4;
+}
+
+.camera:active .light__shadow {
+    opacity: 1;
+}
+
+.camera__right {
+    right: 10px;
+}
+
+.camera__left {
+    left: 10px;
+    transform: rotateY(180deg);
+}
+
+/* Huy update 06/11/2023 */
+
+.live-leaderboard {
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 30px;
+}
+.live-leaderboard-table-header {
+    padding: 16px 10px 10px 10px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: start;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: start;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bolder;
+    color: #fff;
+    background-color: #000;
+    border-radius: 10px;
+}
+
+.live-leaderboard-player-row {
+  padding: 8px 12px;
+  margin-top: 4px;
+  min-height: 68px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.296);
+  border-radius: 8px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: start;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-transition: all 0.14s ease-out;
+  position: relative;
+  transition: all 0.14s ease-out;
+}
+.live-leaderboard-player-row:hover {
+  background-color: #ffffff3d;
+}
+
+.avatar-fire {
+    background-image: url("../../../assets/images/honor/giphy.gif");
+}
+  
+.sub-avatar-fire {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 70px;
+    height: 70px;
+    position: relative;
+}
+.col-player-avatar {
+    position: absolute;
+    bottom: 0px;
+    left: 10px;
+}
+
+.col-player-rank-header {
+    text-align: left;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+  }
+  
+  .col-player-name-header {
+    text-align: center;
+    margin-right: auto;
+    width: 30%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+.col-player-text {
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffff;
+}

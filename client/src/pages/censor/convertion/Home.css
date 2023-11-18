@@ -1,0 +1,19 @@
+/* :where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > th,
+:where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > td {
+  background: #d8d3bd;
+} */
+.detail-button {
+  background-color: #ff6600;
+}
+.update-button {
+  background-color: #ffcc33;
+}
+.add-button {
+  background-color: #ffcc33;
+}

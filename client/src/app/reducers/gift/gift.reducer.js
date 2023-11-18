@@ -7,7 +7,7 @@ export const GiftSlice = createSlice({
   initialState,
   reducers: {
     AddGift: (state, action) => {
-      state.push(action.payload);
+      state.shift(action.payload);
       return state;
     },
     UpdateGift: (state, action) => {
@@ -38,6 +38,11 @@ export const GiftSlice = createSlice({
       state = action.payload;
       return state;
     },
+    PushGift: (state, action) => {
+      const data = action.payload;
+      state = [...data, ...state];
+      return state;
+    },
     FindByIdGift: (state, action) => {
       const index = state.findIndex((el) => el.id === action.payload.id);
       if (index > -1) {
@@ -50,6 +55,7 @@ export const GiftSlice = createSlice({
 export const GetGift = (state) => state.gift;
 export const {
   AddGift,
+  PushGift,
   UpdateGift,
   DeleteGift,
   SetGift,

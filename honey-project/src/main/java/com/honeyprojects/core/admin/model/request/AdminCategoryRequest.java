@@ -9,4 +9,9 @@ import lombok.Setter;
 public class AdminCategoryRequest extends PageableRequest {
 
     private String search;
+
+    private Integer status;
+
+    private Integer transactionRights;
+
 }

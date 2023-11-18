@@ -1,0 +1,101 @@
+.add-point .ant-btn {
+    line-height: normal;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 7%);
+}
+
+.add-point .py-25 {
+    padding: 25px 0px;
+}
+
+.add-point .mt-10 {
+    margin-top: 10px;
+}
+
+.add-point .mb-10 {
+    margin-bottom: 10px;
+}
+
+.add-point .p-0 {
+    padding: 0 !important;
+}
+
+.add-point .pl-5 {
+    padding-left: 5px;
+}
+
+.add-point .m-0 {
+    margin: 0 !important;
+}
+
+.add-point .mx-10 {
+    margin: 0px 10px;
+}
+
+.add-point .search-input {
+    min-width: 30%;
+}
+
+.add-point .search-button {
+    background-color: #EEB30D;
+    margin-bottom: 24px;
+}
+
+.add-point>.ant-card>.ant-card-body {
+    padding-bottom: 0;
+}
+
+.add-point .import-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.import-button input[type="file"] {
+    display: none;
+}
+
+.import-button input[type="file"]::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+.add-point .import-button:hover {
+    background-color: #2db34c !important;
+}
+
+.add-point .select-category .ant-segmented-item-selected {
+    background-color: #EEB30D;
+    color: rgb(255, 255, 255);
+}
+
+.add-point .select-category .ant-segmented-item {
+    transition: #EEB30D 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.add-point .select-category .ant-segmented-thumb {
+    background-color: #EEB30D;
+}
+
+.add-point .content-card .ant-card-body {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.add-point .content-card .ant-card-body {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.add-point .ant-table-thead>tr>th,
+.add-point .ant-table-thead>tr>td {
+    background-color: #EEB30D;
+    color: #fff;
+}
+
+.add-point .ant-btn svg {
+    margin: 0;
+}
