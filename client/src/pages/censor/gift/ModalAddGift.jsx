@@ -360,7 +360,9 @@ const ModalThem = (props) => {
         >
           <Radio.Group onChange={(e) => setQuantityValue(e.target.value)}>
             <Radio value={0}>Vô hạn</Radio>
-            <Radio value={1}>Giới hạn</Radio>
+            <Radio value={1} style={{ marginLeft: 95 }}>
+              Giới hạn
+            </Radio>
           </Radio.Group>
         </Form.Item>
         {form.getFieldValue("quantity") === 1 && (
@@ -517,8 +519,10 @@ const ModalThem = (props) => {
           }}
         >
           <Radio.Group>
-            <Radio value={1}>Cần phê duyệt</Radio>
             <Radio value={0}>Không phê duyệt</Radio>
+            <Radio value={1} style={{ marginLeft: 30 }}>
+              Cần phê duyệt
+            </Radio>
           </Radio.Group>
         </Form.Item>
         <Form.Item
@@ -537,7 +541,9 @@ const ModalThem = (props) => {
         >
           <Radio.Group>
             <Radio value={0}>Cho phép</Radio>
-            <Radio value={1}>Không cho phép</Radio>
+            <Radio value={1} style={{ marginLeft: 77 }}>
+              Không cho phép
+            </Radio>
           </Radio.Group>
         </Form.Item>
         <Form.Item
@@ -555,7 +561,9 @@ const ModalThem = (props) => {
         >
           <Radio.Group onChange={(e) => setLimitQuantityValue(e.target.value)}>
             <Radio value={0}>Không cho phép</Radio>
-            <Radio value={1}>Cho phép</Radio>
+            <Radio value={1} style={{ marginLeft: 37 }}>
+              Cho phép
+            </Radio>
           </Radio.Group>
         </Form.Item>
         {form.getFieldValue("limitQuantity") === 1 && (

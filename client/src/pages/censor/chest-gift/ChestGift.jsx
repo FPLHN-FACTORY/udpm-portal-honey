@@ -1,6 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { Button, Pagination, Space, Table, Card, Input, Tooltip } from "antd";
+import {
+  Button,
+  Pagination,
+  Space,
+  Table,
+  Card,
+  Input,
+  Tooltip,
+  Row,
+  Col,
+} from "antd";
 import {
   PlusOutlined,
   EditOutlined,
@@ -116,45 +126,47 @@ export default function ChestGift() {
           style={{ fontSize: "26px" }}
         />{" "}
         <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span>
-        <form class="flex items-center" onSubmit={handleSearch}>
-          <div class="relative w-full mr-6">
-            <Input
-              style={{ borderRadius: "30px", marginTop: "20px" }}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Nhập tên..."
-            />
-          </div>
-          <Space
-            style={{
-              justifyContent: "center",
-              display: "flex",
-              marginBottom: "16px",
-            }}
-          >
-            <button
-              type="button"
-              className="search-button1"
-              style={{ marginTop: "20px", backgroundColor: "#537fe7" }}
-              onClick={() => {
-                buttonClear();
+        <Row class="flex items-center" onSubmit={handleSearch}>
+          <Col xl={18}>
+            <div class="relative w-full mr-6">
+              <Input
+                style={{ borderRadius: "30px", marginTop: "20px" }}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Nhập tên..."
+              />
+            </div>
+          </Col>
+          <Col xl={6}>
+            <Space
+              style={{
+                justifyContent: "center",
+                display: "flex",
+                marginBottom: "16px",
               }}
             >
-              Làm mới
-            </button>
-            <button
-              type="button"
-              className="search-button1"
-              style={{ marginTop: "20px" }}
-              onClick={() => {
-                setCurrent(1);
-                fetchData();
-              }}
-            >
-              Tìm kiếm
-            </button>
-          </Space>
-        </form>
+              <Button
+                className="search-button1"
+                style={{ marginTop: "20px", backgroundColor: "#537fe7" }}
+                onClick={() => {
+                  buttonClear();
+                }}
+              >
+                Làm mới
+              </Button>
+              <Button
+                className="search-button1"
+                style={{ marginTop: "20px" }}
+                onClick={() => {
+                  setCurrent(1);
+                  fetchData();
+                }}
+              >
+                Tìm kiếm
+              </Button>
+            </Space>
+          </Col>
+        </Row>
       </Card>
 
       <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
@@ -177,7 +189,7 @@ export default function ChestGift() {
             <div>
               <span>
                 <Tooltip title="Tạo rương">
-                  <button
+                  <Button
                     className="add-button1"
                     onClick={() => {
                       setShowModal(true);
@@ -186,7 +198,7 @@ export default function ChestGift() {
                   >
                     <PlusOutlined className="mr-1" />
                     Tạo rương
-                  </button>
+                  </Button>
                 </Tooltip>
               </span>
             </div>

@@ -12,12 +12,12 @@ const ModalAddGiftToChest = (props) => {
   const dispatch = useAppDispatch();
   const columns = [
     {
-      title: "Code",
+      title: "Mã",
       dataIndex: "code",
       key: "code",
     },
     {
-      title: "Name",
+      title: "Tên",
       dataIndex: "name",
     },
   ];
@@ -65,11 +65,11 @@ const ModalAddGiftToChest = (props) => {
     <>
       <Tooltip title="Thêm vật phẩm">
         <Button
-          className="add-button1"
-          style={{ padding: "1px 0.7rem" }}
+          // className="add-button1"
+          style={{ backgroundColor: "green" }}
           onClick={() => handleOnclick()}
         >
-          <PlusCircleOutlined className="icon" />
+          <PlusCircleOutlined className="icon" style={{ color: "white" }} />
         </Button>
       </Tooltip>
       <Modal

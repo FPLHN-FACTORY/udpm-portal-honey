@@ -1,4 +1,4 @@
-:where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper
+/* :where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper
   .ant-table-thead
   > tr
   > th,
@@ -6,8 +6,8 @@
   .ant-table-thead
   > tr
   > td {
-  background: #ffcc00;
-}
+  background: #d8d3bd;
+} */
 .detail-button {
   background-color: #ff6600;
 }

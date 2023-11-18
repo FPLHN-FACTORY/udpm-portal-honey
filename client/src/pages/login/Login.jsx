@@ -1,7 +1,7 @@
 import "./index.css";
 export default function Login() {
   return (
-    <>
+    <div className="login__wraper">
       <a href="#" class="logo" target="_blank">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/FPT_Polytechnic.png/1200px-FPT_Polytechnic.png" alt="" />
       </a>
@@ -128,6 +128,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
