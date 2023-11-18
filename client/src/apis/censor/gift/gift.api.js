@@ -25,14 +25,13 @@ export class GiftAPI {
     formData.append("status", data.status);
     formData.append("transactionGift", data.transactionGift);
     formData.append("type", data.type);
-    if (data.fromDate !== null && data.toDate !== null) {
+    if (data.fromDate !== null) {
       formData.append("fromDate", data.fromDate);
+    }
+    if (data.toDate !== null) {
       formData.append("toDate", data.toDate);
     }
     formData.append("note", data.note);
-    if (data.semesterId !== null) {
-      formData.append("semesterId", data.semesterId);
-    }
     return request({
       method: "POST",
       url: `/${this.COMPONENT_NAME}`,
@@ -57,14 +56,13 @@ export class GiftAPI {
     formData.append("type", data.type);
     formData.append("transactionGift", data.transactionGift);
 
-    if (data.fromDate !== null && data.toDate !== null) {
+    if (data.fromDate !== null) {
       formData.append("fromDate", data.fromDate);
+    }
+    if (data.toDate !== null) {
       formData.append("toDate", data.toDate);
     }
     formData.append("note", data.note);
-    if (data.semesterId !== null) {
-      formData.append("semesterId", data.semesterId);
-    }
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/${id}`,

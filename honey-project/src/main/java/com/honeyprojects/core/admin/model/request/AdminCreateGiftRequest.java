@@ -1,18 +1,12 @@
 package com.honeyprojects.core.admin.model.request;
 
 import com.honeyprojects.core.common.base.PageableRequest;
-import com.honeyprojects.entity.Gift;
-import com.honeyprojects.infrastructure.contant.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.Base64;
-import java.util.Random;
 
 @Getter
 @Setter
@@ -43,7 +37,4 @@ public class AdminCreateGiftRequest extends PageableRequest {
 
     private Long fromDate;
 
-    private String semesterId;
-
-    private String expiry;
 }
