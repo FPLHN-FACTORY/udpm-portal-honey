@@ -123,6 +123,7 @@ const ModalDetail = (props) => {
         footer={null}
       >
         <Form
+         id="detailCategory"
           form={form}
           name="basic"
           onFinish={onFinish}
@@ -202,19 +203,17 @@ const ModalDetail = (props) => {
             }}
           >
             <Button
-              type="primary"
               onClick={handleCancel}
-              className="bg-#1d4ed8-400 text-white"
+              className="submit-button bg-black text-white"
             >
               Đóng
             </Button>
-            <button
-              style={{ width: "60px", height: "38px", marginLeft: "20px" }}
+            <Button
               htmlType="submit"
-              className="submit-button ml-2"
+              className="submit-button ml-2 bg-black text-white"
             >
               OK
-            </button>
+            </Button>
           </Form.Item>
         </Form>
       </Modal>

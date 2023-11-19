@@ -269,12 +269,12 @@ export default function RequestConversionHistory() {
   ];
   return (
     <>
-      <Card className="mb-2 py-1">
+      <Card className="mb-2">
         <Form onFinish={onFinishSearch}>
           <Space size={"large"}>
             <Form.Item name="userName" className="search-input">
               <Input
-                style={{ width: "300px" }}
+                style={{ width: "500px" }}
                 name="userName"
                 size="small"
                 placeholder="Nhập user name sinh viên cần tìm"
@@ -283,7 +283,7 @@ export default function RequestConversionHistory() {
             </Form.Item>
             <Form.Item name={"idCategory"}>
               <Select
-                style={{ width: "150px" }}
+                style={{ width: "450px" }}
                 size="large"
                 placeholder="Loại điểm"
                 options={[
@@ -298,7 +298,7 @@ export default function RequestConversionHistory() {
               htmlType="submit"
               type="primary"
               className="mr-10 search-button"
-              style={{ marginBottom: "25px" }}
+              style={{ marginBottom: "25px", backgroundColor: '#EEB30D' }}
             >
               Lọc
             </Button>
