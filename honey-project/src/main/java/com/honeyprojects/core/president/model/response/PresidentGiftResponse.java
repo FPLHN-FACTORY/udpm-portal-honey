@@ -10,4 +10,7 @@ public interface PresidentGiftResponse extends IsIdentified {
 
     @Value("#{target.name}")
     String getName();
+
+    @Value("#{target.status}")
+    String getStatus();
 }

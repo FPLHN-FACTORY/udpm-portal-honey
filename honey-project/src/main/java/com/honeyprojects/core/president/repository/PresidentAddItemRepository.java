@@ -17,16 +17,16 @@ import java.util.Set;
 @Repository
 public interface PresidentAddItemRepository extends HoneyRepository {
     @Query(value = """
-            SELECT  c.id, c.name 
+            SELECT  c.id, c.name, c.status
             FROM category c
-            where c.name in (:names)
+            WHERE c.name IN (:names) AND c.category_status <> 0
             """, nativeQuery = true)
     List<PresidentCategoryResponse> getCategoriesByNames(Set<String> names);
 
     @Query(value = """
-            SELECT g.id, g.name
-            from gift g
-            where g.name in (:names)  and g.status in (0, 1)
+            SELECT g.id, g.name, g.status
+            FROM gift g
+            WHERE g.name IN (:names) AND g.status <> 2
             """, nativeQuery = true)
     List<PresidentGiftResponse> getGiftsByNames(Set<String> names);
 

@@ -48,7 +48,7 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
 
     @Override
     public List<AdminCategoryResponse> getCategory() {
-        return categoryRepository.getAllListCategory();
+        return categoryRepository.getAllCategory();
     }
 
     @Override

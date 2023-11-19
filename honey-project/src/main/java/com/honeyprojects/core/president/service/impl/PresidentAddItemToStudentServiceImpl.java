@@ -18,10 +18,13 @@ import com.honeyprojects.infrastructure.contant.Constants;
 import com.honeyprojects.infrastructure.contant.NotificationDetailType;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
+import com.honeyprojects.infrastructure.contant.StatusGift;
+import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import com.honeyprojects.util.DataUtils;
 import com.honeyprojects.util.DateUtils;
 import com.honeyprojects.util.ExcelUtils;
+import com.honeyprojects.util.LoggerUtil;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -57,14 +60,16 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
     private PresidentAddItemRepository presidentAddItemRepository;
 
     @Autowired
-    private PresidentGiftRepository presidentGiftRepository;
-
-    @Autowired
     private PresidentNotificationRepository presidentNotificationRepository;
 
     @Autowired
     private StudentNotificationDetailRepository studentNotificationDetailRepository;
 
+    @Autowired
+    private LoggerUtil loggerUtil;
+
+    @Autowired
+    private RabbitProducer producer;
 
     @Override
     public Boolean exportExcel() {
@@ -354,6 +359,7 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
     }
 
     private void saveImportData(List<PresidentAddItemDTO> lstImportUser) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
         for (PresidentAddItemDTO userDTO : lstImportUser) {
             // Duyệt qua danh sách đối tượng AdminAddItemDTO đã được kiểm tra lỗi
             if (userDTO.isError()) {
@@ -385,7 +391,11 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
 
                 for (PresidentGiftResponse gift : gifts) {
                     String nameItem = gift.getName();
-                    createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
+                    if (gift.getStatus().equals(StatusGift.FREE)) {
+                        stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được chủ tịch câu lạc bộ tặng: " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
+                        createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
+
+                    }
                 }
             }
 

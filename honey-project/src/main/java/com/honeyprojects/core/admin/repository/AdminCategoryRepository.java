@@ -14,54 +14,54 @@ import java.util.List;
 
 @Repository
 public interface AdminCategoryRepository extends CategoryRepository {
-    @Query(value = """
-            SELECT c.id, c.name, c.code, c.last_modified_date FROM category c JOIN articles a on c.id = a.category_id
-            WHERE a.category_status = 0
-            GROUP BY c.id, c.name, c.code, c.last_modified_date
-            ORDER BY c.last_modified_date DESC
-            """, nativeQuery = true)
-    List<AdminCategoryResponse> getAllCategory();
 
     @Query(value = """
-            SELECT ROW_NUMBER() OVER(ORDER BY ca.created_date DESC) AS stt, ca.id, ca.code, ca.name, ca.last_modified_date,ca.image,
+            SELECT ROW_NUMBER() OVER(ORDER BY ca.created_date DESC) AS stt,
+             ca.id, ca.code, ca.name,ca.image,
                 ca.category_status, ca.transaction_rights 
                 FROM category ca
-                    WHERE ( ( :#{#request.search} IS NULL
-                              OR :#{#request.search} LIKE '' 
-                             OR ca.code LIKE %:#{#request.search}% )
-                    OR ( :#{#request.search} IS NULL
-                            OR :#{#request.search} LIKE '' 
-                            OR ca.name LIKE %:#{#request.search}% ) ) 
-                    AND ( :#{#request.status} IS NULL
-                        OR :#{#request.status} LIKE ''
-                        OR  ca.category_status LIKE %:#{#request.status}%
-                        )
-                    AND ( :#{#request.transactionRights} IS NULL
-                        OR :#{#request.transactionRights} LIKE ''
-                        OR  ca.transaction_rights LIKE %:#{#request.transactionRights}%
-                        )
-                        AND
-                            ca.category_status <> 0
-                    """, countQuery = """
-            SELECT ROW_NUMBER() OVER(ORDER BY ca.created_date DESC) AS stt, ca.id, ca.code, ca.name, ca.last_modified_date,ca.image,
-                ca.category_status, ca.transaction_rights 
+                WHERE  
+        
+                    (:#{#request.search} IS NULL OR :#{#request.search} LIKE '' 
+                    OR ca.code LIKE CONCAT('%',:#{#request.search},'%') OR  
+                     ca.name LIKE CONCAT('%',:#{#request.search},'%')) 
+                AND 
+                (
+                    :#{#request.status} IS NULL OR 
+                    ca.category_status = :#{#request.status}
+                )
+                AND 
+                (
+                    :#{#request.transactionRights} IS NULL OR 
+                    ca.transaction_rights = :#{#request.transactionRights}
+                )
+                AND 
+                ca.category_status <> 0
+                    """,
+            countQuery = """
+            SELECT count(ca.id)
                 FROM category ca
-                    WHERE  ( ( :#{#request.search} IS NULL
-                              OR :#{#request.search} LIKE '' 
-                             OR ca.code LIKE %:#{#request.search}% )
-                    OR ( :#{#request.search} IS NULL
-                            OR :#{#request.search} LIKE '' 
-                            OR ca.name LIKE %:#{#request.search}% ) ) 
-                    AND ( :#{#request.status} IS NULL
-                        OR  ca.category_status = :#{#request.status}
-                        )
-                    AND ( :#{#request.transactionRights} IS NULL
-                        OR  ca.transaction_rights = :#{#request.transactionRights}
-                        )
-                    AND
-                        ca.category_status <> 0
-                    """, nativeQuery = true)
+            WHERE  
+        
+                    (:#{#request.search} IS NULL OR :#{#request.search} LIKE '' 
+                    OR ca.code LIKE CONCAT('%',:#{#request.search},'%') OR  
+                     ca.name LIKE CONCAT('%',:#{#request.search},'%')) 
+                AND 
+                (
+                    :#{#request.status} IS NULL OR 
+                    ca.category_status = :#{#request.status}
+                )
+                AND 
+                (
+                    :#{#request.transactionRights} IS NULL OR 
+                    ca.transaction_rights = :#{#request.transactionRights}
+                )
+                AND 
+                ca.category_status <> 0
+        """,
+            nativeQuery = true)
     Page<AdminCategoryResponse> getAllCategoryByAdmin(Pageable pageable, @Param("request") AdminCategoryRequest request);
+
 
     @Query(value = """
             SELECT c.id, c.name, c.code, c.last_modified_date ,c.category_status ,c.image, c.transaction_rights  
@@ -69,7 +69,7 @@ public interface AdminCategoryRepository extends CategoryRepository {
             WHERE c.category_status <> 0
             ORDER BY c.last_modified_date DESC
             """, nativeQuery = true)
-    List<AdminCategoryResponse> getAllListCategory();
+    List<AdminCategoryResponse> getAllCategory();
 
     @Query(value = """
             SELECT c.id, c.name

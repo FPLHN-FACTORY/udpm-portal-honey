@@ -7,13 +7,12 @@ import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
 import com.honeyprojects.core.admin.model.response.CensorGiftSelectResponse;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Gift;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-public interface  AdminGiftService {
+public interface AdminGiftService {
 
     PageableObject<AdminGiftResponse> getAllCategoryByAdmin(AdminGiftRequest request);
 
@@ -21,7 +20,7 @@ public interface  AdminGiftService {
 
     Gift addGift(AdminCreateGiftRequest request) throws IOException;
 
-    Gift updateGift(AdminUpdateGiftRequest request,String id) throws IOException;
+    Gift updateGift(AdminUpdateGiftRequest request, String id) throws IOException;
 
     Gift getOne(String id);
 
