@@ -1,9 +1,11 @@
 import {
   Button,
   Card,
+  Col,
   Form,
   Input,
   Pagination,
+  Row,
   Select,
   Space,
   Spin,
@@ -214,39 +216,44 @@ export default function RequestAddPoint() {
       <div className="request-manager">
         <Card className="mb-2 py-1">
           <Form onFinish={onFinishSearch}>
-            <Space size={"large"}>
-              <Form.Item name="userName" className="search-input">
-                <Input
-                  style={{ width: "300px" }}
-                  name="userName"
-                  size="small"
-                  placeholder="Nhập user name sinh viên cần tìm"
-                  prefix={<SearchOutlined />}
-                />
-              </Form.Item>
-              <Form.Item name={"idCategory"}>
-                <Select
-                  style={{ width: "150px" }}
-                  size="large"
-                  placeholder="Loại điểm"
-                  options={[
-                    { value: null, label: "Tất cả" },
-                    ...listCategory.map((category) => {
-                      return {
-                        value: category.id,
-                        label: category.name,
-                      };
-                    }),
-                  ]}
-                />
-              </Form.Item>
-              <Button
-                htmlType="submit"
-                type="primary"
-                className="mr-10 search-button">
-                Lọc
-              </Button>
-            </Space>
+            <Row>
+              <Col xl={12}>
+                <Form.Item name="userName" className="search-input">
+                  <Input
+                    style={{ width: "450px" }}
+                    name="userName"
+                    size="small"
+                    placeholder="Nhập user name sinh viên cần tìm"
+                    prefix={<SearchOutlined />}
+                  />
+                </Form.Item>
+              </Col>
+              <Col xl={12} className="flex">
+                <Form.Item name={"idCategory"}>
+                  <Select
+                    style={{ width: "410px" }}
+                    size="large"
+                    placeholder="Loại điểm"
+                    options={[
+                      { value: null, label: "Tất cả" },
+                      ...listCategory.map((category) => {
+                        return {
+                          value: category.id,
+                          label: category.name,
+                        };
+                      }),
+                    ]}
+                  />
+                </Form.Item>
+                <Button
+                  htmlType="submit"
+                  type="primary"
+                  className="ml-3 search-button"
+                >
+                  Lọc
+                </Button>
+              </Col>
+            </Row>
           </Form>
         </Card>
         <Card title="Yêu cầu cộng điểm">

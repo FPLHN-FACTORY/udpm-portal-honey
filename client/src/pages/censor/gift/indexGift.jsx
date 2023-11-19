@@ -251,7 +251,7 @@ export default function IndexGift() {
       >
         Bạn có chắc chắn muốn xóa vật phẩm này?
       </Modal>
-      <Card style={{ borderTop: "5px solid #FFCC00" }}>
+      <Card style={{ borderTop: "5px solid #FFCC00", marginBottom: 30 }}>
         <div className="filter__auction">
           <FontAwesomeIcon
             icon={faFilter}
@@ -259,7 +259,7 @@ export default function IndexGift() {
             style={{ fontSize: "26px" }}
           />{" "}
           <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span>
-          <Row gutter={30} style={{ marginBottom: "15px", paddingTop: "20px" }}>
+          <Row gutter={24} style={{ marginBottom: "15px", paddingTop: "20px" }}>
             <Col span={12}>
               <span>Tên hoặc mã gift:</span>{" "}
               <Input

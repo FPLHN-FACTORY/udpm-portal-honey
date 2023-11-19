@@ -334,60 +334,64 @@ export default function RandomAddPoint() {
       label: "Tặng ngẫu nhiên mật ong",
       children: (
         <div>
-          <Space
+          <Row
             style={{
               justifyContent: "space-between",
               display: "flex",
-              marginBottom: "16px",
+              marginBottom: 25,
             }}
           >
-            <span style={{ fontSize: "18px" }}>
-              <b>Tặng ngẫu nhiên mật ong</b>
-            </span>
-            <Space
-              style={{
-                justifyContent: "space-between",
-                display: "flex",
-              }}
-            >
-              <Button
-                className="button-css"
-                htmlFor="file-input"
+            <Col gutter={15}>
+              <span style={{ fontSize: "18px" }}>
+                <b>Tặng ngẫu nhiên mật ong</b>
+              </span>
+            </Col>
+            <Col gutter={8} className="-mr-4">
+              <Space
                 style={{
-                  display: "inline-block",
-                  padding: "10px",
-                  zIndex: 2,
+                  justifyContent: "space-between",
+                  display: "flex",
                 }}
-                onClick={() => setOpen(true)}
               >
-                <VerticalAlignBottomOutlined />
-                Import Excel
-              </Button>
-              {open && (
-                <ModalImportExcel
-                  open={open}
-                  setOpen={setOpen}
-                  setLoading={setLoading}
-                  dataRandomPoint={dataRandomPoint}
-                  dataRandomItem={dataRandomItem}
-                  setListStudentPoint={setDataRandomPoint}
-                  setListStudentItem={setDataRandomItem}
-                  nameFile={nameFile}
-                  setNameFile={setNameFile}
-                  setDataPreview={setDataPreview}
-                />
-              )}
-              <Button
-                className="button-css"
-                disabled={dataPreview.totalError > 0 ? true : false}
-                onClick={() => handleCreateRandomPoint(dataRandomPoint)}
-              >
-                <CheckCircleOutlined />
-                Xác nhận
-              </Button>
-            </Space>
-          </Space>
-          <Row gutter={16}>
+                <Button
+                  className="button-css"
+                  htmlFor="file-input"
+                  style={{
+                    display: "inline-block",
+                    padding: "10px",
+                    zIndex: 2,
+                  }}
+                  onClick={() => setOpen(true)}
+                >
+                  <VerticalAlignBottomOutlined />
+                  Import Excel
+                </Button>
+                {open && (
+                  <ModalImportExcel
+                    open={open}
+                    setOpen={setOpen}
+                    setLoading={setLoading}
+                    dataRandomPoint={dataRandomPoint}
+                    dataRandomItem={dataRandomItem}
+                    setListStudentPoint={setDataRandomPoint}
+                    setListStudentItem={setDataRandomItem}
+                    nameFile={nameFile}
+                    setNameFile={setNameFile}
+                    setDataPreview={setDataPreview}
+                  />
+                )}
+                <Button
+                  className="button-css"
+                  disabled={dataPreview.totalError > 0 ? true : false}
+                  onClick={() => handleCreateRandomPoint(dataRandomPoint)}
+                >
+                  <CheckCircleOutlined />
+                  Xác nhận
+                </Button>
+              </Space>
+            </Col>
+          </Row>
+          <Row gutter={15}>
             <Col span={6}>
               <Card
                 title="Loại mật ong"
