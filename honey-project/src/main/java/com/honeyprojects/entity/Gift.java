@@ -2,12 +2,14 @@ package com.honeyprojects.entity;
 
 import com.honeyprojects.entity.base.PrimaryEntity;
 import com.honeyprojects.infrastructure.contant.EntityProperties;
+import com.honeyprojects.infrastructure.contant.ExpiryGift;
 import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TransactionGift;
 import com.honeyprojects.infrastructure.contant.TypeGift;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +34,9 @@ public class Gift extends PrimaryEntity {
 
     private TypeGift type;
 
+    @Enumerated(EnumType.STRING)
+    private ExpiryGift expiry;
+
     private TransactionGift transactionGift;
 
     private Integer quantity;
@@ -43,9 +48,6 @@ public class Gift extends PrimaryEntity {
     private String note;
 
     private Integer limitQuantity;
-
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String semesterId;
 
     private String image;
 

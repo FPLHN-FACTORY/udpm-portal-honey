@@ -27,10 +27,8 @@ const ModalDetailGift = (props) => {
   const [isLimitedQuantity2, setIsLimitedQuantity2] = useState(true);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
   const [listCategory, setListCategory] = useState([]);
-  const [timeType, setTimeType] = useState(null);
   const [errorImage, setErrorImage] = useState("");
   let [selectType, setSelectType] = useState();
-
   const [categoryQuantities, setCategoryQuantities] = useState({});
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [fieldErrors, setFieldErrors] = useState({});
@@ -49,9 +47,6 @@ const ModalDetailGift = (props) => {
     if (gift.image) {
       setSelectedImageUrl(gift.image);
     }
-    const timeType = gift.fromDate && gift.toDate ? "thời hạn" : "vĩnh viễn";
-
-    setTimeType(timeType);
 
     fetchCategory();
     if (gift && gift.quantity !== null) {
@@ -110,7 +105,6 @@ const ModalDetailGift = (props) => {
 
     setCategoryQuantities(newCategoryQuantities);
 
-    // Perform custom validation here
     const error = validateCategories(selectedValues);
     setFieldErrors({ ...fieldErrors, selectedCategories: error });
   };
@@ -129,40 +123,32 @@ const ModalDetailGift = (props) => {
     var selectedFile = event.target.files[0];
     if (selectedFile) {
       var FileUploadName = selectedFile.name;
-      if (FileUploadName == "") {
+      if (FileUploadName === "") {
         setErrorImage("Bạn chưa chọn ảnh");
         setSelectedImageUrl("");
         setImage([]);
       } else {
-        const fileSize = selectedFile.size;
-        const checkFileSize = Math.round(fileSize / 1024 / 1024);
-        if (checkFileSize > 1) {
-          setErrorImage("Ảnh không thể lớn hơn 1 MB");
+        var Extension = FileUploadName.substring(
+          FileUploadName.lastIndexOf(".") + 1
+        ).toLowerCase();
+        if (
+          Extension === "gif" ||
+          Extension === "png" ||
+          Extension === "bmp" ||
+          Extension === "jpeg" ||
+          Extension === "jpg" ||
+          Extension === "webp"
+        ) {
+          setImage(selectedFile);
+          var imageUrl = URL.createObjectURL(selectedFile);
+          setSelectedImageUrl(imageUrl);
+          setErrorImage("");
+        } else {
+          setErrorImage(
+            "Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. "
+          );
           setSelectedImageUrl("");
           setImage([]);
-        } else {
-          var Extension = FileUploadName.substring(
-            FileUploadName.lastIndexOf(".") + 1
-          ).toLowerCase();
-          if (
-            Extension == "gif" ||
-            Extension == "png" ||
-            Extension == "bmp" ||
-            Extension == "jpeg" ||
-            Extension == "jpg" ||
-            Extension == "webp"
-          ) {
-            setImage(selectedFile);
-            var imageUrl = URL.createObjectURL(selectedFile);
-            setSelectedImageUrl(imageUrl);
-            setErrorImage("");
-          } else {
-            setErrorImage(
-              "Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. "
-            );
-            setSelectedImageUrl("");
-            setImage([]);
-          }
         }
       }
     }
@@ -193,6 +179,8 @@ const ModalDetailGift = (props) => {
 
   const validateStartDate = (rule, value) => {
     const endDate = form.getFieldValue("end");
+    const startDateValue = value === "" ? null : value;
+    form.setFieldsValue({ start: startDateValue });
     if (value && endDate && new Date(value) >= new Date(endDate)) {
       return Promise.reject("Thời gian bắt đầu phải trước thời gian kết thúc.");
     }
@@ -201,6 +189,8 @@ const ModalDetailGift = (props) => {
 
   const validateEndDate = (rule, value) => {
     const startDate = form.getFieldValue("start");
+    const endDateValue = value === "" ? null : value;
+    form.setFieldsValue({ end: endDateValue });
     if (value && startDate && new Date(value) <= new Date(startDate)) {
       return Promise.reject("Thời gian kết thúc phải sau thời gian bắt đầu.");
     }
@@ -213,6 +203,7 @@ const ModalDetailGift = (props) => {
       .then((formValues) => {
         let quantity;
         if (selectedImageUrl.length === 0) {
+          message.error("Không được để trống hình ảnh.");
           return;
         }
         if (isLimitedQuantity) {
@@ -231,17 +222,6 @@ const ModalDetailGift = (props) => {
             formValues.limitQuantity !== undefined
               ? parseInt(formValues.limitQuantity)
               : null;
-        }
-
-        let updatedFromDate = null;
-        let updatedToDate = null;
-
-        if (formValues.timeType === "vĩnh viễn") {
-          updatedFromDate = null;
-          updatedToDate = null;
-        } else if (formValues.timeType === "thời hạn") {
-          updatedFromDate = new Date(formValues.start).getTime();
-          updatedToDate = new Date(formValues.end).getTime();
         }
         const newFieldErrors = {};
 
@@ -275,14 +255,22 @@ const ModalDetailGift = (props) => {
             image: image,
             id: gift ? gift.id : null,
             status: formValues.status,
-            quantity: quantity,
-            limitQuantity: limitSL,
+            quantity: isNaN(quantity) ? null : quantity,
+            limitQuantity: isNaN(limitSL) ? null : limitSL,
             type: formValues.type,
             honey: formValues.honey,
             honeyCategoryId: formValues.honeyCategoryId,
             note: formValues.note,
-            fromDate: updatedFromDate,
-            toDate: updatedToDate,
+            fromDate:
+              isNaN(Date.parse(new Date(formValues.start))) ||
+              formValues.start == null
+                ? null
+                : Date.parse(new Date(formValues.start)),
+            toDate:
+              isNaN(Date.parse(new Date(formValues.end))) ||
+              formValues.end == null
+                ? null
+                : Date.parse(new Date(formValues.end)),
           },
           gift ? gift.id : null
         )
@@ -357,7 +345,7 @@ const ModalDetailGift = (props) => {
   const formattedToDate = moment(toDate).format("YYYY-MM-DD");
 
   const initialValues = {
-    image: gift && gift.image !== null ? gift.image : null,
+    image: gift && gift.image !== null && gift.image !== "" ? gift.image : null,
     quantity: gift && gift.quantity !== null ? gift.quantity : null,
     quantityLimit: gift && gift.quantity !== null ? gift.quantity : null,
     limitQuantity:
@@ -371,8 +359,8 @@ const ModalDetailGift = (props) => {
     transactionGift: gift && gift.transactionGift ? gift.transactionGift : 0,
     note: gift && gift.note ? gift.note : "",
     timeType: gift.fromDate && gift.toDate ? "thời hạn" : "vĩnh viễn",
-    start: formattedFromDate,
-    end: formattedToDate,
+    start: gift.fromDate != null ? formattedFromDate : null,
+    end: gift.toDate != null ? formattedToDate : null,
   };
 
   return (
@@ -548,59 +536,31 @@ const ModalDetailGift = (props) => {
           }
           return null;
         })}
-        <Form.Item
-          label="Thời gian"
-          name="timeType"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng chọn thời gian",
-            },
-          ]}
-        >
-          <Radio.Group
-            value={timeType}
-            onChange={(e) => setTimeType(e.target.value)}
+        <>
+          <Form.Item
+            label="Thời gian bắt đầu"
+            name="start"
+            rules={[
+              {
+                validator: validateStartDate,
+              },
+            ]}
           >
-            <Radio value="vĩnh viễn">Vĩnh viễn</Radio>
-            <Radio value="thời hạn">Thời hạn</Radio>
-          </Radio.Group>
-        </Form.Item>
-        {timeType === "thời hạn" && (
-          <>
-            <Form.Item
-              label="Thời gian bắt đầu"
-              name="start"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng chọn thời gian bắt đầu",
-                },
-                {
-                  validator: validateStartDate,
-                },
-              ]}
-            >
-              <Input type="date" />
-            </Form.Item>
+            <Input type="date" />
+          </Form.Item>
 
-            <Form.Item
-              label="Thời gian kết thúc"
-              name="end"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng chọn thời gian kết thúc",
-                },
-                {
-                  validator: validateEndDate,
-                },
-              ]}
-            >
-              <Input type="date" />
-            </Form.Item>
-          </>
-        )}
+          <Form.Item
+            label="Thời gian kết thúc"
+            name="end"
+            rules={[
+              {
+                validator: validateEndDate,
+              },
+            ]}
+          >
+            <Input type="date" />
+          </Form.Item>
+        </>
 
         <Form.Item
           label="Phê duyệt"
