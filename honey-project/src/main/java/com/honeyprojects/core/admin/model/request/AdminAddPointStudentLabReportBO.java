@@ -8,7 +8,8 @@ import java.util.List;
 
 @Getter
 @Setter
-public class AdminAddPointStudentBO extends PageableRequest {
+public class AdminAddPointStudentLabReportBO extends PageableRequest {
     private String code;
-    private List<AdminAddPointStudentRequest> requests;
+    private List<AdminAddPointStudentLabReportRequest> listStudent;
+    private String categoryId;
 }

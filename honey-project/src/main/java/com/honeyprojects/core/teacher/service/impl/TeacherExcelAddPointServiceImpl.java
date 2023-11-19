@@ -18,6 +18,7 @@ import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import com.honeyprojects.util.DataUtils;
+import com.honeyprojects.util.DateUtils;
 import com.honeyprojects.util.ExcelUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -104,7 +105,9 @@ public class TeacherExcelAddPointServiceImpl implements TeacherExcelAddPointServ
                 getPointRequest.setStudentId(simpleResponse.getId());
                 getPointRequest.setCategoryId(category.getId());
                 Long dateNow = Calendar.getInstance().getTimeInMillis();
-                TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest, dateNow);
+
+
+                TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
 
                 History history = new History();
                 history.setStatus(HoneyStatus.CHO_PHE_DUYET);
@@ -138,16 +141,8 @@ public class TeacherExcelAddPointServiceImpl implements TeacherExcelAddPointServ
     @Override
     public Boolean exportExcel() {
         String userHome = System.getProperty("user.home");
-        String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_add_point.xlsx";
+        String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_add_point" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
 
-        File outputFile = new File(outputPath);
-
-        int count = 1;
-        while (outputFile.exists()) {
-            outputPath = userHome + File.separator + "Downloads" + File.separator + "file_add_point" + "(" + count + ")" + ".xlsx";
-            outputFile = new File(outputPath);
-            count++;
-        }
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Trang 1");
 
@@ -279,8 +274,7 @@ public class TeacherExcelAddPointServiceImpl implements TeacherExcelAddPointServ
                     getPointRequest.setStudentId(response.getStudentId());
                     getPointRequest.setCategoryId(response.getCategoryId());
                     Long dateNow = Calendar.getInstance().getTimeInMillis();
-                    TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest, dateNow);
-                    //     System.out.println(teacherPointResponse.getPoint());
+                    TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
 
                     History history = new History();
                     history.setStatus(HoneyStatus.CHO_PHE_DUYET);

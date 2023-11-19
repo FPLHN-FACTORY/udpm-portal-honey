@@ -106,8 +106,6 @@ const UpgrateHoneyIndex = memo(() => {
       });
   };
 
-  console.log(gifts);
-
   const handleClickIdUR = (id) => {
     fechCondition(id);
     setIdUpgrade(id);

@@ -8,21 +8,9 @@ import { StarTwoTone } from "@ant-design/icons";
 
 function ImageRenderer({ image }) {
   if (image) {
-    // Chuyển đổi chuỗi byte thành mảng byte
-    const byteArray = image.split(",").map(Number);
-
-    // Tạo một Uint8Array từ mảng byte
-    const uint8Array = new Uint8Array(byteArray);
-
-    // Chuyển đổi Uint8Array thành Blob
-    const blob = new Blob([uint8Array], { type: "image/jpeg" });
-
-    // Tạo URL dữ liệu từ Blob
-    const imageUrl = URL.createObjectURL(blob);
-
     return (
       <img
-        src={imageUrl}
+        src={image}
         style={{ width: "100px", height: "100px" }}
         alt="Hình ảnh"
       />
@@ -93,7 +81,7 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
       (selectedConversion.honey ? selectedConversion.honey * quantity : 0) >
       fillPoint.point
     ) {
-      message.error("Bạn không đủ điểm để đổi quà trong ranh này.");
+      message.error("Số lượng mật ong không đủ!");
       return;
     }
     if (selectedConversion.quantity != null) {

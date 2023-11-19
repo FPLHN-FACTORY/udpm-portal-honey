@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row, Spin, Tabs, Tooltip } from "antd";
+import { Col, Row, Tabs, Tooltip } from "antd";
 import "./studentChest.css";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -24,7 +24,6 @@ import {
 } from "../../../app/reducers/archive-gift/archive-count-gift.reducer";
 const StudentChest = () => {
   const [filter, setFilter] = useState({ type: 0 });
-  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const dataGift = useAppSelector(GetGiftArchive);
   const dataChest = useAppSelector(GetArchiveChest);
@@ -76,26 +75,20 @@ const StudentChest = () => {
   ];
 
   const fetchGift = () => {
-    setLoading(true);
     ArchiveAPI.getGift(filter).then((response) => {
       dispatch(SetGiftArchive(response.data.data));
-      setLoading(false);
     });
   };
 
   const fetchArchive = () => {
-    setLoading(true);
     ArchiveAPI.getArchive(filter).then((response) => {
       dispatch(SetArchiveGift(response.data.data));
-      setLoading(false);
     });
   };
 
   const fetchChest = () => {
-    setLoading(true);
     ArchiveAPI.getChest(filter).then((response) => {
       dispatch(SetArchiveChest(response.data.data));
-      setLoading(false);
     });
   };
 
@@ -132,7 +125,6 @@ const StudentChest = () => {
 
   return (
     <section className="student__chest">
-      <Spin spinning={loading}></Spin>
       <div className="chest__menu">
         <div className="chest__menu__logo">
           <ShoppingOutlined className="icon__store" />

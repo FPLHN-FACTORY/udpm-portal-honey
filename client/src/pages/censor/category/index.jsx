@@ -143,7 +143,6 @@ export default function Index() {
       key: "categoryStatus",
       align: "center",
       render: (text) => {
-        console.log(text);
         if (text === "2") {
           return (
             <span style={{ color: "green" }}>
@@ -260,7 +259,6 @@ export default function Index() {
                 value={status}
                 onChange={(value) => {
                   setStatus(value);
-                  console.log(value);
                 }}
                 style={{
                   width: "100%",

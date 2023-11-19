@@ -26,16 +26,11 @@ const ItemsChest = memo(() => {
   }, []);
 
   function ImageRenderer({ image, quantity }) {
-    const byteArray = image ? image.split(",").map(Number) : [];
-    const base64ImageData = btoa(
-      String.fromCharCode.apply(null, new Uint8Array(byteArray))
-    );
-    const imageUrl = `data:image/jpeg;base64,${base64ImageData}`;
 
     return (
       <div style={{ position: "relative" }}>
         <img
-          src={imageUrl}
+          src={image}
           style={{ width: "100%", height: "100%" }}
           alt="Hình ảnh"
         />

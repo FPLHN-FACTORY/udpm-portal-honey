@@ -30,16 +30,17 @@ public interface TeacherUseGiftRequestRepository extends HistoryRepository {
             """, nativeQuery = true)
     Page<TeacherUseGiftRequestResponse> getTeacherUseGiftRequest(TeacherGetUseGiftRequest request, Pageable pageable);
 
-    @Query("""
-    select h.className from History h
-    where h.status = :status and h.type = :type
-    group by h.className
-    """)
+    @Query(value = """
+            select h.className from history h
+            where h.status = :status and h.type = :type
+            group by h.className
+            """, nativeQuery = true)
     List<String> filterClass(HoneyStatus status, TypeHistory type);
-    @Query("""
-    select h.giftId from History h
-    where h.status = :status and h.type = :type
-    group by h.giftId
-    """)
+
+    @Query(value = """
+            select h.giftId from history h
+            where h.status = :status and h.type = :type
+            group by h.giftId
+            """, nativeQuery = true)
     List<String> filterGift(HoneyStatus status, TypeHistory type);
 }

@@ -27,7 +27,6 @@ const UsingGift = (props) => {
   };
 
   const handleOk = () => {
-    setLoading(true);
     form
       .validateFields()
       .then((values) => {
@@ -51,9 +50,7 @@ const UsingGift = (props) => {
           });
       })
       .catch((errorInfo) => {
-        console.log("Validation failed:", errorInfo);
       });
-    setLoading(false);
   };
 
   const handleCancel = () => {
@@ -63,7 +60,6 @@ const UsingGift = (props) => {
 
   const [soLuong, setSoLuong] = useState(1);
 
-  const [loading, setLoading] = useState(false);
   return (
     <div>
       <div onClick={showModal}>Sử dụng</div>
@@ -72,7 +68,7 @@ const UsingGift = (props) => {
         visible={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        okButtonProps={{ loading: loading }}>
+      >
         <Form form={form}>
           <b>
             <span style={{ color: "red" }}>* </span> Số lượng
@@ -94,7 +90,8 @@ const UsingGift = (props) => {
                 required: true,
                 message: "Vui lòng nhập mã môn học!",
               },
-            ]}>
+            ]}
+          >
             <Input />
           </Form.Item>
           <b>
@@ -107,7 +104,8 @@ const UsingGift = (props) => {
                 required: true,
                 message: "Vui lòng nhập mã lớp!",
               },
-            ]}>
+            ]}
+          >
             <Input />
           </Form.Item>
           <b>
@@ -124,7 +122,8 @@ const UsingGift = (props) => {
                 type: "email",
                 message: "Email không hợp lệ!",
               },
-            ]}>
+            ]}
+          >
             <Input />
           </Form.Item>
         </Form>

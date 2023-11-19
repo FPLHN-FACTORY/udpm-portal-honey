@@ -18,12 +18,9 @@ const ModalAddGift = (props) => {
     form
       .validateFields()
       .then((formValues) => {
-        console.log(formValues);
         if (gift === null) {
-          console.log(formValues);
           GiftAPI.create(formValues)
             .then((result) => {
-              console.log(result);
               dispatch(AddGift(result.data.data));
               message.success("Thành công!");
               setModalOpen(false);
@@ -38,7 +35,6 @@ const ModalAddGift = (props) => {
               message.error("Lỗi: " + err.message);
             });
         } else {
-          console.log(gift.id);
           GiftAPI.update(formValues, gift.id)
             .then((response) => {
               dispatch(UpdateGift(response.data.data));

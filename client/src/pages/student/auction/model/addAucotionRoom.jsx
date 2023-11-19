@@ -99,7 +99,7 @@ export default function ModalAddAuction({
         message.success("Tạo đấu giá thành công.");
       })
       .catch((errorInfo) => {
-        console.log("Lỗi xảy ra:", errorInfo);
+        console.error("Lỗi xảy ra:", errorInfo);
       });
   };
 

@@ -50,7 +50,6 @@ const ModalAdd = (props) => {
     if (chest === null) {
       ChestAPI.create(formValues).then(onSaveSuccess).catch(onSaveError);
     } else {
-      console.log(formValues);
       ChestAPI.update(formValues, chest.id)
         .then(onSaveSuccess)
         .catch(onSaveError);

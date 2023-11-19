@@ -20,6 +20,14 @@ export class RequestManagerAPI {
     });
   };
 
+  static getHistoryRequestAddItem = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/history-request-add-item`,
+      params: filter,
+    });
+  };
+
   static getHistoryBuyGifft = (filter) => {
     return request({
       method: "GET",

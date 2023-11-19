@@ -1,5 +1,6 @@
 package com.honeyprojects.core.president.service.impl;
 
+import com.honeyprojects.core.admin.repository.AdminHistoryRepository;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.president.model.request.PresidentCreateNotificationDetailAddItemRequest;
 import com.honeyprojects.core.president.model.request.PresidentNotificationAddItemRequest;
@@ -11,14 +12,25 @@ import com.honeyprojects.core.president.repository.PresidentAddItemRepository;
 import com.honeyprojects.core.president.repository.PresidentGiftRepository;
 import com.honeyprojects.core.president.repository.PresidentNotificationRepository;
 import com.honeyprojects.core.president.service.PresidentAddItemToStudentService;
+import com.honeyprojects.core.president.service.PresidentHistoryRepository;
+import com.honeyprojects.core.president.service.PresidentHoneyRepository;
+import com.honeyprojects.core.student.repository.StudentCreateRequestConversionRepository;
 import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
+import com.honeyprojects.core.teacher.model.request.TeacherGetPointRequest;
+import com.honeyprojects.core.teacher.model.response.TeacherPointResponse;
+import com.honeyprojects.entity.History;
+import com.honeyprojects.entity.Honey;
 import com.honeyprojects.entity.Notification;
 import com.honeyprojects.entity.NotificationDetail;
+import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Constants;
+import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.NotificationDetailType;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
+import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.StatusGift;
+import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import com.honeyprojects.util.DataUtils;
@@ -64,6 +76,13 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
 
     @Autowired
     private StudentNotificationDetailRepository studentNotificationDetailRepository;
+
+    @Autowired
+    private PresidentHoneyRepository honeyRepository;
+
+    @Autowired
+    private PresidentHistoryRepository presidentHistoryRepository;
+
 
     @Autowired
     private LoggerUtil loggerUtil;
@@ -391,10 +410,31 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
 
                 for (PresidentGiftResponse gift : gifts) {
                     String nameItem = gift.getName();
-                    if (gift.getStatus().equals(StatusGift.FREE)) {
+                    String status = gift.getStatus();
+                    if (status.equals(StatusGift.FREE.ordinal())) {
+                        // gửi thẳng cho sinh viên
+                        // gửi thông báo cho sinh viên
                         stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được chủ tịch câu lạc bộ tặng: " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
                         createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
+                    }
 
+                    if(status.equals(String.valueOf(StatusGift.ACCEPT.ordinal()))){
+                        // gửi yêu cầu phê duyệt cho admin
+                        // gửi thông báo cho admin
+                        stringBuilder.append("Đã gửi yêu cầu phê duyệt tới admin " + "Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + ": " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
+
+                        History history = new History();
+                        history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+                        history.setType(TypeHistory.CONG_VAT_PHAM);
+                        history.setCreatedAt(new Date().getTime());
+                        history.setGiftId(gift.getId());
+                        history.setNameGift(nameItem);
+                        history.setQuantity(giftMap.get(nameItem));
+                        history.setPresidentId(simpleResponse.getId());
+                        history.setHoneyId(simpleResponse.getId());
+                        history.setNote(null);
+                        history.setStudentId(simpleResponse.getId());
+                        presidentHistoryRepository.save(history);
                     }
                 }
             }
@@ -418,7 +458,14 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                 for (PresidentCategoryResponse category : categories) {
                     String categoryPoint = category.getName();
                     if (honeyMap.containsKey(categoryPoint)) {
-                        createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
+                        if(category.getStatus().equals(CategoryStatus.FREE)){
+                            // gủi cho sinh viên
+                            createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
+                        }
+                        if(category.getStatus().equals(CategoryStatus.ACCEPT)){
+                            // gửi cho admin phê duyệt
+
+                        }
                     }
                 }
             }

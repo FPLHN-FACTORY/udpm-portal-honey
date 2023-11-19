@@ -59,10 +59,6 @@ const ModalThem = (props) => {
       } else {
         const fileSize = selectedFile.size;
         const checkFileSize = Math.round(fileSize / 1024 / 1024);
-        console.log(
-          "🚀 ~ file: ModalAddGift.jsx:65 ~ handleFileInputChange ~ checkFileSize:",
-          checkFileSize
-        );
         if (checkFileSize > 1) {
           setErrorImage("Ảnh không thể lớn hơn 1 MB");
           setSelectedImageUrl("");

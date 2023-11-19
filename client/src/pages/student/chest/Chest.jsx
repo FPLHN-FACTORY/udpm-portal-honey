@@ -22,7 +22,7 @@ const Chest = memo(() => {
   }, []);
 
   function ImageRenderer({ image, quantity }) {
-    const imageUrl = `https://github.com/cuongnq189/react-basic/assets/92096173/92d1478c-d8a7-4d67-b5e5-0224c241f83d`;
+    const imageUrl = `https://github-production-user-asset-6210df.s3.amazonaws.com/92096173/279314951-92d1478c-d8a7-4d67-b5e5-0224c241f83d.png`;
 
     return (
       <div style={{ position: "relative" }}>

@@ -93,7 +93,6 @@ export default function AuctionMangement() {
       } else {
         setCurrent(response.data.data.currentPage);
       }
-      console.log("2222" + response.data.data.data);
     });
   };
 

@@ -7,10 +7,7 @@ import {
   Pagination,
   Row,
   Select,
-  Space,
-  Spin,
   Table,
-  Tag,
   message,
 } from "antd";
 import React, { useEffect, useState } from "react";
@@ -36,7 +33,6 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 
 export default function RequestAddPoint() {
-  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const columns = [
     {
@@ -105,7 +101,6 @@ export default function RequestAddPoint() {
 
   const fetchData = (dispatch, filter) => {
     dispatch(SetHistory([]));
-    setLoading(true);
     CategoryAPI.fetchAllCategory()
       .then((response) => {
         dispatch(SetCategory(response.data.data));
@@ -114,7 +109,6 @@ export default function RequestAddPoint() {
         message.error(error);
       })
       .finally(() => {
-        setLoading(true);
         const fetchData = async (filter) => {
           try {
             const response = await RequestManagerAPI.getAddPoint(filter);
@@ -135,7 +129,6 @@ export default function RequestAddPoint() {
                 }
               })
             );
-            setLoading(false);
             dispatch(SetHistory(listHistory));
             setTotalPage(response.data.totalPages);
           } catch (error) {
@@ -157,7 +150,6 @@ export default function RequestAddPoint() {
   const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
-    setLoading(true);
     if (value.userName === undefined || value.userName.trim().length === 0) {
       setFilter({
         ...filter,
@@ -187,14 +179,11 @@ export default function RequestAddPoint() {
         })
         .catch((error) => console.error(error));
     }
-    setLoading(false);
   };
 
   const changeStatus = (idHistory, status) => {
-    setLoading(true);
     RequestManagerAPI.changeStatus(idHistory, status)
       .then((response) => {
-        console.log(response.data);
         if (response.data.success) {
           fetchData(dispatch, filter);
           if (status === 1)
@@ -206,83 +195,79 @@ export default function RequestAddPoint() {
       .catch((error) => {
         message.error(error);
       })
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(() => {});
   };
 
   return (
-    <Spin spinning={loading}>
-      <div className="request-manager">
-        <Card className="mb-2 py-1">
-          <Form onFinish={onFinishSearch}>
-            <Row>
-              <Col xl={12}>
-                <Form.Item name="userName" className="search-input">
-                  <Input
-                    style={{ width: "450px" }}
-                    name="userName"
-                    size="small"
-                    placeholder="Nhập user name sinh viên cần tìm"
-                    prefix={<SearchOutlined />}
-                  />
-                </Form.Item>
-              </Col>
-              <Col xl={12} className="flex">
-                <Form.Item name={"idCategory"}>
-                  <Select
-                    style={{ width: "410px" }}
-                    size="large"
-                    placeholder="Loại điểm"
-                    options={[
-                      { value: null, label: "Tất cả" },
-                      ...listCategory.map((category) => {
-                        return {
-                          value: category.id,
-                          label: category.name,
-                        };
-                      }),
-                    ]}
-                  />
-                </Form.Item>
-                <Button
-                  htmlType="submit"
-                  type="primary"
-                  className="ml-3 search-button"
-                >
-                  Lọc
-                </Button>
-              </Col>
-            </Row>
-          </Form>
-        </Card>
-        <Card title="Yêu cầu cộng điểm">
-          <Table
-            columns={columns}
-            dataSource={data}
-            rowKey="key"
-            pagination={false}
-            expandable={{
-              expandedRowRender: (record) => (
-                <p>
-                  <b style={{ color: "#EEB30D" }}>Lý do cộng: </b>
-                  {record.note}
-                </p>
-              ),
+    <div className="request-manager">
+      <Card className="mb-2 py-1">
+        <Form onFinish={onFinishSearch}>
+          <Row>
+            <Col xl={12}>
+              <Form.Item name="userName" className="search-input">
+                <Input
+                  style={{ width: "450px" }}
+                  name="userName"
+                  size="small"
+                  placeholder="Nhập user name sinh viên cần tìm"
+                  prefix={<SearchOutlined />}
+                />
+              </Form.Item>
+            </Col>
+            <Col xl={12} className="flex">
+              <Form.Item name={"idCategory"}>
+                <Select
+                  style={{ width: "410px" }}
+                  size="large"
+                  placeholder="Loại điểm"
+                  options={[
+                    { value: null, label: "Tất cả" },
+                    ...listCategory.map((category) => {
+                      return {
+                        value: category.id,
+                        label: category.name,
+                      };
+                    }),
+                  ]}
+                />
+              </Form.Item>
+              <Button
+                htmlType="submit"
+                type="primary"
+                className="ml-3 search-button"
+              >
+                Lọc
+              </Button>
+            </Col>
+          </Row>
+        </Form>
+      </Card>
+      <Card title="Yêu cầu cộng điểm">
+        <Table
+          columns={columns}
+          dataSource={data}
+          rowKey="key"
+          pagination={false}
+          expandable={{
+            expandedRowRender: (record) => (
+              <p>
+                <b style={{ color: "#EEB30D" }}>Lý do cộng: </b>
+                {record.note}
+              </p>
+            ),
+          }}
+        />
+        <div className="mt-10 text-center mb-10">
+          <Pagination
+            simple
+            current={filter.page + 1}
+            onChange={(page) => {
+              setFilter({ ...filter, page: page - 1 });
             }}
+            total={totalPage * 10}
           />
-          <div className="mt-10 text-center mb-10">
-            <Pagination
-              simple
-              current={filter.page + 1}
-              onChange={(page) => {
-                setFilter({ ...filter, page: page - 1 });
-              }}
-              total={totalPage * 10}
-            />
-          </div>
-        </Card>
-      </div>
-    </Spin>
+        </div>
+      </Card>
+    </div>
   );
 }

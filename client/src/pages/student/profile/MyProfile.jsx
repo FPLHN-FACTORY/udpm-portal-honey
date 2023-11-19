@@ -54,8 +54,6 @@ const MyProfile = memo(() => {
       slide.scrollIntoView({ behavior: "smooth" });
     });
   });
-  console.log(dataHoney);
-  console.log(data);
   return (
     <section
       className="student"

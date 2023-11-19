@@ -9,7 +9,6 @@ export default function ModalUpLoadFile(props) {
   const {
     openUpload,
     setOpenUpload,
-    setLoading,
     nameFileUpload,
     setNameFileUpload,
     setDataPreview,
@@ -19,7 +18,6 @@ export default function ModalUpLoadFile(props) {
   const dispatch = useAppDispatch();
 
   const handleExportExcel = () => {
-    setLoading(true);
     RandomAddPointAPI.previewDataExportExcel()
       .then(() => {
         message.success("Export excel thành công");
@@ -27,14 +25,12 @@ export default function ModalUpLoadFile(props) {
       .catch((err) => {
         message.error("Export excel thất bại");
       });
-    setLoading(false);
   };
 
   const handleFileInputChange = (e) => {
     if (file !== null) {
       const formData = new FormData();
       formData.append("file", file.file.originFileObj);
-      setLoading(true);
       RandomAddPointAPI.createPreviewImportExcel(formData)
         .then((response) => {
           if (response.data.data.total > 0) {
@@ -54,7 +50,6 @@ export default function ModalUpLoadFile(props) {
       message.error("Import excel thất bại");
       setDataPreview([]);
     }
-    setLoading(false);
     setNameFileUpload("");
     setOpenUpload(false);
   };
