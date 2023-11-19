@@ -13,11 +13,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -31,17 +28,17 @@ public class AdminGiftRestController {
     private AdminGiftService adminGiftService;
 
     @GetMapping("")
-    public ResponseObject getAllGiftByAdmin(final AdminGiftRequest request){
+    public ResponseObject getAllGiftByAdmin(final AdminGiftRequest request) {
         return new ResponseObject(adminGiftService.getAllCategoryByAdmin(request));
     }
 
     @GetMapping("/list-gift")
-    public ResponseObject getAllListGift(){
+    public ResponseObject getAllListGift() {
         return new ResponseObject(adminGiftService.getAllListGift());
     }
 
     @GetMapping("/get-one/{id}")
-    public ResponseObject getOne(@PathVariable("id") String id){
+    public ResponseObject getOne(@PathVariable("id") String id) {
         return new ResponseObject(adminGiftService.getOne(id));
     }
 
@@ -52,16 +49,16 @@ public class AdminGiftRestController {
 
     @PutMapping("/{id}")
     public ResponseObject updateGift(@Valid @ModelAttribute AdminUpdateGiftRequest request, @PathVariable("id") String id) throws IOException {
-        return new ResponseObject(adminGiftService.updateGift(request,id));
+        return new ResponseObject(adminGiftService.updateGift(request, id));
     }
 
     @PutMapping("/delete/{id}")
-    public ResponseObject updateStatusGift(@PathVariable("id") String id){
+    public ResponseObject updateStatusGift(@PathVariable("id") String id) {
         return new ResponseObject(adminGiftService.updateStatusGift(id));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteGift(@PathVariable("id") String id){
+    public void deleteGift(@PathVariable("id") String id) {
         adminGiftService.deleteById(id);
     }
 

@@ -31,6 +31,9 @@ public interface AdminGiftResponse extends IsIdentified {
     @Value("#{target.type}")
     Integer getType();
 
+    @Value("#{target.expiry}")
+    String getExpiry();
+
     @Value("#{target.from_date}")
     String getFromDate();
 

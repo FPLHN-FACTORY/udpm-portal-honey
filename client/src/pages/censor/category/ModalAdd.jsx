@@ -1,4 +1,4 @@
-import { Form, Input, Modal, Radio, message } from "antd";
+import { Button, Form, Input, Modal, Radio, message } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import {
@@ -27,7 +27,7 @@ const ModalThem = (props) => {
     var selectedFile = event.target.files[0];
     if (selectedFile) {
       var FileUploadName = selectedFile.name;
-      if (FileUploadName == "") {
+      if (FileUploadName === "") {
         setErrorImage("Bạn chưa chọn ảnh");
         setSelectedImageUrl("");
         setImage([]);
@@ -43,12 +43,12 @@ const ModalThem = (props) => {
             FileUploadName.lastIndexOf(".") + 1
           ).toLowerCase();
           if (
-            Extension == "gif" ||
-            Extension == "png" ||
-            Extension == "bmp" ||
-            Extension == "jpeg" ||
-            Extension == "jpg" ||
-            Extension == "webp"
+            Extension === "gif" ||
+            Extension === "png" ||
+            Extension === "bmp" ||
+            Extension === "jpeg" ||
+            Extension === "jpg" ||
+            Extension === "webp"
           ) {
             setImage(selectedFile);
             var imageUrl = URL.createObjectURL(selectedFile);
@@ -168,6 +168,7 @@ const ModalThem = (props) => {
       >
         <hr className="border-0 bg-gray-300 mt-3 mb-6" />
         <Form
+        id="addCategory"
           initialValues={initialValues}
           form={form}
           name="basic"
@@ -209,7 +210,7 @@ const ModalThem = (props) => {
           </Form.Item>
           <Form.Item
             label="Phê duyệt"
-            name="transactionRights"
+            name="categoryStatus"
             rules={[
               {
                 required: true,
@@ -225,7 +226,7 @@ const ModalThem = (props) => {
 
           <Form.Item
             label="Giao dịch"
-            name="categoryStatus"
+            name="transactionRights"
             rules={[
               {
                 required: true,
@@ -245,16 +246,16 @@ const ModalThem = (props) => {
               span: 16,
             }}
           >
-            <button
+            <Button
               style={{ marginRight: "20px" }}
               onClick={onCancel}
               className="submit-button"
             >
               Đóng
-            </button>
-            <button htmlType="submit" className="submit-button ml-2">
+            </Button>
+            <Button htmlType="submit" className="submit-button ml-2">
               OK
-            </button>
+            </Button>
           </Form.Item>
         </Form>
       </Modal>

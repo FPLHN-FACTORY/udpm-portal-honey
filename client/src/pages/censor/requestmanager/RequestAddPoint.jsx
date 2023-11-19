@@ -7,10 +7,8 @@ import {
   Pagination,
   Row,
   Select,
-  Space,
   Spin,
   Table,
-  Tag,
   message,
 } from "antd";
 import React, { useEffect, useState } from "react";
@@ -220,10 +218,10 @@ export default function RequestAddPoint() {
               <Col xl={12}>
                 <Form.Item name="userName" className="search-input">
                   <Input
-                    style={{ width: "450px" }}
+                    style={{ width: "500px" }}
                     name="userName"
                     size="small"
-                    placeholder="Nhập user name sinh viên cần tìm"
+                    placeholder="Nhập mã sinh viên cần tìm"
                     prefix={<SearchOutlined />}
                   />
                 </Form.Item>
@@ -231,7 +229,7 @@ export default function RequestAddPoint() {
               <Col xl={12} className="flex">
                 <Form.Item name={"idCategory"}>
                   <Select
-                    style={{ width: "410px" }}
+                    style={{ width: "450px" }}
                     size="large"
                     placeholder="Loại điểm"
                     options={[

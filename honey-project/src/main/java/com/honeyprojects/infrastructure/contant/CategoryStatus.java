@@ -2,6 +2,6 @@ package com.honeyprojects.infrastructure.contant;
 
 public enum CategoryStatus {
     INACTIVE,
-    FREE,
-    ACCEPT
+    FREE, // không yêu cầu phê duyệt
+    ACCEPT // yêu cầu phê duyệt
 }
