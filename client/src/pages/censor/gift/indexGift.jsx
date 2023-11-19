@@ -14,7 +14,7 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import ModalDetailGift from "./ModalDetailGift";
 import ModalAma from "./ModalAddGift";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -41,6 +41,11 @@ export default function IndexGift() {
   const [showModalDetail, setShowModalDetail] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    document.title = "Quản lý vật phẩm";
     fetchAllCate();
     fetchData();
   }, [current]);
@@ -100,15 +105,10 @@ export default function IndexGift() {
       align: "center",
       render: (image) => {
         if (image) {
-          const byteArray = image.split(",").map(Number);
-          const uint8Array = new Uint8Array(byteArray);
-          const blob = new Blob([uint8Array], { type: "image/jpeg" });
-          const imageUrl = URL.createObjectURL(blob);
-
           return (
             <div style={{ textAlign: "center" }}>
               <img
-                src={imageUrl}
+                src={image}
                 style={{ width: "40px", height: "40px", margin: "auto" }}
                 alt="Hình ảnh"
               />
@@ -137,7 +137,7 @@ export default function IndexGift() {
       dataIndex: "quantity",
       key: "quantity",
       align: "center",
-      render: (quantity) => (quantity !== null ? quantity : "vô hạn"),
+      render: (quantity) => (quantity !== null ? quantity : "Vô hạn"),
     },
     {
       title: "Kiểu",
@@ -157,6 +157,25 @@ export default function IndexGift() {
         }
       },
     },
+    {
+      title: "Trạng thái",
+      dataIndex: "expiry",
+      key: "expiry",
+      align: "center",
+      render: (type) => {
+        switch (type) {
+          case "VINH_VIEN":
+            return "Vĩnh viễn";
+          case "CHUA_HOAT_DONG":
+            return "Chưa hoạt động";
+          case "DANG_HOAT_DONG":
+            return "Đang hoạt động";
+          default:
+            return "Hết hạn";
+        }
+      },
+    },
+
     {
       title: () => <div>Hành động</div>,
       key: "action",

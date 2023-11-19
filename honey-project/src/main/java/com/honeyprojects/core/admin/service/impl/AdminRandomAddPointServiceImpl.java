@@ -81,12 +81,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     private AdChestGiftRepository adChestGiftRepository;
 
     @Autowired
-    private AdArchiveGiftRepository adArchiveGiftRepository;
-
-    @Autowired
-    private AdminHoneyRepository adminHoneyRepository;
-
-    @Autowired
     private AdGiftRepository adGiftRepository;
 
     @Autowired
@@ -483,6 +477,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                         giftMap.put(nameItem, numberItem);
                     }
                 }
+
                 List<AdminImportGiftResponse> gifts = adRandomAddPointRepository.getGiftsByNames(giftMap.keySet());
 
                 for (AdminImportGiftResponse gift : gifts) {

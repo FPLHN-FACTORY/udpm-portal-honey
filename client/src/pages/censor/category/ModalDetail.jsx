@@ -15,12 +15,7 @@ const ModalDetail = (props) => {
 
   useEffect(() => {
     if (category.image) {
-      const byteArray = category.image.split(",").map(Number);
-      const uint8Array = new Uint8Array(byteArray);
-      const blob = new Blob([uint8Array], { type: "image/jpeg" });
-      const imageUrl = URL.createObjectURL(blob);
-
-      setSelectedImageUrl(imageUrl);
+      setSelectedImageUrl(category.image);
     }
   }, [category]);
 

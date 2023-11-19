@@ -8,9 +8,6 @@ public interface AdminCategoryResponse extends IsIdentified {
 
     Integer getStt();
 
-    @Value("#{target.id}")
-    String getId();
-
     @Value("#{target.code}")
     String getCode();
 
