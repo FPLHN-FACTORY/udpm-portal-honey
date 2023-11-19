@@ -58,6 +58,7 @@ const MyProfile = memo(() => {
   console.log(data);
   return (
     <section
+    id="myProfile"
       className="student"
       style={{ height: isCategoryVisible ? "auto" : "495px" }}>
       <div className="wrapper"></div>
