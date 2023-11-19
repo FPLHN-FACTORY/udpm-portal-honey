@@ -12,4 +12,5 @@ public class AdminAddPointStudentPortalEventsBO extends PageableRequest {
     private String code;
     private List<String> lstStudentId;
     private String categoryId;
+    private Integer numberHoney;
 }

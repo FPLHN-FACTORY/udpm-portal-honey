@@ -99,8 +99,49 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
     }
 
     @Override
-    public Boolean createPointToStudentPortalEvents(AdminAddPointStudentPortalEventsBO adminAddPointStudentBO) {
-        return null;
+    public Boolean createPointToStudentPortalEvents(AdminAddPointStudentPortalEventsBO requestAddPointStudentBO) {
+        Category category = adminCategoryRepository.findById(requestAddPointStudentBO.getCategoryId()).orElse(null);
+        Integer honeyPoint = requestAddPointStudentBO.getNumberHoney();
+
+        for (String studentId :
+                requestAddPointStudentBO.getLstStudentId()) {
+            if (category.getCategoryStatus().equals(CategoryStatus.FREE)) {
+                Notification notification = createNotification(studentId);
+                if (!DataUtils.isNullObject(requestAddPointStudentBO.getLstStudentId())) {
+                    try {
+                        createNotificationDetailHoney(category, notification.getId(), honeyPoint);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            if (category.getCategoryStatus().equals(CategoryStatus.ACCEPT)){
+                TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
+                getPointRequest.setStudentId(studentId);
+                getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
+                TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
+
+                History history = new History();
+                history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+                history.setHoneyPoint(honeyPoint);
+                history.setType(TypeHistory.CONG_DIEM);
+                history.setCreatedAt(new Date().getTime());
+                if (teacherPointResponse == null) {
+                    Honey honey = new Honey();
+                    honey.setStatus(Status.HOAT_DONG);
+                    honey.setHoneyPoint(0);
+                    honey.setStudentId(studentId);
+                    honey.setHoneyCategoryId(requestAddPointStudentBO.getCategoryId());
+                    history.setHoneyId(honeyRepository.save(honey).getId());
+                } else {
+                    Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
+                    history.setHoneyId(honey.getId());
+                }
+                history.setStudentId(studentId);
+                historyRepository.save(history);
+            }
+        }
+        return true;
     }
 
     private Notification createNotification(String idStudent) {
