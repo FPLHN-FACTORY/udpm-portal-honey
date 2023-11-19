@@ -1,6 +1,7 @@
 package com.honeyprojects.core.admin.controller;
 
 import com.honeyprojects.core.admin.model.request.AdminAddPointStudentLabReportBO;
+import com.honeyprojects.core.admin.model.request.AdminAddPointStudentPortalEventsBO;
 import com.honeyprojects.core.admin.service.AdminAddPointStudentService;
 import com.honeyprojects.core.common.base.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,14 @@ public class AdminAddPointStudentRestController {
 
     // api dùng để cộng mật ong danh sách sinh viên đã pass xưởng
     @PostMapping("/lab-report")
-    public ResponseObject createImportPoint(@RequestBody AdminAddPointStudentLabReportBO adminAddPointStudentBO) throws IOException {
-        return new ResponseObject(addPointService.addPointStudent(adminAddPointStudentBO));
+    public ResponseObject addPointToStudentLabReport(@RequestBody AdminAddPointStudentLabReportBO adminAddPointStudentBO) throws IOException {
+        return new ResponseObject(addPointService.addPointToStudentLabReport(adminAddPointStudentBO));
     }
 
+    // api dùng để cộng mật ong danh sách sinh viên đã pass xưởng
+    @PostMapping("/lab-report")
+    public ResponseObject createPointToStudentPortalEvents(@RequestBody AdminAddPointStudentPortalEventsBO adminAddPointStudentBO) throws IOException {
+        return new ResponseObject(addPointService.createPointToStudentPortalEvents(adminAddPointStudentBO));
+    }
 }
 

@@ -2,6 +2,7 @@ package com.honeyprojects.core.admin.service.impl;
 
 import com.honeyprojects.core.admin.model.request.AdminAddPointStudentLabReportBO;
 import com.honeyprojects.core.admin.model.request.AdminAddPointStudentLabReportRequest;
+import com.honeyprojects.core.admin.model.request.AdminAddPointStudentPortalEventsBO;
 import com.honeyprojects.core.admin.model.request.AdminCreateNotificationDetailRandomRequest;
 import com.honeyprojects.core.admin.model.request.AdminNotificationRandomRequest;
 import com.honeyprojects.core.admin.repository.AdNotificationRespository;
@@ -51,7 +52,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
     private TeacherHoneyRepository honeyRepository;
 
     @Override
-    public Boolean addPointStudent(AdminAddPointStudentLabReportBO requestAddPointStudentBO) {
+    public Boolean addPointToStudentLabReport(AdminAddPointStudentLabReportBO requestAddPointStudentBO) {
 
         Category category = adminCategoryRepository.findById(requestAddPointStudentBO.getCategoryId()).orElse(null);
 
@@ -95,6 +96,11 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
             }
         }
         return true;
+    }
+
+    @Override
+    public Boolean createPointToStudentPortalEvents(AdminAddPointStudentPortalEventsBO adminAddPointStudentBO) {
+        return null;
     }
 
     private Notification createNotification(String idStudent) {
