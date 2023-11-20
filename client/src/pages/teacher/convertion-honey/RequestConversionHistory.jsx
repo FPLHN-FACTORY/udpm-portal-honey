@@ -185,7 +185,7 @@ export default function RequestConversionHistory() {
             <Space size={"large"} style={{ marginTop: "15px" }}>
               <Form.Item name="email" className="search-input">
                 <Input
-                  style={{ width: "300px" }}
+                  style={{ width: "360px" }}
                   size="small"
                   placeholder="Nhập email sinh viên cần tìm"
                   prefix={<SearchOutlined />}
@@ -194,7 +194,7 @@ export default function RequestConversionHistory() {
               <Form.Item name={"gift"}>
                 <Select
                   showSearch
-                  style={{ width: "150px" }}
+                  style={{ width: "180px" }}
                   size="large"
                   placeholder="Loại quà"
                   options={[
@@ -211,7 +211,7 @@ export default function RequestConversionHistory() {
               <Form.Item name={"lop"}>
                 <Select
                   showSearch
-                  style={{ width: "150px" }}
+                  style={{ width: "180px" }}
                   size="large"
                   placeholder="Lớp"
                   options={[
@@ -229,7 +229,7 @@ export default function RequestConversionHistory() {
                 <Select
                   defaultValue={filter.status}
                   showSearch
-                  style={{ width: "150px" }}
+                  style={{ width: "180px" }}
                   size="large"
                   placeholder="Trạng thái"
                   options={[
