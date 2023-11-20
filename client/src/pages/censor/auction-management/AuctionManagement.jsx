@@ -35,7 +35,7 @@ import {
 } from "../../../app/reducers/auction/auction.reducer";
 import ModalCreateAuction from "./modal-create/ModalCreateAuction.jsx";
 import ModalUpdateAuction from "./modal-update/ModalUpdateAuction";
-import { GetCategory } from "../../../app/reducers/category/category.reducer";
+import moment from "moment";
 const { Option } = Select;
 
 export default function AuctionMangement() {
@@ -50,6 +50,7 @@ export default function AuctionMangement() {
   const dispatch = useAppDispatch();
   const [modalCreate, setModalCreate] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
+  
 
   useEffect(() => {
     fetchData();
@@ -102,14 +103,32 @@ export default function AuctionMangement() {
     },
     {
       title: "Loại điểm",
-      dataIndex: "categoryName",
-      key: "categoryName",
+      dataIndex: "nameCategory",
+      key: "nameCategory",
       render: (text) => <span>{text}</span>,
     },
     {
+      title: "Từ ",
+      dataIndex: "fromDate",
+      key: "fromDate",
+      render: (text) => <span>{moment(text).format("DD/MM/YYYY HH:MM:ss")}</span>
+    },
+    {
+      title: "Đến",
+      dataIndex: "toDate",
+      key: "toDate",
+      render: (text) => <span>{moment(text).format("DD/MM/YYYY HH:MM:ss")}</span>
+    },
+    {
       title: "Mật ong",
-      dataIndex: "honey",
-      key: "honey",
+      dataIndex: "lastPrice",
+      key: "lastPrice",
+      render: (text) => <span>{text ? text: "?"}</span>
+    },
+    {
+      title: "Vật phẩm đấu giá",
+      dataIndex: "giftName",
+      key: "giftName",
     },
     {
       title: "Trạng thái",
@@ -323,7 +342,7 @@ export default function AuctionMangement() {
               </b>
             </span>
           </div>
-          {/* <div>
+          <div>
             <Button
               style={{
                 color: "white",
@@ -342,9 +361,8 @@ export default function AuctionMangement() {
               />
               Thêm phòng đấu giá
             </Button>
-          </div> */}
+          </div>
         </Space>
-
         <div
           style={{
             justifyContent: "center",

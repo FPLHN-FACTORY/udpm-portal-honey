@@ -1,4 +1,14 @@
-import { Input, Modal, Radio, message, Button, Row, Col, Select } from "antd";
+import {
+  Input,
+  Modal,
+  Radio,
+  message,
+  Button,
+  Row,
+  Col,
+  Select,
+  DatePicker,
+} from "antd";
 import { useEffect, useState } from "react";
 import { AuctionAPI } from "../../../../apis/censor/auction/auction.api";
 import { AddAuction } from "../../../../app/reducers/auction/auction.reducer";
@@ -7,17 +17,35 @@ import {
   SetCategory,
 } from "../../../../app/reducers/category/category.reducer";
 import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
+import { GiftAPI } from "../../../../apis/censor/gift/gift.api";
 
 const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
   const [name, setName] = useState("");
   const [errorNameAuction, setErrorNameAuction] = useState("");
   const [honey, setHoney] = useState("");
   const [errorHoney, setErrorHoney] = useState("");
-  const [status, setStatus] = useState("");
+  const [errorItem, setErrorItem] = useState("");
+  const [status, setStatus] = useState(0);
   const [errorStatus, setErrorStatus] = useState("");
   const [honeyCategoryId, setHoneyCategoryId] = useState("");
+  const [items, setItems] = useState([]);
+  const [itemId, setItemId] = useState("");
+  const { Option } = Select;
+  const { RangePicker } = DatePicker;
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
 
   const dispatch = useAppDispatch();
+
+  const fetchDataItem = () => {
+    GiftAPI.fetchAllGift().then((response) => {
+      setItems(response.data.data);
+    });
+  };
+
+  useEffect(() => {
+    fetchDataItem();
+  }, []);
 
   useEffect(() => {
     if (visible === true) {
@@ -32,6 +60,7 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
         setErrorNameAuction("");
         setErrorHoney("");
         setErrorStatus("");
+        setErrorItem("");
       };
     }
   }, [visible]);
@@ -39,6 +68,17 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
   useEffect(() => {
     featAllCategory();
   }, []);
+
+  const handleDateChange = (dates) => {
+    if (dates && dates.length === 2) {
+      const [fromDate, toDate] = dates;
+      setFromDate(fromDate.valueOf());
+      setToDate(toDate.valueOf());
+    } else {
+      setFromDate(null); // Đặt giá trị ngày thành null nếu không có ngày được chọn
+      setToDate(null);
+    }
+  };
 
   const listCategory = useAppSelector(GetCategory);
 
@@ -82,6 +122,13 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
       }
     }
 
+    if (itemId === "" || itemId === undefined || itemId === null) {
+      setErrorItem("Bạn phải chọn vật phẩm cần đấu giá");
+      check++;
+    } else {
+      setErrorItem("");
+    }
+
     if (status.toString().trim().length === 0) {
       setErrorStatus("Trạng thái không được để trống");
       check++;
@@ -95,6 +142,9 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
         status: status,
         honey: honey,
         honeyCategoryId: honeyCategoryId,
+        giftId: itemId,
+        fromDate: fromDate,
+        toDate: toDate,
       };
 
       console.log(obj);
@@ -188,15 +238,39 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
                   setStatus(e.target.value);
                 }}
               >
-                <Radio value={"0"} >
-                  Mở
-                </Radio>
-                <Radio value={"1"} >
-                  Đóng
-                </Radio>
+                <Radio value={0}>Mở</Radio>
+                <Radio value={1}>Đóng</Radio>
               </Radio.Group>
               <br></br>
               <span className="error">{errorStatus}</span>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <span>Vật phẩm đấu giá:</span> <br />
+              <Select
+                value={itemId}
+                onChange={(value) => {
+                  setItemId(value);
+                }}
+                style={{ width: "100%", marginRight: "10px" }}
+              >
+                <Option value="">Chọn vật phẩm</Option>
+                {items.map((item) => {
+                  return <Option value={item.id}>{item.name}</Option>;
+                })}
+              </Select>
+              <br></br>
+              <span className="error">{errorItem}</span>
+            </Col>
+            <Col span={12}>
+            <span>Thời gian đấu giá:</span> <br />
+              <RangePicker
+                renderExtraFooter={() => "Chọn ngày"}
+                onChange={handleDateChange}
+                format={"DD/MM/YYYY"}
+                placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
+              />
             </Col>
           </Row>
         </div>

@@ -34,11 +34,21 @@ export default function ChestGift() {
 
   useEffect(() => {
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    ChestAPI.fetchAll({
+      search: search,
+      page: current - 1,
+    }).then((response) => {
+      dispatch(SetChest(response.data.data.data));
+      setTotal(response.data.data.totalPages);
+    });
   }, [current]);
 
   const fetchData = () => {
     ChestAPI.fetchAll({
-      search: search,
+      search: "",
       page: current - 1,
     }).then((response) => {
       dispatch(SetChest(response.data.data.data));
@@ -48,13 +58,24 @@ export default function ChestGift() {
 
   const buttonClear = () => {
     setSearch("");
-    fetchData();
+    ChestAPI.fetchAll({
+      search: "",
+      page: current - 1,
+    }).then((response) => {
+      dispatch(SetChest(response.data.data.data));
+      setTotal(response.data.data.totalPages);
+    });
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
+  const handleSearch = () => {
     setCurrent(1);
-    fetchData();
+    ChestAPI.fetchAll({
+      search: search,
+      page: 0,
+    }).then((response) => {
+      dispatch(SetChest(response.data.data.data));
+      setTotal(response.data.data.totalPages);
+    });
   };
 
   const data = useAppSelector(GetChest);
@@ -64,7 +85,6 @@ export default function ChestGift() {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
-      render: (text, record, index) => index + 1,
     },
     {
       title: "Tên",
@@ -116,7 +136,6 @@ export default function ChestGift() {
           style={{ fontSize: "26px" }}
         />{" "}
         <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span>
-        <form class="flex items-center" onSubmit={handleSearch}>
           <div class="relative w-full mr-6">
             <Input
               style={{ borderRadius: "30px", marginTop: "20px" }}
@@ -146,15 +165,13 @@ export default function ChestGift() {
               type="button"
               className="search-button1"
               style={{ marginTop: "20px" }}
-              onClick={() => {
-                setCurrent(1);
-                fetchData();
-              }}
+              onClick={() => 
+                handleSearch()
+              }
             >
               Tìm kiếm
             </button>
           </Space>
-        </form>
       </Card>
 
       <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>

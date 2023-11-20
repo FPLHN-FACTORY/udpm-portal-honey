@@ -48,6 +48,10 @@ public class AdminAuctionServiceImpl implements AdminAuctionService {
         Auction auction = new Auction();
         auction.setName(request.getName());
         auction.setHoneyCategoryId(request.getHoneyCategoryId());
+        auction.setGiftId(request.getGiftId());
+        auction.setStartingPrice(BigDecimal.valueOf(request.getHoney()));
+        auction.setFromDate(request.getFromDate());
+        auction.setToDate(request.getToDate());
         if (request.getStatus() == 0) {
             auction.setStatus(Status.HOAT_DONG);
         }

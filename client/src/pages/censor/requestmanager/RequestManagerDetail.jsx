@@ -36,22 +36,21 @@ const fomatDate = (date) => {
 };
 
 export default function RequestManagerDetail() {
-  const param = useParams();
+  const {id} = useParams();
   const navigate = useNavigate();
   const [request, setRequest] = useState({});
   const [student, setStudent] = useState({});
   const [teacher, setTeacher] = useState({});
-
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchData(param, navigate);
-  }, [param, navigate]);
+    fetchData();
+  }, [id]);
 
-  const fetchData = async (param, navigate) => {
+  const fetchData = async () => {
     setLoading(true);
     let [idStudent, idNguoiGui] = "";
-    await RequestManagerAPI.detailRequest(param.id)
+    await RequestManagerAPI.detailRequest(id)
       .then((response) => {
         if (response.data.success) {
           idStudent = response.data.data.studentId;
@@ -84,10 +83,10 @@ export default function RequestManagerDetail() {
 
   const changeStatus = (status) => {
     setLoading(true);
-    RequestManagerAPI.changeStatus(param.id, status)
+    RequestManagerAPI.changeStatus(id, status)
       .then((response) => {
         if (response.data.success) {
-          fetchData(param);
+          fetchData();
           if (status === 1) message.success("Đã xác nhận yêu cầu cộng điểm!");
           if (status === 2) message.error("Hủy yêu cầu thành công!");
         }
