@@ -1,6 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { Button, Pagination, Space, Table, Card, Input, Tooltip } from "antd";
+import {
+  Button,
+  Pagination,
+  Space,
+  Table,
+  Card,
+  Input,
+  Tooltip,
+  Row,
+  Col,
+} from "antd";
 import {
   PlusOutlined,
   EditOutlined,
@@ -85,6 +95,7 @@ export default function ChestGift() {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
+      render: (text, record, index) => index + 1,
     },
     {
       title: "Tên",
@@ -165,7 +176,7 @@ export default function ChestGift() {
               type="button"
               className="search-button1"
               style={{ marginTop: "20px" }}
-              onClick={() => 
+              onClick={() =>
                 handleSearch()
               }
             >

@@ -27,7 +27,7 @@ const ModalThem = (props) => {
     var selectedFile = event.target.files[0];
     if (selectedFile) {
       var FileUploadName = selectedFile.name;
-      if (FileUploadName == "") {
+      if (FileUploadName === "") {
         setErrorImage("Bạn chưa chọn ảnh");
         setSelectedImageUrl("");
         setImage([]);
@@ -43,12 +43,12 @@ const ModalThem = (props) => {
             FileUploadName.lastIndexOf(".") + 1
           ).toLowerCase();
           if (
-            Extension == "gif" ||
-            Extension == "png" ||
-            Extension == "bmp" ||
-            Extension == "jpeg" ||
-            Extension == "jpg" ||
-            Extension == "webp"
+            Extension === "gif" ||
+            Extension === "png" ||
+            Extension === "bmp" ||
+            Extension === "jpeg" ||
+            Extension === "jpg" ||
+            Extension === "webp"
           ) {
             setImage(selectedFile);
             var imageUrl = URL.createObjectURL(selectedFile);
@@ -209,7 +209,7 @@ const ModalThem = (props) => {
           </Form.Item>
           <Form.Item
             label="Phê duyệt"
-            name="transactionRights"
+            name="categoryStatus"
             rules={[
               {
                 required: true,
@@ -225,7 +225,7 @@ const ModalThem = (props) => {
 
           <Form.Item
             label="Giao dịch"
-            name="categoryStatus"
+            name="transactionRights"
             rules={[
               {
                 required: true,

@@ -36,7 +36,7 @@ public class AdminAuctionServiceImpl implements AdminAuctionService {
 
     @Override
     public PageableObject<AdminAuctionResponse> findAllAuction(AdminFindAuctionRequest req) {
-        Pageable pageable = PageRequest.of(req.getPage() - 1, req.getSize());
+        Pageable pageable = PageRequest.of(req.getPage(), req.getSize());
         Page<AdminAuctionResponse> auctionResponses = adAuctionRepository.findAllAuction(req, pageable);
         auctionList = auctionResponses.stream().toList();
         System.out.println(auctionList);

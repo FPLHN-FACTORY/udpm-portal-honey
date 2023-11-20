@@ -50,7 +50,7 @@ export default function AuctionMangement() {
   const dispatch = useAppDispatch();
   const [modalCreate, setModalCreate] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
-  
+
 
   useEffect(() => {
     fetchData();
@@ -72,17 +72,21 @@ export default function AuctionMangement() {
   };
 
   const fetchData = () => {
-    let filter = {
-      name: name,
-      status: status,
-      honeyCategoryId: honeyCategoryId,
+    const data = {
+      ...searchParams,
       page: current,
-      size: 10,
+      size: size,
     };
-    AuctionAPI.fetchAll(filter).then((response) => {
+    AuctionAPI.fetchAll(data).then((response) => {
       dispatch(SetAuction(response.data.data.data));
       setTotal(response.data.data.totalPages);
-      console.log(response.data.data.data);
+      setCurrent(response.data.data.currentPage);
+      if (total > response.data.data.totalPages) {
+        setCurrent(0);
+      } else {
+        setCurrent(response.data.data.currentPage);
+      }
+      console.log("2222" + response.data.data.data);
     });
   };
 
@@ -135,46 +139,53 @@ export default function AuctionMangement() {
       dataIndex: "status",
       key: "status",
       align: "center",
-      render: (text) => (
-        <Tag
-          color={text === "HOAT_DONG" ? "green" : "red"}
-          style={{
-            fontSize: "14px",
-            padding: "5px 10px",
-            borderRadius: "10px",
-            width: "100%",
-            textAlign: "center",
-          }}
-        >
-          {text === "HOAT_DONG" ? "Mở" : "Đóng"}
-        </Tag>
-      ),
+    },
+    {
+      title: "Giá cố định",
+      dataIndex: "startingPrice",
+      key: "startingPrice",
+      align: "center",
+    },
+    {
+      title: "Giá hiện tại",
+      dataIndex: "lastPrice",
+      key: "lastPrice",
+      align: "center",
+      render: (_, record) => {
+        if (record.lastPrice === null) {
+          return "?";
+        } else {
+          return record.lastPrice;
+        }
+      },
+    },
+    {
+      title: "Loại mật ong",
+      dataIndex: "nameCategory",
+      key: "nameCategory",
+      align: "center",
     },
   ];
 
   const buttonSearch = async () => {
-    setCurrent(1);
-    let filter = {
-      name: name,
-      status: status,
-      honeyCategoryId: honeyCategoryId,
-      page: current,
-      size: 10,
-    };
-    console.log(filter);
-    AuctionAPI.fetchAll(filter).then((response) => {
-      dispatch(SetAuction(response.data.data.data));
-      setTotal(response.data.data.totalPages);
-      console.log(response.data.data.data);
+    const values = form.getFieldsValue();
+    setSearchParams({
+      nameGift: values.nameGift,
+      category: values.category,
+      type: values.type,
+      startingPrice: values.startingPrice,
     });
+    setCurrent(0);
   };
 
   const buttonClear = async () => {
-    setName("");
-    setStatus("");
-    setHoneyCategoryId("");
-    setCurrent(1);
-    await fetchData();
+    form.resetFields();
+    setSearchParams({
+      nameGift: "",
+      category: "",
+      type: "",
+      startingPrice: "",
+    });
   };
 
   const buttonCreate = () => {
@@ -219,74 +230,99 @@ export default function AuctionMangement() {
             style={{ fontSize: "26px" }}
           />{" "}
           <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span>
-          <Row gutter={24} style={{ marginBottom: "15px", paddingTop: "20px" }}>
-            <Col span={8}>
-              <span>Tên phiên đấu giá:</span>{" "}
-              <Input
-                type="text"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-                style={{ height: "30px" }}
-              />
-            </Col>
-            <Col span={8}>
-              <span>Thể loại:</span>
-              {""}
-              <Select
-                value={honeyCategoryId}
-                onChange={(value) => {
-                  setHoneyCategoryId(value);
-                }}
-                style={{ width: "100%", marginRight: "10px" }}
-              >
-                <Option value="">Tất cả</Option>
-                {listCategorySearch.map((item) => {
-                  return <Option value={item.id}>{item.name}</Option>;
-                })}
-              </Select>
-            </Col>
-            <Col span={8}>
-              <span>Trạng thái:</span>
-              {""}
-              <Select
-                value={status}
-                onChange={(value) => {
-                  setStatus(value);
-                }}
-                style={{
-                  width: "100%",
-                  fontSize: "13px",
-                }}
-              >
-                <Option
-                  value=""
-                  style={{
-                    fontSize: "13px",
-                  }}
+          <Form form={form}>
+            <Row
+              gutter={12}
+              style={{ marginBottom: "15px", paddingTop: "20px" }}
+            >
+              <Col span={6}>
+                <Form.Item
+                  name="nameGift"
+                  labelCol={{ span: 9 }}
+                  wrapperCol={{ span: 17 }}
+                  label={
+                    <span style={{ marginRight: "8px" }}>Tên vật phẩm</span>
+                  }
                 >
-                  Tất cả
-                </Option>
-                <Option
-                  value="0"
-                  style={{
-                    fontSize: "13px",
-                  }}
+                  <Input
+                    onKeyPress={(e) => {
+                      if (e.key === " " && e.target.selectionStart === 0) {
+                        e.preventDefault();
+                      }
+                    }}
+                    style={{ textAlign: "center", height: "30px" }}
+                    placeholder="Tên vật phẩm"
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item
+                  name="category"
+                  labelCol={{ span: 9 }}
+                  wrapperCol={{ span: 17 }}
+                  label={
+                    <span style={{ marginRight: "8px" }}>Loại mật ong</span>
+                  }
                 >
-                  Mở
-                </Option>
-                <Option
-                  value="1"
-                  style={{
-                    fontSize: "13px",
-                  }}
+                  <Select
+                    style={{ textAlign: "center" }}
+                    placeholder="Chọn loại mật"
+                  >
+                    {listCategorySearch?.map((item) => {
+                      return (
+                        <Select.Option value={item.id}>
+                          {item.name}
+                        </Select.Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item
+                  name="type"
+                  labelCol={{ span: 9 }}
+                  wrapperCol={{ span: 17 }}
+                  label={
+                    <span style={{ marginRight: "8px" }}>Loại vật phẩm</span>
+                  }
                 >
-                  Đóng
-                </Option>
-              </Select>
-            </Col>
-          </Row>
+                  <Select
+                    style={{ textAlign: "center" }}
+                    placeholder="Chọn loại vật phẩm"
+                  >
+                    {listType?.map((item) => {
+                      return (
+                        <Select.Option value={item.value}>
+                          {item.label}
+                        </Select.Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item
+                  name="startingPrice"
+                  labelCol={{ span: 9 }}
+                  wrapperCol={{ span: 17 }}
+                  label={
+                    <span style={{ marginRight: "8px" }}>Giá bắt đầu</span>
+                  }
+                >
+                  <Input
+                    type="number"
+                    style={{
+                      textAlign: "center",
+                      height: "30px",
+                      width: "100%",
+                    }}
+                    placeholder="Vui lòng nhập giá."
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
         </div>
         <Space
           style={{
@@ -338,7 +374,7 @@ export default function AuctionMangement() {
             <span style={{ fontSize: "18px" }}>
               <FontAwesomeIcon icon={faRectangleList} size="xl" />
               <b style={{ marginLeft: "5px", fontWeight: "500" }}>
-                Danh sách đấu giá
+                Danh sách phòng đấu giá
               </b>
             </span>
           </div>
@@ -363,6 +399,7 @@ export default function AuctionMangement() {
             </Button>
           </div>
         </Space>
+
         <div
           style={{
             justifyContent: "center",
@@ -380,11 +417,11 @@ export default function AuctionMangement() {
           <div className="pagination__box">
             <Pagination
               simple
-              current={current}
-              onChange={(page) => {
-                setCurrent(page);
+              onChange={(value) => {
+                setCurrent(value - 1);
               }}
-              total={total * 10}
+              current={current + 1}
+              total={total * size}
             />
           </div>
         </div>

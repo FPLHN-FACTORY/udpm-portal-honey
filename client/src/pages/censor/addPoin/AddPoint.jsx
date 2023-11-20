@@ -183,7 +183,7 @@ export default function AddPoint() {
     <Spin spinning={loading}>
       <div className="add-point">
         <Card className="mb-2 py-1">
-          <Form form={formSearch} className="d-flex" onFinish={onFinishSearch}>
+          <Row form={formSearch} className="d-flex" onFinish={onFinishSearch}>
             <Button
               htmlType="submit"
               type="primary"
@@ -226,7 +226,7 @@ export default function AddPoint() {
                 setNameFileUpload={setNameFileUpload}
               />
             )}
-          </Form>
+          </Row>
         </Card>
         {Object.keys(student).length > 0 ? (
           <Card className="content-card" title="Thông tin sinh viên">

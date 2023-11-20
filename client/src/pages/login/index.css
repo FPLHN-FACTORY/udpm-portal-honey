@@ -4,13 +4,13 @@
     font-size: 20px;
 }
 
-body {
+.login__wraper {
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
     font-size: 15px;
     line-height: 1.7;
     color: #102770;
-    background-color: #ffeba7;
+    /* background-color: #ffeba7; */
     overflow-x: hidden;
 }
 

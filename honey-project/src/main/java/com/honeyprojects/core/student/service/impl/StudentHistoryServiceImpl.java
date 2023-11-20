@@ -57,7 +57,7 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
                     if (history.getType() == TypeHistory.CONG_DIEM) {
                         Honey honey = honeyRepository.findById(history.getHoneyId()).orElse(null);
                         if (honey != null) {
-                            categoryRepository.findById(honey.getHoneyCategoryId()).ifPresent(category -> response.setImage(Arrays.toString(category.getImage())));
+                            categoryRepository.findById(honey.getHoneyCategoryId()).ifPresent(category -> response.setImage(category.getImage() ));
                         }
                         response.setContent("Được cộng mật ong từ " + apiidentity.handleCallApiGetUserById(history.getTeacherId()).getUserName());
                         if (honey != null) {
@@ -67,7 +67,7 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
                     } else if (history.getType() == TypeHistory.DOI_QUA) {
                         Gift gift = giftRepository.findById(history.getGiftId()).orElse(null);
                         if (gift != null) {
-                            response.setImage(Arrays.toString(gift.getImage()));
+                            response.setImage(gift.getImage());
                             response.setContent("Mua x" + history.getQuantity() + " gói quà " + " " + gift.getName());
                             Honey honey = honeyRepository.findById(history.getHoneyId()).orElse(null);
                             if (honey != null) {
@@ -81,14 +81,14 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
                         Gift gift = giftRepository.findById(history.getGiftId()).orElse(null);
                         if (history.getStatus() == HoneyStatus.DA_HUY) {
                             if (gift != null) {
-                                response.setImage(Arrays.toString(gift.getImage()));
+                                response.setImage(gift.getImage());
                                 response.setContent("Mở x" + history.getQuantity() + " gói quà " + " " + gift.getName() + " "
                                                     + "bị giảng viên từ chối");
                                 response.setPointGet("+" + history.getQuantity() + " " + gift.getName() + "[Quà]");
                             }
                         } else {
                             if (gift != null) {
-                                response.setImage(Arrays.toString(gift.getImage()));
+                                response.setImage(gift.getImage());
                                 response.setContent("Mở x" + history.getQuantity() + " gói quà " + " " + gift.getName());
                                 response.setPoint("-" + history.getQuantity() + " " + gift.getName() + "[Quà]");
                             }
@@ -120,7 +120,7 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
                     if (history.getType() == TypeHistory.DOI_QUA) {
                         Gift gift = giftRepository.findById(history.getGiftId()).orElse(null);
                         if (gift != null) {
-                            response.setImage(Arrays.toString(gift.getImage()));
+                            response.setImage(gift.getImage());
                             Honey honey = honeyRepository.findById(history.getHoneyId()).orElse(null);
                             if (honey != null) {
                                 categoryRepository.findById(honey.getHoneyCategoryId()).ifPresent(category ->
@@ -137,7 +137,7 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
                         Gift gift = giftRepository.findById(history.getGiftId()).orElse(null);
 
                         if (gift != null) {
-                            response.setImage(Arrays.toString(gift.getImage()));
+                            response.setImage(gift.getImage());
                             response.setContent("Mở x" + history.getQuantity() + " gói quà " + " " + gift.getName() +
                                                 "[ " + history.getSubject() + " - " + history.getClassName() + " - " +
                                                 apiidentity.handleCallApiGetUserById(history.getTeacherId()).getUserName() + " ]");

@@ -7,4 +7,7 @@ public interface AdminImportGiftResponse extends IsIdentified {
 
     @Value("#{target.name}")
     String getName();
+
+    @Value("#{target.status}")
+    String getStatus();
 }
