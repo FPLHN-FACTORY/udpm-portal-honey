@@ -6,31 +6,6 @@ import "./shop-gift.css";
 import { ResquestConversion } from "../../../apis/user/ResquestConversiton/ResquestConversion.api";
 import { StarTwoTone } from "@ant-design/icons";
 
-function ImageRenderer({ image }) {
-  if (image) {
-    // Chuyển đổi chuỗi byte thành mảng byte
-    const byteArray = image.split(",").map(Number);
-
-    // Tạo một Uint8Array từ mảng byte
-    const uint8Array = new Uint8Array(byteArray);
-
-    // Chuyển đổi Uint8Array thành Blob
-    const blob = new Blob([uint8Array], { type: "image/jpeg" });
-
-    // Tạo URL dữ liệu từ Blob
-    const imageUrl = URL.createObjectURL(blob);
-
-    return (
-      <img
-        src={imageUrl}
-        style={{ width: "100px", height: "100px" }}
-        alt="Hình ảnh"
-      />
-    );
-  } else {
-    return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
-  }
-}
 const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
   const [selectedConversion, setSelectedConversion] = useState(null);
   const [fillUserApi, setFillUserApi] = useState([]);
@@ -160,7 +135,8 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
         closeIcon={null}
         footer={null}
         width={350}
-        className="css-modal-confim-buy-gift">
+        className="css-modal-confim-buy-gift"
+      >
         <div style={{ display: "flex", justifyContent: "center" }}>
           <span style={{ fontSize: "16px", color: "white", fontWeight: 700 }}>
             Bạn có xác nhận mua quà không ?
@@ -171,11 +147,13 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
             display: "flex",
             justifyContent: "center",
             marginTop: "30px",
-          }}>
+          }}
+        >
           <Button
             type="primary"
             className="btn-xac-nhan"
-            onClick={onSubmitCreate}>
+            onClick={onSubmitCreate}
+          >
             xác nhận
           </Button>
           <Button type="primary" className="btn-huy" onClick={handleCancel}>
@@ -196,9 +174,10 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
                   selectedCardIndex === index ? cardBackgroundColor : "",
                 boxShadow:
                   selectedCardIndex === index ? "0px 0px 10px gold" : "",
-              }}>
+              }}
+            >
               <div className="card__image">
-                <ImageRenderer image={item.image} />
+                <img src={item.image} alt="" />
               </div>
               {item.status === 1 ? (
                 <StarTwoTone
@@ -230,7 +209,7 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
         <div className="item__detail">
           <div className="detail__header">
             <div className="item__detail__image">
-              <ImageRenderer image={selectedConversion.image} />
+              <img src={selectedConversion.image} alt="" />
             </div>
             <div class="item__detail__body">
               <h3 title="Ba lô siêu vip">{selectedConversion.name}</h3>{" "}
@@ -267,12 +246,14 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-              }}>
+              }}
+            >
               <span
                 style={{
                   color: "white",
                   fontWeight: 700,
-                }}>
+                }}
+              >
                 {error}
               </span>
             </div>

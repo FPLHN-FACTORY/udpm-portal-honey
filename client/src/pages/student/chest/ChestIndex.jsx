@@ -4,7 +4,6 @@ import "./chest-index.css";
 import { ShoppingOutlined } from "@ant-design/icons";
 import ItemsChest from "./ItemsChest";
 import GiftChest from "./GiftChest";
-import ToolChest from "./ToolChest";
 import Chest from "./Chest";
 
 const ChestIndex = memo(() => {
@@ -17,7 +16,6 @@ const ChestIndex = memo(() => {
   const tabData = [
     { title: "Quà", content: <GiftChest /> },
     { title: "Vật phẩm", content: <ItemsChest /> },
-    { title: "Dụng cụ", content: <ToolChest /> },
     { title: "Rương", content: <Chest /> },
   ];
   return (
@@ -34,7 +32,8 @@ const ChestIndex = memo(() => {
             <div
               key={index}
               className={`tab__detail ${index === activeTab ? "active" : ""}`}
-              onClick={() => handleTabClick(index)}>
+              onClick={() => handleTabClick(index)}
+            >
               {tab.title}
             </div>
           ))}

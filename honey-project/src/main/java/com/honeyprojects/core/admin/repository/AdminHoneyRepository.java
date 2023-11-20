@@ -10,11 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AdminHoneyRepository extends HoneyRepository {
     @Query(value = """
-            SELECT h.id, h.honey_point from honey h
-            LEFT JOIN semester s ON h.user_semester_id = s.id
-            where h.student_id = :#{#getPointRequest.studentId}
-            and h.honey_category_id = :#{#getPointRequest.categoryId}
-            AND :dateNow BETWEEN s.from_date AND s.to_date
+            SELECT h.id, h.honey_point FROM honey h
+            WHERE h.student_id = :#{#getPointRequest.studentId}
+            AND h.honey_category_id = :#{#getPointRequest.categoryId}
             """, nativeQuery = true)
-    AdminPoinResponse getPoint(AdminGetPointRequest getPointRequest, @Param("dateNow") Long dateNow);
+    AdminPoinResponse getPoint(AdminGetPointRequest getPointRequest);
 }

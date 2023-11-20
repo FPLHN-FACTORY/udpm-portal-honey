@@ -27,6 +27,12 @@ public class AdminUpgradeRateController {
     public ResponseObject getCensorUpgradeRate(AdminUpgradeRateRequest searchParams){
         return new ResponseObject(adUpgradeRateGiftService.getAllUpgradeRateGift(searchParams));
     }
+
+    @GetMapping("/gift-upgrade")
+    public ResponseObject getAllListGiftUpgrade(){
+        return new ResponseObject(adminGiftService.getAllListGiftUpgrade());
+    }
+
     @PostMapping("/add-update")
     public ResponseObject addOrUpdate(@RequestBody AdminUpgradeRateGiftRequest addUpgradeRateRequest){
         return new ResponseObject(adUpgradeRateGiftService.addOrUpdateUpgradeRateGift(addUpgradeRateRequest));
