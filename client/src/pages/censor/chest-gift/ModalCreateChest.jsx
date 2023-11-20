@@ -85,17 +85,17 @@ const ModalAdd = (props) => {
               </div>
             </div>
 
-            <div className="ant-form-item">
+            <div className="ant-form-item mt-3">
               <div className="flex justify-center">
                 <Button
                   onClick={onCancel}
-                  className="submit-button submit-button-cancel"
+                  className="submit-button submit-button-cancel bg-black text-white"
                 >
                   Đóng
                 </Button>
                 <Button
                   onClick={onSaveButtonClick}
-                  className="submit-button submit-button-ok"
+                  className="submit-button submit-button-ok ml-2 bg-black text-white"
                 >
                   OK
                 </Button>

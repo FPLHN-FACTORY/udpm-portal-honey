@@ -1,4 +1,4 @@
-import { Form, Input, Modal, Radio, message } from "antd";
+import { Button, Form, Input, Modal, Radio, message } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import {
@@ -168,6 +168,7 @@ const ModalThem = (props) => {
       >
         <hr className="border-0 bg-gray-300 mt-3 mb-6" />
         <Form
+        id="addCategory"
           initialValues={initialValues}
           form={form}
           name="basic"
@@ -245,16 +246,16 @@ const ModalThem = (props) => {
               span: 16,
             }}
           >
-            <button
+            <Button
               style={{ marginRight: "20px" }}
               onClick={onCancel}
               className="submit-button"
             >
               Đóng
-            </button>
-            <button htmlType="submit" className="submit-button ml-2">
+            </Button>
+            <Button htmlType="submit" className="submit-button ml-2">
               OK
-            </button>
+            </Button>
           </Form.Item>
         </Form>
       </Modal>

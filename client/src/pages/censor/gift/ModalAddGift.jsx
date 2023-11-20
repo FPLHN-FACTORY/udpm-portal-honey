@@ -1,4 +1,4 @@
-import { Form, Input, Modal, Radio, Select, message } from "antd";
+import { Button, Col, Form, Input, Modal, Radio, Row, Select, message } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { AddGift } from "../../../app/reducers/gift/gift.reducer";
@@ -279,13 +279,16 @@ const ModalThem = (props) => {
       visible={modalOpen}
       onCancel={onCancel}
       footer={null}
+      width={"80%"}
     >
       <hr className="border-0 bg-gray-300 mt-3 mb-6" />
       <Form
+        id="addGift"
         form={form}
         name="basic"
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
+       
         labelCol={{
           span: 7,
         }}
@@ -293,7 +296,9 @@ const ModalThem = (props) => {
           span: 18,
         }}
         style={{
-          maxWidth: 600,
+          width: 1070,
+          marginTop: 30,
+          justifyContent : "center"
         }}
         initialValues={{
           remember: true,
@@ -304,276 +309,298 @@ const ModalThem = (props) => {
           note: "",
         }}
         autoComplete="off"
+      
       >
-        <div
-          onClick={() => {
-            document.getElementById("select-avatar").click();
-          }}
-          className="image-container"
-        >
-          {image ? <img src={selectedImageUrl} alt="Chọn ảnh" /> : "Chọn ảnh"}
-        </div>
-        <input
-          className="hidden-input"
-          id="select-avatar"
-          type="file"
-          accept="image/*"
-          onChange={(event) => handleFileInputChange(event)}
-        />
-        {errorImage && (
-          <div style={{ color: "red", paddingLeft: "100px" }}>{errorImage}</div>
-        )}
-        <Form.Item
-          label="Tên"
-          name="name"
-          rules={[
-            {
-              required: true,
-              message: "Tên Quà không để trống",
-            },
-            {
-              min: 4,
-              message: "Tên vật phẩm phải tối thiểu 4 kí tự",
-            },
-            {
-              max: 100,
-              message: "Tên vật phẩm phải tối đa 100 kí tự",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Số lượng"
-          name="quantity"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng chọn tùy chọn số lượng",
-            },
-          ]}
-        >
-          <Radio.Group onChange={(e) => setQuantityValue(e.target.value)}>
-            <Radio value={0}>Vô hạn</Radio>
-            <Radio value={1} style={{ marginLeft: 95 }}>
-              Giới hạn
-            </Radio>
-          </Radio.Group>
-        </Form.Item>
-        {form.getFieldValue("quantity") === 1 && (
-          <Form.Item
-            label="Số lượng giới hạn"
-            name="quantityLimit"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập số lượng giới hạn",
-              },
-              {
-                validator: validateQuantity,
-              },
-            ]}
-          >
-            <Input type="number" />
-          </Form.Item>
-        )}
-        <Form.Item
-          label="Loại vật phẩm"
-          name="type"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng chọn loại",
-            },
-          ]}
-        >
-          <Select onChange={handleTypeChange} placeholder="Chọn loại">
-            <Option value={0}>Quà tặng</Option>
-            <Option value={1}>Vật phẩm nâng cấp</Option>
-            <Option value={2}>Danh hiệu</Option>
-          </Select>
-        </Form.Item>
-        <Form.Item
-          label="Loại mật quy đổi"
-          name="honeyCategoryId"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng chọn cấp",
-            },
-          ]}
-        >
-          <Select
-            mode="multiple"
-            placeholder="Chọn cấp bậc"
-            onChange={handleCategoryChange}
-          >
-            {listCategory.map((category) => (
-              <Option key={category.id} value={category.id}>
-                {category.name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-
-        {selectedCategories.map((categoryId) => {
-          const category = listCategory.find((item) => item.id === categoryId);
-
-          return (
+        <Row className="mb-3">
+          <Col xl={4} xs={4}>
+            <div
+              onClick={() => {
+                document.getElementById("select-avatar").click();
+              }}
+              className="image-container"
+            >
+              {image ? (
+                <img src={selectedImageUrl} alt="Chọn ảnh" />
+              ) : (
+                "Chọn ảnh"
+              )}
+            </div>
+            <input
+              className="hidden-input"
+              id="select-avatar"
+              type="file"
+              accept="image/*"
+              onChange={(event) => handleFileInputChange(event)}
+            />
+            {errorImage && (
+              <div style={{ color: "red"}}>
+                {errorImage}
+              </div>
+            )}
+          </Col>
+          <Col xl={10} xs={10}>
             <Form.Item
-              label={`Số mật ${category.name}`}
-              name={`honey_${category.name}`}
-              key={category.id}
+              label="Tên"
+              name="name"
               rules={[
                 {
                   required: true,
-                  message: `Vui lòng nhập số mật ${category.name}`,
+                  message: "Tên Quà không để trống",
                 },
                 {
-                  validator: validateHoney,
+                  min: 4,
+                  message: "Tên vật phẩm phải tối thiểu 4 kí tự",
+                },
+                {
+                  max: 100,
+                  message: "Tên vật phẩm phải tối đa 100 kí tự",
                 },
               ]}
             >
-              <Input
-                type="number"
-                value={categoryQuantities[category.name]}
-                onChange={(e) => {
-                  const newQuantities = { ...categoryQuantities };
-                  newQuantities[category.name] = e.target.value;
-                  setCategoryQuantities(newQuantities);
-                }}
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Số lượng"
+              name="quantity"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn tùy chọn số lượng",
+                },
+              ]}
+            >
+              <Radio.Group onChange={(e) => setQuantityValue(e.target.value)}>
+                <Radio value={0}>Vô hạn</Radio>
+                <Radio value={1} style={{ marginLeft: 95 }}>
+                  Giới hạn
+                </Radio>
+              </Radio.Group>
+            </Form.Item>
+            {form.getFieldValue("quantity") === 1 && (
+              <Form.Item
+                label="Số lượng giới hạn"
+                name="quantityLimit"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập số lượng giới hạn",
+                  },
+                  {
+                    validator: validateQuantity,
+                  },
+                ]}
+              >
+                <Input type="number" />
+              </Form.Item>
+            )}
+            <Form.Item
+              label="Loại vật phẩm"
+              name="type"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn loại",
+                },
+              ]}
+            >
+              <Select onChange={handleTypeChange} placeholder="Chọn loại">
+                <Option value={0}>Quà tặng</Option>
+                <Option value={1}>Vật phẩm nâng cấp</Option>
+                <Option value={2}>Danh hiệu</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Loại mật quy đổi"
+              name="honeyCategoryId"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn cấp",
+                },
+              ]}
+            >
+              <Select
+                mode="multiple"
+                placeholder="Chọn cấp bậc"
+                onChange={handleCategoryChange}
+              >
+                {listCategory.map((category) => (
+                  <Option key={category.id} value={category.id}>
+                    {category.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            {selectedCategories.map((categoryId) => {
+              const category = listCategory.find(
+                (item) => item.id === categoryId
+              );
+
+              return (
+                <Form.Item
+                  label={`Số mật ${category.name}`}
+                  name={`honey_${category.name}`}
+                  key={category.id}
+                  rules={[
+                    {
+                      required: true,
+                      message: `Vui lòng nhập số mật ${category.name}`,
+                    },
+                    {
+                      validator: validateHoney,
+                    },
+                  ]}
+                >
+                  <Input
+                    type="number"
+                    value={categoryQuantities[category.name]}
+                    onChange={(e) => {
+                      const newQuantities = { ...categoryQuantities };
+                      newQuantities[category.name] = e.target.value;
+                      setCategoryQuantities(newQuantities);
+                    }}
+                  />
+                </Form.Item>
+              );
+            })}
+          </Col>
+          <Col xl={10} xs={10} className="pl-2">
+            <Form.Item
+              label="Thời gian bắt đầu"
+              name="start"
+              rules={[
+                {
+                  validator: validateStartDate,
+                },
+              ]}
+            >
+              <Input type="date" />
+            </Form.Item>
+
+            <Form.Item
+              label="Thời gian kết thúc"
+              name="end"
+              rules={[
+                {
+                  validator: validateEndDate,
+                },
+              ]}
+            >
+              <Input type="date" />
+            </Form.Item>
+
+            <Form.Item
+              label="Yêu cầu phê duyệt"
+              name="status"
+              initialValue={1}
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn tùy chọn phê duyệt",
+                },
+              ]}
+              style={{
+                display:
+                  selectType === 0 || selectType === 2 ? "none" : "block",
+              }}
+            >
+              <Radio.Group>
+                <Radio value={0}>Không phê duyệt</Radio>
+                <Radio value={1} style={{ marginLeft: 30 }}>
+                  Cần phê duyệt
+                </Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item
+              label="Giao dịch"
+              name="transactionGift"
+              initialValue={0}
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn tùy chọn giao dịch",
+                },
+              ]}
+              style={{
+                display: selectType === 1 ? "block" : "none",
+              }}
+            >
+              <Radio.Group>
+                <Radio value={0}>Cho phép</Radio>
+                <Radio value={1} style={{ marginLeft: 77 }}>
+                  Không cho phép
+                </Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item
+              label="Cộng dồn"
+              name="limitQuantity"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn tùy chọn số lượng",
+                },
+              ]}
+              style={{
+                display:
+                  selectType === 1 || selectType === 2 ? "none" : "block",
+              }}
+            >
+              <Radio.Group
+                onChange={(e) => setLimitQuantityValue(e.target.value)}
+              >
+                <Radio value={0}>Không cho phép</Radio>
+                <Radio value={1} style={{ marginLeft: 37 }}>
+                  Cho phép
+                </Radio>
+              </Radio.Group>
+            </Form.Item>
+            {form.getFieldValue("limitQuantity") === 1 && (
+              <Form.Item
+                label="Số lượng tối đa"
+                name="limitSoLuong"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập số lượng giới hạn cho phép",
+                  },
+                  {
+                    validator: validateLimitQuantity,
+                  },
+                ]}
+              >
+                <Input type="number" />
+              </Form.Item>
+            )}
+            <Form.Item label="Ghi chú" name="note">
+              <TextArea
+                cols="30"
+                rows="10"
+                style={{ width: "350px", height: "100px" }}
+                autoSize={{ minRows: 4, maxRows: 20 }}
               />
             </Form.Item>
-          );
-        })}
-
-        <Form.Item
-          label="Thời gian bắt đầu"
-          name="start"
-          rules={[
-            {
-              validator: validateStartDate,
-            },
-          ]}
-        >
-          <Input type="date" />
-        </Form.Item>
-
-        <Form.Item
-          label="Thời gian kết thúc"
-          name="end"
-          rules={[
-            {
-              validator: validateEndDate,
-            },
-          ]}
-        >
-          <Input type="date" />
-        </Form.Item>
-
-        <Form.Item
-          label="Yêu cầu phê duyệt"
-          name="status"
-          initialValue={1}
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng chọn tùy chọn phê duyệt",
-            },
-          ]}
-          style={{
-            display: selectType === 0 || selectType === 2 ? "none" : "block",
-          }}
-        >
-          <Radio.Group>
-            <Radio value={0}>Không phê duyệt</Radio>
-            <Radio value={1} style={{ marginLeft: 30 }}>
-              Cần phê duyệt
-            </Radio>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item
-          label="Giao dịch"
-          name="transactionGift"
-          initialValue={0}
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng chọn tùy chọn giao dịch",
-            },
-          ]}
-          style={{
-            display: selectType === 1 ? "block" : "none",
-          }}
-        >
-          <Radio.Group>
-            <Radio value={0}>Cho phép</Radio>
-            <Radio value={1} style={{ marginLeft: 77 }}>
-              Không cho phép
-            </Radio>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item
-          label="Cộng dồn"
-          name="limitQuantity"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng chọn tùy chọn số lượng",
-            },
-          ]}
-          style={{
-            display: selectType === 1 || selectType === 2 ? "none" : "block",
-          }}
-        >
-          <Radio.Group onChange={(e) => setLimitQuantityValue(e.target.value)}>
-            <Radio value={0}>Không cho phép</Radio>
-            <Radio value={1} style={{ marginLeft: 37 }}>
-              Cho phép
-            </Radio>
-          </Radio.Group>
-        </Form.Item>
-        {form.getFieldValue("limitQuantity") === 1 && (
-          <Form.Item
-            label="Số lượng tối đa"
-            name="limitSoLuong"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập số lượng giới hạn cho phép",
-              },
-              {
-                validator: validateLimitQuantity,
-              },
-            ]}
-          >
-            <Input type="number" />
-          </Form.Item>
-        )}
-        <Form.Item label="Ghi chú" name="note">
-          <TextArea
-            cols="30"
-            rows="10"
-            style={{ width: "350px", height: "100px" }}
-          />
-        </Form.Item>
-
+          </Col>
+        </Row>
         <Form.Item
           wrapperCol={{
             offset: 8,
             span: 16,
           }}
+          style={{marginLeft : 130}}
         >
-          <button
+          <Button
             style={{ marginRight: "20px" }}
             onClick={onCancel}
-            className="submit-button"
+            className="submit-button bg-black text-white"
           >
             Đóng
-          </button>
-          <button htmlType="submit" className="submit-button ml-2">
+          </Button>
+          <Button htmlType="submit" className="submit-button 
+              submit-button bg-black text-white ml-2">
             OK
-          </button>
+          </Button>
         </Form.Item>
       </Form>
     </Modal>

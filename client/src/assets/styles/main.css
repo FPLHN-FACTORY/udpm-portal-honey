@@ -55,7 +55,7 @@ body {
   color: #fff;
   font-weight: bold;
   text-align: start;
-  background: #0079ff;
+  background: rgb(255, 204, 0);
   border-bottom: 1px solid #f0f0f0;
   transition: background 0.2s ease;
   font-size: 15px;

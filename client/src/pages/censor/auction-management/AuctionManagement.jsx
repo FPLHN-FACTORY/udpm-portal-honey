@@ -9,7 +9,6 @@ import {
   Input,
   Select,
   Form,
-  InputNumber,
 } from "antd";
 import "./auction-management.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -215,16 +214,12 @@ export default function AuctionMangement() {
           <Form form={form}>
             <Row
               gutter={12}
-              style={{ marginBottom: "15px", paddingTop: "20px" }}
+              style={{ 
+               paddingTop: "20px" }}
             >
               <Col span={6}>
                 <Form.Item
                   name="nameGift"
-                  labelCol={{ span: 9 }}
-                  wrapperCol={{ span: 17 }}
-                  label={
-                    <span style={{ marginRight: "8px" }}>Tên vật phẩm</span>
-                  }
                 >
                   <Input
                     onKeyPress={(e) => {
@@ -240,11 +235,6 @@ export default function AuctionMangement() {
               <Col span={6}>
                 <Form.Item
                   name="category"
-                  labelCol={{ span: 9 }}
-                  wrapperCol={{ span: 17 }}
-                  label={
-                    <span style={{ marginRight: "8px" }}>Loại mật ong</span>
-                  }
                 >
                   <Select
                     style={{ textAlign: "center" }}
@@ -263,11 +253,6 @@ export default function AuctionMangement() {
               <Col span={6}>
                 <Form.Item
                   name="type"
-                  labelCol={{ span: 9 }}
-                  wrapperCol={{ span: 17 }}
-                  label={
-                    <span style={{ marginRight: "8px" }}>Loại vật phẩm</span>
-                  }
                 >
                   <Select
                     style={{ textAlign: "center" }}
@@ -286,11 +271,6 @@ export default function AuctionMangement() {
               <Col span={6}>
                 <Form.Item
                   name="startingPrice"
-                  labelCol={{ span: 9 }}
-                  wrapperCol={{ span: 17 }}
-                  label={
-                    <span style={{ marginRight: "8px" }}>Giá bắt đầu</span>
-                  }
                 >
                   <Input
                     type="number"
@@ -299,7 +279,7 @@ export default function AuctionMangement() {
                       height: "30px",
                       width: "100%",
                     }}
-                    placeholder="Vui lòng nhập giá."
+                    placeholder="Giá bắt đầu"
                   />
                 </Form.Item>
               </Col>
