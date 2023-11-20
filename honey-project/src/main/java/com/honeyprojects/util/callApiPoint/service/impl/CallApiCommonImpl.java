@@ -3,6 +3,8 @@ package com.honeyprojects.util.callApiPoint.service.impl;
 import com.honeyprojects.infrastructure.apiconstants.ApiConstants;
 import com.honeyprojects.infrastructure.session.HoneySession;
 import com.honeyprojects.util.callApiPoint.model.dto.ClassSubjectDto;
+import com.honeyprojects.util.callApiPoint.model.dto.ScoreTemplateDto;
+import com.honeyprojects.util.callApiPoint.model.dto.ScoreTemplateVMDto;
 import com.honeyprojects.util.callApiPoint.model.request.FilterClassSubject;
 import com.honeyprojects.util.callApiPoint.model.request.FilterScoreTemplate;
 import com.honeyprojects.util.callApiPoint.model.request.FilterScoreTemplateVM;
@@ -11,10 +13,6 @@ import com.honeyprojects.util.callApiPoint.model.response.ScoreTemplate;
 import com.honeyprojects.util.callApiPoint.model.response.ScoreTemplateVM;
 import com.honeyprojects.util.callApiPoint.service.CallApiCommonService;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -28,8 +26,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class CallApiCommonImpl implements CallApiCommonService {
@@ -61,26 +57,32 @@ public class CallApiCommonImpl implements CallApiCommonService {
         headers.set("Authorization", authorizationToken);
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        List<ClassSubjectDto> response = new ArrayList<>();
+        try {
+            ResponseEntity<List<ClassSubjectDto>> responseEntity =
+                    restTemplate.exchange(apiConnect, HttpMethod.GET, httpEntity,
+                            new ParameterizedTypeReference<List<ClassSubjectDto>>() {
+                            });
+            response = responseEntity.getBody();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
-        ResponseEntity<List<ClassSubjectDto>> responseEntity =
-                restTemplate.exchange(apiConnect, HttpMethod.GET, httpEntity,
-                        new ParameterizedTypeReference<List<ClassSubjectDto>>() {
-                        });
-
-        List<ClassSubjectDto> response = responseEntity.getBody();
-
-        // Sử dụng Streams và lambda để chuyển đổi danh sách
-        List<ClassSubjectVM> classSubjectList = response.stream()
-                .map(el -> {
-                    ClassSubjectVM classSubjectVM = new ClassSubjectVM();
-                    classSubjectVM.setClassId(el.getId());
-                    classSubjectVM.setClassName(el.getSemesterName());
-                    classSubjectVM.setSubjectId(el.getSubjectId());
-                    classSubjectVM.setSubjectName(el.getSubjectName());
-                    classSubjectVM.setTeacherEmail(el.getLecturerMail());
-                    return classSubjectVM;
-                })
-                .collect(Collectors.toList());
+        List<ClassSubjectVM> classSubjectList = new ArrayList<>();
+        if (response != null && response.size() > 0) {
+            response.stream()
+                    .forEach(el -> {
+                        if (el.getStatus() == 1) {
+                            ClassSubjectVM classSubjectVM = new ClassSubjectVM();
+                            classSubjectVM.setClassId(el.getId());
+                            classSubjectVM.setClassName(el.getName());
+                            classSubjectVM.setSubjectId(el.getSubjectId());
+                            classSubjectVM.setSubjectName(el.getSubjectName());
+                            classSubjectVM.setTeacherEmail(el.getLecturerMail());
+                            classSubjectList.add(classSubjectVM);
+                        }
+                    });
+        }
 
         return classSubjectList;
     }
@@ -88,49 +90,95 @@ public class CallApiCommonImpl implements CallApiCommonService {
     @Override
     // Call api lấy ra danh sách đầu điểm của lớp
     public List<ScoreTemplate> callApiScoreTemplate(FilterScoreTemplate request) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+        String apiConnect = scoreClassDomain +
+                ApiConstants.API_GET_ALL_SCORE_ELEMENT_BY_ID
+                + "?idClass=" + request.getClassId();
 
-        // Kiểm tra xem request có đủ dữ liệu truyền vào không
-        Set<ConstraintViolation<FilterScoreTemplate>> violations = validator.validate(request);
-
-        if (!violations.isEmpty()) {
-            // Nếu có lỗi, bạn có thể xử lý tùy theo yêu cầu, ví dụ: ném một ngoại lệ hoặc trả về kết quả khác.
-            throw new IllegalArgumentException("Request không hợp lệ: " + violations.toString());
+        HttpHeaders headers = new HttpHeaders();
+        String authorizationToken = "Bearer " + honeySession.getToken();
+        headers.set("Authorization", authorizationToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        List<ScoreTemplateDto> response = new ArrayList<>();
+        try {
+            ResponseEntity<List<ScoreTemplateDto>> responseEntity =
+                    restTemplate.exchange(apiConnect, HttpMethod.GET, httpEntity,
+                            new ParameterizedTypeReference<List<ScoreTemplateDto>>() {
+                            });
+            response = responseEntity.getBody();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-
         List<ScoreTemplate> scoreTemplateList = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) {
-            ScoreTemplate scoreTemplate = new ScoreTemplate();
-            scoreTemplate.setScoreTemplateEmail("Email bảng điểm " + i);
-            scoreTemplate.setScoreTemplateId("ID bảng điểm " + i);
-
-            scoreTemplateList.add(scoreTemplate);
+        if (response != null && response.size() > 0) {
+            response.stream()
+                    .forEach(el -> {
+                        if (el.getStatus() == 1) {
+                            ScoreTemplate scoreTemplate = new ScoreTemplate();
+                            scoreTemplate.setId(el.getId());
+                            scoreTemplate.setSubjectId(el.getSubjectId());
+                            scoreTemplate.setName(el.getName());
+                            scoreTemplate.setScoreType(el.getScoreType());
+                            scoreTemplate.setMinScore(el.getMinScore());
+                            scoreTemplate.setMaxScore(el.getMaxScore());
+                            scoreTemplate.setScoreRatio(el.getScoreRatio());
+                            scoreTemplate.setCreatedDate(el.getCreatedDate());
+                            scoreTemplate.setStatus(el.getStatus());
+                            scoreTemplate.setGroup(el.getGroup());
+                            scoreTemplate.setIndex(el.getIndex());
+                            scoreTemplateList.add(scoreTemplate);
+                        }
+                    });
         }
-
         return scoreTemplateList;
     }
 
     @Override
     // Call api lấy ra thông tin 1 đầu điểm của một sinh viên
-    public ScoreTemplateVM callApiScoreTemplateVM(FilterScoreTemplateVM request) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+    public List<ScoreTemplateVM> callApiScoreTemplateVM(FilterScoreTemplateVM request) {
+        String apiConnect = scoreClassDomain +
+                ApiConstants.API_GET_ALL_SCORE_BY_STUDENT_CODE
+                + "?StudentCode=" + request.getStudentName()
+                + "&idScoreElement=" + request.getScoreTemplateId();
 
-        // Kiểm tra xem request có đủ dữ liệu truyền vào không
-        Set<ConstraintViolation<FilterScoreTemplateVM>> violations = validator.validate(request);
-
-        if (!violations.isEmpty()) {
-            // Nếu có lỗi, bạn có thể xử lý tùy theo yêu cầu, ví dụ: ném một ngoại lệ hoặc trả về kết quả khác.
-            throw new IllegalArgumentException("Request không hợp lệ: " + violations.toString());
+        HttpHeaders headers = new HttpHeaders();
+        String authorizationToken = "Bearer " + honeySession.getToken();
+        headers.set("Authorization", authorizationToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        List<ScoreTemplateVMDto> response = new ArrayList<>();
+        try {
+            ResponseEntity<List<ScoreTemplateVMDto>> responseEntity =
+                    restTemplate.exchange(apiConnect, HttpMethod.GET, httpEntity,
+                            new ParameterizedTypeReference<List<ScoreTemplateVMDto>>() {
+                            });
+            response = responseEntity.getBody();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+        List<ScoreTemplateVM> scoreTemplateList = new ArrayList<>();
 
-        ScoreTemplateVM scoreTemplateVM = new ScoreTemplateVM();
-        scoreTemplateVM.setScoreTemplateName("Tên bảng điểm " + request.getScoreTemplateId());
-        scoreTemplateVM.setScoreTemplatePoint(9.5);
-
-        return scoreTemplateVM;
+        if (response != null && response.size() > 0) {
+            response.stream()
+                    .forEach(el -> {
+                        ScoreTemplateVM scoreTemplate = new ScoreTemplateVM();
+                        scoreTemplate.setClassStudentId(el.getClass_StudentId());
+                        scoreTemplate.setScoreElementId(el.getScoreElementId());
+                        scoreTemplate.setName(el.getName());
+                        scoreTemplate.setScoreType(el.getScoreType());
+                        scoreTemplate.setMinScore(el.getMinScore());
+                        scoreTemplate.setMaxScore(el.getMaxScore());
+                        scoreTemplate.setScoreRatio(el.getScoreRatio());
+                        scoreTemplate.setCreatedDate(el.getCreatedDate());
+                        scoreTemplate.setStatus(el.getStatus());
+                        scoreTemplate.setGroup(el.getGroup());
+                        scoreTemplate.setIndex(el.getIndex());
+                        scoreTemplate.setScore(el.getScore());
+                        scoreTemplateList.add(scoreTemplate);
+                    });
+        }
+        return scoreTemplateList;
     }
 
     @Override

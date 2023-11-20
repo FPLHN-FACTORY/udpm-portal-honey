@@ -60,6 +60,7 @@ export default function AddPoint() {
   }, [dispatch]);
 
   const onFinishSearch = (value) => {
+    console.log("aaaa");
     setLoading(true);
     AddPointAPI.searchStudent(value.code.trim()).then((response) => {
       if (response.data.success) {
