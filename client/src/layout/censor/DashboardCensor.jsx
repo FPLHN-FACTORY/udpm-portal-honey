@@ -118,11 +118,6 @@ function DashboardAuthUser({ children }) {
       "/censor/upgrade-rate",
       <FontAwesomeIcon icon={faStar} />
     ),
-    getItem(
-      <Link to="/censor/conversion">Quản lý quy đổi</Link>,
-      "/censor/conversion",
-      <FontAwesomeIcon icon={faExchangeAlt} />
-    ),
   ];
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
