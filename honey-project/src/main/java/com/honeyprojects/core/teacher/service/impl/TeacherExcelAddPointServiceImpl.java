@@ -2,6 +2,9 @@ package com.honeyprojects.core.teacher.service.impl;
 
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
+import com.honeyprojects.core.president.model.request.PresidentCreateNotificationDetailAddItemRequest;
+import com.honeyprojects.core.president.model.request.PresidentNotificationAddItemRequest;
+import com.honeyprojects.core.president.model.response.PresidentCategoryResponse;
 import com.honeyprojects.core.teacher.model.request.TeacherGetPointRequest;
 import com.honeyprojects.core.teacher.model.response.TeacherAddPoinExcelResponse;
 import com.honeyprojects.core.teacher.model.response.TeacherExcelAddPoinBO;
@@ -9,11 +12,20 @@ import com.honeyprojects.core.teacher.model.response.TeacherPointResponse;
 import com.honeyprojects.core.teacher.repository.TeacherCategoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHoneyRepository;
+import com.honeyprojects.core.teacher.repository.TeacherNotificationDetailRepository;
+import com.honeyprojects.core.teacher.repository.TeacherNotificationRepository;
 import com.honeyprojects.core.teacher.service.TeacherExcelAddPointService;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Honey;
+import com.honeyprojects.entity.Notification;
+import com.honeyprojects.entity.NotificationDetail;
+import com.honeyprojects.infrastructure.contant.CategoryStatus;
+import com.honeyprojects.infrastructure.contant.Constants;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.NotificationDetailType;
+import com.honeyprojects.infrastructure.contant.NotificationStatus;
+import com.honeyprojects.infrastructure.contant.NotificationType;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.util.ConvertRequestApiidentity;
@@ -50,6 +62,11 @@ public class TeacherExcelAddPointServiceImpl implements TeacherExcelAddPointServ
     @Autowired
     private TeacherHistoryRepository historyRepository;
 
+    @Autowired
+    private TeacherNotificationRepository teacherNotificationRepository;
+
+    @Autowired
+    private TeacherNotificationDetailRepository teacherNotificationDetailRepository;
     @Autowired
     private UdpmHoney udpmHoney;
 
@@ -96,48 +113,68 @@ public class TeacherExcelAddPointServiceImpl implements TeacherExcelAddPointServ
 
                 dataList.add(response);
             }
+            String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
+            String enumCategoryACCEPT = String.valueOf(CategoryStatus.ACCEPT.ordinal());
 
             for (TeacherAddPoinExcelResponse response : dataList) {
                 SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(response.getEmail());
                 Category category = categoryRepository.getCategoryByName(response.getCategoryName());
+                if(category.getCategoryStatus().equals(enumCategoryFREE)){
+                    // gủi cho sinh viên
+                    Notification notification = createNotification(simpleResponse.getId());
 
-                TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
-                getPointRequest.setStudentId(simpleResponse.getId());
-                getPointRequest.setCategoryId(category.getId());
-                Long dateNow = Calendar.getInstance().getTimeInMillis();
-
-
-                TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
-
-                History history = new History();
-                history.setStatus(HoneyStatus.CHO_PHE_DUYET);
-                history.setTeacherId(idTeacher);
-                history.setHoneyPoint(response.getHoneyPoint());
-                history.setNote(response.getNote());
-                history.setType(TypeHistory.CONG_DIEM);
-                history.setCreatedAt(dateNow);
-                if (teacherPointResponse == null) {
-                    Honey honey = new Honey();
-                    honey.setStatus(Status.HOAT_DONG);
-                    honey.setHoneyPoint(0);
-                    honey.setStudentId(simpleResponse.getId());
-                    honey.setHoneyCategoryId(category.getId());
-                    history.setHoneyId(honeyRepository.save(honey).getId());
-                } else {
-                    Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
-                    history.setHoneyId(honey.getId());
+                    createNotificationDetailHoney(category, notification.getId(), response.getHoneyPoint());
                 }
-                history.setStudentId(simpleResponse.getId());
-                historyRepository.save(history);
+                if(category.getCategoryStatus().equals(enumCategoryACCEPT)){
+                    TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
+                    getPointRequest.setStudentId(simpleResponse.getId());
+                    getPointRequest.setCategoryId(category.getId());
+                    Long dateNow = Calendar.getInstance().getTimeInMillis();
+
+                    TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
+
+                    History history = new History();
+                    history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+                    history.setTeacherId(idTeacher);
+                    history.setHoneyPoint(response.getHoneyPoint());
+                    history.setNote(response.getNote());
+                    history.setType(TypeHistory.CONG_DIEM);
+                    history.setCreatedAt(dateNow);
+                    if (teacherPointResponse == null) {
+                        Honey honey = new Honey();
+                        honey.setStatus(Status.HOAT_DONG);
+                        honey.setHoneyPoint(0);
+                        honey.setStudentId(simpleResponse.getId());
+                        honey.setHoneyCategoryId(category.getId());
+                        history.setHoneyId(honeyRepository.save(honey).getId());
+                    } else {
+                        Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
+                        history.setHoneyId(honey.getId());
+                    }
+                    history.setStudentId(simpleResponse.getId());
+                    historyRepository.save(history);
+                }
+
             }
             return true;
-
         } catch (IOException e) {
             e.printStackTrace();
         }
         return false;
     }
+    private Notification createNotification(String idStudent) {
+        String title = Constants.TITLE_NOTIFICATION_SYSTEM;
+        PresidentNotificationAddItemRequest request = new PresidentNotificationAddItemRequest(title, idStudent, NotificationType.HE_THONG, NotificationStatus.CHUA_DOC);
+        Notification notification = request.createNotification(new Notification());
+        return teacherNotificationRepository.save(notification);
+    }
 
+    private NotificationDetail createNotificationDetailHoney(Category categoryResponse, String idNotification, Integer quantity) {
+        String content = Constants.CONTENT_NOTIFICATION_SYSTEM + " Mật ong - " + categoryResponse.getName() + " - Số lượng: " + quantity;
+        PresidentCreateNotificationDetailAddItemRequest detailRandomRequest = new PresidentCreateNotificationDetailAddItemRequest(content, categoryResponse.getId(), idNotification, NotificationDetailType.NOTIFICATION_DETAIL_HONEY, quantity);
+        NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
+        return teacherNotificationDetailRepository.save(notificationDetail);
+    }
     @Override
     public Boolean exportExcel() {
         String userHome = System.getProperty("user.home");

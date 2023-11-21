@@ -56,9 +56,12 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
 
         Category category = adminCategoryRepository.findById(requestAddPointStudentBO.getCategoryId()).orElse(null);
 
+        String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
+        String enumCategoryACCEPT = String.valueOf(CategoryStatus.ACCEPT.ordinal());
+
         for (AdminAddPointStudentLabReportRequest adminAddPointStudentLabReportRequest :
                 requestAddPointStudentBO.getListStudent()) {
-            if (category.getCategoryStatus().equals(CategoryStatus.FREE)) {
+            if (category.getCategoryStatus().equals(enumCategoryFREE)) {
                 Notification notification = createNotification(adminAddPointStudentLabReportRequest.getId());
                 if (!DataUtils.isNullObject(requestAddPointStudentBO.getListStudent())) {
                     try {
@@ -69,7 +72,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
                     }
                 }
             }
-            if (category.getCategoryStatus().equals(CategoryStatus.ACCEPT)){
+            if (category.getCategoryStatus().equals(enumCategoryACCEPT)){
                 TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
                 getPointRequest.setStudentId(adminAddPointStudentLabReportRequest.getId());
                 getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
@@ -102,10 +105,12 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
     public Boolean createPointToStudentPortalEvents(AdminAddPointStudentPortalEventsBO requestAddPointStudentBO) {
         Category category = adminCategoryRepository.findById(requestAddPointStudentBO.getCategoryId()).orElse(null);
         Integer honeyPoint = requestAddPointStudentBO.getNumberHoney();
+        String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
+        String enumCategoryACCEPT = String.valueOf(CategoryStatus.ACCEPT.ordinal());
 
         for (String studentId :
                 requestAddPointStudentBO.getLstStudentId()) {
-            if (category.getCategoryStatus().equals(CategoryStatus.FREE)) {
+            if (category.getCategoryStatus().equals(enumCategoryFREE)) {
                 Notification notification = createNotification(studentId);
                 if (!DataUtils.isNullObject(requestAddPointStudentBO.getLstStudentId())) {
                     try {
@@ -115,7 +120,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
                     }
                 }
             }
-            if (category.getCategoryStatus().equals(CategoryStatus.ACCEPT)){
+            if (category.getCategoryStatus().equals(enumCategoryACCEPT)){
                 TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
                 getPointRequest.setStudentId(studentId);
                 getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
