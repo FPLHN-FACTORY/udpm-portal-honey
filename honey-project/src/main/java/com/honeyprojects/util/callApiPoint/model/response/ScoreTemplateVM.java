@@ -11,6 +11,17 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ScoreTemplateVM {
 
-    private String scoreTemplateName;
-    private Double scoreTemplatePoint;
+    private String classStudentId;
+    private String scoreElementId;
+    private Long score;
+    private Long scoreType;
+    private Long minScore;
+    private Long maxScore;
+    private Long scoreRatio;
+    private String createdDate;
+    private String name;
+    private Long index;
+    private String group;
+    private Long status;
+    private String scoreElementName;
 }
