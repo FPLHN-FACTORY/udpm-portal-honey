@@ -13,6 +13,7 @@ import {
   SetNotification,
 } from "../../../app/reducers/notification/notification.reducer";
 import { GetCountNotification } from "../../../app/reducers/notification/count-notification.reducer";
+import imageNotification from "../../../assets/images/bell.png";
 
 const Letter = memo(() => {
   const dispatch = useAppDispatch();
@@ -89,7 +90,7 @@ const Letter = memo(() => {
               <div className="letter__item" key={notification.id}>
                 <div className="letter__item__image">
                   <img
-                    src={notification.image}
+                    src={imageNotification}
                     alt="Ảnh"
                     className="item__image"
                   />
