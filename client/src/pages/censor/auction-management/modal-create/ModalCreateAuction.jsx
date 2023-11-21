@@ -25,6 +25,7 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
   const [honey, setHoney] = useState("");
   const [errorHoney, setErrorHoney] = useState("");
   const [errorItem, setErrorItem] = useState("");
+  const [errorDates, setErrorDates] = useState("");
   const [status, setStatus] = useState(0);
   const [errorStatus, setErrorStatus] = useState("");
   const [honeyCategoryId, setHoneyCategoryId] = useState("");
@@ -123,10 +124,16 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
     }
 
     if (itemId === "" || itemId === undefined || itemId === null) {
-      setErrorItem("Bạn phải chọn vật phẩm cần đấu giá");
+      setErrorItem("Vui lòng chọn vật phẩm đấu giá");
       check++;
     } else {
       setErrorItem("");
+    }
+
+    if(fromDate === undefined || fromDate === null || fromDate === "" || toDate === undefined || toDate === null || toDate === ""){
+      setErrorDates("Vui lòng chọn thời gian đấu giá");
+    }else {
+      setErrorDates("");
     }
 
     if (status.toString().trim().length === 0) {
@@ -271,6 +278,8 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
                 format={"DD/MM/YYYY"}
                 placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
               />
+              <br></br>
+              <span className="error">{errorDates}</span>
             </Col>
           </Row>
         </div>

@@ -12,6 +12,7 @@ import {
   Popconfirm,
   Input,
   Select,
+  Form,
 } from "antd";
 import "./auction-management.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,6 +22,7 @@ import {
   faRectangleList,
   faTrash,
   faPlus,
+  faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router";
@@ -36,7 +38,7 @@ import {
 import ModalCreateAuction from "./modal-create/ModalCreateAuction.jsx";
 import ModalUpdateAuction from "./modal-update/ModalUpdateAuction";
 import moment from "moment";
-const { Option } = Select;
+import { CountdownTimer } from "../../util/CountdownTimer";
 
 export default function AuctionMangement() {
   const [auction, setAuction] = useState(null);
@@ -45,11 +47,38 @@ export default function AuctionMangement() {
   const [honeyCategoryId, setHoneyCategoryId] = useState("");
   const [listCategorySearch, setListCategorySearch] = useState([]);
   const { id } = useParams();
-  const [current, setCurrent] = useState(1);
+  const [current, setCurrent] = useState(0);
   const [total, setTotal] = useState(0);
+  const [size, setSize] = useState(10);
   const dispatch = useAppDispatch();
   const [modalCreate, setModalCreate] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
+  const [form] = Form.useForm();
+  const [searchParams, setSearchParams] = useState({
+    nameGift: "",
+    category: "",
+    type: "",
+    startingPrice: "",
+  });
+
+  const listType = [
+    {
+      label: "Quà tặng ",
+      value: 0,
+    },
+    {
+      label: "Vật phẩm ",
+      value: 1,
+    },
+    {
+      label: "Dụng cụ ",
+      value: 2,
+    },
+    {
+      label: "Danh hiệu ",
+      value: 3,
+    },
+  ];
 
 
   useEffect(() => {
@@ -101,7 +130,7 @@ export default function AuctionMangement() {
       render: (text, record, index) => index + 1,
     },
     {
-      title: "Tên phòng đấu giá",
+      title: "Tên phòng",
       dataIndex: "name",
       key: "name",
     },
@@ -111,23 +140,31 @@ export default function AuctionMangement() {
       key: "nameCategory",
       render: (text) => <span>{text}</span>,
     },
+    // {
+    //   title: "Từ ",
+    //   dataIndex: "fromDate",
+    //   key: "fromDate",
+    //   render: (text) => <span>{moment(text).format("DD/MM/YYYY HH:MM:ss")}</span>
+    // },
+    // {
+    //   title: "Đến",
+    //   dataIndex: "toDate",
+    //   key: "toDate",
+    //   render: (text) => <span>{moment(text).format("DD/MM/YYYY HH:MM:ss")}</span>
+    // },
     {
-      title: "Từ ",
-      dataIndex: "fromDate",
-      key: "fromDate",
-      render: (text) => <span>{moment(text).format("DD/MM/YYYY HH:MM:ss")}</span>
-    },
-    {
-      title: "Đến",
+      title: "Còn lại", 
       dataIndex: "toDate",
       key: "toDate",
-      render: (text) => <span>{moment(text).format("DD/MM/YYYY HH:MM:ss")}</span>
-    },
-    {
-      title: "Mật ong",
-      dataIndex: "lastPrice",
-      key: "lastPrice",
-      render: (text) => <span>{text ? text: "?"}</span>
+      align: "center",
+      width: "17%",
+      render: (_, record) => {
+        if(record.status === "HOAT_DONG"){
+          return <CountdownTimer initialTime={record.toDate - new Date().getTime()} />
+        }else{
+          return <span style={{color: 'red'}}>00:00:00</span>
+        }
+      },
     },
     {
       title: "Vật phẩm đấu giá",
@@ -135,13 +172,7 @@ export default function AuctionMangement() {
       key: "giftName",
     },
     {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
-    },
-    {
-      title: "Giá cố định",
+      title: "Giá khởi điểm",
       dataIndex: "startingPrice",
       key: "startingPrice",
       align: "center",
@@ -160,11 +191,32 @@ export default function AuctionMangement() {
       },
     },
     {
-      title: "Loại mật ong",
-      dataIndex: "nameCategory",
-      key: "nameCategory",
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
       align: "center",
+      render: (status) => {
+        if(status === "HOAT_DONG"){
+          return <Tag color="green">Đang mở</Tag>
+        }else{
+          return <Tag color="red">Đã đóng</Tag>
+        }
+      }
     },
+    {
+      title: "Hành động",
+      key: "action",
+      render: (_, record) => (
+        <Tooltip title="Đóng phiên">
+            <Button disabled={record.status === "KHONG_HOAT_DONG"}
+            style={{ backgroundColor:'red', color: 'white'}}
+              onClick={() => buttonDelete(record.id)}
+            >
+              <FontAwesomeIcon icon={faCircleXmark} />
+            </Button>
+          </Tooltip>
+      )
+    }
   ];
 
   const buttonSearch = async () => {
@@ -207,18 +259,18 @@ export default function AuctionMangement() {
     setAuction(null);
   };
 
-  // const buttonDelete = (id) => {
-  //   AuctionAPI.changeStatus(id).then(
-  //     (response) => {
-  //       message.success("Đóng thành công!");
-  //       dispatch(ChangeAuctionStatus(response.data.data));
-  //       fetchData();
-  //     },
-  //     (error) => {
-  //       message.error("Đóng thất bại!");
-  //     }
-  //   );
-  // };
+  const buttonDelete = (id) => {
+    AuctionAPI.changeStatus(id).then(
+      (response) => {
+        message.success("Đóng thành công!");
+        dispatch(ChangeAuctionStatus(response.data.data));
+        fetchData();
+      },
+      (error) => {
+        message.error("Đóng thất bại!");
+      }
+    );
+  };
 
   return (
     <div>
