@@ -1,4 +1,4 @@
-import { Button, Card, Row, Space, Spin, Table } from "antd";
+import { Button, Card, Row, Space, Table } from "antd";
 import React, { useState } from "react";
 import ModalConfirm from "./ModalConfirm";
 
@@ -54,33 +54,31 @@ export default function ListDataImport() {
 
   return (
     <div>
-      <Spin spinning={false}>
-        {/* <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+      {/* <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
           aaa
         </Card> */}
 
-        <Card style={{ borderTop: "5px solid #FFCC00" }}>
-          <Row style={{ marginBottom: "32px" }}>
-            <b style={{ fontSize: "25px" }}>Dữ liệu import</b>
-          </Row>
-          <Table dataSource={dataSource} columns={columns} />
-          <Space
-            style={{
-              justifyContent: "right",
-              display: "flex",
-              marginTop: "32px",
-            }}
-          >
-            <Button className="button-css">CLOSE</Button>
-           
-              <Button className="button-css" onClick={() => setOpen(true)}>
-                ADD
-              </Button>
-           
-            {open && <ModalConfirm open={open} setOpen={setOpen} />}
-          </Space>
-        </Card>
-      </Spin>
+      <Card style={{ borderTop: "5px solid #FFCC00" }}>
+        <Row style={{ marginBottom: "32px" }}>
+          <b style={{ fontSize: "25px" }}>Dữ liệu import</b>
+        </Row>
+        <Table dataSource={dataSource} columns={columns} />
+        <Space
+          style={{
+            justifyContent: "right",
+            display: "flex",
+            marginTop: "32px",
+          }}
+        >
+          <Button className="button-css">CLOSE</Button>
+
+          <Button className="button-css" onClick={() => setOpen(true)}>
+            ADD
+          </Button>
+
+          {open && <ModalConfirm open={open} setOpen={setOpen} />}
+        </Space>
+      </Card>
     </div>
   );
 }

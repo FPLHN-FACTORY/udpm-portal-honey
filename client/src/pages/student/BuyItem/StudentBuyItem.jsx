@@ -150,7 +150,7 @@ export default function StudentBuyItem(props) {
     } else if (
       (selectedConversion ? selectedConversion.honey : 0) > fillPoint.point
     ) {
-      message.error("Bạn không đủ điểm để đổi quà trong ranh này.");
+      message.error("Số lượng mật ong không đủ!");
       return;
     }
 
@@ -187,7 +187,6 @@ export default function StudentBuyItem(props) {
     return category ? category.name : "";
   };
 
-  console.log("fillCategory", fillCategory[0]);
 
   return (
     <>

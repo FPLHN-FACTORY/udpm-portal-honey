@@ -33,7 +33,6 @@ const UsingGift = (props) => {
   };
 
   const handleOk = () => {
-    setLoading(true);
     form
       .validateFields()
       .then((values) => {
@@ -56,10 +55,6 @@ const UsingGift = (props) => {
             fetchData();
           });
       })
-      .catch((errorInfo) => {
-        console.log("Validation failed:", errorInfo);
-      });
-    setLoading(false);
   };
 
   const handleCancel = () => {
@@ -75,12 +70,12 @@ const UsingGift = (props) => {
     const classStudent = dataClass.filter(el => el.classId = value)[0];
     form.setFieldValue("maMon", classStudent.subjectName)
     form.setFieldValue("emailGV", classStudent.teacherEmail)
-    
+
     ArchiveAPI.getScoreClass({classId: classStudent.classId, subjectId: classStudent.subjectId}).then((response) => {
       setDataScore(response.data)
     })
   };
-  
+
   // Filter `option.label` match the user type `input`
   const filterOption = (input, option) =>
     (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
@@ -95,14 +90,14 @@ const UsingGift = (props) => {
         onCancel={handleCancel}
         okButtonProps={{ loading: loading }}>
         <hr className="border-0 bg-gray-300 mt-3 mb-6" />
-        <Form form={form} 
+        <Form form={form}
             labelCol={{
               span: 7,
             }}
             wrapperCol={{
               span: 18,
             }} >
-        
+
           <Form.Item
             name="maLop"
             label="Mã lớp học"
@@ -146,7 +141,7 @@ const UsingGift = (props) => {
             ]}>
             <Input disabled />
           </Form.Item>
-          
+
           <Form.Item
             name="dauDiem"
             label="Đầu điểm lớp học"

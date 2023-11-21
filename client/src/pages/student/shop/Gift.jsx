@@ -6,6 +6,19 @@ import "./shop-gift.css";
 import { ResquestConversion } from "../../../apis/user/ResquestConversiton/ResquestConversion.api";
 import { StarTwoTone } from "@ant-design/icons";
 
+function ImageRenderer({ image }) {
+  if (image) {
+    return (
+      <img
+        src={image}
+        style={{ width: "100px", height: "100px" }}
+        alt="Hình ảnh"
+      />
+    );
+  } else {
+    return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
+  }
+}
 const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
   const [selectedConversion, setSelectedConversion] = useState(null);
   const [fillUserApi, setFillUserApi] = useState([]);
@@ -68,7 +81,7 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
       (selectedConversion.honey ? selectedConversion.honey * quantity : 0) >
       fillPoint.point
     ) {
-      message.error("Bạn không đủ điểm để đổi quà trong ranh này.");
+      message.error("Số lượng mật ong không đủ!");
       return;
     }
     if (selectedConversion.quantity != null) {

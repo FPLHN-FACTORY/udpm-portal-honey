@@ -8,10 +8,9 @@ import React from "react";
 import { AddPointExcelAPI } from "../../../apis/teacher/add-point/add-point-excel.api";
 
 export default function ModalImportExcel(props) {
-  const { open, setOpen, nameFile, setNameFile, loading, setLoading } = props;
+  const { open, setOpen, nameFile, setNameFile, loading } = props;
 
   const handleExportExcel = () => {
-    setLoading(true);
     AddPointExcelAPI.exportExcel()
       .then(() => {
         message.success("Export excel thành công");
@@ -19,17 +18,14 @@ export default function ModalImportExcel(props) {
       .catch((err) => {
         message.error("Export excel thất bại");
       });
-    setLoading(false);
   };
 
   const handleFileInputChange = (e) => {
     setNameFile(e.target.files[0].name);
     const formData = new FormData();
     formData.append("file", e.target.files[0]);
-    setLoading(true);
     AddPointExcelAPI.previewImportPoint(formData)
       .then((response) => {
-    //    console.log(response.data.data);
         if (response.data.data.totalError === 0) {
           message.success("Import thành công ")
         } else {
@@ -49,7 +45,6 @@ export default function ModalImportExcel(props) {
       .catch((error) => {
         message.error("Lỗi khi import Excel.");
       });
-    setLoading(false);
   };
 
   const handleRemoveFile = () => {

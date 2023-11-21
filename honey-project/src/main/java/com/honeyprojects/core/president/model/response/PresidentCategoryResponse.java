@@ -11,7 +11,7 @@ public interface PresidentCategoryResponse extends IsIdentified {
     @Value("#{target.name}")
     String getName();
 
-    @Value("#{target.status}")
+    @Value("#{target.category_status}")
     String getStatus();
 
 }
