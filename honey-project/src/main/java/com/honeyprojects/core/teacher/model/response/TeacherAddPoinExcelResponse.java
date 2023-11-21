@@ -9,27 +9,17 @@ import lombok.ToString;
 @Setter
 @ToString
 public class TeacherAddPoinExcelResponse {
-    public String studentName;
+    private String id;
 
-    public String email;
+    private String userName;
 
-    public Integer honeyPoint;
+    private String lstGift;
 
-    private String honeyId;
-
-    private String categoryId;
-
-    private String studentId;
+    private String lstHoney;
 
     private String note;
 
-    private String categoryName;
-
-    private String importMessageStudent;
-
-    private String importMessageCategory;
-
-    private String importMessagePoint;
+    private String importMessage;
 
     private boolean isError;
 
