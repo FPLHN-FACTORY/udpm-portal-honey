@@ -26,12 +26,12 @@ public interface AdminRequestConversionHistoryResponse extends IsIdentified {
     @Value("#{target.created_date}")
     Long getCreatedDate();
 
-
     @Value("#{target.status}")
     Integer getStatus();
 
     @Value("#{target.note}")
     String getNote();
+
     @Value("#{target.quantity}")
     String getQuantity();
 

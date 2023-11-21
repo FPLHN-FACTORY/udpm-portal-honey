@@ -2,7 +2,6 @@ package com.honeyprojects.core.teacher.repository;
 
 import com.honeyprojects.core.teacher.model.request.TeacherGetUseGiftRequest;
 import com.honeyprojects.core.teacher.model.response.TeacherUseGiftRequestResponse;
-import com.honeyprojects.entity.History;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.repository.HistoryRepository;
@@ -31,16 +30,16 @@ public interface TeacherUseGiftRequestRepository extends HistoryRepository {
     Page<TeacherUseGiftRequestResponse> getTeacherUseGiftRequest(TeacherGetUseGiftRequest request, Pageable pageable);
 
     @Query(value = """
-            select h.className from history h
-            where h.status = :status and h.type = :type
-            group by h.className
+            select h.class_name from history h
+            where h.status = 0 and h.type = 3
+            group by h.class_name
             """, nativeQuery = true)
-    List<String> filterClass(HoneyStatus status, TypeHistory type);
+    List<String> filterClass();
 
     @Query(value = """
-            select h.giftId from history h
-            where h.status = :status and h.type = :type
-            group by h.giftId
+            select h.gift_id from history h
+            where h.status = 0 and h.type = 3
+            group by h.gift_id
             """, nativeQuery = true)
-    List<String> filterGift(HoneyStatus status, TypeHistory type);
+    List<String> filterGift();
 }

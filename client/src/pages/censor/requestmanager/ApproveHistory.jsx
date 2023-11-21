@@ -21,10 +21,7 @@ import {
   GetCategory,
   SetCategory,
 } from "../../../app/reducers/category/category.reducer";
-import {
-
-  SearchOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import moment from "moment";
@@ -42,47 +39,8 @@ const statusHistory = (status) => {
 
 export default function RequestApprovedHistory() {
   const dispatch = useAppDispatch();
-  const columns = [
-    {
-      title: "STT",
-      dataIndex: "stt",
-      key: "stt",
-    },
-    {
-      title: "User name",
-      dataIndex: "userName",
-      key: "userName",
-    },
-    {
-      title: "Tên sinh viên",
-      dataIndex: "nameStudent",
-      key: "nameStudent",
-    },
-    {
-      title: "Loại điểm",
-      dataIndex: "nameCategory",
-      key: "nameCategory",
-    },
-    {
-      title: "Số điểm",
-      dataIndex: "honeyPoint",
-      key: "honeyPoint",
-    },
-    {
-      title: "Ngày tạo",
-      dataIndex: "createdDate",
-      key: "createdDate",
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-    },
-  ];
-
   const [totalPage, setTotalPage] = useState(1);
   const [filter, setFilter] = useState({ page: 0, status: null });
-  const [type, setType] = useState();
 
   useEffect(() => {
     fetchData(dispatch, filter);
@@ -133,12 +91,12 @@ export default function RequestApprovedHistory() {
       ...data,
       key: data.id,
       status: statusHistory(data.status),
-      createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
+      createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
   });
   const listCategory = useAppSelector(GetCategory);
-
+  console.log(data);
   const onFinishSearch = (value) => {
     if (value.userName === undefined || value.userName.trim().length === 0) {
       setFilter({
@@ -166,87 +124,80 @@ export default function RequestApprovedHistory() {
   };
 
   return (
-      <div className="request-manager">
-        {/* <TabsHistory selectIndex={1} type={type} /> */}
-        <Card className="mb-2 py-1">
-          <Form onFinish={onFinishSearch}>
-            <Space size={"large"}>
-              <Form.Item name="userName" className="search-input">
-                <Input
-                  style={{ width: "400px" }}
-                  name="userName"
-                  size="small"
-                  placeholder="Nhập user name sinh viên cần tìm"
-                  prefix={<SearchOutlined />}
-                />
-              </Form.Item>
-              <Form.Item name={"idCategory"}>
-                <Select
-                  style={{ width: "250px" }}
-                  size="large"
-                  placeholder="Loại điểm"
-                  options={[
-                    { value: null, label: "Tất cả" },
-                    ...listCategory.map((category) => {
-                      return {
-                        value: category.id,
-                        label: category.name,
-                      };
-                    }),
-                  ]}
-                />
-              </Form.Item>
-              <Form.Item name={"status"} initialValue={null}>
-                <Select
-                  style={{ width: "260px" }}
-                  size="large"
-                  placeholder="Trạng thái"
-                  options={[
-                    { value: null, label: "Tất cả" },
-                    ...[1, 2].map((value) => {
-                      return {
-                        value: value,
-                        label: statusHistory(value),
-                      };
-                    }),
-                  ]}
-                />
-              </Form.Item>
-              <Button
-                htmlType="submit"
-                type="primary"
-                className="mr-10 search-button">
-                Lọc
-              </Button>
-            </Space>
-          </Form>
-        </Card>
-        <Card title="Lịch sử phê duyệt cộng điểm">
-          <Table
-            columns={columns}
-            dataSource={data}
-            rowKey="key"
-            pagination={false}
-            expandable={{
-              expandedRowRender: (record) => (
-                <p>
-                  <b style={{ color: "#EEB30D" }}>Lý do cộng: </b>
-                  {record.note}
-                </p>
-              ),
+    <div className="request-manager">
+      {/* <TabsHistory selectIndex={1} type={type} /> */}
+      <Card className="mb-2 py-1">
+        <Form onFinish={onFinishSearch}>
+          <Space size={"large"}>
+            <Form.Item name="userName" className="search-input">
+              <Input
+                style={{ width: "400px" }}
+                name="userName"
+                size="small"
+                placeholder="Nhập user name sinh viên cần tìm"
+                prefix={<SearchOutlined />}
+              />
+            </Form.Item>
+            <Form.Item name={"idCategory"}>
+              <Select
+                style={{ width: "250px" }}
+                size="large"
+                placeholder="Loại điểm"
+                options={[
+                  { value: null, label: "Tất cả" },
+                  ...listCategory.map((category) => {
+                    return {
+                      value: category.id,
+                      label: category.name,
+                    };
+                  }),
+                ]}
+              />
+            </Form.Item>
+            <Form.Item name={"status"} initialValue={null}>
+              <Select
+                style={{ width: "260px" }}
+                size="large"
+                placeholder="Trạng thái"
+                options={[
+                  { value: null, label: "Tất cả" },
+                  ...[1, 2].map((value) => {
+                    return {
+                      value: value,
+                      label: statusHistory(value),
+                    };
+                  }),
+                ]}
+              />
+            </Form.Item>
+            <Button
+              htmlType="submit"
+              type="primary"
+              className="mr-10 search-button"
+            >
+              Lọc
+            </Button>
+          </Space>
+        </Form>
+      </Card>
+      <Card title="Lịch sử phê duyệt cộng điểm">
+        {data.map((item) => (
+          <Card>
+            Sinh viên {item.nameStudent} được cộng {item.honeyPoint} mật ong{" "}
+            {item.nameCategory} vào lúc {item.createdDate} - {item.note}
+          </Card>
+        ))}
+        <div className="mt-10 text-center mb-10">
+          <Pagination
+            simple
+            current={filter.page + 1}
+            onChange={(page) => {
+              setFilter({ ...filter, page: page - 1 });
             }}
+            total={totalPage * 10}
           />
-          <div className="mt-10 text-center mb-10">
-            <Pagination
-              simple
-              current={filter.page + 1}
-              onChange={(page) => {
-                setFilter({ ...filter, page: page - 1 });
-              }}
-              total={totalPage * 10}
-            />
-          </div>
-        </Card>
-      </div>
+        </div>
+      </Card>
+    </div>
   );
 }

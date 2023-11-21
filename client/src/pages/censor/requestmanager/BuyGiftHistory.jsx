@@ -34,13 +34,11 @@ export default function BuyGiftHistory() {
   const [filter, setFilter] = useState({ page: 0 });
   const [fillUserApi, setFillUserApi] = useState([]);
   const [fillPoint, setFillPoint] = useState(0);
-  const [type, setType] = useState();
+
   const fechUserApiById = () => {
     ResquestConversion.getUserAPiByid().then((response) => {
       setFillUserApi({
         ...response.data.data,
-        khoa: "17.3",
-        phone: "0763104018",
       });
     });
   };
@@ -121,79 +119,81 @@ export default function BuyGiftHistory() {
         .catch((error) => console.error(error));
     }
   };
-  const columns = [
-    {
-      title: "STT",
-      dataIndex: "stt",
-      key: "stt",
-      render: (text, record, index) => index + 1,
-    },
+  // const columns = [
+  //   {
+  //     title: "STT",
+  //     dataIndex: "stt",
+  //     key: "stt",
+  //     render: (text, record, index) => index + 1,
+  //   },
 
-    {
-      title: "Tên sinh viên",
-      dataIndex: "studentName",
-      key: "studentName",
-    },
-    {
-      title: "userName",
-      dataIndex: "userName",
-      key: "userName",
-    },
-    {
-      title: "Loại điểm",
-      dataIndex: "nameCategory",
-      key: "nameCategory",
-    },
-    {
-      title: "Loại quà",
-      dataIndex: "nameGift",
-      key: "nameGift",
-    },
-    {
-      title: "Số lượng",
-      dataIndex: "quantity",
-      key: "quantity",
-    },
-    {
-      title: "Điểm trừ",
-      dataIndex: "honeyPoint",
-      key: "honeyPoint",
-      render: (text) => <span>{`-${text} điểm`}</span>,
-    },
-    {
-      title: "Ngày tạo",
-      dataIndex: "createdDate",
-      key: "createdDate",
-      render: (text) => <span>{moment(text).format("DD/MM/YYYY")}</span>,
-    },
+  //   {
+  //     title: "Tên sinh viên",
+  //     dataIndex: "studentName",
+  //     key: "studentName",
+  //   },
+  //   {
+  //     title: "userName",
+  //     dataIndex: "userName",
+  //     key: "userName",
+  //   },
+  //   {
+  //     title: "Loại điểm",
+  //     dataIndex: "nameCategory",
+  //     key: "nameCategory",
+  //   },
+  //   {
+  //     title: "Loại quà",
+  //     dataIndex: "nameGift",
+  //     key: "nameGift",
+  //   },
+  //   {
+  //     title: "Số lượng",
+  //     dataIndex: "quantity",
+  //     key: "quantity",
+  //   },
+  //   {
+  //     title: "Điểm trừ",
+  //     dataIndex: "honeyPoint",
+  //     key: "honeyPoint",
+  //     render: (text) => <span>{`-${text} điểm`}</span>,
+  //   },
+  //   {
+  //     title: "Ngày tạo",
+  //     dataIndex: "createdDate",
+  //     key: "createdDate",
+  //     render: (text) => <span>{moment(text).format("DD/MM/YYYY")}</span>,
+  //   },
 
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => (
-        <Tag
-          color={
-            status === 0
-              ? "geekblue"
-              : status === 1
-              ? "green"
-              : status === 2
-              ? "volcano"
-              : "default"
-          }
-        >
-          {status === 0
-            ? "Chờ phê duyệt"
-            : status === 1
-            ? "Đổi thành công"
-            : status === 2
-            ? "Đã hủy"
-            : "Không sác định"}
-        </Tag>
-      ),
-    },
-  ];
+  //   {
+  //     title: "Trạng thái",
+  //     dataIndex: "status",
+  //     key: "status",
+  //     render: (status) => (
+  //       <Tag
+  //         color={
+  //           status === 0
+  //             ? "geekblue"
+  //             : status === 1
+  //             ? "green"
+  //             : status === 2
+  //             ? "volcano"
+  //             : "default"
+  //         }
+  //       >
+  //         {status === 0
+  //           ? "Chờ phê duyệt"
+  //           : status === 1
+  //           ? "Đổi thành công"
+  //           : status === 2
+  //           ? "Đã hủy"
+  //           : "Không sác định"}
+  //       </Tag>
+  //     ),
+  //   },
+  // ];
+  console.log(getHistory);
+
   return (
     <>
       <Card className="mb-2">
@@ -250,12 +250,15 @@ export default function BuyGiftHistory() {
       </Card>
       <Card title="Lịch sử đổi quà">
         <div className="mt-5">
-          <Table
+          {/* <Table
             columns={columns}
             rowKey="id"
             dataSource={getHistory}
             pagination={false}
-          />
+          /> */}
+          {getHistory.map((item) => (
+            <Card>Sinh viên </Card>
+          ))}
         </div>
         <div className="mt-5 text-center">
           <Pagination
