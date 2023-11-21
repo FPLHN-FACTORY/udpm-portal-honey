@@ -100,7 +100,6 @@ export default function AddItem() {
           setHoneyStudent({ point: 0 });
         }
       })
-      .finally(() => {});
   };
 
   const handleClostPreview = () => {
