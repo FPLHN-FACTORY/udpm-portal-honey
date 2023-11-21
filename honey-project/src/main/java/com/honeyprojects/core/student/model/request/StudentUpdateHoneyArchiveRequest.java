@@ -13,4 +13,10 @@ public class StudentUpdateHoneyArchiveRequest {
 
     private List<String>idGift;
 
+    private Integer quantity;
+
+    private Integer originalHoney;
+
+    private Integer destinationHoney;
+
 }

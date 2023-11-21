@@ -51,7 +51,6 @@ export default function AddPoint() {
         setCategorySelected(response.data.data[0].id);
         dispatch(SetCategory(response.data.data));
       })
-      .finally(() => {});
   }, [dispatch]);
 
   const onFinishSearch = (value) => {
@@ -102,7 +101,6 @@ export default function AddPoint() {
           setHoneyStudent({ point: 0 });
         }
       })
-      .finally(() => {});
   };
 
   const handleClostPreview = () => {
@@ -169,49 +167,52 @@ export default function AddPoint() {
     <div>
       <div className="add-point">
         <Card className="mb-2 py-1">
-          <Row form={formSearch} className="d-flex" onFinish={onFinishSearch}>
-            <Button
-              htmlType="submit"
-              type="primary"
-              className="mr-10 search-button"
-            >
-              Search
-            </Button>
-            <Form.Item
-              name="code"
-              rules={[
-                {
-                  required: true,
-                  whitespace: true,
-                  message: "Vui lòng nhập mã sinh viên",
-                },
-              ]}
-              className="search-input"
-            >
-              <Input
-                size="small"
-                placeholder="Nhập mã sinh viên cần tìm"
-                prefix={<SearchOutlined />}
-              />
-            </Form.Item>
+          <Form form={formSearch} className="d-flex" onFinish={onFinishSearch}>
+            <Row>
+              <Button
+                htmlType="submit"
+                type="primary"
+                className="mr-10 search-button"
+              >
+                Search
+              </Button>
+              <Form.Item
+                name="code"
+                rules={[
+                  {
+                    required: true,
+                    whitespace: true,
+                    message: "Vui lòng nhập mã sinh viên",
+                  },
+                ]}
+                className="search-input"
+              >
+                <Input
+                  size="small"
+                  placeholder="Nhập mã sinh viên cần tìm"
+                  prefix={<SearchOutlined />}
+                  style={{ width: 800, marginRight : 20}}
+                />
+              </Form.Item>
 
-            <Button
-              className="ml-auto import-button"
-              type="primary"
-              onClick={() => setOpenUpload(true)}
-            >
-              Import excel
-            </Button>
-            {openUpload && (
-              <ModalUpLoadFile
-                openUpload={openUpload}
-                setOpenUpload={setOpenUpload}
-                setDataPreview={setDataPreview}
-                nameFileUpload={nameFileUpload}
-                setNameFileUpload={setNameFileUpload}
-              />
-            )}
-          </Row>
+              <Button
+                className="ml-auto import-button"
+                type="primary"
+                onClick={() => setOpenUpload(true)}
+              >
+                Import excel
+              </Button>
+              {openUpload && (
+                <ModalUpLoadFile
+                  openUpload={openUpload}
+                  setOpenUpload={setOpenUpload}
+                  setDataPreview={setDataPreview}
+                  nameFileUpload={nameFileUpload}
+                  setNameFileUpload={setNameFileUpload}
+                />
+              )}
+            </Row>
+          </Form>
         </Card>
         {Object.keys(student).length > 0 ? (
           <Card className="content-card" title="Thông tin sinh viên">

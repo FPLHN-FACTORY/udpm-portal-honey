@@ -190,7 +190,7 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
               }}
             >
               <div className="card__image">
-                <ImageRenderer image={item.image} />
+                <img src={item.image} alt="" />
               </div>
               {item.status === 1 ? (
                 <StarTwoTone
@@ -222,7 +222,7 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
         <div className="item__detail">
           <div className="detail__header">
             <div className="item__detail__image">
-              <ImageRenderer image={selectedConversion.image} />
+              <img src={selectedConversion.image} alt="" />
             </div>
             <div class="item__detail__body">
               <h3 title="Ba lô siêu vip">{selectedConversion.name}</h3>{" "}

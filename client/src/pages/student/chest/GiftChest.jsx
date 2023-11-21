@@ -79,7 +79,7 @@ const GiftChest = memo(() => {
               }}
             >
               <div className="chest__card__image">
-                <ImageRenderer image={data.image} quantity={data.quantity} />
+                <img src={data.image} alt="" quantity={data.quantity} />
               </div>
               <div className="chest__card__body">
                 <h3>{data.name}</h3>
@@ -92,7 +92,7 @@ const GiftChest = memo(() => {
         <div className="chest__item__detail">
           <div className="chest__detail__header">
             <div className="chest__detail__image">
-              <ImageRenderer image={archiveGift.image} />
+              <img src={archiveGift.image} alt="" />
             </div>
             <div class="chest__detail__body">
               <h3>{name}</h3>

@@ -34,21 +34,6 @@ const StudentChest = () => {
   const [archiveChest, setArchiveChest] = useState();
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
 
-  function ImageRenderer({ image }) {
-    const byteArray = image ? image.split(",").map(Number) : [];
-    const base64ImageData = btoa(
-      String.fromCharCode.apply(null, new Uint8Array(byteArray))
-    );
-    const imageUrl = `data:image/jpeg;base64,${base64ImageData}`;
-
-    return (
-      <img
-        src={imageUrl}
-        style={{ width: "40px", height: "40px" }}
-        alt="Hình ảnh"
-      />
-    );
-  }
   useEffect(() => {
     fetchGift();
     fetchArchive();
@@ -175,7 +160,7 @@ const StudentChest = () => {
                         setShowAdditionalInfo(true);
                       }}
                     >
-                      <ImageRenderer image={data.image} />
+                      <img src={data.image} alt="" />
                       <div className="quantity-gift">{data.quantity}</div>
                     </div>
                   </Tooltip>
@@ -193,7 +178,7 @@ const StudentChest = () => {
                         setShowAdditionalInfo(true);
                       }}
                     >
-                      <ImageRenderer image={data.image} />
+                      <img src={data.image} alt="" />
                       <div className="quantity-gift">{data.quantity}</div>
                     </div>
                   </Tooltip>
@@ -212,7 +197,7 @@ const StudentChest = () => {
                         setShowAdditionalInfo(true);
                       }}
                     >
-                      <ImageRenderer image={data.image} />
+                      <img src={data.image} alt="" />
                       <div className="quantity-gift">{data.quantity}</div>
                     </div>
                   </Tooltip>

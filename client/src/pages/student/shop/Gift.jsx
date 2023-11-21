@@ -148,7 +148,8 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
         closeIcon={null}
         footer={null}
         width={350}
-        className="css-modal-confim-buy-gift">
+        className="css-modal-confim-buy-gift"
+      >
         <div style={{ display: "flex", justifyContent: "center" }}>
           <span style={{ fontSize: "16px", color: "white", fontWeight: 700 }}>
             Bạn có xác nhận mua quà không ?
@@ -159,11 +160,13 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
             display: "flex",
             justifyContent: "center",
             marginTop: "30px",
-          }}>
+          }}
+        >
           <Button
             type="primary"
             className="btn-xac-nhan"
-            onClick={onSubmitCreate}>
+            onClick={onSubmitCreate}
+          >
             xác nhận
           </Button>
           <Button type="primary" className="btn-huy" onClick={handleCancel}>
@@ -184,9 +187,10 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
                   selectedCardIndex === index ? cardBackgroundColor : "",
                 boxShadow:
                   selectedCardIndex === index ? "0px 0px 10px gold" : "",
-              }}>
+              }}
+            >
               <div className="card__image">
-                <ImageRenderer image={item.image} />
+                <img src={item.image} alt="" />
               </div>
               {item.status === 1 ? (
                 <StarTwoTone
@@ -218,7 +222,7 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
         <div className="item__detail">
           <div className="detail__header">
             <div className="item__detail__image">
-              <ImageRenderer image={selectedConversion.image} />
+              <img src={selectedConversion.image} alt="" />
             </div>
             <div class="item__detail__body">
               <h3 title="Ba lô siêu vip">{selectedConversion.name}</h3>{" "}
@@ -255,12 +259,14 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-              }}>
+              }}
+            >
               <span
                 style={{
                   color: "white",
                   fontWeight: 700,
-                }}>
+                }}
+              >
                 {error}
               </span>
             </div>
