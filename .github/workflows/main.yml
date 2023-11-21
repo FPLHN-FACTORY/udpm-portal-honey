@@ -3,7 +3,7 @@ name: job deploy server
 on:
   push:
     branches:
-      - 'deploy server'
+      - 'deploy-server'
 
 jobs:
   build_marketplace:
