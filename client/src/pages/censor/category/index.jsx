@@ -260,7 +260,6 @@ export default function Index() {
                 value={status}
                 onChange={(value) => {
                   setStatus(value);
-                  console.log(value);
                 }}
                 style={{
                   width: "100%",

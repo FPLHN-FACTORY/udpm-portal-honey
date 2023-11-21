@@ -94,7 +94,6 @@ export default function AddRequestConversion(props) {
 
     if (selectedCategory) {
       const newCategoryStatus = selectedCategory.categoryStatus;
-      console.log(`Status category : ${newCategoryStatus}`);
       setCategoryStatus(newCategoryStatus);
     }
   };
@@ -160,7 +159,7 @@ export default function AddRequestConversion(props) {
     } else if (
       (selectedConversion ? selectedConversion.honey : 0) > fillPoint.point
     ) {
-      message.error("Bạn không đủ điểm để đổi quà trong ranh này.");
+      message.error("Số lượng mật ong không đủ!");
       return;
     }
 
@@ -197,8 +196,6 @@ export default function AddRequestConversion(props) {
     const category = fillCategory.find((item) => item.id === categoryId);
     return category ? category.name : "";
   };
-
-  console.log(categoryStatus);
 
   return (
     <>

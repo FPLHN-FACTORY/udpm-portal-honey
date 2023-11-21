@@ -82,6 +82,11 @@ public class AdminGiftServiceImpl implements AdminGiftService {
     }
 
     @Override
+    public List<AdminGiftResponse> getAllListGiftUpgrade() {
+        return adGiftRepository.getAllListGiftUpgrade();
+    }
+
+    @Override
     @Transactional
     @Synchronized
     public Gift addGift(AdminCreateGiftRequest request) throws IOException {

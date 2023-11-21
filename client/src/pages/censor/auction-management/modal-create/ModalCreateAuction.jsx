@@ -154,7 +154,6 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
         toDate: toDate,
       };
 
-      console.log(obj);
       const categoryNameItem = listCategory.find(
         (item) => item.id === honeyCategoryId
       );

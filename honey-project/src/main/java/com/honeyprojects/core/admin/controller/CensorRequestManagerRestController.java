@@ -5,6 +5,7 @@ import com.honeyprojects.core.admin.model.request.AdminCreateConversionHistoryRe
 import com.honeyprojects.core.admin.model.request.AdminHistoryApprovedSearchRequest;
 import com.honeyprojects.core.admin.model.request.CensorChangeStatusRequest;
 import com.honeyprojects.core.admin.model.request.CensorSearchHistoryRequest;
+import com.honeyprojects.core.admin.model.response.AdminRequestConversionHistoryAddItemResponse;
 import com.honeyprojects.core.admin.model.response.AdminRequestConversionHistoryResponse;
 import com.honeyprojects.core.admin.model.response.CensorAddHoneyRequestResponse;
 import com.honeyprojects.core.admin.model.response.CensorTransactionRequestResponse;
@@ -57,6 +58,11 @@ public class CensorRequestManagerRestController {
     @GetMapping("/history-request-conversion")
     public PageableObject<AdminRequestConversionHistoryResponse> getHistoryRequestConversion(AdminCreateConversionHistoryRequest historyRequest) {
         return requestConversionService.getHistoryConversionAdmin(historyRequest);
+    }
+
+    @GetMapping("/history-request-add-item")
+    public PageableObject<AdminRequestConversionHistoryAddItemResponse> getHistoryRequestAddItem(AdminCreateConversionHistoryRequest historyRequest) {
+        return requestConversionService.getHistoryRequestAddItem(historyRequest);
     }
 
     @GetMapping("/history-buy-gift")

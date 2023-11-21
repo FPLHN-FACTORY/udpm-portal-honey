@@ -23,7 +23,6 @@ const DeleteConfirm = (props) => {
     form
       .validateFields()
       .then((formValues) => {
-        console.log('id: '+id)
         GiftAPI.delete(formValues, id)
           .then((response) => {
             dispatch(DeleteGift(response.data.data));

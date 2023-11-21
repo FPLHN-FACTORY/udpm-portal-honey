@@ -34,7 +34,7 @@ const statusHistory = (status) => {
   }
 };
 
-export default function RequestConversionHistory() {
+export default function RequestAddItemHistory() {
   const [getHistory, setGetHistory] = useState([]);
   const [fillCategory, setFillCategory] = useState([]);
   const [totalPages, setTotalPages] = useState([]);
@@ -45,7 +45,9 @@ export default function RequestConversionHistory() {
   const fetchData = (filter) => {
     const fetchData = async (filter) => {
       try {
-        const response = await RequestManagerAPI.getHistoryConversion(filter);
+        const response = await RequestManagerAPI.getHistoryRequestAddItem(
+          filter
+        );
         const listHistory = await Promise.all(
           response.data.data.map(async (data) => {
             try {
@@ -178,12 +180,7 @@ export default function RequestConversionHistory() {
       key: "userName",
     },
     {
-      title: "Loại điểm",
-      dataIndex: "nameCategory",
-      key: "nameCategory",
-    },
-    {
-      title: "Loại quà",
+      title: "Tên quà",
       dataIndex: "nameGift",
       key: "nameGift",
     },
@@ -191,12 +188,6 @@ export default function RequestConversionHistory() {
       title: "Số lượng",
       dataIndex: "quantity",
       key: "quantity",
-    },
-    {
-      title: "Điểm trừ",
-      dataIndex: "honeyPoint",
-      key: "honeyPoint",
-      render: (text) => <span>{`-${text} điểm`}</span>,
     },
     {
       title: "Ngày tạo",
@@ -267,12 +258,12 @@ export default function RequestConversionHistory() {
   ];
   return (
     <>
-      <Card className="mb-2">
+      <Card className="mb-2 py-1">
         <Form onFinish={onFinishSearch}>
           <Space size={"large"}>
             <Form.Item name="userName" className="search-input">
               <Input
-                style={{ width: "500px" }}
+                style={{ width: "300px" }}
                 name="userName"
                 size="small"
                 placeholder="Nhập user name sinh viên cần tìm"
@@ -281,7 +272,7 @@ export default function RequestConversionHistory() {
             </Form.Item>
             <Form.Item name={"idCategory"}>
               <Select
-                style={{ width: "450px" }}
+                style={{ width: "150px" }}
                 size="large"
                 placeholder="Loại điểm"
                 options={[
@@ -296,7 +287,7 @@ export default function RequestConversionHistory() {
               htmlType="submit"
               type="primary"
               className="mr-10 search-button"
-              style={{ marginBottom: "25px", backgroundColor: '#EEB30D' }}
+              style={{ marginBottom: "25px" }}
             >
               Lọc
             </Button>

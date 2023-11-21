@@ -36,6 +36,9 @@ public class History extends PrimaryEntity {
     private String teacherId;
 
     @Column(length = EntityProperties.LENGTH_ID)
+    private String presidentId;
+
+    @Column(length = EntityProperties.LENGTH_ID)
     private String honeyId;
 
     @Column(length = EntityProperties.LENGTH_NOTE)

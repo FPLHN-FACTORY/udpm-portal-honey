@@ -61,8 +61,7 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
 
     @Override
     public TeacherPointResponse getPointStudent(TeacherGetPointRequest getPointRequest) {
-        Long dateNow = Calendar.getInstance().getTimeInMillis();
-        return honeyRepository.getPoint(getPointRequest, dateNow);
+        return honeyRepository.getPoint(getPointRequest);
     }
 
     @Override

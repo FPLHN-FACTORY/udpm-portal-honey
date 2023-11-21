@@ -8,7 +8,6 @@ import {
   Row,
   Select,
   Space,
-  Spin,
   Table,
   Tabs,
   Tooltip,
@@ -47,7 +46,6 @@ export default function RandomAddPoint() {
   const [listGiftByChest, setListGiftByChest] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [dataPreview, setDataPreview] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [nameFile, setNameFile] = useState("");
@@ -76,7 +74,6 @@ export default function RandomAddPoint() {
   listChest.map((c) => optionChest.push({ value: c.id, label: c.name }));
 
   const fetchCategory = () => {
-    setLoading(true);
     RandomAddPointAPI.fetchAllCategory()
       .then((response) => {
         setCategory(response.data.data);
@@ -84,7 +81,6 @@ export default function RandomAddPoint() {
       .catch((err) => {
         message.error("Lỗi: " + err.message);
       });
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -122,7 +118,6 @@ export default function RandomAddPoint() {
 
   const handleChangeChest = (e) => {
     const value = e === undefined ? "" : e;
-    setLoading(true);
     if (value !== "") {
       handleFetchGiftByChest(value);
       RandomAddPointAPI.getChestById(e)
@@ -140,11 +135,9 @@ export default function RandomAddPoint() {
         listItem: [],
       });
     }
-    setLoading(false);
   };
 
   const handleDeleteChestGif = (chestId, giftId, selectedChest) => {
-    setLoading(true);
     RandomAddPointAPI.deleteChestGift(chestId, giftId)
       .then(() => {
         handleFetchGiftByChest(selectedChest);
@@ -153,7 +146,6 @@ export default function RandomAddPoint() {
       .catch(() => {
         message.error("Xóa thất bại.");
       });
-    setLoading(false);
   };
 
   const handleValidationRandomItem = () => {
@@ -239,7 +231,6 @@ export default function RandomAddPoint() {
     const check = handleValidationRandomPoint();
 
     if (check < 1) {
-      setLoading(true);
       RandomAddPointAPI.createRandomPoint(dataRandomPoint)
         .then(() => {
           message.success("Tạo ngẫu nhiên mật ong thành công");
@@ -252,7 +243,6 @@ export default function RandomAddPoint() {
         .catch(() => {
           message.error("Tạo ngẫu nhiên mật ong thất bại");
         });
-      setLoading(false);
     } else {
       message.error(
         "Tạo ngẫu nhiên mật ong thất bại, bạn cần nhập đủ các dữ liệu"
@@ -264,7 +254,6 @@ export default function RandomAddPoint() {
     const check = handleValidationRandomItem();
 
     if (check < 1) {
-      setLoading(true);
       RandomAddPointAPI.createRandomItem(dataRandomItem)
         .then(() => {
           message.success("Phát rương thành công");
@@ -277,7 +266,6 @@ export default function RandomAddPoint() {
         .catch(() => {
           message.error("Phát rương thất bại");
         });
-      setLoading(false);
     } else {
       message.error("Phát rương thất bại, bạn cần nhập đủ các dữ liệu");
     }
@@ -370,7 +358,6 @@ export default function RandomAddPoint() {
                   <ModalImportExcel
                     open={open}
                     setOpen={setOpen}
-                    setLoading={setLoading}
                     dataRandomPoint={dataRandomPoint}
                     dataRandomItem={dataRandomItem}
                     setListStudentPoint={setDataRandomPoint}
@@ -564,7 +551,6 @@ export default function RandomAddPoint() {
                 <ModalImportExcel
                   open={open}
                   setOpen={setOpen}
-                  setLoading={setLoading}
                   dataRandomPoint={dataRandomPoint}
                   dataRandomItem={dataRandomItem}
                   setListStudentPoint={setDataRandomPoint}
@@ -710,45 +696,43 @@ export default function RandomAddPoint() {
           setChest={setChestDetail}
         />
       )}
-      <Spin spinning={loading}>
+      <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+        <Tabs
+          items={items}
+          defaultActiveKey="1"
+          activeKey={activeTabKey}
+          onChange={handleTabChange}
+        />
+      </Card>
+      {activeTabKey === "2" && dataRandomItem.chestId !== "" && (
         <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
-          <Tabs
-            items={items}
-            defaultActiveKey="1"
-            activeKey={activeTabKey}
-            onChange={handleTabChange}
-          />
-        </Card>
-        {activeTabKey === "2" && dataRandomItem.chestId !== "" && (
-          <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+          <Space
+            style={{
+              justifyContent: "space-between",
+              display: "flex",
+              marginBottom: "16px",
+            }}
+          >
+            <span style={{ fontSize: "18px" }}>
+              <b>Danh sách vật phẩm</b>
+            </span>
             <Space
               style={{
                 justifyContent: "space-between",
                 display: "flex",
-                marginBottom: "16px",
               }}
             >
-              <span style={{ fontSize: "18px" }}>
-                <b>Danh sách vật phẩm</b>
-              </span>
-              <Space
-                style={{
-                  justifyContent: "space-between",
-                  display: "flex",
-                }}
-              >
-                <ModalAddChestGift
-                  handleFetchGiftByChest={handleFetchGiftByChest}
-                  selectedChest={selectedChest}
-                  chest={chestDetail}
-                  icon={<PlusCircleOutlined />}
-                />
-              </Space>
+              <ModalAddChestGift
+                handleFetchGiftByChest={handleFetchGiftByChest}
+                selectedChest={selectedChest}
+                chest={chestDetail}
+                icon={<PlusCircleOutlined />}
+              />
             </Space>
-            <Table rowKey="id" columns={colums} dataSource={listGiftByChest} />
-          </Card>
-        )}
-      </Spin>
+          </Space>
+          <Table rowKey="id" columns={colums} dataSource={listGiftByChest} />
+        </Card>
+      )}
     </div>
   );
 }

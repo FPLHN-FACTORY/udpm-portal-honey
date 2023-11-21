@@ -13,7 +13,6 @@ const ModalDetail = (props) => {
   const { chest } = props;
   const dispatch = useAppDispatch();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   const columns = [
@@ -46,7 +45,6 @@ const ModalDetail = (props) => {
         toDate: moment(item.toDate).format("DD/MM/YYYY"),
         fromDate: moment(item.fromDate).format("DD/MM/YYYY"),
       }));
-      console.log(formattedData);
       dispatch(SetChestGift(formattedData));
     });
   };
@@ -54,7 +52,6 @@ const ModalDetail = (props) => {
   const dataChest = useAppSelector(GetChestGift);
 
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -118,7 +115,6 @@ const ModalDetail = (props) => {
             onClick={handleDeleteSelected}
             style={{ marginBottom: "10px" }}
             disabled={!hasSelected}
-            loading={loading}
           >
             Xóa
           </Button>

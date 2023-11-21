@@ -8,7 +8,6 @@ import {
   Popconfirm,
   Select,
   Space,
-  Spin,
   Table,
   Tag,
   Tooltip,
@@ -16,8 +15,6 @@ import {
 } from "antd";
 import {
   SearchOutlined,
-  CheckCircleFilled,
-  CloseCircleFilled,
 } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { AddPointAPI } from "../../../apis/teacher/add-point/add-point.api";
@@ -30,7 +27,6 @@ import {
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCheck,
   faClose,
   faFilter,
   faRectangleList,
@@ -129,7 +125,6 @@ export default function RequestConversion() {
 
   const [totalPage, setTotalPage] = useState(1);
   const [filter, setFilter] = useState({ page: 0, status: 0 });
-  const [loading, setLoading] = useState(false);
   const [filterClass, setFilterClass] = useState([]);
   const [filterGift, setFilterGift] = useState([]);
 
@@ -144,7 +139,6 @@ export default function RequestConversion() {
 
   const fetchData = async (filter) => {
     try {
-      setLoading(true);
       const response = await TeacherUseGiftApi.getRequestUseGift(filter);
       const listHistory = await Promise.all(
         response.data.data.data.map(async (data) => {
@@ -165,7 +159,6 @@ export default function RequestConversion() {
     } catch (error) {
       console.error(error);
     }
-    setLoading(false);
   };
   useEffect(() => {
     fetchData(filter);
@@ -199,24 +192,20 @@ export default function RequestConversion() {
   };
 
   const accept = (id) => {
-    setLoading(true);
     TeacherUseGiftApi.accpect(id)
       .then((result) => {
         dispatch(DeleteHistory(result.data.data));
       })
       .finally(() => {
-        setLoading(false);
         message.success("Phê duyệt thành công");
       });
   };
   const cancel = (id) => {
-    setLoading(true);
     TeacherUseGiftApi.cancel(id, note)
       .then((result) => {
         dispatch(DeleteHistory(result.data.data));
       })
       .finally(() => {
-        setLoading(false);
         message.error("Đã hủy yêu cầu");
       });
   };
@@ -242,138 +231,135 @@ export default function RequestConversion() {
       listId: selectedRowKeys,
     }).finally(() => {
       fetchData();
-      setLoading(false);
       message.success("Phê duyệt thành công");
     });
   };
 
   return (
-    <Spin spinning={loading}>
-      <div className="add-point">
-        <Card
-          className="mb-2"
-          style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}
+    <div className="add-point">
+      <Card
+        className="mb-2"
+        style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}
+      >
+        {" "}
+        <FontAwesomeIcon
+          icon={faFilter}
+          size="2px"
+          style={{ fontSize: "26px" }}
+        />{" "}
+        <span
+          style={{
+            fontSize: "18px",
+            fontWeight: "500",
+          }}
         >
-          {" "}
-          <FontAwesomeIcon
-            icon={faFilter}
-            size="2px"
-            style={{ fontSize: "26px" }}
-          />{" "}
-          <span
-            style={{
-              fontSize: "18px",
-              fontWeight: "500",
-            }}
-          >
-            Bộ lọc
-          </span>
-          <Form onFinish={onFinishSearch}>
-            <Space size={"large"} style={{ marginTop: "15px" }}>
-              <Form.Item name="email" className="search-input">
-                <Input
-                  style={{ width: "300px" }}
-                  size="small"
-                  placeholder="Nhập email sinh viên cần tìm"
-                  prefix={<SearchOutlined />}
-                />
-              </Form.Item>
-              <Form.Item name={"gift"}>
-                <Select
-                  showSearch
-                  style={{ width: "150px" }}
-                  size="large"
-                  placeholder="Loại quà"
-                  options={[
-                    { value: null, label: "Tất cả" },
-                    ...filterGift.map((gift) => {
-                      return {
-                        value: gift.id,
-                        label: gift.name,
-                      };
-                    }),
-                  ]}
-                />
-              </Form.Item>
-              <Form.Item name={"lop"}>
-                <Select
-                  showSearch
-                  style={{ width: "150px" }}
-                  size="large"
-                  placeholder="Lớp"
-                  options={[
-                    { value: null, label: "Tất cả" },
-                    ...filterClass.map((fclass) => {
-                      return {
-                        value: fclass,
-                        label: fclass,
-                      };
-                    }),
-                  ]}
-                />
-              </Form.Item>
-              <Button
-                htmlType="submit"
-                type="primary"
-                className="mr-10 search-button"
-              >
-                Lọc
-              </Button>
-            </Space>
-          </Form>
-        </Card>
-        <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
-          <Space
-            style={{
-              justifyContent: "space-between",
-              display: "flex",
-              marginBottom: "16px",
-            }}
-          >
+          Bộ lọc
+        </span>
+        <Form onFinish={onFinishSearch}>
+          <Space size={"large"} style={{ marginTop: "15px" }}>
+            <Form.Item name="email" className="search-input">
+              <Input
+                style={{ width: "300px" }}
+                size="small"
+                placeholder="Nhập email sinh viên cần tìm"
+                prefix={<SearchOutlined />}
+              />
+            </Form.Item>
+            <Form.Item name={"gift"}>
+              <Select
+                showSearch
+                style={{ width: "150px" }}
+                size="large"
+                placeholder="Loại quà"
+                options={[
+                  { value: null, label: "Tất cả" },
+                  ...filterGift.map((gift) => {
+                    return {
+                      value: gift.id,
+                      label: gift.name,
+                    };
+                  }),
+                ]}
+              />
+            </Form.Item>
+            <Form.Item name={"lop"}>
+              <Select
+                showSearch
+                style={{ width: "150px" }}
+                size="large"
+                placeholder="Lớp"
+                options={[
+                  { value: null, label: "Tất cả" },
+                  ...filterClass.map((fclass) => {
+                    return {
+                      value: fclass,
+                      label: fclass,
+                    };
+                  }),
+                ]}
+              />
+            </Form.Item>
+            <Button
+              htmlType="submit"
+              type="primary"
+              className="mr-10 search-button"
+            >
+              Lọc
+            </Button>
+          </Space>
+        </Form>
+      </Card>
+      <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+        <Space
+          style={{
+            justifyContent: "space-between",
+            display: "flex",
+            marginBottom: "16px",
+          }}
+        >
+          <div>
+            <span style={{ fontSize: "18px" }}>
+              <FontAwesomeIcon icon={faRectangleList} size="xl" />
+              <b style={{ marginLeft: "5px", fontWeight: "500" }}>
+                Danh sách yêu cầu
+              </b>
+            </span>
+          </div>
+          <div className="flex flex-row-reverse">
             <div>
-              <span style={{ fontSize: "18px" }}>
-                <FontAwesomeIcon icon={faRectangleList} size="xl" />
-                <b style={{ marginLeft: "5px", fontWeight: "500" }}>
-                  Danh sách yêu cầu
-                </b>
+              <span>
+                <Tooltip>
+                  <button
+                    className="add-button1"
+                    onClick={() => {
+                      handleConfirm();
+                    }}
+                  >
+                    Xác nhận{" "}
+                  </button>
+                </Tooltip>
               </span>
             </div>
-            <div className="flex flex-row-reverse">
-              <div>
-                <span>
-                  <Tooltip>
-                    <button
-                      className="add-button1"
-                      onClick={() => {
-                        handleConfirm();
-                      }}
-                    >
-                      Xác nhận{" "}
-                    </button>
-                  </Tooltip>
-                </span>
-              </div>
-            </div>
-          </Space>
-          <Table
-            rowSelection={rowSelection}
-            columns={columns}
-            dataSource={data}
-            rowKey="key"
-            pagination={false}
-          />
-          <div className="mt-10 text-center mb-10">
-            <Pagination
-              simple
-              current={filter.page + 1}
-              onChange={(page) => {
-                setFilter({ ...filter, page: page - 1 });
-              }}
-              total={totalPage * 10}
-            />
           </div>
-        </Card>
-      </div>
-    </Spin>
+        </Space>
+        <Table
+          rowSelection={rowSelection}
+          columns={columns}
+          dataSource={data}
+          rowKey="key"
+          pagination={false}
+        />
+        <div className="mt-10 text-center mb-10">
+          <Pagination
+            simple
+            current={filter.page + 1}
+            onChange={(page) => {
+              setFilter({ ...filter, page: page - 1 });
+            }}
+            total={totalPage * 10}
+          />
+        </div>
+      </Card>
+    </div>
   );
 }

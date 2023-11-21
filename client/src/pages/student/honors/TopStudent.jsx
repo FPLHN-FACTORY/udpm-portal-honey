@@ -58,7 +58,6 @@ const TopStudent = ({ isClose, isShow }) => {
       if (time > 0) {
         setTime(time - 1);
       } else {
-        console.log("aaaa");
         clearInterval(timer);
         closeTop3();
       }

@@ -11,7 +11,6 @@ import {
   Row,
   Segmented,
   Space,
-  Spin,
   Table,
   Tag,
   Tooltip,
@@ -37,7 +36,6 @@ export default function AddItem() {
 
   const [dataPreview, setDataPreview] = useState([]);
 
-  const [loading, setLoading] = useState(false);
   const [openUpload, setOpenUpload] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -48,19 +46,13 @@ export default function AddItem() {
   const previewImport = useAppSelector(GetImport);
 
   useEffect(() => {
-    setLoading(true);
-    AddItemAPI.getCategory()
-      .then((response) => {
-        setCategorySelected(response.data.data[0].id);
-        dispatch(SetCategory(response.data.data));
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    AddItemAPI.getCategory().then((response) => {
+      setCategorySelected(response.data.data[0].id);
+      dispatch(SetCategory(response.data.data));
+    });
   }, [dispatch]);
 
   const onFinishSearch = (value) => {
-    setLoading(true);
     AddItemAPI.searchStudent(value.code.trim()).then((response) => {
       if (response.data.success) {
         setStudent(response.data.data);
@@ -75,22 +67,18 @@ export default function AddItem() {
         ]);
       }
     });
-    setLoading(false);
   };
 
   const onFinishAdd = (values) => {
-    setLoading(true);
     addPoint({
       ...values,
       honeyId: honeyStudent.id,
       studentId: student.id,
       categoryId: categorySelected,
     });
-    setLoading(false);
   };
 
   const addPoint = (data) => {
-    setLoading(true);
     AddItemAPI.addPoint(data).then((response) => {
       if (response.data.success) {
         message.success("Đã gửi yêu cầu!");
@@ -101,11 +89,9 @@ export default function AddItem() {
         message.error("Gửi yêu cầu thất bại!");
       }
     });
-    setLoading(false);
   };
 
   const getHoney = (studentId, categoryId) => {
-    setLoading(true);
     AddItemAPI.getHoney(studentId, categoryId)
       .then((response) => {
         if (response.data.success) {
@@ -114,9 +100,7 @@ export default function AddItem() {
           setHoneyStudent({ point: 0 });
         }
       })
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(() => {});
   };
 
   const handleClostPreview = () => {
@@ -180,7 +164,7 @@ export default function AddItem() {
   ];
 
   return (
-    <Spin spinning={loading}>
+    <div>
       <div className="add-point">
         <Card className="mb-2 py-1">
           <Form form={formSearch} className="d-flex" onFinish={onFinishSearch}>
@@ -220,7 +204,6 @@ export default function AddItem() {
               <ModalUpLoadFile
                 openUpload={openUpload}
                 setOpenUpload={setOpenUpload}
-                setLoading={setLoading}
                 setDataPreview={setDataPreview}
                 nameFileUpload={nameFileUpload}
                 setNameFileUpload={setNameFileUpload}
@@ -407,6 +390,6 @@ export default function AddItem() {
           </Space>
         </Card>
       )}
-    </Spin>
+    </div>
   );
 }

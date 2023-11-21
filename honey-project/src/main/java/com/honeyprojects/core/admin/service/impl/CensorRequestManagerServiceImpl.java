@@ -138,6 +138,11 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
     }
 
     @Override
+    public History approvalAddGiftToStudent(AdminChangeStatusGiftRequest changeStatusRequest) {
+        return null;
+    }
+
+    @Override
     public PageableObject<CensorAddHoneyRequestResponse> getHistoryAddPoint(CensorSearchHistoryRequest historyRequest) {
         Pageable pageable = PageRequest.of(historyRequest.getPage(), historyRequest.getSize());
         return new PageableObject<>(historyRepository.getHistoryAddPoint(historyRequest, pageable));

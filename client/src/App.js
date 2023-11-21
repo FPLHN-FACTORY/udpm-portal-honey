@@ -90,16 +90,6 @@ function App() {
                 </AuthGuard>
               }
             />
-            {/* <Route
-              path="/censor/request-buy-gift/history"
-              element={
-                <AuthGuard>
-                  <DashboardCensor>
-                    <RequestConversionHistory />
-                  </DashboardCensor>
-                </AuthGuard>
-              }
-            /> */}
             <Route
               path="/censor/conversion"
               element={

@@ -1,15 +1,15 @@
-@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap"); */
 
-* {
+/* * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
   text-decoration: none;
   list-style: none;
-}
+} */
 
 /* ------------------------student----------------- */
-.student {
+#myProfile .student {
   width: 100%;
   /* height: auto; */
   height: 100% !important;
@@ -23,7 +23,7 @@
   min-height: 100%;
 }
 
-.wrapper {
+#myProfile .wrapper {
   position: absolute;
   background-color: black;
   opacity: 0.4;
@@ -33,7 +33,7 @@
   right: 0;
 }
 
-.student__profile {
+#myProfile .student__profile {
   background-color: transparent;
   /* height: auto; */
   height: 100%;
@@ -43,7 +43,7 @@
   flex: 0 0 auto;
 }
 
-.student__card {
+#myProfile .student__card {
   width: 100%;
   height: 100%;
   border: none;
@@ -54,7 +54,7 @@
   background-color: transparent;
 }
 
-.student__card__image {
+#myProfile .student__card__image {
   width: 200px;
   height: 200px;
   border-radius: 50%;
@@ -63,7 +63,7 @@
   overflow: hidden;
 }
 
-.infor__image {
+#myProfile .infor__image {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -71,33 +71,33 @@
   transition: all 0.3s;
 }
 
-.infor__image:hover {
+#myProfile .infor__image:hover {
   transform: scale(1.2);
 }
 
-.student__card__infor {
+#myProfile .student__card__infor {
   margin-top: 20px;
   text-align: center;
   color: #f2cc8f;
 }
 
-.student__card__infor p {
+#myProfile .student__card__infor p {
   font-weight: bold;
   font-size: 23px;
   font-family: "VT323", monospace;
 }
 
-.student__card__infor em {
+#myProfile .student__card__infor em {
   font-size: 23px;
   font-family: "VT323", monospace;
 }
 
-.category__button {
+#myProfile .category__button {
   margin-top: 30px;
   text-align: center;
 }
 
-.show {
+#myProfile .show {
   background: #f3b95d;
   border: 2px solid transparent;
   border-radius: 100px;
@@ -111,14 +111,14 @@
   font-family: "VT323", monospace;
 }
 
-.show:hover {
+#myProfile .show:hover {
   background: #e07a5f;
   color: #ffffff;
   font-family: "VT323", monospace;
 }
 
 /* ---------------category slide------------- */
-.category__slide {
+#myProfile .category__slide {
   position: absolute;
   bottom: 0;
   right: 0;
@@ -133,7 +133,7 @@
   background: transparent;
 }
 
-.category__item {
+#myProfile .category__item {
   border-radius: 5px;
   margin-right: 10px;
   border: 1px solid #ddd;
@@ -148,73 +148,73 @@
   scroll-snap-align: start;
 }
 
-::-webkit-scrollbar {
+#myProfile ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 
-::-webkit-scrollbar-thumb {
+#myProfile ::-webkit-scrollbar-thumb {
   background-color: #ddd;
   opacity: 0.5;
   border-radius: 0;
 }
 
-::-webkit-scrollbar-thumb:hover {
+#myProfile ::-webkit-scrollbar-thumb:hover {
   background-color: #ddd;
 }
 
-.category__item:hover {
+#myProfile .category__item:hover {
   border-color: #d6a354;
   border-width: 3px;
 }
 
-.category__image {
-  width: 50%;
+#myProfile .category__image {
+  width: 70%;
   height: 100%;
   border-radius: 5px;
   transition: transform 0.3s ease-in-out;
 }
 
-.category__item:hover .category__image img {
+#myProfile .category__item:hover .category__image img {
   transform: scale(0.9);
 }
 
-.category__image img {
+#myProfile .category__image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 5px;
 }
 
-.category__name {
+#myProfile .category__name {
   text-align: right;
   margin-left: 5px;
-  width: 50%;
+  width: 80px;
 }
 
-.category__name h4 {
+#myProfile .category__name h4 {
   font-size: 25px;
   font-weight: bold;
   color: #fff;
   font-family: "VT323", monospace;
 }
 
-.category__name p {
+#myProfile .category__name p {
   font-size: 25px;
   color: #fff;
   font-family: "VT323", monospace;
 }
 
-.category__name h4,
-.category__name p {
+#myProfile .category__name h4,
+#myProfile .category__name p {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 /* ------------category---------- */
-.category {
-  height: 50%;
+#myProfile .category {
+  height: 100%;
   width: 70%;
   display: flex;
   flex-wrap: wrap;
@@ -222,10 +222,11 @@
   margin-top: 20px;
 }
 
-.category .category__item {
+#myProfile .category .category__item {
   margin-bottom: 10px;
 }
 
-.hidden {
+#myProfile .hidden {
   display: none;
 }
+
