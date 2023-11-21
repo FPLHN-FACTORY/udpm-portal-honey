@@ -53,7 +53,6 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
 
     @Override
     public AdminPoinResponse getPointStudent(AdminGetPointRequest getPointRequest) {
-        Long dateNow = Calendar.getInstance().getTimeInMillis();
         return honeyRepository.getPoint(getPointRequest);
     }
 

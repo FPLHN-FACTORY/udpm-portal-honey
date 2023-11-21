@@ -58,7 +58,6 @@ const data = [
   },
 ];
 const onChange = (pagination, filters, sorter, extra) => {
-  console.log("params", pagination, filters, sorter, extra);
 };
 const TableSliderPoint = () => (
   <Table columns={columns} dataSource={data} onChange={onChange} />

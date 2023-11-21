@@ -16,10 +16,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface CensorRequestManagerService {
+
     History changeStatus(CensorChangeStatusRequest changeStatusRequest);
 
     History changeStatusConversion(AdminChangeStatusGiftRequest changeStatusRequest);
 
+    History approvalAddGiftToStudent(AdminChangeStatusGiftRequest changeStatusRequest);
 
     PageableObject<CensorAddHoneyRequestResponse> getHistoryAddPoint(
             CensorSearchHistoryRequest historyRequest);
@@ -28,6 +30,7 @@ public interface CensorRequestManagerService {
             CensorSearchHistoryRequest historyRequest);
 
     SimpleResponse searchUser(String username);
+
     SimpleResponse getUserById(String id);
 
     CensorDetailRequestResponse getRequest(String idRequest);

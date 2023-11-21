@@ -1,6 +1,7 @@
 package com.honeyprojects.core.admin.service.impl;
 
 import com.honeyprojects.core.admin.model.request.AdminCreateConversionHistoryRequest;
+import com.honeyprojects.core.admin.model.response.AdminRequestConversionHistoryAddItemResponse;
 import com.honeyprojects.core.admin.model.response.AdminRequestConversionHistoryResponse;
 import com.honeyprojects.core.admin.repository.AdRequestConversionHistoryRepository;
 import com.honeyprojects.core.admin.service.AdminRequestConversionService;
@@ -26,5 +27,11 @@ public class AdminRequestConversionServiceImpl implements AdminRequestConversion
     public PageableObject<AdminRequestConversionHistoryResponse> getHistoryBuyGiftAdmin(AdminCreateConversionHistoryRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         return new PageableObject<>(historyRepository.getBuyGiftHistory(request, pageable));
+    }
+
+    @Override
+    public PageableObject<AdminRequestConversionHistoryAddItemResponse> getHistoryRequestAddItem(AdminCreateConversionHistoryRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        return new PageableObject<>(historyRepository.getHistoryRequestAddItem(request, pageable));
     }
 }

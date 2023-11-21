@@ -23,7 +23,6 @@ const ModalAddCategory = (props) => {
       .validateFields()
       .then((formValues) => {
         if (category === null) {
-          console.log(formValues);
           CategoryAPI.create(formValues)
             .then((result) => {
               dispatch(AddCategory(result.data.data));

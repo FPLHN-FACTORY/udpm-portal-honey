@@ -41,17 +41,12 @@ for (let i = 0; i < 46; i++) {
 }
 const ApprovalPoint = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [loading, setLoading] = useState(false);
   const start = () => {
-    setLoading(true);
-    // ajax request after empty completing
     setTimeout(() => {
       setSelectedRowKeys([]);
-      setLoading(false);
     }, 1000);
   };
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {
@@ -71,7 +66,6 @@ const ApprovalPoint = () => {
           type="primary"
           onClick={start}
           disabled={!hasSelected}
-          loading={loading}
         >
           Reload
         </Button>

@@ -5,25 +5,18 @@ import {
   Form,
   Input,
   Pagination,
-  Popconfirm,
   Select,
   Space,
-  Spin,
   Table,
   Tag,
-  Tooltip,
-  message,
 } from "antd";
 import {
   SearchOutlined,
-  CheckCircleFilled,
-  CloseCircleFilled,
 } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { AddPointAPI } from "../../../apis/teacher/add-point/add-point.api";
 import { TeacherUseGiftApi } from "../../../apis/teacher/convertion-honey/convertion-honey.api";
 import {
-  DeleteHistory,
   GetHistory,
   SetHistory,
 } from "../../../app/reducers/history/history.reducer";
@@ -91,7 +84,6 @@ export default function RequestConversionHistory() {
 
   const [totalPage, setTotalPage] = useState(1);
   const [filter, setFilter] = useState({ page: 0, status: 1 });
-  const [loading, setLoading] = useState(false);
   const [filterClass, setFilterClass] = useState([]);
   const [filterGift, setFilterGift] = useState([]);
 
@@ -106,7 +98,6 @@ export default function RequestConversionHistory() {
 
   const fetchData = async (filter) => {
     try {
-      setLoading(true);
       const response = await TeacherUseGiftApi.getRequestUseGift(filter);
       const listHistory = await Promise.all(
         response.data.data.data.map(async (data) => {
@@ -117,7 +108,6 @@ export default function RequestConversionHistory() {
               emailStudent: user.data.data.email,
             };
           } catch (error) {
-            console.error(error);
             return data;
           }
         })
@@ -127,7 +117,6 @@ export default function RequestConversionHistory() {
     } catch (error) {
       console.error(error);
     }
-    setLoading(false);
   };
   useEffect(() => {
     fetchData(filter);
@@ -163,123 +152,125 @@ export default function RequestConversionHistory() {
   };
 
   return (
-    <Spin spinning={loading}>
-      <div className="add-point">
-        <Card
-          className="mb-2"
-          style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
-          {" "}
-          <FontAwesomeIcon
-            icon={faFilter}
-            size="2px"
-            style={{ fontSize: "26px" }}
-          />{" "}
-          <span
-            style={{
-              fontSize: "18px",
-              fontWeight: "500",
-            }}>
-            Bộ lọc
-          </span>
-          <Form onFinish={onFinishSearch}>
-            <Space size={"large"} style={{ marginTop: "15px" }}>
-              <Form.Item name="email" className="search-input">
-                <Input
-                  style={{ width: "300px" }}
-                  size="small"
-                  placeholder="Nhập email sinh viên cần tìm"
-                  prefix={<SearchOutlined />}
-                />
-              </Form.Item>
-              <Form.Item name={"gift"}>
-                <Select
-                  showSearch
-                  style={{ width: "150px" }}
-                  size="large"
-                  placeholder="Loại quà"
-                  options={[
-                    { value: null, label: "Tất cả" },
-                    ...filterGift.map((gift) => {
-                      return {
-                        value: gift.id,
-                        label: gift.name,
-                      };
-                    }),
-                  ]}
-                />
-              </Form.Item>
-              <Form.Item name={"lop"}>
-                <Select
-                  showSearch
-                  style={{ width: "150px" }}
-                  size="large"
-                  placeholder="Lớp"
-                  options={[
-                    { value: null, label: "Tất cả" },
-                    ...filterClass.map((fclass) => {
-                      return {
-                        value: fclass,
-                        label: fclass,
-                      };
-                    }),
-                  ]}
-                />
-              </Form.Item>
-              <Form.Item name={"status"}>
-                <Select
-                  defaultValue={filter.status}
-                  showSearch
-                  style={{ width: "150px" }}
-                  size="large"
-                  placeholder="Trạng thái"
-                  options={[
-                    { value: 1, label: statusHistory("1") },
-                    { value: 2, label: statusHistory("2") },
-                  ]}
-                />
-              </Form.Item>
-              <Button
-                htmlType="submit"
-                type="primary"
-                className="mr-10 search-button">
-                Lọc
-              </Button>
-            </Space>
-          </Form>
-        </Card>
-        <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
-          <Space
-            style={{
-              justifyContent: "space-between",
-              marginBottom: "16px",
-            }}>
-            <div>
-              <span style={{ fontSize: "18px" }}>
-                <FontAwesomeIcon icon={faRectangleList} size="xl" />
-                <b style={{ marginLeft: "5px", fontWeight: "500" }}>
-                  Danh sách yêu cầu
-                </b>
-              </span>
-            </div>
+    <div className="add-point">
+      <Card
+        className="mb-2"
+        style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}
+      >
+        {" "}
+        <FontAwesomeIcon
+          icon={faFilter}
+          size="2px"
+          style={{ fontSize: "26px" }}
+        />{" "}
+        <span
+          style={{
+            fontSize: "18px",
+            fontWeight: "500",
+          }}
+        >
+          Bộ lọc
+        </span>
+        <Form onFinish={onFinishSearch}>
+          <Space size={"large"} style={{ marginTop: "15px" }}>
+            <Form.Item name="email" className="search-input">
+              <Input
+                style={{ width: "300px" }}
+                size="small"
+                placeholder="Nhập email sinh viên cần tìm"
+                prefix={<SearchOutlined />}
+              />
+            </Form.Item>
+            <Form.Item name={"gift"}>
+              <Select
+                showSearch
+                style={{ width: "150px" }}
+                size="large"
+                placeholder="Loại quà"
+                options={[
+                  { value: null, label: "Tất cả" },
+                  ...filterGift.map((gift) => {
+                    return {
+                      value: gift.id,
+                      label: gift.name,
+                    };
+                  }),
+                ]}
+              />
+            </Form.Item>
+            <Form.Item name={"lop"}>
+              <Select
+                showSearch
+                style={{ width: "150px" }}
+                size="large"
+                placeholder="Lớp"
+                options={[
+                  { value: null, label: "Tất cả" },
+                  ...filterClass.map((fclass) => {
+                    return {
+                      value: fclass,
+                      label: fclass,
+                    };
+                  }),
+                ]}
+              />
+            </Form.Item>
+            <Form.Item name={"status"}>
+              <Select
+                defaultValue={filter.status}
+                showSearch
+                style={{ width: "150px" }}
+                size="large"
+                placeholder="Trạng thái"
+                options={[
+                  { value: 1, label: statusHistory("1") },
+                  { value: 2, label: statusHistory("2") },
+                ]}
+              />
+            </Form.Item>
+            <Button
+              htmlType="submit"
+              type="primary"
+              className="mr-10 search-button"
+            >
+              Lọc
+            </Button>
           </Space>
-          <Table
-            columns={columns}
-            dataSource={data}
-            rowKey="key"
-            pagination={false}
-          />
-          <div className="mt-10 text-center mb-10">
-            <Pagination
-              simple
-              current={filter.page + 1}
-              onChange={(page) => {
-                setFilter({ ...filter, page: page - 1 });
-              }}
-              total={totalPage * 10}
-            />
+        </Form>
+      </Card>
+      <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+        <Space
+          style={{
+            justifyContent: "space-between",
+            marginBottom: "16px",
+          }}
+        >
+          <div>
+            <span style={{ fontSize: "18px" }}>
+              <FontAwesomeIcon icon={faRectangleList} size="xl" />
+              <b style={{ marginLeft: "5px", fontWeight: "500" }}>
+                Danh sách yêu cầu
+              </b>
+            </span>
           </div>
-        </Card>
-      </div>
-    </Spin>
+        </Space>
+        <Table
+          columns={columns}
+          dataSource={data}
+          rowKey="key"
+          pagination={false}
+        />
+        <div className="mt-10 text-center mb-10">
+          <Pagination
+            simple
+            current={filter.page + 1}
+            onChange={(page) => {
+              setFilter({ ...filter, page: page - 1 });
+            }}
+            total={totalPage * 10}
+          />
+        </div>
+      </Card>
+    </div>
   );
 }

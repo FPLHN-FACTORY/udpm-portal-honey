@@ -1,5 +1,6 @@
 package com.honeyprojects.core.president.service.impl;
 
+import com.honeyprojects.core.admin.repository.AdminHistoryRepository;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.president.model.request.PresidentCreateNotificationDetailAddItemRequest;
 import com.honeyprojects.core.president.model.request.PresidentNotificationAddItemRequest;
@@ -11,14 +12,26 @@ import com.honeyprojects.core.president.repository.PresidentAddItemRepository;
 import com.honeyprojects.core.president.repository.PresidentGiftRepository;
 import com.honeyprojects.core.president.repository.PresidentNotificationRepository;
 import com.honeyprojects.core.president.service.PresidentAddItemToStudentService;
+import com.honeyprojects.core.president.service.PresidentHistoryRepository;
+import com.honeyprojects.core.president.service.PresidentHoneyRepository;
+import com.honeyprojects.core.student.repository.StudentCreateRequestConversionRepository;
 import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
+import com.honeyprojects.core.teacher.model.request.TeacherGetPointRequest;
+import com.honeyprojects.core.teacher.model.response.TeacherPointResponse;
+import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
+import com.honeyprojects.entity.History;
+import com.honeyprojects.entity.Honey;
 import com.honeyprojects.entity.Notification;
 import com.honeyprojects.entity.NotificationDetail;
+import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Constants;
+import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.NotificationDetailType;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
+import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.StatusGift;
+import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import com.honeyprojects.util.DataUtils;
@@ -64,6 +77,15 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
 
     @Autowired
     private StudentNotificationDetailRepository studentNotificationDetailRepository;
+
+    @Autowired
+    private PresidentHoneyRepository honeyRepository;
+
+    @Autowired
+    private PresidentHistoryRepository presidentHistoryRepository;
+
+    @Autowired
+    private TeacherHistoryRepository historyRepository;
 
     @Autowired
     private LoggerUtil loggerUtil;
@@ -370,7 +392,6 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
             // Gọi API để lấy thông tin người dùng bằng địa chỉ email
             String emailSimple = userDTO.getUserName() + "@fpt.edu.vn";
             SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
-            Notification notification = createNotification(simpleResponse.getId());
 
             // Xử lý vật phẩm (gift)
             if (!DataUtils.isNullObject(userDTO.getLstGift())) {
@@ -391,10 +412,34 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
 
                 for (PresidentGiftResponse gift : gifts) {
                     String nameItem = gift.getName();
-                    if (gift.getStatus().equals(StatusGift.FREE)) {
-                        stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được chủ tịch câu lạc bộ tặng: " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
-                        createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
+                    String status = gift.getStatus();
 
+                    String enumStatusFREE = String.valueOf(StatusGift.FREE.ordinal());
+                    if (status.equals(enumStatusFREE)) {
+                        // gửi thẳng cho sinh viên
+                        // gửi thông báo cho sinh viên
+                        stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được chủ tịch câu lạc bộ tặng: " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
+                        Notification notification = createNotification(simpleResponse.getId());
+                        createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
+                    }
+                    String enumStatusACCEPT = String.valueOf(StatusGift.ACCEPT.ordinal());
+                    if(status.equals(enumStatusACCEPT)){
+                        // gửi yêu cầu phê duyệt cho admin
+                        // gửi thông báo cho admin
+                        stringBuilder.append("Đã gửi yêu cầu phê duyệt tới admin " + "Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + ": " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
+
+                        History history = new History();
+                        history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+                        history.setType(TypeHistory.CONG_VAT_PHAM);
+                        history.setCreatedAt(new Date().getTime());
+                        history.setGiftId(gift.getId());
+                        history.setNameGift(nameItem);
+                        history.setQuantity(giftMap.get(nameItem));
+                        history.setPresidentId(simpleResponse.getId());
+                        history.setHoneyId(simpleResponse.getId());
+                        history.setNote(null);
+                        history.setStudentId(simpleResponse.getId());
+                        presidentHistoryRepository.save(history);
                     }
                 }
             }
@@ -417,8 +462,42 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                 List<PresidentCategoryResponse> categories = presidentAddItemRepository.getCategoriesByNames(honeyMap.keySet());
                 for (PresidentCategoryResponse category : categories) {
                     String categoryPoint = category.getName();
+                    String categoryId = category.getId();
+                    String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
+                    String enumCategoryACCEPT = String.valueOf(CategoryStatus.ACCEPT.ordinal());
                     if (honeyMap.containsKey(categoryPoint)) {
-                        createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
+                        if(category.getStatus().equals(enumCategoryFREE)){
+                            // gủi cho sinh viên
+                            Notification notification = createNotification(simpleResponse.getId());
+                            createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
+                        }
+                        if(category.getStatus().equals(enumCategoryACCEPT)){
+                            // gửi cho admin phê duyệt
+                            // gửi thông báo cho admin
+                            TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
+                            getPointRequest.setStudentId(simpleResponse.getId());
+                            getPointRequest.setCategoryId(categoryId);
+                            TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
+
+                            History history = new History();
+                            history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+                            history.setHoneyPoint(honeyMap.get(categoryPoint));
+                            history.setType(TypeHistory.CONG_DIEM);
+                            history.setCreatedAt(new Date().getTime());
+                            if (teacherPointResponse == null) {
+                                Honey honey = new Honey();
+                                honey.setStatus(Status.HOAT_DONG);
+                                honey.setHoneyPoint(0);
+                                honey.setStudentId(simpleResponse.getId());
+                                honey.setHoneyCategoryId(categoryId);
+                                history.setHoneyId(honeyRepository.save(honey).getId());
+                            } else {
+                                Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
+                                history.setHoneyId(honey.getId());
+                            }
+                            history.setStudentId(simpleResponse.getId());
+                            historyRepository.save(history);
+                        }
                     }
                 }
             }
