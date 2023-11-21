@@ -8,7 +8,6 @@ import {
   Popconfirm,
   Select,
   Space,
-  Spin,
   Table,
   Tag,
   Tooltip,
@@ -16,8 +15,6 @@ import {
 } from "antd";
 import {
   SearchOutlined,
-  CheckCircleFilled,
-  CloseCircleFilled,
 } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { AddPointAPI } from "../../../apis/teacher/add-point/add-point.api";
@@ -30,7 +27,6 @@ import {
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCheck,
   faClose,
   faFilter,
   faRectangleList,
@@ -129,7 +125,6 @@ export default function RequestConversion() {
 
   const [totalPage, setTotalPage] = useState(1);
   const [filter, setFilter] = useState({ page: 0, status: 0 });
-  const [loading, setLoading] = useState(false);
   const [filterClass, setFilterClass] = useState([]);
   const [filterGift, setFilterGift] = useState([]);
 
@@ -144,7 +139,6 @@ export default function RequestConversion() {
 
   const fetchData = async (filter) => {
     try {
-      setLoading(true);
       const response = await TeacherUseGiftApi.getRequestUseGift(filter);
       const listHistory = await Promise.all(
         response.data.data.data.map(async (data) => {
@@ -165,7 +159,6 @@ export default function RequestConversion() {
     } catch (error) {
       console.error(error);
     }
-    setLoading(false);
   };
   useEffect(() => {
     fetchData(filter);
@@ -199,24 +192,20 @@ export default function RequestConversion() {
   };
 
   const accept = (id) => {
-    setLoading(true);
     TeacherUseGiftApi.accpect(id)
       .then((result) => {
         dispatch(DeleteHistory(result.data.data));
       })
       .finally(() => {
-        setLoading(false);
         message.success("Phê duyệt thành công");
       });
   };
   const cancel = (id) => {
-    setLoading(true);
     TeacherUseGiftApi.cancel(id, note)
       .then((result) => {
         dispatch(DeleteHistory(result.data.data));
       })
       .finally(() => {
-        setLoading(false);
         message.error("Đã hủy yêu cầu");
       });
   };
@@ -242,7 +231,6 @@ export default function RequestConversion() {
       listId: selectedRowKeys,
     }).finally(() => {
       fetchData();
-      setLoading(false);
       message.success("Phê duyệt thành công");
     });
   };

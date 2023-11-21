@@ -2,18 +2,17 @@ import { Input, Modal, message, Button, Form, Select } from "antd";
 import { UpgradeApi } from "../../../apis/censor/upgrade-rate/upgrade-rate.api";
 import {
   GetCategory,
+  SetCategory,
 } from "../../../app/reducers/category/category.reducer";
-import {
-  GetGift,
-} from "../../../app/reducers/gift/gift.reducer";
-import { useAppSelector } from "../../../app/hooks";
+import { GetGift, SetGift } from "../../../app/reducers/gift/gift.reducer";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useEffect, useState } from "react";
 
 const ModalCreateUpgradeRate = ({
   visible,
   onCancel,
   fetchAllData,
-  currentItem
+  currentItem,
 }) => {
   const [form] = Form.useForm();
   const [id, setId] = useState(null);
@@ -35,8 +34,21 @@ const ModalCreateUpgradeRate = ({
       // form.setFieldsValue({ idGifts: updatedCurrentItem.giftName });
       form.setFieldsValue(updatedCurrentItem);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    fechAllGift();
+  }, []);
+
+  const fechAllGift = () => {
+    UpgradeApi.getALLGift().then((response) => {
+      dispatch(SetGift(response.data.data));
+    });
+  };
+
   const listCategory = useAppSelector(GetCategory);
   const listGift = useAppSelector(GetGift);
 
@@ -48,7 +60,7 @@ const ModalCreateUpgradeRate = ({
         destinationHoneyId: values.destinationHoney,
         quantityOriginalHoney: values.quantityOriginal,
         quantityDestinationHoney: values.quantityDestination,
-        idGifts : values.idGifts,
+        idGifts: values.idGifts,
         ratio: values.ratio,
         status: 0,
       };
@@ -59,26 +71,24 @@ const ModalCreateUpgradeRate = ({
           return;
         }
       }
-      UpgradeApi.create(obj).then(
-        (response) => {
-          if (response.data.data) {
-            if (id) {
-              message.success("Cập nhật thành công!");
-            } else {
-              message.success("Thêm mới thành công!");
-            }
+      UpgradeApi.create(obj).then((response) => {
+        if (response.data.data) {
+          if (id) {
+            message.success("Cập nhật thành công!");
           } else {
-            if (id) {
-              message.success("Cập nhật Thất bại!");
-            } else {
-              message.success("Thêm mới Thất bại!");
-            }
+            message.success("Thêm mới thành công!");
           }
-          fetchAllData();
-          form.resetFields();
-          onCancel();
+        } else {
+          if (id) {
+            message.success("Cập nhật Thất bại!");
+          } else {
+            message.success("Thêm mới Thất bại!");
+          }
         }
-      );
+        fetchAllData();
+        form.resetFields();
+        onCancel();
+      });
     });
   };
 
@@ -92,10 +102,15 @@ const ModalCreateUpgradeRate = ({
         className="modal_show_detail"
       >
         <div style={{ paddingTop: "0", borderBottom: "1px solid black" }}>
-          <span style={{ fontSize: "18px" }}> {id ? "Cập nhật nâng hạng" : "Thêm mới nâng hạng"}</span>
+          <span style={{ fontSize: "18px" }}>
+            {" "}
+            {id ? "Cập nhật nâng hạng" : "Thêm mới nâng hạng"}
+          </span>
         </div>
         <div style={{ marginTop: "15px" }}>
-          <Form form={form} onFinish={create}
+          <Form
+            form={form}
+            onFinish={create}
             labelCol={{
               span: 7,
             }}
@@ -104,12 +119,16 @@ const ModalCreateUpgradeRate = ({
             }}
             style={{
               maxWidth: 600,
-            }}>
+            }}
+          >
             <Form.Item
               name="originalHoney"
               label="Loại mật quy đổi"
               rules={[
-                { required: true, message: "Loại mật quy đổi không được để trống" },
+                {
+                  required: true,
+                  message: "Loại mật quy đổi không được để trống",
+                },
               ]}
             >
               <Select
@@ -135,13 +154,14 @@ const ModalCreateUpgradeRate = ({
                     if (value > 0) {
                       return Promise.resolve();
                     }
-                    return Promise.reject('Số lượng mật quy đổi không được nhò hơn 0');
+                    return Promise.reject(
+                      "Số lượng mật quy đổi không được nhò hơn 0"
+                    );
                   },
                 },
               ]}
             >
-              <Input
-                className="w-full" type="number" />
+              <Input className="w-full" type="number" />
             </Form.Item>
             <Form.Item
               name="destinationHoney"
@@ -175,19 +195,23 @@ const ModalCreateUpgradeRate = ({
                     if (value > 0) {
                       return Promise.resolve();
                     }
-                    return Promise.reject('Số lượng mật nâng cấp không được nhò hơn 0');
+                    return Promise.reject(
+                      "Số lượng mật nâng cấp không được nhò hơn 0"
+                    );
                   },
                 },
               ]}
             >
-              <Input
-                className="w-full" type="number" />
+              <Input className="w-full" type="number" />
             </Form.Item>
             <Form.Item
               name="idGifts"
               label="Vật phẩm đi kèm"
               rules={[
-                { required: true, message: "Danh sách vật phẩm đi kèm không được để trống" },
+                {
+                  required: true,
+                  message: "Danh sách vật phẩm đi kèm không được để trống",
+                },
               ]}
             >
               <Select
@@ -215,13 +239,14 @@ const ModalCreateUpgradeRate = ({
                     if (value >= 0 && value <= 100) {
                       return Promise.resolve();
                     }
-                    return Promise.reject('Tỉ lệ nâng cấp phải nằm trong khoảng từ 0 đến 100');
+                    return Promise.reject(
+                      "Tỉ lệ nâng cấp phải nằm trong khoảng từ 0 đến 100"
+                    );
                   },
                 },
               ]}
             >
-              <Input
-                className="w-full" type="number" />
+              <Input className="w-full" type="number" />
             </Form.Item>
             <div style={{ textAlign: "right" }}>
               <div style={{ paddingTop: "15px" }}>

@@ -239,8 +239,6 @@ export default function RequestConversionHistory() {
           <div
             style={{ fontSize: "19px", textAlign: "center", color: "green" }}
           >
-            {console.log(values)}
-
             {values.status !== 1 && values.status !== 2 && (
               <CheckCircleFilled
                 onClick={() => {

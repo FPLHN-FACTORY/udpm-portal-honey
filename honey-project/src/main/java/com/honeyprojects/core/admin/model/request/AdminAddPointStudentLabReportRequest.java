@@ -6,11 +6,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AdminAddPointStudentRequest extends PageableRequest {
+public class AdminAddPointStudentLabReportRequest extends PageableRequest {
 
     private String id;
 
-    private String email;
+    private Integer numberHoney;
 
-    private Double pointStudent;
 }

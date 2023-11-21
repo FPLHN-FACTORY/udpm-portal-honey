@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import "./index.css";
-import { Image, Select, Spin } from "antd";
+import { Image, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import { HistoryApi } from "../../../apis/student/history/historyApi.api";
 

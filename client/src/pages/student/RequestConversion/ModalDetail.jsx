@@ -20,11 +20,8 @@ const ModalDetailConversion = (props) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  console.log(fillName.nameCate);
 
   form.setFieldsValue(conversion);
-
-  console.log(fillCategory.name);
 
   const getId = conversion.categoryId;
   useEffect(() => {

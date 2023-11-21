@@ -5,25 +5,18 @@ import {
   Form,
   Input,
   Pagination,
-  Popconfirm,
   Select,
   Space,
-  Spin,
   Table,
   Tag,
-  Tooltip,
-  message,
 } from "antd";
 import {
   SearchOutlined,
-  CheckCircleFilled,
-  CloseCircleFilled,
 } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { AddPointAPI } from "../../../apis/teacher/add-point/add-point.api";
 import { TeacherUseGiftApi } from "../../../apis/teacher/convertion-honey/convertion-honey.api";
 import {
-  DeleteHistory,
   GetHistory,
   SetHistory,
 } from "../../../app/reducers/history/history.reducer";
@@ -117,7 +110,6 @@ export default function RequestConversionHistory() {
               emailStudent: user.data.data.email,
             };
           } catch (error) {
-            console.error(error);
             return data;
           }
         })
@@ -127,7 +119,6 @@ export default function RequestConversionHistory() {
     } catch (error) {
       console.error(error);
     }
-    setLoading(false);
   };
   useEffect(() => {
     fetchData(filter);
@@ -163,7 +154,7 @@ export default function RequestConversionHistory() {
   };
 
   return (
-    <Spin spinning={loading}>
+
       <div className="add-point">
         <Card
           className="mb-2"
@@ -280,6 +271,6 @@ export default function RequestConversionHistory() {
           </div>
         </Card>
       </div>
-    </Spin>
+
   );
 }
