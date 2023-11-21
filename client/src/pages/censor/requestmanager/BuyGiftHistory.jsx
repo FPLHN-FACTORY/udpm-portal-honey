@@ -70,6 +70,7 @@ export default function BuyGiftHistory() {
         );
         setGetHistory(listHistory);
         setTotalPages(response.data.totalPages);
+        console.log(listHistory);
       } catch (error) {
         console.error(error);
       }
@@ -257,7 +258,30 @@ export default function BuyGiftHistory() {
             pagination={false}
           /> */}
           {getHistory.map((item) => (
-            <Card>Sinh viên </Card>
+            <div className="list__point ">
+              <h3 className="text-slate-600"> Sinh viên {item.studentName}</h3>
+              <div className="list__point__title">
+                <p>
+                  <strong className="text-slate-500 mr-[8px]">
+                    Số điểm được cộng:
+                  </strong>
+                  {item.honeyPoint} vật phẩm {item.nameCategory}
+                </p>
+                <p>
+                  <strong className="text-slate-500 mr-[8px]">
+                    Thời gian:
+                  </strong>
+                  { moment(item.createdDate).format("DD-MM-YYYY HH:mm:ss")}
+                </p>
+                <p
+                  title={item.note}
+                  className="w-[300px] overflow-hidden whitespace-nowrap text-ellipsis"
+                >
+                  <strong className="text-slate-500 mr-[8px]">Lý do:</strong>
+                  {item.note}
+                </p>
+              </div>
+            </div>
           ))}
         </div>
         <div className="mt-5 text-center">

@@ -93,3 +93,23 @@
 .request-manager-detail .ant-descriptions-header {
     margin-bottom: 0;
 }
+
+.list__point {
+    box-shadow: 8px 8px 12px 0 rgba(0, 0, 0, 0.12), -8px -8px 12px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 65px 0 0 65px;
+    padding: 10px 50px;
+    margin-bottom: 15px;
+    transition: all 0.3s;
+}
+
+.list__point:hover {
+    transform: scale(1.01);
+}
+
+.list__point__title {
+    border-top: 1px dashed rgba(150, 150, 150, 1);
+    padding-top: 8px;
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-between;
+}

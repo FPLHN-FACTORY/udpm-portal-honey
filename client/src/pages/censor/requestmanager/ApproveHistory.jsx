@@ -96,7 +96,7 @@ export default function RequestApprovedHistory() {
     };
   });
   const listCategory = useAppSelector(GetCategory);
-  console.log(data);
+  // console.log(data);
   const onFinishSearch = (value) => {
     if (value.userName === undefined || value.userName.trim().length === 0) {
       setFilter({
@@ -182,10 +182,28 @@ export default function RequestApprovedHistory() {
       </Card>
       <Card title="Lịch sử phê duyệt cộng điểm">
         {data.map((item) => (
-          <Card>
-            Sinh viên {item.nameStudent} được cộng {item.honeyPoint} mật ong{" "}
-            {item.nameCategory} vào lúc {item.createdDate} - {item.note}
-          </Card>
+          <div className="list__point ">
+            <h3 className="text-slate-600"> Sinh viên {item.nameStudent}</h3>
+            <div className="list__point__title">
+              <p>
+                <strong className="text-slate-500 mr-[8px]">
+                  Số điểm được cộng:
+                </strong>
+                {item.honeyPoint} mật ong {item.nameCategory}
+              </p>
+              <p>
+                <strong className="text-slate-500 mr-[8px]">Thời gian:</strong>
+                {item.createdDate}
+              </p>
+              <p
+                title={item.note}
+                className="w-[300px] overflow-hidden whitespace-nowrap text-ellipsis"
+              >
+                <strong className="text-slate-500 mr-[8px]">Lý do:</strong>
+                {item.note}
+              </p>
+            </div>
+          </div>
         ))}
         <div className="mt-10 text-center mb-10">
           <Pagination
