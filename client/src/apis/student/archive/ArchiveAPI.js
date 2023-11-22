@@ -84,4 +84,27 @@ export class ArchiveAPI {
       url: `/${this.COMPONENT_NAME}/find-all-user?id=${id}`,
     });
   };
+  
+  static getListClass = () => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}/list-class`,
+    });
+  };
+  
+  static getScoreClass = (filter) => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}/score-class`,
+      data: filter,
+    });
+  };
+  
+  static getDetailScoreClass = (filter) => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}`,
+      data: filter,
+    });
+  };
 }
