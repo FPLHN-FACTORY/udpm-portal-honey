@@ -7,7 +7,6 @@ import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import TextArea from "antd/es/input/TextArea";
 import "./index.css";
 import { GiftDetail } from "../../../apis/censor/gift/gift-detail.api";
-import { formatDate } from "../../util/DateUtil";
 
 const ModalThem = (props) => {
   const onFinishFailed = () => {
@@ -16,7 +15,6 @@ const ModalThem = (props) => {
     } else {
       setErrorImage("");
     }
-    message.error("Lỗi");
   };
 
   const { modalOpen, setModalOpen, gift, onSave, fetchData } = props;
@@ -29,8 +27,6 @@ const ModalThem = (props) => {
   const [listCategory, setListCategory] = useState([]);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
   const [selectType, setSelectType] = useState();
-
-  const [timeType, setTimeType] = useState("vĩnh viễn");
 
   const [categoryQuantities, setCategoryQuantities] = useState({});
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -101,6 +97,7 @@ const ModalThem = (props) => {
       setLimitQuantityValue(0);
       form.setFieldsValue({ limitSoLuong: 1 });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gift]);
 
   const fetchCategory = () => {
@@ -238,7 +235,7 @@ const ModalThem = (props) => {
                   fetchData();
                 })
                 .catch((err) => {
-                  message.error("Lỗi khi thêm mới GiftDetail: " + err.message);
+                  message.error("Lỗi hệ thống !!!");
                 });
             });
 
@@ -296,8 +293,8 @@ const ModalThem = (props) => {
           span: 18,
         }}
         style={{
-          width: 1070,
           marginTop: 30,
+          padding: "0 30px",
           justifyContent : "center"
         }}
         initialValues={{
@@ -430,6 +427,27 @@ const ModalThem = (props) => {
                   </Option>
                 ))}
               </Select>
+            </Form.Item>
+            <Form.Item
+              label={<span>Thời gian hết hạn <br/>(Theo ngày)</span>}
+              name="numberDateEnd"
+              rules={[
+                {
+                  validator: (_, value) => {
+                    if (value.trim().length === 0) {
+                      return Promise.resolve();
+                    }
+                    const regex = /^[1-9]+$/;
+                    if (!regex.test(value)) {
+                      return Promise.reject(new Error('Vui lòng nhập một số nguyên dương'));
+                    }
+            
+                    return Promise.resolve();
+                  },
+                },
+              ]}
+            >
+              <Input type="number" />
             </Form.Item>
 
             {selectedCategories.map((categoryId) => {
@@ -583,25 +601,20 @@ const ModalThem = (props) => {
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item
-          wrapperCol={{
-            offset: 8,
-            span: 16,
-          }}
-          style={{marginLeft : 130}}
-        >
-          <Button
-            style={{ marginRight: "20px" }}
-            onClick={onCancel}
-            className="submit-button bg-black text-white"
-          >
-            Đóng
-          </Button>
-          <Button htmlType="submit" className="submit-button 
-              submit-button bg-black text-white ml-2">
-            OK
-          </Button>
-        </Form.Item>
+        <Row className="text-center pb-4">
+          <Col span={24}>
+              <Button 
+                onClick={onCancel}
+                className="submit-button bg-black text-white"
+              >
+                Đóng
+              </Button>
+              <Button htmlType="submit" className="submit-button 
+                  submit-button bg-black text-white ml-2">
+                OK
+              </Button>
+          </Col>
+        </Row>
       </Form>
     </Modal>
   );
