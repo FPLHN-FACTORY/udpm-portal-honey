@@ -40,7 +40,6 @@ jobs:
           file: ./client/Dockerfile
           push: true
           tags: huynqph26782/udpm-portal-honney:0.0.1
-
       - 
        name: executing remote ssh commands using password
        uses: appleboy/ssh-action@v1.0.0
@@ -55,6 +54,8 @@ jobs:
             docker pull huynqph26782/udpm-portal-honney-api:0.0.1
             docker-compose up -d --build web_honey
             docker-compose up -d --build api_honey
+            docker restart nginx-proxy
+            docker image prune
     
         
   notifi_slack_bot:
