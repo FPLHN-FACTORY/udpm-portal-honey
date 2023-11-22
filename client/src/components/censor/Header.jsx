@@ -7,6 +7,7 @@ import {
   Avatar,
   List,
   Menu,
+  Button,
 } from "antd";
 
 import {
@@ -21,11 +22,12 @@ import approved from "../../assets/images/check.png";
 import refuse from "../../assets/images/cancel.png";
 import evaluate from "../../assets/images/star.png";
 
-import moment from "moment";
 import SubMenu from "antd/es/menu/SubMenu";
 import { deleteToken, getToken } from "../../helper/userToken";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { NotificationAPI } from "../../apis/censor/notification/censor-notification.api";
+import moment from "moment";
 // const data = [
 //   {
 //     id: 1,
@@ -64,12 +66,30 @@ import { useNavigate } from "react-router-dom";
 // ];
 
 function Header({ onSlidebar, onPress, name, subName }) {
-  useEffect(() => window.scrollTo(0, 0));
+  
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [countNotification, setCountNotification] = useState(0);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const [notification, setNotification] = useState(null);
+
+  const fetchNotifications = () => {
+    NotificationAPI.fetchAllNotification().then((response) => {
+      setNotification(response.data)
+    })
+  }
+
+  const fetchCountNotifications = () => {
+    NotificationAPI.fetchCountNotification().then((response) => {
+      setCountNotification(response.data)
+    })
+  }
+
+  useEffect(() => {
+    fetchNotifications();
+    fetchCountNotifications();
+  },[]) 
 
   useEffect(() => {
     const tokenValue = getToken();
@@ -138,6 +158,11 @@ function Header({ onSlidebar, onPress, name, subName }) {
   //   }
   // };
 
+  const handleItemClick = (item) => {
+      navigate(`/censor/request-manager/detail/${item.studentId}`);
+      setIsOpen(!isOpen);
+  };
+
   return (
     <>
       <Row gutter={[24, 0]}>
@@ -148,83 +173,102 @@ function Header({ onSlidebar, onPress, name, subName }) {
           <Badge size="small" count={countNotification}>
             <Dropdown
               overlay={
-                <List
-                  style={{ width: "300px" }}
-                  className="header-notifications-dropdown"
-                  itemLayout="horizontal"
-                  dataSource={9}
-                  renderItem={(item) => (
-                    <List.Item
-                      className={`notification-item ${
-                        hoveredItem === item.id ? "hovered" : ""
-                      }`}
-                      // onMouseEnter={() => handleItemHover(item.id)}
-                      // onMouseLeave={() => handleItemHover(null)}
-                      // onClick={() => handleItemClick(item)}
+                <>
+                    <div
+                      style={{
+                        backgroundColor: "white",
+                        marginTop: "20px",
+                        marginBottom: "-10px",
+                      }}
                     >
-                      <List.Item.Meta
-                        avatar={
-                          <div
-                            style={{
-                              position: "relative",
-                              display: "inline-block",
-                            }}
-                          >
-                            <Avatar
-                              shape="circle"
-                              src={avtar}
-                              style={{ width: "50px", height: "50px" }}
-                            />
-                            <Avatar
-                              shape="circle"
-                              src={AvatarMap[item.type]}
+                      <Button
+                        type="link"
+                        style={{ width: "100%", textAlign: "left" }}
+                        // onClick={() => markAsRead()}
+                      >
+                        <u>Đánh dấu tất cả đã đọc</u>
+                      </Button>
+                    </div>
+                  <List
+                    style={{
+                      width: "300px",
+                      height: "600px",
+                      overflow: "scroll",
+                    }}
+                    className="header-notifications-dropdown"
+                    itemLayout="horizontal"
+                    dataSource={notification}
+                    renderItem={(item) => (
+                      <List.Item
+                        className={`notification-item ${
+                          hoveredItem === item.id ? "hovered" : ""
+                        }`}
+                        onMouseEnter={() => handleItemHover(item.id)}
+                        onMouseLeave={() => handleItemHover(null)}
+                        onClick={() => handleItemClick(item)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <List.Item.Meta
+                          avatar={
+                            <div
                               style={{
-                                width: "25px",
-                                height: "25px",
-                                position: "absolute",
-                                bottom: "-5px",
-                                right: 0,
+                                position: "relative",
+                                display: "inline-block",
                               }}
-                            />
-                          </div>
-                        }
-                        title={item.contentActivity}
-                        description={
-                          <>
-                            <ClockCircleFilled />{" "}
-                            {moment(item.createdDate).format("DD/MM/YYYY")}
-                          </>
-                        }
-                      />
-                      {/* {hoveredItem === item.id && (
-                        <Dropdown
-                          overlay={
-                            <Menu>
-                              <Menu.Item
-                                key="delete"
-                                onClick={() => deleteNotification(item.id)}
-                              >
-                                <a href="# ">Xóa</a>
-                              </Menu.Item>
-                            </Menu>
+                            >
+                              <Avatar
+                                shape="circle"
+                                src={avtar}
+                                style={{ width: "50px", height: "50px" }}
+                              />
+                              {/* <Avatar
+                                shape="circle"
+                                src={AvatarMap[item.type]}
+                                style={{
+                                  width: "25px",
+                                  height: "25px",
+                                  position: "absolute",
+                                  bottom: "-5px",
+                                  right: 0,
+                                }}
+                              /> */}
+                            </div>
                           }
-                          trigger={["click"]}
-                        >
-                          <Button
-                            shape="circle"
-                            style={{
-                              border: "none",
-                              boxShadow: "none",
-                              right: "0",
-                            }}
-                            className="notification-options absolute "
-                            icon={<MoreOutlined />}
-                          />
-                        </Dropdown>
-                      )} */}
-                    </List.Item>
-                  )}
-                />
+                          title={
+                            <span
+                              style={{
+                                fontWeight: !item.status ? "bold" : "400",
+                                overflowWrap: "break-word",
+                              }}
+                            >
+                              
+                              {item.title}
+                              {!item.status ? (
+                                <div
+                                  style={{
+                                    width: "10px",
+                                    height: "10px",
+                                    backgroundColor: "blue",
+                                    borderRadius: "55%",
+                                    float: "right",
+                                    marginRight: "-8px",
+                                    marginTop: "-35px",
+                                  }}
+                                />
+                              ) : null}
+                            </span>
+                          }
+                          description={
+                            <>
+                              <ClockCircleFilled />{" "}
+                              {moment(item.createdDate).format("DD/MM/YYYY")}
+                            </>
+                          }
+                        />
+                      </List.Item>
+                    )}
+                  />
+                </>
               }
               trigger={["click"]}
               visible={isOpen}

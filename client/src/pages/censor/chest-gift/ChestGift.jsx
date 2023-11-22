@@ -44,11 +44,21 @@ export default function ChestGift() {
 
   useEffect(() => {
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    ChestAPI.fetchAll({
+      search: search,
+      page: current - 1,
+    }).then((response) => {
+      dispatch(SetChest(response.data.data.data));
+      setTotal(response.data.data.totalPages);
+    });
   }, [current]);
 
   const fetchData = () => {
     ChestAPI.fetchAll({
-      search: search,
+      search: "",
       page: current - 1,
     }).then((response) => {
       dispatch(SetChest(response.data.data.data));
@@ -58,13 +68,24 @@ export default function ChestGift() {
 
   const buttonClear = () => {
     setSearch("");
-    fetchData();
+    ChestAPI.fetchAll({
+      search: "",
+      page: current - 1,
+    }).then((response) => {
+      dispatch(SetChest(response.data.data.data));
+      setTotal(response.data.data.totalPages);
+    });
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
+  const handleSearch = () => {
     setCurrent(1);
-    fetchData();
+    ChestAPI.fetchAll({
+      search: search,
+      page: 0,
+    }).then((response) => {
+      dispatch(SetChest(response.data.data.data));
+      setTotal(response.data.data.totalPages);
+    });
   };
 
   const data = useAppSelector(GetChest);
@@ -126,47 +147,42 @@ export default function ChestGift() {
           style={{ fontSize: "26px" }}
         />{" "}
         <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span>
-        <Row class="flex items-center" onSubmit={handleSearch}>
-          <Col xl={18}>
-            <div class="relative w-full mr-6">
-              <Input
-                style={{ borderRadius: "30px", marginTop: "20px" }}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Nhập tên..."
-              />
-            </div>
-          </Col>
-          <Col xl={6}>
-            <Space
-              style={{
-                justifyContent: "center",
-                display: "flex",
-                marginBottom: "16px",
+          <div class="relative w-full mr-6">
+            <Input
+              style={{ borderRadius: "30px", marginTop: "20px" }}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Nhập tên..."
+            />
+          </div>
+          <Space
+            style={{
+              justifyContent: "center",
+              display: "flex",
+              marginBottom: "16px",
+            }}
+          >
+            <button
+              type="button"
+              className="search-button1"
+              style={{ marginTop: "20px", backgroundColor: "#537fe7" }}
+              onClick={() => {
+                buttonClear();
               }}
             >
-              <Button
-                className="search-button1"
-                style={{ marginTop: "20px", backgroundColor: "#537fe7" }}
-                onClick={() => {
-                  buttonClear();
-                }}
-              >
-                Làm mới
-              </Button>
-              <Button
-                className="search-button1"
-                style={{ marginTop: "20px" }}
-                onClick={() => {
-                  setCurrent(1);
-                  fetchData();
-                }}
-              >
-                Tìm kiếm
-              </Button>
-            </Space>
-          </Col>
-        </Row>
+              Làm mới
+            </button>
+            <button
+              type="button"
+              className="search-button1"
+              style={{ marginTop: "20px" }}
+              onClick={() =>
+                handleSearch()
+              }
+            >
+              Tìm kiếm
+            </button>
+          </Space>
       </Card>
 
       <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
@@ -189,7 +205,7 @@ export default function ChestGift() {
             <div>
               <span>
                 <Tooltip title="Tạo rương">
-                  <Button
+                  <button
                     className="add-button1"
                     onClick={() => {
                       setShowModal(true);
@@ -198,7 +214,7 @@ export default function ChestGift() {
                   >
                     <PlusOutlined className="mr-1" />
                     Tạo rương
-                  </Button>
+                  </button>
                 </Tooltip>
               </span>
             </div>
