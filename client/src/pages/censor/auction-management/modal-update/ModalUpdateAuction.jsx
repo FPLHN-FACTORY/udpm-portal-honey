@@ -19,7 +19,7 @@ const ModalUpdateAuction = ({ visible, onCancel, auction, fetchAllData }) => {
     if (auction !== null) {
       setName(auction.name);
       setHoney(auction.honey);
-      setStatus(auction.status == "HOAT_DONG" ? "0" : "1");
+      setStatus(auction.status === "HOAT_DONG" ? "0" : "1");
       setHoneyCategoryId(auction.categoryId);
       return () => {
         setName("");
@@ -167,7 +167,6 @@ const ModalUpdateAuction = ({ visible, onCancel, auction, fetchAllData }) => {
                 value={status}
                 onChange={(e) => {
                   setStatus(e.target.value);
-                  (e.target.value);
                 }}
               >
                 <Radio value={"0"}>Mở</Radio>
