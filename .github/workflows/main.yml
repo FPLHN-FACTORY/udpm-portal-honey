@@ -31,7 +31,7 @@ jobs:
           context: ./honey-project
           file: ./honey-project/Dockerfile
           push: true
-          tags: huynqph26782/udpm-portal-articles:back-end
+          tags: huynqph26782/udpm-portal-honney-api:0.0.1
   
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -39,7 +39,7 @@ jobs:
           context: ./client
           file: ./client/Dockerfile
           push: true
-          tags: huynqph26782/udpm-portal-articles:font-end
+          tags: huynqph26782/udpm-portal-honney:0.0.1
 
       - 
        name: executing remote ssh commands using password
