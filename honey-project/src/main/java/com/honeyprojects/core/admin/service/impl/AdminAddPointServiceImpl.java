@@ -86,7 +86,7 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
         History history = new History();
         history.setStatus(HoneyStatus.DA_PHE_DUYET);
         history.setTeacherId(idAdmin);
-        history.setHoneyPoint(addPointRequest.getHoneyPoint());
+//        history.setHoneyPoint(addPointRequest.getHoneyPoint());
         history.setNote(addPointRequest.getNote());
         history.setType(TypeHistory.CONG_DIEM);
         history.setCreatedAt(dateNow);
@@ -97,11 +97,11 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
             honey.setStudentId(addPointRequest.getStudentId());
             honey.setHoneyCategoryId(addPointRequest.getCategoryId());
             honeyRepository.save(honey);
-            history.setHoneyId(honeyRepository.save(honey).getId());
+//            history.setHoneyId(honeyRepository.save(honey).getId());
 
         } else {
             Honey honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();
-            history.setHoneyId(honey.getId());
+//            history.setHoneyId(honey.getId());
             honey.setHoneyPoint(addPointRequest.getHoneyPoint() + honey.getHoneyPoint());
             honeyRepository.save(honey);
         }

@@ -58,80 +58,80 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
 
     @Override
     public History addBuyItem(StudentBuyItemRequest createRequest) {
-        Category category = categoryRepository.findById(createRequest.getCategoryId()).orElse(null);
-        Gift gift = giftRepository.findById(createRequest.getGiftId()).orElse(null);
-
-
-        Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(createRequest.getStudentId(), createRequest.getCategoryId());
-        History history = new History();
-        ArchiveGift archiveGift = new ArchiveGift();
-        Archive archive = new Archive();
-        archive.setStudentId(createRequest.getStudentId());
-        archive.setStatus(Status.HOAT_DONG);
-        if (honey == null) {
-            // Nếu Honey chưa tồn tại, tạo mới
-            honey = new Honey();
-            honey.setStudentId(createRequest.getStudentId());
-            honey.setHoneyCategoryId(createRequest.getCategoryId());
-            honey.setHoneyPoint(createRequest.getHoneyPoint());
-            honey = honeyRepository.save(honey);
-        } else {
-            if (gift.getStatus().equals(StatusGift.ACCEPT)) {
-                history.setStatus(HoneyStatus.CHO_PHE_DUYET);
-                history.setType(TypeHistory.DOI_QUA);
-            } else {
-                history.setStatus(HoneyStatus.DA_PHE_DUYET);
-                history.setType(TypeHistory.DOI_QUA);
-
-                int deductedPoints = createRequest.getHoneyPoint();
-                int quantity = createRequest.getQuantity();
-                honey.setHoneyPoint(honey.getHoneyPoint() - (deductedPoints * quantity));
-                honey = honeyRepository.save(honey);
-                if(gift.getQuantity() != null){
-                    gift.setQuantity(gift.getQuantity() - createRequest.getQuantity());
-                    giftRepository.save(gift);
-                }
-
-            }
-
-        }
-
-        if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
-
-            Archive getArchive = archiveRepository.findByStudentId(createRequest.getStudentId()).orElse(archive);
-            archiveRepository.save(getArchive);
-            ArchiveGift archiveGift1 = giftArchiveRepository.findByGiftIdAndArchiveId(createRequest.getGiftId(),getArchive.getId());
-            if(archiveGift1 != null){
-                int currentQuantity = archiveGift1.getQuantity();
-                int additionalQuantity = createRequest.getQuantity();
-                archiveGift1.setQuantity(currentQuantity + additionalQuantity);
-                giftArchiveRepository.save(archiveGift1);
-            }else if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
-                archiveGift.setGiftId(createRequest.getGiftId());
-                archiveGift.setNote(createRequest.getNote());
-                archiveGift.setArchiveId(getArchive.getId());
-                archiveGift.setQuantity(createRequest.getQuantity());
-                giftArchiveRepository.save(archiveGift);
-            }
-        }
-
-        // Tiếp tục với việc thêm yêu cầu vào bảng History
-        Long dateNow = Calendar.getInstance().getTimeInMillis();
-        history.setCreatedAt(dateNow);
-        history.setHoneyPoint(createRequest.getHoneyPoint());
-        history.setStudentId(createRequest.getStudentId());
-        history.setGiftId(createRequest.getGiftId());
-        history.setHoneyId(honey.getId());
-        history.setNameGift(createRequest.getNameGift());
-        history.setNote(createRequest.getNote());
-        history.setQuantity(createRequest.getQuantity());
-
-
-
-
-        return studentCreateRequestConversionRepository.save(history);
-
-
+//        Category category = categoryRepository.findById(createRequest.getCategoryId()).orElse(null);
+//        Gift gift = giftRepository.findById(createRequest.getGiftId()).orElse(null);
+//
+//
+//        Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(createRequest.getStudentId(), createRequest.getCategoryId());
+//        History history = new History();
+//        ArchiveGift archiveGift = new ArchiveGift();
+//        Archive archive = new Archive();
+//        archive.setStudentId(createRequest.getStudentId());
+//        archive.setStatus(Status.HOAT_DONG);
+//        if (honey == null) {
+//            // Nếu Honey chưa tồn tại, tạo mới
+//            honey = new Honey();
+//            honey.setStudentId(createRequest.getStudentId());
+//            honey.setHoneyCategoryId(createRequest.getCategoryId());
+//            honey.setHoneyPoint(createRequest.getHoneyPoint());
+//            honey = honeyRepository.save(honey);
+//        } else {
+//            if (gift.getStatus().equals(StatusGift.ACCEPT)) {
+//                history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+//                history.setType(TypeHistory.DOI_QUA);
+//            } else {
+//                history.setStatus(HoneyStatus.DA_PHE_DUYET);
+//                history.setType(TypeHistory.DOI_QUA);
+//
+//                int deductedPoints = createRequest.getHoneyPoint();
+//                int quantity = createRequest.getQuantity();
+//                honey.setHoneyPoint(honey.getHoneyPoint() - (deductedPoints * quantity));
+//                honey = honeyRepository.save(honey);
+//                if(gift.getQuantity() != null){
+//                    gift.setQuantity(gift.getQuantity() - createRequest.getQuantity());
+//                    giftRepository.save(gift);
+//                }
+//
+//            }
+//
+//        }
+//
+//        if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
+//
+//            Archive getArchive = archiveRepository.findByStudentId(createRequest.getStudentId()).orElse(archive);
+//            archiveRepository.save(getArchive);
+//            ArchiveGift archiveGift1 = giftArchiveRepository.findByGiftIdAndArchiveId(createRequest.getGiftId(),getArchive.getId());
+//            if(archiveGift1 != null){
+//                int currentQuantity = archiveGift1.getQuantity();
+//                int additionalQuantity = createRequest.getQuantity();
+//                archiveGift1.setQuantity(currentQuantity + additionalQuantity);
+//                giftArchiveRepository.save(archiveGift1);
+//            }else if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
+//                archiveGift.setGiftId(createRequest.getGiftId());
+//                archiveGift.setNote(createRequest.getNote());
+//                archiveGift.setArchiveId(getArchive.getId());
+//                archiveGift.setQuantity(createRequest.getQuantity());
+//                giftArchiveRepository.save(archiveGift);
+//            }
+//        }
+//
+//        // Tiếp tục với việc thêm yêu cầu vào bảng History
+//        Long dateNow = Calendar.getInstance().getTimeInMillis();
+//        history.setCreatedAt(dateNow);
+//        history.setHoneyPoint(createRequest.getHoneyPoint());
+//        history.setStudentId(createRequest.getStudentId());
+//        history.setGiftId(createRequest.getGiftId());
+//        history.setHoneyId(honey.getId());
+//        history.setNameGift(createRequest.getNameGift());
+//        history.setNote(createRequest.getNote());
+//        history.setQuantity(createRequest.getQuantity());
+//
+//
+//
+//
+//        return studentCreateRequestConversionRepository.save(history);
+//
+return null;
     }
 
     @Override

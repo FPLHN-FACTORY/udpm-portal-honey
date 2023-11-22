@@ -85,31 +85,32 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     @Override
     @Transactional
     public History addPoint(TeacherAddPointRequest addPointRequest) {
-        //fake teacher login
-        String idTeacher = udpmHoney.getIdUser();
-
-        Long dateNow = Calendar.getInstance().getTimeInMillis();
-
-        History history = new History();
-        history.setStatus(HoneyStatus.CHO_PHE_DUYET);
-        history.setTeacherId(idTeacher);
-        history.setHoneyPoint(addPointRequest.getHoneyPoint());
-        history.setNote(addPointRequest.getNote());
-        history.setType(TypeHistory.CONG_DIEM);
-        history.setCreatedAt(dateNow);
-        if (addPointRequest.getHoneyId() == null) {
-            Honey honey = new Honey();
-            honey.setStatus(Status.HOAT_DONG);
-            honey.setHoneyPoint(0);
-            honey.setStudentId(addPointRequest.getStudentId());
-            honey.setHoneyCategoryId(addPointRequest.getCategoryId());
-            history.setHoneyId(honeyRepository.save(honey).getId());
-        } else {
-            Honey honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();
-            history.setHoneyId(honey.getId());
-        }
-        history.setStudentId(addPointRequest.getStudentId());
-        return historyRepository.save(history);
+//        //fake teacher login
+//        String idTeacher = udpmHoney.getIdUser();
+//
+//        Long dateNow = Calendar.getInstance().getTimeInMillis();
+//
+//        History history = new History();
+//        history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+//        history.setTeacherId(idTeacher);
+//        history.setHoneyPoint(addPointRequest.getHoneyPoint());
+//        history.setNote(addPointRequest.getNote());
+//        history.setType(TypeHistory.CONG_DIEM);
+//        history.setCreatedAt(dateNow);
+//        if (addPointRequest.getHoneyId() == null) {
+//            Honey honey = new Honey();
+//            honey.setStatus(Status.HOAT_DONG);
+//            honey.setHoneyPoint(0);
+//            honey.setStudentId(addPointRequest.getStudentId());
+//            honey.setHoneyCategoryId(addPointRequest.getCategoryId());
+//            history.setHoneyId(honeyRepository.save(honey).getId());
+//        } else {
+//            Honey honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();
+//            history.setHoneyId(honey.getId());
+//        }
+//        history.setStudentId(addPointRequest.getStudentId());
+//        return historyRepository.save(history);
+        return null;
     }
 
     @Override
