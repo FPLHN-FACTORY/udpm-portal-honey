@@ -19,7 +19,10 @@ public class HistoryDetail extends PrimaryEntity {
     private String studentId;
 
     @Column(length = EntityProperties.LENGTH_ID)
-    private String objectId;
+    private String presidentId;
+
+    @Column(length = EntityProperties.LENGTH_ID)
+    private String teacherId;
 
     @Column(length = EntityProperties.LENGTH_ID)
     private String honeyId;
