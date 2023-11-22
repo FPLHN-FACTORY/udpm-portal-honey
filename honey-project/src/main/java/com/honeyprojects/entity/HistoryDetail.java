@@ -16,6 +16,9 @@ import lombok.Setter;
 public class HistoryDetail extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_ID)
+    private String historyId;
+
+    @Column(length = EntityProperties.LENGTH_ID)
     private String studentId;
 
     @Column(length = EntityProperties.LENGTH_ID)
