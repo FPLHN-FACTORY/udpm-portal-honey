@@ -41,30 +41,31 @@ public class TeacherConvertionHoneyServiceImpl implements TeacherConvertionHoney
     @Override
     @Transactional
     public History addConvertion(@Valid TeacherConvertionHoneyRequest convertionHoneyRequest) {
-        Long dateNow = Calendar.getInstance().getTimeInMillis();
-        Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(convertionHoneyRequest.getStudentId(), convertionHoneyRequest.getCategoryId());
-        if (honey == null) {
-            honey = new Honey();
-            honey.setStatus(Status.HOAT_DONG);
-            honey.setStudentId(convertionHoneyRequest.getStudentId());
-            honey.setHoneyCategoryId(convertionHoneyRequest.getCategoryId());
-        } else {
-            int deductedPoints = convertionHoneyRequest.getHoneyPoint();
-            honey.setHoneyPoint(honey.getHoneyPoint() - deductedPoints);
-        }
-        String idTeacher = udpmHoney.getIdUser();
-        History history = new History();
-        history.setStatus(HoneyStatus.DA_PHE_DUYET);
-        history.setHoneyId(honeyRepository.save(honey).getId());
-        history.setTeacherId(idTeacher);
-        history.setHoneyPoint(convertionHoneyRequest.getHoneyPoint());
-        history.setType(TypeHistory.DOI_QUA);
-        history.setGiftId(convertionHoneyRequest.getGiftId());
-        history.setNameGift(giftRepository.findById(convertionHoneyRequest.getGiftId()).get().getName());
-        history.setCreatedAt(dateNow);
-        history.setHoneyId(honey.getId());
-        history.setStudentId(convertionHoneyRequest.getStudentId());
-        return teacherHistoryRepository.save(history);
+//        Long dateNow = Calendar.getInstance().getTimeInMillis();
+//        Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(convertionHoneyRequest.getStudentId(), convertionHoneyRequest.getCategoryId());
+//        if (honey == null) {
+//            honey = new Honey();
+//            honey.setStatus(Status.HOAT_DONG);
+//            honey.setStudentId(convertionHoneyRequest.getStudentId());
+//            honey.setHoneyCategoryId(convertionHoneyRequest.getCategoryId());
+//        } else {
+//            int deductedPoints = convertionHoneyRequest.getHoneyPoint();
+//            honey.setHoneyPoint(honey.getHoneyPoint() - deductedPoints);
+//        }
+//        String idTeacher = udpmHoney.getIdUser();
+//        History history = new History();
+//        history.setStatus(HoneyStatus.DA_PHE_DUYET);
+//        history.setHoneyId(honeyRepository.save(honey).getId());
+//        history.setTeacherId(idTeacher);
+//        history.setHoneyPoint(convertionHoneyRequest.getHoneyPoint());
+//        history.setType(TypeHistory.DOI_QUA);
+//        history.setGiftId(convertionHoneyRequest.getGiftId());
+//        history.setNameGift(giftRepository.findById(convertionHoneyRequest.getGiftId()).get().getName());
+//        history.setCreatedAt(dateNow);
+//        history.setHoneyId(honey.getId());
+//        history.setStudentId(convertionHoneyRequest.getStudentId());
+//        return teacherHistoryRepository.save(history);
+        return null;
     }
 
     @Override
