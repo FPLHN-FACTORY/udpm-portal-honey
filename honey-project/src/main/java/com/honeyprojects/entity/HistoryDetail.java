@@ -35,4 +35,6 @@ public class HistoryDetail extends PrimaryEntity {
     private Integer quantityGift;
 
     private Integer honeyPoint;
+
+    private String nameGift;
 }
