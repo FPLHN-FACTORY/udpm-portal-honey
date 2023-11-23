@@ -13,7 +13,7 @@ export class AuctionAPI {
   static create = (data) => {
     return request({
       method: "POST",
-      url: `/${this.COMPONENT_NAME}` + `/add`,
+      url: `/${this.COMPONENT_NAME}/add`,
       data: data,
     });
   };

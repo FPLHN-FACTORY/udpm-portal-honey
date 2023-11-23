@@ -11,7 +11,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/teacher/list-students-add-point")
-public class TeacherAddPointExcelCotroller {
+public class TeacherAddPointExcelController {
 
     @Autowired
     private TeacherExcelAddPointService service;

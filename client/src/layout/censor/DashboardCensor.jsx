@@ -98,10 +98,39 @@ function DashboardAuthUser({ children }) {
         ),
       ]
     ),
+    // getItem(
+    //   <Link to="/censor/request-manager/random-add-point">Tặng vật phẩm</Link>,
+    //   "/censor/request-manager/random-add-point",
+    //   <FontAwesomeIcon icon={faCommentsDollar} />,
+    //   [
+    //     getItem(
+    //       <Link to={"/censor/event"}>Module sự kiện</Link>,
+    //       "/censor/event"
+    //     ),
+    //     getItem(
+    //       <Link to={"/censor/project"}>Module dự án</Link>,
+    //       "/censor/project"
+    //     ),
+    //   ]
+    // ),
     getItem(
-      <Link to="/censor/request-manager/random-add-point">Tặng vật phẩm</Link>,
-      "/censor/request-manager/random-add-point",
-      <FontAwesomeIcon icon={faCommentsDollar} />
+      "Tặng vật phẩm",
+      "Tặng vật phẩm",
+      <FontAwesomeIcon icon={faCodePullRequest} />,
+      [
+        getItem(
+          <Link to={"/censor/request-manager/random-add-point"}>Tặng vật phẩm</Link>,
+          "/censor/request-manager/random-add-point"
+        ),
+        getItem(
+          <Link to={"/censor/event"}>Module sự kiện</Link>,
+          "/censor/event"
+        ),
+        getItem(
+          <Link to={"/censor/project"}>Module dự án</Link>,
+          "/censor/project"
+        ),
+      ]
     ),
     getItem(
       <Link to="/censor/chest">Quản lý rương</Link>,
