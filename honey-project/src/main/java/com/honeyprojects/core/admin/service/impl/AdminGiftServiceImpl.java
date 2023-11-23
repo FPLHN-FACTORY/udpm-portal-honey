@@ -106,6 +106,9 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         gift.setTransactionGift(TransactionGift.values()[request.getTransactionGift()]);
         gift.setNote(request.getNote());
 
+        if (request.getNumberDateEnd() != null) {
+            gift.setNumberEndDate(Long.valueOf(request.getNumberDateEnd()));
+        }
         Long fromDate = null;
         Long toDate = null;
         if (request.getFromDate() != null) {

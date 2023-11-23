@@ -85,6 +85,11 @@ const ModalDetail = (props) => {
     }
   };
 
+  const handleCancel = () => {
+    setModalVisible(false);
+    setSelectedRowKeys([]);
+  }
+
   return (
     <div>
       <Tooltip title="Mở rương">
@@ -102,7 +107,7 @@ const ModalDetail = (props) => {
         onOk={() => {
           setModalVisible(false);
         }}
-        onCancel={() => setModalVisible(false)}
+        onCancel={() => handleCancel()}
       >
         <div>
           <Button

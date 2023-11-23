@@ -199,7 +199,7 @@ export default function HistoryAddPoint() {
           <Space size={"large"}>
             <Form.Item name="userName" className="search-input">
               <Input
-                style={{ width: "300px" }}
+                style={{ width: "500px" }}
                 size="small"
                 placeholder="Nhập mã sinh viên cần tìm"
                 prefix={<SearchOutlined />}
@@ -207,7 +207,7 @@ export default function HistoryAddPoint() {
             </Form.Item>
             <Form.Item name={"idCategory"}>
               <Select
-                style={{ width: "150px" }}
+                style={{ width: "450px" }}
                 size="large"
                 placeholder="Loại điểm"
                 options={[

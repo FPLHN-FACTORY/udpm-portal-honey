@@ -126,17 +126,18 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
         history.setCreatedAt(dateNow);
         history.setNote(createRequest.getNote());
         history.setStudentId(createRequest.getStudentId());
-
+        studentCreateRequestConversionRepository.save(history);
 
         historyDetail.setHoneyPoint(createRequest.getHoneyPoint());
         historyDetail.setGiftId(createRequest.getGiftId());
         historyDetail.setHoneyId(honey.getId());
         historyDetail.setNameGift(createRequest.getNameGift());
         historyDetail.setQuantityGift(createRequest.getQuantity());
+        historyDetail.setHistoryId(history.getId());
 
         historyDetailRepository.save(historyDetail);
 
-        return studentCreateRequestConversionRepository.save(history);
+        return history;
 
     }
 

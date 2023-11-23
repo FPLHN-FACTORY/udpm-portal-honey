@@ -2573,7 +2573,7 @@ section.ant-layout.layout-content .ant-layout-content.content-ant {
 .d-flex {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
 }
 
 .payment-method-card.ant-card {

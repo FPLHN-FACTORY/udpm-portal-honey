@@ -14,7 +14,7 @@ public interface StudentArchiveByUserResponse {
     String getIdGift();
 
     @Value("#{target.image}")
-    byte[] getImage();
+    String getImage();
 
     @Value("#{target.nameGift}")
     String getNameGift();
