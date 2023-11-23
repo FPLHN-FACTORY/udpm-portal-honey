@@ -1,4 +1,4 @@
-package com.honeyprojects.core.president.service;
+package com.honeyprojects.core.president.repository;
 
 import com.honeyprojects.repository.HistoryRepository;
 import org.springframework.stereotype.Repository;
