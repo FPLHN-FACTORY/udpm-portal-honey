@@ -205,7 +205,7 @@ export default function AddItem() {
                 <ModalUpLoadFile
                   openUpload={openUpload}
                   setOpenUpload={setOpenUpload}
-                  setLoading={setLoading}
+                  // setLoading={setLoading}
                   setDataPreview={setDataPreview}
                   nameFileUpload={nameFileUpload}
                   setNameFileUpload={setNameFileUpload}

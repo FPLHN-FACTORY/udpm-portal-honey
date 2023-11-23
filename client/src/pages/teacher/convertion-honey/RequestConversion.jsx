@@ -236,7 +236,6 @@ export default function RequestConversion() {
   };
 
   return (
-    <Spin spinning={loading}>
       <div className="add-point">
         <Card
           className="mb-2"
@@ -362,6 +361,5 @@ export default function RequestConversion() {
           </div>
         </Card>
       </div>
-    </Spin>
   );
 }
