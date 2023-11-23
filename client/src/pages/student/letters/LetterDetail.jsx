@@ -111,7 +111,7 @@ const LetterDetail = () => {
                 {formatTime(notification.createdDate)}
               </p>
             </div>
-            {notification.type === "HE_THONG" && (
+            {/* {notification.type === "HE_THONG" && (
               <Button
                 className="item__button"
                 onClick={() => handleReceiving(dataReceiving, id)}
@@ -119,7 +119,7 @@ const LetterDetail = () => {
               >
                 {notification.status === "DA_NHAN" ? "Đã nhận" : "Nhận quà"}
               </Button>
-            )}
+            )} */}
           </Space>
 
           <div className="letter__detail__content">
