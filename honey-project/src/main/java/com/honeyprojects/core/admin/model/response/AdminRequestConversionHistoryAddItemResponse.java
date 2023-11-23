@@ -8,6 +8,9 @@ public interface AdminRequestConversionHistoryAddItemResponse extends IsIdentifi
     @Value("#{target.student_id}")
     String getStudentId();
 
+    String getIdHistoryDetail();
+
+
     @Value("#{target.name_gift}")
     String getNameGift();
 
@@ -23,7 +26,7 @@ public interface AdminRequestConversionHistoryAddItemResponse extends IsIdentifi
     @Value("#{target.note}")
     String getNote();
 
-    @Value("#{target.quantity}")
-    String getQuantity();
+    @Value("#{target.quantity_gift}")
+    Integer getQuantityGift();
 
 }
