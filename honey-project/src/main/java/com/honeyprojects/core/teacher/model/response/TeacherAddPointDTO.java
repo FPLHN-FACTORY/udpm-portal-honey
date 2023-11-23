@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class TeacherAddPoinExcelResponse {
+public class TeacherAddPointDTO {
     private String id;
 
     private String userName;
