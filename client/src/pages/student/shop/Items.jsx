@@ -6,19 +6,6 @@ import "./shop-gift.css";
 import { BuyItem } from "../../../apis/student/buyItem/ButItem";
 import { StarTwoTone } from "@ant-design/icons";
 
-function ImageRenderer({ image }) {
-  if (image) {
-    return (
-      <img
-        src={image}
-        style={{ width: "100px", height: "100px" }}
-        alt="Hình ảnh"
-      />
-    );
-  } else {
-    return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
-  }
-}
 const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
   const [selectedConversion, setSelectedConversion] = useState(null);
   const [fillUserApi, setFillUserApi] = useState([]);

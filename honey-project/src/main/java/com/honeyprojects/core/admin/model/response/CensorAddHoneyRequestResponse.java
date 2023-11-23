@@ -19,10 +19,7 @@ public interface CensorAddHoneyRequestResponse extends IsIdentified {
     @Value("#{target.honey_point}")
     Integer getHoneyPoint();
 
-    @Value("#{target.created_date}")
-    Long getCreatedDate();
-
-    @Value("#{target.status}")
-    Integer getStatus();
+    @Value("#{target.created_at}")
+    Long getCreatedAt();
 
 }

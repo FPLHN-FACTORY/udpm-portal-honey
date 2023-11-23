@@ -4,31 +4,26 @@
     font-size: 20px;
 }
 
-.login__wraper {
+.login__wrraper {
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
     font-size: 15px;
     line-height: 1.7;
     color: #102770;
-    /* background-color: #ffeba7; */
+    background-color: #ffeba7;
     overflow-x: hidden;
 }
 
-a {
+.pricing-wrap .link {
+    color: #c4c3ca;
     cursor: pointer;
     transition: all 200ms linear;
 }
 
-a:hover {
-    text-decoration: none;
-}
-
-.link {
-    color: #c4c3ca;
-}
-
-.link:hover {
+pricing-wrap .link:hover {
     color: #ffeba7;
+    text-decoration: none;
+
 }
 
 .over-hide {
@@ -39,7 +34,7 @@ a:hover {
     font-size: 22px;
 }
 
-.section {
+.wrraper__login {
     position: relative;
     width: 100%;
     z-index: 1;
@@ -48,12 +43,6 @@ a:hover {
 
 .full-height {
     min-height: 100vh;
-}
-
-[type="checkbox"]:checked,
-[type="checkbox"]:not(:checked) {
-    position: absolute;
-    left: -9999px;
 }
 
 .pricing:checked+label,
@@ -453,7 +442,6 @@ a:hover {
     transform: translate3d(0, 0, 35px) perspective(100px) scale(1);
     transition: transform 400ms 1300ms ease, opacity 300ms 1300ms ease;
 }
-
 
 
 .logo {
