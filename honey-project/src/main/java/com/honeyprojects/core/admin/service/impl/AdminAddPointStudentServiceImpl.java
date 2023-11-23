@@ -254,6 +254,11 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
         return presidentAddItemBO;
     }
 
+    @Override
+    public void importDataLabReport(AdminAddPointStudentLabReportBOO adminAddPointStudentBO) throws IOException {
+
+    }
+
     private AdminAddPointStudentLabReportRequestt processRowLabReport(Row row) {
         AdminAddPointStudentLabReportRequestt userDTO = new AdminAddPointStudentLabReportRequestt();
         String email = ExcelUtils.getCellString(row.getCell(0));

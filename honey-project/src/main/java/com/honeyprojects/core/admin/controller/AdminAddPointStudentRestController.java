@@ -5,6 +5,7 @@ import com.honeyprojects.core.admin.model.request.AdminAddPointStudentPortalEven
 import com.honeyprojects.core.admin.service.AdminAddPointStudentService;
 import com.honeyprojects.core.admin.service.AdminCategoryService;
 import com.honeyprojects.core.common.base.ResponseObject;
+import com.honeyprojects.core.president.model.response.PresidentAddItemDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/add-point-student")
@@ -42,7 +44,10 @@ public class AdminAddPointStudentRestController {
         return new ResponseObject(addPointService.previewDataLabReportImportExcel(file));
     }
 
-
+    @PostMapping("/import-data")
+    public void importDataLabReport(@RequestBody AdminAddPointStudentLabReportBOO adminAddPointStudentBO) throws IOException {
+        addPointService.importDataLabReport(adminAddPointStudentBO);
+    }
     //========================
     // api dùng để cộng mật ong danh sách sinh viên tham gia sự kiện
     @PostMapping("/portal-events")
