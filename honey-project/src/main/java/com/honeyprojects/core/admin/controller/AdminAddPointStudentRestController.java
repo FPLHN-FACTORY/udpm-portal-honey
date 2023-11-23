@@ -67,5 +67,10 @@ public class AdminAddPointStudentRestController {
         return new ResponseObject(addPointService.exportExcelPortalEvents());
     }
 
+//    @PostMapping("/portal-events/preview-data")
+//    public ResponseObject previewDataLabReport(@RequestParam("file") MultipartFile file) throws IOException {
+//        return new ResponseObject(addPointService.previewDataLabReportImportExcel(file));
+//    }
+
 }
 

@@ -24,5 +24,19 @@ export class AddPointStudentAPI {
     });
   };
 
-  
+  static previewDataExcelEvent = (importExcel) => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}/portal-events/preview-data`,
+      data: importExcel,
+    });
+  };
+
+  static previewDatatExcelLab = (importExcel) => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}/lab-report/preview-data`,
+      data: importExcel,
+    });
+  };
 }

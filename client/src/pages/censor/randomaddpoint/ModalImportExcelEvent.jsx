@@ -3,15 +3,12 @@ import { Button, Modal, Upload, message } from "antd";
 import React, { useState } from "react";
 import "./index.css";
 import { AddPointStudentAPI } from "../../../apis/censor/add-point/add-point-student.api";
+import { useAppDispatch } from "../../../app/hooks";
+import { SetImport } from "../../../app/reducers/import/import.president.reducer";
 
 export default function ModalImportExcelLab(props) {
-  const {
-    open,
-    setOpen,
-    nameFile,
-    setNameFile,
-  } = props;
-
+  const { open, setOpen, nameFile, setNameFile, setDataPreview } = props;
+  const dispatch = useAppDispatch();
   const [file, setFile] = useState(null);
 
   const handleExportExcel = () => {
@@ -25,38 +22,24 @@ export default function ModalImportExcelLab(props) {
   };
 
   const handleFileInputChange = (e) => {
-    // if (file !== null) {
-    //   const formData = new FormData();
-    //   formData.append("file", file.file.originFileObj);
-    //   RandomAddPointAPI.previewDataRandomExcel(formData)
-    //     .then((response) => {
-    //       if (response.data.data.total > 0) {
-    //         const idList = response.data.data.lstAdminAddPointDTO.map(
-    //           (item) => item.id
-    //         );
-    //         setListStudentPoint({
-    //           ...dataRandomPoint,
-    //           listStudentPoint: idList,
-    //         });
-    //         setListStudentItem({
-    //           ...dataRandomItem,
-    //           listStudentPoint: idList,
-    //         });
-    //         setDataPreview(response.data.data);
-    //         message.success("Import excel thành công");
-    //       } else {
-    //         message.error("Import excel thất bại");
-    //         setDataPreview([]);
-    //       }
-    //     })
-    //     .catch(() => {
-    //       message.error("Import excel thất bại");
-    //       setDataPreview([]);
-    //     });
-    // } else {
-    //   message.error("Import excel thất bại");
-    //   setDataPreview([]);
-    // }
+    if (file !== null) {
+      const formData = new FormData();
+      formData.append("file", file.file.originFileObj);
+      AddPointStudentAPI.previewDataExcelEvent(formData)
+        .then((response) => {
+          console.log('====================================');
+          console.log(response);
+          console.log('====================================');
+          setDataPreview(response.data.data.listStudent);
+          dispatch(SetImport(response.data.data));
+          message.success("Import excel thành công");
+        })
+        .catch(() => {
+          message.error("Import excel thất bại");
+        });
+    } else {
+      message.error("Import excel thất bại");
+    }
     setNameFile("");
     setOpen(false);
   };
