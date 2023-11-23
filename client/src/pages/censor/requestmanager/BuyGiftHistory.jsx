@@ -6,6 +6,7 @@ import {
   Pagination,
   Select,
   Space,
+  Table,
   Tag,
   message,
 } from "antd";
@@ -18,9 +19,9 @@ import { SearchOutlined } from "@ant-design/icons";
 const statusHistory = (status) => {
   switch (status) {
     case 1:
-      return <Tag color="green">Phê duyệt</Tag>; // Màu xanh lá cây
+      return <Tag color="green">Đổi thành công</Tag>; // Màu xanh lá cây
     case 2:
-      return <Tag color="volcano">Từ chối</Tag>; // Màu đỏ
+      return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
     default:
       return <Tag>Không xác định</Tag>;
   }
@@ -98,7 +99,6 @@ export default function BuyGiftHistory() {
         .catch((error) => console.error(error));
     }
   };
-
   return (
     <>
       <Card className="mb-2">

@@ -1,55 +1,17 @@
 package com.honeyprojects.core.admin.service.impl;
 
-import com.honeyprojects.core.admin.model.request.AdminCreateHoneyRequest;
-import com.honeyprojects.core.admin.model.request.AdminCreateNotificationDetailRandomRequest;
-import com.honeyprojects.core.admin.model.request.AdminNotificationRandomRequest;
-import com.honeyprojects.core.admin.model.request.AdminRandomPointRequest;
-import com.honeyprojects.core.admin.model.response.AdminAddItemBO;
-import com.honeyprojects.core.admin.model.response.AdminAddItemDTO;
-import com.honeyprojects.core.admin.model.response.AdminAddPointBO;
-import com.honeyprojects.core.admin.model.response.AdminAddPointDTO;
-import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
-import com.honeyprojects.core.admin.model.response.AdminChestGiftResponse;
-import com.honeyprojects.core.admin.model.response.AdminChestReponse;
-import com.honeyprojects.core.admin.model.response.AdminImportCategoryResponse;
-import com.honeyprojects.core.admin.model.response.AdminImportGiftResponse;
-import com.honeyprojects.core.admin.repository.AdArchiveGiftRepository;
-import com.honeyprojects.core.admin.repository.AdArchiveRepository;
-import com.honeyprojects.core.admin.repository.AdChestGiftRepository;
-import com.honeyprojects.core.admin.repository.AdChestRepository;
-import com.honeyprojects.core.admin.repository.AdGiftRepository;
-import com.honeyprojects.core.admin.repository.AdNotificationRespository;
-import com.honeyprojects.core.admin.repository.AdRandomAddPointRepository;
-import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
-import com.honeyprojects.core.admin.repository.AdminHoneyRepository;
+import com.honeyprojects.core.admin.model.request.*;
+import com.honeyprojects.core.admin.model.response.*;
+import com.honeyprojects.core.admin.repository.*;
 import com.honeyprojects.core.admin.service.AdRandomAddPointService;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
-import com.honeyprojects.entity.Chest;
-import com.honeyprojects.entity.Gift;
-import com.honeyprojects.entity.Honey;
-import com.honeyprojects.entity.Notification;
-import com.honeyprojects.entity.NotificationDetail;
-import com.honeyprojects.infrastructure.contant.Constants;
-import com.honeyprojects.infrastructure.contant.NotificationDetailType;
-import com.honeyprojects.infrastructure.contant.NotificationStatus;
-import com.honeyprojects.infrastructure.contant.NotificationType;
+import com.honeyprojects.entity.*;
+import com.honeyprojects.infrastructure.contant.*;
 import com.honeyprojects.infrastructure.logger.entity.LoggerFunction;
 import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
-import com.honeyprojects.util.ConvertRequestApiidentity;
-import com.honeyprojects.util.DataUtils;
-import com.honeyprojects.util.DateUtils;
-import com.honeyprojects.util.ExcelUtils;
-import com.honeyprojects.util.LoggerUtil;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import com.honeyprojects.util.*;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,15 +22,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -90,6 +44,9 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     private AdArchiveRepository adArchiveRepository;
 
     @Autowired
+    private AdArchiveGiftRepository adArchiveGiftRepository;
+
+    @Autowired
     private AdNotificationRespository adNotificationRespository;
 
     @Autowired
@@ -103,6 +60,15 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
     @Autowired
     private RabbitProducer producer;
+
+    @Autowired
+    private AdminHistoryRandomRepository adHistoryRepository;
+
+    @Autowired
+    private AdHistoryDetailRandomRepository adHistoryDetailRepository;
+
+    @Autowired
+    private AdHoneyRepository adHoneyRepository;
 
     @Autowired
     private ConvertRequestApiidentity convertRequestApiidentity;
@@ -155,11 +121,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                             honeyList.add(student);
                         } else {
                             // Tạo một bản ghi Honey mới nếu không tìm thấy
-                            AdminCreateHoneyRequest adminCreateHoneyRequest = new AdminCreateHoneyRequest();
-                            adminCreateHoneyRequest.setStudentId(idS.getId());
-                            adminCreateHoneyRequest.setCategoryId(idCategory);
-                            adminCreateHoneyRequest.setHoneyPoint(0);
-                            Honey newHoney = adminCreateHoneyRequest.createHoney(new Honey());
+                            Honey newHoney = createHoney(idS.getId(), idCategory);
                             honeyList.add(newHoney);
                         }
                     }
@@ -174,11 +136,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                             honeyList.add(honey1);
                         } else {
                             // Tạo một bản ghi Honey mới nếu không tìm thấy
-                            AdminCreateHoneyRequest adminCreateHoneyRequest = new AdminCreateHoneyRequest();
-                            adminCreateHoneyRequest.setStudentId(student);
-                            adminCreateHoneyRequest.setCategoryId(idCategory);
-                            adminCreateHoneyRequest.setHoneyPoint(0);
-                            Honey newHoney = adminCreateHoneyRequest.createHoney(new Honey());
+                            Honey newHoney = createHoney(student, idCategory);
                             honeyList.add(newHoney);
                         }
                     }
@@ -197,9 +155,13 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     continue;
                 } else {
                     SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(honey.getStudentId());
+                    History history = createHistory(honey.getStudentId(), TypeHistory.CONG_DIEM);
+                    createHistoryDetail(honey.getStudentId(), honey.getId(), null, null, history.getId(), null, randomPoint, null);
                     Notification notification = createNotification(honey.getStudentId());
                     stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được hệ thống tặng: " + randomPoint + " " + categoryResponse.getName());
                     createNotificationDetailHoney(categoryResponse, notification.getId(), randomPoint);
+                    honey.setHoneyPoint(honey.getHoneyPoint() + randomPoint);
+                    adHoneyRepository.save(honey);
                 }
             }
             createLogBug(stringBuilder);
@@ -212,7 +174,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
     @Override
     public Boolean createRandomItem(AdminRandomPointRequest req) {
-        Random random = new Random();
         StringBuilder stringBuilder = new StringBuilder();
         try {
             if (req.getListStudentPoint().isEmpty()) {
@@ -224,8 +185,16 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     Optional<Chest> optionalChest = chestRepository.findById(req.getChestId());
                     if (optionalChest.isPresent()) {
                         Chest chest = optionalChest.get();
+                        String archiveId = adArchiveRepository.getIdArchiveByIdStudent(simple.getId());
+                        History history = createHistory(simple.getId(), TypeHistory.CONG_RUONG);
+                        if (archiveId == null) {
+                            Archive archive = createArchive(simple.getId());
+                            createArchiveGift(archive.getId(), chest.getId(), null, 1);
+                        } else {
+                            createArchiveGift(archiveId, chest.getId(), null, 1);
+                        }
+                        createHistoryDetailChest(simple, chest, history, 1, stringBuilder);
                         Notification notification = createNotification(simple.getId());
-                        stringBuilder.append("Sinh viên " + simple.getName() + " - " + simple.getUserName() + " được hệ thống tặng: 1 rương " + chest.getName() + ", ");
                         createNotificationDetailChest(chest, notification.getId(), 1);
                     } else {
                         continue;
@@ -238,8 +207,16 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(idStudent);
                     if (optionalChest.isPresent()) {
                         Chest chest = optionalChest.get();
-                        Notification notification = createNotification(idStudent);
-                        stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được hệ thống tặng: 1 rương " + chest.getName() + ", ");
+                        History history = createHistory(simpleResponse.getId(), TypeHistory.CONG_RUONG);
+                        String archiveId = adArchiveRepository.getIdArchiveByIdStudent(simpleResponse.getId());
+                        if (archiveId == null) {
+                            Archive archive = createArchive(simpleResponse.getId());
+                            createArchiveGift(archive.getId(), chest.getId(), null, 1);
+                        } else {
+                            createArchiveGift(archiveId, chest.getId(), null, 1);
+                        }
+                        createHistoryDetailChest(simpleResponse, chest, history, 1, stringBuilder);
+                        Notification notification = createNotification(simpleResponse.getId());
                         createNotificationDetailChest(chest, notification.getId(), 1);
                     } else {
                         continue;
@@ -460,8 +437,16 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             // Gọi API để lấy thông tin người dùng bằng địa chỉ email
             String emailSimple = userDTO.getUserName() + "@fpt.edu.vn";
             SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
+            String idArchive = null;
+            String archiveId = adArchiveRepository.getIdArchiveByIdStudent(simpleResponse.getId());
+            if (archiveId == null) {
+                Archive archive = createArchive(simpleResponse.getId());
+                idArchive = archive.getId();
+            } else {
+                idArchive = archiveId;
+            }
             Notification notification = createNotification(simpleResponse.getId());
-
+            History history = createHistory(simpleResponse.getId(), TypeHistory.MAT_ONG_VA_VAT_PHAM);
             // Xử lý vật phẩm (gift)
             if (!DataUtils.isNullObject(userDTO.getLstGift())) {
                 String[] partsGift = userDTO.getLstGift().split(", ");
@@ -482,7 +467,9 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
                 for (AdminImportGiftResponse gift : gifts) {
                     String nameItem = gift.getName();
-                    stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được hệ thống tặng: " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
+                    Gift giftDetail = adGiftRepository.findById(gift.getId()).orElse(null);
+                    createArchiveGift(idArchive, null, gift.getId(), giftMap.get(nameItem));
+                    createHistoryDetailGift(simpleResponse, giftDetail, history, giftMap.get(nameItem), stringBuilder);
                     createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
                 }
             }
@@ -505,7 +492,18 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 for (AdminImportCategoryResponse category : categories) {
                     String categoryPoint = category.getName();
                     if (honeyMap.containsKey(categoryPoint)) {
-                        stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được hệ thống tặng: " + honeyMap.get(categoryPoint) + " " + category.getName() + ", ");
+                        Optional<Honey> honeyOptional = adRandomAddPointRepository.getHoneyByIdStudent(simpleResponse.getId(), category.getId());
+                        if (honeyOptional.isPresent()) {
+                            Honey honey = honeyOptional.get();
+                            honey.setHoneyPoint(honey.getHoneyPoint() + honeyMap.get(categoryPoint));
+                            adHoneyRepository.save(honey);
+                            createHistoryDetailHoney(simpleResponse, honey, category.getName(), history, honeyMap.get(categoryPoint), stringBuilder);
+                        } else {
+                            Honey newHoney = createHoney(simpleResponse.getId(), category.getId());
+                            newHoney.setHoneyPoint(newHoney.getHoneyPoint() + honeyMap.get(categoryPoint));
+                            adHoneyRepository.save(newHoney);
+                            createHistoryDetailHoney(simpleResponse, newHoney, category.getName(), history, honeyMap.get(categoryPoint), stringBuilder);
+                        }
                         createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
                     }
                 }
@@ -514,6 +512,55 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         createLogBug(stringBuilder);
     }
 
+    private Honey createHoney(String studentId, String categoryId) {
+        AdminCreateHoneyRequest adminCreateHoneyRequest = new AdminCreateHoneyRequest();
+        adminCreateHoneyRequest.setStudentId(studentId);
+        adminCreateHoneyRequest.setCategoryId(categoryId);
+        adminCreateHoneyRequest.setHoneyPoint(0);
+        Honey newHoney = adminCreateHoneyRequest.createHoney(new Honey());
+        return adHoneyRepository.save(newHoney);
+    }
+
+    private Archive createArchive(String idStudent) {
+        Archive archive = new Archive();
+        archive.setStudentId(idStudent);
+        archive.setStatus(Status.HOAT_DONG);
+        return adArchiveRepository.save(archive);
+    }
+
+    private ArchiveGift createArchiveGift(String archive, String idChest, String idGift, Integer quantity) {
+        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archive, idChest, idGift, quantity);
+        ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
+        return adArchiveGiftRepository.save(archiveGift);
+    }
+
+    private HistoryDetail createHistoryDetailGift(SimpleResponse simpleResponse, Gift gift, History history, Integer quantity, StringBuilder stringBuilder) {
+        stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được hệ thống tặng: " + quantity + " vật phẩm: " + gift.getName() + " ,");
+        return createHistoryDetail(simpleResponse.getId(), null, gift.getId(), null, history.getId(), quantity, null, gift.getName());
+    }
+
+    private HistoryDetail createHistoryDetailChest(SimpleResponse simpleResponse, Chest chest, History history, Integer quantity, StringBuilder stringBuilder) {
+        stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được hệ thống tặng: 1 rương " + chest.getName() + ", ");
+        return createHistoryDetail(simpleResponse.getId(), null, null, chest.getId(), history.getId(), null, null, null);
+    }
+
+    private HistoryDetail createHistoryDetailHoney(SimpleResponse simpleResponse, Honey honey, String categoryName, History history, Integer quantity, StringBuilder stringBuilder) {
+        stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được hệ thống tặng: " + quantity + " " + categoryName + ", ");
+        return createHistoryDetail(simpleResponse.getId(), honey.getId(), null, null, history.getId(), null, quantity, null);
+    }
+
+
+    private History createHistory(String idStudent, TypeHistory typeHistory) {
+        AdminHistoryRandomRequest request = new AdminHistoryRandomRequest(idStudent, typeHistory);
+        History history = request.createHistory(new History());
+        return adHistoryRepository.save(history);
+    }
+
+    private HistoryDetail createHistoryDetail(String idStudent, String idHoney, String idGift, String idChest, String idHistory, Integer giftQuantity, Integer quantityHoney, String nameGift) {
+        AdminHistoryRandomDetailRequest request = new AdminHistoryRandomDetailRequest(idStudent, idHoney, idGift, idChest, idHistory, giftQuantity, quantityHoney, nameGift);
+        HistoryDetail historyDetail = request.createHistoryDetail(new HistoryDetail());
+        return adHistoryDetailRepository.save(historyDetail);
+    }
 
     private Notification createNotification(String idStudent) {
         String title = Constants.TITLE_NOTIFICATION_SYSTEM;

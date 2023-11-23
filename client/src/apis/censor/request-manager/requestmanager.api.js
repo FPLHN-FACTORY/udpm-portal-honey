@@ -101,13 +101,21 @@ export class RequestManagerAPI {
     idStudent,
     idGift,
     idHistory,
+    idHistoryDetail,
     status,
-    quantity
+    quantityGift
   ) => {
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/change-status-conversion`,
-      data: { idStudent, idGift, idHistory, status, quantity },
+      data: {
+        idStudent,
+        idGift,
+        idHistory,
+        idHistoryDetail,
+        status,
+        quantityGift,
+      },
     });
   };
 

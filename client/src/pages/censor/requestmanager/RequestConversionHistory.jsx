@@ -119,22 +119,23 @@ export default function RequestConversionHistory() {
     idStudent,
     idGift,
     idHistory,
+    idHistoryDetail,
     status,
-    quantity
+    quantityGift
   ) => {
     RequestManagerAPI.changeStatusConversion(
       idStudent,
       idGift,
       idHistory,
+      idHistoryDetail,
       status,
-      quantity
+      quantityGift
     ).then((response) => {
       if (response.data.success) {
         if (status === 1) message.success("Đã xác nhận yêu cầu mua vật phẩm!");
         if (status === 2) message.error("Hủy yêu cầu thành công!");
         setType(response.data.data.type);
       }
-      // message.success("Phê duyệt thành công");
       fetchData();
     });
   };
@@ -146,7 +147,7 @@ export default function RequestConversionHistory() {
     );
     const newFillPoint = response.data.data;
 
-    const totalPoint = values.quantity * values.honeyPoint;
+    const totalPoint = values.quantityGift * values.honeyPoint;
     if (totalPoint > newFillPoint) {
       message.error("Sinh viên Không còn đủ điểm để mua quà!");
     } else {
@@ -154,8 +155,9 @@ export default function RequestConversionHistory() {
         values.studentId,
         values.giftId,
         values.id,
+        values.idHistoryDetail,
         1,
-        values.quantity
+        values.quantityGift
       );
     }
   };
@@ -189,8 +191,8 @@ export default function RequestConversionHistory() {
     },
     {
       title: "Số lượng",
-      dataIndex: "quantity",
-      key: "quantity",
+      dataIndex: "quantityGift",
+      key: "quantityGift",
     },
     {
       title: "Điểm trừ",
@@ -255,6 +257,7 @@ export default function RequestConversionHistory() {
                     values.studentId,
                     values.giftId,
                     values.id,
+                    values.idHistoryDetail,
                     2
                   );
                 }}
@@ -296,7 +299,7 @@ export default function RequestConversionHistory() {
               htmlType="submit"
               type="primary"
               className="mr-10 search-button"
-              style={{ marginBottom: "25px", backgroundColor: '#EEB30D' }}
+              style={{ marginBottom: "25px", backgroundColor: "#EEB30D" }}
             >
               Lọc
             </Button>

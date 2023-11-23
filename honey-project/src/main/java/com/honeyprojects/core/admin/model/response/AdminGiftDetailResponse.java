@@ -13,6 +13,8 @@ public interface AdminGiftDetailResponse {
     @Value("#{target.category_id}")
     String getCategoryId();
 
+    @Value("#{target.category_name}")
+    String getCategoryName();
     @Value("#{target.honey}")
     String getHoney();
 }

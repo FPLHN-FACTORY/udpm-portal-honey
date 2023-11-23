@@ -10,7 +10,9 @@ import java.util.List;
 @Repository
 public interface AdGiftDetailRepository extends GiftDetailRepository {
     @Query(value = """
-    select gd.id, gd.gift_id, gd.category_id, gd.honey from gift_detail gd where gift_id = :idGift
+    select gd.id, gd.gift_id, gd.category_id, c.name as category_name,gd.honey from gift_detail gd 
+    JOIN category c On c.id = gd.category_id
+    where gift_id = :idGift
 """, nativeQuery = true)
     List<AdminGiftDetailResponse> listGiftDetailByGiftId(String idGift);
 }

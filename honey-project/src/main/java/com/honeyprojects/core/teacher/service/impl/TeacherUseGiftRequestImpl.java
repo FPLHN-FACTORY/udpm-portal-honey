@@ -70,120 +70,123 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
 
     @Override
     public History acceptRequest(String id) {
-        History history = historyRepository.findById(id).get();
-        Gift gift = giftRepository.findById(history.getGiftId()).get();
-        history.setStatus(HoneyStatus.DA_PHE_DUYET);
-        historyRepository.save(history);
-        Notification notification = new Notification();
-        notification.setStudentId(history.getStudentId());
-        notification.setTitle("Yêu cầu mở quà");
-        notification.setType(NotificationType.TEACHER);
-        notificationRepository.save(notification);
-
-        NotificationDetail notificationDetail = new NotificationDetail();
-        notificationDetail.setIdNotification(notification.getId());
-        SimpleResponse teacher = apiidentity.handleCallApiGetUserById(history.getTeacherId());
-        StringBuilder content = new StringBuilder("Gói quà [ ");
-        notificationDetail.setContent(content.append(gift.getName())
-                .append((" ] đã được phê duyệt.\n"))
-                .append("Lớp: ")
-                .append(history.getNameGift())
-                .append(" | Giảng viên: ")
-                .append(teacher.getName())
-                .toString());
-        notificationDetailRepository.save(notificationDetail);
-        return history;
+//        History history = historyRepository.findById(id).get();
+//        Gift gift = giftRepository.findById(history.getGiftId()).get();
+//        history.setStatus(HoneyStatus.DA_PHE_DUYET);
+//        historyRepository.save(history);
+//        Notification notification = new Notification();
+//        notification.setStudentId(history.getStudentId());
+//        notification.setTitle("Yêu cầu mở quà");
+//        notification.setType(NotificationType.TEACHER);
+//        notificationRepository.save(notification);
+//
+//        NotificationDetail notificationDetail = new NotificationDetail();
+//        notificationDetail.setIdNotification(notification.getId());
+//        SimpleResponse teacher = apiidentity.handleCallApiGetUserById(history.getTeacherId());
+//        StringBuilder content = new StringBuilder("Gói quà [ ");
+//        notificationDetail.setContent(content.append(gift.getName())
+//                .append((" ] đã được phê duyệt.\n"))
+//                .append("Lớp: ")
+//                .append(history.getNameGift())
+//                .append(" | Giảng viên: ")
+//                .append(teacher.getName())
+//                .toString());
+//        notificationDetailRepository.save(notificationDetail);
+//        return history;
+        return null;
     }
 
     @Override
     public List<History> acceptAllRequest(TeacherAcceptAllRequest request) {
-        List<History> historyList = new ArrayList<>();
-        for (String idHistory : request.getListId()) {
-            History history = historyRepository.findById(idHistory).get();
-            Gift gift = giftRepository.findById(history.getGiftId()).get();
-            history.setStatus(HoneyStatus.DA_PHE_DUYET);
-            historyList.add(history);
-            historyRepository.saveAll(historyList);
-
-            Notification notification = new Notification();
-            notification.setStudentId(history.getStudentId());
-            notification.setTitle(Constants.TITLE_NOTIFICATION_TEACHER);
-            notification.setType(NotificationType.TEACHER);
-            notification.setStatus(NotificationStatus.CHUA_DOC);
-            notificationRepository.save(notification);
-
-            NotificationDetail notificationDetail = new NotificationDetail();
-            notificationDetail.setIdNotification(notification.getId());
-            SimpleResponse teacher = apiidentity.handleCallApiGetUserById(history.getTeacherId());
-            StringBuilder content = new StringBuilder("Gói quà [ ");
-            notificationDetail.setContent(content.append(gift.getName())
-                    .append((" ] đã được phê duyệt.\n"))
-                    .append(" Môn: ")
-                    .append(history.getSubject())
-                    .append(" Lớp: ")
-                    .append(history.getClassName())
-                    .append(" | Giảng viên: ")
-                    .append(teacher.getName())
-                    .append(" Số lượng: ")
-                    .append(history.getQuantity())
-                    .toString());
-            notificationDetailRepository.save(notificationDetail);
-        }
-        return historyList;
+//        List<History> historyList = new ArrayList<>();
+//        for (String idHistory : request.getListId()) {
+//            History history = historyRepository.findById(idHistory).get();
+//            Gift gift = giftRepository.findById(history.getGiftId()).get();
+//            history.setStatus(HoneyStatus.DA_PHE_DUYET);
+//            historyList.add(history);
+//            historyRepository.saveAll(historyList);
+//
+//            Notification notification = new Notification();
+//            notification.setStudentId(history.getStudentId());
+//            notification.setTitle(Constants.TITLE_NOTIFICATION_TEACHER);
+//            notification.setType(NotificationType.TEACHER);
+//            notification.setStatus(NotificationStatus.CHUA_DOC);
+//            notificationRepository.save(notification);
+//
+//            NotificationDetail notificationDetail = new NotificationDetail();
+//            notificationDetail.setIdNotification(notification.getId());
+//            SimpleResponse teacher = apiidentity.handleCallApiGetUserById(history.getTeacherId());
+//            StringBuilder content = new StringBuilder("Gói quà [ ");
+//            notificationDetail.setContent(content.append(gift.getName())
+//                    .append((" ] đã được phê duyệt.\n"))
+//                    .append(" Môn: ")
+//                    .append(history.getSubject())
+//                    .append(" Lớp: ")
+//                    .append(history.getClassName())
+//                    .append(" | Giảng viên: ")
+//                    .append(teacher.getName())
+//                    .append(" Số lượng: ")
+//                    .append(history.getQuantity())
+//                    .toString());
+//            notificationDetailRepository.save(notificationDetail);
+//        }
+//        return historyList;
+        return null;
     }
 
     @Override
     @Transactional
     @Async
     public History cancelRequest(String id, String note) {
-        History history = historyRepository.findById(id).get();
-        Gift gift = giftRepository.findById(history.getGiftId()).get();
-        history.setStatus(HoneyStatus.DA_HUY);
-        history.setNote(note);
-        Archive newArchive = new Archive();
-        newArchive.setStudentId(history.getStudentId());
-        Archive archive = archiveRepository
-                .findByStudentId(history.getStudentId()).orElse(newArchive);
-        archiveRepository.save(archive);
-
-
-        ArchiveGift archiveGift = archiveGiftRepository
-                .findByArchiveIdAndGiftId(archive.getId(), history.getGiftId())
-                .orElse(new ArchiveGift());
-        archiveGift.setGiftId(history.getGiftId());
-        archiveGift.setArchiveId(archive.getId());
-        if (archiveGift.getQuantity() != null) {
-            archiveGift.setQuantity(archiveGift.getQuantity() + history.getQuantity());
-        } else {
-            archiveGift.setQuantity(history.getQuantity());
-        }
-        Notification notification = new Notification();
-        notification.setStudentId(history.getStudentId());
-        notification.setTitle("Yêu cầu mở quà");
-        notification.setType(NotificationType.TEACHER);
-        notificationRepository.save(notification);
-
-        NotificationDetail notificationDetail = new NotificationDetail();
-        notificationDetail.setIdNotification(notification.getId());
-        SimpleResponse teacher = apiidentity.handleCallApiGetUserById(history.getTeacherId());
-        StringBuilder content = new StringBuilder("Gói quà [ ");
-        notificationDetail.setContent(content.append(gift.getName())
-                .append((" ] bị từ chối.\n"))
-                .append("Môn: ")
-                .append(history.getSubject())
-                .append(" Số lượng: ")
-                .append(history.getQuantity())
-                .append(" Lớp: ")
-                .append(history.getClassName())
-                .append(" | Giảng viên: ")
-                .append(teacher.getName())
-                .append(" LÝ DO: ")
-                .append(note)
-                .toString());
-        notificationDetailRepository.save(notificationDetail);
-        archiveGiftRepository.save(archiveGift);
-        historyRepository.save(history);
-        return history;
+//        History history = historyRepository.findById(id).get();
+//        Gift gift = giftRepository.findById(history.getGiftId()).get();
+//        history.setStatus(HoneyStatus.DA_HUY);
+//        history.setNote(note);
+//        Archive newArchive = new Archive();
+//        newArchive.setStudentId(history.getStudentId());
+//        Archive archive = archiveRepository
+//                .findByStudentId(history.getStudentId()).orElse(newArchive);
+//        archiveRepository.save(archive);
+//
+//
+//        ArchiveGift archiveGift = archiveGiftRepository
+//                .findByArchiveIdAndGiftId(archive.getId(), history.getGiftId())
+//                .orElse(new ArchiveGift());
+//        archiveGift.setGiftId(history.getGiftId());
+//        archiveGift.setArchiveId(archive.getId());
+//        if (archiveGift.getQuantity() != null) {
+//            archiveGift.setQuantity(archiveGift.getQuantity() + history.getQuantity());
+//        } else {
+//            archiveGift.setQuantity(history.getQuantity());
+//        }
+//        Notification notification = new Notification();
+//        notification.setStudentId(history.getStudentId());
+//        notification.setTitle("Yêu cầu mở quà");
+//        notification.setType(NotificationType.TEACHER);
+//        notificationRepository.save(notification);
+//
+//        NotificationDetail notificationDetail = new NotificationDetail();
+//        notificationDetail.setIdNotification(notification.getId());
+//        SimpleResponse teacher = apiidentity.handleCallApiGetUserById(history.getTeacherId());
+//        StringBuilder content = new StringBuilder("Gói quà [ ");
+//        notificationDetail.setContent(content.append(gift.getName())
+//                .append((" ] bị từ chối.\n"))
+//                .append("Môn: ")
+//                .append(history.getSubject())
+//                .append(" Số lượng: ")
+//                .append(history.getQuantity())
+//                .append(" Lớp: ")
+//                .append(history.getClassName())
+//                .append(" | Giảng viên: ")
+//                .append(teacher.getName())
+//                .append(" LÝ DO: ")
+//                .append(note)
+//                .toString());
+//        notificationDetailRepository.save(notificationDetail);
+//        archiveGiftRepository.save(archiveGift);
+//        historyRepository.save(history);
+//        return history;
+        return null;
     }
 
 }
