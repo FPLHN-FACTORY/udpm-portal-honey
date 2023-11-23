@@ -3,6 +3,7 @@ package com.honeyprojects.core.admin.repository;
 import com.honeyprojects.core.admin.model.request.AdminGiftRequest;
 import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
 import com.honeyprojects.core.admin.model.response.CensorGiftSelectResponse;
+import com.honeyprojects.core.president.model.response.PresidentExportGiftResponse;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.repository.GiftRepository;
 import org.springframework.data.domain.Page;
@@ -70,17 +71,16 @@ public interface AdGiftRepository extends GiftRepository {
             """, nativeQuery = true)
     List<AdminGiftResponse> getAllListGiftUpgrade();
 
-    List<AdminGiftResponse> findAllByType(@Param("type") Integer type);
-
     @Query(value = """
              SELECT g.id, g.name FROM gift g where g.status in (0,1) ORDER BY g.last_modified_date DESC
             """, nativeQuery = true )
     List<CensorGiftSelectResponse> getAllGiftExist();
 
-    @Query(value = """
-              SELECT g.id, g.name FROM gift g LEFT JOIN upgrade_rate_gift u ON g.id = u.id_gift WHERE u.id_upgrade_rate = :id AND g.status in (0,1) ORDER BY g.last_modified_date DESC
-            """, nativeQuery = true )
-    List<CensorGiftSelectResponse> getGiftsExistByUpgradeRateGiftId(@Param("id") String id);
-
     List<Gift> findAllByIdIn(List<String> ids);
+
+    @Query(value = """
+            SELECT g.name, g.status from gift g
+            where status <> 2
+            """, nativeQuery = true)
+    List<PresidentExportGiftResponse> getGiftToExport();
 }

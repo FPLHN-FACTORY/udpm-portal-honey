@@ -1,5 +1,6 @@
 package com.honeyprojects.core.teacher.service.impl;
 
+import com.honeyprojects.core.admin.model.response.AdminExportCategoryResponse;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.president.model.request.PresidentCreateNotificationDetailAddItemRequest;
@@ -179,7 +180,7 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
         return teacherNotificationDetailRepository.save(notificationDetail);
     }
 
-    private static final int COLUMN_WIDTH = 15 * 256;
+    private static final int COLUMN_WIDTH = 25 * 256;
 
     @Override
     public Boolean exportExcel() {
@@ -187,7 +188,8 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
         String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_add_point" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
 
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Trang 1");
+        // Sheet 1
+        Sheet sheet = workbook.createSheet("Danh sách import");
 
         CellStyle headerStyle = workbook.createCellStyle();
         Font font = workbook.createFont();
@@ -250,6 +252,10 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
         emptyHeaderFont.setColor(IndexedColors.RED.getIndex());
         emptyHeaderStyle.setFont(emptyHeaderFont);
 
+        // Sheet 2
+        Sheet sheet2 = workbook.createSheet("Danh sách mật ong");
+        createSheetContent(sheet2, workbook);
+
         try {
             FileOutputStream outputStream = new FileOutputStream(outputPath);
             workbook.write(outputStream);
@@ -259,6 +265,47 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
             e.printStackTrace();
             return false;
         }
+    }
+
+    private void createSheetContent(Sheet sheet2, Workbook workbook) {
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setColor(IndexedColors.BLACK.getIndex());
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 15);
+        headerStyle.setFont(font);
+        headerStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+        headerStyle.setBorderTop(BorderStyle.THIN);
+        headerStyle.setBorderBottom(BorderStyle.THIN);
+        headerStyle.setBorderLeft(BorderStyle.THIN);
+        headerStyle.setBorderRight(BorderStyle.THIN);
+
+        // Đoạn mã thêm dữ liệu category vào sheet "Trang 2"
+        List<AdminExportCategoryResponse> categories = getCategoryData(); // Lấy dữ liệu category từ database hoặc từ nguồn dữ liệu khác
+
+        Row headerRowSheet2 = sheet2.createRow(0);
+        String[] headersSheet2 = {"Loại mật ong", "Yêu cầu phê duyệt"};
+        int columnCountSheet2 = headersSheet2.length;
+
+        for (int i = 0; i < columnCountSheet2; i++) {
+            Cell headerCell = headerRowSheet2.createCell(i);
+            headerCell.setCellValue(headersSheet2[i]);
+            headerCell.setCellStyle(headerStyle);
+            sheet2.setColumnWidth(i, COLUMN_WIDTH); // Thiết lập cỡ cột
+        }
+
+        int rowNum = 1;
+        for (AdminExportCategoryResponse category : categories) {
+            Row row = sheet2.createRow(rowNum++);
+            row.createCell(0).setCellValue(category.getName());
+            row.createCell(1).setCellValue(category.getStatus().equals("1") ? "Không" : "Có");
+        }
+    }
+
+    private List<AdminExportCategoryResponse> getCategoryData() {
+        return categoryRepository.getCategoryToExport();
     }
 
     @Override
