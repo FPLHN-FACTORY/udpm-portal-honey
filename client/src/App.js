@@ -27,7 +27,6 @@ import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
 // import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
 import ChestGift from "./pages/censor/chest-gift/ChestGift";
 import AuctionMangement from "./pages/censor/auction-management/AuctionManagement";
-import { deleteToken, getToken, setToken } from "./helper/userToken";
 import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";
 import ConvertionHoney from "./pages/teacher/convertion-honey/RequestConversion";
 import TeacherRequestConversionHistory from "./pages/teacher/convertion-honey/RequestConversionHistory";
@@ -50,6 +49,8 @@ import { SelectLoading } from "./app/reducers/loading/loading.reducer";
 import { useAppSelector } from "./app/hooks";
 import Login from "./pages/login/Login";
 import AuthorSwitch from "./pages/login/AuthorSwitch";
+import ProjectManager from "./pages/censor/randomaddpoint/ProjectManager";
+import EventManager from "./pages/censor/randomaddpoint/EventManager";
 
 function App() {
   const data = useAppSelector(SelectLoading);
@@ -206,6 +207,26 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <UpgradeRate />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/event"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <EventManager/>
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/project"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <ProjectManager/>
                   </DashboardCensor>
                 </AuthGuard>
               }

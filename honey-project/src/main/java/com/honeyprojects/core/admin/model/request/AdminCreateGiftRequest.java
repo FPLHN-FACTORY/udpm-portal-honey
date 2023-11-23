@@ -37,4 +37,6 @@ public class AdminCreateGiftRequest extends PageableRequest {
 
     private Long fromDate;
 
+    private Long numberDateEnd;
+
 }

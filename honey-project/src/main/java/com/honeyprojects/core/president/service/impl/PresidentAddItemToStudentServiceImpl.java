@@ -382,127 +382,127 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
     }
 
     private void saveImportData(List<PresidentAddItemDTO> lstImportUser) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (PresidentAddItemDTO userDTO : lstImportUser) {
-            // Duyệt qua danh sách đối tượng AdminAddItemDTO đã được kiểm tra lỗi
-            if (userDTO.isError()) {
-                // Nếu đối tượng có lỗi, bỏ qua và tiếp tục với đối tượng tiếp theo trong danh sách
-                continue;
-            }
-
-            // Gọi API để lấy thông tin người dùng bằng địa chỉ email
-            String emailSimple = userDTO.getUserName() + "@fpt.edu.vn";
-            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
-
-            // Xử lý vật phẩm (gift)
-            if (!DataUtils.isNullObject(userDTO.getLstGift())) {
-                String[] partsGift = userDTO.getLstGift().split(", ");
-                Map<String, Integer> giftMap = new HashMap<>();
-
-                for (String part : partsGift) {
-                    String[] subParts = part.split(" ", 2);
-                    if (subParts.length == 2) {
-                        String numberItemStr = subParts[0];
-                        String nameItem = subParts[1];
-                        Integer numberItem = Integer.parseInt(numberItemStr);
-                        // Lưu trữ số lượng quà dựa trên tên quà
-                        giftMap.put(nameItem, numberItem);
-                    }
-                }
-                List<PresidentGiftResponse> gifts = presidentAddItemRepository.getGiftsByNames(giftMap.keySet());
-
-                for (PresidentGiftResponse gift : gifts) {
-                    String nameItem = gift.getName();
-                    String status = gift.getStatus();
-
-                    String enumStatusFREE = String.valueOf(StatusGift.FREE.ordinal());
-                    if (status.equals(enumStatusFREE)) {
-                        // gửi thẳng cho sinh viên
-                        // gửi thông báo cho sinh viên
-                        stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được chủ tịch câu lạc bộ tặng: " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
-                        Notification notification = createNotification(simpleResponse.getId());
-                        createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
-                    }
-                    String enumStatusACCEPT = String.valueOf(StatusGift.ACCEPT.ordinal());
-                    if(status.equals(enumStatusACCEPT)){
-                        // gửi yêu cầu phê duyệt cho admin
-                        // gửi thông báo cho admin
-                        stringBuilder.append("Đã gửi yêu cầu phê duyệt tới admin " + "Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + ": " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
-
-                        History history = new History();
-                        history.setStatus(HoneyStatus.CHO_PHE_DUYET);
-                        history.setType(TypeHistory.CONG_VAT_PHAM);
-                        history.setCreatedAt(new Date().getTime());
-                        history.setGiftId(gift.getId());
-                        history.setNameGift(nameItem);
-                        history.setQuantity(giftMap.get(nameItem));
-                        history.setPresidentId(simpleResponse.getId());
-                        history.setHoneyId(simpleResponse.getId());
-                        history.setNote(null);
-                        history.setStudentId(simpleResponse.getId());
-                        presidentHistoryRepository.save(history);
-                    }
-                }
-            }
-
-            // Xử lý điểm mật ong (honey)
-            if (!DataUtils.isNullObject(userDTO.getLstHoney())) {
-                String[] partsHoney = userDTO.getLstHoney().split(", ");
-                Map<String, Integer> honeyMap = new HashMap<>();
-
-                for (String part : partsHoney) {
-                    String[] subParts = part.split(" ", 2);
-                    if (subParts.length == 2) {
-                        String numberPointStr = subParts[0].trim();
-                        String categoryPoint = subParts[1].trim().replace("-", "");
-                        Integer numberPoint = Integer.parseInt(numberPointStr);
-                        // Lưu trữ số lượng điểm mật ong dựa trên tên loại điểm
-                        honeyMap.put(categoryPoint, numberPoint);
-                    }
-                }
-                List<PresidentCategoryResponse> categories = presidentAddItemRepository.getCategoriesByNames(honeyMap.keySet());
-                for (PresidentCategoryResponse category : categories) {
-                    String categoryPoint = category.getName();
-                    String categoryId = category.getId();
-                    String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
-                    String enumCategoryACCEPT = String.valueOf(CategoryStatus.ACCEPT.ordinal());
-                    if (honeyMap.containsKey(categoryPoint)) {
-                        if(category.getStatus().equals(enumCategoryFREE)){
-                            // gủi cho sinh viên
-                            Notification notification = createNotification(simpleResponse.getId());
-                            createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
-                        }
-                        if(category.getStatus().equals(enumCategoryACCEPT)){
-                            // gửi cho admin phê duyệt
-                            // gửi thông báo cho admin
-                            TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
-                            getPointRequest.setStudentId(simpleResponse.getId());
-                            getPointRequest.setCategoryId(categoryId);
-                            TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
-
-                            History history = new History();
-                            history.setStatus(HoneyStatus.CHO_PHE_DUYET);
-                            history.setHoneyPoint(honeyMap.get(categoryPoint));
-                            history.setType(TypeHistory.CONG_DIEM);
-                            history.setCreatedAt(new Date().getTime());
-                            if (teacherPointResponse == null) {
-                                Honey honey = new Honey();
-                                honey.setStatus(Status.HOAT_DONG);
-                                honey.setHoneyPoint(0);
-                                honey.setStudentId(simpleResponse.getId());
-                                honey.setHoneyCategoryId(categoryId);
-                                history.setHoneyId(honeyRepository.save(honey).getId());
-                            } else {
-                                Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
-                                history.setHoneyId(honey.getId());
-                            }
-                            history.setStudentId(simpleResponse.getId());
-                            historyRepository.save(history);
-                        }
-                    }
-                }
-            }
-        }
+//        StringBuilder stringBuilder = new StringBuilder();
+//        for (PresidentAddItemDTO userDTO : lstImportUser) {
+//            // Duyệt qua danh sách đối tượng AdminAddItemDTO đã được kiểm tra lỗi
+//            if (userDTO.isError()) {
+//                // Nếu đối tượng có lỗi, bỏ qua và tiếp tục với đối tượng tiếp theo trong danh sách
+//                continue;
+//            }
+//
+//            // Gọi API để lấy thông tin người dùng bằng địa chỉ email
+//            String emailSimple = userDTO.getUserName() + "@fpt.edu.vn";
+//            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
+//
+//            // Xử lý vật phẩm (gift)
+//            if (!DataUtils.isNullObject(userDTO.getLstGift())) {
+//                String[] partsGift = userDTO.getLstGift().split(", ");
+//                Map<String, Integer> giftMap = new HashMap<>();
+//
+//                for (String part : partsGift) {
+//                    String[] subParts = part.split(" ", 2);
+//                    if (subParts.length == 2) {
+//                        String numberItemStr = subParts[0];
+//                        String nameItem = subParts[1];
+//                        Integer numberItem = Integer.parseInt(numberItemStr);
+//                        // Lưu trữ số lượng quà dựa trên tên quà
+//                        giftMap.put(nameItem, numberItem);
+//                    }
+//                }
+//                List<PresidentGiftResponse> gifts = presidentAddItemRepository.getGiftsByNames(giftMap.keySet());
+//
+//                for (PresidentGiftResponse gift : gifts) {
+//                    String nameItem = gift.getName();
+//                    String status = gift.getStatus();
+//
+//                    String enumStatusFREE = String.valueOf(StatusGift.FREE.ordinal());
+//                    if (status.equals(enumStatusFREE)) {
+//                        // gửi thẳng cho sinh viên
+//                        // gửi thông báo cho sinh viên
+//                        stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được chủ tịch câu lạc bộ tặng: " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
+//                        Notification notification = createNotification(simpleResponse.getId());
+//                        createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
+//                    }
+//                    String enumStatusACCEPT = String.valueOf(StatusGift.ACCEPT.ordinal());
+//                    if(status.equals(enumStatusACCEPT)){
+//                        // gửi yêu cầu phê duyệt cho admin
+//                        // gửi thông báo cho admin
+//                        stringBuilder.append("Đã gửi yêu cầu phê duyệt tới admin " + "Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + ": " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
+//
+//                        History history = new History();
+//                        history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+//                        history.setType(TypeHistory.CONG_VAT_PHAM);
+//                        history.setCreatedAt(new Date().getTime());
+//                        history.setGiftId(gift.getId());
+//                        history.setNameGift(nameItem);
+//                        history.setQuantity(giftMap.get(nameItem));
+//                        history.setPresidentId(simpleResponse.getId());
+//                        history.setHoneyId(simpleResponse.getId());
+//                        history.setNote(null);
+//                        history.setStudentId(simpleResponse.getId());
+//                        presidentHistoryRepository.save(history);
+//                    }
+//                }
+//            }
+//
+//            // Xử lý điểm mật ong (honey)
+//            if (!DataUtils.isNullObject(userDTO.getLstHoney())) {
+//                String[] partsHoney = userDTO.getLstHoney().split(", ");
+//                Map<String, Integer> honeyMap = new HashMap<>();
+//
+//                for (String part : partsHoney) {
+//                    String[] subParts = part.split(" ", 2);
+//                    if (subParts.length == 2) {
+//                        String numberPointStr = subParts[0].trim();
+//                        String categoryPoint = subParts[1].trim().replace("-", "");
+//                        Integer numberPoint = Integer.parseInt(numberPointStr);
+//                        // Lưu trữ số lượng điểm mật ong dựa trên tên loại điểm
+//                        honeyMap.put(categoryPoint, numberPoint);
+//                    }
+//                }
+//                List<PresidentCategoryResponse> categories = presidentAddItemRepository.getCategoriesByNames(honeyMap.keySet());
+//                for (PresidentCategoryResponse category : categories) {
+//                    String categoryPoint = category.getName();
+//                    String categoryId = category.getId();
+//                    String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
+//                    String enumCategoryACCEPT = String.valueOf(CategoryStatus.ACCEPT.ordinal());
+//                    if (honeyMap.containsKey(categoryPoint)) {
+//                        if(category.getStatus().equals(enumCategoryFREE)){
+//                            // gủi cho sinh viên
+//                            Notification notification = createNotification(simpleResponse.getId());
+//                            createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
+//                        }
+//                        if(category.getStatus().equals(enumCategoryACCEPT)){
+//                            // gửi cho admin phê duyệt
+//                            // gửi thông báo cho admin
+//                            TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
+//                            getPointRequest.setStudentId(simpleResponse.getId());
+//                            getPointRequest.setCategoryId(categoryId);
+//                            TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
+//
+//                            History history = new History();
+//                            history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+//                            history.setHoneyPoint(honeyMap.get(categoryPoint));
+//                            history.setType(TypeHistory.CONG_DIEM);
+//                            history.setCreatedAt(new Date().getTime());
+//                            if (teacherPointResponse == null) {
+//                                Honey honey = new Honey();
+//                                honey.setStatus(Status.HOAT_DONG);
+//                                honey.setHoneyPoint(0);
+//                                honey.setStudentId(simpleResponse.getId());
+//                                honey.setHoneyCategoryId(categoryId);
+//                                history.setHoneyId(honeyRepository.save(honey).getId());
+//                            } else {
+//                                Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
+//                                history.setHoneyId(honey.getId());
+//                            }
+//                            history.setStudentId(simpleResponse.getId());
+//                            historyRepository.save(history);
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
 

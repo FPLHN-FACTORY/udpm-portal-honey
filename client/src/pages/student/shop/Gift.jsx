@@ -68,6 +68,7 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
       setSelectedConversion(conversion);
       setSelectedCardIndex(index);
       setCardBackgroundColor("#CCCC99");
+      setQuantity(1);
     }
   };
 
@@ -109,6 +110,7 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
       .then((response) => {
         if (response.data.success) {
           message.success("Đổi quà thành công");
+          setQuantity(1);
           if (
             selectedConversion &&
             initialQuantity !== null &&

@@ -158,13 +158,6 @@ export default function AddPoint() {
       <div className="add-point">
         <Card className="mb-2 py-1">
           <Form form={formSearch} className="d-flex" onFinish={onFinishSearch}>
-            <Button
-              htmlType="submit"
-              type="primary"
-              className="mr-10 search-button"
-            >
-              Search
-            </Button>
             <Form.Item
               name="code"
               rules={[
@@ -175,6 +168,7 @@ export default function AddPoint() {
                 },
               ]}
               className="search-input"
+              style={{ width: 900, marginRight: 10 }}
             >
               <Input
                 size="small"
@@ -182,6 +176,13 @@ export default function AddPoint() {
                 prefix={<SearchOutlined />}
               />
             </Form.Item>
+            <Button
+              htmlType="submit"
+              type="primary"
+              className="mr-10 search-button"
+            >
+              Search
+            </Button>
             <Form.Item>
               {/* <Button
               className="button-css"

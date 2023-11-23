@@ -16,10 +16,16 @@ import lombok.Setter;
 public class HistoryDetail extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_ID)
+    private String historyId;
+
+    @Column(length = EntityProperties.LENGTH_ID)
     private String studentId;
 
     @Column(length = EntityProperties.LENGTH_ID)
-    private String objectId;
+    private String presidentId;
+
+    @Column(length = EntityProperties.LENGTH_ID)
+    private String teacherId;
 
     @Column(length = EntityProperties.LENGTH_ID)
     private String honeyId;
@@ -27,9 +33,17 @@ public class HistoryDetail extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_ID)
     private String giftId;
 
+    @Column(length = EntityProperties.LENGTH_ID)
+    private String chestId;
+
+    @Column(length = EntityProperties.LENGTH_ID)
+    private String historyId;
+
     private Status status;
 
     private Integer quantityGift;
 
     private Integer honeyPoint;
+
+    private String nameGift;
 }

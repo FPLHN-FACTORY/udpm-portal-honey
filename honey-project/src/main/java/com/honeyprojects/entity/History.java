@@ -25,10 +25,10 @@ public class History extends PrimaryEntity {
     private String studentId;
 
     @Column(length = EntityProperties.LENGTH_ID)
-    private String objectId;
+    private String presidentId;
 
-    @Column(length = EntityProperties.LENGTH_NAME)
-    private String objectName;
+    @Column(length = EntityProperties.LENGTH_ID)
+    private String teacherId;
 
     @Column(length = EntityProperties.LENGTH_NOTE)
     private String note;

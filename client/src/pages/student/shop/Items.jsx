@@ -69,6 +69,7 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
       setSelectedConversion(conversion);
       setSelectedCardIndex(index);
       setCardBackgroundColor("#CCCC99");
+      setQuantity(1);
     }
   };
 
@@ -108,7 +109,13 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
     BuyItem.createRequest(addRequest)
       .then((response) => {
         if (response.data.success) {
-          message.success("Đổi quà thành công");
+          if (selectedConversion && selectedConversion.status === 1) {
+            message.success("Gửi yêu cầu đổi vật phẩm thành công");
+          } else {
+            message.success("Đổi vật phẩm thành công");
+          }
+
+          setQuantity(1);
           if (
             selectedConversion &&
             selectedConversion.status === 0 &&

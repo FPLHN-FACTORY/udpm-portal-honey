@@ -43,9 +43,17 @@ const ModalDetailGift = (props) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [fieldErrors, setFieldErrors] = useState({});
 
+  const [categoryDetailAddOptions, setCategoryDetailAddOptions] = useState([]);
+
   useEffect(() => {
     GiftDetail.fetchAll(gift.id).then((response) => {
       const detailData = response.data.data;
+
+      const cateAddOption = detailData.map((item) => ({
+        id: item.categoryId,
+        name: item.categoryName,
+      }));
+      fetchCategory(cateAddOption);
       const categoryIds = detailData.map((item) => item.categoryId);
       const honeyValues = detailData.reduce((acc, item) => {
         acc[item.categoryId] = item.honey;
@@ -58,7 +66,7 @@ const ModalDetailGift = (props) => {
       setSelectedImageUrl(gift.image);
     }
 
-    fetchCategory();
+    // fetchCategory(cateAddOption);
     if (gift && gift.quantity !== null) {
       setIsLimitedQuantity(true);
     } else {
@@ -104,10 +112,15 @@ const ModalDetailGift = (props) => {
   };
 
   const handleCategoryChange = (selectedValues) => {
-    setSelectedCategories(selectedValues);
+    // Filter selectedValues to include only valid category IDs
+    const filteredSelectedValues = selectedValues.filter((value) =>
+      listCategory.some((category) => category.id === value)
+    );
+
+    setSelectedCategories(filteredSelectedValues);
 
     const newCategoryQuantities = { ...categoryQuantities };
-    selectedCategories.forEach((category) => {
+    filteredSelectedValues.forEach((category) => {
       if (!selectedValues.includes(category)) {
         delete newCategoryQuantities[category];
       }
@@ -115,7 +128,7 @@ const ModalDetailGift = (props) => {
 
     setCategoryQuantities(newCategoryQuantities);
 
-    const error = validateCategories(selectedValues);
+    const error = validateCategories(filteredSelectedValues);
     setFieldErrors({ ...fieldErrors, selectedCategories: error });
   };
 
@@ -128,6 +141,15 @@ const ModalDetailGift = (props) => {
     const newQuantities = { ...categoryQuantities };
     newQuantities[categoryId] = value;
     setCategoryQuantities(newQuantities);
+
+    const newFieldErrors = { ...fieldErrors };
+    if (value <= 0) {
+      newFieldErrors[categoryId] = true;
+    } else {
+      newFieldErrors[categoryId] = false;
+    }
+
+    setFieldErrors(newFieldErrors);
   };
   const handleFileInputChange = (event) => {
     var selectedFile = event.target.files[0];
@@ -164,9 +186,21 @@ const ModalDetailGift = (props) => {
     }
   };
 
-  const fetchCategory = () => {
+  const fetchCategory = (cateAddOption) => {
     CategoryAPI.fetchAllCategory().then((response) => {
-      setListCategory(response.data.data);
+      const mergedList = [...response.data.data];
+      console.log(";11111111111;;;");
+      console.log(mergedList);
+      console.log(";;;;;;;;;;;");
+      console.log(cateAddOption);
+      cateAddOption.forEach((item2) => {
+        const existingItem = mergedList.find((item1) => item1.id === item2.id);
+
+        if (!existingItem) {
+          mergedList.push(item2);
+        }
+      });
+      setListCategory(mergedList);
     });
   };
 
@@ -208,57 +242,34 @@ const ModalDetailGift = (props) => {
   };
 
   const onFinish = () => {
+    // Validate form fields
     form
       .validateFields()
       .then((formValues) => {
-        let quantity;
-        if (selectedImageUrl.length === 0) {
-          message.error("Không được để trống hình ảnh.");
-          return;
-        }
-        if (isLimitedQuantity) {
-          quantity = parseInt(formValues.quantityLimit);
-        } else {
-          quantity =
-            formValues.quantity !== undefined
-              ? parseInt(formValues.quantity)
-              : null;
-        }
-        let limitSL;
-        if (isLimitedQuantity2) {
-          limitSL = parseInt(formValues.limitSoLuong);
-        } else {
-          limitSL =
-            formValues.limitQuantity !== undefined
-              ? parseInt(formValues.limitQuantity)
-              : null;
-        }
-        const newFieldErrors = {};
-
-        selectedCategories.forEach((categoryId) => {
-          const category = listCategory.find((item) => item.id === categoryId);
-
-          const honeyValue = categoryQuantities[category.id] || "";
-
-          if (honeyValue === "" || honeyValue < 0) {
-            newFieldErrors[category.id] = true;
-          } else {
-            newFieldErrors[category.id] = false;
-          }
-        });
-
-        if (fieldErrors.selectedCategories) {
-          return;
-        }
-
-        setFieldErrors(newFieldErrors);
-
-        const hasErrors = Object.values(newFieldErrors).some(
+        // Check for category validation errors
+        const hasCategoryErrors = Object.values(fieldErrors).some(
           (hasError) => hasError
         );
-        if (hasErrors) {
+        if (hasCategoryErrors) {
+          // Display error message and prevent update
+          message.error("Vui lòng kiểm tra lại các cấp bậc và số mật.");
           return;
         }
+
+        // Continue with the update logic
+        const quantity = isLimitedQuantity
+          ? parseInt(formValues.quantityLimit)
+          : formValues.quantity !== undefined
+          ? parseInt(formValues.quantity)
+          : null;
+
+        const limitSL = isLimitedQuantity2
+          ? parseInt(formValues.limitSoLuong)
+          : formValues.limitQuantity !== undefined
+          ? parseInt(formValues.limitQuantity)
+          : null;
+
+        // Perform the update
         GiftAPI.update(
           {
             ...formValues,
@@ -285,9 +296,11 @@ const ModalDetailGift = (props) => {
           gift ? gift.id : null
         )
           .then((response) => {
+            // Handle success
             const selectedCategoryIds = selectedCategories;
             const honeyValues = { ...categoryQuantities };
 
+            // Update or create GiftDetail entries
             GiftDetail.fetchAll(gift.id).then((response) => {
               const detailData = response.data.data;
               const categoryIdsInDetail = detailData.map(
@@ -297,6 +310,7 @@ const ModalDetailGift = (props) => {
                 (categoryId) => !selectedCategoryIds.includes(categoryId)
               );
 
+              // Delete entries for categories not selected
               categoryIdsToDelete.forEach((categoryId) => {
                 const detailItem = detailData.find(
                   (item) => item.categoryId === categoryId
@@ -310,6 +324,8 @@ const ModalDetailGift = (props) => {
                     });
                 }
               });
+
+              // Update or create entries for selected categories
               selectedCategoryIds.forEach((categoryId) => {
                 const honey = honeyValues[categoryId];
                 const existingItem = detailData.find(
@@ -335,16 +351,20 @@ const ModalDetailGift = (props) => {
                 }
               });
             });
+
+            // Dispatch action and show success message
             dispatch(UpdateGift(response.data.data));
             message.success("Cập nhật thành công!");
             onUpdate();
             fetchData();
           })
           .catch((err) => {
+            // Handle update error
             message.error("Lỗi: " + err.message);
           });
       })
-      .catch(() => {
+      .catch((errorInfo) => {
+        // Handle form validation error
         message.error("Vui lòng điền đầy đủ thông tin.");
       });
   };
@@ -375,7 +395,7 @@ const ModalDetailGift = (props) => {
 
   return (
     <Modal
-    title="Chi tiết vật phẩm"
+      title="Chi tiết vật phẩm"
       onCancel={handleCancel}
       footer={null}
       visible={visible}
@@ -396,7 +416,7 @@ const ModalDetailGift = (props) => {
         style={{
           width: 1070,
           marginTop: 30,
-          justifyContent : "center"
+          justifyContent: "center",
         }}
         initialValues={initialValues}
         autoComplete="off"
@@ -496,16 +516,19 @@ const ModalDetailGift = (props) => {
                   message: "Vui lòng chọn loại",
                 },
               ]}
-              style={{height: 40}}
-              
+              style={{ height: 40 }}
             >
-              <Select placeholder="Chọn loại" onChange={handleTypeChange} className="select-custom" >
+              <Select
+                placeholder="Chọn loại"
+                onChange={handleTypeChange}
+                className="select-custom"
+              >
                 <Option value={0}>Quà tặng</Option>
                 <Option value={1}>Vật phẩm nâng cấp</Option>
                 <Option value={2}>Dụng cụ</Option>
               </Select>
             </Form.Item>
-          
+
             <Row className="select-section">
               <span className="select-asterisk">*</span>
               <span className="select-label">Chọn cấp bậc : </span>
@@ -537,7 +560,7 @@ const ModalDetailGift = (props) => {
                 categoryId in categoryQuantities
                   ? categoryQuantities[categoryId]
                   : "";
-              const isInvalid = honeyValue === "" || honeyValue <= 0;
+              const isInvalid = honeyValue === "" || fieldErrors[categoryId];
 
               if (selectedCategories.includes(categoryId)) {
                 return (
@@ -560,11 +583,18 @@ const ModalDetailGift = (props) => {
                             e.target.value
                           )
                         }
-                        className="ml-2 mb-4" style={{width:307}}
+                        className="ml-2 mb-4"
+                        style={{ width: 307 }}
                       />
                     </Row>
                     {isInvalid && (
-                      <p style={{ color: "red", marginTop : -25, marginLeft : 130 }}>
+                      <p
+                        style={{
+                          color: "red",
+                          marginTop: -25,
+                          marginLeft: 130,
+                        }}
+                      >
                         Số mật phải lớn hơn 0 và không được để trống.
                       </p>
                     )}
@@ -573,34 +603,32 @@ const ModalDetailGift = (props) => {
               }
               return null;
             })}
-            </Col>
-            
-            
-          <Col xl={10} xs={10} className="pl-2">
-              <Form.Item
-                label="Thời gian bắt đầu"
-                name="start"
-                rules={[
-                  {
-                    validator: validateStartDate,
-                  },
-                ]}
-              >
-                <Input type="date" />
-              </Form.Item>
+          </Col>
 
-              <Form.Item
-                label="Thời gian kết thúc"
-                name="end"
-                rules={[
-                  {
-                    validator: validateEndDate,
-                  },
-                ]}
-              >
-                <Input type="date" />
-              </Form.Item>
-            
+          <Col xl={10} xs={10} className="pl-2">
+            <Form.Item
+              label="Thời gian bắt đầu"
+              name="start"
+              rules={[
+                {
+                  validator: validateStartDate,
+                },
+              ]}
+            >
+              <Input type="date" />
+            </Form.Item>
+
+            <Form.Item
+              label="Thời gian kết thúc"
+              name="end"
+              rules={[
+                {
+                  validator: validateEndDate,
+                },
+              ]}
+            >
+              <Input type="date" />
+            </Form.Item>
 
             <Form.Item
               label="Phê duyệt"
@@ -707,7 +735,7 @@ const ModalDetailGift = (props) => {
             offset: 8,
             span: 16,
           }}
-          style={{marginLeft : 130}}
+          style={{ marginLeft: 130 }}
         >
           <Button
             style={{ marginRight: "20px" }}
@@ -716,7 +744,10 @@ const ModalDetailGift = (props) => {
           >
             Đóng
           </Button>
-          <Button htmlType="submit" className="submit-button  bg-black text-white ml-2">
+          <Button
+            htmlType="submit"
+            className="submit-button  bg-black text-white ml-2"
+          >
             OK
           </Button>
         </Form.Item>

@@ -40,7 +40,7 @@ const ModalDetail = (props) => {
         setImage([]);
       } else {
         const fileSize = selectedFile.size;
-        const checkFileSize = Math.round((fileSize / 1024) / 1024);
+        const checkFileSize = Math.round(fileSize / 1024 / 1024);
         if (checkFileSize > 1) {
           setErrorImage("Ảnh không thể lớn hơn 1 MB");
           setSelectedImageUrl("");
@@ -62,7 +62,9 @@ const ModalDetail = (props) => {
             setSelectedImageUrl(imageUrl);
             setErrorImage("");
           } else {
-            setErrorImage("Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. ");
+            setErrorImage(
+              "Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. "
+            );
             setSelectedImageUrl("");
             setImage([]);
           }
@@ -84,23 +86,45 @@ const ModalDetail = (props) => {
         } else {
           setErrorImage("");
         }
-        if(check>0){
+
+        if (check > 0) {
           return;
         }
-        CategoryAPI.update({ ...formValues, image: image }, category.id)
-          .then((response) => {
-            dispatch(UpdateCategory(response.data.data));
-            message.success("Thành công!");
-            setIsModalOpen(false);
-            form.resetFields();
-            fetchData();
-          })
-          .catch((err) => {
-            message.error("Lỗi: " + err.message);
+
+        if (formValues.transactionRights === "0") {
+          // If transactionRights is 0, show confirmation modal
+          Modal.confirm({
+            title: "Chú ý",
+            content:
+              "Bạn có chắc chắn muốn cập nhật thể loại này có thể giao dịch không?",
+            onOk: () => {
+              handleUpdateCategory(formValues);
+            },
+            onCancel: () => {
+              // Do nothing on cancel
+            },
           });
+        } else {
+          // If transactionRights is 1, directly update the category
+          handleUpdateCategory(formValues);
+        }
       })
       .catch(() => {
         message.error("Vui lòng điền đầy đủ thông tin.");
+      });
+  };
+
+  const handleUpdateCategory = (formValues) => {
+    CategoryAPI.update({ ...formValues, image: image }, category.id)
+      .then((response) => {
+        dispatch(UpdateCategory(response.data.data));
+        message.success("Thành công!");
+        setIsModalOpen(false);
+        form.resetFields();
+        fetchData();
+      })
+      .catch((err) => {
+        message.error("Lỗi: " + err.message);
       });
   };
   return (
@@ -123,7 +147,7 @@ const ModalDetail = (props) => {
         footer={null}
       >
         <Form
-         id="detailCategory"
+          id="detailCategory"
           form={form}
           name="basic"
           onFinish={onFinish}
@@ -191,8 +215,8 @@ const ModalDetail = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={"0"}>Được giao dịch</Radio>
               <Radio value={"1"}>Không giao dịch</Radio>
+              <Radio value={"0"}>Được giao dịch</Radio>
             </Radio.Group>
           </Form.Item>
 

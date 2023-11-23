@@ -1,5 +1,5 @@
 export const AppConfig = {
-  apiUrl: process.env.REACT_APP_API_URL,
+  apiUrl: "http://localhost:2508/api",
   routerBase: "",
 };
 
