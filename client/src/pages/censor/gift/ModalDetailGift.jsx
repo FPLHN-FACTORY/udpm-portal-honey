@@ -43,7 +43,7 @@ const ModalDetailGift = (props) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [fieldErrors, setFieldErrors] = useState({});
 
-  const [categoryDetailAddOptions, setCategoryDetailAddOptions] = useState([]);
+  const [checkTypeTime, setCheckTypeTime] = useState(2);
 
   useEffect(() => {
     GiftDetail.fetchAll(gift.id).then((response) => {
@@ -79,6 +79,7 @@ const ModalDetailGift = (props) => {
       setIsLimitedQuantity2(false);
       form.setFieldsValue({ limitSoLuong: 1 });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gift]);
 
   const handleTypeChange = (selectedType) => {
@@ -104,11 +105,6 @@ const ModalDetailGift = (props) => {
       return "Vui lòng chọn ít nhất một cấp bậc.";
     }
     return null;
-  };
-  const changeSelectType = (value) => {
-    if (value) {
-      initialValues.gift.type = value;
-    }
   };
 
   const handleCategoryChange = (selectedValues) => {
@@ -414,9 +410,9 @@ const ModalDetailGift = (props) => {
           span: 18,
         }}
         style={{
-          width: 1070,
           marginTop: 30,
-          justifyContent: "center",
+          padding: "0 30px",
+          justifyContent : "center"
         }}
         initialValues={initialValues}
         autoComplete="off"
@@ -483,7 +479,7 @@ const ModalDetailGift = (props) => {
                 >
                   Vô hạn
                 </Radio>
-                <Radio
+                <Radio style={{ marginLeft: 95 }}
                   value={gift && gift.quantity !== null ? gift.quantity : 1}
                 >
                   Giới hạn
@@ -529,9 +525,17 @@ const ModalDetailGift = (props) => {
               </Select>
             </Form.Item>
 
-            <Row className="select-section">
-              <span className="select-asterisk">*</span>
-              <span className="select-label">Chọn cấp bậc : </span>
+            <Form.Item
+              label="Chọn cấp bậc"
+              name="type"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn loại",
+                },
+              ]}
+              style={{ height: 40 }}
+            >
               <Select
                 className="select-custom"
                 mode="tags"
@@ -550,7 +554,7 @@ const ModalDetailGift = (props) => {
                   </Select.Option>
                 ))}
               </Select>
-            </Row>
+              </Form.Item>
             <div style={{ color: "red", textAlign: "center", marginTop: "-2" }}>
               {fieldErrors.selectedCategories}
             </div>
@@ -560,19 +564,24 @@ const ModalDetailGift = (props) => {
                 categoryId in categoryQuantities
                   ? categoryQuantities[categoryId]
                   : "";
-              const isInvalid = honeyValue === "" || fieldErrors[categoryId];
 
               if (selectedCategories.includes(categoryId)) {
                 return (
-                  <div className="input-matcate" key={categoryId}>
-                    <Row>
-                      <label
-                        className="label"
-                        htmlFor={`honey_${category.name}`}
-                      >
-                        <span className="select-asterisk">*</span> Số mật{" "}
-                        {category.name} :
-                      </label>
+                    <Form.Item
+                      label={`Số mật ${category.name}`}
+                      name="type"
+                      rules={[
+                        {
+                          required: true,
+                          message: `Loại mật ${category.name} không được để trống.`,
+                        },
+                        {
+                          min: 0,
+                          message: `Vui lòng không được để trống số lượng mật ${category.name}`
+                        }
+                      ]}
+                      style={{ height: 40 }}
+                    >
                       <Input
                         type="number"
                         id={`honey_${category.name}`}
@@ -583,52 +592,95 @@ const ModalDetailGift = (props) => {
                             e.target.value
                           )
                         }
-                        className="ml-2 mb-4"
-                        style={{ width: 307 }}
-                      />
-                    </Row>
-                    {isInvalid && (
-                      <p
-                        style={{
-                          color: "red",
-                          marginTop: -25,
-                          marginLeft: 130,
-                        }}
-                      >
-                        Số mật phải lớn hơn 0 và không được để trống.
-                      </p>
-                    )}
-                  </div>
+                        />
+                      </Form.Item>
                 );
               }
               return null;
             })}
           </Col>
 
-          <Col xl={10} xs={10} className="pl-2">
-            <Form.Item
-              label="Thời gian bắt đầu"
-              name="start"
+          <Col xl={10} xs={10} className="pl-2" >
+          <Form.Item
+              label="Thời gian hết hạn"
+              name="checkTypeDate"
               rules={[
                 {
-                  validator: validateStartDate,
+                  required: true,
+                  message: "Vui lòng chọn thời gian hết hạn",
                 },
               ]}
             >
-              <Input type="date" />
+              <Radio.Group className="flex" defaultValue={2} onChange={(e) => {
+                setCheckTypeTime(e.target.value);
+                form.setFieldValue("numberDateEnd", null);
+                form.setFieldValue("start", null);
+                form.setFieldValue("end", null);
+              }}>
+                <Radio value={0}>Theo ngày bắt đầu</Radio>
+                <Radio value={1}>Theo khoảng ngày</Radio>
+                <Radio value={2}>Vô hạn</Radio>
+              </Radio.Group>
             </Form.Item>
+            {
+              checkTypeTime === 0 ?
+                <>
+                  <Form.Item
+                    label={<span>Thời gian hết hạn <br/>(Theo ngày)</span>}
+                    name="numberDateEnd"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng chọn thời gian hết hạn",
+                      },
+                      {
+                        validator: (_, value) => {
+                          if (value.trim().length === 0) {
+                            return Promise.resolve();
+                          }
+                          const regex = /^[1-9]+$/;
+                          if (!regex.test(value)) {
+                            return Promise.reject(new Error('Vui lòng nhập một số nguyên dương'));
+                          }
+                  
+                          return Promise.resolve();
+                        },
+                      },
+                    ]}
+                  >
+                    <Input type="number" />
+                  </Form.Item>
+                </> : checkTypeTime === 1 ?
+                <>
+                  <Form.Item
+                    label="Thời gian bắt đầu"
+                    name="start"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng chọn thời gian hết hạn",
+                      },
+                      {
+                        validator: validateStartDate,
+                      },
+                    ]}
+                  >
+                    <Input type="date" />
+                  </Form.Item>
 
-            <Form.Item
-              label="Thời gian kết thúc"
-              name="end"
-              rules={[
-                {
-                  validator: validateEndDate,
-                },
-              ]}
-            >
-              <Input type="date" />
-            </Form.Item>
+                  <Form.Item
+                    label="Thời gian kết thúc"
+                    name="end"
+                    rules={[
+                      {
+                        validator: validateEndDate,
+                      },
+                    ]}
+                  >
+                    <Input type="date" />
+                  </Form.Item>
+                </> : <></>
+            }
 
             <Form.Item
               label="Phê duyệt"
@@ -676,8 +728,15 @@ const ModalDetailGift = (props) => {
             <Form.Item
               label="Cộng dồn"
               name="limitQuantity"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn tùy chọn số lượng",
+                },
+              ]}
               style={{
-                display: gift.type === 1 || gift.type === 2 ? "none" : "block",
+                display:
+                  selectType === 1 || selectType === 2 ? "none" : "block",
               }}
             >
               <Radio.Group
@@ -730,27 +789,24 @@ const ModalDetailGift = (props) => {
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item
-          wrapperCol={{
-            offset: 8,
-            span: 16,
-          }}
-          style={{ marginLeft: 130 }}
-        >
-          <Button
-            style={{ marginRight: "20px" }}
-            onClick={handleCancel}
-            className="submit-button bg-black text-white"
-          >
-            Đóng
-          </Button>
-          <Button
-            htmlType="submit"
-            className="submit-button  bg-black text-white ml-2"
-          >
-            OK
-          </Button>
-        </Form.Item>
+
+        <Row className="text-center pb-4">
+          <Col span={24}>
+            <Button
+              style={{ marginRight: "20px" }}
+              onClick={handleCancel}
+              className="submit-button bg-black text-white"
+            >
+              Đóng
+            </Button>
+            <Button
+              htmlType="submit"
+              className="submit-button  bg-black text-white ml-2"
+            >
+              OK
+            </Button>
+          </Col>
+        </Row>
       </Form>
     </Modal>
   );
