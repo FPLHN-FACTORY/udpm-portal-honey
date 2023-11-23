@@ -11,7 +11,6 @@ import {
   message,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { ResquestConversion } from "../../../apis/user/ResquestConversiton/ResquestConversion.api";
 import moment from "moment";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
@@ -21,26 +20,11 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 
-const statusHistory = (status) => {
-  switch (status) {
-    case 0:
-      return <Tag color="geekblue">Chờ phê duyệt</Tag>; // Màu xanh dương
-    case 1:
-      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
-    case 2:
-      return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
-    default:
-      return <Tag>Không xác định</Tag>;
-  }
-};
-
 export default function RequestConversionHistory() {
   const [getHistory, setGetHistory] = useState([]);
   const [fillCategory, setFillCategory] = useState([]);
   const [totalPages, setTotalPages] = useState([]);
   const [filter, setFilter] = useState({ page: 0 });
-  const [fillPoint, setFillPoint] = useState(0);
-  const [type, setType] = useState();
 
   const fetchData = (filter) => {
     const fetchData = async (filter) => {
@@ -70,12 +54,6 @@ export default function RequestConversionHistory() {
       }
     };
     fetchData(filter);
-  };
-
-  const fechFillPoint = (idStudent, idCategory) => {
-    RequestManagerAPI.getPoint(idStudent, idCategory).then((response) => {
-      setFillPoint(response.data.data);
-    });
   };
 
   const fechCategory = () => {
@@ -134,7 +112,6 @@ export default function RequestConversionHistory() {
       if (response.data.success) {
         if (status === 1) message.success("Đã xác nhận yêu cầu mua vật phẩm!");
         if (status === 2) message.error("Hủy yêu cầu thành công!");
-        setType(response.data.data.type);
       }
       fetchData();
     });

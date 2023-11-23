@@ -1,5 +1,6 @@
 package com.honeyprojects.core.teacher.service.impl;
 
+import com.honeyprojects.core.admin.repository.AdHistoryDetailRepository;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
@@ -18,6 +19,7 @@ import com.honeyprojects.core.teacher.service.TeacherAddPointExcelService;
 import com.honeyprojects.core.teacher.service.TeacherAddPointService;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.History;
+import com.honeyprojects.entity.HistoryDetail;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.entity.Notification;
 import com.honeyprojects.infrastructure.contant.*;
@@ -53,7 +55,8 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     @Autowired
     private ConvertRequestApiidentity requestApiidentity;
 
-
+    @Autowired
+    private AdHistoryDetailRepository historyDetailRandomRepository;
 
     @Override
     public List<TeacherCategoryResponse> getCategory() {
@@ -91,44 +94,47 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     @Override
     @Transactional
     public History addPoint(TeacherAddPointRequest addPointRequest) {
-        //fake teacher login
         String idTeacher = udpmHoney.getIdUser();
-
         Long dateNow = Calendar.getInstance().getTimeInMillis();
-
         History history = new History();
         history.setStatus(HoneyStatus.CHO_PHE_DUYET);
         history.setTeacherId(idTeacher);
-//        history.setHoneyPoint(addPointRequest.getHoneyPoint());
         history.setNote(addPointRequest.getNote());
         history.setType(TypeHistory.CONG_DIEM);
         history.setCreatedAt(dateNow);
+        history.setStudentId(addPointRequest.getStudentId());
+        historyRepository.save(history);
+
+        HistoryDetail historyDetail = new HistoryDetail();
+        historyDetail.setHistoryId(history.getId());
+        historyDetail.setHoneyPoint(addPointRequest.getHoneyPoint());
+        historyDetail.setStudentId(addPointRequest.getStudentId());
+
         if (addPointRequest.getHoneyId() == null) {
             Honey honey = new Honey();
             honey.setStatus(Status.HOAT_DONG);
             honey.setHoneyPoint(0);
             honey.setStudentId(addPointRequest.getStudentId());
             honey.setHoneyCategoryId(addPointRequest.getCategoryId());
-//            history.setHoneyId(honeyRepository.save(honey).getId());
+            honeyRepository.save(honey);
+            historyDetail.setHoneyId(honey.getId());
         } else {
             Honey honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();
-//            history.setHoneyId(honey.getId());
+            honeyRepository.save(honey);
+            historyDetail.setHoneyId(honey.getId());
         }
-        history.setStudentId(addPointRequest.getStudentId());
-
-        History his = historyRepository.save(history);
+        historyDetailRandomRepository.save(historyDetail);
 
         Optional<Category> ca = categoryRepository.findById(addPointRequest.getCategoryId());
-
         Notification notification = new Notification();
-        notification.setTitle("Yêu cầu cộng "+addPointRequest.getHoneyPoint()+" mật ong loại "+ca.get().getName()+" cho sinh viên");
+        notification.setTitle("Yêu cầu cộng " + addPointRequest.getHoneyPoint() + " mật ong loại " + ca.get().getName() + " cho sinh viên");
         notification.setStatus(NotificationStatus.CHUA_DOC);
         notification.setType(NotificationType.CHO_PHE_DUYET);
         notification.setStudentId(history.getId());
 
         teacherNotificationRepository.save(notification);
 
-        return his;
+        return history;
     }
 
     @Override

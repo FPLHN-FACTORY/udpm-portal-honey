@@ -14,21 +14,6 @@ export default function StudentHistory() {
   const navigate = useNavigate();
   const [lastElementRef, inView] = useInView();
 
-  function ImageRenderer({ image }) {
-    if (image) {
-      const byteArray = JSON.parse(image);
-      const uint8Array = new Uint8Array(byteArray);
-      const blob = new Blob([uint8Array], { type: "image/jpeg" });
-      const imageUrl = URL.createObjectURL(blob);
-
-      return (
-        <Image height={"100%"} className="content__image" src={imageUrl} />
-      );
-    } else {
-      return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
-    }
-  }
-
   function fetchData(type, page) {
     setIsFetching(true);
     HistoryApi.getAllHistory({ type: type, page: page }).then((result) => {
@@ -99,7 +84,7 @@ export default function StudentHistory() {
             if (data.length === index + 1) {
               return (
                 <div className={`content red`} ref={lastElementRef} key={index}>
-                  <ImageRenderer image={e.image} />
+                  <img className="size_img" src={e.image} alt="" />
                   <div className="student__history__text">{e.content}</div>
                   <div className={`student__history__point}`}>
                     <div
@@ -130,7 +115,7 @@ export default function StudentHistory() {
             } else {
               return (
                 <div className={`content red`} key={index}>
-                  <ImageRenderer image={e.image} />
+                  <img className="size_img" src={e.image} alt="" />
                   <div className="student__history__text">{e.content}</div>
                   <div className={`student__history__point}`}>
                     <div

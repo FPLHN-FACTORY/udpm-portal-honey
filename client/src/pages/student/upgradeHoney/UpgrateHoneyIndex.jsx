@@ -471,40 +471,6 @@ const UpgrateHoneyIndex = memo(() => {
           </div>
         </div>
       </div>
-
-      {/* <div className="upgrate__honey__choose">
-        <div className="upgrate__honey__header">
-          <div className="upgrate__honey__list">
-            <div className="upgrate__list__title"> Phôi nâng cấp </div>
-
-            <div className="upgrate__list"></div>
-          </div>
-        </div>
-        <div className="upgrate__list__box">
-          {condition !== null &&
-            condition.map((item) => (
-              <div
-                className={`upgrate__chest__wrapper ${
-                  item.check ? "" : "cursor-not-allowed"
-                }`}
-                onClick={() => handleClickCondition(item)}
-              >
-                <div
-                  className={` ${item.check ? "" : "upgrate__condition__item"}`}
-                ></div>
-                <div className="upgrate__honey__image">
-                  <img src={item.image} alt="" />
-                </div>
-                <div class="upgrate__condition__name">{item.name}</div>
-              </div>
-            ))}
-        </div>
-        <div className="div-button">
-          <Button className="use__button" onClick={() => handleClickUpdate()}>
-            <p className="button__text">Nâng cấp</p>
-          </Button>
-        </div>
-      </div> */}
     </section>
   );
 });

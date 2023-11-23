@@ -1,12 +1,12 @@
 import "./index.css";
 export default function Login() {
   return (
-    <div className="login__wraper">
+    <div className="login__wrraper">
       <a href="#" class="logo" target="_blank">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/FPT_Polytechnic.png/1200px-FPT_Polytechnic.png" alt="" />
       </a>
 
-      <div class="section over-hide">
+      <div class="wrraper__login over-hide">
         <div class="container">
           <div class="row full-height justify-content-center">
             <div class="col-12 text-center align-self-center py-5">
