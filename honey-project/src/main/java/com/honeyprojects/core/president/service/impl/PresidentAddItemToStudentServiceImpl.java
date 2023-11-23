@@ -17,6 +17,7 @@ import com.honeyprojects.core.president.service.PresidentHoneyRepository;
 import com.honeyprojects.core.student.repository.StudentCreateRequestConversionRepository;
 import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
 import com.honeyprojects.core.teacher.model.request.TeacherGetPointRequest;
+import com.honeyprojects.core.teacher.model.response.TeacherCategoryResponse;
 import com.honeyprojects.core.teacher.model.response.TeacherPointResponse;
 import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
 import com.honeyprojects.entity.History;
@@ -335,22 +336,22 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                     }
                 }
                 List<PresidentCategoryResponse> categories = presidentAddItemRepository.getCategoriesByNames(honeyMap.keySet());
-                for (PresidentCategoryResponse category : categories) {
-                    String categoryPoint = category.getName();
-                    if (!honeyMap.containsKey(categoryPoint)) {
-                        userDTO.setImportMessage("Loại mật ong " + categoryPoint + " không tồn tại");
-                        userDTO.setError(true);
-                        check++;
-                        hasError = true;
-                        break;
+
+                // Kiểm tra sự không tồn tại của mỗi loại mật ong trong honeyMap
+                for (String honeyType : honeyMap.keySet()) {
+                    boolean found = false;
+                    for (PresidentCategoryResponse category : categories) {
+                        String categoryName = category.getName().toLowerCase();
+                        if (categoryName.equals(honeyType.toLowerCase())) {
+                            found = true;
+                            break;
+                        }
                     }
-                    Integer numberPoint = nameToNumberMap.get(categoryPoint);
-                    if (numberPoint < 1) {
-                        userDTO.setImportMessage("Số lượng mật ong không được nhỏ hơn 1");
+                    if (!found) {
+                        userDTO.setImportMessage("Loại mật ong " + honeyType + " không tồn tại");
                         userDTO.setError(true);
                         check++;
                         hasError = true;
-                        break;
                     }
                 }
             }
