@@ -6,7 +6,6 @@ import {
   Pagination,
   Select,
   Space,
-  Table,
   Tag,
   message,
 } from "antd";
@@ -19,9 +18,9 @@ import { SearchOutlined } from "@ant-design/icons";
 const statusHistory = (status) => {
   switch (status) {
     case 1:
-      return <Tag color="green">Đổi thành công</Tag>; // Màu xanh lá cây
+      return <Tag color="green">Phê duyệt</Tag>; // Màu xanh lá cây
     case 2:
-      return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
+      return <Tag color="volcano">Từ chối</Tag>; // Màu đỏ
     default:
       return <Tag>Không xác định</Tag>;
   }
@@ -32,20 +31,6 @@ export default function BuyGiftHistory() {
   const [fillCategory, setFillCategory] = useState([]);
   const [totalPages, setTotalPages] = useState([]);
   const [filter, setFilter] = useState({ page: 0 });
-  const [fillUserApi, setFillUserApi] = useState([]);
-  const [fillPoint, setFillPoint] = useState(0);
-
-  const fechUserApiById = () => {
-    ResquestConversion.getUserAPiByid().then((response) => {
-      setFillUserApi({
-        ...response.data.data,
-      });
-    });
-  };
-
-  useEffect(() => {
-    fechUserApiById();
-  }, []);
 
   const fetchData = (filter) => {
     const fetchData = async (filter) => {
@@ -70,18 +55,11 @@ export default function BuyGiftHistory() {
         );
         setGetHistory(listHistory);
         setTotalPages(response.data.totalPages);
-        console.log(listHistory);
       } catch (error) {
         console.error(error);
       }
     };
     fetchData(filter);
-  };
-
-  const fechFillPoint = (idStudent, idCategory) => {
-    RequestManagerAPI.getPoint(idStudent, idCategory).then((response) => {
-      setFillPoint(response.data.data);
-    });
   };
 
   const fechCategory = () => {
@@ -120,80 +98,6 @@ export default function BuyGiftHistory() {
         .catch((error) => console.error(error));
     }
   };
-  // const columns = [
-  //   {
-  //     title: "STT",
-  //     dataIndex: "stt",
-  //     key: "stt",
-  //     render: (text, record, index) => index + 1,
-  //   },
-
-  //   {
-  //     title: "Tên sinh viên",
-  //     dataIndex: "studentName",
-  //     key: "studentName",
-  //   },
-  //   {
-  //     title: "userName",
-  //     dataIndex: "userName",
-  //     key: "userName",
-  //   },
-  //   {
-  //     title: "Loại điểm",
-  //     dataIndex: "nameCategory",
-  //     key: "nameCategory",
-  //   },
-  //   {
-  //     title: "Loại quà",
-  //     dataIndex: "nameGift",
-  //     key: "nameGift",
-  //   },
-  //   {
-  //     title: "Số lượng",
-  //     dataIndex: "quantity",
-  //     key: "quantity",
-  //   },
-  //   {
-  //     title: "Điểm trừ",
-  //     dataIndex: "honeyPoint",
-  //     key: "honeyPoint",
-  //     render: (text) => <span>{`-${text} điểm`}</span>,
-  //   },
-  //   {
-  //     title: "Ngày tạo",
-  //     dataIndex: "createdDate",
-  //     key: "createdDate",
-  //     render: (text) => <span>{moment(text).format("DD/MM/YYYY")}</span>,
-  //   },
-
-  //   {
-  //     title: "Trạng thái",
-  //     dataIndex: "status",
-  //     key: "status",
-  //     render: (status) => (
-  //       <Tag
-  //         color={
-  //           status === 0
-  //             ? "geekblue"
-  //             : status === 1
-  //             ? "green"
-  //             : status === 2
-  //             ? "volcano"
-  //             : "default"
-  //         }
-  //       >
-  //         {status === 0
-  //           ? "Chờ phê duyệt"
-  //           : status === 1
-  //           ? "Đổi thành công"
-  //           : status === 2
-  //           ? "Đã hủy"
-  //           : "Không sác định"}
-  //       </Tag>
-  //     ),
-  //   },
-  // ];
-  console.log(getHistory);
 
   return (
     <>
@@ -251,12 +155,6 @@ export default function BuyGiftHistory() {
       </Card>
       <Card title="Lịch sử đổi quà">
         <div className="mt-5">
-          {/* <Table
-            columns={columns}
-            rowKey="id"
-            dataSource={getHistory}
-            pagination={false}
-          /> */}
           {getHistory.map((item) => (
             <div className="list__point ">
               <h3 className="text-slate-600"> Sinh viên {item.studentName}</h3>
@@ -271,14 +169,7 @@ export default function BuyGiftHistory() {
                   <strong className="text-slate-500 mr-[8px]">
                     Thời gian:
                   </strong>
-                  { moment(item.createdDate).format("DD-MM-YYYY HH:mm:ss")}
-                </p>
-                <p
-                  title={item.note}
-                  className="w-[300px] overflow-hidden whitespace-nowrap text-ellipsis"
-                >
-                  <strong className="text-slate-500 mr-[8px]">Lý do:</strong>
-                  {item.note}
+                  {moment(item.createdDate).format("DD-MM-YYYY HH:mm:ss")}
                 </p>
               </div>
             </div>

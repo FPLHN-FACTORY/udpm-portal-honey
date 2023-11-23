@@ -21,22 +21,15 @@ import {
   GetAuction,
   SetAuction,
 } from "../../../app/reducers/auction/auction.reducer";
-// import ModalCreateAuction from "./modal-create/ModalCreateAuction.jsx";
-// import ModalUpdateAuction from "./modal-update/ModalUpdateAuction";
 import { CountdownTimer } from "../../util/CountdownTimer";
 
-const { Option } = Select;
 
 export default function AuctionMangement() {
-  // const [auction, setAuction] = useState(null);
   const [listCategorySearch, setListCategorySearch] = useState([]);
-  const { id } = useParams();
   const [current, setCurrent] = useState(0);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(10);
   const dispatch = useAppDispatch();
-  // const [modalCreate, setModalCreate] = useState(false);
-  // const [modalUpdate, setModalUpdate] = useState(false);
   const [form] = Form.useForm();
   const listType = [
     {
@@ -167,38 +160,6 @@ export default function AuctionMangement() {
       startingPrice: "",
     });
   };
-
-  // const buttonCreate = () => {
-  //   setModalCreate(true);
-  // };
-
-  // const buttonCreateCancel = () => {
-  //   setModalCreate(false);
-  //   setAuction(null);
-  // };
-
-  // const buttonUpdate = (record) => {
-  //   setModalUpdate(true);
-  //   setAuction(record);
-  // };
-
-  // const buttonUpdateCancel = () => {
-  //   setModalUpdate(false);
-  //   setAuction(null);
-  // };
-
-  // const buttonDelete = (id) => {
-  //   AuctionAPI.changeStatus(id).then(
-  //     (response) => {
-  //       message.success("Đóng thành công!");
-  //       dispatch(ChangeAuctionStatus(response.data.data));
-  //       fetchData();
-  //     },
-  //     (error) => {
-  //       message.error("Đóng thất bại!");
-  //     }
-  //   );
-  // };
 
   return (
     <div>

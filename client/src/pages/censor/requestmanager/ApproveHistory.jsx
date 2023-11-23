@@ -6,7 +6,6 @@ import {
   Pagination,
   Select,
   Space,
-  Table,
   Tag,
   message,
 } from "antd";
@@ -96,7 +95,7 @@ export default function RequestApprovedHistory() {
     };
   });
   const listCategory = useAppSelector(GetCategory);
-  // console.log(data);
+
   const onFinishSearch = (value) => {
     if (value.userName === undefined || value.userName.trim().length === 0) {
       setFilter({
@@ -125,7 +124,6 @@ export default function RequestApprovedHistory() {
 
   return (
     <div className="request-manager">
-      {/* <TabsHistory selectIndex={1} type={type} /> */}
       <Card className="mb-2 py-1">
         <Form onFinish={onFinishSearch}>
           <Space size={"large"}>
@@ -180,7 +178,7 @@ export default function RequestApprovedHistory() {
           </Space>
         </Form>
       </Card>
-      <Card title="Lịch sử phê duyệt cộng điểm">
+      <Card title="Lịch sử cộng điểm">
         {data.map((item) => (
           <div className="list__point ">
             <h3 className="text-slate-600"> Sinh viên {item.nameStudent}</h3>

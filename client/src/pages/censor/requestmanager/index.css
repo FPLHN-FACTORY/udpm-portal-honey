@@ -1,115 +1,117 @@
 .request-manager .ant-btn {
-    line-height: normal;
-    box-shadow: 0 2px 4px rgb(0 0 0 / 7%);
+  line-height: normal;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 7%);
 }
 
 .request-manager .py-25 {
-    padding: 25px 0px;
+  padding: 25px 0px;
 }
 
 .request-manager .mt-10 {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .request-manager .mb-10 {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .request-manager .p-0 {
-    padding: 0 !important;
+  padding: 0 !important;
 }
 
 .request-manager .pl-5 {
-    padding-left: 5px;
+  padding-left: 5px;
 }
 
 .request-manager .m-0 {
-    margin: 0 !important;
+  margin: 0 !important;
 }
 
 .request-manager .mx-10 {
-    margin: 0px 10px;
+  margin: 0px 10px;
 }
 
 .request-manager .search-input {
-    min-width: 30%;
+  min-width: 30%;
 }
 
 .request-manager .search-button {
-    background-color: #EEB30D;
-    margin-bottom: 24px;
+  background-color: #eeb30d;
+  margin-bottom: 24px;
 }
 
-.request-manager>.ant-card>.ant-card-body {
-    padding-bottom: 0;
+.request-manager > .ant-card > .ant-card-body {
+  padding-bottom: 0;
 }
 
 .request-manager .search-button:hover {
-    background-color: #EEB30D !important;
+  background-color: #eeb30d !important;
 }
 
 .request-manager .import-button {
-    background-color: #24923e;
-    margin-bottom: 24px;
+  background-color: #24923e;
+  margin-bottom: 24px;
 }
 
 .request-manager .import-button:hover {
-    background-color: #2db34c !important;
+  background-color: #2db34c !important;
 }
 
 .request-manager .select-category .ant-segmented-item-selected {
-    background-color: #EEB30D;
-    color: rgb(255, 255, 255);
+  background-color: #eeb30d;
+  color: rgb(255, 255, 255);
 }
 
 .request-manager .select-category .ant-segmented-item {
-    transition: #EEB30D 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: #eeb30d 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
 .request-manager .select-category .ant-segmented-thumb {
-    background-color: #EEB30D;
+  background-color: #eeb30d;
 }
 
 .request-manager .content-card .ant-card-body {
-    padding-top: 0;
-    padding-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .request-manager .content-card .ant-card-body {
-    padding-top: 0;
-    padding-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
-.request-manager .ant-table-thead>tr>th,
-.request-manager .ant-table-thead>tr>td {
-    background-color: #EEB30D;
-    color: #fff;
+.request-manager .ant-table-thead > tr > th,
+.request-manager .ant-table-thead > tr > td {
+  background-color: #eeb30d;
+  color: #fff;
 }
 
 .request-manager .ant-btn svg {
-    margin: 0;
+  margin: 0;
 }
 
 .request-manager-detail .ant-descriptions-header {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .list__point {
-    box-shadow: 8px 8px 12px 0 rgba(0, 0, 0, 0.12), -8px -8px 12px 0 rgba(0, 0, 0, 0.12);
-    border-radius: 65px 0 0 65px;
-    padding: 10px 50px;
-    margin-bottom: 15px;
-    transition: all 0.3s;
+  /* box-shadow: 8px 8px 12px 0 rgba(0, 0, 0, 0.12),
+    -8px -8px 12px 0 rgba(0, 0, 0, 0.12); */
+  border-bottom: 1px dashed rgba(150, 150, 150, 1);
+  /* border-radius: 20px; */
+  padding: 10px 50px;
+  margin-bottom: 15px;
+  transition: all 0.3s;
 }
 
 .list__point:hover {
-    transform: scale(1.01);
+  transform: scale(1.01);
 }
 
 .list__point__title {
-    border-top: 1px dashed rgba(150, 150, 150, 1);
-    padding-top: 8px;
-    margin-top: 8px;
-    display: flex;
-    justify-content: space-between;
+  /* border-top: 1px dashed rgba(150, 150, 150, 1); */
+  padding-top: 8px;
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
 }

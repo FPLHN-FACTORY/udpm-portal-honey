@@ -109,12 +109,12 @@ function DashboardAuthUser({ children }) {
       <FontAwesomeIcon icon={faToolbox} />
     ),
     getItem(
-      <Link to="/censor/auction-management">Quản lý phòng đấu giá</Link>,
+      <Link to="/censor/auction-management">Quản lý đấu giá</Link>,
       "/censor/auction-management",
       <FontAwesomeIcon icon={faScaleUnbalanced} />
     ),
     getItem(
-      <Link to="/censor/upgrade-rate">Quản lý tỉ lệ nâng cấp</Link>,
+      <Link to="/censor/upgrade-rate">Quản lý nâng cấp</Link>,
       "/censor/upgrade-rate",
       <FontAwesomeIcon icon={faStar} />
     ),

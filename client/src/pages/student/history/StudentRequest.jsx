@@ -14,21 +14,6 @@ export default function StudentRequest() {
   const navigate = useNavigate();
   const [lastElementRef, inView] = useInView();
 
-  function ImageRenderer({ image }) {
-    if (image) {
-      const byteArray = JSON.parse(image);
-      const uint8Array = new Uint8Array(byteArray);
-      const blob = new Blob([uint8Array], { type: "image/jpeg" });
-      const imageUrl = URL.createObjectURL(blob);
-
-      return (
-        <Image height={"100%"} className="content__image" src={imageUrl} />
-      );
-    } else {
-      return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
-    }
-  }
-
   function fetchData(type, page) {
     setIsFetching(true);
     HistoryApi.getAllRequest({ type: type, page: page }).then((result) => {
@@ -41,7 +26,7 @@ export default function StudentRequest() {
     setData([]);
     setPage(0);
   }, [type]);
-  
+
   useEffect(() => {
     fetchData(type, page);
   }, [type, page]);
@@ -58,12 +43,14 @@ export default function StudentRequest() {
         <div className="button-group">
           <button
             className="button button__notactivebutton__notactive"
-            onClick={() => navigate("/student/history")}>
+            onClick={() => navigate("/student/history")}
+          >
             Lịch sử
           </button>
           <button
             className="button button__active"
-            onClick={() => navigate("/student/request")}>
+            onClick={() => navigate("/student/request")}
+          >
             Yêu cầu
           </button>
           <Select
@@ -92,16 +79,18 @@ export default function StudentRequest() {
             if (data.length === index + 1) {
               return (
                 <div className={`content red`} ref={lastElementRef} key={index}>
-                  <ImageRenderer image={e.image} />
+                  <img className="size_img" src={e.image} alt="" />
                   <div className="student__history__text">{e.content}</div>
                   <div className={`student__history__point}`}>
                     <div
                       className={`student__history__point 
-                    }`}>
+                    }`}
+                    >
                       {e.point && (
                         <span
                           className={"red__text"}
-                          style={{ marginRight: "10px" }}>
+                          style={{ marginRight: "10px" }}
+                        >
                           {e.point}
                         </span>
                       )}
@@ -109,7 +98,8 @@ export default function StudentRequest() {
                       {e.pointGet && (
                         <span
                           className={"green__text"}
-                          style={{ marginRight: "10px" }}>
+                          style={{ marginRight: "10px" }}
+                        >
                           {e.pointGet}
                         </span>
                       )}
@@ -120,16 +110,18 @@ export default function StudentRequest() {
             } else {
               return (
                 <div className={`content red`} key={index}>
-                  <ImageRenderer image={e.image} />
+                  <img className="size_img" src={e.image} alt="" />
                   <div className="student__history__text">{e.content}</div>
                   <div className={`student__history__point}`}>
                     <div
                       className={`student__history__point 
-                    }`}>
+                    }`}
+                    >
                       {e.point && (
                         <span
                           className={"red__text"}
-                          style={{ marginRight: "10px" }}>
+                          style={{ marginRight: "10px" }}
+                        >
                           {e.point}
                         </span>
                       )}
@@ -137,7 +129,8 @@ export default function StudentRequest() {
                       {e.pointGet && (
                         <span
                           className={"green__text"}
-                          style={{ marginRight: "10px" }}>
+                          style={{ marginRight: "10px" }}
+                        >
                           {e.pointGet}
                         </span>
                       )}
