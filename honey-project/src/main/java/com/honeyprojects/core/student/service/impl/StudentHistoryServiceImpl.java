@@ -43,118 +43,120 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
 
     @Override
     public Map<String, Object> getListHistory(Integer type, Integer page) {
-        Page<History> list;
-        Sort sort = Sort.by(Sort.Direction.DESC, "lastModifiedDate");
-        Pageable pageable = PageRequest.of(page, 5, sort);
-        try {
-            list = historyRepository.getListHistory(udpmHoney.getIdUser(), TypeHistory.values()[type], pageable);
-        } catch (Exception e) {
-            list = historyRepository.getListHistory(udpmHoney.getIdUser(), null, pageable);
-        }
-        List<StudentHistoryResponse> listResponse = list.getContent().stream().map(
-                history -> {
-                    StudentHistoryResponse response = new StudentHistoryResponse();
-                    if (history.getType() == TypeHistory.CONG_DIEM) {
-                        Honey honey = honeyRepository.findById(history.getHoneyId()).orElse(null);
-                        if (honey != null) {
-                            categoryRepository.findById(honey.getHoneyCategoryId()).ifPresent(category -> response.setImage(category.getImage() ));
-                        }
-                        response.setContent("Được cộng mật ong từ " + apiidentity.handleCallApiGetUserById(history.getTeacherId()).getUserName());
-                        if (honey != null) {
-                            categoryRepository.findById(honey.getHoneyCategoryId()).ifPresent(category ->
-                                    response.setPointGet("+" + history.getHoneyPoint() + " " + category.getName() + "[Mật]"));
-                        }
-                    } else if (history.getType() == TypeHistory.DOI_QUA) {
-                        Gift gift = giftRepository.findById(history.getGiftId()).orElse(null);
-                        if (gift != null) {
-                            response.setImage(gift.getImage());
-                            response.setContent("Mua x" + history.getQuantity() + " gói quà " + " " + gift.getName());
-                            Honey honey = honeyRepository.findById(history.getHoneyId()).orElse(null);
-                            if (honey != null) {
-                                response.setPointGet("+" + history.getQuantity() + " " + gift.getName() + "[Quà]");
-                                categoryRepository.findById(honey.getHoneyCategoryId()).ifPresent(category ->
-                                        response.setPoint("-" + history.getHoneyPoint() * history.getQuantity() + " " + category.getName() + "[Mật]"));
-
-                            }
-                        }
-                    } else if (history.getType() == TypeHistory.PHE_DUYET_QUA) {
-                        Gift gift = giftRepository.findById(history.getGiftId()).orElse(null);
-                        if (history.getStatus() == HoneyStatus.DA_HUY) {
-                            if (gift != null) {
-                                response.setImage(gift.getImage());
-                                response.setContent("Mở x" + history.getQuantity() + " gói quà " + " " + gift.getName() + " "
-                                                    + "bị giảng viên từ chối");
-                                response.setPointGet("+" + history.getQuantity() + " " + gift.getName() + "[Quà]");
-                            }
-                        } else {
-                            if (gift != null) {
-                                response.setImage(gift.getImage());
-                                response.setContent("Mở x" + history.getQuantity() + " gói quà " + " " + gift.getName());
-                                response.setPoint("-" + history.getQuantity() + " " + gift.getName() + "[Quà]");
-                            }
-                        }
-                    }
-                    return response;
-                }
-        ).toList();
-        Map<String, Object> result = new HashMap<>();
-        result.put("data", listResponse);
-        result.put("totalPages", list.getTotalPages());
-        result.put("currentPage", list.getNumber());
-        return result;
+//        Page<History> list;
+//        Sort sort = Sort.by(Sort.Direction.DESC, "lastModifiedDate");
+//        Pageable pageable = PageRequest.of(page, 5, sort);
+//        try {
+//            list = historyRepository.getListHistory(udpmHoney.getIdUser(), TypeHistory.values()[type], pageable);
+//        } catch (Exception e) {
+//            list = historyRepository.getListHistory(udpmHoney.getIdUser(), null, pageable);
+//        }
+//        List<StudentHistoryResponse> listResponse = list.getContent().stream().map(
+//                history -> {
+//                    StudentHistoryResponse response = new StudentHistoryResponse();
+//                    if (history.getType() == TypeHistory.CONG_DIEM) {
+//                        Honey honey = honeyRepository.findById(history.getHoneyId()).orElse(null);
+//                        if (honey != null) {
+//                            categoryRepository.findById(honey.getHoneyCategoryId()).ifPresent(category -> response.setImage(category.getImage() ));
+//                        }
+//                        response.setContent("Được cộng mật ong từ " + apiidentity.handleCallApiGetUserById(history.getTeacherId()).getUserName());
+//                        if (honey != null) {
+//                            categoryRepository.findById(honey.getHoneyCategoryId()).ifPresent(category ->
+//                                    response.setPointGet("+" + history.getHoneyPoint() + " " + category.getName() + "[Mật]"));
+//                        }
+//                    } else if (history.getType() == TypeHistory.DOI_QUA) {
+//                        Gift gift = giftRepository.findById(history.getGiftId()).orElse(null);
+//                        if (gift != null) {
+//                            response.setImage(gift.getImage());
+//                            response.setContent("Mua x" + history.getQuantity() + " gói quà " + " " + gift.getName());
+//                            Honey honey = honeyRepository.findById(history.getHoneyId()).orElse(null);
+//                            if (honey != null) {
+//                                response.setPointGet("+" + history.getQuantity() + " " + gift.getName() + "[Quà]");
+//                                categoryRepository.findById(honey.getHoneyCategoryId()).ifPresent(category ->
+//                                        response.setPoint("-" + history.getHoneyPoint() * history.getQuantity() + " " + category.getName() + "[Mật]"));
+//
+//                            }
+//                        }
+//                    } else if (history.getType() == TypeHistory.PHE_DUYET_QUA) {
+//                        Gift gift = giftRepository.findById(history.getGiftId()).orElse(null);
+//                        if (history.getStatus() == HoneyStatus.DA_HUY) {
+//                            if (gift != null) {
+//                                response.setImage(gift.getImage());
+//                                response.setContent("Mở x" + history.getQuantity() + " gói quà " + " " + gift.getName() + " "
+//                                                    + "bị giảng viên từ chối");
+//                                response.setPointGet("+" + history.getQuantity() + " " + gift.getName() + "[Quà]");
+//                            }
+//                        } else {
+//                            if (gift != null) {
+//                                response.setImage(gift.getImage());
+//                                response.setContent("Mở x" + history.getQuantity() + " gói quà " + " " + gift.getName());
+//                                response.setPoint("-" + history.getQuantity() + " " + gift.getName() + "[Quà]");
+//                            }
+//                        }
+//                    }
+//                    return response;
+//                }
+//        ).toList();
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("data", listResponse);
+//        result.put("totalPages", list.getTotalPages());
+//        result.put("currentPage", list.getNumber());
+//        return result;
+        return null;
     }
 
     @Override
     public Map<String, Object> getListRequest(Integer type, Integer page) {
-        Page<History> list;
-        Sort sort = Sort.by(Sort.Direction.DESC, "lastModifiedDate");
-        Pageable pageable = PageRequest.of(page, 5, sort);
-        try {
-            list = historyRepository.getListRequest(udpmHoney.getIdUser(), TypeHistory.values()[type], pageable);
-        } catch (Exception e) {
-            list = historyRepository.getListRequest(udpmHoney.getIdUser(), null, pageable);
-        }
-        List<StudentHistoryResponse> listResponse = list.getContent().stream().map(
-                history -> {
-                    StudentHistoryResponse response = new StudentHistoryResponse();
-                    if (history.getType() == TypeHistory.DOI_QUA) {
-                        Gift gift = giftRepository.findById(history.getGiftId()).orElse(null);
-                        if (gift != null) {
-                            response.setImage(gift.getImage());
-                            Honey honey = honeyRepository.findById(history.getHoneyId()).orElse(null);
-                            if (honey != null) {
-                                categoryRepository.findById(honey.getHoneyCategoryId()).ifPresent(category ->
-                                        response.setContent("Đổi " + history.getHoneyPoint() * history.getQuantity() + " mật " + category.getName() +
-                                                            " lấy x" + history.getQuantity() + " gói quà " + " " + gift.getName()));
-                            }
-                            if (history.getStatus() == HoneyStatus.CHO_PHE_DUYET) {
-                                response.setPointGet("[Chờ phê duyệt]");
-                            } else {
-                                response.setPoint("[Bị từ chối]");
-                            }
-                        }
-                    } else if (history.getType() == TypeHistory.PHE_DUYET_QUA) {
-                        Gift gift = giftRepository.findById(history.getGiftId()).orElse(null);
-
-                        if (gift != null) {
-                            response.setImage(gift.getImage());
-                            response.setContent("Mở x" + history.getQuantity() + " gói quà " + " " + gift.getName() +
-                                                "[ " + history.getSubject() + " - " + history.getClassName() + " - " +
-                                                apiidentity.handleCallApiGetUserById(history.getTeacherId()).getUserName() + " ]");
-                            if (history.getStatus() == HoneyStatus.CHO_PHE_DUYET) {
-                                response.setPointGet("[Chờ phê duyệt]");
-                            } else {
-                                response.setPoint("[Bị từ chối]");
-                            }
-                        }
-                    }
-                    return response;
-                }
-        ).toList();
-        Map<String, Object> result = new HashMap<>();
-        result.put("data", listResponse);
-        result.put("totalPages", list.getTotalPages());
-        result.put("currentPage", list.getNumber());
-        return result;
+//        Page<History> list;
+//        Sort sort = Sort.by(Sort.Direction.DESC, "lastModifiedDate");
+//        Pageable pageable = PageRequest.of(page, 5, sort);
+//        try {
+//            list = historyRepository.getListRequest(udpmHoney.getIdUser(), TypeHistory.values()[type], pageable);
+//        } catch (Exception e) {
+//            list = historyRepository.getListRequest(udpmHoney.getIdUser(), null, pageable);
+//        }
+//        List<StudentHistoryResponse> listResponse = list.getContent().stream().map(
+//                history -> {
+//                    StudentHistoryResponse response = new StudentHistoryResponse();
+//                    if (history.getType() == TypeHistory.DOI_QUA) {
+//                        Gift gift = giftRepository.findById(history.getGiftId()).orElse(null);
+//                        if (gift != null) {
+//                            response.setImage(gift.getImage());
+//                            Honey honey = honeyRepository.findById(history.getHoneyId()).orElse(null);
+//                            if (honey != null) {
+//                                categoryRepository.findById(honey.getHoneyCategoryId()).ifPresent(category ->
+//                                        response.setContent("Đổi " + history.getHoneyPoint() * history.getQuantity() + " mật " + category.getName() +
+//                                                            " lấy x" + history.getQuantity() + " gói quà " + " " + gift.getName()));
+//                            }
+//                            if (history.getStatus() == HoneyStatus.CHO_PHE_DUYET) {
+//                                response.setPointGet("[Chờ phê duyệt]");
+//                            } else {
+//                                response.setPoint("[Bị từ chối]");
+//                            }
+//                        }
+//                    } else if (history.getType() == TypeHistory.PHE_DUYET_QUA) {
+//                        Gift gift = giftRepository.findById(history.getGiftId()).orElse(null);
+//
+//                        if (gift != null) {
+//                            response.setImage(gift.getImage());
+//                            response.setContent("Mở x" + history.getQuantity() + " gói quà " + " " + gift.getName() +
+//                                                "[ " + history.getSubject() + " - " + history.getClassName() + " - " +
+//                                                apiidentity.handleCallApiGetUserById(history.getTeacherId()).getUserName() + " ]");
+//                            if (history.getStatus() == HoneyStatus.CHO_PHE_DUYET) {
+//                                response.setPointGet("[Chờ phê duyệt]");
+//                            } else {
+//                                response.setPoint("[Bị từ chối]");
+//                            }
+//                        }
+//                    }
+//                    return response;
+//                }
+//        ).toList();
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("data", listResponse);
+//        result.put("totalPages", list.getTotalPages());
+//        result.put("currentPage", list.getNumber());
+//        return result;
+        return null;
     }
 }

@@ -15,10 +15,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AdRequestConversionHistoryRepository extends HistoryRepository {
     @Query(value = """
-                SELECT c.name as nameCategory,c.id as categoryId, h.gift_id , h.id,h.name_gift, h.honey_point, h.last_modified_date,h.quantity,
-                h.created_date, h.status, h.student_id, h.note FROM history h  inner join
-                 honey hn on hn.id = h.honey_id inner join category c 
-                 on hn.honey_category_id = c.id 
+                SELECT c.name as nameCategory,c.id as categoryId, hd.gift_id ,hd.id as idHistoryDetail, h.id,hd.name_gift, hd.honey_point, h.last_modified_date,hd.quantity_gift ,
+                h.created_date, h.status, h.student_id, h.note FROM history h 
+                inner join history_detail hd on hd.history_id = h.id
+                inner join honey hn on hn.id = hd.honey_id 
+                inner join category c on hn.honey_category_id = c.id    
                   WHERE (:#{#filter.status} IS NULL OR h.status = :#{#filter.status})
             AND (:#{#filter.idCategory} IS NULL OR c.id = :#{#filter.idCategory})
             AND (:#{#filter.idStudent} IS NULL OR h.student_id = :#{#filter.idStudent})
@@ -28,10 +29,11 @@ public interface AdRequestConversionHistoryRepository extends HistoryRepository 
                                                            Pageable pageable);
 
     @Query(value = """
-                SELECT c.name as nameCategory,c.id as categoryId, h.gift_id , h.id,h.name_gift, h.honey_point, h.last_modified_date,h.quantity,
-                h.created_date, h.status, h.student_id, h.note FROM history h  inner join
-                 honey hn on hn.id = h.honey_id inner join category c 
-                 on hn.honey_category_id = c.id 
+                SELECT c.name as nameCategory,c.id as categoryId, hd.gift_id , h.id,hd.name_gift, hd.honey_point, h.last_modified_date,hd.quantity_gift ,
+                h.created_date, h.status, h.student_id, h.note FROM history h 
+                inner join history_detail hd on hd.history_id = h.id
+                inner join honey hn on hn.id = hd.honey_id 
+                inner join category c on hn.honey_category_id = c.id     
                   WHERE (:#{#filter.status} IS NULL OR h.status = :#{#filter.status})
             AND (:#{#filter.idCategory} IS NULL OR c.id = :#{#filter.idCategory})
             AND (:#{#filter.idStudent} IS NULL OR h.student_id = :#{#filter.idStudent})
@@ -41,11 +43,11 @@ public interface AdRequestConversionHistoryRepository extends HistoryRepository 
                                                                   Pageable pageable);
 
     @Query(value = """
-                SELECT h.gift_id , h.id, h.name_gift, h.quantity,
-                h.created_date, h.status, h.student_id, h.note FROM history h
+                SELECT hd.gift_id , h.id,hd.id as idHistoryDetail, hd.name_gift, hd.quantity_gift,
+                h.created_date, h.status, h.student_id, h.note FROM history h join history_detail hd on hd.history_id = h.id
                 WHERE (:#{#filter.status} IS NULL OR h.status = :#{#filter.status})
                     AND (:#{#filter.idStudent} IS NULL OR h.student_id = :#{#filter.idStudent})
-                    AND h.type = 4 AND h.status = 0 ORDER BY h.last_modified_date DESC
+                    AND h.type = 2 AND h.status = 0 ORDER BY h.last_modified_date DESC
                 """, nativeQuery = true)
     Page<AdminRequestConversionHistoryAddItemResponse> getHistoryRequestAddItem(@Param("filter") AdminCreateConversionHistoryRequest filter,
                                                                                 Pageable pageable);
