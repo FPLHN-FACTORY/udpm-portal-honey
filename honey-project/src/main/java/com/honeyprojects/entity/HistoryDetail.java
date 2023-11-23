@@ -36,9 +36,6 @@ public class HistoryDetail extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_ID)
     private String chestId;
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String historyId;
-
     private Status status;
 
     private Integer quantityGift;

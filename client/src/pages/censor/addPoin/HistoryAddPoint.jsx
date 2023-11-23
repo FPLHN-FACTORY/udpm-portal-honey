@@ -24,7 +24,6 @@ import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
 
 export default function HistoryAddPoint() {
-
   const dispatch = useAppDispatch();
   const [totalPage, setTotalPage] = useState(1);
   const [filter, setFilter] = useState({ page: 0 });
@@ -71,10 +70,12 @@ export default function HistoryAddPoint() {
   };
 
   const data = useAppSelector(GetHistory).map((data) => {
+    console.log(data);
+
     return {
       ...data,
       key: data.id,
-      createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
+      createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
   });

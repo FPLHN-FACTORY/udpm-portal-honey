@@ -39,7 +39,7 @@ public interface StudentUpgradeRateRepository extends UpgradeRateRepository {
              JOIN upgrade_rate_gift ur ON ur.id_upgrade_rate = u.id
              LEFT JOIN gift g ON g.id = ur.id_gift
              LEFT JOIN category c1 ON c1.id = u.destination_honey
-             LEFT JOIN category c2 ON C2.id = u.original_honey
+             LEFT JOIN category c2 ON c2.id = u.original_honey
              WHERE ( :#{#request.name} IS NULL 
                 OR :#{#request.name} LIKE ''
                 OR c1.name LIKE :#{#request.name} 
