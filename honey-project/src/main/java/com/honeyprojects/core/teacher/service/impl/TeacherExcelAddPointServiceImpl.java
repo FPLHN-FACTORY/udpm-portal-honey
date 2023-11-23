@@ -187,6 +187,7 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
         String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_add_point" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
 
         Workbook workbook = new XSSFWorkbook();
+        // Sheet 1
         Sheet sheet = workbook.createSheet("Trang 1");
 
         CellStyle headerStyle = workbook.createCellStyle();
@@ -249,6 +250,10 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
         Font emptyHeaderFont = workbook.createFont();
         emptyHeaderFont.setColor(IndexedColors.RED.getIndex());
         emptyHeaderStyle.setFont(emptyHeaderFont);
+
+        // Sheet 2
+//        Sheet sheet2 = workbook.createSheet("Trang 2");
+//        createSheetContent(sheet2, workbook);
 
         try {
             FileOutputStream outputStream = new FileOutputStream(outputPath);
