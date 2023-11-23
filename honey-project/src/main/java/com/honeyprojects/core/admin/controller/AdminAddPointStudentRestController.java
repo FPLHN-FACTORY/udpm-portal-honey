@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/add-point-student")
+@RequestMapping("/api/censor/add-point-student")
 public class AdminAddPointStudentRestController {
 
     @Autowired

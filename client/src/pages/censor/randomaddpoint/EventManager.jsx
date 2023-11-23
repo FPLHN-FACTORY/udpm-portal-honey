@@ -14,8 +14,17 @@ import {
   } from "@fortawesome/free-solid-svg-icons";
   import { Option } from "antd/es/mentions";
 import { SearchOutlined } from "@ant-design/icons";
+import ModalImportExcelEvent from "./ModalImportExcelEvent";
+import { useEffect, useState } from "react";
+import { GetCategory, SetCategory } from "../../../app/reducers/category/category.reducer";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { AddPointStudentAPI } from "../../../apis/censor/add-point/add-point-student.api";
   
   export default function EventManager() {
+    const [open, setOpen] = useState(false);
+    const dispatch = useAppDispatch();
+    const [category, setCategory] = useState("");
+    const [nameFile, setNameFile] = useState("");
     const columns = [
       {
         title: "Name",
@@ -56,6 +65,18 @@ import { SearchOutlined } from "@ant-design/icons";
         tags: ["cool", "teacher"],
       },
     ];
+
+    const fetchDataCate = () => {
+      AddPointStudentAPI.getCategory().then((respose) => {
+        dispatch(SetCategory(respose.data.data));
+      })
+    }
+
+    useEffect(() => {
+      fetchDataCate();
+    },[])
+
+    const categoryData = useAppSelector(GetCategory);
   
     return (
       <>
@@ -87,8 +108,11 @@ import { SearchOutlined } from "@ant-design/icons";
                 prefix={<SearchOutlined />}
               />
             </Form.Item>
-              <Select placeholder='Thể loại'  style={{width: 400, marginRight: "10px" }}>
-                <Option value="" >Tất cả</Option>
+              <Select placeholder='Thể loại'  style={{width: 400, marginRight: "10px" }} value={category} onChange={(value) => setCategory(value)}>
+                <Option value="" disabled={true}>Chọn thể loại</Option>
+                {categoryData.map((category) => 
+                  <Option value={category.id}>{category.name}</Option>
+                )}
               </Select>
               <Button
                 style={{
@@ -96,9 +120,18 @@ import { SearchOutlined } from "@ant-design/icons";
                   backgroundColor: "rgb(55, 137, 220)",
                   color: "white",
                 }}
+                onClick={() => setOpen(true)}
               >
                 Import excel
               </Button>
+              {open && (
+                  <ModalImportExcelEvent
+                    open={open}
+                    setOpen={setOpen}
+                    nameFile={nameFile}
+                    setNameFile={setNameFile}
+                  />
+                )}
             </Row>
           </div>
         </Card>
