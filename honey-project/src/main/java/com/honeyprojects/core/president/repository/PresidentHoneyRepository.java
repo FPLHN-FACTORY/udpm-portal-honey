@@ -1,4 +1,4 @@
-package com.honeyprojects.core.president.service;
+package com.honeyprojects.core.president.repository;
 
 import com.honeyprojects.core.teacher.model.request.TeacherGetPointRequest;
 import com.honeyprojects.core.teacher.model.response.TeacherPointResponse;

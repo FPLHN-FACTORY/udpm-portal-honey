@@ -1,7 +1,5 @@
 package com.honeyprojects.core.president.service;
 
-import com.honeyprojects.core.admin.model.response.AdminAddItemBO;
-import com.honeyprojects.core.admin.model.response.AdminAddItemDTO;
 import com.honeyprojects.core.president.model.response.PresidentAddItemBO;
 import com.honeyprojects.core.president.model.response.PresidentAddItemDTO;
 import org.springframework.web.multipart.MultipartFile;

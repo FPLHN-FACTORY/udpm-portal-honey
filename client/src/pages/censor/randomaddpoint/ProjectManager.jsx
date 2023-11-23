@@ -11,8 +11,17 @@ import {
   faFilter,
 } from "@fortawesome/free-solid-svg-icons";
 import { Option } from "antd/es/mentions";
+import { AddPointStudentAPI } from "../../../apis/censor/add-point/add-point-student.api";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { GetCategory, SetCategory } from "../../../app/reducers/category/category.reducer";
+import ModalImportExcelLab from "./ModalImportExcelEvent";
 
 export default function ProjectManager() {
+  const [open, setOpen] = useState(false);
+    const dispatch = useAppDispatch();
+    const [category, setCategory] = useState("");
+    const [nameFile, setNameFile] = useState("");
   const columns = [
     {
       title: "Name",
@@ -54,6 +63,18 @@ export default function ProjectManager() {
     },
   ];
 
+  const fetchDataCate = () => {
+    AddPointStudentAPI.getCategory().then((respose) => {
+      dispatch(SetCategory(respose.data.data));
+    })
+  }
+
+  useEffect(() => {
+    fetchDataCate();
+  },[])
+
+  const categoryData = useAppSelector(GetCategory);
+
   return (
     <>
     <section id="project_manager">
@@ -66,18 +87,30 @@ export default function ProjectManager() {
           />{" "}
           <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span>
           <Row gutter={24} style={{ paddingTop: "20px" }}>
-            <Select placeholder='Thể loại'  style={{ width: 900, marginRight: "10px" }}>
-              <Option value="" >Tất cả</Option>
-            </Select>
+          <Select placeholder='Thể loại'  style={{width: 400, marginRight: "10px" }} value={category} onChange={(value) => setCategory(value)}>
+                <Option value="" disabled={true}>Chọn thể loại</Option>
+                {categoryData.map((category) => 
+                  <Option value={category.id}>{category.name}</Option>
+                )}
+              </Select>
             <Button
               style={{
                 marginRight: "8px",
                 backgroundColor: "rgb(55, 137, 220)",
                 color: "white",
               }}
+              onClick={() => setOpen(true)}
             >
               Import excel
             </Button>
+            {open && (
+                  <ModalImportExcelLab
+                    open={open}
+                    setOpen={setOpen}
+                    nameFile={nameFile}
+                    setNameFile={setNameFile}
+                  />
+                )}
           </Row>
         </div>
       </Card>

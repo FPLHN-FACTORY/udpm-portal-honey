@@ -1,8 +1,6 @@
 package com.honeyprojects.core.teacher.controller;
 
-import com.honeyprojects.core.admin.service.CensorRequestManagerService;
 import com.honeyprojects.core.common.base.ResponseObject;
-import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.teacher.model.request.TeacherConvertionHoneyRequest;
 import com.honeyprojects.core.teacher.model.request.TeacherGetPointRequest;
 import com.honeyprojects.core.teacher.service.TeacherAddPointService;
@@ -22,6 +20,7 @@ public class TeacherConvertionHoneyController {
 
     @Autowired
     private TeacherConvertionHoneyService teacherConvertionHoneyService;
+
     @Autowired
     private TeacherAddPointService teacherAddPointService;
 
