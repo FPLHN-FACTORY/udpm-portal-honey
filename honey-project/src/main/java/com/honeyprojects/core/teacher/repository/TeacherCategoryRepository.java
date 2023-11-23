@@ -1,6 +1,8 @@
 package com.honeyprojects.core.teacher.repository;
 
+import com.honeyprojects.core.admin.model.response.AdminExportCategoryResponse;
 import com.honeyprojects.core.teacher.model.response.TeacherCategoryResponse;
+import com.honeyprojects.entity.Category;
 import com.honeyprojects.repository.CategoryRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -22,4 +24,10 @@ public interface TeacherCategoryRepository extends CategoryRepository {
             WHERE c.name IN (:names) AND c.category_status <> 0
             """, nativeQuery = true)
     List<TeacherCategoryResponse> getCategoriesByNames(Set<String> names);
+
+    @Query(value = """
+            SELECT c.name, c.category_status FROM category c
+            WHERE c.category_status <> 0
+            """, nativeQuery = true)
+    List<AdminExportCategoryResponse> getCategoryToExport();
 }

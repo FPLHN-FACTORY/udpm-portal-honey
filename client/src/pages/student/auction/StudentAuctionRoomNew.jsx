@@ -31,7 +31,7 @@ import ModalAddAuction from "./model/addAucotionRoom";
 import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 import { GetUser } from "../../../app/reducers/users/users.reducer";
-
+import { AppConfig } from "../../../AppConfig";
 export default function StudentAuctionRoomNew() {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
@@ -258,7 +258,7 @@ export default function StudentAuctionRoomNew() {
   const [stompClientAll, setStompClientAll] = useState(null);
   useEffect(() => {
     const socket = new SockJS(
-      "http://localhost:2508/api/portal-honey-websocket-endpoint"
+      AppConfig.apiUrl + "/portal-honey-websocket-endpoint"
     );
     const stompClient = Stomp.over(socket);
 

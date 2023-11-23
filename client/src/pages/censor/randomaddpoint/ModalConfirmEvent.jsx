@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../app/hooks";
 import { getToken } from "../../../helper/userToken";
 
-export default function ModalConfirm(props) {
+export default function ModalConfirmEvent(props) {
   const {
     openConfirm,
     setOpenConfirm,
