@@ -1,8 +1,6 @@
 package com.honeyprojects.core.teacher.repository;
 
-import com.honeyprojects.core.president.model.response.PresidentCategoryResponse;
 import com.honeyprojects.core.teacher.model.response.TeacherCategoryResponse;
-import com.honeyprojects.entity.Category;
 import com.honeyprojects.repository.CategoryRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
