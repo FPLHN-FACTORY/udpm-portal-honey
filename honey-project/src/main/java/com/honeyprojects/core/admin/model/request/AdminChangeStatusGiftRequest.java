@@ -9,6 +9,8 @@ public class AdminChangeStatusGiftRequest {
 
     String idHistory;
 
+    String idHistoryDetail;
+
     int status;
 
     String idGift;
@@ -17,6 +19,6 @@ public class AdminChangeStatusGiftRequest {
 
     String note;
 
-    Integer quantity;
+    Integer quantityGift;
 
 }

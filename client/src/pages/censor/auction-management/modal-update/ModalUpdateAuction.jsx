@@ -167,7 +167,7 @@ const ModalUpdateAuction = ({ visible, onCancel, auction, fetchAllData }) => {
                 value={status}
                 onChange={(e) => {
                   setStatus(e.target.value);
-                  (e.target.value);
+                  // (e.target.value);
                 }}
               >
                 <Radio value={"0"}>Mở</Radio>

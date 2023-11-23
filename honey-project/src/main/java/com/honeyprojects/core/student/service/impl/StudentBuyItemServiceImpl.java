@@ -126,16 +126,17 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
         history.setCreatedAt(dateNow);
         history.setNote(createRequest.getNote());
         history.setStudentId(createRequest.getStudentId());
-
+        studentCreateRequestConversionRepository.save(history);
 
         historyDetail.setGiftId(createRequest.getGiftId());
         historyDetail.setHoneyId(honey.getId());
         historyDetail.setNameGift(createRequest.getNameGift());
         historyDetail.setHoneyPoint(createRequest.getHoneyPoint());
         historyDetail.setQuantityGift(createRequest.getQuantity());
+        historyDetail.setHistoryId(history.getId());
         historyDetailRepository.save(historyDetail);
 
-        return studentCreateRequestConversionRepository.save(history);
+        return history;
 
 
     }
