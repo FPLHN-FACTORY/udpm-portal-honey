@@ -236,130 +236,130 @@ export default function RequestConversion() {
   };
 
   return (
-    <div className="add-point">
-      <Card
-        className="mb-2"
-        style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}
-      >
-        {" "}
-        <FontAwesomeIcon
-          icon={faFilter}
-          size="2px"
-          style={{ fontSize: "26px" }}
-        />{" "}
-        <span
-          style={{
-            fontSize: "18px",
-            fontWeight: "500",
-          }}
+      <div className="add-point">
+        <Card
+          className="mb-2"
+          style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}
         >
-          Bộ lọc
-        </span>
-        <Form onFinish={onFinishSearch}>
-          <Space size={"large"} style={{ marginTop: "15px" }}>
-            <Form.Item name="email" className="search-input">
-              <Input
-                style={{ width: "300px" }}
-                size="small"
-                placeholder="Nhập email sinh viên cần tìm"
-                prefix={<SearchOutlined />}
-              />
-            </Form.Item>
-            <Form.Item name={"gift"}>
-              <Select
-                showSearch
-                style={{ width: "150px" }}
-                size="large"
-                placeholder="Loại quà"
-                options={[
-                  { value: null, label: "Tất cả" },
-                  ...filterGift.map((gift) => {
-                    return {
-                      value: gift.id,
-                      label: gift.name,
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
-            <Form.Item name={"lop"}>
-              <Select
-                showSearch
-                style={{ width: "150px" }}
-                size="large"
-                placeholder="Lớp"
-                options={[
-                  { value: null, label: "Tất cả" },
-                  ...filterClass.map((fclass) => {
-                    return {
-                      value: fclass,
-                      label: fclass,
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
-            <Button
-              htmlType="submit"
-              type="primary"
-              className="mr-10 search-button"
-            >
-              Lọc
-            </Button>
-          </Space>
-        </Form>
-      </Card>
-      <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
-        <Space
-          style={{
-            justifyContent: "space-between",
-            display: "flex",
-            marginBottom: "16px",
-          }}
-        >
-          <div>
-            <span style={{ fontSize: "18px" }}>
-              <FontAwesomeIcon icon={faRectangleList} size="xl" />
-              <b style={{ marginLeft: "5px", fontWeight: "500" }}>
-                Danh sách yêu cầu
-              </b>
-            </span>
-          </div>
-          <div className="flex flex-row-reverse">
+          {" "}
+          <FontAwesomeIcon
+            icon={faFilter}
+            size="2px"
+            style={{ fontSize: "26px" }}
+          />{" "}
+          <span
+            style={{
+              fontSize: "18px",
+              fontWeight: "500",
+            }}
+          >
+            Bộ lọc
+          </span>
+          <Form onFinish={onFinishSearch}>
+            <Space size={"large"} style={{ marginTop: "15px" }}>
+              <Form.Item name="email" className="search-input">
+                <Input
+                  style={{ width: "400px" }}
+                  size="small"
+                  placeholder="Nhập email sinh viên cần tìm"
+                  prefix={<SearchOutlined />}
+                />
+              </Form.Item>
+              <Form.Item name={"gift"}>
+                <Select
+                  showSearch
+                  style={{ width: "260px" }}
+                  size="large"
+                  placeholder="Loại quà"
+                  options={[
+                    { value: null, label: "Tất cả" },
+                    ...filterGift.map((gift) => {
+                      return {
+                        value: gift.id,
+                        label: gift.name,
+                      };
+                    }),
+                  ]}
+                />
+              </Form.Item>
+              <Form.Item name={"lop"}>
+                <Select
+                  showSearch
+                  style={{ width: "260px" }}
+                  size="large"
+                  placeholder="Lớp"
+                  options={[
+                    { value: null, label: "Tất cả" },
+                    ...filterClass.map((fclass) => {
+                      return {
+                        value: fclass,
+                        label: fclass,
+                      };
+                    }),
+                  ]}
+                />
+              </Form.Item>
+              <Button
+                htmlType="submit"
+                type="primary"
+                className="mr-10 search-button"
+              >
+                Lọc
+              </Button>
+            </Space>
+          </Form>
+        </Card>
+        <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+          <Space
+            style={{
+              justifyContent: "space-between",
+              display: "flex",
+              marginBottom: "16px",
+            }}
+          >
             <div>
-              <span>
-                <Tooltip>
-                  <button
-                    className="add-button1"
-                    onClick={() => {
-                      handleConfirm();
-                    }}
-                  >
-                    Xác nhận{" "}
-                  </button>
-                </Tooltip>
+              <span style={{ fontSize: "18px" }}>
+                <FontAwesomeIcon icon={faRectangleList} size="xl" />
+                <b style={{ marginLeft: "5px", fontWeight: "500" }}>
+                  Danh sách yêu cầu
+                </b>
               </span>
             </div>
-          </div>
-        </Space>
-        <Table
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={data}
-          rowKey="key"
-          pagination={false}
-        />
-        <div className="mt-10 text-center mb-10">
-          <Pagination
-            simple
-            current={filter.page + 1}
-            onChange={(page) => {
-              setFilter({ ...filter, page: page - 1 });
-            }}
-            total={totalPage * 10}
+            <div className="flex flex-row-reverse">
+              <div>
+                <span>
+                  <Tooltip>
+                    <button
+                      className="add-button1"
+                      onClick={() => {
+                        handleConfirm();
+                      }}
+                    >
+                      Xác nhận{" "}
+                    </button>
+                  </Tooltip>
+                </span>
+              </div>
+            </div>
+          </Space>
+          <Table
+            rowSelection={rowSelection}
+            columns={columns}
+            dataSource={data}
+            rowKey="key"
+            pagination={false}
           />
-        </div>
-      </Card>
-    </div>
+          <div className="mt-10 text-center mb-10">
+            <Pagination
+              simple
+              current={filter.page + 1}
+              onChange={(page) => {
+                setFilter({ ...filter, page: page - 1 });
+              }}
+              total={totalPage * 10}
+            />
+          </div>
+        </Card>
+      </div>
   );
 }

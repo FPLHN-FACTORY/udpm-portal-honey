@@ -2,9 +2,7 @@ package com.honeyprojects.entity;
 
 import com.honeyprojects.entity.base.PrimaryEntity;
 import com.honeyprojects.infrastructure.contant.EntityProperties;
-import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.Status;
-import com.honeyprojects.infrastructure.contant.TypeHistory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -14,12 +12,8 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "history")
-public class History extends PrimaryEntity {
-
-    private Long changeDate;
-
-    private Long createdAt;
+@Table(name = "history_detail")
+public class HistoryDetail extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_ID)
     private String studentId;
@@ -30,14 +24,20 @@ public class History extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_ID)
     private String teacherId;
 
-    @Column(length = EntityProperties.LENGTH_NOTE)
-    private String note;
+    @Column(length = EntityProperties.LENGTH_ID)
+    private String honeyId;
 
-    private HoneyStatus status;
+    @Column(length = EntityProperties.LENGTH_ID)
+    private String giftId;
 
-    private TypeHistory type;
+    @Column(length = EntityProperties.LENGTH_ID)
+    private String historyId;
 
-    private String className;
+    private Status status;
 
-    private String subject;
+    private Integer quantityGift;
+
+    private Integer honeyPoint;
+
+    private String nameGift;
 }

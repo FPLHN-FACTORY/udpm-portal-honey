@@ -151,8 +151,8 @@ export default function BuyGiftHistory() {
     },
     {
       title: "Số lượng",
-      dataIndex: "quantity",
-      key: "quantity",
+      dataIndex: "quantityGift",
+      key: "quantityGift",
     },
     {
       title: "Điểm trừ",

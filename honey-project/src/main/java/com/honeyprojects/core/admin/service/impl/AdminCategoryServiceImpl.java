@@ -95,6 +95,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     @Override
     @Transactional
     public Category addCategory(AdminCreateCategoryRequest request) throws IOException {
+        List<Category> getAllCate = adminCategoryRepository.findAll();
         StringBuilder contentLogger = new StringBuilder();
         LoggerFunction loggerObject = new LoggerFunction();
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
@@ -120,6 +121,12 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
         ca.setCategoryStatus(CategoryStatus.values()[request.getCategoryStatus()]);
         ca.setTransactionRights(request.getTransactionRights() == 0 ? CategoryTransaction.FREE : CategoryTransaction.LIMIT);
         adminCategoryRepository.save(ca);
+        for(Category cate : getAllCate  ){
+            if(request.getTransactionRights() == 0 ){
+                cate.setTransactionRights(CategoryTransaction.LIMIT);
+                adminCategoryRepository.save(cate);
+            }
+        }
         contentLogger.append("Đã lưu thể loại có id là: " + ca.getId() + ".");
         try {
             rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
@@ -132,6 +139,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     @Override
     @Transactional
     public Category updateCategory(AdminUpdateCategoryRequest request, String id) throws IOException {
+        List<Category> getAllCate = adminCategoryRepository.findAll();
         StringBuilder contentLogger = new StringBuilder();
         LoggerFunction loggerObject = new LoggerFunction();
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
@@ -160,7 +168,9 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
         if (categoryOptional.isPresent()) {
             Category category = categoryOptional.get();
             category.setName(request.getName());
-            category.setImage(setImageToCloud(request, category.getImage()));
+            if(request.getImage() != null){
+                category.setImage(setImageToCloud(request, category.getImage()));
+            }
             category.setCategoryStatus(CategoryStatus.values()[request.getCategoryStatus()]);
             category.setTransactionRights(request.getTransactionRights() == 0 ? CategoryTransaction.FREE : CategoryTransaction.LIMIT);
             contentLogger.append("Đã Cập nhật thể loại có id truyền vào là: " + id + ".");
@@ -169,7 +179,15 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+            for(Category cate : getAllCate  ){
+                if(request.getTransactionRights() == 0 && !cate.getId().equals(id) ){
+                    cate.setTransactionRights(CategoryTransaction.LIMIT);
+                }
+                adminCategoryRepository.save(cate);
+            }
+
             return adminCategoryRepository.save(category);
+
         } else {
             contentLogger.append("Cập nhật không tồn tại category có id là: " + id + ".");
             try {
@@ -179,6 +197,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
             }
             throw new RestApiException("Cập nhật không tồn tại category có id là: " + id + ".");
         }
+
     }
 
     public String setImageToCloud(AdminUpdateCategoryRequest request, String image){

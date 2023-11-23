@@ -263,7 +263,7 @@ export default function RequestAddItemHistory() {
           <Space size={"large"}>
             <Form.Item name="userName" className="search-input">
               <Input
-                style={{ width: "300px" }}
+                style={{ width: "500px" }}
                 name="userName"
                 size="small"
                 placeholder="Nhập user name sinh viên cần tìm"
@@ -272,7 +272,7 @@ export default function RequestAddItemHistory() {
             </Form.Item>
             <Form.Item name={"idCategory"}>
               <Select
-                style={{ width: "150px" }}
+                style={{ width: "450px" }}
                 size="large"
                 placeholder="Loại điểm"
                 options={[
@@ -287,7 +287,7 @@ export default function RequestAddItemHistory() {
               htmlType="submit"
               type="primary"
               className="mr-10 search-button"
-              style={{ marginBottom: "25px" }}
+              style={{ marginBottom: "25px", backgroundColor: '#EEB30D'  }}
             >
               Lọc
             </Button>
