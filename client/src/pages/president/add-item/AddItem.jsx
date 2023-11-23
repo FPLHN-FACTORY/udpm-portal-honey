@@ -167,47 +167,51 @@ export default function AddItem() {
       <div className="add-point">
         <Card className="mb-2 py-1">
           <Form form={formSearch} className="d-flex" onFinish={onFinishSearch}>
-            <Button
-              htmlType="submit"
-              type="primary"
-              className="mr-10 search-button"
-            >
-              Search
-            </Button>
-            <Form.Item
-              name="code"
-              // rules={[
-              //   {
-              //     required: true,
-              //     whitespace: true,
-              //     message: "Vui lòng nhập mã sinh viên",
-              //   },
-              // ]}
-              className="search-input"
-            >
-              <Input
-                size="small"
-                placeholder="Nhập mã sinh viên cần tìm"
-                prefix={<SearchOutlined />}
-              />
-            </Form.Item>
+            <Row>
 
-            <Button
-              className="ml-auto import-button"
-              type="primary"
-              onClick={() => setOpenUpload(true)}
-            >
-              Import excel
-            </Button>
-            {openUpload && (
-              <ModalUpLoadFile
-                openUpload={openUpload}
-                setOpenUpload={setOpenUpload}
-                setDataPreview={setDataPreview}
-                nameFileUpload={nameFileUpload}
-                setNameFileUpload={setNameFileUpload}
-              />
-            )}
+              <Form.Item
+                name="code"
+                // rules={[
+                //   {
+                //     required: true,
+                //     whitespace: true,
+                //     message: "Vui lòng nhập mã sinh viên",
+                //   },
+                // ]}
+                className="search-input mr-10"
+                style={{width : 845}}
+              >
+                <Input
+                  size="small"
+                  placeholder="Nhập mã sinh viên cần tìm"
+                  prefix={<SearchOutlined />}
+                />
+              </Form.Item>
+              <Button
+                htmlType="submit"
+                type="primary"
+                className="mr-10 search-button"
+              >
+                Search
+              </Button>
+              <Button
+                className="ml-auto import-button"
+                type="primary"
+                onClick={() => setOpenUpload(true)}
+              >
+                Import excel
+              </Button>
+              {openUpload && (
+                <ModalUpLoadFile
+                  openUpload={openUpload}
+                  setOpenUpload={setOpenUpload}
+                  // setLoading={setLoading}
+                  setDataPreview={setDataPreview}
+                  nameFileUpload={nameFileUpload}
+                  setNameFileUpload={setNameFileUpload}
+                />
+              )}
+            </Row>
           </Form>
         </Card>
         {Object.keys(student).length > 0 ? (

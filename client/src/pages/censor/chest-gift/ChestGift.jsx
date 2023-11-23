@@ -159,29 +159,37 @@ export default function ChestGift() {
             style={{
               justifyContent: "center",
               display: "flex",
-              marginBottom: "16px",
+              marginTop: "20px",
             }}
           >
-            <button
+            <Button
               type="button"
-              className="search-button1"
-              style={{ marginTop: "20px", backgroundColor: "#537fe7" }}
+              style={{
+                marginLeft: "8px",
+                backgroundColor: "#FF9900",
+                color: "white",
+                outline: "none",
+                border: "none",
+              }}
               onClick={() => {
                 buttonClear();
               }}
             >
               Làm mới
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
-              className="search-button1"
-              style={{ marginTop: "20px" }}
+              style={{
+                marginRight: "8px",
+                backgroundColor: "rgb(55, 137, 220)",
+                color: "white",
+              }}
               onClick={() =>
                 handleSearch()
               }
             >
               Tìm kiếm
-            </button>
+            </Button>
           </Space>
       </Card>
 
