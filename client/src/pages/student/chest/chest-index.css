@@ -191,6 +191,15 @@
   object-fit: cover;
   /* border-radius: 50%; */
   border: 2px solid #ffffff66;
+  border-radius: 5px;
+}
+.chest__card__quantity {
+  position: absolute;
+  top: 100px;
+  right: 40px;
+  color: white;
+  font-weight: 450;
+  text-shadow: 1px 1px 1px gray; /* Kích thước và màu của viền */
 }
 
 .chest__card__body {

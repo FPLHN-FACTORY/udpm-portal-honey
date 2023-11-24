@@ -2,7 +2,7 @@ import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppConfig } from "./AppConfig";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 import NotFound from "./pages/404";
 import NotAuthorized from "./pages/401";
 import AuthGuard from "./guard/AuthGuard";

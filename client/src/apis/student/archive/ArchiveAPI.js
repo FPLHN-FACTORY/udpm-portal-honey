@@ -84,14 +84,14 @@ export class ArchiveAPI {
       url: `/${this.COMPONENT_NAME}/find-all-user?id=${id}`,
     });
   };
-  
+
   static getListClass = () => {
     return request({
       method: "POST",
       url: `/${this.COMPONENT_NAME}/list-class`,
     });
   };
-  
+
   static getScoreClass = (filter) => {
     return request({
       method: "POST",
@@ -99,12 +99,20 @@ export class ArchiveAPI {
       data: filter,
     });
   };
-  
+
   static getDetailScoreClass = (filter) => {
     return request({
       method: "POST",
       url: `/${this.COMPONENT_NAME}`,
       data: filter,
+    });
+  };
+
+  static deleteItem = (data, id) => {
+    return request({
+      method: "PUT",
+      url: `/${this.COMPONENT_NAME}/item/${id}`,
+      data: data,
     });
   };
 }

@@ -106,4 +106,9 @@ public class StudentArchiveController {
         return new ResponseObject(service.findArchiveByUser(id));
     }
 
+    @PutMapping("/item/{id}")
+    public ResponseObject deleteItem(@PathVariable("id") String id, @RequestBody StudentGetArchiveGiftRequest request) {
+        return new ResponseObject(service.deleteItem(id, request));
+    }
+
 }
