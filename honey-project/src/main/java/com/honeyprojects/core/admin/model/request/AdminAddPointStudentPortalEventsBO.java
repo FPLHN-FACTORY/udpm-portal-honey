@@ -10,7 +10,10 @@ import java.util.List;
 @Setter
 public class AdminAddPointStudentPortalEventsBO extends PageableRequest {
     private String code;
-    private List<String> lstStudentId;
+    private List<AdminAddPointStudentPortalEventsRequest> lstStudentId;
     private String categoryId;
     private Integer numberHoney;
+    private Long total;
+    private Long totalSuccess;
+    private Long totalError;
 }
