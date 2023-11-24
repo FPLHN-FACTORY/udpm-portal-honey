@@ -1,4 +1,4 @@
-import { Col } from "antd";
+import { Col, Popconfirm, Slider, message } from "antd";
 import React, { memo, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useState } from "react";
@@ -20,29 +20,11 @@ const ItemsChest = memo(() => {
   const [note, setNote] = useState("");
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const [archiveGift, setArchiveGift] = useState();
+  const [quantityDelete, setQuantityDelete] = useState(0);
 
   useEffect(() => {
     fetchItems();
   }, []);
-
-  function ImageRenderer({ image, quantity }) {
-    const byteArray = image ? image.split(",").map(Number) : [];
-    const base64ImageData = btoa(
-      String.fromCharCode.apply(null, new Uint8Array(byteArray))
-    );
-    const imageUrl = `data:image/jpeg;base64,${base64ImageData}`;
-
-    return (
-      <div style={{ position: "relative" }}>
-        <img
-          src={imageUrl}
-          style={{ width: "100%", height: "100%" }}
-          alt="Hình ảnh"
-        />
-        <div className="quantity-item">{quantity}</div>
-      </div>
-    );
-  }
 
   const handleTabClick = (index) => {
     setIsActive(index);
@@ -66,6 +48,23 @@ const ItemsChest = memo(() => {
 
   const quantity = useAppSelector(GetArchiveCountGift);
 
+  const handleConfirm = (id) => {
+    const data = {
+      quantity: quantityDelete,
+    };
+    ArchiveAPI.deleteItem(data, id)
+      .then((response) => {
+        dispatch(SetArchiveCountGift(parseInt(response.data.quantity)));
+        message.success("Xóa thành công!");
+      })
+      .catch((error) => {
+        message.error(error.response.data.message);
+      })
+      .finally(() => {
+        fetchItems();
+      });
+  };
+
   return (
     <section className="item__chest">
       <div className="item__chest__list" gutter={16}>
@@ -83,8 +82,9 @@ const ItemsChest = memo(() => {
               }}
             >
               <div className="chest__card__image">
-                <ImageRenderer image={data.image} quantity={data.quantity} />
+                <img src={data.image} alt="" />
               </div>
+              <div className="chest__card__quantity">{data.quantity}</div>
               <div className="chest__card__body">
                 <h3>{data.name}</h3>
               </div>
@@ -92,11 +92,11 @@ const ItemsChest = memo(() => {
           </Col>
         ))}
       </div>
-      {showAdditionalInfo ? (
+      {showAdditionalInfo && quantity >= 0 ? (
         <div className="chest__item__detail">
           <div className="chest__detail__header">
             <div className="chest__detail__image">
-              <ImageRenderer image={archiveGift.image} />
+              <img src={archiveGift.image} alt="" />
             </div>
             <div class="chest__detail__body">
               <h3>{name}</h3>
@@ -105,6 +105,29 @@ const ItemsChest = memo(() => {
           </div>
           <div className="chest__detail__text">
             <span>{note}</span>
+          </div>
+          <div className="chest__detail__button">
+            <Popconfirm
+              title={
+                <div>
+                  <p>Số lượng:</p>
+                  <Slider
+                    value={quantityDelete}
+                    onChange={(e) => {
+                      setQuantityDelete(e);
+                    }}
+                    max={quantity}
+                    min={0}
+                    style={{ width: "70px" }}
+                  />
+                </div>
+              }
+              onConfirm={() => handleConfirm(archiveGift.id)}
+              okText="Xác nhận"
+              cancelText="Hủy"
+            >
+              <div>Xóa</div>
+            </Popconfirm>
           </div>
         </div>
       ) : null}

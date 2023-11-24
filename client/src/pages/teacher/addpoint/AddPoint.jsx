@@ -9,24 +9,23 @@ import {
   Input,
   InputNumber,
   Row,
-  Spin,
   Tag,
   message,
   Select,
+  Tooltip,
+  Table,
+  Space,
 } from "antd";
-import {
-  SearchOutlined,
-  SendOutlined,
-  VerticalAlignBottomOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined, SendOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
   GetCategory,
   SetCategory,
 } from "../../../app/reducers/category/category.reducer";
 import { AddPointAPI } from "../../../apis/teacher/add-point/add-point.api";
-// import { AddPointExcelAPI } from "../../../apis/teacher/add-point/add-point-excel.api";
+import { GetImport } from "../../../app/reducers/import/import.president.reducer";
 import ModalImportExcel from "./ModalImportExcel";
+import ModalConfirm from "./ModalConfirm";
 
 export default function AddPoint() {
   const dispatch = useAppDispatch();
@@ -34,29 +33,22 @@ export default function AddPoint() {
   const [student, setStudent] = useState({});
   const [honeyStudent, setHoneyStudent] = useState({ honey: 0 });
   const [categorySelected, setCategorySelected] = useState();
-
-  const [loading, setLoading] = useState(false);
+  const [dataPreview, setDataPreview] = useState([]);
   const [open, setOpen] = useState(false);
-
   const [nameFile, setNameFile] = useState("");
-
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const previewImport = useAppSelector(GetImport);
   const [formSearch] = Form.useForm();
   const [formAddPoint] = Form.useForm();
 
   useEffect(() => {
-    setLoading(true);
-    AddPointAPI.getCategory()
-      .then((response) => {
-        setCategorySelected(response.data.data[0].id);
-        dispatch(SetCategory(response.data.data));
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    AddPointAPI.getCategory().then((response) => {
+      setCategorySelected(response.data.data[0].id);
+      dispatch(SetCategory(response.data.data));
+    });
   }, [dispatch]);
 
   const onFinishSearch = (value) => {
-    setLoading(true);
     AddPointAPI.searchStudent(value.code.trim()).then((response) => {
       if (response.data.success) {
         setStudent(response.data.data);
@@ -71,22 +63,18 @@ export default function AddPoint() {
         ]);
       }
     });
-    setLoading(false);
   };
 
   const onFinishAdd = (values) => {
-    setLoading(true);
     addPoint({
       ...values,
       honeyId: honeyStudent.id,
       studentId: student.id,
       categoryId: categorySelected,
     });
-    setLoading(false);
   };
 
   const addPoint = (data) => {
-    setLoading(true);
     AddPointAPI.addPoint(data)
       .then((response) => {
         if (response.data.success) {
@@ -101,11 +89,9 @@ export default function AddPoint() {
       .catch((error) => {
         console.log(error);
       });
-    setLoading(false);
   };
 
   const getHoney = (studentId, categoryId) => {
-    setLoading(true);
     AddPointAPI.getHoney(studentId, categoryId)
       .then((response) => {
         if (response.data.success) {
@@ -114,24 +100,64 @@ export default function AddPoint() {
           setHoneyStudent({ point: 0 });
         }
       })
-      .catch((error) => console.log(error))
-      .finally(() => {
-        setLoading(false);
-      });
+      .catch((error) => console.log(error));
   };
 
+  const handleClostPreview = () => {
+    setDataPreview([]);
+    setNameFile("");
+  };
+  const columsPreview = [
+    {
+      title: "Mã sinh viên",
+      dataIndex: "userName",
+      key: "username",
+      render: (_, record) => {
+        return record.userName === null ? (
+          <span style={{ color: "orange" }}>không có dữ liệu</span>
+        ) : (
+          <span>{record.userName}</span>
+        );
+      },
+    },
+    {
+      title: "Mật ong",
+      dataIndex: "lstHoney",
+      key: "lstHoney",
+      render: (_, record) => {
+        return <span>{record.lstHoney}</span>;
+      },
+    },
+    {
+      title: "Mô tả",
+      dataIndex: "note",
+      key: "note",
+      render: (_, record) => {
+        return <span>{record.note}</span>;
+      },
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "importMessage",
+      key: "importMessage",
+      render: (_, record) => {
+        return record.error === false ? (
+          <Tooltip title={record.importMessage}>
+            <span style={{ color: "green" }}>Thành công</span>
+          </Tooltip>
+        ) : (
+          <Tooltip title={record.importMessage}>
+            <span style={{ color: "red" }}>Thất bại</span>
+          </Tooltip>
+        );
+      },
+    },
+  ];
   return (
-    <Spin spinning={loading}>
+    <div>
       <div className="add-point">
         <Card className="mb-2 py-1">
           <Form form={formSearch} className="d-flex" onFinish={onFinishSearch}>
-            <Button
-              htmlType="submit"
-              type="primary"
-              className="mr-10 search-button"
-            >
-              Search
-            </Button>
             <Form.Item
               name="code"
               rules={[
@@ -142,6 +168,7 @@ export default function AddPoint() {
                 },
               ]}
               className="search-input"
+              style={{ width: 900, marginRight: 10 }}
             >
               <Input
                 size="small"
@@ -149,24 +176,46 @@ export default function AddPoint() {
                 prefix={<SearchOutlined />}
               />
             </Form.Item>
+            <Button
+              htmlType="submit"
+              type="primary"
+              className="mr-10 search-button"
+            >
+              Search
+            </Button>
             <Form.Item>
+              {/* <Button
+              className="button-css"
+              htmlFor="file-input"
+              style={{
+                marginLeft: "8px",
+                padding: "10px",
+              }}
+              onClick={() => setOpen(true)}
+            >
+              <VerticalAlignBottomOutlined />
+              Import Excel
+            </Button>
+            {open && (
+              <ModalImportExcel
+                open={open}
+                setOpen={setOpen}
+                nameFile={nameFile}
+                setNameFile={setNameFile}
+              />
+            )} */}
               <Button
-                className="button-css"
-                htmlFor="file-input"
-                style={{
-                  marginLeft: "8px",
-                  padding: "10px",
-                }}
+                className="ml-auto import-button"
+                type="primary"
                 onClick={() => setOpen(true)}
               >
-                <VerticalAlignBottomOutlined />
-                Import Excel
+                Import excel
               </Button>
               {open && (
                 <ModalImportExcel
                   open={open}
                   setOpen={setOpen}
-                  setLoading={setLoading}
+                  setDataPreview={setDataPreview}
                   nameFile={nameFile}
                   setNameFile={setNameFile}
                 />
@@ -307,6 +356,67 @@ export default function AddPoint() {
           </Card>
         )}
       </div>
-    </Spin>
+      {dataPreview.length > 0 && (
+        <Card style={{ borderTop: "5px solid #FFCC00", marginTop: "32px" }}>
+          <Space
+            style={{
+              justifyContent: "space-between",
+              display: "flex",
+              marginBottom: "24px",
+            }}
+          >
+            <div>
+              <b style={{ fontSize: "25px" }}>Dữ liệu import</b>
+            </div>
+            <div>
+              <span>
+                {previewImport && (
+                  <b style={{ fontSize: "15px" }}>
+                    <span style={{ color: "#FFCC00" }}>Tổng: </span>
+                    {previewImport.total} -
+                    <span style={{ color: "green" }}> Thành công: </span>
+                    {previewImport.totalSuccess} -
+                    <span style={{ color: "red" }}> Lỗi: </span>
+                    {previewImport.totalError}
+                  </b>
+                )}
+              </span>
+            </div>
+          </Space>
+          <Table
+            dataSource={dataPreview}
+            columns={columsPreview}
+            pagination={false}
+          />
+          <Space
+            style={{
+              justifyContent: "right",
+              display: "flex",
+              marginTop: "32px",
+            }}
+          >
+            <Button className="button-css" onClick={() => handleClostPreview()}>
+              Đóng
+            </Button>
+            <Button
+              disabled={previewImport.totalError < 1 ? false : true}
+              className="button-css"
+              onClick={() => setOpenConfirm(true)}
+            >
+              Thêm
+            </Button>
+            {openConfirm && (
+              <ModalConfirm
+                dataPreview={dataPreview}
+                openConfirm={openConfirm}
+                setOpenConfirm={setOpenConfirm}
+                setDataPreview={setDataPreview}
+                setNameFile={setNameFile}
+              />
+            )}
+          </Space>
+        </Card>
+      )}
+    </div>
   );
 }

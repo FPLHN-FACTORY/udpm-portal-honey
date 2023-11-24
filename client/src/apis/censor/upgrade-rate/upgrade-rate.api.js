@@ -26,6 +26,13 @@ export class UpgradeApi {
     });
   };
 
+  static getALLGift = () => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/gift-upgrade`,
+    });
+  };
+
   static getAllCensorExist = () => {
     return request({
       method: "GET",

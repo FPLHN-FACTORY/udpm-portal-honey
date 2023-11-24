@@ -48,13 +48,12 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
 
     @Override
     public List<AdminCategoryResponse> getCategory() {
-        return categoryRepository.getAllListCategory();
+        return categoryRepository.getAllCategory();
     }
 
     @Override
     public AdminPoinResponse getPointStudent(AdminGetPointRequest getPointRequest) {
-        Long dateNow = Calendar.getInstance().getTimeInMillis();
-        return honeyRepository.getPoint(getPointRequest, dateNow);
+        return honeyRepository.getPoint(getPointRequest);
     }
 
     @Override

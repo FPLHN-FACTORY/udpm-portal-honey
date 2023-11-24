@@ -1,6 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { Button, Pagination, Space, Table, Card, Input, Tooltip } from "antd";
+import {
+  Button,
+  Pagination,
+  Space,
+  Table,
+  Card,
+  Input,
+  Tooltip,
+  Row,
+  Col,
+} from "antd";
 import {
   PlusOutlined,
   EditOutlined,
@@ -34,11 +44,21 @@ export default function ChestGift() {
 
   useEffect(() => {
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    ChestAPI.fetchAll({
+      search: search,
+      page: current - 1,
+    }).then((response) => {
+      dispatch(SetChest(response.data.data.data));
+      setTotal(response.data.data.totalPages);
+    });
   }, [current]);
 
   const fetchData = () => {
     ChestAPI.fetchAll({
-      search: search,
+      search: "",
       page: current - 1,
     }).then((response) => {
       dispatch(SetChest(response.data.data.data));
@@ -48,13 +68,24 @@ export default function ChestGift() {
 
   const buttonClear = () => {
     setSearch("");
-    fetchData();
+    ChestAPI.fetchAll({
+      search: "",
+      page: current - 1,
+    }).then((response) => {
+      dispatch(SetChest(response.data.data.data));
+      setTotal(response.data.data.totalPages);
+    });
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
+  const handleSearch = () => {
     setCurrent(1);
-    fetchData();
+    ChestAPI.fetchAll({
+      search: search,
+      page: 0,
+    }).then((response) => {
+      dispatch(SetChest(response.data.data.data));
+      setTotal(response.data.data.totalPages);
+    });
   };
 
   const data = useAppSelector(GetChest);
@@ -116,7 +147,6 @@ export default function ChestGift() {
           style={{ fontSize: "26px" }}
         />{" "}
         <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span>
-        <form class="flex items-center" onSubmit={handleSearch}>
           <div class="relative w-full mr-6">
             <Input
               style={{ borderRadius: "30px", marginTop: "20px" }}
@@ -129,32 +159,38 @@ export default function ChestGift() {
             style={{
               justifyContent: "center",
               display: "flex",
-              marginBottom: "16px",
+              marginTop: "20px",
             }}
           >
-            <button
+            <Button
               type="button"
-              className="search-button1"
-              style={{ marginTop: "20px", backgroundColor: "#537fe7" }}
+              style={{
+                marginLeft: "8px",
+                backgroundColor: "#FF9900",
+                color: "white",
+                outline: "none",
+                border: "none",
+              }}
               onClick={() => {
                 buttonClear();
               }}
             >
               Làm mới
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
-              className="search-button1"
-              style={{ marginTop: "20px" }}
-              onClick={() => {
-                setCurrent(1);
-                fetchData();
+              style={{
+                marginRight: "8px",
+                backgroundColor: "rgb(55, 137, 220)",
+                color: "white",
               }}
+              onClick={() =>
+                handleSearch()
+              }
             >
               Tìm kiếm
-            </button>
+            </Button>
           </Space>
-        </form>
       </Card>
 
       <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>

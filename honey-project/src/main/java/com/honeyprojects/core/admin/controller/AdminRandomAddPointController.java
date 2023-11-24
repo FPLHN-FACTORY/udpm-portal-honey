@@ -102,5 +102,4 @@ public class AdminRandomAddPointController {
     public ResponseObject addChest(@PathVariable String name) {
         return new ResponseObject(adRandomAddPointService.addChest(name));
     }
-
 }

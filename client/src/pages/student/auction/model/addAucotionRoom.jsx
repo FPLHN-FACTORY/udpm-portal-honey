@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import {
   Button,
   Card,
@@ -10,7 +11,6 @@ import {
   Space,
   message,
 } from "antd";
-import { Base64Image } from "../../../util/ByteArrayToImage";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../../../app/hooks";
 import { GetUser } from "../../../../app/reducers/users/users.reducer";
@@ -99,7 +99,7 @@ export default function ModalAddAuction({
         message.success("Tạo đấu giá thành công.");
       })
       .catch((errorInfo) => {
-        console.log("Lỗi xảy ra:", errorInfo);
+        console.error("Lỗi xảy ra:", errorInfo);
       });
   };
 
@@ -182,9 +182,9 @@ export default function ModalAddAuction({
                         ) : (
                           <div>
                             <div className="item">
-                              <Base64Image
-                                base64String={archiveGift.image}
-                                css={{
+                              <img 
+                                src={archiveGift.image}
+                                style={{
                                   width: "100%",
                                   height: "100%",
                                 }}
@@ -313,9 +313,9 @@ export default function ModalAddAuction({
                                   alt="Ảnh mặc định"
                                 />
                               ) : (
-                                <Base64Image
-                                  base64String={square.image}
-                                  css={{
+                                <img
+                                  src={square.image}
+                                  style={{
                                     width: "100%",
                                     height: "100%",
                                   }}

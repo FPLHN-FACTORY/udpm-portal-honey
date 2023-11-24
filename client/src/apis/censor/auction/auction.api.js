@@ -5,25 +5,15 @@ export class AuctionAPI {
   static fetchAll = (filter) => {
     return request({
       method: "GET",
-      url:
-        `/${this.COMPONENT_NAME}` +
-        `/search?name=` +
-        filter.name +
-        `&status=` +
-        filter.status +
-        `&honeyCategoryId=` +
-        filter.honeyCategoryId +
-        `&page=` +
-        filter.page +
-        `&size=` +
-        filter.size,
+      url: `/${this.COMPONENT_NAME}/search`,
+      params: filter,
     });
   };
 
   static create = (data) => {
     return request({
       method: "POST",
-      url: `/${this.COMPONENT_NAME}` + `/add`,
+      url: `/${this.COMPONENT_NAME}/add`,
       data: data,
     });
   };

@@ -51,6 +51,7 @@ export default function Index() {
   useEffect(() => {
     CategoryAPI.fetchAll().then((response) => {
       dispatch(SetCategory(response.data.data.data));
+      console.log(response.data.data.data);
       setTotal(response.data.data.totalPages);
     });
   }, [dispatch]);
@@ -110,14 +111,10 @@ export default function Index() {
       align: "center",
       render: (image) => {
         if (image) {
-          const byteArray = image.split(",").map(Number);
-          const uint8Array = new Uint8Array(byteArray);
-          const blob = new Blob([uint8Array], { type: "image/jpeg" });
-          const imageUrl = URL.createObjectURL(blob);
           return (
             <div style={{ textAlign: "center" }}>
               <img
-                src={imageUrl}
+                src={image}
                 style={{ width: "40px", height: "40px", margin: "auto" }}
                 alt="Hình ảnh"
               />
@@ -147,7 +144,7 @@ export default function Index() {
       key: "categoryStatus",
       align: "center",
       render: (text) => {
-        if (text === "1") {
+        if (text === "2") {
           return (
             <span style={{ color: "green" }}>
               <CheckOutlined />
@@ -263,7 +260,6 @@ export default function Index() {
                 value={status}
                 onChange={(value) => {
                   setStatus(value);
-                  console.log(value);
                 }}
                 style={{
                   width: "100%",
@@ -279,7 +275,7 @@ export default function Index() {
                   Tất cả
                 </Option>
                 <Option
-                  value="1"
+                  value="2"
                   style={{
                     fontSize: "13px",
                   }}
@@ -287,7 +283,7 @@ export default function Index() {
                   Phê duyệt
                 </Option>
                 <Option
-                  value="2"
+                  value="1"
                   style={{
                     fontSize: "13px",
                   }}
@@ -303,7 +299,6 @@ export default function Index() {
                 value={transaction}
                 onChange={(value) => {
                   setTransaction(value);
-                  console.log(value);
                 }}
                 style={{
                   width: "100%",

@@ -6,7 +6,6 @@ import {
   Pagination,
   Select,
   Space,
-  Spin,
   Table,
   Tag,
   message,
@@ -46,7 +45,6 @@ const statusHistory = (status) => {
 };
 
 export default function ListRequest() {
-  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const columns = [
     {
@@ -120,7 +118,6 @@ export default function ListRequest() {
 
   const fetchData = (dispatch, filter) => {
     dispatch(SetHistory([]));
-    setLoading(true);
     CategoryAPI.fetchAllCategory()
       .then((response) => {
         dispatch(SetCategory(response.data.data));
@@ -129,7 +126,6 @@ export default function ListRequest() {
         message.error(error);
       })
       .finally(() => {
-        setLoading(true);
         const fetchData = async (filter) => {
           try {
             const response = await RequestManagerAPI.listRequest(filter);
@@ -150,7 +146,6 @@ export default function ListRequest() {
                 }
               })
             );
-            setLoading(false);
             dispatch(SetHistory(listHistory));
             setTotalPage(response.data.totalPages);
           } catch (error) {
@@ -173,7 +168,6 @@ export default function ListRequest() {
   const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
-    setLoading(true);
     if (value.userName === undefined || value.userName.trim().length === 0) {
       setFilter({
         ...filter,
@@ -203,14 +197,11 @@ export default function ListRequest() {
         })
         .catch((error) => console.error(error));
     }
-    setLoading(false);
   };
 
   const changeStatus = (idHistory, status) => {
-    setLoading(true);
     RequestManagerAPI.changeStatus(idHistory, status)
       .then((response) => {
-        console.log(response.data);
         if (response.data.success) {
           fetchData(dispatch, filter);
           if (status === 1) message.success("Đã xác nhận yêu cầu cộng điểm!");
@@ -222,12 +213,10 @@ export default function ListRequest() {
         message.error(error);
       })
       .finally(() => {
-        setLoading(false);
       });
   };
 
   return (
-    <Spin spinning={loading}>
       <div className="request-manager">
         <TabsRequest selectIndex={1} type={type} />
         <Card className="mb-2 py-1">
@@ -235,7 +224,7 @@ export default function ListRequest() {
             <Space size={"large"}>
               <Form.Item name="userName" className="search-input">
                 <Input
-                  style={{ width: "300px" }}
+                  style={{ width: "400px" }}
                   name="userName"
                   size="small"
                   placeholder="Nhập user name sinh viên cần tìm"
@@ -244,7 +233,7 @@ export default function ListRequest() {
               </Form.Item>
               <Form.Item name={"idCategory"}>
                 <Select
-                  style={{ width: "150px" }}
+                  style={{ width: "250px" }}
                   size="large"
                   placeholder="Loại điểm"
                   options={[
@@ -260,7 +249,7 @@ export default function ListRequest() {
               </Form.Item>
               <Form.Item name={"status"} initialValue={null}>
                 <Select
-                  style={{ width: "150px" }}
+                  style={{ width: "260px" }}
                   size="large"
                   placeholder="Trạng thái"
                   options={[
@@ -310,6 +299,5 @@ export default function ListRequest() {
           </div>
         </Card>
       </div>
-    </Spin>
   );
 }

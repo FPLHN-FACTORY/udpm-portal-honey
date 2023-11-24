@@ -58,9 +58,7 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
 
     @Override
     public History addRequestConversion(StudentCreateRequestConversionRequest createRequest) {
-        Category category = categoryRepository.findById(createRequest.getCategoryId()).orElse(null);
         Gift gift = giftRepository.findById(createRequest.getGiftId()).orElse(null);
-
 
         Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(createRequest.getStudentId(), createRequest.getCategoryId());
         History history = new History();

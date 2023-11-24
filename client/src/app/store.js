@@ -2,7 +2,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import giftReducer from "./reducers/gift/gift.reducer";
 import conversionReducer from "./reducers/conversion/conversion.reducer";
 import honeyReducer from "./reducers/honey/honey.reducer";
-import semesterReducer from "./reducers/semester/semester.reducer";
 import historyReducer from "./reducers/history/history.reducer";
 import notificationReducer from "./reducers/notification/notification.reducer";
 import studentSemestertReducer from "./reducers/student-semester/student-semester.reducer";
@@ -21,6 +20,7 @@ import countNotificationReducer from "./reducers/notification/count-notification
 import upgradeRateReducer from "./reducers/upgrade-rate/upgrade-rate.reducer";
 import archiveReducer from "./reducers/archive/archive.reducer";
 import importPresidentReducer from "./reducers/import/import.president.reducer";
+import importTeacherReducer from "./reducers/import/import.teacher.reducer";
 export const store = configureStore({
   reducer: {
     gift: giftReducer,
@@ -28,7 +28,6 @@ export const store = configureStore({
     history: historyReducer,
     notification: notificationReducer,
     honey: honeyReducer,
-    semester: semesterReducer,
     user: usersReducer,
     studentSemestert: studentSemestertReducer,
     loadding: loaddingReducer,
@@ -39,6 +38,7 @@ export const store = configureStore({
     chestGift: chestGiftReducer,
     import: importReducer,
     importPresident: importPresidentReducer,
+    importTeacher: importTeacherReducer,
     giftArchive: giftArchiveReducer,
     archiveChest: archiveChestReducer,
     archiveCountGift: archiveCountGiftReducer,

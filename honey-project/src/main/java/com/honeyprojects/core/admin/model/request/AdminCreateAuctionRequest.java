@@ -24,4 +24,13 @@ public class AdminCreateAuctionRequest {
 
     @NotNull
     private String honeyCategoryId;
+
+    @NotNull
+    private String giftId;
+
+    @NotNull
+    private Long fromDate;
+
+    @NotNull
+    private Long toDate;
 }

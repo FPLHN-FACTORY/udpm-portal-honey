@@ -1,4 +1,4 @@
-import { Form, Input, Modal, Radio, message } from "antd";
+import { Button, Form, Input, Modal, Radio, message } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import {
@@ -27,15 +27,15 @@ const ModalThem = (props) => {
     var selectedFile = event.target.files[0];
     if (selectedFile) {
       var FileUploadName = selectedFile.name;
-      if (FileUploadName == "") {
+      if (FileUploadName === "") {
         setErrorImage("Bạn chưa chọn ảnh");
         setSelectedImageUrl("");
         setImage([]);
       } else {
         const fileSize = selectedFile.size;
-        const checkFileSize = Math.round((fileSize / 1024) / 1024);
-        if (checkFileSize > 1) {
-          setErrorImage("Ảnh không thể lớn hơn 1 MB");
+        const checkFileSize = Math.round(fileSize / 1024 / 1024);
+        if (checkFileSize > 10) {
+          setErrorImage("Ảnh không thể lớn hơn 10 MB");
           setSelectedImageUrl("");
           setImage([]);
         } else {
@@ -43,19 +43,21 @@ const ModalThem = (props) => {
             FileUploadName.lastIndexOf(".") + 1
           ).toLowerCase();
           if (
-            Extension == "gif" ||
-            Extension == "png" ||
-            Extension == "bmp" ||
-            Extension == "jpeg" ||
-            Extension == "jpg" ||
-            Extension == "webp"
+            Extension === "gif" ||
+            Extension === "png" ||
+            Extension === "bmp" ||
+            Extension === "jpeg" ||
+            Extension === "jpg" ||
+            Extension === "webp"
           ) {
             setImage(selectedFile);
             var imageUrl = URL.createObjectURL(selectedFile);
             setSelectedImageUrl(imageUrl);
             setErrorImage("");
           } else {
-            setErrorImage("Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. ");
+            setErrorImage(
+              "Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. "
+            );
             setSelectedImageUrl("");
             setImage([]);
           }
@@ -153,7 +155,7 @@ const ModalThem = (props) => {
   };
   const initialValues = {
     categoryStatus: "1",
-    transactionRights: "0",
+    transactionRights: "1",
   };
 
   return (
@@ -166,6 +168,7 @@ const ModalThem = (props) => {
       >
         <hr className="border-0 bg-gray-300 mt-3 mb-6" />
         <Form
+        id="addCategory"
           initialValues={initialValues}
           form={form}
           name="basic"
@@ -207,7 +210,7 @@ const ModalThem = (props) => {
           </Form.Item>
           <Form.Item
             label="Phê duyệt"
-            name="transactionRights"
+            name="categoryStatus"
             rules={[
               {
                 required: true,
@@ -216,14 +219,14 @@ const ModalThem = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={"0"}>Không phê duyệt</Radio>
-              <Radio value={"1"}>Cần phê duyệt</Radio>
+              <Radio value={"1"}>Không phê duyệt</Radio>
+              <Radio value={"2"}>Cần phê duyệt</Radio>
             </Radio.Group>
           </Form.Item>
 
           <Form.Item
             label="Giao dịch"
-            name="categoryStatus"
+            name="transactionRights"
             rules={[
               {
                 required: true,
@@ -232,8 +235,8 @@ const ModalThem = (props) => {
             ]}
           >
             <Radio.Group>
-              <Radio value={"1"}>Được giao dịch</Radio>
-              <Radio value={"2"}>Không giao dịch</Radio>
+              <Radio value={"1"}>Không giao dịch</Radio>
+              <Radio value={"0"}>Được giao dịch</Radio>
             </Radio.Group>
           </Form.Item>
 
@@ -243,16 +246,16 @@ const ModalThem = (props) => {
               span: 16,
             }}
           >
-            <button
+            <Button
               style={{ marginRight: "20px" }}
               onClick={onCancel}
               className="submit-button"
             >
               Đóng
-            </button>
-            <button htmlType="submit" className="submit-button ml-2">
+            </Button>
+            <Button htmlType="submit" className="submit-button ml-2">
               OK
-            </button>
+            </Button>
           </Form.Item>
         </Form>
       </Modal>

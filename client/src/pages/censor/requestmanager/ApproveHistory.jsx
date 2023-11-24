@@ -6,7 +6,6 @@ import {
   Pagination,
   Select,
   Space,
-  Spin,
   Table,
   Tag,
   message,
@@ -23,18 +22,12 @@ import {
   SetCategory,
 } from "../../../app/reducers/category/category.reducer";
 import {
-  CheckCircleFilled,
-  CloseCircleFilled,
-  EyeFilled,
+
   SearchOutlined,
 } from "@ant-design/icons";
-import TabsRequest from "./TabsRequest";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
-import { Link } from "react-router-dom";
 import moment from "moment";
-import { type } from "@testing-library/user-event/dist/type";
-import TabsHistory from "./TabsHistory";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -48,7 +41,6 @@ const statusHistory = (status) => {
 };
 
 export default function RequestApprovedHistory() {
-  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const columns = [
     {
@@ -98,7 +90,6 @@ export default function RequestApprovedHistory() {
 
   const fetchData = (dispatch, filter) => {
     dispatch(SetHistory([]));
-    setLoading(true);
     CategoryAPI.fetchAllCategory()
       .then((response) => {
         dispatch(SetCategory(response.data.data));
@@ -107,7 +98,6 @@ export default function RequestApprovedHistory() {
         message.error(error);
       })
       .finally(() => {
-        setLoading(true);
         const fetchData = async (filter) => {
           try {
             const response = await RequestManagerAPI.historyApproved(filter);
@@ -128,7 +118,6 @@ export default function RequestApprovedHistory() {
                 }
               })
             );
-            setLoading(false);
             dispatch(SetHistory(listHistory));
             setTotalPage(response.data.totalPages);
           } catch (error) {
@@ -151,7 +140,6 @@ export default function RequestApprovedHistory() {
   const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
-    setLoading(true);
     if (value.userName === undefined || value.userName.trim().length === 0) {
       setFilter({
         ...filter,
@@ -175,11 +163,9 @@ export default function RequestApprovedHistory() {
         })
         .catch((error) => console.error(error));
     }
-    setLoading(false);
   };
 
   return (
-    <Spin spinning={loading}>
       <div className="request-manager">
         {/* <TabsHistory selectIndex={1} type={type} /> */}
         <Card className="mb-2 py-1">
@@ -187,7 +173,7 @@ export default function RequestApprovedHistory() {
             <Space size={"large"}>
               <Form.Item name="userName" className="search-input">
                 <Input
-                  style={{ width: "300px" }}
+                  style={{ width: "400px" }}
                   name="userName"
                   size="small"
                   placeholder="Nhập user name sinh viên cần tìm"
@@ -196,7 +182,7 @@ export default function RequestApprovedHistory() {
               </Form.Item>
               <Form.Item name={"idCategory"}>
                 <Select
-                  style={{ width: "150px" }}
+                  style={{ width: "250px" }}
                   size="large"
                   placeholder="Loại điểm"
                   options={[
@@ -212,7 +198,7 @@ export default function RequestApprovedHistory() {
               </Form.Item>
               <Form.Item name={"status"} initialValue={null}>
                 <Select
-                  style={{ width: "150px" }}
+                  style={{ width: "260px" }}
                   size="large"
                   placeholder="Trạng thái"
                   options={[
@@ -262,6 +248,5 @@ export default function RequestApprovedHistory() {
           </div>
         </Card>
       </div>
-    </Spin>
   );
 }

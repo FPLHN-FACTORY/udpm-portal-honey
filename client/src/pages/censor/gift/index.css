@@ -1,19 +1,19 @@
-.image-container {
+#detailGift .image-container {
   border: 2px dashed #ddd;
   border-radius: 50%;
   cursor: pointer;
-  height: 150px;
-  width: 150px;
-  margin-left: 100px;
+  height: 170px;
+  width: 170px;
+  margin-top: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   position: relative;
   text-align: center;
 }
-.image-container img {
+#detailGift .image-container img {
   max-width: 100%;
   max-height: 100%;
   width: auto;
@@ -21,50 +21,91 @@
   object-fit: contain;
 }
 
-.hidden-input {
+#detailGift .hidden-input {
   display: none !important;
 }
 
-.errorImageMes {
+#detailGift .errorImageMes {
   padding-left: 120px;
   text-align: center;
   display: flex;
   align-items: center;
   margin-bottom: 20px;
 }
-.custom-select-container {
+#detailGift .custom-select-container {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
 }
 
-.select-section {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  justify-content: center !important;
-  margin-left: 30px !important;
+#detailGift .select-section {
+  margin-bottom: 25px;
+  margin-left: 13px;
 }
 
-.select-asterisk {
+#detailGift .select-section  .select-asterisk {
   color: red;
-  margin-right: 4px;
+  margin-right: -10px;
   font-size: 14px;
   line-height: 1;
 }
 
-.select-custom {
-  width: 76% !important;
-  padding: 0;
-  margin-left: 7px !important;
+#detailGift .input-matcate  .select-asterisk {
+  color: red;
+  /* margin-right: -10px; */
+  font-size: 14px;
+  line-height: 1;
 }
-.input-matcate input[type="number"] {
-  width: 73%;
+
+#detailGift :where(.css-dev-only-do-not-override-14wwjjs).ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+  width: 100%;
+  height: 40px;
+  /* padding: 0 11px; */
+}
+
+#detailGift .select-section .select-custom{
+  height: 40px;
+  margin-left: 10px;
+}
+
+#detailGift .select-section .select-label{
+  margin-left: 15px;
+}
+#detailGift .ant-select-show-search:where(.css-dev-only-do-not-override-14wwjjs).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  height: 40px;
+}
+
+
+#addGift .image-container {
+  border: 2px dashed #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 170px;
+  width: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   margin-bottom: 20px;
-  margin-left: 7px !important;
+  position: relative;
+  text-align: center;
 }
-.input-matcate {
-  margin-left: 12px !important;
-  text-align: left !important;
-  justify-content: left !important;
+#addGift .image-container img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+#addGift .hidden-input {
+  display: none !important;
+}
+
+#addGift .errorImageMes {
+  padding-left: 120px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
 }

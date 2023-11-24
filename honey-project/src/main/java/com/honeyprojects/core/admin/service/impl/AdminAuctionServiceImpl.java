@@ -36,7 +36,7 @@ public class AdminAuctionServiceImpl implements AdminAuctionService {
 
     @Override
     public PageableObject<AdminAuctionResponse> findAllAuction(AdminFindAuctionRequest req) {
-        Pageable pageable = PageRequest.of(req.getPage() - 1, req.getSize());
+        Pageable pageable = PageRequest.of(req.getPage(), req.getSize());
         Page<AdminAuctionResponse> auctionResponses = adAuctionRepository.findAllAuction(req, pageable);
         auctionList = auctionResponses.stream().toList();
         System.out.println(auctionList);
@@ -48,6 +48,10 @@ public class AdminAuctionServiceImpl implements AdminAuctionService {
         Auction auction = new Auction();
         auction.setName(request.getName());
         auction.setHoneyCategoryId(request.getHoneyCategoryId());
+        auction.setGiftId(request.getGiftId());
+        auction.setStartingPrice(BigDecimal.valueOf(request.getHoney()));
+        auction.setFromDate(request.getFromDate());
+        auction.setToDate(request.getToDate());
         if (request.getStatus() == 0) {
             auction.setStatus(Status.HOAT_DONG);
         }

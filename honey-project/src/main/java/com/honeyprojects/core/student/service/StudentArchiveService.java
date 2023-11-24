@@ -34,4 +34,6 @@ public interface StudentArchiveService {
 
     List<StudentArchiveByUserResponse> findArchiveByUser(String idUser);
 
+    ArchiveGift deleteItem(String id, StudentGetArchiveGiftRequest request);
+
 }

@@ -13,27 +13,26 @@ const ModalDetail = (props) => {
   const { chest } = props;
   const dispatch = useAppDispatch();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   const columns = [
     {
-      title: "Code",
+      title: "Mã",
       dataIndex: "code",
       key: "code",
     },
     {
-      title: "Name",
+      title: "Tên",
       dataIndex: "name",
       key: "name",
     },
     {
-      title: "To date",
+      title: "Ngày bắt đầu",
       dataIndex: "toDate",
       key: "toDate",
     },
     {
-      title: "From date",
+      title: "Ngày kết thúc",
       dataIndex: "fromDate",
       key: "fromDate",
     },
@@ -46,7 +45,6 @@ const ModalDetail = (props) => {
         toDate: moment(item.toDate).format("DD/MM/YYYY"),
         fromDate: moment(item.fromDate).format("DD/MM/YYYY"),
       }));
-      console.log(formattedData);
       dispatch(SetChestGift(formattedData));
     });
   };
@@ -54,7 +52,6 @@ const ModalDetail = (props) => {
   const dataChest = useAppSelector(GetChestGift);
 
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -88,6 +85,11 @@ const ModalDetail = (props) => {
     }
   };
 
+  const handleCancel = () => {
+    setModalVisible(false);
+    setSelectedRowKeys([]);
+  }
+
   return (
     <div>
       <Tooltip title="Mở rương">
@@ -105,7 +107,7 @@ const ModalDetail = (props) => {
         onOk={() => {
           setModalVisible(false);
         }}
-        onCancel={() => setModalVisible(false)}
+        onCancel={() => handleCancel()}
       >
         <div>
           <Button
@@ -113,7 +115,6 @@ const ModalDetail = (props) => {
             onClick={handleDeleteSelected}
             style={{ marginBottom: "10px" }}
             disabled={!hasSelected}
-            loading={loading}
           >
             Xóa
           </Button>

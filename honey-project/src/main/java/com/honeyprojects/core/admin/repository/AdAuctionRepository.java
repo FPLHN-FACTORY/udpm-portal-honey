@@ -45,7 +45,6 @@ public interface AdAuctionRepository extends AuctionRepository {
                   END AS status
             FROM auction a
             JOIN gift g on a.gift_id = g.id
-            JOIN semester s on g.semester_id = s.id
             JOIN category ca ON ca.id = a.honey_category_id 
             WHERE (:#{#req.nameGift} IS NULL OR :#{#req.nameGift} LIKE '' OR g.name LIKE %:#{#req.nameGift}%) 
             AND (:#{#req.type} IS NULL OR :#{#req.type} LIKE '' OR g.type = :#{#req.type}) 
@@ -55,7 +54,6 @@ public interface AdAuctionRepository extends AuctionRepository {
             SELECT COUNT(a.id)
             FROM auction a
             JOIN gift g on a.gift_id = g.id
-            JOIN semester s on g.semester_id = s.id
             JOIN category ca ON ca.id = a.honey_category_id 
             WHERE (:#{#req.nameGift} IS NULL OR :#{#req.nameGift} LIKE '' OR g.name LIKE %:#{#req.nameGift}%) 
             AND (:#{#req.type} IS NULL OR :#{#req.type} LIKE '' OR g.type = :#{#req.type}) 

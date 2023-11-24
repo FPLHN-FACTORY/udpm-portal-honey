@@ -196,12 +196,12 @@ export default function BuyGiftHistory() {
   ];
   return (
     <>
-      <Card className="mb-2 py-1">
+      <Card className="mb-2">
         <Form onFinish={onFinishSearch}>
           <Space size={"large"}>
             <Form.Item name="userName" className="search-input">
               <Input
-                style={{ width: "300px" }}
+                style={{ width: "400px" }}
                 name="userName"
                 size="small"
                 placeholder="Nhập user name sinh viên cần tìm"
@@ -210,7 +210,7 @@ export default function BuyGiftHistory() {
             </Form.Item>
             <Form.Item name={"idCategory"}>
               <Select
-                style={{ width: "150px" }}
+                style={{ width: "250px" }}
                 size="large"
                 placeholder="Loại điểm"
                 options={[
@@ -223,7 +223,7 @@ export default function BuyGiftHistory() {
             </Form.Item>
             <Form.Item name={"status"} initialValue={null}>
               <Select
-                style={{ width: "150px" }}
+                style={{ width: "260px" }}
                 size="large"
                 placeholder="Trạng thái"
                 options={[

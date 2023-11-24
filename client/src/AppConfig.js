@@ -1,9 +1,9 @@
 export const AppConfig = {
-  apiUrl: "http://localhost:2508/api",
+  apiUrl: process.env.REACT_APP_API_URL,
   routerBase: "",
 };
 
-export const connectIdentity = "https://localhost:5000/";
+export const connectIdentity = process.env.REACT_APP_CONNECT_IDENTITY;
 
 // export const ImageConfig = {
 //   apiUrl: "http://localhost:80/article/",

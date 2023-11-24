@@ -55,7 +55,7 @@ body {
   color: #fff;
   font-weight: bold;
   text-align: start;
-  background: #0079ff;
+  background: rgb(255, 204, 0);
   border-bottom: 1px solid #f0f0f0;
   transition: background 0.2s ease;
   font-size: 15px;
@@ -70,7 +70,7 @@ body {
 }
 
 .layout-dashboard {
-  background: transparent;
+  /* background: transparent; */
   text-align: left;
   position: relative;
   overflow-x: hidden;
@@ -2573,7 +2573,7 @@ section.ant-layout.layout-content .ant-layout-content.content-ant {
 .d-flex {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
 }
 
 .payment-method-card.ant-card {

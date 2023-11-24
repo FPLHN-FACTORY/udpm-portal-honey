@@ -5,25 +5,18 @@ import {
   Form,
   Input,
   Pagination,
-  Popconfirm,
   Select,
   Space,
-  Spin,
   Table,
   Tag,
-  Tooltip,
-  message,
 } from "antd";
 import {
   SearchOutlined,
-  CheckCircleFilled,
-  CloseCircleFilled,
 } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { AddPointAPI } from "../../../apis/teacher/add-point/add-point.api";
 import { TeacherUseGiftApi } from "../../../apis/teacher/convertion-honey/convertion-honey.api";
 import {
-  DeleteHistory,
   GetHistory,
   SetHistory,
 } from "../../../app/reducers/history/history.reducer";
@@ -117,7 +110,6 @@ export default function RequestConversionHistory() {
               emailStudent: user.data.data.email,
             };
           } catch (error) {
-            console.error(error);
             return data;
           }
         })
@@ -127,7 +119,6 @@ export default function RequestConversionHistory() {
     } catch (error) {
       console.error(error);
     }
-    setLoading(false);
   };
   useEffect(() => {
     fetchData(filter);
@@ -163,7 +154,7 @@ export default function RequestConversionHistory() {
   };
 
   return (
-    <Spin spinning={loading}>
+
       <div className="add-point">
         <Card
           className="mb-2"
@@ -185,7 +176,7 @@ export default function RequestConversionHistory() {
             <Space size={"large"} style={{ marginTop: "15px" }}>
               <Form.Item name="email" className="search-input">
                 <Input
-                  style={{ width: "300px" }}
+                  style={{ width: "360px" }}
                   size="small"
                   placeholder="Nhập email sinh viên cần tìm"
                   prefix={<SearchOutlined />}
@@ -194,7 +185,7 @@ export default function RequestConversionHistory() {
               <Form.Item name={"gift"}>
                 <Select
                   showSearch
-                  style={{ width: "150px" }}
+                  style={{ width: "180px" }}
                   size="large"
                   placeholder="Loại quà"
                   options={[
@@ -211,7 +202,7 @@ export default function RequestConversionHistory() {
               <Form.Item name={"lop"}>
                 <Select
                   showSearch
-                  style={{ width: "150px" }}
+                  style={{ width: "180px" }}
                   size="large"
                   placeholder="Lớp"
                   options={[
@@ -229,7 +220,7 @@ export default function RequestConversionHistory() {
                 <Select
                   defaultValue={filter.status}
                   showSearch
-                  style={{ width: "150px" }}
+                  style={{ width: "180px" }}
                   size="large"
                   placeholder="Trạng thái"
                   options={[
@@ -280,6 +271,6 @@ export default function RequestConversionHistory() {
           </div>
         </Card>
       </div>
-    </Spin>
+
   );
 }

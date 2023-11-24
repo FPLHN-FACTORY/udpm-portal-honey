@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Input, message } from "antd";
+import { Modal, Input, message, Button } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { ChestAPI } from "../../../apis/censor/chest/chest.api";
 import {
@@ -50,7 +50,6 @@ const ModalAdd = (props) => {
     if (chest === null) {
       ChestAPI.create(formValues).then(onSaveSuccess).catch(onSaveError);
     } else {
-      console.log(formValues);
       ChestAPI.update(formValues, chest.id)
         .then(onSaveSuccess)
         .catch(onSaveError);
@@ -85,20 +84,20 @@ const ModalAdd = (props) => {
               </div>
             </div>
 
-            <div className="ant-form-item">
-              <div className="ant-form-item-control">
-                <button
+            <div className="ant-form-item mt-3">
+              <div className="flex justify-center">
+                <Button
                   onClick={onCancel}
-                  className="submit-button submit-button-cancel"
+                  className="submit-button submit-button-cancel bg-black text-white"
                 >
                   Đóng
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={onSaveButtonClick}
-                  className="submit-button submit-button-ok"
+                  className="submit-button submit-button-ok ml-2 bg-black text-white"
                 >
                   OK
-                </button>
+                </Button>
               </div>
             </div>
           </div>
