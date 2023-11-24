@@ -93,7 +93,7 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
         history.setAdminId(idAdmin);
         history.setNote(addPointRequest.getNote());
         history.setType(TypeHistory.CONG_DIEM);
-        history.setCreatedAt(dateNow);
+        history.setChangeDate(dateNow);
         historyRepository.save(history);
 
         HistoryDetail historyDetail = new HistoryDetail();

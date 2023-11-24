@@ -19,4 +19,6 @@ public interface TeacherHoneyRepository extends HoneyRepository {
             """, nativeQuery = true)
     TeacherPointResponse getPoint(TeacherGetPointRequest getPointRequest);
 
+    Honey findByStudentIdAndHoneyCategoryId(String id, String categoryId);
+
 }
