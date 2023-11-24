@@ -30,4 +30,5 @@ public class AdminAddPointRequest {
     @NotBlank
     @Length(max = 36)
     private String categoryId;
+
 }

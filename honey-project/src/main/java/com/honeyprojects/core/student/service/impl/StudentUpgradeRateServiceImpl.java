@@ -81,6 +81,9 @@ public class StudentUpgradeRateServiceImpl implements StudentUpgradeRateService 
                         throw new RestApiException("Bạn không đủ mật ong để nâng cấp");
                     }
                 }
+                else{
+                    throw new RestApiException("Bạn không đủ mật ong để nâng cấp");
+                }
                 if (honeyPoint.getHoneyCategoryId().equals(checkRatio.get().getDestinationHoney())) {
                     honeyPoint.setHoneyPoint(honeyPoint.getHoneyPoint() + request.getDestinationHoney());
                     foundDestinationHoney = true;

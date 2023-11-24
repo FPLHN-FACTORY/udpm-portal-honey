@@ -23,6 +23,7 @@ const ModalThem = (props) => {
   const [errorImage, setErrorImage] = useState("");
   const [image, setImage] = useState([]);
   const [quantityValue, setQuantityValue] = useState(0);
+  const [checkTypeTime, setCheckTypeTime] = useState(2);
   const [limitQuantityValue, setLimitQuantityValue] = useState(0);
   const [listCategory, setListCategory] = useState([]);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
@@ -428,27 +429,6 @@ const ModalThem = (props) => {
                 ))}
               </Select>
             </Form.Item>
-            <Form.Item
-              label={<span>Thời gian hết hạn <br/>(Theo ngày)</span>}
-              name="numberDateEnd"
-              rules={[
-                {
-                  validator: (_, value) => {
-                    if (value.trim().length === 0) {
-                      return Promise.resolve();
-                    }
-                    const regex = /^[1-9]+$/;
-                    if (!regex.test(value)) {
-                      return Promise.reject(new Error('Vui lòng nhập một số nguyên dương'));
-                    }
-            
-                    return Promise.resolve();
-                  },
-                },
-              ]}
-            >
-              <Input type="number" />
-            </Form.Item>
 
             {selectedCategories.map((categoryId) => {
               const category = listCategory.find(
@@ -485,29 +465,85 @@ const ModalThem = (props) => {
           </Col>
           <Col xl={10} xs={10} className="pl-2">
             <Form.Item
-              label="Thời gian bắt đầu"
-              name="start"
+              label="Thời gian hết hạn"
+              name="checkTypeDate"
               rules={[
                 {
-                  validator: validateStartDate,
+                  required: true,
+                  message: "Vui lòng chọn thời gian hết hạn",
                 },
               ]}
             >
-              <Input type="date" />
+              <Radio.Group className="flex" defaultValue={2} onChange={(e) => {
+                setCheckTypeTime(e.target.value);
+                form.setFieldValue("numberDateEnd", null);
+                form.setFieldValue("start", null);
+                form.setFieldValue("end", null);
+              }}>
+                <Radio value={0}>Theo ngày bắt đầu</Radio>
+                <Radio value={1}>Theo khoảng ngày</Radio>
+                <Radio value={2}>Vô hạn</Radio>
+              </Radio.Group>
             </Form.Item>
+            {
+              checkTypeTime === 0 ?
+                <>
+                  <Form.Item
+                    label={<span>Thời gian hết hạn <br/>(Theo ngày)</span>}
+                    name="numberDateEnd"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng chọn thời gian hết hạn",
+                      },
+                      {
+                        validator: (_, value) => {
+                          if (value.trim().length === 0) {
+                            return Promise.resolve();
+                          }
+                          const regex = /^[1-9]+$/;
+                          if (!regex.test(value)) {
+                            return Promise.reject(new Error('Vui lòng nhập một số nguyên dương'));
+                          }
+                  
+                          return Promise.resolve();
+                        },
+                      },
+                    ]}
+                  >
+                    <Input type="number" />
+                  </Form.Item>
+                </> : checkTypeTime === 1 ?
+                <>
+                  <Form.Item
+                    label="Thời gian bắt đầu"
+                    name="start"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng chọn thời gian hết hạn",
+                      },
+                      {
+                        validator: validateStartDate,
+                      },
+                    ]}
+                  >
+                    <Input type="date" />
+                  </Form.Item>
 
-            <Form.Item
-              label="Thời gian kết thúc"
-              name="end"
-              rules={[
-                {
-                  validator: validateEndDate,
-                },
-              ]}
-            >
-              <Input type="date" />
-            </Form.Item>
-
+                  <Form.Item
+                    label="Thời gian kết thúc"
+                    name="end"
+                    rules={[
+                      {
+                        validator: validateEndDate,
+                      },
+                    ]}
+                  >
+                    <Input type="date" />
+                  </Form.Item>
+                </> : <></>
+            }
             <Form.Item
               label="Yêu cầu phê duyệt"
               name="status"
