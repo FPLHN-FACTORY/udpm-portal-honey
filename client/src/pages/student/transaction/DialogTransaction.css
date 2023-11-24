@@ -1,10 +1,10 @@
 .dialog-transaction .ant-card-body {
   padding: 0;
-  background-image: url("../../../assets/images/bar-transaction.png");
+  background-image: url("../../../assets/images/student-profile/background.jpg");
+  background-size: cover;
 }
 
 .dialog-transaction .ant-btn:hover {
-  background-color: #d39e0c !important;
   color: white !important;
 }
 
@@ -25,7 +25,6 @@
 .dialog-transaction .chess-square {
   border-radius: 5px;
   border-style: ridge;
-  background: #464239;
   height: 55px;
   margin: 3px;
 }
@@ -61,7 +60,7 @@
 }
 
 .dialog-transaction .text-title {
-  color: #504438;
+  color: #ffffff;
   font-size: 15px;
   line-height: 30px;
 }
@@ -74,7 +73,7 @@
 }
 
 .dialog-transaction .chest-transaction {
-  border-right: 2px solid #837463;
+  border-right: 2px solid rgb(255, 136, 0);
   padding-right: 10px;
 }
 
@@ -104,8 +103,24 @@
   border: 3px ridge !important;
   width: 130px;
   color: white;
-  background-color: #696b68;
   margin-right: 5px;
+  background-color: rgb(255, 136, 0);
+}
+
+.dialog-transaction .button-khoa-disabled {
+  border: 3px ridge !important;
+  width: 130px;
+  color: white;
+  margin-right: 5px;
+  background-color: rgb(80, 53, 23);
+}
+
+.dialog-transaction .button-khoa:disabled {
+  border: 3px ridge !important;
+  width: 130px;
+  color: white;
+  margin-right: 5px;
+  background-color: rgb(80, 53, 23);
 }
 
 .dialog-transaction .button-xac-nhan {
@@ -114,7 +129,16 @@
   color: white;
   margin-left: 10px;
   margin-right: -10px;
-  background-color: #50873e;
+  background-color: #42ca15;
+}
+
+.dialog-transaction .button-xac-nhan:disabled {
+  border: 3px ridge !important;
+  width: 130px;
+  color: white;
+  margin-left: 10px;
+  margin-right: -10px;
+  background-color: #294b1d;
 }
 
 .dialog-transaction .img-item {
@@ -138,7 +162,7 @@
 }
 
 .dialog-transaction .col-title {
-  border-right: 2px solid #837463;
+  border-right: 2px solid rgb(255, 136, 0);
   padding-right: 10px;
   padding-left: 14px;
   text-align: center;
@@ -146,7 +170,7 @@
 
 .dialog-transaction .title-balo {
   font-weight: 800;
-  color: #504438;
+  color: #ffffff;
   font-size: 20px;
   display: inline-block;
   vertical-align: middle;
@@ -176,11 +200,11 @@
 }
 
 .dialog-transaction .button-khoa:hover {
-  background-color: #535352 !important;
+  background-color: rgb(80, 53, 23) !important;
 }
 
 .dialog-transaction .button-xac-nhan:hover {
-  background-color: #457436 !important;
+  background-color: #294b1d !important;
 }
 
 .dialog-transaction .tag-backgroup {
@@ -191,7 +215,7 @@
 
 .input-honey {
   border: 2px ridge;
-  background-color: #464239;
+  background-color: #46423900;
   height: 30px;
   color: white;
   text-align: center;
@@ -246,10 +270,6 @@
   padding: 0;
 }
 
-.dialog-transaction .select-category .ant-select-selection-item {
-  font-weight: bold;
-  color: #464239;
-}
 
 .css-modal-confim-transaction .ant-modal-content {
   background-color: rgba(46, 46, 46, 0.4);

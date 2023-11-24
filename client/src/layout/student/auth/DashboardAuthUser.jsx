@@ -129,10 +129,11 @@ function DashboardAuthUser({ children }) {
     ProfileApi.getUserLogin().then((response) => {
       dispatch(SetUser(response.data.data));
       const nameUser = response.data.data.name;
+      const idUser = response.data.data.idUser;
       getStompClient().send(
-        `/action/accept-transaction/${idTransaction}`,
+        `/transaction/accept-transaction/${idTransaction}`,
         {},
-        JSON.stringify({ nameUser, idTransaction })
+        JSON.stringify({ nameUser, idTransaction, idUser })
       );
       setTransaction(transaction);
       message.destroy(idTransaction);
@@ -188,8 +189,7 @@ function DashboardAuthUser({ children }) {
         onClick={() => {
           deleteToken();
           navigate(`/author-switch`);
-        }}
-      >
+        }}>
         Đăng xuất
       </Menu.Item>
       {/* <Menu.Item
@@ -252,10 +252,11 @@ function DashboardAuthUser({ children }) {
       (result) => {
         if (result.data.success) {
           const nameUser = data.name;
+          const idUser = data.idUser;
           getStompClient().send(
-            "/action/send-transaction/" + result.data.data,
+            "/transaction/send-transaction/" + result.data.data,
             {},
-            JSON.stringify({ nameUser, idTransaction })
+            JSON.stringify({ nameUser, idTransaction, idUser })
           );
           setIsModalOpen(false);
           message.success("Đã gửi yêu cầu giao dịch!");
@@ -395,8 +396,7 @@ function DashboardAuthUser({ children }) {
                     <div style={{ float: "right" }}>
                       <button
                         onClick={hanlderClickCaiDat}
-                        class="btn-cai-dat btn-student btn-icon"
-                      >
+                        class="btn-cai-dat btn-student btn-icon">
                         <Dropdown
                           overlay={settingMenu}
                           placement="bottomRight"
