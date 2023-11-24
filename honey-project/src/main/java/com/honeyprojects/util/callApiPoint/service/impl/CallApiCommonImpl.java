@@ -66,6 +66,8 @@ public class CallApiCommonImpl implements CallApiCommonService {
             response = responseEntity.getBody();
         } catch (Exception ex) {
             ex.printStackTrace();
+            // Fake data
+            response = generateFakeData();
         }
 
         List<ClassSubjectVM> classSubjectList = new ArrayList<>();
@@ -85,6 +87,47 @@ public class CallApiCommonImpl implements CallApiCommonService {
         }
 
         return classSubjectList;
+    }
+
+    public static List<ClassSubjectDto> generateFakeData() {
+        List<ClassSubjectDto> fakeDataList = new ArrayList<>();
+
+        for (int i = 1; i <= 5; i++) {
+            ClassSubjectDto fakeData = createFakeClassSubjectDto(i);
+            fakeDataList.add(fakeData);
+        }
+
+        return fakeDataList;
+    }
+
+    private static ClassSubjectDto createFakeClassSubjectDto(int index) {
+        return ClassSubjectDto.builder()
+                .id("IDClassSubjectDto" + index)
+                .lecturerId("LecturerID" + index)
+                .transferLecturerId("TransferLecturerID" + index)
+                .blockSemesterId("BlockSemesterID" + index)
+                .subjectId("SubjectID" + index)
+                .name("Fake Class " + index)
+                .numberOfStudents(30L + index)
+                .createdDate("2023-11-24")
+                .note("This is a fake class for testing " + index)
+                .status(1L)
+                .lecturerCode("LC00" + index)
+                .lecturerName("John Doe " + index)
+                .lecturerMail("john.doe" + index + "@example.com")
+                .blockName("Block " + index)
+                .semesterName("Spring 2023")
+                .startDate("2023-01-01")
+                .endDate("2023-05-31")
+                .subjectCode("SC00" + index)
+                .subjectName("Fake Subject " + index)
+                .majorId("MajorID30" + index)
+                .majorCode("MC00" + index)
+                .majorName("Computer Science " + index)
+                .numberOfStudentsCurrent(25L + index)
+                .numberOfStudentsFailed(2L + index)
+                .numberOfStudentsPassed(23L + index)
+                .build();
     }
 
     @Override
@@ -108,6 +151,7 @@ public class CallApiCommonImpl implements CallApiCommonService {
             response = responseEntity.getBody();
         } catch (Exception ex) {
             ex.printStackTrace();
+            generateFakeDataScoreTemplateDto();
         }
         List<ScoreTemplate> scoreTemplateList = new ArrayList<>();
 
@@ -134,6 +178,33 @@ public class CallApiCommonImpl implements CallApiCommonService {
         return scoreTemplateList;
     }
 
+    public static List<ScoreTemplateDto> generateFakeDataScoreTemplateDto() {
+        List<ScoreTemplateDto> fakeDataList = new ArrayList<>();
+
+        for (int i = 1; i <= 5; i++) {
+            ScoreTemplateDto fakeData = createFakeScoreTemplateDto(i);
+            fakeDataList.add(fakeData);
+        }
+
+        return fakeDataList;
+    }
+
+    private static ScoreTemplateDto createFakeScoreTemplateDto(int index) {
+        return ScoreTemplateDto.builder()
+                .id("IDScoreTemplateDto" + index)
+                .subjectId("SubjectID" + index)
+                .name("Template" + index)
+                .scoreType((long) index)
+                .minScore(60L)
+                .maxScore(100L)
+                .scoreRatio(10L)
+                .createdDate("2023-11-24")
+                .status(1L)
+                .group("Group" + index)
+                .index((long) index)
+                .build();
+    }
+
     @Override
     // Call api lấy ra thông tin 1 đầu điểm của một sinh viên
     public List<ScoreTemplateVM> callApiScoreTemplateVM(FilterScoreTemplateVM request) {
@@ -156,6 +227,7 @@ public class CallApiCommonImpl implements CallApiCommonService {
             response = responseEntity.getBody();
         } catch (Exception ex) {
             ex.printStackTrace();
+            generateFakeDataScoreTemplateVMDto();
         }
         List<ScoreTemplateVM> scoreTemplateList = new ArrayList<>();
 
@@ -181,6 +253,34 @@ public class CallApiCommonImpl implements CallApiCommonService {
         return scoreTemplateList;
     }
 
+    public static List<ScoreTemplateVMDto> generateFakeDataScoreTemplateVMDto() {
+        List<ScoreTemplateVMDto> fakeDataList = new ArrayList<>();
+
+        for (int i = 1; i <= 5; i++) {
+            ScoreTemplateVMDto fakeData = createFakeScoreTemplateVMDto(i);
+            fakeDataList.add(fakeData);
+        }
+
+        return fakeDataList;
+    }
+
+    private static ScoreTemplateVMDto createFakeScoreTemplateVMDto(int index) {
+        return ScoreTemplateVMDto.builder()
+                .class_StudentId("StudentID" + index)
+                .scoreElementId("ElementID" + index)
+                .score((long) (50 + index * 5))
+                .scoreType((long) index)
+                .minScore(60L)
+                .maxScore(100L)
+                .scoreRatio(10L)
+                .createdDate("2023-11-24")
+                .name("Template" + index)
+                .index((long) index)
+                .group("Group" + index)
+                .status(1L)
+                .scoreElementName("ElementName" + index)
+                .build();
+    }
     @Override
     public boolean checkRoleIdentity() {
         return true;
