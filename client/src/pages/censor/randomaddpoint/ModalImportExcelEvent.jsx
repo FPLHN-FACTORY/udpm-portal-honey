@@ -6,7 +6,7 @@ import { AddPointStudentAPI } from "../../../apis/censor/add-point/add-point-stu
 import { useAppDispatch } from "../../../app/hooks";
 import { SetImport } from "../../../app/reducers/import/import.president.reducer";
 
-export default function ModalImportExcelLab(props) {
+export default function ModalImportExcelEvent(props) {
   const { open, setOpen, nameFile, setNameFile, setDataPreview } = props;
   const dispatch = useAppDispatch();
   const [file, setFile] = useState(null);
@@ -27,10 +27,10 @@ export default function ModalImportExcelLab(props) {
       formData.append("file", file.file.originFileObj);
       AddPointStudentAPI.previewDataExcelEvent(formData)
         .then((response) => {
-          console.log('====================================');
-          console.log(response);
-          console.log('====================================');
-          setDataPreview(response.data.data.listStudent);
+          console.log("====================================");
+          console.log(response.data.data);
+          console.log("====================================");
+          setDataPreview(response.data.data.lstStudentId);
           dispatch(SetImport(response.data.data));
           message.success("Import excel thành công");
         })

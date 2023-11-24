@@ -8,7 +8,7 @@ import { useAppDispatch } from "../../../app/hooks";
 import { getToken } from "../../../helper/userToken";
 import { AddPointStudentAPI } from "../../../apis/censor/add-point/add-point-student.api";
 
-export default function ModalConfirmEvent(props) {
+export default function ModalConfirmLabReport(props) {
   const {
     openConfirm,
     setOpenConfirm,
@@ -16,7 +16,6 @@ export default function ModalConfirmEvent(props) {
     setDataPreview,
     setNameFile,
   } = props;
-
   const [isLoad, setIsLoad] = useState(false);
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -54,9 +53,10 @@ export default function ModalConfirmEvent(props) {
     const headers = {
       Authorization: "Bearer " + bearerToken,
     };
-    AddPointStudentAPI.createImportDataEvent(dataPreview)
+    AddPointStudentAPI.createImportDataLab(dataPreview)
       .then(() => {
         // stompClient.send("/action/create-notification-user", headers, {});
+
         message.success("Import thành công");
       })
       .catch((error) => {
