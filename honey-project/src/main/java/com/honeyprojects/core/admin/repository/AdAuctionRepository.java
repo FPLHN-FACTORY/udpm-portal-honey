@@ -2,17 +2,17 @@ package com.honeyprojects.core.admin.repository;
 
 import com.honeyprojects.core.admin.model.request.AdminFindAuctionRequest;
 import com.honeyprojects.core.admin.model.response.AdminAuctionResponse;
-import com.honeyprojects.core.student.model.request.auction.StudentAuctionRoomFilterRequest;
-import com.honeyprojects.core.student.model.response.StudentAuctionResponse;
 import com.honeyprojects.entity.Auction;
 import com.honeyprojects.repository.AuctionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface AdAuctionRepository extends AuctionRepository {
 
     @Query(value = """
