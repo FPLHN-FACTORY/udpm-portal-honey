@@ -384,12 +384,12 @@ function DashboardAuthUser({ children }) {
                       class="btn-balo btn-student btn-icon"
                     />
                     <button
-                      onClick={hanlderClickNangCap}
-                      class="btn-dap-do btn-student btn-icon"
-                    />
-                    <button
                       onClick={hanlderClickGiaoDich}
                       class="btn-giao-dich btn-student btn-icon"
+                    />
+                    <button
+                      onClick={hanlderClickTonVinh}
+                      class="btn-dap-do btn-student btn-icon"
                     />
                   </Col>
                   <Col span={12}>
@@ -434,10 +434,6 @@ function DashboardAuthUser({ children }) {
                             : "btn-tat-am-thanh btn-student btn-icon"
                         }
                       />
-                      <button
-                        class="btn-cai-dat btn-student btn-icon"
-                        onClick={hanlderClickTonVinh}
-                      />
                     </div>
                   </Col>
                 </Row>
@@ -459,7 +455,7 @@ function DashboardAuthUser({ children }) {
                   className="btn-cua-hang btn-student"
                 />
                 <button
-                  onClick={hanlderClickDoiQua}
+                  onClick={hanlderClickNangCap}
                   className="btn-doi-qua btn-student"
                 />
               </Footer>
