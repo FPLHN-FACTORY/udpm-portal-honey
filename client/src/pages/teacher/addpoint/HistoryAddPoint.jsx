@@ -204,12 +204,30 @@ export default function HistoryAddPoint() {
         </Form>
       </Card>
       <Card title="Lịch sử cộng điểm">
-        <Table
-          columns={columns}
-          dataSource={data}
-          rowKey="key"
-          pagination={false}
-        />
+      {data.map((item) => (
+          <div className="list__point ">
+            <h3 className="text-slate-600"> Sinh viên {item.nameStudent}</h3>
+            <div className="list__point__title">
+              <p>
+                <strong className="text-slate-500 mr-[8px]">
+                  Số điểm được cộng:
+                </strong>
+                {item.honeyPoint} mật ong {item.nameCategory}
+              </p>
+              <p>
+                <strong className="text-slate-500 mr-[8px]">Thời gian:</strong>
+                {item.createdDate}
+              </p>
+              <p
+                title={item.note}
+                className="w-[300px] overflow-hidden whitespace-nowrap text-ellipsis"
+              >
+                <strong className="text-slate-500 mr-[8px]">Lý do:</strong>
+                {item.note}
+              </p>
+            </div>
+          </div>
+        ))}
         <div className="mt-10 text-center mb-10">
           <Pagination
             simple
