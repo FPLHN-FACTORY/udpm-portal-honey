@@ -56,7 +56,7 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     private ConvertRequestApiidentity requestApiidentity;
 
     @Autowired
-    private AdHistoryDetailRepository historyDetailRandomRepository;
+    private AdHistoryDetailRepository historyDetailRepository;
 
     @Override
     public List<TeacherCategoryResponse> getCategory() {
@@ -96,43 +96,60 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     public History addPoint(TeacherAddPointRequest addPointRequest) {
         String idTeacher = udpmHoney.getIdUser();
         Long dateNow = Calendar.getInstance().getTimeInMillis();
+        Optional<Category>category = categoryRepository.findById(addPointRequest.getCategoryId());
+        System.out.println("------------"+category.get().getCategoryStatus());
+        HistoryDetail historyDetail = new HistoryDetail();
         History history = new History();
-        history.setStatus(HoneyStatus.CHO_PHE_DUYET);
         history.setTeacherId(idTeacher);
         history.setNote(addPointRequest.getNote());
         history.setType(TypeHistory.CONG_DIEM);
-        history.setCreatedAt(dateNow);
-        history.setStudentId(addPointRequest.getStudentId());
+        history.setChangeDate(dateNow);
+        if(category.get().getCategoryStatus().equals(CategoryStatus.FREE)){
+            history.setStatus(HoneyStatus.DA_PHE_DUYET);
+            if (addPointRequest.getHoneyId() == null) {
+                Honey honey = new Honey();
+                honey.setStatus(Status.HOAT_DONG);
+                honey.setHoneyPoint(addPointRequest.getHoneyPoint());
+                honey.setStudentId(addPointRequest.getStudentId());
+                honey.setHoneyCategoryId(addPointRequest.getCategoryId());
+                honeyRepository.save(honey);
+                historyDetail.setHoneyId(honey.getId());
+            } else {
+                Honey honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();
+                honey.setHoneyPoint(addPointRequest.getHoneyPoint()+ honey.getHoneyPoint());
+                honeyRepository.save(honey);
+                historyDetail.setHoneyId(honey.getId());
+            }
+        }
+        else{
+            if (addPointRequest.getHoneyId() == null) {
+                Honey honey = new Honey();
+                honey.setStatus(Status.KHONG_HOAT_DONG);
+                honey.setHoneyPoint(0);
+                honey.setStudentId(addPointRequest.getStudentId());
+                honey.setHoneyCategoryId(addPointRequest.getCategoryId());
+                honeyRepository.save(honey);
+                historyDetail.setHoneyId(honey.getId());
+            } else {
+                Honey honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();
+                historyDetail.setHoneyId(honey.getId());
+            }
+            history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+            Optional<Category> ca = categoryRepository.findById(addPointRequest.getCategoryId());
+            Notification notification = new Notification();
+            notification.setTitle("Yêu cầu cộng " + addPointRequest.getHoneyPoint() + " mật ong loại " + ca.get().getName() + " cho sinh viên");
+            notification.setStatus(NotificationStatus.CHUA_DOC);
+            notification.setType(NotificationType.CHO_PHE_DUYET);
+            notification.setStudentId(history.getId());
+
+            teacherNotificationRepository.save(notification);
+        }
         historyRepository.save(history);
 
-        HistoryDetail historyDetail = new HistoryDetail();
         historyDetail.setHistoryId(history.getId());
         historyDetail.setHoneyPoint(addPointRequest.getHoneyPoint());
         historyDetail.setStudentId(addPointRequest.getStudentId());
-
-        if (addPointRequest.getHoneyId() == null) {
-            Honey honey = new Honey();
-            honey.setStatus(Status.HOAT_DONG);
-            honey.setHoneyPoint(0);
-            honey.setStudentId(addPointRequest.getStudentId());
-            honey.setHoneyCategoryId(addPointRequest.getCategoryId());
-            honeyRepository.save(honey);
-            historyDetail.setHoneyId(honey.getId());
-        } else {
-            Honey honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();
-            honeyRepository.save(honey);
-            historyDetail.setHoneyId(honey.getId());
-        }
-        historyDetailRandomRepository.save(historyDetail);
-
-        Optional<Category> ca = categoryRepository.findById(addPointRequest.getCategoryId());
-        Notification notification = new Notification();
-        notification.setTitle("Yêu cầu cộng " + addPointRequest.getHoneyPoint() + " mật ong loại " + ca.get().getName() + " cho sinh viên");
-        notification.setStatus(NotificationStatus.CHUA_DOC);
-        notification.setType(NotificationType.CHO_PHE_DUYET);
-        notification.setStudentId(history.getId());
-
-        teacherNotificationRepository.save(notification);
+        historyDetailRepository.save(historyDetail);
 
         return history;
     }

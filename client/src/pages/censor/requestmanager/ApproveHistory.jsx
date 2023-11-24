@@ -94,6 +94,7 @@ export default function RequestApprovedHistory() {
       acction: { idHistory: data.id, status: data.status },
     };
   });
+
   const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {

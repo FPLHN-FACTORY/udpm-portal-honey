@@ -123,7 +123,7 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
 
         // Tiếp tục với việc thêm yêu cầu vào bảng History
         Long dateNow = Calendar.getInstance().getTimeInMillis();
-        history.setCreatedAt(dateNow);
+        history.setChangeDate(dateNow);
         history.setNote(createRequest.getNote());
         history.setStudentId(createRequest.getStudentId());
         studentCreateRequestConversionRepository.save(history);

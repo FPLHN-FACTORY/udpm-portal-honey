@@ -17,7 +17,7 @@ public interface AdminHistoryRepository extends HistoryRepository {
             FROM history_detail hd
             LEFT JOIN history h ON hd.history_id = h.id
             LEFT JOIN honey ho ON hd.honey_id = ho.id
-            JOIN category c ON c.id = ho.honey_category_id
+            JOIN category c ON c.id = ho.honey_category_idx
             AND (:#{#searchParams.idCategory} IS NULL OR c.id = :#{#searchParams.idCategory})
             AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent})
             AND h.type = 0 AND h.admin_id = :#{#searchParams.idAdmin}

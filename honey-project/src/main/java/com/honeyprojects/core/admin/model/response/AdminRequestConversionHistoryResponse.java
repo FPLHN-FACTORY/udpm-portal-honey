@@ -9,7 +9,7 @@ public interface AdminRequestConversionHistoryResponse extends IsIdentified {
     String getStudentId();
 
     String getIdHistoryDetail();
-//    @Value("#{target.student_id}")
+
     String getCategoryId();
 
     @Value("#{target.name_gift}")
@@ -24,9 +24,8 @@ public interface AdminRequestConversionHistoryResponse extends IsIdentified {
     @Value("#{target.honey_point}")
     Integer getHoneyPoint();
 
-    @Value("#{target.created_date}")
-    Long getCreatedDate();
-
+    @Value("#{target.change_date}")
+    Long getChangeDate();
 
     @Value("#{target.status}")
     Integer getStatus();

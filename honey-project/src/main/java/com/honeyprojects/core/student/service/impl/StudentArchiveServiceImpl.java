@@ -64,6 +64,9 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
 
     @Override
     public PageableObject<StudentArchiveResponse> getAllGiftArchive(StudentArchiveFilterRequest filterRequest) {
+        System.err.println("--------------------------");
+        System.err.println(udpmHoney.getIdUser());
+        System.err.println("--------------------------");
         Pageable pageable = PageRequest.of(filterRequest.getPage(), filterRequest.getSize());
         filterRequest.setIdStudent(udpmHoney.getIdUser());
         return new PageableObject<>(studentGiftArchiveRepository.getAllGiftArchive(filterRequest, pageable));
@@ -184,4 +187,21 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     public List<StudentArchiveByUserResponse> findArchiveByUser(String idUser) {
         return archiveRepository.findArchiveByUser(idUser);
     }
+
+    @Override
+    public ArchiveGift deleteItem(String id, StudentGetArchiveGiftRequest request) {
+        Optional<ArchiveGift> optional = archiveGiftRepository.findById(id);
+        if (!optional.isPresent()) {
+            throw new RestApiException("Không tìm thấy vật phẩm");
+        }
+        ArchiveGift archiveGift = optional.get();
+        if (archiveGift.getQuantity() - request.getQuantity() > 0) {
+            archiveGift.setQuantity(archiveGift.getQuantity() - request.getQuantity());
+            archiveGiftRepository.save(archiveGift);
+        } else {
+            archiveGiftRepository.delete(archiveGift);
+        }
+        return archiveGift;
+    }
+
 }

@@ -4,6 +4,7 @@ import com.honeyprojects.entity.base.IsIdentified;
 import org.springframework.beans.factory.annotation.Value;
 
 public interface AdminAddHoneyHistoryResponse  extends IsIdentified {
+
     String getStt();
 
     @Value("#{target.note}")
@@ -20,4 +21,5 @@ public interface AdminAddHoneyHistoryResponse  extends IsIdentified {
 
     @Value("#{target.created_at}")
     Long getCreatedAt();
+
 }

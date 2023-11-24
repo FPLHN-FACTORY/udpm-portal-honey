@@ -1,4 +1,4 @@
-package com.honeyprojects.core.student.model.response;
+package com.honeyprojects.core.student.model.response.transaction;
 
 import com.honeyprojects.entity.base.IsIdentified;
 

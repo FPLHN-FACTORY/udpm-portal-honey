@@ -19,6 +19,7 @@ public interface TeacherAddPointService {
     TeacherPointResponse getPointStudent(TeacherGetPointRequest getPointRequest);
 
     PageableObject<TeacherAddHoneyHistoryResponse> getHistory(TeacherSearchHistoryRequest historyRequest);
+
     PageableObject<TeacherAddHoneyHistoryResponse> getListRequest(TeacherSearchHistoryRequest historyRequest);
 
     History changeStatus(TeacherChangeStatusRequest changeStatusRequest);

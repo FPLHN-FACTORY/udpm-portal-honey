@@ -1,7 +1,9 @@
 package com.honeyprojects.core.student.controller;
 
 import com.honeyprojects.core.common.base.ResponseObject;
-import com.honeyprojects.core.student.model.request.StudentTransactionRequest;
+import com.honeyprojects.core.student.model.request.transaction.ItemTransfer;
+import com.honeyprojects.core.student.model.request.transaction.StudentDoneRequest;
+import com.honeyprojects.core.student.model.request.transaction.StudentTransactionRequest;
 import com.honeyprojects.core.student.service.StudentTransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -31,6 +33,7 @@ public class StudentTransactionRestController {
     public ResponseObject getStudent(String id) {
         return new ResponseObject(transactionService.getUserById(id));
     }
+
     @GetMapping("/get-gift")
     public ResponseObject getGift() {
         return new ResponseObject(transactionService.getGiftTransactions());
@@ -39,6 +42,11 @@ public class StudentTransactionRestController {
     @GetMapping("/get-user-login")
     public String getUserLogin() {
         return transactionService.getUserLogin();
+    }
+
+    @PostMapping
+    public ResponseObject transaction(@RequestBody StudentDoneRequest request){
+        return new ResponseObject(transactionService.transaction(request));
     }
 
     @MessageMapping("/send-transaction/{id}")
@@ -50,13 +58,22 @@ public class StudentTransactionRestController {
     @MessageMapping("/accept-transaction/{id}")
     @SendTo("/portal-honey/transaction/{id}/accept")
     public ResponseObject acceptTransaction(@RequestBody StudentTransactionRequest request) {
-        System.out.println(request);
         return new ResponseObject(transactionService.sendTransaction(request));
     }
-    @MessageMapping("/transaction/{id}/cancel")
-    @SendTo("/portal-honey/transaction/{id}/cancel")
-    public Boolean cancelTransaction() {
-        return true;
+
+    @MessageMapping("/{id}/cancel")
+    @SendTo("/portal-honey/transaction/{id}")
+    public ResponseObject cancelTransaction() {
+        ItemTransfer itemTransfer = new ItemTransfer();
+        itemTransfer.setCancel(true);
+        return new ResponseObject(itemTransfer);
+    }
+
+    @MessageMapping("/send-item/{id}")
+    @SendTo("/portal-honey/transaction/{id}")
+    public ResponseObject sendItem(@RequestBody ItemTransfer itemTransfer) {
+        itemTransfer.setCancel(false);
+        return new ResponseObject(itemTransfer);
     }
 
 }

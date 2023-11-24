@@ -103,6 +103,7 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
 
         if (addPointRequest.getHoneyId() == null) {
             Honey honey = new Honey();
+            honey.setStatus(Status.HOAT_DONG);
             honey.setHoneyPoint(addPointRequest.getHoneyPoint());
             honey.setStudentId(addPointRequest.getStudentId());
             honey.setHoneyCategoryId(addPointRequest.getCategoryId());

@@ -26,20 +26,6 @@ const GiftChest = memo(() => {
     fetchGift();
   }, []);
 
-  function ImageRenderer({ image, quantity }) {
-
-    return (
-      <div style={{ position: "relative" }}>
-        <img
-          src={image}
-          style={{ width: "100%", height: "100%" }}
-          alt="Hình ảnh"
-        />
-        <div className="quantity-item">{quantity}</div>
-      </div>
-    );
-  }
-
   const handleTabClick = (index) => {
     setIsActive(index);
   };
@@ -79,8 +65,9 @@ const GiftChest = memo(() => {
               }}
             >
               <div className="chest__card__image">
-                <img src={data.image} alt="" quantity={data.quantity} />
+                <img src={data.image} alt="" />
               </div>
+              <div className="chest__card__quantity">{data.quantity}</div>
               <div className="chest__card__body">
                 <h3>{data.name}</h3>
               </div>
