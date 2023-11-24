@@ -13,9 +13,6 @@ public interface CensorTransactionRequestResponse extends IsIdentified {
     @Value("#{target.student_id}")
     String getStudentId();
 
-    @Value("#{target.studentSend}")
-    String getStudentSend();
-
     @Value("#{target.nameCategory}")
     String getNameCategory();
 
@@ -24,6 +21,9 @@ public interface CensorTransactionRequestResponse extends IsIdentified {
 
     @Value("#{target.created_date}")
     Long getCreatedDate();
+
+    @Value("#{target.change_date}")
+    Long getChangeDate();
 
     @Value("#{target.status}")
     Integer getStatus();

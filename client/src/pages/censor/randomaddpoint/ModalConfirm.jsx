@@ -6,7 +6,6 @@ import {
 } from "../../../helper/stomp-client/config";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../app/hooks";
-import { SetCountNotification } from "../../../app/reducers/notification/count-notification.reducer";
 import { getToken } from "../../../helper/userToken";
 
 export default function ModalConfirm(props) {

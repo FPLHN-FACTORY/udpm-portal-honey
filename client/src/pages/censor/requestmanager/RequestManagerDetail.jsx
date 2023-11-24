@@ -1,4 +1,4 @@
-import { Button, Card, Descriptions, Space, Spin, Tag, message } from "antd";
+import { Button, Card, Descriptions, Space, Tag, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import { useNavigate, useParams } from "react-router-dom";
@@ -36,22 +36,19 @@ const fomatDate = (date) => {
 };
 
 export default function RequestManagerDetail() {
-  const param = useParams();
+  const {id} = useParams();
   const navigate = useNavigate();
   const [request, setRequest] = useState({});
   const [student, setStudent] = useState({});
   const [teacher, setTeacher] = useState({});
 
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
-    fetchData(param, navigate);
-  }, [param, navigate]);
+    fetchData();
+  }, [id]);
 
-  const fetchData = async (param, navigate) => {
-    setLoading(true);
+  const fetchData = async () => {
     let [idStudent, idNguoiGui] = "";
-    await RequestManagerAPI.detailRequest(param.id)
+    await RequestManagerAPI.detailRequest(id)
       .then((response) => {
         if (response.data.success) {
           idStudent = response.data.data.studentId;
@@ -66,7 +63,6 @@ export default function RequestManagerDetail() {
       });
     await RequestManagerAPI.getUserAPiById(idStudent)
       .then((response) => {
-        console.log(response);
         setStudent(response.data.data);
       })
       .catch((error) => {
@@ -79,15 +75,13 @@ export default function RequestManagerDetail() {
       .catch((error) => {
         console.error(error);
       });
-    setLoading(false);
   };
 
   const changeStatus = (status) => {
-    setLoading(true);
-    RequestManagerAPI.changeStatus(param.id, status)
+    RequestManagerAPI.changeStatus(id, status)
       .then((response) => {
         if (response.data.success) {
-          fetchData(param);
+          fetchData();
           if (status === 1) message.success("Đã xác nhận yêu cầu cộng điểm!");
           if (status === 2) message.error("Hủy yêu cầu thành công!");
         }
@@ -95,92 +89,85 @@ export default function RequestManagerDetail() {
       .catch((error) => {
         console.error(error);
       })
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(() => {});
   };
 
   return (
-    <Spin spinning={loading}>
-      <div className="request-manager">
-        <Button
-          onClick={() => navigate(-1)}
-          type="primary"
-          style={{ backgroundColor: "black" }}>
-          Quay lại
-        </Button>
-        {request.id !== null && (
-          <Card
-            className="m-25 request-manager-detail"
-            title="Chi tiết yêu cầu"
-            extra={
-              request.status !== 2 &&
-              request.status !== 1 && (
-                <Space size={"middle"}>
-                  <Button
-                    onClick={() => changeStatus(1)}
-                    type="primary"
-                    style={{ backgroundColor: "#EEB30D" }}>
-                    Phê duyệt
-                  </Button>
-                  <Button onClick={() => changeStatus(2)} type="primary" danger>
-                    Từ chối
-                  </Button>
-                </Space>
-              )
-            }>
-            <Descriptions title="Nội dung yêu cầu">
-              <Descriptions.Item label="Loại yêu cầu">
-                {type(request.type)}
-              </Descriptions.Item>
-              <Descriptions.Item label="Loại điểm">
-                {request.nameCategory}
-              </Descriptions.Item>
-              <Descriptions.Item label="Số điểm">
-                {request.honeyPoint}
-              </Descriptions.Item>
-              <Descriptions.Item label="Ngày tạo">
-                {fomatDate(request.createDate)}
-              </Descriptions.Item>
-              <Descriptions.Item label="Trạng thái">
-                {statusHistory(request.status)}
-              </Descriptions.Item>
-              <Descriptions.Item label="Ngày phê duyệt">
-                {request.changeDate
-                  ? fomatDate(request.changeDate)
-                  : "Chưa phê duyệt"}
-              </Descriptions.Item>
-              <Descriptions.Item label="Lý do">
-                {request.note}
-              </Descriptions.Item>
-            </Descriptions>
-            <hr />
-            <Descriptions title="Thông tin sinh viên">
-              <Descriptions.Item label="User name">
-                {student.userName}
-              </Descriptions.Item>
-              <Descriptions.Item label="Họ & tên">
-                {student.name}
-              </Descriptions.Item>
-              <Descriptions.Item label="Email">
-                {student.email}
-              </Descriptions.Item>
-            </Descriptions>
-            <hr />
-            <Descriptions title="Thông tin người gửi">
-              <Descriptions.Item label="User name người gửi">
-                {teacher.userName}
-              </Descriptions.Item>
-              <Descriptions.Item label="Họ & tên">
-                {teacher.name}
-              </Descriptions.Item>
-              <Descriptions.Item label="Email">
-                {teacher.email}
-              </Descriptions.Item>
-            </Descriptions>
-          </Card>
-        )}
-      </div>
-    </Spin>
+    <div className="request-manager">
+      <Button
+        onClick={() => navigate(-1)}
+        type="primary"
+        style={{ backgroundColor: "black" }}
+      >
+        Quay lại
+      </Button>
+      {request.id !== null && (
+        <Card
+          className="m-25 request-manager-detail"
+          title="Chi tiết yêu cầu"
+          extra={
+            request.status !== 2 &&
+            request.status !== 1 && (
+              <Space size={"middle"}>
+                <Button
+                  onClick={() => changeStatus(1)}
+                  type="primary"
+                  style={{ backgroundColor: "#EEB30D" }}
+                >
+                  Phê duyệt
+                </Button>
+                <Button onClick={() => changeStatus(2)} type="primary" danger>
+                  Từ chối
+                </Button>
+              </Space>
+            )
+          }
+        >
+          <Descriptions title="Nội dung yêu cầu">
+            <Descriptions.Item label="Loại yêu cầu">
+              {type(request.type)}
+            </Descriptions.Item>
+            <Descriptions.Item label="Loại điểm">
+              {request.nameCategory}
+            </Descriptions.Item>
+            <Descriptions.Item label="Số điểm">
+              {request.honeyPoint}
+            </Descriptions.Item>
+            <Descriptions.Item label="Ngày tạo">
+              {fomatDate(request.createDate)}
+            </Descriptions.Item>
+            <Descriptions.Item label="Trạng thái">
+              {statusHistory(request.status)}
+            </Descriptions.Item>
+            <Descriptions.Item label="Ngày phê duyệt">
+              {request.changeDate
+                ? fomatDate(request.changeDate)
+                : "Chưa phê duyệt"}
+            </Descriptions.Item>
+            <Descriptions.Item label="Lý do">{request.note}</Descriptions.Item>
+          </Descriptions>
+          <hr />
+          <Descriptions title="Thông tin sinh viên">
+            <Descriptions.Item label="User name">
+              {student.userName}
+            </Descriptions.Item>
+            <Descriptions.Item label="Họ & tên">
+              {student.name}
+            </Descriptions.Item>
+            <Descriptions.Item label="Email">{student.email}</Descriptions.Item>
+          </Descriptions>
+          <hr />
+          <Descriptions title="Thông tin người gửi">
+            <Descriptions.Item label="User name người gửi">
+              {teacher.userName}
+            </Descriptions.Item>
+            <Descriptions.Item label="Họ & tên">
+              {teacher.name}
+            </Descriptions.Item>
+            <Descriptions.Item label="Email">{teacher.email}</Descriptions.Item>
+          </Descriptions>
+        </Card>
+      )}
+    </div>
   );
 }

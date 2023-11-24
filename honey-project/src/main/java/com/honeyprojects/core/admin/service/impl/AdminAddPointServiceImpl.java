@@ -7,6 +7,8 @@ import com.honeyprojects.core.admin.model.request.AdminSearchHistoryRequest;
 import com.honeyprojects.core.admin.model.response.AdminAddHoneyHistoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminPoinResponse;
+import com.honeyprojects.core.admin.repository.AdHistoryDetailRandomRepository;
+import com.honeyprojects.core.admin.repository.AdHistoryDetailRepository;
 import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
 import com.honeyprojects.core.admin.repository.AdminHistoryRepository;
 import com.honeyprojects.core.admin.repository.AdminHoneyRepository;
@@ -15,6 +17,7 @@ import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.entity.History;
+import com.honeyprojects.entity.HistoryDetail;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.Status;
@@ -41,6 +44,9 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
     private AdminHistoryRepository historyRepository;
 
     @Autowired
+    private AdHistoryDetailRepository historyDetailRandomRepository;
+
+    @Autowired
     private UdpmHoney udpmHoney;
 
     @Autowired
@@ -53,8 +59,7 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
 
     @Override
     public AdminPoinResponse getPointStudent(AdminGetPointRequest getPointRequest) {
-        Long dateNow = Calendar.getInstance().getTimeInMillis();
-        return honeyRepository.getPoint(getPointRequest, dateNow);
+        return honeyRepository.getPoint(getPointRequest);
     }
 
     @Override
@@ -85,12 +90,17 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
         String idAdmin = udpmHoney.getIdUser();
         Long dateNow = Calendar.getInstance().getTimeInMillis();
         History history = new History();
-        history.setStatus(HoneyStatus.DA_PHE_DUYET);
-        history.setTeacherId(idAdmin);
-        history.setHoneyPoint(addPointRequest.getHoneyPoint());
+        history.setAdminId(idAdmin);
         history.setNote(addPointRequest.getNote());
         history.setType(TypeHistory.CONG_DIEM);
-        history.setCreatedAt(dateNow);
+        history.setChangeDate(dateNow);
+        historyRepository.save(history);
+
+        HistoryDetail historyDetail = new HistoryDetail();
+        historyDetail.setHistoryId(history.getId());
+        historyDetail.setHoneyPoint(addPointRequest.getHoneyPoint());
+        historyDetail.setStudentId(addPointRequest.getStudentId());
+
         if (addPointRequest.getHoneyId() == null) {
             Honey honey = new Honey();
             honey.setStatus(Status.HOAT_DONG);
@@ -98,16 +108,15 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
             honey.setStudentId(addPointRequest.getStudentId());
             honey.setHoneyCategoryId(addPointRequest.getCategoryId());
             honeyRepository.save(honey);
-            history.setHoneyId(honeyRepository.save(honey).getId());
-
+            historyDetail.setHoneyId(honey.getId());
         } else {
             Honey honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();
-            history.setHoneyId(honey.getId());
             honey.setHoneyPoint(addPointRequest.getHoneyPoint() + honey.getHoneyPoint());
             honeyRepository.save(honey);
+            historyDetail.setHoneyId(honey.getId());
         }
-        history.setStudentId(addPointRequest.getStudentId());
-        return historyRepository.save(history);
+        historyDetailRandomRepository.save(historyDetail);
+        return history;
     }
 
     @Override

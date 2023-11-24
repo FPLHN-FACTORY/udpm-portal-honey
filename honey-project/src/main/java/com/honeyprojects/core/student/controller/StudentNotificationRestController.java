@@ -65,5 +65,8 @@ public class StudentNotificationRestController extends BaseController {
         studentNotificationService.deleteNotification(id);
     }
 
-
+    @PutMapping("/read-all-notification")
+    public ResponseObject raedAllNotification() {
+        return new ResponseObject(studentNotificationService.updateNotification(udpmHoney.getIdUser()));
+    }
 }

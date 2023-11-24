@@ -5,39 +5,62 @@ import {
   Row,
   Space,
   Table,
+  Tag,
   Pagination,
+  message,
+  Tooltip,
+  Popconfirm,
   Input,
   Select,
   Form,
 } from "antd";
 import "./auction-management.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter, faRectangleList } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFilter,
+  faPenToSquare,
+  faRectangleList,
+  faTrash,
+  faPlus,
+  faCircleXmark,
+} from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AuctionAPI } from "../../../apis/censor/auction/auction.api";
 import {
   GetAuction,
   SetAuction,
+  DeleteAuction,
+  ChangeAuctionStatus,
 } from "../../../app/reducers/auction/auction.reducer";
-// import ModalCreateAuction from "./modal-create/ModalCreateAuction.jsx";
-// import ModalUpdateAuction from "./modal-update/ModalUpdateAuction";
+import ModalCreateAuction from "./modal-create/ModalCreateAuction.jsx";
+import ModalUpdateAuction from "./modal-update/ModalUpdateAuction";
+import moment from "moment";
 import { CountdownTimer } from "../../util/CountdownTimer";
 
-const { Option } = Select;
-
 export default function AuctionMangement() {
-  // const [auction, setAuction] = useState(null);
+  const [auction, setAuction] = useState(null);
+  const [name, setName] = useState("");
+  const [status, setStatus] = useState("");
+  const [honeyCategoryId, setHoneyCategoryId] = useState("");
   const [listCategorySearch, setListCategorySearch] = useState([]);
   const { id } = useParams();
   const [current, setCurrent] = useState(0);
   const [total, setTotal] = useState(0);
   const [size, setSize] = useState(10);
   const dispatch = useAppDispatch();
-  // const [modalCreate, setModalCreate] = useState(false);
-  // const [modalUpdate, setModalUpdate] = useState(false);
+  const [modalCreate, setModalCreate] = useState(false);
+  const [modalUpdate, setModalUpdate] = useState(false);
   const [form] = Form.useForm();
+  const [searchParams, setSearchParams] = useState({
+    nameGift: "",
+    category: "",
+    type: "",
+    startingPrice: "",
+  });
+
   const listType = [
     {
       label: "Quà tặng ",
@@ -57,18 +80,18 @@ export default function AuctionMangement() {
     },
   ];
 
-  const [searchParams, setSearchParams] = useState({
-    nameGift: "",
-    category: "",
-    type: "",
-    startingPrice: "",
-  });
 
   useEffect(() => {
     fetchData();
-  }, [current, size, searchParams]);
+    return () => {
+      dispatch(SetAuction([]));
+    };
+  }, [current]);
 
   useEffect(() => {
+    setName("");
+    setStatus("");
+    setHoneyCategoryId("");
     fetchDataCategory();
   }, []);
 
@@ -92,7 +115,6 @@ export default function AuctionMangement() {
       } else {
         setCurrent(response.data.data.currentPage);
       }
-      console.log("2222" + response.data.data.data);
     });
   };
 
@@ -104,25 +126,52 @@ export default function AuctionMangement() {
       dataIndex: "stt",
       key: "stt",
       align: "center",
+      render: (text, record, index) => index + 1,
     },
     {
-      title: "Tên vật phẩm",
-      dataIndex: "giftName",
-      key: "giftName",
-      align: "center",
+      title: "Tên phòng",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: "Thời gian còn lại",
+      title: "Loại điểm",
+      dataIndex: "nameCategory",
+      key: "nameCategory",
+      render: (text) => <span>{text}</span>,
+    },
+    // {
+    //   title: "Từ ",
+    //   dataIndex: "fromDate",
+    //   key: "fromDate",
+    //   render: (text) => <span>{moment(text).format("DD/MM/YYYY HH:MM:ss")}</span>
+    // },
+    // {
+    //   title: "Đến",
+    //   dataIndex: "toDate",
+    //   key: "toDate",
+    //   render: (text) => <span>{moment(text).format("DD/MM/YYYY HH:MM:ss")}</span>
+    // },
+    {
+      title: "Còn lại", 
       dataIndex: "toDate",
       key: "toDate",
       align: "center",
       width: "17%",
-      render: (_, record) => (
-        <CountdownTimer initialTime={record.toDate - new Date().getTime()} />
-      ),
+      render: (_, record) => {
+        if(record.status === "HOAT_DONG"){
+          return <CountdownTimer initialTime={record.toDate - new Date().getTime()} />
+        }else{
+          return <span style={{color: 'red'}}>00:00:00</span>
+        }
+      },
     },
     {
-      title: "Giá cố định",
+      title: "Vật phẩm đấu giá",
+      dataIndex: "giftName",
+      key: "giftName",
+    },
+    {
+      title: "Giá khởi điểm",
       dataIndex: "startingPrice",
       key: "startingPrice",
       align: "center",
@@ -141,11 +190,32 @@ export default function AuctionMangement() {
       },
     },
     {
-      title: "Loại mật ong",
-      dataIndex: "nameCategory",
-      key: "nameCategory",
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
       align: "center",
+      render: (status) => {
+        if(status === "HOAT_DONG"){
+          return <Tag color="green">Đang mở</Tag>
+        }else{
+          return <Tag color="red">Đã đóng</Tag>
+        }
+      }
     },
+    {
+      title: "Hành động",
+      key: "action",
+      render: (_, record) => (
+        <Tooltip title="Đóng phiên">
+            <Button disabled={record.status === "KHONG_HOAT_DONG"}
+            style={{ backgroundColor:'red', color: 'white'}}
+              onClick={() => buttonDelete(record.id)}
+            >
+              <FontAwesomeIcon icon={faCircleXmark} />
+            </Button>
+          </Tooltip>
+      )
+    }
   ];
 
   const buttonSearch = async () => {
@@ -169,37 +239,37 @@ export default function AuctionMangement() {
     });
   };
 
-  // const buttonCreate = () => {
-  //   setModalCreate(true);
-  // };
+  const buttonCreate = () => {
+    setModalCreate(true);
+  };
 
-  // const buttonCreateCancel = () => {
-  //   setModalCreate(false);
-  //   setAuction(null);
-  // };
+  const buttonCreateCancel = () => {
+    setModalCreate(false);
+    setAuction(null);
+  };
 
-  // const buttonUpdate = (record) => {
-  //   setModalUpdate(true);
-  //   setAuction(record);
-  // };
+  const buttonUpdate = (record) => {
+    setModalUpdate(true);
+    setAuction(record);
+  };
 
-  // const buttonUpdateCancel = () => {
-  //   setModalUpdate(false);
-  //   setAuction(null);
-  // };
+  const buttonUpdateCancel = () => {
+    setModalUpdate(false);
+    setAuction(null);
+  };
 
-  // const buttonDelete = (id) => {
-  //   AuctionAPI.changeStatus(id).then(
-  //     (response) => {
-  //       message.success("Đóng thành công!");
-  //       dispatch(ChangeAuctionStatus(response.data.data));
-  //       fetchData();
-  //     },
-  //     (error) => {
-  //       message.error("Đóng thất bại!");
-  //     }
-  //   );
-  // };
+  const buttonDelete = (id) => {
+    AuctionAPI.changeStatus(id).then(
+      (response) => {
+        message.success("Đóng thành công!");
+        dispatch(ChangeAuctionStatus(response.data.data));
+        fetchData();
+      },
+      (error) => {
+        message.error("Đóng thất bại!");
+      }
+    );
+  };
 
   return (
     <div>
@@ -340,7 +410,7 @@ export default function AuctionMangement() {
               </b>
             </span>
           </div>
-          {/* <div>
+          <div>
             <Button
               style={{
                 color: "white",
@@ -359,7 +429,7 @@ export default function AuctionMangement() {
               />
               Thêm phòng đấu giá
             </Button>
-          </div> */}
+          </div>
         </Space>
 
         <div
@@ -389,7 +459,7 @@ export default function AuctionMangement() {
         </div>
       </Card>
 
-      {/* <ModalCreateAuction
+      <ModalCreateAuction
         visible={modalCreate}
         onCancel={buttonCreateCancel}
         fetchAllData={fetchData}
@@ -399,7 +469,7 @@ export default function AuctionMangement() {
         onCancel={buttonUpdateCancel}
         auction={auction}
         fetchAllData={fetchData}
-      /> */}
+      />
     </div>
   );
 }

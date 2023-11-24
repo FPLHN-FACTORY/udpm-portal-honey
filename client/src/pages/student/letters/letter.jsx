@@ -1,4 +1,4 @@
-import { Card, Col, Row, message } from "antd";
+import { Card, Col, Row, message, notification } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ClockCircleOutlined, HeatMapOutlined } from "@ant-design/icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
@@ -13,6 +13,7 @@ import {
   SetNotification,
 } from "../../../app/reducers/notification/notification.reducer";
 import { GetCountNotification } from "../../../app/reducers/notification/count-notification.reducer";
+import imageNotification from "../../../assets/images/bell.png";
 
 const Letter = memo(() => {
   const dispatch = useAppDispatch();
@@ -27,6 +28,17 @@ const Letter = memo(() => {
     setAllRead(!allRead);
   };
 
+  const readAllNotification = () => {
+    NotificationAPI.readAllNotification().then((response) => {
+      if (response.status === 200) {
+        message.success("Đã đọc hết thư");
+        fetchListNotification();
+      } else {
+        message.warning("Không thể đọc hết thư");
+      }
+    });
+  };
+
   const fetchNotification = async () => {
     try {
       const response = await NotificationAPI.fetchNotification({
@@ -35,6 +47,7 @@ const Letter = memo(() => {
       dispatch(SetNotification(response.data.data.data));
 
       setCurrent(response.data.data.currentPage);
+
       setCrease(true);
       if (response.data.data.totalPages - current <= 1) {
         setNotificationHasData(false);
@@ -82,6 +95,16 @@ const Letter = memo(() => {
       <div className="letter__title">
         <h2>Hòm thư</h2>
       </div>
+      {dataCountNotification > 0 && (
+        <div>
+          <div
+            className="button__readAll"
+            onClick={() => readAllNotification()}
+          >
+            <span className="item__button">Đọc hết</span>
+          </div>
+        </div>
+      )}
       <div className="letter__list">
         <Col span={24}>
           {dataNotification.map((notification) => (
@@ -89,7 +112,7 @@ const Letter = memo(() => {
               <div className="letter__item" key={notification.id}>
                 <div className="letter__item__image">
                   <img
-                    src={notification.image}
+                    src={imageNotification}
                     alt="Ảnh"
                     className="item__image"
                   />

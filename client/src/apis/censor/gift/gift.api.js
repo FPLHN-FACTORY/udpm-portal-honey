@@ -32,6 +32,7 @@ export class GiftAPI {
       formData.append("toDate", data.toDate);
     }
     formData.append("note", data.note);
+    formData.append("numberDateEnd", data.numberDateEnd);
     return request({
       method: "POST",
       url: `/${this.COMPONENT_NAME}`,
@@ -63,6 +64,7 @@ export class GiftAPI {
       formData.append("toDate", data.toDate);
     }
     formData.append("note", data.note);
+    formData.append("numberDateEnd", data.numberDateEnd);
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/${id}`,

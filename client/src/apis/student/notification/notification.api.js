@@ -46,4 +46,18 @@ export class NotificationAPI {
       url: `/${this.COMPONENT_NAME}/update-status/${id}`,
     });
   };
+
+  static countNotification = (id) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/count`,
+    });
+  };
+
+  static readAllNotification = () => {
+    return request({
+      method: "PUT",
+      url: `/${this.COMPONENT_NAME}/read-all-notification`,
+    });
+  };
 }

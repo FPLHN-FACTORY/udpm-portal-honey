@@ -6,7 +6,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AdminChangeStatusRequest {
+
     String idHistory;
 
     int status;
+
 }

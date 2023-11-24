@@ -6,7 +6,6 @@ import {
   Pagination,
   Select,
   Space,
-  Table,
   message,
 } from "antd";
 import React, { useEffect, useState } from "react";
@@ -24,71 +23,8 @@ import {
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
 
-// const statusHistory = (status) => {
-//   switch (status) {
-//     case 1:
-//       return (
-//         <Tag style={{ width: "80px", textAlign: "center" }} color="green">
-//           Gửi thành công
-//         </Tag>
-//       ); // Màu xanh lá cây
-//     case 2:
-//       return (
-//         <Tag style={{ width: "80px", textAlign: "center" }} color="volcano">
-//           Gửi thất bại
-//         </Tag>
-//       ); // Màu đỏ
-//     default:
-//       return <Tag>Không xác định</Tag>;
-//   }
-// };
-
 export default function HistoryAddPoint() {
   const dispatch = useAppDispatch();
-  const columns = [
-    {
-      title: "STT",
-      dataIndex: "stt",
-      key: "stt",
-      align: "center",
-    },
-    {
-      title: "Tên sinh viên",
-      dataIndex: "nameStudent",
-      key: "nameStudent",
-      align: "center",
-    },
-    {
-      title: "Loại điểm",
-      dataIndex: "nameCategory",
-      key: "nameCategory",
-      align: "center",
-    },
-    {
-      title: "Số điểm",
-      dataIndex: "honeyPoint",
-      key: "honeyPoint",
-      align: "center",
-    },
-    {
-      title: "Ngày tạo",
-      dataIndex: "createdDate",
-      key: "createdDate",
-      align: "center",
-    },
-    {
-      title: "Lý do",
-      dataIndex: "note",
-      key: "note",
-      align: "center",
-    },
-    // {
-    //   title: "Trạng thái",
-    //   dataIndex: "status",
-    //   key: "status",
-    // },
-  ];
-
   const [totalPage, setTotalPage] = useState(1);
   const [filter, setFilter] = useState({ page: 0 });
 
@@ -134,11 +70,12 @@ export default function HistoryAddPoint() {
   };
 
   const data = useAppSelector(GetHistory).map((data) => {
+    console.log(data);
+
     return {
       ...data,
       key: data.id,
-      // status: statusHistory(data.status),
-      createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
+      createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
   });
@@ -210,12 +147,31 @@ export default function HistoryAddPoint() {
         </Form>
       </Card>
       <Card title="Lịch sử cộng điểm">
-        <Table
-          columns={columns}
-          dataSource={data}
-          rowKey="key"
-          pagination={false}
-        />
+        {data.map((item) => (
+          <div className="list__point ">
+            <h3 className="text-slate-600"> Sinh viên {item.nameStudent}</h3>
+            <div className="list__point__title">
+              <p>
+                <strong className="text-slate-500 mr-[8px]">
+                  Số điểm được cộng:
+                </strong>
+                {item.honeyPoint} mật ong {item.nameCategory}
+              </p>
+              <p>
+                <strong className="text-slate-500 mr-[8px]">Thời gian:</strong>
+                {item.createdDate}
+              </p>
+              <p
+                title={item.note}
+                className="w-[300px] overflow-hidden whitespace-nowrap text-ellipsis"
+              >
+                <strong className="text-slate-500 mr-[8px]">Lý do:</strong>
+                {item.note}
+              </p>
+            </div>
+          </div>
+        ))}
+        <div className="mt-10 text-center mb-10"></div>
         <div className="mt-10 text-center mb-10">
           <Pagination
             simple

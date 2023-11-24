@@ -16,13 +16,11 @@ const ModalUpdateAuction = ({ visible, onCancel, auction, fetchAllData }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log(auction);
     if (auction !== null) {
       setName(auction.name);
       setHoney(auction.honey);
       setStatus(auction.status == "HOAT_DONG" ? "0" : "1");
       setHoneyCategoryId(auction.categoryId);
-      console.log(auction.honeyCategoryId);
       return () => {
         setName("");
         setHoney("");
@@ -81,7 +79,6 @@ const ModalUpdateAuction = ({ visible, onCancel, auction, fetchAllData }) => {
         honeyCategoryId: honeyCategoryId,
       };
 
-      console.log(obj);
       const categoryNameItem = listCategory.find(
         (item) => item.id === honeyCategoryId
       );
@@ -93,7 +90,6 @@ const ModalUpdateAuction = ({ visible, onCancel, auction, fetchAllData }) => {
             categoryName: categoryNameItem.name,
             categoryId: categoryNameItem.id,
           };
-          console.log(response.data.data);
           dispatch(UpdateAuction(objCreate));
           fetchAllData();
           onCancel();
@@ -126,7 +122,6 @@ const ModalUpdateAuction = ({ visible, onCancel, auction, fetchAllData }) => {
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
-                  console.log(e.target.value.name);
                 }}
                 type="text"
               />
@@ -172,7 +167,7 @@ const ModalUpdateAuction = ({ visible, onCancel, auction, fetchAllData }) => {
                 value={status}
                 onChange={(e) => {
                   setStatus(e.target.value);
-                  console.log(e.target.value);
+                  // (e.target.value);
                 }}
               >
                 <Radio value={"0"}>Mở</Radio>

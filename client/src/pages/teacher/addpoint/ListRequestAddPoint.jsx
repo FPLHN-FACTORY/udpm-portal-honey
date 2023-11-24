@@ -29,10 +29,6 @@ const statusHistory = (status) => {
   switch (status) {
     case 0:
       return <Tag color="geekblue">Chờ phê duyệt</Tag>; // Màu xanh dương
-    case 1:
-      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
-    case 2:
-      return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
     default:
       return <Tag>Không xác định</Tag>;
   }
@@ -92,7 +88,8 @@ export default function HistoryAddPoint() {
             style={{
               color: values.status === 1 ? "" : "#fff",
               height: "30px",
-            }}>
+            }}
+          >
             Hủy
           </Button>
         </div>
@@ -199,7 +196,7 @@ export default function HistoryAddPoint() {
           <Space size={"large"}>
             <Form.Item name="userName" className="search-input">
               <Input
-                style={{ width: "300px" }}
+                style={{ width: "500px" }}
                 size="small"
                 placeholder="Nhập mã sinh viên cần tìm"
                 prefix={<SearchOutlined />}
@@ -207,7 +204,7 @@ export default function HistoryAddPoint() {
             </Form.Item>
             <Form.Item name={"idCategory"}>
               <Select
-                style={{ width: "150px" }}
+                style={{ width: "450px" }}
                 size="large"
                 placeholder="Loại điểm"
                 options={[
@@ -224,7 +221,8 @@ export default function HistoryAddPoint() {
             <Button
               htmlType="submit"
               type="primary"
-              className="mr-10 search-button">
+              className="mr-10 search-button"
+            >
               Lọc
             </Button>
           </Space>

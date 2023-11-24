@@ -98,10 +98,39 @@ function DashboardAuthUser({ children }) {
         ),
       ]
     ),
+    // getItem(
+    //   <Link to="/censor/request-manager/random-add-point">Tặng vật phẩm</Link>,
+    //   "/censor/request-manager/random-add-point",
+    //   <FontAwesomeIcon icon={faCommentsDollar} />,
+    //   [
+    //     getItem(
+    //       <Link to={"/censor/event"}>Module sự kiện</Link>,
+    //       "/censor/event"
+    //     ),
+    //     getItem(
+    //       <Link to={"/censor/project"}>Module dự án</Link>,
+    //       "/censor/project"
+    //     ),
+    //   ]
+    // ),
     getItem(
-      <Link to="/censor/request-manager/random-add-point">Tặng vật phẩm</Link>,
-      "/censor/request-manager/random-add-point",
-      <FontAwesomeIcon icon={faCommentsDollar} />
+      "Tặng vật phẩm",
+      "Tặng vật phẩm",
+      <FontAwesomeIcon icon={faCodePullRequest} />,
+      [
+        getItem(
+          <Link to={"/censor/request-manager/random-add-point"}>Tặng vật phẩm</Link>,
+          "/censor/request-manager/random-add-point"
+        ),
+        getItem(
+          <Link to={"/censor/event"}>Module sự kiện</Link>,
+          "/censor/event"
+        ),
+        getItem(
+          <Link to={"/censor/project"}>Module dự án</Link>,
+          "/censor/project"
+        ),
+      ]
     ),
     getItem(
       <Link to="/censor/chest">Quản lý rương</Link>,
@@ -109,19 +138,14 @@ function DashboardAuthUser({ children }) {
       <FontAwesomeIcon icon={faToolbox} />
     ),
     getItem(
-      <Link to="/censor/auction-management">Quản lý phòng đấu giá</Link>,
+      <Link to="/censor/auction-management">Quản lý đấu giá</Link>,
       "/censor/auction-management",
       <FontAwesomeIcon icon={faScaleUnbalanced} />
     ),
     getItem(
-      <Link to="/censor/upgrade-rate">Quản lý tỉ lệ nâng cấp</Link>,
+      <Link to="/censor/upgrade-rate">Quản lý nâng cấp</Link>,
       "/censor/upgrade-rate",
       <FontAwesomeIcon icon={faStar} />
-    ),
-    getItem(
-      <Link to="/censor/conversion">Quản lý quy đổi</Link>,
-      "/censor/conversion",
-      <FontAwesomeIcon icon={faExchangeAlt} />
     ),
   ];
   const toggleCollapse = () => {

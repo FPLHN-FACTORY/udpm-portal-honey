@@ -80,7 +80,7 @@ public interface AdRandomAddPointRepository extends HoneyRepository {
     List<String> getAllNameChest();
 
     @Query(value = """
-            SELECT  c.id, c.name, c.status
+            SELECT  c.id, c.name, c.category_status
             FROM category c
             WHERE c.name IN (:names) AND c.category_status <> 0
             """, nativeQuery = true)

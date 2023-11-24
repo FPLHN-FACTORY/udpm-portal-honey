@@ -18,11 +18,13 @@ import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.History;
+import com.honeyprojects.entity.HistoryDetail;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
+import com.honeyprojects.repository.HistoryDetailRepository;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -55,6 +57,9 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
     @Autowired
     private StudentArchiveRepository archiveRepository;
 
+    @Autowired
+    private HistoryDetailRepository historyDetailRepository;
+
 
     @Override
     public History addBuyItem(StudentBuyItemRequest createRequest) {
@@ -64,6 +69,7 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
 
         Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(createRequest.getStudentId(), createRequest.getCategoryId());
         History history = new History();
+        HistoryDetail historyDetail = new HistoryDetail();
         ArchiveGift archiveGift = new ArchiveGift();
         Archive archive = new Archive();
         archive.setStudentId(createRequest.getStudentId());
@@ -117,19 +123,20 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
 
         // Tiếp tục với việc thêm yêu cầu vào bảng History
         Long dateNow = Calendar.getInstance().getTimeInMillis();
-        history.setCreatedAt(dateNow);
-        history.setHoneyPoint(createRequest.getHoneyPoint());
-        history.setStudentId(createRequest.getStudentId());
-        history.setGiftId(createRequest.getGiftId());
-        history.setHoneyId(honey.getId());
-        history.setNameGift(createRequest.getNameGift());
+        history.setChangeDate(dateNow);
         history.setNote(createRequest.getNote());
-        history.setQuantity(createRequest.getQuantity());
+        history.setStudentId(createRequest.getStudentId());
+        studentCreateRequestConversionRepository.save(history);
 
+        historyDetail.setGiftId(createRequest.getGiftId());
+        historyDetail.setHoneyId(honey.getId());
+        historyDetail.setNameGift(createRequest.getNameGift());
+        historyDetail.setHoneyPoint(createRequest.getHoneyPoint());
+        historyDetail.setQuantityGift(createRequest.getQuantity());
+        historyDetail.setHistoryId(history.getId());
+        historyDetailRepository.save(historyDetail);
 
-
-
-        return studentCreateRequestConversionRepository.save(history);
+        return history;
 
 
     }

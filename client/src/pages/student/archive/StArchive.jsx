@@ -1,4 +1,4 @@
-import { Button, Card, Space, Spin, Table, Tabs, Tooltip } from "antd";
+import { Button, Card, Space, Table, Tabs, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -20,7 +20,6 @@ import {
 } from "../../../app/reducers/archive-gift/archive-chest.reducer";
 
 export default function StArchive() {
-  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const [archivegift, setArchiveGift] = useState();
   const [showModal, setShowModal] = useState(false);
@@ -35,21 +34,16 @@ export default function StArchive() {
   }, [filter]);
 
   const fetchData = () => {
-    console.log(selectedOption);
     try {
-      setLoading(true);
       if (selectedOption === 0) {
         ArchiveAPI.getGift(filter).then((response) => {
           dispatch(SetGiftArchive(response.data.data));
-          console.log(response.data.data);
           setTotalPage(response.data.totalPages);
-          setLoading(false);
         });
       } else {
         ArchiveAPI.getArchive(filter).then((response) => {
           dispatch(SetArchiveGift(response.data.data));
           setTotalPage(response.data.totalPages);
-          setLoading(false);
         });
       }
     } catch (error) {
@@ -197,7 +191,6 @@ export default function StArchive() {
 
   return (
     <div className="st_archive">
-      <Spin spinning={loading}></Spin>
       {showModal && (
         <DetailArchiveGift
           modalVisible={showModal}

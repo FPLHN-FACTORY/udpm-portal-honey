@@ -7,6 +7,9 @@ public interface CensorAddHoneyRequestResponse extends IsIdentified {
 
     String getStt();
 
+    @Value("#{target.idHistory}")
+    String getIdHistory();
+
     @Value("#{target.note}")
     String getNote();
 
@@ -19,10 +22,9 @@ public interface CensorAddHoneyRequestResponse extends IsIdentified {
     @Value("#{target.honey_point}")
     Integer getHoneyPoint();
 
-    @Value("#{target.created_date}")
-    Long getCreatedDate();
+    @Value("#{target.change_date}")
+    Long getChangeDate();
 
     @Value("#{target.status}")
     Integer getStatus();
-
 }

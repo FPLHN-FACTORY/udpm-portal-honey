@@ -1,6 +1,7 @@
 package com.honeyprojects.core.admin.model.request;
 
 import com.honeyprojects.entity.Honey;
+import com.honeyprojects.infrastructure.contant.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ public class AdminCreateHoneyRequest {
         honey.setHoneyCategoryId(this.categoryId);
         honey.setStudentId(this.studentId);
         honey.setHoneyPoint(this.honeyPoint);
-        honey.setStatus(null);
+        honey.setStatus(Status.HOAT_DONG);
         honey.setReason(null);
         return honey;
     }

@@ -45,6 +45,8 @@ public class Gift extends PrimaryEntity {
 
     private Long fromDate;
 
+    private Long numberEndDate;
+
     private String note;
 
     private Integer limitQuantity;

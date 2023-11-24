@@ -8,7 +8,6 @@ export default function ModalImportExcel(props) {
   const {
     open,
     setOpen,
-    setLoading,
     dataRandomPoint,
     dataRandomItem,
     setListStudentPoint,
@@ -21,7 +20,6 @@ export default function ModalImportExcel(props) {
   const [file, setFile] = useState(null);
 
   const handleExportExcel = () => {
-    setLoading(true);
     RandomAddPointAPI.createExportExcel()
       .then(() => {
         message.success("Export excel thành công");
@@ -29,14 +27,12 @@ export default function ModalImportExcel(props) {
       .catch((err) => {
         message.error("Export excel thất bại");
       });
-    setLoading(false);
   };
 
   const handleFileInputChange = (e) => {
     if (file !== null) {
       const formData = new FormData();
       formData.append("file", file.file.originFileObj);
-      setLoading(true);
       RandomAddPointAPI.previewDataRandomExcel(formData)
         .then((response) => {
           if (response.data.data.total > 0) {
@@ -67,7 +63,6 @@ export default function ModalImportExcel(props) {
       setDataPreview([]);
     }
     setNameFile("");
-    setLoading(false);
     setOpen(false);
   };
 

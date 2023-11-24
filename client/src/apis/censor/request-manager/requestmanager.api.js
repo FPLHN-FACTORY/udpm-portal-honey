@@ -20,6 +20,14 @@ export class RequestManagerAPI {
     });
   };
 
+  static getHistoryRequestAddItem = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/history-request-add-item`,
+      params: filter,
+    });
+  };
+
   static getHistoryBuyGifft = (filter) => {
     return request({
       method: "GET",
@@ -81,11 +89,11 @@ export class RequestManagerAPI {
       params: filter,
     });
   };
-  static changeStatus = (idHistory, status) => {
+  static changeStatus = (idHistory, idHistoryDetail, status) => {
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/change-status`,
-      data: { idHistory, status },
+      data: { idHistory, idHistoryDetail, status },
     });
   };
 
@@ -93,13 +101,21 @@ export class RequestManagerAPI {
     idStudent,
     idGift,
     idHistory,
+    idHistoryDetail,
     status,
-    quantity
+    quantityGift
   ) => {
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/change-status-conversion`,
-      data: { idStudent, idGift, idHistory, status, quantity },
+      data: {
+        idStudent,
+        idGift,
+        idHistory,
+        idHistoryDetail,
+        status,
+        quantityGift,
+      },
     });
   };
 

@@ -14,6 +14,7 @@ import com.honeyprojects.core.student.service.StudentUpgradeRateService;
 import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.entity.UpgradeRate;
+import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,6 +58,7 @@ public class StudentUpgradeRateServiceImpl implements StudentUpgradeRateService 
     @Override
     public Boolean updateArchive(StudentUpdateHoneyArchiveRequest request) {
         Optional<UpgradeRate> checkRatio = studentUpgradeRateRepository.findById(request.getIdUpgrade());
+        boolean foundDestinationHoney = false;
         if (checkRatio.isEmpty()) {
             throw new RestApiException("Không tìm thấy loại nâng cấp");
         }
@@ -71,19 +73,37 @@ public class StudentUpgradeRateServiceImpl implements StudentUpgradeRateService 
             List<Honey> honey = new ArrayList<>();
             List<Honey> listCategories = honeyRepository.getListIdCategory(udpmHoney.getIdUser());
             for (Honey honeyPoint : listCategories) {
-                if (honeyPoint.getHoneyCategoryId().equals(checkRatio.get().getOriginalHoney())) {
-                    honeyPoint.setHoneyPoint(honeyPoint.getHoneyPoint() - checkRatio.get().getQuantityOriginalHoney());
+                if (honeyPoint.getHoneyCategoryId().equals(checkRatio.get().getOriginalHoney())
+                ) {
+                    if (honeyPoint.getHoneyPoint() >= request.getOriginalHoney()) {
+                        honeyPoint.setHoneyPoint(honeyPoint.getHoneyPoint() - request.getOriginalHoney());
+                    } else {
+                        throw new RestApiException("Bạn không đủ mật ong để nâng cấp");
+                    }
+                }
+                else{
+                    throw new RestApiException("Bạn không đủ mật ong để nâng cấp");
                 }
                 if (honeyPoint.getHoneyCategoryId().equals(checkRatio.get().getDestinationHoney())) {
-                    honeyPoint.setHoneyPoint(honeyPoint.getHoneyPoint() + checkRatio.get().getQuantityDestinationHoney());
+                    honeyPoint.setHoneyPoint(honeyPoint.getHoneyPoint() + request.getDestinationHoney());
+                    foundDestinationHoney = true;
                 }
                 honey.add(honeyPoint);
+            }
+            if (!foundDestinationHoney) {
+                // Tạo một đối tượng Honey mới và thêm vào danh sách
+                Honey newHoney = new Honey();
+                newHoney.setHoneyCategoryId(checkRatio.get().getDestinationHoney());
+                newHoney.setHoneyPoint(request.getDestinationHoney());
+                newHoney.setStudentId(udpmHoney.getIdUser());
+                newHoney.setStatus(Status.HOAT_DONG);
+                honey.add(newHoney);
             }
             honeyRepository.saveAll(honey);
             // update quantity archive
             for (ArchiveGift archiveGift : listArchive) {
                 if (archiveGift.getQuantity() > 1) {
-                    archiveGift.setQuantity(archiveGift.getQuantity() - 1);
+                    archiveGift.setQuantity(archiveGift.getQuantity() - request.getQuantity());
                     listArchiveNew.add(archiveGift);
                 } else {
                     archiveGiftRepository.delete(archiveGift);
@@ -94,7 +114,7 @@ public class StudentUpgradeRateServiceImpl implements StudentUpgradeRateService 
         } else if (rate > ratio && listArchive.size() == listCondition.size()) {
             for (ArchiveGift archiveGift : listArchive) {
                 if (archiveGift.getQuantity() > 1) {
-                    archiveGift.setQuantity(archiveGift.getQuantity() - 1);
+                    archiveGift.setQuantity(archiveGift.getQuantity() - request.getQuantity());
                     listArchiveNew.add(archiveGift);
                 } else {
                     archiveGiftRepository.delete(archiveGift);
@@ -102,8 +122,7 @@ public class StudentUpgradeRateServiceImpl implements StudentUpgradeRateService 
             }
             archiveGiftRepository.saveAll(listArchiveNew);
             return false;
-        }
-        else {
+        } else {
             throw new RestApiException("Không đủ điều kiện nâng cấp");
         }
     }

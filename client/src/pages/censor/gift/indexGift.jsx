@@ -261,7 +261,7 @@ export default function IndexGift() {
           <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span>
           <Row gutter={24} style={{ marginBottom: "15px", paddingTop: "20px" }}>
             <Col span={12}>
-              <span>Tên hoặc mã gift:</span>{" "}
+              <span>Tên hoặc mã:</span>{" "}
               <Input
                 type="text"
                 value={search}

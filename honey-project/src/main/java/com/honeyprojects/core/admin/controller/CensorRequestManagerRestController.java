@@ -5,6 +5,7 @@ import com.honeyprojects.core.admin.model.request.AdminCreateConversionHistoryRe
 import com.honeyprojects.core.admin.model.request.AdminHistoryApprovedSearchRequest;
 import com.honeyprojects.core.admin.model.request.CensorChangeStatusRequest;
 import com.honeyprojects.core.admin.model.request.CensorSearchHistoryRequest;
+import com.honeyprojects.core.admin.model.response.AdminRequestConversionHistoryAddItemResponse;
 import com.honeyprojects.core.admin.model.response.AdminRequestConversionHistoryResponse;
 import com.honeyprojects.core.admin.model.response.CensorAddHoneyRequestResponse;
 import com.honeyprojects.core.admin.model.response.CensorTransactionRequestResponse;
@@ -13,6 +14,11 @@ import com.honeyprojects.core.admin.service.CensorRequestManagerService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.ResponseObject;
 import com.honeyprojects.util.callApiPoint.model.request.FilterClassSubject;
+import com.honeyprojects.util.callApiPoint.model.request.FilterScoreTemplate;
+import com.honeyprojects.util.callApiPoint.model.request.FilterScoreTemplateVM;
+import com.honeyprojects.util.callApiPoint.model.response.ClassSubjectVM;
+import com.honeyprojects.util.callApiPoint.model.response.ScoreTemplate;
+import com.honeyprojects.util.callApiPoint.model.response.ScoreTemplateVM;
 import com.honeyprojects.util.callApiPoint.service.CallApiCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +34,7 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.util.List;
 
 
 @RestController
@@ -39,16 +46,6 @@ public class CensorRequestManagerRestController {
     @Autowired
     private AdminRequestConversionService requestConversionService;
 
-    @Autowired
-    private CallApiCommonService callApiCommonService;
-
-    @GetMapping
-    private void testCall(@RequestParam(name = "test") String test) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, KeyManagementException {
-        FilterClassSubject classSubject = new FilterClassSubject();
-        classSubject.setEmailStudent(test);
-        callApiCommonService.callApiClassSubjectVM(classSubject);
-    }
-
     @GetMapping("/add-point")
     public PageableObject<CensorAddHoneyRequestResponse> getHistoryAddPoint(CensorSearchHistoryRequest historyRequest) {
         return requestManagerService.getHistoryAddPoint(historyRequest);
@@ -57,6 +54,11 @@ public class CensorRequestManagerRestController {
     @GetMapping("/history-request-conversion")
     public PageableObject<AdminRequestConversionHistoryResponse> getHistoryRequestConversion(AdminCreateConversionHistoryRequest historyRequest) {
         return requestConversionService.getHistoryConversionAdmin(historyRequest);
+    }
+
+    @GetMapping("/history-request-add-item")
+    public PageableObject<AdminRequestConversionHistoryAddItemResponse> getHistoryRequestAddItem(AdminCreateConversionHistoryRequest historyRequest) {
+        return requestConversionService.getHistoryRequestAddItem(historyRequest);
     }
 
     @GetMapping("/history-buy-gift")

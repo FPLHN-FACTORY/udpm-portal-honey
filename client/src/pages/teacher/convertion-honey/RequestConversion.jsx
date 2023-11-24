@@ -8,17 +8,11 @@ import {
   Popconfirm,
   Select,
   Space,
-  Spin,
   Table,
-  Tag,
   Tooltip,
   message,
 } from "antd";
-import {
-  SearchOutlined,
-  CheckCircleFilled,
-  CloseCircleFilled,
-} from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { AddPointAPI } from "../../../apis/teacher/add-point/add-point.api";
 import { TeacherUseGiftApi } from "../../../apis/teacher/convertion-honey/convertion-honey.api";
@@ -36,19 +30,6 @@ import {
   faRectangleList,
 } from "@fortawesome/free-solid-svg-icons";
 
-const statusHistory = (status) => {
-  switch (status) {
-    case 0:
-      return <Tag color="geekblue">Chờ phê duyệt</Tag>; // Màu xanh dương
-    case 1:
-      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
-    case 2:
-      return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
-    default:
-      return <Tag>Không xác định</Tag>;
-  }
-};
-
 export default function RequestConversion() {
   const dispatch = useAppDispatch();
   const [note, setNote] = useState("");
@@ -57,43 +38,52 @@ export default function RequestConversion() {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
+      align: "center",
     },
     {
       title: "Email sinh viên",
       dataIndex: "emailStudent",
       key: "emailStudent",
+      align: "center",
     },
     {
       title: "Loại quà",
       dataIndex: "nameGift",
       key: "nameGift",
+      align: "center",
     },
     {
       title: "Lớp",
       dataIndex: "lop",
       key: "lop",
+      align: "center",
     },
     {
       title: "Môn",
       dataIndex: "mon",
       key: "mon",
+      align: "center",
     },
     {
       title: "Số lượng",
       dataIndex: "quantity",
       key: "quantity",
+      align: "center",
     },
     {
       title: "Ngày tạo",
       dataIndex: "createdDate",
       key: "createdDate",
+      align: "center",
     },
     {
       title: "Hành động",
       dataIndex: "acction",
       key: "acction",
+      align: "center",
       render: (values) => (
-        <Space size="large">
+        // <>
+        <Space size="small">
           <Tooltip title="Hủy yêu cầu">
             <Popconfirm
               title="Vui lòng nhập lý do hủy"
@@ -115,12 +105,21 @@ export default function RequestConversion() {
                 style={{
                   backgroundColor: "red",
                   color: "white",
-                  height: "35px",
                 }}
               >
                 <FontAwesomeIcon icon={faClose} />
               </Button>
             </Popconfirm>
+          </Tooltip>
+          <Tooltip title="Xác nhận">
+            <Button
+              style={{
+                backgroundColor: "yellowgreen",
+                color: "white",
+              }}
+            >
+              <FontAwesomeIcon icon={faCheck} />
+            </Button>
           </Tooltip>
         </Space>
       ),
@@ -129,7 +128,6 @@ export default function RequestConversion() {
 
   const [totalPage, setTotalPage] = useState(1);
   const [filter, setFilter] = useState({ page: 0, status: 0 });
-  const [loading, setLoading] = useState(false);
   const [filterClass, setFilterClass] = useState([]);
   const [filterGift, setFilterGift] = useState([]);
 
@@ -144,7 +142,6 @@ export default function RequestConversion() {
 
   const fetchData = async (filter) => {
     try {
-      setLoading(true);
       const response = await TeacherUseGiftApi.getRequestUseGift(filter);
       const listHistory = await Promise.all(
         response.data.data.data.map(async (data) => {
@@ -165,7 +162,6 @@ export default function RequestConversion() {
     } catch (error) {
       console.error(error);
     }
-    setLoading(false);
   };
   useEffect(() => {
     fetchData(filter);
@@ -175,7 +171,6 @@ export default function RequestConversion() {
     return {
       ...data,
       key: data.id,
-      status: statusHistory(data.status),
       createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
       acction: { idHistory: data.id },
     };
@@ -199,24 +194,20 @@ export default function RequestConversion() {
   };
 
   const accept = (id) => {
-    setLoading(true);
     TeacherUseGiftApi.accpect(id)
       .then((result) => {
         dispatch(DeleteHistory(result.data.data));
       })
       .finally(() => {
-        setLoading(false);
         message.success("Phê duyệt thành công");
       });
   };
   const cancel = (id) => {
-    setLoading(true);
     TeacherUseGiftApi.cancel(id, note)
       .then((result) => {
         dispatch(DeleteHistory(result.data.data));
       })
       .finally(() => {
-        setLoading(false);
         message.error("Đã hủy yêu cầu");
       });
   };
@@ -242,13 +233,11 @@ export default function RequestConversion() {
       listId: selectedRowKeys,
     }).finally(() => {
       fetchData();
-      setLoading(false);
       message.success("Phê duyệt thành công");
     });
   };
 
   return (
-    <Spin spinning={loading}>
       <div className="add-point">
         <Card
           className="mb-2"
@@ -272,7 +261,7 @@ export default function RequestConversion() {
             <Space size={"large"} style={{ marginTop: "15px" }}>
               <Form.Item name="email" className="search-input">
                 <Input
-                  style={{ width: "300px" }}
+                  style={{ width: "400px" }}
                   size="small"
                   placeholder="Nhập email sinh viên cần tìm"
                   prefix={<SearchOutlined />}
@@ -281,7 +270,7 @@ export default function RequestConversion() {
               <Form.Item name={"gift"}>
                 <Select
                   showSearch
-                  style={{ width: "150px" }}
+                  style={{ width: "260px" }}
                   size="large"
                   placeholder="Loại quà"
                   options={[
@@ -298,7 +287,7 @@ export default function RequestConversion() {
               <Form.Item name={"lop"}>
                 <Select
                   showSearch
-                  style={{ width: "150px" }}
+                  style={{ width: "260px" }}
                   size="large"
                   placeholder="Lớp"
                   options={[
@@ -374,6 +363,5 @@ export default function RequestConversion() {
           </div>
         </Card>
       </div>
-    </Spin>
   );
 }

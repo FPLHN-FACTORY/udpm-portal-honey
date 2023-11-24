@@ -8,7 +8,8 @@ public interface AdminRequestConversionHistoryResponse extends IsIdentified {
     @Value("#{target.student_id}")
     String getStudentId();
 
-//    @Value("#{target.student_id}")
+    String getIdHistoryDetail();
+
     String getCategoryId();
 
     @Value("#{target.name_gift}")
@@ -23,16 +24,15 @@ public interface AdminRequestConversionHistoryResponse extends IsIdentified {
     @Value("#{target.honey_point}")
     Integer getHoneyPoint();
 
-    @Value("#{target.created_date}")
-    Long getCreatedDate();
-
+    @Value("#{target.change_date}")
+    Long getChangeDate();
 
     @Value("#{target.status}")
     Integer getStatus();
 
     @Value("#{target.note}")
     String getNote();
-    @Value("#{target.quantity}")
-    String getQuantity();
+    @Value("#{target.quantity_gift}")
+    Integer getQuantityGift();
 
 }

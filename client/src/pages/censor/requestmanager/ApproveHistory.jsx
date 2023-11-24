@@ -6,8 +6,6 @@ import {
   Pagination,
   Select,
   Space,
-  Spin,
-  Table,
   Tag,
   message,
 } from "antd";
@@ -22,19 +20,10 @@ import {
   GetCategory,
   SetCategory,
 } from "../../../app/reducers/category/category.reducer";
-import {
-  CheckCircleFilled,
-  CloseCircleFilled,
-  EyeFilled,
-  SearchOutlined,
-} from "@ant-design/icons";
-import TabsRequest from "./TabsRequest";
+import { SearchOutlined } from "@ant-design/icons";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
-import { Link } from "react-router-dom";
 import moment from "moment";
-import { type } from "@testing-library/user-event/dist/type";
-import TabsHistory from "./TabsHistory";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -48,49 +37,9 @@ const statusHistory = (status) => {
 };
 
 export default function RequestApprovedHistory() {
-  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
-  const columns = [
-    {
-      title: "STT",
-      dataIndex: "stt",
-      key: "stt",
-    },
-    {
-      title: "User name",
-      dataIndex: "userName",
-      key: "userName",
-    },
-    {
-      title: "Tên sinh viên",
-      dataIndex: "nameStudent",
-      key: "nameStudent",
-    },
-    {
-      title: "Loại điểm",
-      dataIndex: "nameCategory",
-      key: "nameCategory",
-    },
-    {
-      title: "Số điểm",
-      dataIndex: "honeyPoint",
-      key: "honeyPoint",
-    },
-    {
-      title: "Ngày tạo",
-      dataIndex: "createdDate",
-      key: "createdDate",
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-    },
-  ];
-
   const [totalPage, setTotalPage] = useState(1);
   const [filter, setFilter] = useState({ page: 0, status: null });
-  const [type, setType] = useState();
 
   useEffect(() => {
     fetchData(dispatch, filter);
@@ -98,7 +47,6 @@ export default function RequestApprovedHistory() {
 
   const fetchData = (dispatch, filter) => {
     dispatch(SetHistory([]));
-    setLoading(true);
     CategoryAPI.fetchAllCategory()
       .then((response) => {
         dispatch(SetCategory(response.data.data));
@@ -107,7 +55,6 @@ export default function RequestApprovedHistory() {
         message.error(error);
       })
       .finally(() => {
-        setLoading(true);
         const fetchData = async (filter) => {
           try {
             const response = await RequestManagerAPI.historyApproved(filter);
@@ -128,7 +75,6 @@ export default function RequestApprovedHistory() {
                 }
               })
             );
-            setLoading(false);
             dispatch(SetHistory(listHistory));
             setTotalPage(response.data.totalPages);
           } catch (error) {
@@ -144,14 +90,14 @@ export default function RequestApprovedHistory() {
       ...data,
       key: data.id,
       status: statusHistory(data.status),
-      createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
+      createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
   });
+
   const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
-    setLoading(true);
     if (value.userName === undefined || value.userName.trim().length === 0) {
       setFilter({
         ...filter,
@@ -175,93 +121,100 @@ export default function RequestApprovedHistory() {
         })
         .catch((error) => console.error(error));
     }
-    setLoading(false);
   };
 
   return (
-    <Spin spinning={loading}>
-      <div className="request-manager">
-        {/* <TabsHistory selectIndex={1} type={type} /> */}
-        <Card className="mb-2 py-1">
-          <Form onFinish={onFinishSearch}>
-            <Space size={"large"}>
-              <Form.Item name="userName" className="search-input">
-                <Input
-                  style={{ width: "400px" }}
-                  name="userName"
-                  size="small"
-                  placeholder="Nhập user name sinh viên cần tìm"
-                  prefix={<SearchOutlined />}
-                />
-              </Form.Item>
-              <Form.Item name={"idCategory"}>
-                <Select
-                  style={{ width: "250px" }}
-                  size="large"
-                  placeholder="Loại điểm"
-                  options={[
-                    { value: null, label: "Tất cả" },
-                    ...listCategory.map((category) => {
-                      return {
-                        value: category.id,
-                        label: category.name,
-                      };
-                    }),
-                  ]}
-                />
-              </Form.Item>
-              <Form.Item name={"status"} initialValue={null}>
-                <Select
-                  style={{ width: "260px" }}
-                  size="large"
-                  placeholder="Trạng thái"
-                  options={[
-                    { value: null, label: "Tất cả" },
-                    ...[1, 2].map((value) => {
-                      return {
-                        value: value,
-                        label: statusHistory(value),
-                      };
-                    }),
-                  ]}
-                />
-              </Form.Item>
-              <Button
-                htmlType="submit"
-                type="primary"
-                className="mr-10 search-button">
-                Lọc
-              </Button>
-            </Space>
-          </Form>
-        </Card>
-        <Card title="Lịch sử phê duyệt cộng điểm">
-          <Table
-            columns={columns}
-            dataSource={data}
-            rowKey="key"
-            pagination={false}
-            expandable={{
-              expandedRowRender: (record) => (
-                <p>
-                  <b style={{ color: "#EEB30D" }}>Lý do cộng: </b>
-                  {record.note}
-                </p>
-              ),
-            }}
-          />
-          <div className="mt-10 text-center mb-10">
-            <Pagination
-              simple
-              current={filter.page + 1}
-              onChange={(page) => {
-                setFilter({ ...filter, page: page - 1 });
-              }}
-              total={totalPage * 10}
-            />
+    <div className="request-manager">
+      <Card className="mb-2 py-1">
+        <Form onFinish={onFinishSearch}>
+          <Space size={"large"}>
+            <Form.Item name="userName" className="search-input">
+              <Input
+                style={{ width: "400px" }}
+                name="userName"
+                size="small"
+                placeholder="Nhập user name sinh viên cần tìm"
+                prefix={<SearchOutlined />}
+              />
+            </Form.Item>
+            <Form.Item name={"idCategory"}>
+              <Select
+                style={{ width: "250px" }}
+                size="large"
+                placeholder="Loại điểm"
+                options={[
+                  { value: null, label: "Tất cả" },
+                  ...listCategory.map((category) => {
+                    return {
+                      value: category.id,
+                      label: category.name,
+                    };
+                  }),
+                ]}
+              />
+            </Form.Item>
+            <Form.Item name={"status"} initialValue={null}>
+              <Select
+                style={{ width: "260px" }}
+                size="large"
+                placeholder="Trạng thái"
+                options={[
+                  { value: null, label: "Tất cả" },
+                  ...[1, 2].map((value) => {
+                    return {
+                      value: value,
+                      label: statusHistory(value),
+                    };
+                  }),
+                ]}
+              />
+            </Form.Item>
+            <Button
+              htmlType="submit"
+              type="primary"
+              className="mr-10 search-button"
+            >
+              Lọc
+            </Button>
+          </Space>
+        </Form>
+      </Card>
+      <Card title="Lịch sử cộng điểm">
+        {data.map((item) => (
+          <div className="list__point ">
+            <h3 className="text-slate-600"> Sinh viên {item.nameStudent}</h3>
+            <div className="list__point__title">
+              <p>
+                <strong className="text-slate-500 mr-[8px]">
+                  Số điểm được cộng:
+                </strong>
+                {item.honeyPoint} mật ong {item.nameCategory}
+              </p>
+              <p>
+                <strong className="text-slate-500 mr-[8px]">Thời gian:</strong>
+                {item.createdDate}
+              </p>
+              <p
+                title={item.note}
+                className="w-[300px] overflow-hidden whitespace-nowrap text-ellipsis"
+              >
+                <strong className="text-slate-500 mr-[8px]">Lý do:</strong>
+                {item.note}
+              </p>
+            </div>
           </div>
-        </Card>
-      </div>
-    </Spin>
+        ))}
+        <div className="mt-10 text-center mb-10">
+          <Pagination
+            simple
+            current={filter.page + 1}
+            onChange={(page) => {
+              setFilter({ ...filter, page: page - 1 });
+            }}
+            total={totalPage * 10}
+          />
+        </div>
+      </Card>
+    </div>
   );
 }

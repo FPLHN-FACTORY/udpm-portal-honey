@@ -64,6 +64,9 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
 
     @Override
     public PageableObject<StudentArchiveResponse> getAllGiftArchive(StudentArchiveFilterRequest filterRequest) {
+        System.err.println("--------------------------");
+        System.err.println(udpmHoney.getIdUser());
+        System.err.println("--------------------------");
         Pageable pageable = PageRequest.of(filterRequest.getPage(), filterRequest.getSize());
         filterRequest.setIdStudent(udpmHoney.getIdUser());
         return new PageableObject<>(studentGiftArchiveRepository.getAllGiftArchive(filterRequest, pageable));
@@ -79,45 +82,45 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     @Override
     @Transactional
     public ArchiveGift studentUsingGift(StudentRequestChangeGift request) {
-        SimpleResponse teacher = requestApiidentity.handleCallApiGetUserByEmail(request.getEmailGV());
-        if (teacher == null) {
-            throw new RestApiException("Email giảng viên không tồn tại trong hệ thống!");
-        }
-        ArchiveGift archiveGift = archiveGiftRepository.findById(request.getArchiveGiftId()).orElse(null);
-        if (archiveGift != null) {
-////            Semester semester = semesterRepository.findByStatus(SemesterStatus.DANG_HOAT_DONG)
-////                    .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
-////            StudentSumHistoryParam sumHistoryParam = new StudentSumHistoryParam(
-////                    archiveGift.getGiftId(), request.getMaLop(), request.getMaMon(), semester.getFromDate(),
-////                    semester.getToDate());
-////            Integer total = historyRepository.getTotalUseGift(sumHistoryParam);
-////            Gift gift = giftRepository.findById(archiveGift.getGiftId())
-////                    .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
-//            if (total == null) {
-//                total = 0;
+//        SimpleResponse teacher = requestApiidentity.handleCallApiGetUserByEmail(request.getEmailGV());
+//        if (teacher == null) {
+//            throw new RestApiException("Email giảng viên không tồn tại trong hệ thống!");
+//        }
+//        ArchiveGift archiveGift = archiveGiftRepository.findById(request.getArchiveGiftId()).orElse(null);
+//        if (archiveGift != null) {
+//////            Semester semester = semesterRepository.findByStatus(SemesterStatus.DANG_HOAT_DONG)
+//////                    .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
+//////            StudentSumHistoryParam sumHistoryParam = new StudentSumHistoryParam(
+//////                    archiveGift.getGiftId(), request.getMaLop(), request.getMaMon(), semester.getFromDate(),
+//////                    semester.getToDate());
+//////            Integer total = historyRepository.getTotalUseGift(sumHistoryParam);
+//////            Gift gift = giftRepository.findById(archiveGift.getGiftId())
+//////                    .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
+////            if (total == null) {
+////                total = 0;
+////            }
+////            if (gift.getLimitQuantity() != null
+////                    && gift.getLimitQuantity() < (total + request.getQuantity())) {
+////                throw new RestApiException("Số lượng sử dụng quá giới hạn!");
+////            }
+//            History history = new History();
+//            history.setQuantity(request.getQuantity());
+//            history.setStudentId(udpmHoney.getIdUser());
+//            history.setTeacherId(teacher.getId());
+//            history.setClassName(request.getMaLop());
+//            history.setSubject(request.getMaMon());
+//            history.setType(TypeHistory.PHE_DUYET_QUA);
+//            history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+//            history.setGiftId(archiveGift.getGiftId());
+//            historyRepository.save(history);
+//            archiveGift.setQuantity(archiveGift.getQuantity() - request.getQuantity());
+//            if (archiveGift.getQuantity() <= 0) {
+//                archiveGiftRepository.delete(archiveGift);
+//            } else {
+//                archiveGiftRepository.save(archiveGift);
 //            }
-//            if (gift.getLimitQuantity() != null
-//                    && gift.getLimitQuantity() < (total + request.getQuantity())) {
-//                throw new RestApiException("Số lượng sử dụng quá giới hạn!");
-//            }
-            History history = new History();
-            history.setQuantity(request.getQuantity());
-            history.setStudentId(udpmHoney.getIdUser());
-            history.setTeacherId(teacher.getId());
-            history.setClassName(request.getMaLop());
-            history.setSubject(request.getMaMon());
-            history.setType(TypeHistory.PHE_DUYET_QUA);
-            history.setStatus(HoneyStatus.CHO_PHE_DUYET);
-            history.setGiftId(archiveGift.getGiftId());
-            historyRepository.save(history);
-            archiveGift.setQuantity(archiveGift.getQuantity() - request.getQuantity());
-            if (archiveGift.getQuantity() <= 0) {
-                archiveGiftRepository.delete(archiveGift);
-            } else {
-                archiveGiftRepository.save(archiveGift);
-            }
-            return archiveGift;
-        }
+//            return archiveGift;
+//        }
         return null;
     }
 
@@ -184,4 +187,21 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     public List<StudentArchiveByUserResponse> findArchiveByUser(String idUser) {
         return archiveRepository.findArchiveByUser(idUser);
     }
+
+    @Override
+    public ArchiveGift deleteItem(String id, StudentGetArchiveGiftRequest request) {
+        Optional<ArchiveGift> optional = archiveGiftRepository.findById(id);
+        if (!optional.isPresent()) {
+            throw new RestApiException("Không tìm thấy vật phẩm");
+        }
+        ArchiveGift archiveGift = optional.get();
+        if (archiveGift.getQuantity() - request.getQuantity() > 0) {
+            archiveGift.setQuantity(archiveGift.getQuantity() - request.getQuantity());
+            archiveGiftRepository.save(archiveGift);
+        } else {
+            archiveGiftRepository.delete(archiveGift);
+        }
+        return archiveGift;
+    }
+
 }

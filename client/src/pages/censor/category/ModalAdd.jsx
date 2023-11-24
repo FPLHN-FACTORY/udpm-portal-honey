@@ -107,46 +107,63 @@ const ModalThem = (props) => {
         }
 
         if (check === 0) {
-          if (category === null) {
-            CategoryAPI.create({
-              ...formValues,
-              image: image,
-              name: categoryName,
-            })
-              .then((result) => {
-                dispatch(AddCategory(result.data.data));
-                message.success("Thành công!");
-                setModalOpen(false);
-                form.resetFields();
-                const newCategory = {
-                  id: result.data.data.id,
-                  name: categoryName,
-                  image: image,
-                };
-                onSave && onSave(newCategory);
-                fetchData();
-              })
-              .catch((err) => {
-                message.error("Lỗi: " + err.message);
-              });
+          if (formValues.transactionRights === "0") {
+            // If transactionRights is 0, show confirmation modal
+            Modal.confirm({
+              title: "Chú ý",
+              content:
+                "Bạn có chắc chắn muốn thêm thể loại này được giao dịch không?",
+              onOk: () => {
+                handleAddCategory(formValues);
+              },
+              onCancel: () => {},
+            });
           } else {
-            CategoryAPI.update(formValues, category.id)
-              .then((response) => {
-                dispatch(UpdateCategory(response.data.data));
-                message.success("Thành công!");
-                setModalOpen(false);
-                form.resetFields();
-                fetchData();
-              })
-              .catch((err) => {
-                message.error("Lỗi: " + err.message);
-              });
+            handleAddCategory(formValues);
           }
         }
       })
       .catch(() => {
         message.error("Vui lòng điền đầy đủ thông tin.");
       });
+  };
+
+  const handleAddCategory = (formValues) => {
+    if (category === null) {
+      CategoryAPI.create({
+        ...formValues,
+        image: image,
+        name: categoryName,
+      })
+        .then((result) => {
+          dispatch(AddCategory(result.data.data));
+          message.success("Thành công!");
+          setModalOpen(false);
+          form.resetFields();
+          const newCategory = {
+            id: result.data.data.id,
+            name: categoryName,
+            image: image,
+          };
+          onSave && onSave(newCategory);
+          fetchData();
+        })
+        .catch((err) => {
+          message.error("Lỗi: " + err.message);
+        });
+    } else {
+      CategoryAPI.update(formValues, category.id)
+        .then((response) => {
+          dispatch(UpdateCategory(response.data.data));
+          message.success("Thành công!");
+          setModalOpen(false);
+          form.resetFields();
+          fetchData();
+        })
+        .catch((err) => {
+          message.error("Lỗi: " + err.message);
+        });
+    }
   };
 
   const onCancel = () => {
@@ -168,7 +185,7 @@ const ModalThem = (props) => {
       >
         <hr className="border-0 bg-gray-300 mt-3 mb-6" />
         <Form
-        id="addCategory"
+          id="addCategory"
           initialValues={initialValues}
           form={form}
           name="basic"

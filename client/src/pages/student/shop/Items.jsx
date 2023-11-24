@@ -6,31 +6,6 @@ import "./shop-gift.css";
 import { BuyItem } from "../../../apis/student/buyItem/ButItem";
 import { StarTwoTone } from "@ant-design/icons";
 
-function ImageRenderer({ image }) {
-  if (image) {
-    // Chuyển đổi chuỗi byte thành mảng byte
-    const byteArray = image.split(",").map(Number);
-
-    // Tạo một Uint8Array từ mảng byte
-    const uint8Array = new Uint8Array(byteArray);
-
-    // Chuyển đổi Uint8Array thành Blob
-    const blob = new Blob([uint8Array], { type: "image/jpeg" });
-
-    // Tạo URL dữ liệu từ Blob
-    const imageUrl = URL.createObjectURL(blob);
-
-    return (
-      <img
-        src={imageUrl}
-        style={{ width: "100px", height: "100px" }}
-        alt="Hình ảnh"
-      />
-    );
-  } else {
-    return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
-  }
-}
 const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
   const [selectedConversion, setSelectedConversion] = useState(null);
   const [fillUserApi, setFillUserApi] = useState([]);
@@ -81,6 +56,7 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
       setSelectedConversion(conversion);
       setSelectedCardIndex(index);
       setCardBackgroundColor("#CCCC99");
+      setQuantity(1);
     }
   };
 
@@ -93,7 +69,7 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
       (selectedConversion ? selectedConversion.honey * quantity : 0) >
       fillPoint.point
     ) {
-      message.error("Bạn không đủ điểm để đổi quà trong ranh này.");
+      message.error("Số lượng mật ong không đủ!");
       return;
     }
     if (selectedConversion.quantity != null) {
@@ -120,7 +96,13 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
     BuyItem.createRequest(addRequest)
       .then((response) => {
         if (response.data.success) {
-          message.success("Đổi quà thành công");
+          if (selectedConversion && selectedConversion.status === 1) {
+            message.success("Gửi yêu cầu đổi vật phẩm thành công");
+          } else {
+            message.success("Đổi vật phẩm thành công");
+          }
+
+          setQuantity(1);
           if (
             selectedConversion &&
             selectedConversion.status === 0 &&
@@ -202,7 +184,7 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
               }}
             >
               <div className="card__image">
-                <ImageRenderer image={item.image} />
+                <img src={item.image} alt="" />
               </div>
               {item.status === 1 ? (
                 <StarTwoTone
@@ -234,7 +216,7 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
         <div className="item__detail">
           <div className="detail__header">
             <div className="item__detail__image">
-              <ImageRenderer image={selectedConversion.image} />
+              <img src={selectedConversion.image} alt="" />
             </div>
             <div class="item__detail__body">
               <h3 title="Ba lô siêu vip">{selectedConversion.name}</h3>{" "}

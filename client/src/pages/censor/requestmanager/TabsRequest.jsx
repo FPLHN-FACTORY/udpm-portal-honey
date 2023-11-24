@@ -2,6 +2,7 @@ import { Tabs } from "antd";
 import RequestConversionHistory from "./RequestConversionHistory";
 import "./index.css";
 import RequestAddPoint from "./RequestAddPoint";
+import RequestAddItemHistory from "./RequestAddItemHistory";
 
 export default function TabsRequest() {
   const items = [
@@ -14,6 +15,12 @@ export default function TabsRequest() {
       key: "2",
       label: "Vật phẩm",
       children: <RequestConversionHistory />,
+    },
+    ,
+    {
+      key: "3",
+      label: "Cộng vật phẩm",
+      children: <RequestAddItemHistory />,
     },
   ];
 

@@ -18,6 +18,8 @@ public interface AdminGiftService {
 
     List<AdminGiftResponse> getAllListGift();
 
+    List<AdminGiftResponse> getAllListGiftUpgrade();
+
     Gift addGift(AdminCreateGiftRequest request) throws IOException;
 
     Gift updateGift(AdminUpdateGiftRequest request, String id) throws IOException;

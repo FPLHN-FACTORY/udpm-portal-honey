@@ -1,7 +1,7 @@
 .student__chest {
   width: 100%;
   height: 100%;
-  background-image: url("https://w.wallhaven.cc/full/pk/wallhaven-pkgkye.jpg");
+  background-image: url("../../../assets/images/student-profile/wallhaven-pkgkye.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -191,6 +191,15 @@
   object-fit: cover;
   /* border-radius: 50%; */
   border: 2px solid #ffffff66;
+  border-radius: 5px;
+}
+.chest__card__quantity {
+  position: absolute;
+  top: 100px;
+  right: 40px;
+  color: white;
+  font-weight: 450;
+  text-shadow: 1px 1px 1px gray; /* Kích thước và màu của viền */
 }
 
 .chest__card__body {

@@ -10,7 +10,6 @@ import {
   InputNumber,
   Row,
   Space,
-  Spin,
   Table,
   Tag,
   Tooltip,
@@ -37,7 +36,6 @@ export default function AddPoint() {
 
   const [dataPreview, setDataPreview] = useState([]);
 
-  const [loading, setLoading] = useState(false);
   const [openUpload, setOpenUpload] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -48,19 +46,14 @@ export default function AddPoint() {
   const previewImport = useAppSelector(GetImport);
 
   useEffect(() => {
-    setLoading(true);
     AddPointAPI.getCategory()
       .then((response) => {
         setCategorySelected(response.data.data[0].id);
         dispatch(SetCategory(response.data.data));
       })
-      .finally(() => {
-        setLoading(false);
-      });
   }, [dispatch]);
 
   const onFinishSearch = (value) => {
-    setLoading(true);
     AddPointAPI.searchStudent(value.code.trim()).then((response) => {
       if (response.data.success) {
         setStudent(response.data.data);
@@ -75,22 +68,18 @@ export default function AddPoint() {
         ]);
       }
     });
-    setLoading(false);
   };
 
   const onFinishAdd = (values) => {
-    setLoading(true);
     addPoint({
       ...values,
       honeyId: honeyStudent.id,
       studentId: student.id,
       categoryId: categorySelected,
     });
-    setLoading(false);
   };
 
   const addPoint = (data) => {
-    setLoading(true);
     AddPointAPI.addPoint(data).then((response) => {
       if (response.data.success) {
         message.success("Thành công!");
@@ -101,11 +90,9 @@ export default function AddPoint() {
         message.error("Thất bại!");
       }
     });
-    setLoading(false);
   };
 
   const getHoney = (studentId, categoryId) => {
-    setLoading(true);
     AddPointAPI.getHoney(studentId, categoryId)
       .then((response) => {
         if (response.data.success) {
@@ -114,9 +101,6 @@ export default function AddPoint() {
           setHoneyStudent({ point: 0 });
         }
       })
-      .finally(() => {
-        setLoading(false);
-      });
   };
 
   const handleClostPreview = () => {
@@ -180,18 +164,11 @@ export default function AddPoint() {
   ];
 
   return (
-    <Spin spinning={loading}>
+    <div>
       <div className="add-point">
         <Card className="mb-2 py-1">
           <Form form={formSearch} className="d-flex" onFinish={onFinishSearch}>
-            <Row>
-              <Button
-                htmlType="submit"
-                type="primary"
-                className="mr-10 search-button"
-              >
-                Search
-              </Button>
+            <Row className="">  
               <Form.Item
                 name="code"
                 rules={[
@@ -207,10 +184,16 @@ export default function AddPoint() {
                   size="small"
                   placeholder="Nhập mã sinh viên cần tìm"
                   prefix={<SearchOutlined />}
-                  style={{ width: 800, marginRight : 20}}
+                  style={{ width: 835, marginRight : 20}}
                 />
               </Form.Item>
-
+              <Button
+                htmlType="submit"
+                type="primary"
+                className="mr-10 search-button"
+              >
+                Search
+              </Button>
               <Button
                 className="ml-auto import-button"
                 type="primary"
@@ -222,7 +205,6 @@ export default function AddPoint() {
                 <ModalUpLoadFile
                   openUpload={openUpload}
                   setOpenUpload={setOpenUpload}
-                  setLoading={setLoading}
                   setDataPreview={setDataPreview}
                   nameFileUpload={nameFileUpload}
                   setNameFileUpload={setNameFileUpload}
@@ -425,6 +407,6 @@ export default function AddPoint() {
           </Space>
         </Card>
       )}
-    </Spin>
+    </div>
   );
 }

@@ -14,7 +14,6 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { SearchOutlined, SendOutlined } from "@ant-design/icons";
-import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { TransactionApi } from "../../../apis/student/transaction/transactionApi.api";
 import {
@@ -24,7 +23,7 @@ import {
 
 const red = [255, 0, 0];
 const green = [0, 128, 0];
-export default function CreateTransaction({ setData, setCurrent, setLoading }) {
+export default function CreateTransaction({ setData, setCurrent }) {
   const [percent, setPercent] = useState(0);
 
   const interpolatedColor = [
@@ -42,7 +41,6 @@ export default function CreateTransaction({ setData, setCurrent, setLoading }) {
   const [formSearch] = Form.useForm();
 
   const onSearchStudent = (value) => {
-    setLoading(true);
     TransactionApi.searchStudent(value.code)
       .then((result) => {
         if (result.data.success) {
@@ -75,12 +73,10 @@ export default function CreateTransaction({ setData, setCurrent, setLoading }) {
         console.error(error);
       })
       .finally(() => {
-        setLoading(false);
       });
   };
 
   const onSubmit = (data) => {
-    setLoading(true);
     TransactionApi.verify()
       .then((response) => {
         if (response.data.success) {
@@ -100,17 +96,13 @@ export default function CreateTransaction({ setData, setCurrent, setLoading }) {
       .catch((error) => {
         console.error(error);
       })
-      .finally(() => {
-        setLoading(false);
-      });
   };
 
   useEffect(() => {
-    getHoney(category.id, setLoading);
-  }, [category, setLoading]);
+    getHoney(category.id);
+  }, [category]);
 
   const getHoney = (categoryId, loading) => {
-    loading(true);
     TransactionApi.getHoney(categoryId)
       .then((response) => {
         if (response.data.success) {
@@ -121,7 +113,6 @@ export default function CreateTransaction({ setData, setCurrent, setLoading }) {
       })
       .catch((error) => console.log(error))
       .finally(() => {
-        loading(false);
       });
   };
 

@@ -64,4 +64,24 @@ public class StudentNotificationServiceImpl implements StudentNotificationServic
         Optional<Notification> optionalNotification = notificationRepository.findById(id);
         notificationRepository.delete(optionalNotification.get());
     }
+
+    @Override
+    public Boolean updateNotification(String id) {
+        List<String> lstNotification = notificationRepository.getAllIdNotificationByIdStudent(id);
+        if (lstNotification.size() < 1) {
+            return false;
+        } else {
+            for (String idn : lstNotification) {
+                Optional<Notification> notificationOptional = notificationRepository.findById(idn);
+                if (notificationOptional.isPresent()) {
+                    Notification notification = notificationOptional.get();
+                    notification.setStatus(NotificationStatus.DA_DOC_CHUA_NHAN_QUA);
+                    notificationRepository.save(notification);
+                } else {
+                    continue;
+                }
+            }
+            return true;
+        }
+    }
 }

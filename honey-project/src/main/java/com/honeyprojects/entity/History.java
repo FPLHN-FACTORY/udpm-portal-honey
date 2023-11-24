@@ -17,26 +17,21 @@ import lombok.Setter;
 @Table(name = "history")
 public class History extends PrimaryEntity {
 
-    @Column(length = EntityProperties.LENGTH_NAME)
-    private String nameGift;
-
-    private Integer honeyPoint;
-
     private Long changeDate;
 
     private Long createdAt;
 
     @Column(length = EntityProperties.LENGTH_ID)
-    private String giftId;
+    private String studentId;
 
     @Column(length = EntityProperties.LENGTH_ID)
-    private String studentId;
+    private String presidentId;
 
     @Column(length = EntityProperties.LENGTH_ID)
     private String teacherId;
 
     @Column(length = EntityProperties.LENGTH_ID)
-    private String honeyId;
+    private String adminId;
 
     @Column(length = EntityProperties.LENGTH_NOTE)
     private String note;
@@ -48,7 +43,4 @@ public class History extends PrimaryEntity {
     private String className;
 
     private String subject;
-
-    private Integer quantity;
-
 }
