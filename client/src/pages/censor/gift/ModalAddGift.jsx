@@ -1,4 +1,14 @@
-import { Button, Col, Form, Input, Modal, Radio, Row, Select, message } from "antd";
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  Modal,
+  Radio,
+  Row,
+  Select,
+  message,
+} from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
 import { AddGift } from "../../../app/reducers/gift/gift.reducer";
@@ -98,7 +108,7 @@ const ModalThem = (props) => {
       setLimitQuantityValue(0);
       form.setFieldsValue({ limitSoLuong: 1 });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gift]);
 
   const fetchCategory = () => {
@@ -145,7 +155,7 @@ const ModalThem = (props) => {
 
   const validateEndDate = (rule, value) => {
     const startDate = form.getFieldValue("start");
-    const endDateValue = value === "" ? null : value;
+    const endDateValue = value === undefined ? null : value;
     form.setFieldsValue({ end: endDateValue });
     if (value && startDate && new Date(value) <= new Date(startDate)) {
       return Promise.reject("Thời gian kết thúc phải sau thời gian bắt đầu.");
@@ -167,6 +177,8 @@ const ModalThem = (props) => {
       form.setFieldsValue({
         status: 0,
         limitQuantity: 0,
+        honeyCategoryId: null,
+        checkTypeDate: 2,
       });
     }
   };
@@ -218,6 +230,10 @@ const ModalThem = (props) => {
             formValues.end === null
               ? null
               : Date.parse(new Date(formValues.end)),
+          numberDateEnd:
+            formValues.numberDateEnd !== undefined
+              ? formValues.numberDateEnd
+              : null,
         };
         GiftAPI.create(dataCreate)
           .then((result) => {
@@ -242,6 +258,7 @@ const ModalThem = (props) => {
 
             dispatch(AddGift(result.data.data));
             message.success("Thành công!");
+            fetchData();
             setModalOpen(false);
             form.resetFields();
             const newGift = {
@@ -286,7 +303,6 @@ const ModalThem = (props) => {
         name="basic"
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-       
         labelCol={{
           span: 7,
         }}
@@ -296,7 +312,7 @@ const ModalThem = (props) => {
         style={{
           marginTop: 30,
           padding: "0 30px",
-          justifyContent : "center"
+          justifyContent: "center",
         }}
         initialValues={{
           remember: true,
@@ -305,9 +321,9 @@ const ModalThem = (props) => {
           quantityLimit: 1,
           limitSoLuong: 1,
           note: "",
+          numberDateEnd: 1,
         }}
         autoComplete="off"
-      
       >
         <Row className="mb-3">
           <Col xl={4} xs={4}>
@@ -330,11 +346,7 @@ const ModalThem = (props) => {
               accept="image/*"
               onChange={(event) => handleFileInputChange(event)}
             />
-            {errorImage && (
-              <div style={{ color: "red"}}>
-                {errorImage}
-              </div>
-            )}
+            {errorImage && <div style={{ color: "red" }}>{errorImage}</div>}
           </Col>
           <Col xl={10} xs={10}>
             <Form.Item
@@ -407,28 +419,30 @@ const ModalThem = (props) => {
                 <Option value={2}>Danh hiệu</Option>
               </Select>
             </Form.Item>
-            <Form.Item
-              label="Loại mật quy đổi"
-              name="honeyCategoryId"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng chọn cấp",
-                },
-              ]}
-            >
-              <Select
-                mode="multiple"
-                placeholder="Chọn cấp bậc"
-                onChange={handleCategoryChange}
+            {selectType !== 2 && (
+              <Form.Item
+                label="Loại mật quy đổi"
+                name="honeyCategoryId"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng chọn cấp",
+                  },
+                ]}
               >
-                {listCategory.map((category) => (
-                  <Option key={category.id} value={category.id}>
-                    {category.name}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
+                <Select
+                  mode="multiple"
+                  placeholder="Chọn cấp bậc"
+                  onChange={handleCategoryChange}
+                >
+                  {listCategory.map((category) => (
+                    <Option key={category.id} value={category.id}>
+                      {category.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            )}
 
             {selectedCategories.map((categoryId) => {
               const category = listCategory.find(
@@ -464,86 +478,98 @@ const ModalThem = (props) => {
             })}
           </Col>
           <Col xl={10} xs={10} className="pl-2">
-            <Form.Item
-              label="Thời gian hết hạn"
-              name="checkTypeDate"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng chọn thời gian hết hạn",
-                },
-              ]}
-            >
-              <Radio.Group className="flex" defaultValue={2} onChange={(e) => {
-                setCheckTypeTime(e.target.value);
-                form.setFieldValue("numberDateEnd", null);
-                form.setFieldValue("start", null);
-                form.setFieldValue("end", null);
-              }}>
-                <Radio value={0}>Theo ngày bắt đầu</Radio>
-                <Radio value={1}>Theo khoảng ngày</Radio>
-                <Radio value={2}>Vô hạn</Radio>
-              </Radio.Group>
-            </Form.Item>
-            {
-              checkTypeTime === 0 ?
-                <>
-                  <Form.Item
-                    label={<span>Thời gian hết hạn <br/>(Theo ngày)</span>}
-                    name="numberDateEnd"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Vui lòng chọn thời gian hết hạn",
-                      },
-                      {
-                        validator: (_, value) => {
-                          if (value.trim().length === 0) {
-                            return Promise.resolve();
-                          }
-                          const regex = /^[1-9]+$/;
-                          if (!regex.test(value)) {
-                            return Promise.reject(new Error('Vui lòng nhập một số nguyên dương'));
-                          }
-                  
-                          return Promise.resolve();
-                        },
-                      },
-                    ]}
-                  >
-                    <Input type="number" />
-                  </Form.Item>
-                </> : checkTypeTime === 1 ?
-                <>
-                  <Form.Item
-                    label="Thời gian bắt đầu"
-                    name="start"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Vui lòng chọn thời gian hết hạn",
-                      },
-                      {
-                        validator: validateStartDate,
-                      },
-                    ]}
-                  >
-                    <Input type="date" />
-                  </Form.Item>
+            {selectType !== 2 && (
+              <Form.Item
+                label="Thời gian hết hạn"
+                name="checkTypeDate"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng chọn thời gian hết hạn",
+                  },
+                ]}
+              >
+                <Radio.Group
+                  className="flex"
+                  defaultValue={2}
+                  onChange={(e) => {
+                    setCheckTypeTime(e.target.value);
+                    form.setFieldValue("numberDateEnd", null);
+                    form.setFieldValue("start", null);
+                    form.setFieldValue("end", null);
+                  }}
+                >
+                  <Radio value={0}>Theo ngày bắt đầu</Radio>
+                  <Radio value={1}>Theo khoảng ngày</Radio>
+                  <Radio value={2}>Vô hạn</Radio>
+                </Radio.Group>
+              </Form.Item>
+            )}
+            {checkTypeTime === 0 && selectType !== 2 ? (
+              <>
+                <Form.Item
+                  label={
+                    <span>
+                      Thời gian hết hạn <br />
+                      (Theo ngày)
+                    </span>
+                  }
+                  name="numberDateEnd"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng chọn thời gian hết hạn",
+                    },
+                    {
+                      validator: (_, value) => {
+                        const regex = /^[0-9]+$/;
+                        if (!regex.test(value)) {
+                          return Promise.reject(
+                            new Error("Vui lòng nhập một số nguyên dương")
+                          );
+                        }
 
-                  <Form.Item
-                    label="Thời gian kết thúc"
-                    name="end"
-                    rules={[
-                      {
-                        validator: validateEndDate,
+                        return Promise.resolve();
                       },
-                    ]}
-                  >
-                    <Input type="date" />
-                  </Form.Item>
-                </> : <></>
-            }
+                    },
+                  ]}
+                >
+                  <Input type="number" />
+                </Form.Item>
+              </>
+            ) : checkTypeTime === 1 && selectType !== 2 ? (
+              <>
+                <Form.Item
+                  label="Thời gian bắt đầu"
+                  name="start"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng chọn thời gian hết hạn",
+                    },
+                    {
+                      validator: validateStartDate,
+                    },
+                  ]}
+                >
+                  <Input type="date" />
+                </Form.Item>
+
+                <Form.Item
+                  label="Thời gian kết thúc"
+                  name="end"
+                  rules={[
+                    {
+                      validator: validateEndDate,
+                    },
+                  ]}
+                >
+                  <Input type="date" />
+                </Form.Item>
+              </>
+            ) : (
+              <></>
+            )}
             <Form.Item
               label="Yêu cầu phê duyệt"
               name="status"
@@ -555,8 +581,7 @@ const ModalThem = (props) => {
                 },
               ]}
               style={{
-                display:
-                  selectType === 0 || selectType === 2 ? "none" : "block",
+                display: selectType === 2 ? "none" : "block",
               }}
             >
               <Radio.Group>
@@ -577,7 +602,8 @@ const ModalThem = (props) => {
                 },
               ]}
               style={{
-                display: selectType === 1 ? "block" : "none",
+                display:
+                  selectType === 0 || selectType === 1 ? "block" : "none",
               }}
             >
               <Radio.Group>
@@ -639,16 +665,19 @@ const ModalThem = (props) => {
         </Row>
         <Row className="text-center pb-4">
           <Col span={24}>
-              <Button 
-                onClick={onCancel}
-                className="submit-button bg-black text-white"
-              >
-                Đóng
-              </Button>
-              <Button htmlType="submit" className="submit-button 
-                  submit-button bg-black text-white ml-2">
-                OK
-              </Button>
+            <Button
+              onClick={onCancel}
+              className="submit-button bg-black text-white"
+            >
+              Đóng
+            </Button>
+            <Button
+              htmlType="submit"
+              className="submit-button 
+                  submit-button bg-black text-white ml-2"
+            >
+              OK
+            </Button>
           </Col>
         </Row>
       </Form>
