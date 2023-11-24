@@ -46,6 +46,19 @@ const LetterDetail = () => {
       });
   };
 
+  const deleteNotification = (id) => {
+    NotificationAPI.delete(id)
+      .then((response) => {
+        if (response.status === 200) {
+          message.success("Xóa thư thành công");
+          navigate("/student/letter");
+        } else {
+          message.error("Xóa thư thất bại");
+        }
+      })
+      .catch(() => {});
+  };
+
   const handleReceiving = (data, id) => {
     NotificationDetailAPI.receivingGiftsFromNotifications(data, id)
       .then(() => {
@@ -111,15 +124,13 @@ const LetterDetail = () => {
                 {formatTime(notification.createdDate)}
               </p>
             </div>
-            {/* {notification.type === "HE_THONG" && (
-              <Button
-                className="item__button"
-                onClick={() => handleReceiving(dataReceiving, id)}
-                disabled={notification.status === "DA_NHAN" ? true : false}
-              >
-                {notification.status === "DA_NHAN" ? "Đã nhận" : "Nhận quà"}
-              </Button>
-            )} */}
+
+            <Button
+              className="item__button"
+              onClick={() => deleteNotification(id)}
+            >
+              Xóa
+            </Button>
           </Space>
 
           <div className="letter__detail__content">

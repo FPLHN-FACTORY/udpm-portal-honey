@@ -152,11 +152,6 @@ export default function RequestConversionHistory() {
       key: "studentName",
     },
     {
-      title: "Tên sinh viên",
-      dataIndex: "userName",
-      key: "userName",
-    },
-    {
       title: "Loại điểm",
       dataIndex: "nameCategory",
       key: "nameCategory",

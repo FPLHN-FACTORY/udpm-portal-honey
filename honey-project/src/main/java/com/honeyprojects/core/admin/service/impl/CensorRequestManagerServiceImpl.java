@@ -24,7 +24,6 @@ import com.honeyprojects.entity.Honey;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.Message;
 import com.honeyprojects.infrastructure.contant.Status;
-import com.honeyprojects.infrastructure.contant.TypeGift;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.repository.HistoryDetailRepository;
@@ -64,46 +63,45 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
     @Override
     @Transactional
     public History changeStatus(CensorChangeStatusRequest changeReq) {
-//        Long dateNow = Calendar.getInstance().getTimeInMillis();
-//        History history = historyRepository.findById(changeReq.getIdHistory()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
-//        history.setStatus(HoneyStatus.values()[changeReq.getStatus()]);
-//        if (changeReq.getStatus() == 1 && history.getType().equals(TypeHistory.CONG_DIEM)) {
-//            Honey honey = honeyRepository.findById(history.getHoneyId()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
-//            honey.setHoneyPoint(honey.getHoneyPoint() + history.getHoneyPoint());
-//
-//            honeyRepository.save(honey);
-//            history.setChangeDate(dateNow);
-//        } else if (changeReq.getStatus() == 1 && history.getType().equals(TypeHistory.GIAO_DICH)) {
-//            //lay ra honey cua nguoi gui
-//            Honey honey = honeyRepository.findById(history.getHoneyId())
-//                    .orElseThrow(() -> new RestApiException(Message.HONEY_NOT_EXIST));
-//            //tru honey cua nguoi gui
-//            honey.setHoneyPoint(honey.getHoneyPoint() - history.getHoneyPoint());
-//
-//            //lay ra honey cua nguoi nhan
-//            Honey honeyNhan = honeyRepository.getPoint(history.getStudentId(),
-//                    honey.getHoneyCategoryId());
-//            honeyRepository.save(honey);
-//            //kiem tra neu honey nguoi nhan khong ton tai se tao moi
-//            if (honeyNhan == null) {
-//                honeyNhan = new Honey();
-//                honeyNhan.setHoneyPoint(0);
-//                honeyNhan.setHoneyCategoryId(honey.getHoneyCategoryId());
-//                honeyNhan.setStudentId(history.getStudentId());
-//            }
-//            //cong them honey cho nguoi nhan
-//            honeyNhan.setHoneyPoint(honeyNhan.getHoneyPoint() + history.getHoneyPoint());
-//            honeyRepository.save(honeyNhan);
-//
-//            history.setChangeDate(dateNow);
-//        }
-//        return historyRepository.save(history);
-        return null;
+        Long dateNow = Calendar.getInstance().getTimeInMillis();
+        History history = historyRepository.findById(changeReq.getIdHistory()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
+        history.setStatus(HoneyStatus.values()[changeReq.getStatus()]);
+        HistoryDetail historyDetail = historyDetailRepository.findById(changeReq.getIdHistoryDetail()).orElse(null);
+        if (changeReq.getStatus() == 1 && history.getType().equals(TypeHistory.CONG_DIEM)) {
+            Honey honey = honeyRepository.findById(historyDetail.getHoneyId()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
+            honey.setHoneyPoint(honey.getHoneyPoint() + historyDetail.getHoneyPoint());
+            honey.setStatus(Status.HOAT_DONG);
+            honeyRepository.save(honey);
+            history.setChangeDate(dateNow);
+        } else if (changeReq.getStatus() == 1 && history.getType().equals(TypeHistory.GIAO_DICH)) {
+            //lay ra honey cua nguoi gui
+            Honey honey = honeyRepository.findById(historyDetail.getHoneyId())
+                    .orElseThrow(() -> new RestApiException(Message.HONEY_NOT_EXIST));
+            //tru honey cua nguoi gui
+            honey.setHoneyPoint(honey.getHoneyPoint() - historyDetail.getHoneyPoint());
+
+            //lay ra honey cua nguoi nhan
+            Honey honeyNhan = honeyRepository.getPoint(history.getStudentId(),
+                    honey.getHoneyCategoryId());
+            honeyRepository.save(honey);
+            //kiem tra neu honey nguoi nhan khong ton tai se tao moi
+            if (honeyNhan == null) {
+                honeyNhan = new Honey();
+                honeyNhan.setHoneyPoint(0);
+                honeyNhan.setHoneyCategoryId(honey.getHoneyCategoryId());
+                honeyNhan.setStudentId(history.getStudentId());
+            }
+            //cong them honey cho nguoi nhan
+            honeyNhan.setHoneyPoint(honeyNhan.getHoneyPoint() + historyDetail.getHoneyPoint());
+            honeyRepository.save(honeyNhan);
+
+            history.setChangeDate(dateNow);
+        }
+        return historyRepository.save(history);
     }
 
     @Override
     public History changeStatusConversion(AdminChangeStatusGiftRequest request) {
-        System.out.println("=-0990-0"+request.getStatus()+ "status" + "id" +  request.getIdHistoryDetail());
         Long dateNow = Calendar.getInstance().getTimeInMillis();
 
         History history = historyRepository.findById(request.getIdHistory()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));

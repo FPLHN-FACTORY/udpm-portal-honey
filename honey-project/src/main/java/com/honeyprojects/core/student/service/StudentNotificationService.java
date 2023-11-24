@@ -21,4 +21,6 @@ public interface StudentNotificationService {
     Notification getOne(String id);
 
     void deleteNotification(String id);
+
+    Boolean updateNotification(String id);
 }

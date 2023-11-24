@@ -11,4 +11,6 @@ public class StudentGetArchiveGiftRequest {
 
     private String idStudent;
 
+    private Integer quantity;
+
 }

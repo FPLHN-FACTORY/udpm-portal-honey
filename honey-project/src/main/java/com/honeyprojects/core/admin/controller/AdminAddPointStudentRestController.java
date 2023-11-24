@@ -1,6 +1,7 @@
 package com.honeyprojects.core.admin.controller;
 
 import com.honeyprojects.core.admin.model.request.AdminAddPointStudentLabReportBOO;
+import com.honeyprojects.core.admin.model.request.AdminAddPointStudentPortalEventsBO;
 import com.honeyprojects.core.admin.model.request.AdminAddPointStudentPortalEventsBOO;
 import com.honeyprojects.core.admin.service.AdminAddPointStudentService;
 import com.honeyprojects.core.admin.service.AdminCategoryService;
@@ -44,7 +45,7 @@ public class AdminAddPointStudentRestController {
         return new ResponseObject(addPointService.previewDataLabReportImportExcel(file));
     }
 
-    @PostMapping("/import-data")
+    @PostMapping("/lab-report/import-data")
     public void importDataLabReport(@RequestBody AdminAddPointStudentLabReportBOO adminAddPointStudentBO) throws IOException {
         addPointService.importDataLabReport(adminAddPointStudentBO);
     }
@@ -67,10 +68,15 @@ public class AdminAddPointStudentRestController {
         return new ResponseObject(addPointService.exportExcelPortalEvents());
     }
 
-//    @PostMapping("/portal-events/preview-data")
-//    public ResponseObject previewDataLabReport(@RequestParam("file") MultipartFile file) throws IOException {
-//        return new ResponseObject(addPointService.previewDataLabReportImportExcel(file));
-//    }
+    @PostMapping("/portal-events/preview-data")
+    public ResponseObject previewDataPortalEvents(@RequestParam("file") MultipartFile file) throws IOException {
+        return new ResponseObject(addPointService.previewDataPortalEventsImportExcel(file));
+    }
+
+    @PostMapping("/portal-events/import-data")
+    public void importDataPortalEvents(@RequestBody AdminAddPointStudentPortalEventsBO adminAddPointStudentBO) throws IOException {
+        addPointService.importDataPortalEvents(adminAddPointStudentBO);
+    }
 
 }
 
