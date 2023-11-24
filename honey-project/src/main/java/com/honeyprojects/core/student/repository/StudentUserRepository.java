@@ -17,7 +17,7 @@ public interface StudentUserRepository extends HoneyRepository {
             c.image
             FROM honey h
             JOIN category c ON h.honey_category_id = c.id
-            WHERE h.student_id = :userId
+            WHERE h.student_id = :userId AND h.status = 0
              """, nativeQuery = true)
     List<StudentMyHoneyResponse> getHoney(String userId);
 

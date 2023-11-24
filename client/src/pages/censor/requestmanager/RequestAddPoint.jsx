@@ -68,14 +68,17 @@ export default function RequestAddPoint() {
         <div style={{ fontSize: "19px", textAlign: "center", color: "green" }}>
           {values.status !== 1 && values.status !== 2 && (
             <CheckCircleFilled
-              onClick={() => changeStatus(values.idHistory, 1)}
+              onClick={() =>
+                changeStatus(values.idHistory, values.idHistoryDetail, 1)
+              }
             />
           )}
-
           {values.status !== 1 && values.status !== 2 && (
             <CloseCircleFilled
               style={{ fontSize: "19px", margin: "0px 10px", color: "red" }}
-              onClick={() => changeStatus(values.idHistory, 2)}
+              onClick={() =>
+                changeStatus(values.idHistory, values.idHistoryDetail, 2)
+              }
             />
           )}
           <Link to={"/censor/request-manager/detail/" + values.idHistory}>
@@ -138,11 +141,13 @@ export default function RequestAddPoint() {
       ...data,
       key: data.id,
       createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
-      acction: { idHistory: data.id, status: data.status },
+      acction: {
+        idHistory: data.idHistory,
+        idHistoryDetail: data.id,
+        status: data.status,
+      },
     };
   });
-
-  console.log(data);
 
   const listCategory = useAppSelector(GetCategory);
 
@@ -178,8 +183,8 @@ export default function RequestAddPoint() {
     }
   };
 
-  const changeStatus = (idHistory, status) => {
-    RequestManagerAPI.changeStatus(idHistory, status)
+  const changeStatus = (idHistory, idHistoryDetail, status) => {
+    RequestManagerAPI.changeStatus(idHistory, idHistoryDetail, status)
       .then((response) => {
         if (response.data.success) {
           fetchData(dispatch, filter);

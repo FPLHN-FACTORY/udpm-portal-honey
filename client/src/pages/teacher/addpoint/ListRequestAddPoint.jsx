@@ -29,10 +29,6 @@ const statusHistory = (status) => {
   switch (status) {
     case 0:
       return <Tag color="geekblue">Chờ phê duyệt</Tag>; // Màu xanh dương
-    case 1:
-      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
-    case 2:
-      return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
     default:
       return <Tag>Không xác định</Tag>;
   }
@@ -92,7 +88,8 @@ export default function HistoryAddPoint() {
             style={{
               color: values.status === 1 ? "" : "#fff",
               height: "30px",
-            }}>
+            }}
+          >
             Hủy
           </Button>
         </div>
@@ -224,7 +221,8 @@ export default function HistoryAddPoint() {
             <Button
               htmlType="submit"
               type="primary"
-              className="mr-10 search-button">
+              className="mr-10 search-button"
+            >
               Lọc
             </Button>
           </Space>

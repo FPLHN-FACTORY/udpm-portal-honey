@@ -19,8 +19,8 @@ public interface TeacherAddHoneyHistoryResponse extends IsIdentified {
     @Value("#{target.honey_point}")
     Integer getHoneyPoint();
 
-    @Value("#{target.created_date}")
-    Long getCreatedDate();
+    @Value("#{target.change_date}")
+    Long getChangeDate();
 
     @Value("#{target.status}")
     Integer getStatus();
