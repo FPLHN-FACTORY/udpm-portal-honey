@@ -107,7 +107,7 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         gift.setNote(request.getNote());
 
         if (request.getNumberDateEnd() != null) {
-            gift.setNumberEndDate(Long.valueOf(request.getNumberDateEnd()));
+            gift.setNumberEndDate(request.getNumberDateEnd());
         }
         Long fromDate = null;
         Long toDate = null;
