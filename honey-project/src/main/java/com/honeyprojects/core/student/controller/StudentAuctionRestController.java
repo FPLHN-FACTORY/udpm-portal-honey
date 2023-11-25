@@ -8,10 +8,13 @@ import com.honeyprojects.core.student.model.request.auction.StudentAuctionCreate
 import com.honeyprojects.core.student.model.request.auction.StudentAuctionRoomFilterRequest;
 import com.honeyprojects.core.student.model.response.StudentAuctionResponse;
 import com.honeyprojects.core.student.service.StudentAuctionService;
+import com.honeyprojects.entity.Auction;
 import com.honeyprojects.infrastructure.configws.modelmessage.MessageAuction;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +26,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class StudentAuctionRestController {
 
-    private final AdminAuctionService adminAuctionService;
+    @Autowired
+    private AdminAuctionService adminAuctionService;
 
-    private final StudentAuctionService studentAuctionService;
+    @Autowired
+    private StudentAuctionService studentAuctionService;
+
 
     @GetMapping("/find-all")
     public ResponseObject findAll(AdminFindAuctionRequest request) {
@@ -40,8 +46,10 @@ public class StudentAuctionRestController {
     @MessageMapping("/add-auction")
     @SendTo("/portal-honey/add-auction")
     public ResponseObject add(@RequestBody StudentAuctionCreateRequest request) {
-        return new ResponseObject(studentAuctionService.add(request));
+        Auction result = studentAuctionService.add(request);
+        return new ResponseObject(result);
     }
+
 
     @GetMapping("/search")
     public ResponseObject searchAuctionRoom(final StudentAuctionRoomFilterRequest request) {
