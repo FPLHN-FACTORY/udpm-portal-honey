@@ -31,7 +31,7 @@ public class WebSecurityConfiguration {
                 .disable()
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .requestMatchers("/", "/api/authentication/**").permitAll()
+                .requestMatchers("/", "/api/authentication/**", "/api/censor/add-point-student/**").permitAll()
                 .requestMatchers("/api/censor/**").hasAuthority(ActorConstants.ACTOR_ADMIN)
                 .requestMatchers("/api/student/**").hasAuthority(ActorConstants.ACTOR_STUDENT)
                 .requestMatchers("/api/teacher/**").hasAuthority(ActorConstants.ACTOR_TEACHER)
