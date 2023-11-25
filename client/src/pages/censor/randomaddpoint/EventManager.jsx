@@ -131,10 +131,9 @@ export default function EventManager() {
                   onChange={handleHoneyChange}
                 />
               </Form.Item>
-
               <Select
                 placeholder="Thể loại"
-                style={{ width: 400, marginRight: "10px" }}
+                style={{ width: "400px", marginRight: "10px" }}
                 value={category}
                 onChange={(value, option) =>
                   handleCategoryChange(value, option)

@@ -1,6 +1,7 @@
 package com.honeyprojects.core.teacher.service.impl;
 
 import com.honeyprojects.core.admin.model.response.AdminExportCategoryResponse;
+import com.honeyprojects.core.admin.service.ExportExcelServiceService;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.president.model.request.PresidentCreateNotificationDetailAddItemRequest;
@@ -23,8 +24,8 @@ import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import com.honeyprojects.util.DataUtils;
-import com.honeyprojects.util.DateUtils;
 import com.honeyprojects.util.ExcelUtils;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -39,11 +40,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,8 +70,12 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
 
     @Autowired
     private TeacherNotificationDetailRepository teacherNotificationDetailRepository;
+
     @Autowired
     private UdpmHoney udpmHoney;
+
+    @Autowired
+    private ExportExcelServiceService exportExcelService;
 
     @Override
     public Boolean importFromExcel(MultipartFile file) {
@@ -183,88 +186,92 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
     private static final int COLUMN_WIDTH = 25 * 256;
 
     @Override
-    public Boolean exportExcel() {
-        String userHome = System.getProperty("user.home");
-        String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_add_point" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
-
-        Workbook workbook = new XSSFWorkbook();
-        // Sheet 1
-        Sheet sheet = workbook.createSheet("Danh sách import");
-
-        CellStyle headerStyle = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        font.setColor(IndexedColors.BLACK.getIndex());
-        font.setBold(true);
-        font.setFontHeightInPoints((short) 15);
-        headerStyle.setFont(font);
-        headerStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-
-        headerStyle.setBorderTop(BorderStyle.THIN);
-        headerStyle.setBorderBottom(BorderStyle.THIN);
-        headerStyle.setBorderLeft(BorderStyle.THIN);
-        headerStyle.setBorderRight(BorderStyle.THIN);
-
-        // Dòng thứ 1 - Chữ "Chú ý"
-        Row noteRow = sheet.createRow(0);
-        Cell noteCell = noteRow.createCell(0);
-        noteCell.setCellValue("Chú ý");
-        // Tạo một kiểu cho ô "Lưu ý"
-        CellStyle noteStyle = workbook.createCellStyle();
-        Font noteFont = workbook.createFont();
-        noteFont.setBold(true);
-        noteFont.setFontHeightInPoints((short) 13);
-        noteStyle.setFont(noteFont);
-        noteFont.setColor(IndexedColors.RED.getIndex());
-        noteStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-        noteStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        noteCell.setCellStyle(noteStyle);
-        // Dòng thứ 2 - cách viết đúng định dạng quà tặng
-        Row formatGiftRow = sheet.createRow(1);
-        Cell formatGiftCell = formatGiftRow.createCell(1);
-        formatGiftCell.setCellValue("Định dạng mật ong:  <số lượng> <loại mật ong> VD: " +
-                "Cột mật ong: 10 GOLD, ...");
-
-        // Tạo một kiểu cho các ô định dạng
-        CellStyle formatStyle = workbook.createCellStyle();
-        Font formatFont = workbook.createFont();
-        formatFont.setBold(true);
-        formatFont.setFontHeightInPoints((short) 13);
-        formatFont.setColor(IndexedColors.BLACK.getIndex());
-        formatStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
-//            formatStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        formatStyle.setFont(formatFont);
-        formatGiftCell.setCellStyle(formatStyle);
-        // Tạo hàng tiêu đề và đặt các tiêu đề cột
-        Row headerRow = sheet.createRow(3);
-        String[] headers = {"Mã sinh viên", "Mật ong", "Mô tả"};
-        int columnCount = headers.length;
-        for (int i = 0; i < columnCount; i++) {
-            Cell headerCell = headerRow.createCell(i);
-            headerCell.setCellValue(headers[i]);
-            headerCell.setCellStyle(headerStyle);
-            // Thiết lập cỡ cột
-            sheet.setColumnWidth(i, COLUMN_WIDTH); // Sử dụng một constant cho cỡ cột
-        }
-        // Tạo kiểu cho ô tiêu đề trống
-        CellStyle emptyHeaderStyle = workbook.createCellStyle();
-        Font emptyHeaderFont = workbook.createFont();
-        emptyHeaderFont.setColor(IndexedColors.RED.getIndex());
-        emptyHeaderStyle.setFont(emptyHeaderFont);
-
-        // Sheet 2
-        Sheet sheet2 = workbook.createSheet("Danh sách mật ong");
-        createSheetContent(sheet2, workbook);
-
-        try {
-            FileOutputStream outputStream = new FileOutputStream(outputPath);
-            workbook.write(outputStream);
-            outputStream.close();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+    public ByteArrayOutputStream exportExcel(HttpServletResponse response) {
+//        String userHome = System.getProperty("user.home");
+//        String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_add_point" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
+//
+//        Workbook workbook = new XSSFWorkbook();
+//        // Sheet 1
+//        Sheet sheet = workbook.createSheet("Danh sách import");
+//
+//        CellStyle headerStyle = workbook.createCellStyle();
+//        Font font = workbook.createFont();
+//        font.setColor(IndexedColors.BLACK.getIndex());
+//        font.setBold(true);
+//        font.setFontHeightInPoints((short) 15);
+//        headerStyle.setFont(font);
+//        headerStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+//        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+//
+//        headerStyle.setBorderTop(BorderStyle.THIN);
+//        headerStyle.setBorderBottom(BorderStyle.THIN);
+//        headerStyle.setBorderLeft(BorderStyle.THIN);
+//        headerStyle.setBorderRight(BorderStyle.THIN);
+//
+//        // Dòng thứ 1 - Chữ "Chú ý"
+//        Row noteRow = sheet.createRow(0);
+//        Cell noteCell = noteRow.createCell(0);
+//        noteCell.setCellValue("Chú ý");
+//        // Tạo một kiểu cho ô "Lưu ý"
+//        CellStyle noteStyle = workbook.createCellStyle();
+//        Font noteFont = workbook.createFont();
+//        noteFont.setBold(true);
+//        noteFont.setFontHeightInPoints((short) 13);
+//        noteStyle.setFont(noteFont);
+//        noteFont.setColor(IndexedColors.RED.getIndex());
+//        noteStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+//        noteStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+//        noteCell.setCellStyle(noteStyle);
+//        // Dòng thứ 2 - cách viết đúng định dạng quà tặng
+//        Row formatGiftRow = sheet.createRow(1);
+//        Cell formatGiftCell = formatGiftRow.createCell(1);
+//        formatGiftCell.setCellValue("Định dạng mật ong:  <số lượng> <loại mật ong> VD: " +
+//                "Cột mật ong: 10 GOLD, ...");
+//
+//        // Tạo một kiểu cho các ô định dạng
+//        CellStyle formatStyle = workbook.createCellStyle();
+//        Font formatFont = workbook.createFont();
+//        formatFont.setBold(true);
+//        formatFont.setFontHeightInPoints((short) 13);
+//        formatFont.setColor(IndexedColors.BLACK.getIndex());
+//        formatStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+////            formatStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+//        formatStyle.setFont(formatFont);
+//        formatGiftCell.setCellStyle(formatStyle);
+//        // Tạo hàng tiêu đề và đặt các tiêu đề cột
+//        Row headerRow = sheet.createRow(3);
+//        String[] headers = {"Mã sinh viên", "Mật ong", "Mô tả"};
+//        int columnCount = headers.length;
+//        for (int i = 0; i < columnCount; i++) {
+//            Cell headerCell = headerRow.createCell(i);
+//            headerCell.setCellValue(headers[i]);
+//            headerCell.setCellStyle(headerStyle);
+//            // Thiết lập cỡ cột
+//            sheet.setColumnWidth(i, COLUMN_WIDTH); // Sử dụng một constant cho cỡ cột
+//        }
+//        // Tạo kiểu cho ô tiêu đề trống
+//        CellStyle emptyHeaderStyle = workbook.createCellStyle();
+//        Font emptyHeaderFont = workbook.createFont();
+//        emptyHeaderFont.setColor(IndexedColors.RED.getIndex());
+//        emptyHeaderStyle.setFont(emptyHeaderFont);
+//
+//        // Sheet 2
+//        Sheet sheet2 = workbook.createSheet("Danh sách mật ong");
+//        createSheetContent(sheet2, workbook);
+//
+//        try {
+//            FileOutputStream outputStream = new FileOutputStream(outputPath);
+//            workbook.write(outputStream);
+//            outputStream.close();
+//            return true;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+        List<AdminExportCategoryResponse> categories = getCategoryData();
+        return exportExcelService.export(response, categories, null,
+                "Định dạng mật ong:  <số lượng> <loại mật ong> VD: Cột mật ong: 10 GOLD, ..."
+                , new String[]{"Mã sinh viên", "Mật ong", "Mô tả"});
     }
 
     private void createSheetContent(Sheet sheet2, Workbook workbook) {

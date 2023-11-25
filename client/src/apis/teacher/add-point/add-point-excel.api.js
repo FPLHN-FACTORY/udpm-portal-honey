@@ -10,12 +10,21 @@ export class AddPointExcelAPI {
     });
   };
 
-  static exportExcel = () => {
+  // static exportExcel = () => {
+  //   return request({
+  //     method: "POST",
+  //     url: `${this.COMPONENT_NAME}/export-excel`,
+  //   });
+  // };
+
+  static exportExcel(filter) {
     return request({
-      method: "POST",
-      url: `${this.COMPONENT_NAME}/export-excel`,
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/export-excel`,
+      responseType: "blob",
+      params: filter,
     });
-  };
+  }
 
   static previewImportPoint = (file) => {
     return request({

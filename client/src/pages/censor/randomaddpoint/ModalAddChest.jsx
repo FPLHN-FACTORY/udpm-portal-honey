@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../app/hooks";
 import { AddChest } from "../../../app/reducers/chest/chest.reducer";
-import { Input, Modal, message } from "antd";
+import { Button, Input, Modal, message } from "antd";
 import { RandomAddPointAPI } from "../../../apis/censor/random-add-point/random-add-point.api";
 import { ChestAPI } from "../../../apis/censor/chest/chest.api";
 
@@ -110,19 +110,19 @@ export default function ModalAddChest(props) {
             </div>
 
             <div className="ant-form-item">
-              <div className="ant-form-item-control">
-                <button
+              <div className="ant-form-item-control mt-5 ml-36">
+                <Button
                   onClick={onCancel}
-                  className="submit-button submit-button-cancel"
+                  className="submit-button submit-button-ok ml-2 bg-black text-white"
                 >
                   Đóng
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={onSaveButtonClick}
-                  className="submit-button submit-button-ok"
+                  className="submit-button submit-button-ok ml-2 bg-black text-white"
                 >
                   OK
-                </button>
+                </Button>
               </div>
             </div>
           </div>

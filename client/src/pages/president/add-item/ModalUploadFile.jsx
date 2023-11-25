@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { AddItemExcelAPI } from "../../../apis/president/add-item/add-item-excel.api";
 import { SetImport } from "../../../app/reducers/import/import.president.reducer";
 import { useAppDispatch } from "../../../app/hooks";
+import { convertLongToDate } from "../../util/DateUtil";
 
 export default function ModalUpLoadFile(props) {
   const {
@@ -18,13 +19,20 @@ export default function ModalUpLoadFile(props) {
   const dispatch = useAppDispatch();
 
   const handleExportExcel = () => {
-    AddItemExcelAPI.exportExcel()
-      .then(() => {
-        message.success("Export excel thành công");
-      })
-      .catch((err) => {
-        message.error("Export excel thất bại");
+    AddItemExcelAPI.exportExcel({}).then((response) => {
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download =
+        "File mẫu import" +
+        convertLongToDate(new Date().getTime()) +
+        ".xlsx";
+      link.click();
+      window.URL.revokeObjectURL(url);
+    });
   };
 
   const handleFileInputChange = (e) => {
@@ -84,6 +92,7 @@ export default function ModalUpLoadFile(props) {
           <Upload.Dragger
             type="file"
             accept=".xlsx,.xls"
+            maxCount={1}
             onChange={(e) => handleOnChangeFile(e)}
           >
             {nameFileUpload === "" ? (

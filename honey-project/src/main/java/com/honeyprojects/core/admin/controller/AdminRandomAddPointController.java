@@ -4,7 +4,12 @@ import com.honeyprojects.core.admin.model.request.AdminRandomPointRequest;
 import com.honeyprojects.core.admin.model.response.AdminAddItemDTO;
 import com.honeyprojects.core.admin.service.AdRandomAddPointService;
 import com.honeyprojects.core.common.base.ResponseObject;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -45,9 +51,25 @@ public class AdminRandomAddPointController {
         return new ResponseObject(adRandomAddPointService.createRandomItem(adminRandomPointRequest));
     }
 
-    @PostMapping("/create/export")
-    public ResponseObject createExportRandomPoint() {
-        return new ResponseObject(adRandomAddPointService.exportExcel());
+//    @PostMapping("/create/export")
+//    public ResponseObject createExportRandomPoint() {
+//        return new ResponseObject(adRandomAddPointService.exportExcel());
+//    }
+
+    @GetMapping("/create/export")
+    public ResponseEntity<byte[]> createExportRandomPoint(HttpServletResponse response) {
+        try {
+            ByteArrayOutputStream file = adRandomAddPointService.exportExcel(response);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", "sample.xlsx");
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(file.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/create/preview-data-random")
@@ -62,9 +84,20 @@ public class AdminRandomAddPointController {
     }
 
     // màn cộng mật ong
-    @PostMapping("/export/data")
-    public ResponseObject previewDataExportExcel() {
-        return new ResponseObject(adRandomAddPointService.previewDataExportExcel());
+    @GetMapping("/export/data")
+    public ResponseEntity<byte[]> exportExcel(HttpServletResponse response) {
+        try {
+            ByteArrayOutputStream file = adRandomAddPointService.previewDataExportExcel(response);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", "sample.xlsx");
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(file.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // màn cộng mật ong
