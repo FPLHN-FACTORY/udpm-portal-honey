@@ -6,3 +6,13 @@ export const formatDate = (date) => {
   const year = formattedDate.getFullYear();
   return `${day}/${month}/${year}`;
 };
+
+export const convertLongToDate = (long) => {
+  const date = new Date(long);
+
+  const formattedStartTime = `${date.getDate()}/${
+    date.getMonth() + 1
+  }/${date.getFullYear()}`;
+
+  return formattedStartTime;
+};

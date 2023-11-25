@@ -10,6 +10,7 @@ import com.honeyprojects.core.admin.model.request.AdminNotificationRandomRequest
 import com.honeyprojects.core.admin.repository.AdNotificationRespository;
 import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
 import com.honeyprojects.core.admin.service.AdminAddPointStudentService;
+import com.honeyprojects.core.admin.service.ExportExcelServiceService;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.president.model.response.PresidentAddItemBO;
 import com.honeyprojects.core.president.model.response.PresidentAddItemDTO;
@@ -38,6 +39,7 @@ import com.honeyprojects.util.DataUtils;
 import com.honeyprojects.util.DateUtils;
 import com.honeyprojects.util.ExcelUtils;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -52,6 +54,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -83,6 +86,9 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
 
     @Autowired
     private ConvertRequestApiidentity convertRequestApiidentity;
+
+    @Autowired
+    private ExportExcelServiceService exportExcelService;
 
     @Override
     public Boolean addPointToStudentLabReport(AdminAddPointStudentLabReportBOO requestAddPointStudentBO) {
@@ -615,5 +621,18 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
                 NotificationDetailType.NOTIFICATION_DETAIL_HONEY, Integer.parseInt(String.valueOf(roundedQuantity)));
         NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
         return studentNotificationDetailRepository.save(notificationDetail);
+    }
+
+    @Override
+    public ByteArrayOutputStream exportExcelPortalEventsClass(HttpServletResponse response) {
+        return exportExcelService.export(response, null, null,
+                "Định dạng cột email: haipxph26772@fpt.edu.vn", new String[]{"Email"});
+    }
+
+    @Override
+    public ByteArrayOutputStream exportExcelLabReportClass(HttpServletResponse response) {
+        return exportExcelService.export(response, null, null,
+                "Định dạng cột email: haipxph26772@fpt.edu.vn - Định dạng cột số lượng mật ong: 29"
+                , new String[]{"Email", "Số lượng mật ong"});
     }
 }

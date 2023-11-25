@@ -3,6 +3,7 @@ import { Button, Modal, Upload, message } from "antd";
 import React, { useState } from "react";
 import "./index.css";
 import { RandomAddPointAPI } from "../../../apis/censor/random-add-point/random-add-point.api";
+import { convertLongToDate } from "../../util/DateUtil";
 
 export default function ModalImportExcel(props) {
   const {
@@ -20,13 +21,20 @@ export default function ModalImportExcel(props) {
   const [file, setFile] = useState(null);
 
   const handleExportExcel = () => {
-    RandomAddPointAPI.createExportExcel()
-      .then(() => {
-        message.success("Export excel thành công");
-      })
-      .catch((err) => {
-        message.error("Export excel thất bại");
+    RandomAddPointAPI.createExportExcel({}).then((response) => {
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download =
+        "File mẫu random import" +
+        convertLongToDate(new Date().getTime()) +
+        ".xlsx";
+      link.click();
+      window.URL.revokeObjectURL(url);
+    });
   };
 
   const handleFileInputChange = (e) => {
@@ -107,6 +115,7 @@ export default function ModalImportExcel(props) {
           <Upload.Dragger
             type="file"
             accept=".xlsx,.xls"
+            maxCount={1}
             onChange={(e) => handleOnChangeFile(e)}
           >
             {nameFile === "" ? (
