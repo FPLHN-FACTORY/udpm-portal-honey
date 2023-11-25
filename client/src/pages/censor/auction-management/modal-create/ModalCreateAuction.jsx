@@ -188,7 +188,7 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
           onCancel();
         },
         (error) => {
-          // message.error(error.response.data.message);
+          message.error(error.response.data.message);
         }
       );
     }
