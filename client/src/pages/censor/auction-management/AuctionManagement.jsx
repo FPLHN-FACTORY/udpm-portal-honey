@@ -9,7 +9,6 @@ import {
   Pagination,
   message,
   Tooltip,
-  Popconfirm,
   Input,
   Select,
   Form,
@@ -18,13 +17,10 @@ import "./auction-management.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFilter,
-  faPenToSquare,
   faRectangleList,
-  faTrash,
   faPlus,
   faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useEffect, useState } from "react";
@@ -37,7 +33,6 @@ import {
 } from "../../../app/reducers/auction/auction.reducer";
 import ModalCreateAuction from "./modal-create/ModalCreateAuction.jsx";
 import ModalUpdateAuction from "./modal-update/ModalUpdateAuction";
-import moment from "moment";
 import { CountdownTimer } from "../../util/CountdownTimer";
 
 export default function AuctionMangement() {
@@ -79,7 +74,6 @@ export default function AuctionMangement() {
       value: 3,
     },
   ];
-
 
   useEffect(() => {
     fetchData();
@@ -152,16 +146,20 @@ export default function AuctionMangement() {
     //   render: (text) => <span>{moment(text).format("DD/MM/YYYY HH:MM:ss")}</span>
     // },
     {
-      title: "Còn lại", 
+      title: "Còn lại",
       dataIndex: "toDate",
       key: "toDate",
       align: "center",
       width: "17%",
       render: (_, record) => {
-        if(record.status === "HOAT_DONG"){
-          return <CountdownTimer initialTime={record.toDate - new Date().getTime()} />
-        }else{
-          return <span style={{color: 'red'}}>00:00:00</span>
+        if (record.status === "HOAT_DONG") {
+          return (
+            <CountdownTimer
+              initialTime={record.toDate - new Date().getTime()}
+            />
+          );
+        } else {
+          return <span style={{ color: "red" }}>00:00:00</span>;
         }
       },
     },
@@ -195,27 +193,28 @@ export default function AuctionMangement() {
       key: "status",
       align: "center",
       render: (status) => {
-        if(status === "HOAT_DONG"){
-          return <Tag color="green">Đang mở</Tag>
-        }else{
-          return <Tag color="red">Đã đóng</Tag>
+        if (status === "HOAT_DONG") {
+          return <Tag color="green">Đang mở</Tag>;
+        } else {
+          return <Tag color="red">Đã đóng</Tag>;
         }
-      }
+      },
     },
     {
       title: "Hành động",
       key: "action",
       render: (_, record) => (
         <Tooltip title="Đóng phiên">
-            <Button disabled={record.status === "KHONG_HOAT_DONG"}
-            style={{ backgroundColor:'red', color: 'white'}}
-              onClick={() => buttonDelete(record.id)}
-            >
-              <FontAwesomeIcon icon={faCircleXmark} />
-            </Button>
-          </Tooltip>
-      )
-    }
+          <Button
+            disabled={record.status === "KHONG_HOAT_DONG"}
+            style={{ backgroundColor: "red", color: "white" }}
+            onClick={() => buttonDelete(record.id)}
+          >
+            <FontAwesomeIcon icon={faCircleXmark} />
+          </Button>
+        </Tooltip>
+      ),
+    },
   ];
 
   const buttonSearch = async () => {
@@ -284,13 +283,12 @@ export default function AuctionMangement() {
           <Form form={form}>
             <Row
               gutter={12}
-              style={{ 
-               paddingTop: "20px" }}
+              style={{
+                paddingTop: "20px",
+              }}
             >
               <Col span={6}>
-                <Form.Item
-                  name="nameGift"
-                >
+                <Form.Item name="nameGift">
                   <Input
                     onKeyPress={(e) => {
                       if (e.key === " " && e.target.selectionStart === 0) {
@@ -303,9 +301,7 @@ export default function AuctionMangement() {
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item
-                  name="category"
-                >
+                <Form.Item name="category">
                   <Select
                     style={{ textAlign: "center" }}
                     placeholder="Chọn loại mật"
@@ -321,9 +317,7 @@ export default function AuctionMangement() {
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item
-                  name="type"
-                >
+                <Form.Item name="type">
                   <Select
                     style={{ textAlign: "center" }}
                     placeholder="Chọn loại vật phẩm"
@@ -339,9 +333,7 @@ export default function AuctionMangement() {
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item
-                  name="startingPrice"
-                >
+                <Form.Item name="startingPrice">
                   <Input
                     type="number"
                     style={{

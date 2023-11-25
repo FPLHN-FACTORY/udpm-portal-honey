@@ -2,7 +2,6 @@ package com.honeyprojects.core.admin.controller;
 
 import com.honeyprojects.core.admin.model.request.AdminAddPointStudentLabReportBOO;
 import com.honeyprojects.core.admin.model.request.AdminAddPointStudentPortalEventsBO;
-import com.honeyprojects.core.admin.model.request.AdminAddPointStudentPortalEventsBOO;
 import com.honeyprojects.core.admin.service.AdminAddPointStudentService;
 import com.honeyprojects.core.admin.service.AdminCategoryService;
 import com.honeyprojects.core.common.base.ResponseObject;

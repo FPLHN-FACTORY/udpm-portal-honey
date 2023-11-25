@@ -9,11 +9,13 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "archive_gift")
+@ToString
 public class ArchiveGift extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_ID)
