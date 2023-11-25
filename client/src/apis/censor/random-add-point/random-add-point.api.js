@@ -39,17 +39,21 @@ export class RandomAddPointAPI {
     });
   }
 
-  static createExportExcel = () => {
+  static createExportExcel = (filter) => {
     return request({
-      method: "POST",
+      method: "GET",
       url: `/${this.COMPONENT_NAME}/create/export`,
+      responseType: "blob",
+      params: filter,
     });
   };
 
-  static previewDataExportExcel = () => {
+  static previewDataExportExcel = (filter) => {
     return request({
-      method: "POST",
+      method: "GET",
       url: `/${this.COMPONENT_NAME}/export/data`,
+      responseType: "blob",
+      params: filter,
     });
   };
 
