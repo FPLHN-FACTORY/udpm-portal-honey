@@ -1,3 +1,4 @@
+import { Tag } from "antd";
 import React, { useState, useEffect } from "react";
 
 export const CountdownTimer = ({ initialTime }) => {
@@ -21,7 +22,7 @@ export const CountdownTimer = ({ initialTime }) => {
   return (
     <div className="">
       {countdown <= 0 ? (
-        <span style={{ color: "#fffa37" }}>Đã đóng</span>
+        <Tag color="red">Đã đóng</Tag>
       ) : (
         <span style={{ color: "blue", fontWeight: "bold" }}>
           {formatTime(countdown)}

@@ -286,12 +286,11 @@ export default function StudentAuctionRoomNew() {
         message.error(errorObject.errorMessage);
       });
 
-      stompClient.subscribe(`/portal-honey/add-auction`, () => {
-        // let data = JSON.parse(message.body);
-        // dispatch(AddAuction(data.data));
-        loadData();
+      stompClient.subscribe(`/portal-honey/add-auction`, (mes) => {
+        message.success("Tạo đấu giá thành công.");
+        form.resetFields();
+        handleOk();
       });
-
       setStompClientAll(stompClient);
     });
 
