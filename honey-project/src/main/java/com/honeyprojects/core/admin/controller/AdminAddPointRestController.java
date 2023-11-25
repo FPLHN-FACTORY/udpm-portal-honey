@@ -25,11 +25,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/censor/add-point")
 public class AdminAddPointRestController {
-    @Autowired
-    private AdminAddPointService addPointService;
 
     @Autowired
-    private AdminCategoryService adminCategoryService;
+    private AdminAddPointService addPointService;
 
     @GetMapping("/list-category")
     public ResponseObject getAllListCategory() {
