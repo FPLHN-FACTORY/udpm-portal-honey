@@ -11,10 +11,7 @@ import java.util.List;
 
 public interface PresidentAddItemToStudentService {
 
-//    Boolean exportExcel();
-
     ByteArrayOutputStream exportExcel(HttpServletResponse response);
-
 
     PresidentAddItemBO previewDataImportExcel(MultipartFile file) throws IOException;
 

@@ -15,16 +15,12 @@ public interface AdminAddPointStudentService {
 
     Boolean addPointToStudentLabReport(AdminAddPointStudentLabReportBOO adminAddPointStudentBO);
 
-    Boolean exportExcelLabReport();
-
     AdminAddPointStudentLabReportBOO previewDataLabReportImportExcel(MultipartFile file) throws IOException;
 
     void importDataLabReport(AdminAddPointStudentLabReportBOO adminAddPointStudentBO) throws IOException;
 
     // ====================
     Boolean createPointToStudentPortalEvents(AdminAddPointStudentPortalEventsBOO adminAddPointStudentBO);
-
-    Boolean exportExcelPortalEvents();
 
     AdminAddPointStudentPortalEventsBO previewDataPortalEventsImportExcel(MultipartFile file) throws IOException;
 

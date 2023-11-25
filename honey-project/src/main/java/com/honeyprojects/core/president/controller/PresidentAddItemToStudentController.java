@@ -29,11 +29,6 @@ public class PresidentAddItemToStudentController {
     @Autowired
     private PresidentAddItemToStudentService presidentAddItemToStudentService;
 
-//    @PostMapping("/export")
-//    public ResponseObject exportTemplate() {
-//        return new ResponseObject(presidentAddItemToStudentService.exportExcel());
-//    }
-
     @GetMapping("/export")
     public ResponseEntity<byte[]> exportExcel(HttpServletResponse response) {
         try {
