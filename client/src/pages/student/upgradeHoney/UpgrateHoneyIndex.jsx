@@ -1,4 +1,4 @@
-import { Button, Col, message, Modal, Row } from "antd";
+import { Button, Col, message, Row } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightLong } from "@fortawesome/free-solid-svg-icons";
 import { SearchOutlined } from "@ant-design/icons";
@@ -37,6 +37,7 @@ const UpgrateHoneyIndex = memo(() => {
   useEffect(() => {
     fetchArchive();
     fechUpgradeRate();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchArchive = () => {
@@ -99,15 +100,15 @@ const UpgrateHoneyIndex = memo(() => {
         } else if (response.data.data === false) {
           message.error("Nâng cấp thất bại");
         }
-        fetchArchive();
-        fechCondition(idUpgrade);
-        setGifts([]);
       })
       .catch((error) => {
-        fetchArchive();
-        fechCondition(idUpgrade);
-        setGifts([]);
+        if (error.response.status === 400) {
+          message.error(error.response.data.message);
+        }
       });
+      fetchArchive();
+      fechCondition(idUpgrade);
+      setGifts([]);
   };
 
   const handleClickIdUR = (id) => {
@@ -244,7 +245,7 @@ const UpgrateHoneyIndex = memo(() => {
                 <SearchOutlined />
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   placeholder="Nhập tên..."
                   value={valueUpgrade}
                   onChange={(e) => setvalueUpgrade(e.target.value)}
@@ -307,7 +308,7 @@ const UpgrateHoneyIndex = memo(() => {
                 <SearchOutlined />
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   value={valueGift}
                   onChange={(e) => setValueGift(e.target.value)}
                   onKeyDown={handleKeyDown}
@@ -341,12 +342,12 @@ const UpgrateHoneyIndex = memo(() => {
                   }`}
                   onClick={() => handleClickQuantity(item)}
                 >
-                  <div class="upgrate__chest__overlay"></div>
+                  <div className="upgrate__chest__overlay"></div>
                   <div className="upgrate__honey__image">
                     <img src={item.image} alt="" />
                   </div>
-                  <div class="upgrate__chest__quantity">{item.quantity}</div>
-                  <div class="upgrate__chest__name">{item.name}</div>
+                  <div className="upgrate__chest__quantity">{item.quantity}</div>
+                  <div className="upgrate__chest__name">{item.name}</div>
                 </div>
               ))}
             </div>
@@ -380,7 +381,7 @@ const UpgrateHoneyIndex = memo(() => {
                     <div className="upgrate__input">
                       <input
                         type="number"
-                        class="form-control"
+                        className="form-control"
                         placeholder="Nhập lượng mật ong..."
                         value={destination}
                         style={{
@@ -401,7 +402,7 @@ const UpgrateHoneyIndex = memo(() => {
                     <div className="upgrate__input">
                       <input
                         type="text"
-                        class="form-control"
+                        className="form-control"
                         value={valueHoney}
                         disabled
                         style={{
@@ -463,8 +464,8 @@ const UpgrateHoneyIndex = memo(() => {
                     <div className="upgrate__honey__image">
                       <img src={item.image} alt="" />
                     </div>
-                    <div class="upgrate__chest__quantity">{numberGift}</div>
-                    <div class="upgrate__condition__name">{item.name}</div>
+                    <div className="upgrate__chest__quantity">{numberGift}</div>
+                    <div className="upgrate__condition__name">{item.name}</div>
                   </div>
                 ))}
             </div>

@@ -8,7 +8,6 @@ import {
   startLoading,
 } from "../app/reducers/loading/loading.reducer";
 import { store } from "../app/store";
-import { message } from "antd";
 
 export const request = axios.create({
   baseURL: AppConfig.apiUrl,
@@ -39,9 +38,9 @@ request.interceptors.response.use(
       window.location.href = window.location.origin + "/401";
       return;
     }
-    if (error.response && error.response.status === 400) {
-      message.error(error.response.data.message);
-    }
+    // if (error.response && error.response.status === 400) {
+    //   message.error(error.response.data.message);
+    // }
     throw error;
   }
 );

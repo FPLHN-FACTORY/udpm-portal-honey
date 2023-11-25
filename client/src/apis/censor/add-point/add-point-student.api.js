@@ -39,4 +39,20 @@ export class AddPointStudentAPI {
       data: importExcel,
     });
   };
+
+  static createImportDataLab = (dataPreview) => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}/lab-report/import-data`,
+      data: dataPreview,
+    });
+  };
+
+  static createImportDataEvent = (dataPreview) => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}/portal-events/import-data`,
+      data: dataPreview,
+    });
+  };
 }
