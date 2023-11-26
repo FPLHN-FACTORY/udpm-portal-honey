@@ -322,6 +322,7 @@ const ModalThem = (props) => {
           limitSoLuong: 1,
           note: "",
           numberDateEnd: 1,
+          checkTypeDate: 2
         }}
         autoComplete="off"
       >
@@ -523,7 +524,7 @@ const ModalThem = (props) => {
                     {
                       validator: (_, value) => {
                         const regex = /^[0-9]+$/;
-                        if (!regex.test(value)) {
+                        if (!regex.test(value) || value === 0) {
                           return Promise.reject(
                             new Error("Vui lòng nhập một số nguyên dương")
                           );

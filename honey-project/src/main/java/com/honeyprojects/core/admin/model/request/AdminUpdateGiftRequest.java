@@ -9,13 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-@ToString
 public class AdminUpdateGiftRequest {
 
     private String code;
 
-    @NotBlank(message = "tên không được để trống")
-    @Size(min = 0, max = 100)
     private String name;
 
     private Integer type;
@@ -35,5 +32,7 @@ public class AdminUpdateGiftRequest {
     private Long toDate;
 
     private Long fromDate;
+
+    private Long numberDateEnd;
 
 }
