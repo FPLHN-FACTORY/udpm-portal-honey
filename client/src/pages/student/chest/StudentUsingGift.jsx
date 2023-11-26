@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { message, Modal, Form, Input, InputNumber, Slider, Select } from "antd";
+import { message, Modal, Form, Input, Slider, Select } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 import { SetGiftArchive } from "../../../app/reducers/archive-gift/gift-archive.reducer";
 import { SetArchiveCountGift } from "../../../app/reducers/archive-gift/archive-count-gift.reducer";
+import { Option } from "antd/es/mentions";
 
 const UsingGift = (props) => {
   const { archivegift, filter } = props;
@@ -64,15 +65,14 @@ const UsingGift = (props) => {
 
   const [soLuong, setSoLuong] = useState(1);
 
-  const [loading, setLoading] = useState(false);
 
   const onChange = (value) => {
     const classStudent = dataClass.filter(el => el.classId = value)[0];
     form.setFieldValue("maMon", classStudent.subjectName)
     form.setFieldValue("emailGV", classStudent.teacherEmail)
 
-    ArchiveAPI.getScoreClass({classId: classStudent.classId, subjectId: classStudent.subjectId}).then((response) => {
-      setDataScore(response.data)
+    ArchiveAPI.getScoreClass({ classId: classStudent.classId, subjectId: classStudent.subjectId }).then((response) => {
+      setDataScore(response.data);
     })
   };
 
@@ -87,8 +87,7 @@ const UsingGift = (props) => {
         title="Sử dụng quà tặng"
         visible={isModalOpen}
         onOk={handleOk}
-        onCancel={handleCancel}
-        okButtonProps={{ loading: loading }}>
+        onCancel={handleCancel}>
         <hr className="border-0 bg-gray-300 mt-3 mb-6" />
         <Form form={form}
             labelCol={{
@@ -108,12 +107,19 @@ const UsingGift = (props) => {
               },
             ]}>
             <Select
-              placeholder="Vui lòng chọn giảng viên"
+              placeholder="Vui lòng nhập mã lớp!"
               onChange={onChange}
-              key={"classId"}
+              name="maLopSelect"
+              key={"maLopSelect"}
               filterOption={filterOption}
-              options={dataClass.map(option => ({ value: option.classId, label: option.className }))}
-            />
+            >
+              {
+                dataClass.map(option => (
+                  <Option value={option.classId} key={option.classId} > {option.className}</Option>
+                ))
+              }
+              
+            </Select>
           </Form.Item>
           <Form.Item
             name="maMon"
@@ -153,10 +159,15 @@ const UsingGift = (props) => {
             ]}>
             <Select
               showSearch
+              name="dauDiemSelect"
               placeholder="Vui lòng chọn đầu điểm"
               filterOption={filterOption}
-              options={dataScore.map(option => ({ value: option.id, label: option.name }))}
-            />
+              key={"dauDiemSelect"}
+            >
+              {dataScore.map(option => (
+                <Option value={option.id} key={option.id} > { option.name }</Option>
+              ))}
+            </Select>
           </Form.Item>
 
           <Form.Item

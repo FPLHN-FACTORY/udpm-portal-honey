@@ -48,6 +48,7 @@ export default function IndexGift() {
     document.title = "Quản lý vật phẩm";
     fetchAllCate();
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
 
   const fetchData = () => {
@@ -56,6 +57,7 @@ export default function IndexGift() {
       categoryId: honeyCategoryId,
       page: current - 1,
     }).then((response) => {
+      console.log(response.data.data.data);
       dispatch(SetGift(response.data.data.data));
       setTotal(response.data.data.totalPages);
     });

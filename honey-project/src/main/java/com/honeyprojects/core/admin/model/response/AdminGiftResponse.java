@@ -42,4 +42,7 @@ public interface AdminGiftResponse extends IsIdentified {
 
     @Value("#{target.note}")
     String getNote();
+
+    @Value("#{target.number_end_date}")
+    Long getNumberEndDate();
 }
