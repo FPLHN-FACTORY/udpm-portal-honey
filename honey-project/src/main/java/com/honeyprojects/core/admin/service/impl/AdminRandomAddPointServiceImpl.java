@@ -4,6 +4,7 @@ import com.honeyprojects.core.admin.model.request.*;
 import com.honeyprojects.core.admin.model.response.*;
 import com.honeyprojects.core.admin.repository.*;
 import com.honeyprojects.core.admin.service.AdRandomAddPointService;
+import com.honeyprojects.core.admin.service.ExportExcelServiceService;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.president.model.response.PresidentExportGiftResponse;
 import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
@@ -12,6 +13,7 @@ import com.honeyprojects.infrastructure.contant.*;
 import com.honeyprojects.infrastructure.logger.entity.LoggerFunction;
 import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
 import com.honeyprojects.util.*;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -73,6 +76,9 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
     @Autowired
     private ConvertRequestApiidentity convertRequestApiidentity;
+
+    @Autowired
+    private ExportExcelServiceService exportExcelService;
 
     @Override
     public List<AdminCategoryResponse> getAllCategory() {
@@ -232,215 +238,19 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     }
 
     @Override
-    public Boolean exportExcel() {
-        // Lấy đường dẫn thư mục "Downloads" trong hệ thống
-        String userHome = System.getProperty("user.home");
-        String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_import" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
-
-        // Tạo một workbook (bảng tính) mới cho tệp Excel
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Trang 1");
-        // Thiết lập kiểu cho phần tiêu đề của bảng tính
-        CellStyle headerStyle = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        font.setColor(IndexedColors.BLACK.getIndex());
-        font.setBold(true);
-        font.setFontHeightInPoints((short) 15);
-        headerStyle.setFont(font);
-        headerStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        headerStyle.setBorderTop(BorderStyle.THIN);
-        headerStyle.setBorderBottom(BorderStyle.THIN);
-        headerStyle.setBorderLeft(BorderStyle.THIN);
-        headerStyle.setBorderRight(BorderStyle.THIN);
-        // Tạo hàng tiêu đề và đặt các tiêu đề cột
-        Row headerRow = sheet.createRow(0);
-        String[] headers = {"STT", "Tên đăng nhập"};
-        for (int i = 0; i < headers.length; i++) {
-            Cell headerCell = headerRow.createCell(i);
-            headerCell.setCellValue(headers[i]);
-            headerCell.setCellStyle(headerStyle);
-        }
-        // Tự động điều chỉnh kích thước cột cho tiêu đề
-        for (int i = 0; i < headers.length; i++) {
-            sheet.autoSizeColumn(i);
-        }
-        try {
-            // Lưu workbook vào tệp Excel tại đường dẫn đã xác định
-            FileOutputStream outputStream = new FileOutputStream(outputPath);
-            workbook.write(outputStream);
-            outputStream.close();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+    public ByteArrayOutputStream exportExcel(HttpServletResponse response) {
+        return exportExcelService.export(response, null, null,
+                "Định dạng tên đăng nhập: haipxph26772"
+                , new String[]{"Tên đăng nhập"});
     }
 
     @Override
-    public Boolean previewDataExportExcel() {// màn cộng mật ong
-        try {
-            // Lấy đường dẫn thư mục "Downloads" trong hệ thống
-            String userHome = System.getProperty("user.home");
-            String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_add_item" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
-
-            // Tạo một workbook (bảng tính) mới cho bản xem trước dữ liệu
-            Workbook workbook = new XSSFWorkbook();
-            Sheet sheet = workbook.createSheet("Danh sách import");
-            // Thiết lập kiểu cho phần tiêu đề của bảng tính
-            CellStyle headerStyle = workbook.createCellStyle();
-            Font font = workbook.createFont();
-            font.setBold(true);
-            font.setFontHeightInPoints((short) 13);
-            headerStyle.setFont(font);
-            font.setColor(IndexedColors.WHITE.getIndex());
-            headerStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
-            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            headerStyle.setBorderTop(BorderStyle.THIN);
-            headerStyle.setBorderBottom(BorderStyle.THIN);
-            headerStyle.setBorderLeft(BorderStyle.THIN);
-            headerStyle.setBorderRight(BorderStyle.THIN);
-            // Dòng thứ 1 - Chữ "Chú ý"
-            Row noteRow = sheet.createRow(0);
-            Cell noteCell = noteRow.createCell(0);
-            noteCell.setCellValue("Chú ý");
-            // Tạo một kiểu cho ô "Lưu ý"
-            CellStyle noteStyle = workbook.createCellStyle();
-            Font noteFont = workbook.createFont();
-            noteFont.setBold(true);
-            noteFont.setFontHeightInPoints((short) 13);
-            noteStyle.setFont(noteFont);
-            noteFont.setColor(IndexedColors.RED.getIndex());
-            noteStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-            noteStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            noteCell.setCellStyle(noteStyle);
-            // Dòng thứ 2 - cách viết đúng định dạng quà tặng
-            Row formatGiftRow = sheet.createRow(1);
-            Cell formatGiftCell = formatGiftRow.createCell(1);
-            formatGiftCell.setCellValue("Định dạng vật phẩm và mật ong:  <số lượng> <tên vật phẩm>, ..., <số lượng> <loại mật ong> VD: " +
-                    "Cột vật phẩm: 10 Tinh hoa lam, ... - Cột mật ong: 10 GOLD, ...");
-
-            // Tạo một kiểu cho các ô định dạng
-            CellStyle formatStyle = workbook.createCellStyle();
-            Font formatFont = workbook.createFont();
-            formatFont.setBold(true);
-            formatFont.setFontHeightInPoints((short) 13);
-            formatFont.setColor(IndexedColors.BLACK.getIndex());
-            formatStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
-//            formatStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            formatStyle.setFont(formatFont);
-            formatGiftCell.setCellStyle(formatStyle);
-            // Tạo hàng tiêu đề và đặt các tiêu đề cột
-            Row headerRow = sheet.createRow(3);
-            String[] headers = {"Mã sinh viên", "Vật phẩm", "Mật ong"};
-            int columnCount = headers.length;
-            for (int i = 0; i < columnCount; i++) {
-                Cell headerCell = headerRow.createCell(i);
-                headerCell.setCellValue(headers[i]);
-                headerCell.setCellStyle(headerStyle);
-                // Thiết lập cỡ cột
-                sheet.setColumnWidth(i, COLUMN_WIDTH); // Sử dụng một constant cho cỡ cột
-            }
-            // Tạo kiểu cho ô tiêu đề trống
-            CellStyle emptyHeaderStyle = workbook.createCellStyle();
-            Font emptyHeaderFont = workbook.createFont();
-            emptyHeaderFont.setColor(IndexedColors.RED.getIndex());
-            emptyHeaderStyle.setFont(emptyHeaderFont);
-
-            // Sheet 2
-            Sheet sheet2 = workbook.createSheet("Danh sách mật ong");
-            createSheet2Content(sheet2, workbook);
-
-            // Sheet 2
-            Sheet sheet3 = workbook.createSheet("Danh sách vật phẩm");
-            createSheet3Content(sheet3, workbook);
-
-            // Lưu workbook vào tệp Excel tại đường dẫn đã xác định
-            try (FileOutputStream outputStream = new FileOutputStream(outputPath)) {
-                workbook.write(outputStream);
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    private void createSheet3Content(Sheet sheet3, Workbook workbook) {
-        CellStyle headerStyle = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        font.setColor(IndexedColors.BLACK.getIndex());
-        font.setBold(true);
-        font.setFontHeightInPoints((short) 15);
-        headerStyle.setFont(font);
-        headerStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-
-        headerStyle.setBorderTop(BorderStyle.THIN);
-        headerStyle.setBorderBottom(BorderStyle.THIN);
-        headerStyle.setBorderLeft(BorderStyle.THIN);
-        headerStyle.setBorderRight(BorderStyle.THIN);
-
-        // Đoạn mã thêm dữ liệu category vào sheet "Trang 2"
-        List<PresidentExportGiftResponse> gifts = getGiftData(); // Lấy dữ liệu category từ database hoặc từ nguồn dữ liệu khác
-
-        Row headerRowSheet2 = sheet3.createRow(0);
-        String[] headersSheet2 = {"Tên vật phẩm", "Yêu cầu phê duyệt"};
-        int columnCountSheet2 = headersSheet2.length;
-
-        for (int i = 0; i < columnCountSheet2; i++) {
-            Cell headerCell = headerRowSheet2.createCell(i);
-            headerCell.setCellValue(headersSheet2[i]);
-            headerCell.setCellStyle(headerStyle);
-            sheet3.setColumnWidth(i, COLUMN_WIDTH); // Thiết lập cỡ cột
-        }
-
-        int rowNum = 1;
-        for (PresidentExportGiftResponse gift : gifts) {
-            Row row = sheet3.createRow(rowNum++);
-            row.createCell(0).setCellValue(gift.getName());
-            row.createCell(1).setCellValue(gift.getStatus().equals("0") ? "Không" : "Có");
-        }
-    }
-
-    private void createSheet2Content(Sheet sheet2, Workbook workbook) {
-        CellStyle headerStyle = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        font.setColor(IndexedColors.BLACK.getIndex());
-        font.setBold(true);
-        font.setFontHeightInPoints((short) 15);
-        headerStyle.setFont(font);
-        headerStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-
-        headerStyle.setBorderTop(BorderStyle.THIN);
-        headerStyle.setBorderBottom(BorderStyle.THIN);
-        headerStyle.setBorderLeft(BorderStyle.THIN);
-        headerStyle.setBorderRight(BorderStyle.THIN);
-
-        // Đoạn mã thêm dữ liệu category vào sheet "Trang 2"
-        List<AdminExportCategoryResponse> categories = getCategoryData(); // Lấy dữ liệu category từ database hoặc từ nguồn dữ liệu khác
-
-        Row headerRowSheet2 = sheet2.createRow(0);
-        String[] headersSheet2 = {"Loại mật ong", "Yêu cầu phê duyệt"};
-        int columnCountSheet2 = headersSheet2.length;
-
-        for (int i = 0; i < columnCountSheet2; i++) {
-            Cell headerCell = headerRowSheet2.createCell(i);
-            headerCell.setCellValue(headersSheet2[i]);
-            headerCell.setCellStyle(headerStyle);
-            sheet2.setColumnWidth(i, COLUMN_WIDTH); // Thiết lập cỡ cột
-        }
-
-        int rowNum = 1;
-        for (AdminExportCategoryResponse category : categories) {
-            Row row = sheet2.createRow(rowNum++);
-            row.createCell(0).setCellValue(category.getName());
-            row.createCell(1).setCellValue(category.getStatus().equals("1") ? "Không" : "Có");
-        }
+    public ByteArrayOutputStream previewDataExportExcel(HttpServletResponse response) {
+        List<AdminExportCategoryResponse> categories = getCategoryData();
+        List<PresidentExportGiftResponse> gifts = getGiftData();
+        return exportExcelService.export(response, categories, gifts,
+                "Định dạng vật phẩm và mật ong:  <số lượng> <tên vật phẩm>, ..., <số lượng> <loại mật ong> VD: Cột vật phẩm: 10 Tinh hoa lam, ... - Cột mật ong: 10 GOLD, ..."
+                , new String[]{"Mã sinh viên", "Vật phẩm", "Mật ong"});
     }
 
     private List<AdminExportCategoryResponse> getCategoryData() {
@@ -450,9 +260,6 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     private List<PresidentExportGiftResponse> getGiftData() {
         return adGiftRepository.getGiftToExport();
     }
-
-    // Đặt một constant cho cỡ cột
-    private static final int COLUMN_WIDTH = 25 * 256;
 
     @Override
     public AdminAddPointBO previewDataRandomExcel(MultipartFile file) throws IOException {
@@ -464,7 +271,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         Sheet sheet = workbook.getSheetAt(0);
         // Đọc dữ liệu từ bảng tính và tạo danh sách các đối tượng AdminAddItemDTO
         List<AdminAddPointDTO> lstUserImportDTO = StreamSupport.stream(sheet.spliterator(), false)
-                .skip(1) // Bỏ qua 2 dòng đầu tiên
+                .skip(3) // Bỏ qua 2 dòng đầu tiên
                 .filter(row -> !ExcelUtils.checkNullLCells(row, 1))
                 .map(row -> processRowPoint(row))
                 .collect(Collectors.toList());
@@ -696,7 +503,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
     private AdminAddPointDTO processRowPoint(Row row) {
         AdminAddPointDTO userDTO = new AdminAddPointDTO();
-        String userName = ExcelUtils.getCellString(row.getCell(1));
+        String userName = ExcelUtils.getCellString(row.getCell(0));
         // Tạo địa chỉ email giả định từ tên đăng nhập
         String emailSimple = userName + "@fpt.edu.vn";
         // Gọi API để kiểm tra sự tồn tại của người dùng

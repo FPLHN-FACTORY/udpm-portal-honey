@@ -18,24 +18,27 @@ import {
 } from "../../../../app/reducers/category/category.reducer";
 import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 import { GiftAPI } from "../../../../apis/censor/gift/gift.api";
+import dayjs from "dayjs";
 
 const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
   const [name, setName] = useState("");
   const [errorNameAuction, setErrorNameAuction] = useState("");
-  const [honey, setHoney] = useState("");
+  const [honey, setHoney] = useState(0);
   const [errorHoney, setErrorHoney] = useState("");
   const [errorItem, setErrorItem] = useState("");
   const [errorDates, setErrorDates] = useState("");
   const [status, setStatus] = useState(0);
   const [errorStatus, setErrorStatus] = useState("");
   const [honeyCategoryId, setHoneyCategoryId] = useState("");
+  const [errorHoneyCategory, setErrorHoneyCategory] = useState("");
   const [items, setItems] = useState([]);
   const [itemId, setItemId] = useState("");
   const { Option } = Select;
   const { RangePicker } = DatePicker;
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
-
+  const [quantity, setQuantity] = useState(0);
+  const [errorQuantity, setErrorQuantity] = useState("");
   const dispatch = useAppDispatch();
 
   const fetchDataItem = () => {
@@ -50,18 +53,22 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
 
   useEffect(() => {
     if (visible === true) {
-      if (listCategory.length > 0) {
-        setHoneyCategoryId(listCategory[0].id);
-      }
       return () => {
         setName("");
-        setHoney("");
-        setStatus("");
+        setHoney(0);
+        setStatus(0);
         setHoneyCategoryId("");
+        setItemId("");
         setErrorNameAuction("");
         setErrorHoney("");
         setErrorStatus("");
         setErrorItem("");
+        setQuantity(0);
+        setErrorDates("");
+        setErrorQuantity("");
+        setErrorHoneyCategory("");
+        setFromDate(null);
+        setToDate(null);
       };
     }
   }, [visible]);
@@ -76,7 +83,7 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
       setFromDate(fromDate.valueOf());
       setToDate(toDate.valueOf());
     } else {
-      setFromDate(null); // Đặt giá trị ngày thành null nếu không có ngày được chọn
+      setFromDate(null);
       setToDate(null);
     }
   };
@@ -95,22 +102,20 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
 
   const create = () => {
     let check = 0;
-    let regex_so = /^[1-9][0-9]*$/;
-
-    // validate honey
-    if (honey.trim().length === 0) {
-      setErrorHoney("Mật ong không được để trống");
+    if (honey === 0 || honey > 1000000000) {
+      setErrorHoney(
+        "Số lượng mật ong phải là số nguyên dương lớn hơn 0 và nhỏ hơn bằng 1 tỷ"
+      );
       check++;
     } else {
-      if (!regex_so.test(honey)) {
-        setErrorHoney("Mật ong phải là số nguyên dương");
-        check++;
-      } else {
-        setErrorHoney("");
-      }
+      setErrorHoney("");
     }
-
-    // validate name
+    if (honeyCategoryId === "") {
+      setErrorHoneyCategory("Vui lòng chọn loại điểm");
+      check++;
+    } else {
+      setErrorHoneyCategory("");
+    }
     if (name.toString().trim().length === 0) {
       setErrorNameAuction("Tên phiên đấu giá không được để trống");
       check++;
@@ -122,27 +127,39 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
         setErrorNameAuction("");
       }
     }
-
     if (itemId === "" || itemId === undefined || itemId === null) {
       setErrorItem("Vui lòng chọn vật phẩm đấu giá");
       check++;
     } else {
       setErrorItem("");
     }
-
-    if(fromDate === undefined || fromDate === null || fromDate === "" || toDate === undefined || toDate === null || toDate === ""){
+    if (
+      fromDate === undefined ||
+      fromDate === null ||
+      fromDate === "" ||
+      toDate === undefined ||
+      toDate === null ||
+      toDate === ""
+    ) {
       setErrorDates("Vui lòng chọn thời gian đấu giá");
-    }else {
+      check++;
+    } else {
       setErrorDates("");
     }
-
     if (status.toString().trim().length === 0) {
       setErrorStatus("Trạng thái không được để trống");
       check++;
     } else {
       setErrorStatus("");
     }
-
+    if (quantity === 0 || quantity > 1000000000) {
+      setErrorQuantity(
+        "Số lượng vật phẩm đấu giá là số nguyên dương lớn hơn 0 và nhỏ hơn bằng 1 tỷ"
+      );
+      check++;
+    } else {
+      setErrorQuantity("");
+    }
     if (check === 0) {
       let obj = {
         name: name,
@@ -152,6 +169,7 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
         giftId: itemId,
         fromDate: fromDate,
         toDate: toDate,
+        quantity: quantity,
       };
 
       const categoryNameItem = listCategory.find(
@@ -205,14 +223,17 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
             <Col span={12}>
               <span>Loại điểm:</span> <br />
               <Select
-                style={{ width: "100%" }}
                 value={honeyCategoryId}
                 onChange={(value) => {
                   setHoneyCategoryId(value);
                 }}
-                size="large"
                 placeholder="Thể loại"
+                style={{
+                  width: "100%",
+                  height: "40px",
+                }}
                 options={[
+                  { value: "", label: "Chọn thể loại" },
                   ...listCategory.map((category) => {
                     return {
                       value: category.id,
@@ -221,7 +242,7 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
                   }),
                 ]}
               />
-              <span className="error">{}</span>
+              <span className="error">{errorHoneyCategory}</span>
             </Col>
           </Row>
           <Row gutter={16} style={{ marginBottom: "15px" }}>
@@ -230,9 +251,12 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
               <Input
                 value={honey}
                 onChange={(e) => {
-                  setHoney(e.target.value);
+                  const newValue = Math.max(0, parseInt(e.target.value) || 0);
+                  setHoney(newValue);
                 }}
-                type="text"
+                type="number"
+                min={0}
+                step={1}
               />
               <span className="error">{errorHoney}</span>
             </Col>
@@ -243,15 +267,16 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
                 onChange={(e) => {
                   setStatus(e.target.value);
                 }}
+                style={{ lineHeight: "50px" }}
               >
                 <Radio value={0}>Mở</Radio>
                 <Radio value={1}>Đóng</Radio>
               </Radio.Group>
-              <br></br>
+              <br />
               <span className="error">{errorStatus}</span>
             </Col>
           </Row>
-          <Row gutter={16}>
+          <Row gutter={16} style={{ marginBottom: "15px" }}>
             <Col span={12}>
               <span>Vật phẩm đấu giá:</span> <br />
               <Select
@@ -259,25 +284,46 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
                 onChange={(value) => {
                   setItemId(value);
                 }}
-                style={{ width: "100%", marginRight: "10px" }}
+                style={{ height: "40px", width: "100%" }}
               >
                 <Option value="">Chọn vật phẩm</Option>
                 {items.map((item) => {
                   return <Option value={item.id}>{item.name}</Option>;
                 })}
               </Select>
-              <br></br>
               <span className="error">{errorItem}</span>
             </Col>
             <Col span={12}>
-            <span>Thời gian đấu giá:</span> <br />
+              <span>Số lượng :</span> <br />
+              <Input
+                value={quantity}
+                onChange={(e) => {
+                  const newValue = Math.max(0, parseInt(e.target.value) || 0);
+                  setQuantity(newValue);
+                }}
+                type="number"
+                min={0}
+                step={1}
+              />{" "}
+              <br />
+              <span className="error">{errorQuantity}</span>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={24}>
+              <span>Thời gian đấu giá:</span> <br />
               <RangePicker
                 renderExtraFooter={() => "Chọn ngày"}
                 onChange={handleDateChange}
                 format={"DD/MM/YYYY"}
                 placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
+                style={{ height: "40px", width: "100%" }}
+                value={[
+                  fromDate ? dayjs(fromDate) : null,
+                  toDate ? dayjs(toDate) : null,
+                ]}
               />
-              <br></br>
+              <br />
               <span className="error">{errorDates}</span>
             </Col>
           </Row>

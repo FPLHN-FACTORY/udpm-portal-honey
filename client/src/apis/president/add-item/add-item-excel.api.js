@@ -10,12 +10,21 @@ export class AddItemExcelAPI {
     });
   };
 
-  static exportExcel = () => {
+  // static exportExcel = () => {
+  //   return request({
+  //     method: "POST",
+  //     url: `${this.COMPONENT_NAME}/export`,
+  //   });
+  // };
+
+  static exportExcel(filter) {
     return request({
-      method: "POST",
-      url: `${this.COMPONENT_NAME}/export`,
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/export`,
+      responseType: "blob",
+      params: filter,
     });
-  };
+  }
 
   static previewDataExportExcel = (file) => {
     return request({

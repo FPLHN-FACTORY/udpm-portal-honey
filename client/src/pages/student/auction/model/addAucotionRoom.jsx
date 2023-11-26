@@ -11,7 +11,7 @@ import {
   Space,
   message,
 } from "antd";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAppSelector } from "../../../../app/hooks";
 import { GetUser } from "../../../../app/reducers/users/users.reducer";
 import { ArchiveAPI } from "../../../../apis/student/archive/ArchiveAPI";
@@ -26,7 +26,9 @@ export default function ModalAddAuction({
   const user = useAppSelector(GetUser);
   const [listArchiveUser, setListArchiveUser] = useState([]);
   const [archiveGift, setArchiveGift] = useState(null);
-
+  const [quantity, setQuantity] = useState(0);
+  const [jump, setJump] = useState(0);
+  const [startingPrice, setStartingPrice] = useState(0);
   const loadListArchive = () => {
     ArchiveAPI.findAllUser(user.idUser).then((res) => {
       setListArchiveUser(res.data.data);
@@ -34,7 +36,20 @@ export default function ModalAddAuction({
   };
 
   useEffect(() => {
-    loadListArchive();
+    if (visible) {
+      setQuantity(0);
+      setJump(0);
+      setStartingPrice(0);
+      form.setFieldsValue({ time: 8 });
+      loadListArchive();
+      return () => {
+        setArchiveGift(null);
+        setQuantity(0);
+        setJump(0);
+        setStartingPrice(0);
+        form.setFieldsValue({ time: 8 });
+      };
+    }
   }, [visible]);
 
   const handleSubmit = () => {
@@ -48,9 +63,9 @@ export default function ModalAddAuction({
               <span>
                 Bạn có muốn đấu giá{" "}
                 <span style={{ color: "blue", fontWeight: "bold" }}>
-                  {archiveGift.nameGift}{" "}
+                  {archiveGift?.nameGift}{" "}
                 </span>
-                không ?
+                không?
               </span>
             ),
             okText: "Đồng ý",
@@ -61,42 +76,40 @@ export default function ModalAddAuction({
         });
       })
       .then((values) => {
-        // Lấy giá trị từ form khi người dùng đã hoàn thành
-        const { startingPrice, time, jump } = values;
-        if (startingPrice === undefined) {
-          message.error("Vui lòng nhập giá trị khởi điểm hợp lệ.");
-          return;
-        } else if (isNaN(Number(startingPrice)) || Number(startingPrice) < 0) {
-          message.error("Vui lòng nhập giá trị khởi điểm lớn hơn hoặc bằng 0.");
-          return;
-        }
-
+        const { time } = values;
         if (time === undefined) {
-          message.error("Vui lòng thời hạn.");
+          message.error("Vui lòng chọn thời hạn");
           return;
         }
-
-        if (archiveGift === null) {
-          message.error("Vui lòng chọn vật phẩm để đấu giá.");
+        if (!archiveGift) {
+          message.error("Vui lòng chọn vật phẩm để đấu giá");
+          return;
+        }
+        if (startingPrice === undefined) {
+          message.error("Vui lòng nhập giá trị khởi điểm lớn hơn hoặc bằng 0");
+          return;
+        }
+        if (quantity === 0 || quantity > 1000000000) {
+          message.error(
+            "Số lượng vật phẩm đấu giá là số nguyên dương lớn hơn 0 và nhỏ hơn bằng 1 tỷ"
+          );
           return;
         }
         const dataUpload = {
-          idUser: user.idUser,
-          idGift: archiveGift.idGift,
-          jump: jump,
-          startingPrice: startingPrice,
-          time: time,
-          name: archiveGift.nameGift,
-          idCategory: archiveGift.idCategory,
+          idUser: user?.idUser,
+          idGift: archiveGift?.idGift,
+          jump,
+          startingPrice,
+          time,
+          name: archiveGift?.nameGift,
+          idCategory: archiveGift?.idCategory,
+          quantity,
         };
         stompClientAll.send(
           `/action/add-auction`,
           {},
           JSON.stringify(dataUpload)
         );
-        onOK();
-        form.resetFields();
-        message.success("Tạo đấu giá thành công.");
       })
       .catch((errorInfo) => {
         console.error("Lỗi xảy ra:", errorInfo);
@@ -182,7 +195,7 @@ export default function ModalAddAuction({
                         ) : (
                           <div>
                             <div className="item">
-                              <img 
+                              <img
                                 src={archiveGift.image}
                                 style={{
                                   width: "100%",
@@ -195,7 +208,6 @@ export default function ModalAddAuction({
                             </span>
                           </div>
                         )}
-
                         <hr
                           style={{
                             height: "2px",
@@ -203,9 +215,37 @@ export default function ModalAddAuction({
                             backgroundColor: "black",
                           }}
                         />
-
-                        <Form.Item
-                          label={
+                        <br />
+                        <Row gutter={16}>
+                          <Col span={10}>
+                            <span
+                              style={{
+                                color: "white",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              Số lượng :
+                            </span>
+                          </Col>
+                          <Col span={14}>
+                            <Input
+                              className="input-auction"
+                              value={quantity}
+                              onChange={(e) => {
+                                const newValue = Math.max(
+                                  0,
+                                  parseInt(e.target.value) || 0
+                                );
+                                setQuantity(newValue);
+                              }}
+                              type="number"
+                              min={0}
+                              step={1}
+                            />{" "}
+                          </Col>
+                        </Row>
+                        <Row gutter={16}>
+                          <Col span={10}>
                             <span
                               style={{
                                 color: "white",
@@ -214,15 +254,26 @@ export default function ModalAddAuction({
                             >
                               Giá khởi điểm :
                             </span>
-                          }
-                          colon={false}
-                          name="startingPrice"
-                          style={{ marginTop: "30px" }}
-                        >
-                          <Input type="number" className="input-auction" />
-                        </Form.Item>
-                        <Form.Item
-                          label={
+                          </Col>
+                          <Col span={14}>
+                            <Input
+                              className="input-auction"
+                              value={startingPrice}
+                              onChange={(e) => {
+                                const newValue = Math.max(
+                                  0,
+                                  parseInt(e.target.value) || 0
+                                );
+                                setStartingPrice(newValue);
+                              }}
+                              type="number"
+                              min={0}
+                              step={1}
+                            />{" "}
+                          </Col>
+                        </Row>
+                        <Row gutter={16}>
+                          <Col span={10}>
                             <span
                               style={{
                                 color: "white",
@@ -231,13 +282,24 @@ export default function ModalAddAuction({
                             >
                               Bước nhảy :
                             </span>
-                          }
-                          colon={false}
-                          name="jump"
-                        >
-                          <Input type="number" className="input-auction" />
-                        </Form.Item>
-
+                          </Col>
+                          <Col span={14}>
+                            <Input
+                              className="input-auction"
+                              value={jump}
+                              onChange={(e) => {
+                                const newValue = Math.max(
+                                  0,
+                                  parseInt(e.target.value) || 0
+                                );
+                                setJump(newValue);
+                              }}
+                              type="number"
+                              min={0}
+                              step={1}
+                            />{" "}
+                          </Col>
+                        </Row>
                         <Form.Item
                           label={
                             <span
@@ -263,7 +325,6 @@ export default function ModalAddAuction({
                             </Space>
                           </Radio.Group>
                         </Form.Item>
-
                         <div className="div-button">
                           <Button
                             type="primary"

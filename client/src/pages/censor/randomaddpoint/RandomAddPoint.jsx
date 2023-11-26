@@ -671,7 +671,7 @@ export default function RandomAddPoint() {
             onConfirm={() =>
               handleDeleteChestGif(chestDetail.id, record.id, selectedChest)
             }
-            color="cyan"
+            // color="cyan"
             okText="Yes"
             cancelText="No"
           >

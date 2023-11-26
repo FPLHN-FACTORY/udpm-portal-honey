@@ -45,7 +45,7 @@ public class AdminAuctionController {
     }
 
     @PostMapping("/add")
-    public ResponseObject addAcution(@RequestBody AdminCreateAuctionRequest obj) {
+    public ResponseObject addAuction(@RequestBody AdminCreateAuctionRequest obj) {
         return new ResponseObject(adminAuctionService.addAuction(obj));
     }
 

@@ -10,6 +10,7 @@ import com.honeyprojects.core.admin.model.request.AdminNotificationRandomRequest
 import com.honeyprojects.core.admin.repository.AdNotificationRespository;
 import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
 import com.honeyprojects.core.admin.service.AdminAddPointStudentService;
+import com.honeyprojects.core.admin.service.ExportExcelServiceService;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.president.model.response.PresidentAddItemBO;
 import com.honeyprojects.core.president.model.response.PresidentAddItemDTO;
@@ -38,6 +39,7 @@ import com.honeyprojects.util.DataUtils;
 import com.honeyprojects.util.DateUtils;
 import com.honeyprojects.util.ExcelUtils;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -52,6 +54,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -83,6 +86,9 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
 
     @Autowired
     private ConvertRequestApiidentity convertRequestApiidentity;
+
+    @Autowired
+    private ExportExcelServiceService exportExcelService;
 
     @Override
     public Boolean addPointToStudentLabReport(AdminAddPointStudentLabReportBOO requestAddPointStudentBO) {
@@ -132,96 +138,6 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
             }
         }
         return true;
-    }
-
-    @Override
-    public Boolean exportExcelLabReport() {
-        try {
-            // Lấy đường dẫn thư mục "Downloads" trong hệ thống
-            String userHome = System.getProperty("user.home");
-            String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_add_honey_point_lab_report" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
-
-            // Tạo một workbook (bảng tính) mới cho bản xem trước dữ liệu
-            Workbook workbook = new XSSFWorkbook();
-            Sheet sheet = workbook.createSheet("Trang 1");
-
-            // Thiết lập kiểu cho phần tiêu đề của bảng tính
-            CellStyle headerStyle = workbook.createCellStyle();
-            Font font = workbook.createFont();
-            font.setBold(true);
-            font.setFontHeightInPoints((short) 13);
-            headerStyle.setFont(font);
-            font.setColor(IndexedColors.WHITE.getIndex());
-            headerStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
-            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-
-            headerStyle.setBorderTop(BorderStyle.THIN);
-            headerStyle.setBorderBottom(BorderStyle.THIN);
-            headerStyle.setBorderLeft(BorderStyle.THIN);
-            headerStyle.setBorderRight(BorderStyle.THIN);
-
-            // Dòng thứ 1 - Chữ "Chú ý"
-            Row noteRow = sheet.createRow(0);
-            Cell noteCell = noteRow.createCell(0);
-            noteCell.setCellValue("Chú ý");
-
-            // Tạo một kiểu cho ô "Lưu ý"
-            CellStyle noteStyle = workbook.createCellStyle();
-            Font noteFont = workbook.createFont();
-            noteFont.setBold(true);
-            noteFont.setFontHeightInPoints((short) 13);
-            noteStyle.setFont(noteFont);
-            noteFont.setColor(IndexedColors.RED.getIndex());
-            noteStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-            noteStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            noteCell.setCellStyle(noteStyle);
-
-            // Dòng thứ 2 - cách viết đúng định dạng quà tặng
-            Row formatGiftRow = sheet.createRow(1);
-            Cell formatGiftCell = formatGiftRow.createCell(1);
-            formatGiftCell.setCellValue("Định dạng cột email: haipxph26772@fpt.edu.vn - Định dạng cột số lượng mật ong: 29");
-
-            // Tạo một kiểu cho các ô định dạng
-            CellStyle formatStyle = workbook.createCellStyle();
-            Font formatFont = workbook.createFont();
-            formatFont.setBold(true);
-            formatFont.setFontHeightInPoints((short) 13);
-            formatFont.setColor(IndexedColors.BLACK.getIndex());
-            formatStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
-            formatStyle.setFont(formatFont);
-            formatGiftCell.setCellStyle(formatStyle);
-
-            // Tạo hàng tiêu đề và đặt các tiêu đề cột
-            Row headerRow = sheet.createRow(3);
-            String[] headers = {"Email", "Số lượng mật ong"};
-            int columnCount = headers.length;
-
-            for (int i = 0; i < columnCount; i++) {
-                Cell headerCell = headerRow.createCell(i);
-                headerCell.setCellValue(headers[i]);
-                headerCell.setCellStyle(headerStyle);
-
-                // Thiết lập cỡ cột
-                sheet.setColumnWidth(i, Constants.COLUMN_WIDTH); // Sử dụng một constant cho cỡ cột
-            }
-
-            // Tạo kiểu cho ô tiêu đề trống
-            CellStyle emptyHeaderStyle = workbook.createCellStyle();
-            Font emptyHeaderFont = workbook.createFont();
-            emptyHeaderFont.setColor(IndexedColors.RED.getIndex());
-            emptyHeaderStyle.setFont(emptyHeaderFont);
-            // Lưu workbook vào tệp Excel tại đường dẫn đã xác định
-            try (FileOutputStream outputStream = new FileOutputStream(outputPath)) {
-                workbook.write(outputStream);
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     @Override
@@ -348,96 +264,6 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
         userDTO.setEmail(email != null ? email : null);
 
         return userDTO;
-    }
-
-    @Override
-    public Boolean exportExcelPortalEvents() {
-        try {
-            // Lấy đường dẫn thư mục "Downloads" trong hệ thống
-            String userHome = System.getProperty("user.home");
-            String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_add_honey_point_portal_events" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
-
-            // Tạo một workbook (bảng tính) mới cho bản xem trước dữ liệu
-            Workbook workbook = new XSSFWorkbook();
-            Sheet sheet = workbook.createSheet("Trang 1");
-
-            // Thiết lập kiểu cho phần tiêu đề của bảng tính
-            CellStyle headerStyle = workbook.createCellStyle();
-            Font font = workbook.createFont();
-            font.setBold(true);
-            font.setFontHeightInPoints((short) 13);
-            headerStyle.setFont(font);
-            font.setColor(IndexedColors.WHITE.getIndex());
-            headerStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
-            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-
-            headerStyle.setBorderTop(BorderStyle.THIN);
-            headerStyle.setBorderBottom(BorderStyle.THIN);
-            headerStyle.setBorderLeft(BorderStyle.THIN);
-            headerStyle.setBorderRight(BorderStyle.THIN);
-
-            // Dòng thứ 1 - Chữ "Chú ý"
-            Row noteRow = sheet.createRow(0);
-            Cell noteCell = noteRow.createCell(0);
-            noteCell.setCellValue("Chú ý");
-
-            // Tạo một kiểu cho ô "Lưu ý"
-            CellStyle noteStyle = workbook.createCellStyle();
-            Font noteFont = workbook.createFont();
-            noteFont.setBold(true);
-            noteFont.setFontHeightInPoints((short) 13);
-            noteStyle.setFont(noteFont);
-            noteFont.setColor(IndexedColors.RED.getIndex());
-            noteStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-            noteStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            noteCell.setCellStyle(noteStyle);
-
-            // Dòng thứ 2 - cách viết đúng định dạng quà tặng
-            Row formatGiftRow = sheet.createRow(1);
-            Cell formatGiftCell = formatGiftRow.createCell(1);
-            formatGiftCell.setCellValue("Định dạng cột email: haipxph26772@fpt.edu.vn");
-
-            // Tạo một kiểu cho các ô định dạng
-            CellStyle formatStyle = workbook.createCellStyle();
-            Font formatFont = workbook.createFont();
-            formatFont.setBold(true);
-            formatFont.setFontHeightInPoints((short) 13);
-            formatFont.setColor(IndexedColors.BLACK.getIndex());
-            formatStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
-            formatStyle.setFont(formatFont);
-            formatGiftCell.setCellStyle(formatStyle);
-
-            // Tạo hàng tiêu đề và đặt các tiêu đề cột
-            Row headerRow = sheet.createRow(3);
-            String[] headers = {"Email"};
-            int columnCount = headers.length;
-
-            for (int i = 0; i < columnCount; i++) {
-                Cell headerCell = headerRow.createCell(i);
-                headerCell.setCellValue(headers[i]);
-                headerCell.setCellStyle(headerStyle);
-
-                // Thiết lập cỡ cột
-                sheet.setColumnWidth(i, Constants.COLUMN_WIDTH); // Sử dụng một constant cho cỡ cột
-            }
-
-            // Tạo kiểu cho ô tiêu đề trống
-            CellStyle emptyHeaderStyle = workbook.createCellStyle();
-            Font emptyHeaderFont = workbook.createFont();
-            emptyHeaderFont.setColor(IndexedColors.RED.getIndex());
-            emptyHeaderStyle.setFont(emptyHeaderFont);
-            // Lưu workbook vào tệp Excel tại đường dẫn đã xác định
-            try (FileOutputStream outputStream = new FileOutputStream(outputPath)) {
-                workbook.write(outputStream);
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     @Override
@@ -615,5 +441,18 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
                 NotificationDetailType.NOTIFICATION_DETAIL_HONEY, Integer.parseInt(String.valueOf(roundedQuantity)));
         NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
         return studentNotificationDetailRepository.save(notificationDetail);
+    }
+
+    @Override
+    public ByteArrayOutputStream exportExcelPortalEventsClass(HttpServletResponse response) {
+        return exportExcelService.export(response, null, null,
+                "Định dạng cột email: haipxph26772@fpt.edu.vn", new String[]{"Email"});
+    }
+
+    @Override
+    public ByteArrayOutputStream exportExcelLabReportClass(HttpServletResponse response) {
+        return exportExcelService.export(response, null, null,
+                "Định dạng cột email: haipxph26772@fpt.edu.vn - Định dạng cột số lượng mật ong: 29"
+                , new String[]{"Email", "Số lượng mật ong"});
     }
 }
