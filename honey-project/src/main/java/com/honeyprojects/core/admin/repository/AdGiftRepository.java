@@ -57,7 +57,7 @@ public interface AdGiftRepository extends GiftRepository {
 
     @Query(value = """
             SELECT g.id, g.name, g.code, g.quantity, g.status, g.type, g.transaction_gift, 
-            g.from_date, g.to_date, g.note, g.last_modified_date,g.limit_quantity, g.image
+            g.from_date, g.to_date, g.note, g.last_modified_date,g.limit_quantity, g.image, g.expiry , g.number_end_date
             FROM gift g WHERE (status =0 OR status = 1) 
             ORDER BY g.last_modified_date DESC
             """, nativeQuery = true)
@@ -65,7 +65,7 @@ public interface AdGiftRepository extends GiftRepository {
 
     @Query(value = """
             SELECT g.id, g.name, g.code, g.quantity, g.status, g.type, g.transaction_gift, 
-            g.from_date, g.to_date, g.note, g.last_modified_date,g.limit_quantity, g.image, g.expiry 
+            g.from_date, g.to_date, g.note, g.last_modified_date,g.limit_quantity, g.image, g.expiry , g.number_end_date
             FROM gift g WHERE g.type = 1
             ORDER BY g.last_modified_date DESC
             """, nativeQuery = true)

@@ -30,7 +30,6 @@ const ModalDetailGift = (props) => {
   const { TextArea } = Input;
   const { Option } = Select;
   const { visible, onCancel, onUpdate, gift, fetchData } = props;
-  console.log(gift);
   const [form] = Form.useForm();
   const [image, setImage] = useState(null);
   const [isLimitedQuantity, setIsLimitedQuantity] = useState(true);
@@ -413,8 +412,6 @@ const ModalDetailGift = (props) => {
     checkTypeDate: 2
   };
 
-  console.log(initialValues);
-
   return (
     <Modal
       title="Chi tiết vật phẩm"
@@ -582,10 +579,13 @@ const ModalDetailGift = (props) => {
                 </Select>
               </Form.Item>
             )}
-            <div style={{ color: "red", textAlign: "center", marginTop: "-2" }}>
+            {
+              selectType !== 2 &&  (<div style={{ color: "red", textAlign: "center", marginTop: "-2" }}>
               {fieldErrors.selectedCategories}
-            </div>
-            {listCategory.map((category) => {
+            </div>)
+            }
+            
+            {selectType !== 2 && listCategory.map((category) => {
               const categoryId = category.id;
               const honeyValue =
                 categoryId in categoryQuantities
@@ -668,7 +668,8 @@ const ModalDetailGift = (props) => {
                     },
                     {
                       validator: (_, value) => {
-                        if (value.trim().length === 0) {
+                        console.log(value);
+                        if ((value + "").trim().length === 0) {
                           return Promise.resolve();
                         }
                         const regex = /^[0-9]+$/;

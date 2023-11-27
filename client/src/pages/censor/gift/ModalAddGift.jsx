@@ -359,13 +359,23 @@ const ModalThem = (props) => {
                   message: "Tên Quà không để trống",
                 },
                 {
+                  validator: (_, value) => {
+                    const whitespaceCount = (value.match(/\s/g) || []).length;
+                    if (whitespaceCount >= 3) {
+                      return Promise.reject("Tên không được chứa 3 khoảng trắng trở lên");
+                    } else {
+                      return Promise.resolve();
+                    }
+                  },
+                },
+                {
                   min: 4,
                   message: "Tên vật phẩm phải tối thiểu 4 kí tự",
                 },
                 {
                   max: 100,
                   message: "Tên vật phẩm phải tối đa 100 kí tự",
-                },
+                }
               ]}
             >
               <Input />
@@ -445,7 +455,7 @@ const ModalThem = (props) => {
               </Form.Item>
             )}
 
-            {selectedCategories.map((categoryId) => {
+            {selectType !== 2 && selectedCategories.map((categoryId) => {
               const category = listCategory.find(
                 (item) => item.id === categoryId
               );

@@ -2,7 +2,6 @@ import { Input, Modal, message, Button, Form, Select } from "antd";
 import { UpgradeApi } from "../../../apis/censor/upgrade-rate/upgrade-rate.api";
 import {
   GetCategory,
-  SetCategory,
 } from "../../../app/reducers/category/category.reducer";
 import { GetGift, SetGift } from "../../../app/reducers/gift/gift.reducer";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -46,6 +45,7 @@ const ModalCreateUpgradeRate = ({
 
   useEffect(() => {
     fechAllGift();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fechAllGift = () => {
@@ -156,6 +156,12 @@ const ModalCreateUpgradeRate = ({
                 },
                 {
                   validator: (rule, value) => {
+                    const regex = /^[0-9]+$/;
+                    if (!regex.test(value) || value === 0) {
+                      return Promise.reject(
+                        new Error("Vui lòng nhập một số nguyên dương")
+                      );
+                    }
                     if (value > 0) {
                       return Promise.resolve();
                     }
@@ -197,6 +203,12 @@ const ModalCreateUpgradeRate = ({
                 },
                 {
                   validator: (rule, value) => {
+                    const regex = /^[0-9]+$/;
+                    if (!regex.test(value) || value === 0) {
+                      return Promise.reject(
+                        new Error("Vui lòng nhập một số nguyên dương")
+                      );
+                    }
                     if (value > 0) {
                       return Promise.resolve();
                     }
@@ -240,6 +252,12 @@ const ModalCreateUpgradeRate = ({
                 },
                 {
                   validator: (rule, value) => {
+                    // const regex = /^[0-9]+$/;
+                    // if (!regex.test(value) || value === 0) {
+                    //   return Promise.reject(
+                    //     new Error("Vui lòng nhập một số nguyên dương")
+                    //   );
+                    // }
                     if (value >= 0 && value <= 100) {
                       return Promise.resolve();
                     }
