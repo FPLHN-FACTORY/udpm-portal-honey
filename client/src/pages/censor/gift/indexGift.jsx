@@ -67,7 +67,15 @@ export default function IndexGift() {
     setSearch("");
     setHoneyCategoryId("");
     setCurrent(1);
-    fetchData();
+    GiftAPI.fetchAll({
+      search: "",
+      categoryId: "",
+      page: current - 1,
+    }).then((response) => {
+      console.log(response.data.data.data);
+      dispatch(SetGift(response.data.data.data));
+      setTotal(response.data.data.totalPages);
+    });
   };
 
   const fetchAllCate = () => {
@@ -98,7 +106,7 @@ export default function IndexGift() {
       dataIndex: "stt",
       key: "stt",
       align: "center",
-      render: (text, record, index) => (current - 1) * 4 + (index + 1),
+      render: (text, record, index) => (current - 1) * 5 + (index + 1),
     },
     {
       title: "Ảnh",
