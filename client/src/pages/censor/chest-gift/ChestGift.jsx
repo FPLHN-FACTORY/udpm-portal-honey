@@ -147,50 +147,48 @@ export default function ChestGift() {
           style={{ fontSize: "26px" }}
         />{" "}
         <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span>
-          <div class="relative w-full mr-6">
-            <Input
-              style={{ borderRadius: "30px", marginTop: "20px" }}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Nhập tên..."
-            />
-          </div>
-          <Space
+        <div class="relative w-full mr-6">
+          <Input
+            style={{ borderRadius: "30px", marginTop: "20px" }}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Nhập tên..."
+          />
+        </div>
+        <Space
+          style={{
+            justifyContent: "center",
+            display: "flex",
+            marginTop: "20px",
+          }}
+        >
+          <Button
+            type="button"
             style={{
-              justifyContent: "center",
-              display: "flex",
-              marginTop: "20px",
+              marginLeft: "8px",
+              backgroundColor: "#FF9900",
+              color: "white",
+              outline: "none",
+              border: "none",
+            }}
+            onClick={() => {
+              buttonClear();
             }}
           >
-            <Button
-              type="button"
-              style={{
-                marginLeft: "8px",
-                backgroundColor: "#FF9900",
-                color: "white",
-                outline: "none",
-                border: "none",
-              }}
-              onClick={() => {
-                buttonClear();
-              }}
-            >
-              Làm mới
-            </Button>
-            <Button
-              type="button"
-              style={{
-                marginRight: "8px",
-                backgroundColor: "rgb(55, 137, 220)",
-                color: "white",
-              }}
-              onClick={() =>
-                handleSearch()
-              }
-            >
-              Tìm kiếm
-            </Button>
-          </Space>
+            Làm mới
+          </Button>
+          <Button
+            type="button"
+            style={{
+              marginRight: "8px",
+              backgroundColor: "rgb(55, 137, 220)",
+              color: "white",
+            }}
+            onClick={() => handleSearch()}
+          >
+            Tìm kiếm
+          </Button>
+        </Space>
       </Card>
 
       <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
