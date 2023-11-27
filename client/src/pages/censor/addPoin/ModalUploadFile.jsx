@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { RandomAddPointAPI } from "../../../apis/censor/random-add-point/random-add-point.api";
 import { SetImport } from "../../../app/reducers/import/import.reducer";
 import { useAppDispatch } from "../../../app/hooks";
+import { convertLongToDate } from "../../util/DateUtil";
 
 export default function ModalUpLoadFile(props) {
   const {
@@ -18,13 +19,20 @@ export default function ModalUpLoadFile(props) {
   const dispatch = useAppDispatch();
 
   const handleExportExcel = () => {
-    RandomAddPointAPI.previewDataExportExcel()
-      .then(() => {
-        message.success("Export excel thành công");
-      })
-      .catch((err) => {
-        message.error("Export excel thất bại");
+    RandomAddPointAPI.previewDataExportExcel({}).then((response) => {
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download =
+        "File mẫu import cộng mật ong" +
+        convertLongToDate(new Date().getTime()) +
+        ".xlsx";
+      link.click();
+      window.URL.revokeObjectURL(url);
+    });
   };
 
   const handleFileInputChange = (e) => {
@@ -93,6 +101,7 @@ export default function ModalUpLoadFile(props) {
           <Upload.Dragger
             type="file"
             accept=".xlsx,.xls"
+            maxCount={1}
             onChange={(e) => handleOnChangeFile(e)}
           >
             {nameFileUpload === "" ? (

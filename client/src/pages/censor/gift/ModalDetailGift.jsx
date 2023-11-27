@@ -25,12 +25,12 @@ const ModalDetailGift = (props) => {
     } else {
       setErrorImage("");
     }
-    message.error("Error");
   };
 
   const { TextArea } = Input;
   const { Option } = Select;
   const { visible, onCancel, onUpdate, gift, fetchData } = props;
+  console.log(gift);
   const [form] = Form.useForm();
   const [image, setImage] = useState(null);
   const [isLimitedQuantity, setIsLimitedQuantity] = useState(true);
@@ -43,12 +43,12 @@ const ModalDetailGift = (props) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [fieldErrors, setFieldErrors] = useState({});
 
-  const [checkTypeTime, setCheckTypeTime] = useState(2);
+  const [checkTypeTime, setCheckTypeTime] = useState(null);
 
   useEffect(() => {
     GiftDetail.fetchAll(gift.id).then((response) => {
       const detailData = response.data.data;
-
+      setSelectType(gift.type);
       const cateAddOption = detailData.map((item) => ({
         id: item.categoryId,
         name: item.categoryName,
@@ -62,6 +62,18 @@ const ModalDetailGift = (props) => {
       setSelectedCategories(categoryIds);
       setCategoryQuantities(honeyValues);
     });
+    if (gift.numberEndDate !== null) {
+      setCheckTypeTime(0);
+      form.setFieldValue("checkTypeDate", 0);
+      form.setFieldValue("numberEndDate", gift.numberEndDate);
+    } else if (gift.toDate !== null && gift.fromDate !== null) {
+      form.setFieldValue("checkTypeDate", 1);
+      setCheckTypeTime(1);
+    } else {
+      form.setFieldValue("checkTypeDate", 2);
+      setCheckTypeTime(2);
+    }
+
     if (gift.image) {
       setSelectedImageUrl(gift.image);
     }
@@ -79,7 +91,7 @@ const ModalDetailGift = (props) => {
       setIsLimitedQuantity2(false);
       form.setFieldsValue({ limitSoLuong: 1 });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gift]);
 
   const handleTypeChange = (selectedType) => {
@@ -89,13 +101,14 @@ const ModalDetailGift = (props) => {
         status: 0,
       });
     } else if (selectedType === 1) {
-      form.setFieldsValue({
-        limitQuantity: 0,
-      });
+      // form.setFieldsValue({
+      //   limitQuantity: 0,
+      // });
     } else if (selectedType === 2) {
       form.setFieldsValue({
         status: 0,
-        limitQuantity: 0,
+        honeyCategoryId: null,
+        checkTypeDate: 2,
       });
     }
   };
@@ -185,10 +198,6 @@ const ModalDetailGift = (props) => {
   const fetchCategory = (cateAddOption) => {
     CategoryAPI.fetchAllCategory().then((response) => {
       const mergedList = [...response.data.data];
-      console.log(";11111111111;;;");
-      console.log(mergedList);
-      console.log(";;;;;;;;;;;");
-      console.log(cateAddOption);
       cateAddOption.forEach((item2) => {
         const existingItem = mergedList.find((item1) => item1.id === item2.id);
 
@@ -238,21 +247,17 @@ const ModalDetailGift = (props) => {
   };
 
   const onFinish = () => {
-    // Validate form fields
     form
       .validateFields()
       .then((formValues) => {
-        // Check for category validation errors
         const hasCategoryErrors = Object.values(fieldErrors).some(
           (hasError) => hasError
         );
         if (hasCategoryErrors) {
-          // Display error message and prevent update
           message.error("Vui lòng kiểm tra lại các cấp bậc và số mật.");
           return;
         }
 
-        // Continue with the update logic
         const quantity = isLimitedQuantity
           ? parseInt(formValues.quantityLimit)
           : formValues.quantity !== undefined
@@ -265,30 +270,50 @@ const ModalDetailGift = (props) => {
           ? parseInt(formValues.limitQuantity)
           : null;
 
-        // Perform the update
+        
+        if (checkTypeTime === 0) {
+          formValues.end = null;
+          formValues.start = null;
+        } else if (checkTypeTime === 1) {
+          formValues.numberEndDate = undefined;
+        } else {
+          formValues.end = null;
+          formValues.start = null;
+          formValues.numberEndDate = undefined;
+        }
+
+        const numberEndDate = formValues.numberEndDate !== undefined
+        ? parseInt(formValues.numberEndDate)
+          : null;
+        
+        const data = {
+          ...formValues,
+          image: image,
+          id: gift ? gift.id : null,
+          status: formValues.status,
+          quantity: isNaN(quantity) ? null : quantity,
+          limitQuantity: isNaN(limitSL) ? null : limitSL,
+          type: formValues.type,
+          honey: formValues.honey,
+          honeyCategoryId: formValues.honeyCategoryId,
+          note: formValues.note,
+          fromDate:
+            isNaN(Date.parse(new Date(formValues.start))) ||
+            formValues.start == null
+              ? null
+              : Date.parse(new Date(formValues.start)),
+          toDate:
+            isNaN(Date.parse(new Date(formValues.end))) ||
+            formValues.end == null
+              ? null
+              : Date.parse(new Date(formValues.end)),
+          numberEndDate: numberEndDate
+        }
+
+        console.log(data);
+        
         GiftAPI.update(
-          {
-            ...formValues,
-            image: image,
-            id: gift ? gift.id : null,
-            status: formValues.status,
-            quantity: isNaN(quantity) ? null : quantity,
-            limitQuantity: isNaN(limitSL) ? null : limitSL,
-            type: formValues.type,
-            honey: formValues.honey,
-            honeyCategoryId: formValues.honeyCategoryId,
-            note: formValues.note,
-            fromDate:
-              isNaN(Date.parse(new Date(formValues.start))) ||
-              formValues.start == null
-                ? null
-                : Date.parse(new Date(formValues.start)),
-            toDate:
-              isNaN(Date.parse(new Date(formValues.end))) ||
-              formValues.end == null
-                ? null
-                : Date.parse(new Date(formValues.end)),
-          },
+          data,
           gift ? gift.id : null
         )
           .then((response) => {
@@ -306,7 +331,6 @@ const ModalDetailGift = (props) => {
                 (categoryId) => !selectedCategoryIds.includes(categoryId)
               );
 
-              // Delete entries for categories not selected
               categoryIdsToDelete.forEach((categoryId) => {
                 const detailItem = detailData.find(
                   (item) => item.categoryId === categoryId
@@ -321,7 +345,6 @@ const ModalDetailGift = (props) => {
                 }
               });
 
-              // Update or create entries for selected categories
               selectedCategoryIds.forEach((categoryId) => {
                 const honey = honeyValues[categoryId];
                 const existingItem = detailData.find(
@@ -360,7 +383,6 @@ const ModalDetailGift = (props) => {
           });
       })
       .catch((errorInfo) => {
-        // Handle form validation error
         message.error("Vui lòng điền đầy đủ thông tin.");
       });
   };
@@ -387,7 +409,11 @@ const ModalDetailGift = (props) => {
     timeType: gift.fromDate && gift.toDate ? "thời hạn" : "vĩnh viễn",
     start: gift.fromDate != null ? formattedFromDate : null,
     end: gift.toDate != null ? formattedToDate : null,
+    numberEndDate: gift.numberEndDate != null ? gift.numberEndDate : null,
+    checkTypeDate: 2
   };
+
+  console.log(initialValues);
 
   return (
     <Modal
@@ -412,7 +438,7 @@ const ModalDetailGift = (props) => {
         style={{
           marginTop: 30,
           padding: "0 30px",
-          justifyContent : "center"
+          justifyContent: "center",
         }}
         initialValues={initialValues}
         autoComplete="off"
@@ -479,7 +505,8 @@ const ModalDetailGift = (props) => {
                 >
                   Vô hạn
                 </Radio>
-                <Radio style={{ marginLeft: 95 }}
+                <Radio
+                  style={{ marginLeft: 95 }}
                   value={gift && gift.quantity !== null ? gift.quantity : 1}
                 >
                   Giới hạn
@@ -521,40 +548,40 @@ const ModalDetailGift = (props) => {
               >
                 <Option value={0}>Quà tặng</Option>
                 <Option value={1}>Vật phẩm nâng cấp</Option>
-                <Option value={2}>Dụng cụ</Option>
+                <Option value={2}>Danh hiệu</Option>
               </Select>
             </Form.Item>
-
-            <Form.Item
-              label="Chọn cấp bậc"
-              name="type"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng chọn loại",
-                },
-              ]}
-              style={{ height: 40 }}
-            >
-              <Select
-                className="select-custom"
-                mode="tags"
-                placeholder="Chọn cấp bậc"
-                onChange={(value) => handleCategoryChange(value)}
-                value={selectedCategories}
-                maxTagCount={3}
-                showSearch
-                filterOption={(input, option) =>
-                  option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                }
+            {selectType !== 2 && (
+              <Form.Item
+                label="Chọn cấp bậc"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng chọn loại",
+                  },
+                ]}
+                style={{ height: 40 }}
               >
-                {listCategory.map((item) => (
-                  <Select.Option key={item.id} value={item.id}>
-                    {item.name}
-                  </Select.Option>
-                ))}
-              </Select>
+                <Select
+                  className="select-custom"
+                  mode="tags"
+                  placeholder="Chọn cấp bậc"
+                  onChange={(value) => handleCategoryChange(value)}
+                  value={selectedCategories}
+                  maxTagCount={3}
+                  showSearch
+                  filterOption={(input, option) =>
+                    option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {listCategory.map((item) => (
+                    <Select.Option key={item.id} value={item.id}>
+                      {item.name}
+                    </Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
+            )}
             <div style={{ color: "red", textAlign: "center", marginTop: "-2" }}>
               {fieldErrors.selectedCategories}
             </div>
@@ -567,120 +594,135 @@ const ModalDetailGift = (props) => {
 
               if (selectedCategories.includes(categoryId)) {
                 return (
-                    <Form.Item
-                      label={`Số mật ${category.name}`}
-                      name="type"
-                      rules={[
-                        {
-                          required: true,
-                          message: `Loại mật ${category.name} không được để trống.`,
-                        },
-                        {
-                          min: 0,
-                          message: `Vui lòng không được để trống số lượng mật ${category.name}`
-                        }
-                      ]}
-                      style={{ height: 40 }}
-                    >
-                      <Input
-                        type="number"
-                        id={`honey_${category.name}`}
-                        value={honeyValue}
-                        onChange={(e) =>
-                          handleCategoryQuantityChange(
-                            categoryId,
-                            e.target.value
-                          )
-                        }
-                        />
-                      </Form.Item>
+                  <Form.Item
+                    label={`Số mật ${category.name}`}
+                    rules={[
+                      {
+                        required: true,
+                        message: `Loại mật ${category.name} không được để trống.`,
+                      },
+                      {
+                        min: 0,
+                        message: `Vui lòng không được để trống số lượng mật ${category.name}`,
+                      },
+                    ]}
+                    style={{ height: 40 }}
+                  >
+                    <Input
+                      type="number"
+                      id={`honey_${category.name}`}
+                      value={honeyValue}
+                      onChange={(e) =>
+                        handleCategoryQuantityChange(categoryId, e.target.value)
+                      }
+                    />
+                  </Form.Item>
                 );
               }
               return null;
             })}
           </Col>
 
-          <Col xl={10} xs={10} className="pl-2" >
-          <Form.Item
-              label="Thời gian hết hạn"
-              name="checkTypeDate"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng chọn thời gian hết hạn",
-                },
-              ]}
-            >
-              <Radio.Group className="flex" defaultValue={2} onChange={(e) => {
-                setCheckTypeTime(e.target.value);
-                form.setFieldValue("numberDateEnd", null);
-                form.setFieldValue("start", null);
-                form.setFieldValue("end", null);
-              }}>
-                <Radio value={0}>Theo ngày bắt đầu</Radio>
-                <Radio value={1}>Theo khoảng ngày</Radio>
-                <Radio value={2}>Vô hạn</Radio>
-              </Radio.Group>
-            </Form.Item>
-            {
-              checkTypeTime === 0 ?
-                <>
-                  <Form.Item
-                    label={<span>Thời gian hết hạn <br/>(Theo ngày)</span>}
-                    name="numberDateEnd"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Vui lòng chọn thời gian hết hạn",
-                      },
-                      {
-                        validator: (_, value) => {
-                          if (value.trim().length === 0) {
-                            return Promise.resolve();
-                          }
-                          const regex = /^[1-9]+$/;
-                          if (!regex.test(value)) {
-                            return Promise.reject(new Error('Vui lòng nhập một số nguyên dương'));
-                          }
-                  
+          <Col xl={10} xs={10} className="pl-2">
+            {selectType !== 2 && (
+              <Form.Item
+                label="Thời gian hết hạn"
+                name="checkTypeDate"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng chọn thời gian hết hạn",
+                  },
+                ]}
+              >
+                <Radio.Group
+                  className="flex"
+                  defaultValue={checkTypeTime}
+                  onChange={(e) => {
+                    setCheckTypeTime(e.target.value);
+                  }}
+                >
+                  <Radio
+                    defaultChecked={gift && gift.numberEndDate !== null} value={0}>Theo ngày bắt đầu</Radio>
+                  <Radio
+                    defaultChecked={gift && gift.toDate !== null && gift.fromDate !== null}  value={1}>Theo khoảng ngày</Radio>
+                  <Radio
+                    defaultChecked={gift && gift.numberEndDate !== null && gift.toDate !== null && gift.fromDate !== null}  value={2}>Vô hạn</Radio>
+                </Radio.Group>
+              </Form.Item>
+            )}
+            {checkTypeTime === 0 && selectType !== 2 ? (
+              <>
+                <Form.Item
+                  label={
+                    <span>
+                      Thời gian hết hạn <br />
+                      (Theo ngày)
+                    </span>
+                  }
+                  name="numberEndDate"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng chọn thời gian hết hạn",
+                    },
+                    {
+                      validator: (_, value) => {
+                        if (value.trim().length === 0) {
                           return Promise.resolve();
-                        },
-                      },
-                    ]}
-                  >
-                    <Input type="number" />
-                  </Form.Item>
-                </> : checkTypeTime === 1 ?
-                <>
-                  <Form.Item
-                    label="Thời gian bắt đầu"
-                    name="start"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Vui lòng chọn thời gian hết hạn",
-                      },
-                      {
-                        validator: validateStartDate,
-                      },
-                    ]}
-                  >
-                    <Input type="date" />
-                  </Form.Item>
+                        }
+                        const regex = /^[0-9]+$/;
+                        if (!regex.test(value) || value === 0) {
+                          return Promise.reject(
+                            new Error("Vui lòng nhập một số nguyên dương")
+                          );
+                        }
 
-                  <Form.Item
-                    label="Thời gian kết thúc"
-                    name="end"
-                    rules={[
-                      {
-                        validator: validateEndDate,
+                        return Promise.resolve();
                       },
-                    ]}
-                  >
-                    <Input type="date" />
-                  </Form.Item>
-                </> : <></>
-            }
+                    },
+                  ]}
+                >
+                  <Input type="number" />
+                </Form.Item>
+              </>
+            ) : checkTypeTime === 1 && selectType !== 2 ? (
+              <>
+                <Form.Item
+                  label="Thời gian bắt đầu"
+                  name="start"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng chọn thời gian bắt đầu",
+                    },
+                    {
+                      validator: validateStartDate,
+                    },
+                  ]}
+                >
+                  <Input type="date" />
+                </Form.Item>
+
+                <Form.Item
+                  label="Thời gian kết thúc"
+                  name="end"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng chọn thời gian hết hạn",
+                    },
+                    {
+                      validator: validateEndDate,
+                    },
+                  ]}
+                >
+                  <Input type="date" />
+                </Form.Item>
+              </>
+            ) : (
+              <></>
+            )}
 
             <Form.Item
               label="Phê duyệt"
@@ -692,7 +734,7 @@ const ModalDetailGift = (props) => {
                 },
               ]}
               style={{
-                display: gift.type === 0 || gift.type === 2 ? "none" : "block",
+                display: selectType === 2 ? "none" : "block",
               }}
             >
               <Radio.Group
@@ -717,7 +759,8 @@ const ModalDetailGift = (props) => {
                 },
               ]}
               style={{
-                display: selectType === 1 ? "block" : "none",
+                display:
+                  selectType === 0 || selectType === 1 ? "block" : "none",
               }}
             >
               <Radio.Group>
@@ -725,44 +768,43 @@ const ModalDetailGift = (props) => {
                 <Radio value={1}>Không cho phép</Radio>
               </Radio.Group>
             </Form.Item>
-            <Form.Item
-              label="Cộng dồn"
-              name="limitQuantity"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng chọn tùy chọn số lượng",
-                },
-              ]}
-              style={{
-                display:
-                  selectType === 1 || selectType === 2 ? "none" : "block",
-              }}
-            >
-              <Radio.Group
-                onChange={(e) => {
-                  setIsLimitedQuantity2(e.target.value !== null);
-                  if (!e.target.value) {
-                    form.setFieldsValue({ limitSoLuong: null });
-                  }
-                }}
+            {selectType === 0 && 
+              <Form.Item
+                label="Cộng dồn"
+                name="limitQuantity"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng chọn tùy chọn số lượng",
+                  },
+                ]}
               >
-                <Radio
-                  value={null}
-                  defaultChecked={gift && gift.limitQuantity === null}
+                <Radio.Group
+                  onChange={(e) => {
+                    setIsLimitedQuantity2(e.target.value !== 0);
+                    if (e.target.value === 0) {
+                      form.setFieldsValue({ limitSoLuong: null });
+                    } else {
+                      form.setFieldsValue({ limitSoLuong: gift.limitQuantity });
+                    }
+                  }}
                 >
-                  Không cho phép
-                </Radio>
-                <Radio
-                  value={
-                    gift && gift.limitQuantity !== null ? gift.limitQuantity : 1
-                  }
-                >
-                  Cho phép
-                </Radio>
-              </Radio.Group>
-            </Form.Item>
-            {isLimitedQuantity2 ? (
+                  <Radio
+                    value={0}
+                    defaultChecked={gift && gift.limitQuantity === null}
+                  >
+                    Không cho phép
+                  </Radio>
+                  <Radio
+                    value={1}
+                    defaultChecked={gift && gift.limitQuantity !== null}
+                  >
+                    Cho phép
+                  </Radio>
+                </Radio.Group>
+              </Form.Item>
+            }
+            {isLimitedQuantity2 && selectType === 0 ? (
               <Form.Item
                 label="Số lượng tối đa"
                 name="limitSoLuong"
@@ -789,11 +831,9 @@ const ModalDetailGift = (props) => {
             </Form.Item>
           </Col>
         </Row>
-
         <Row className="text-center pb-4">
           <Col span={24}>
             <Button
-              style={{ marginRight: "20px" }}
               onClick={handleCancel}
               className="submit-button bg-black text-white"
             >
@@ -801,7 +841,8 @@ const ModalDetailGift = (props) => {
             </Button>
             <Button
               htmlType="submit"
-              className="submit-button  bg-black text-white ml-2"
+              className="submit-button 
+                  submit-button bg-black text-white ml-2"
             >
               OK
             </Button>

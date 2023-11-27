@@ -8,6 +8,7 @@ import {
   Select,
   Space,
   Table,
+  message,
 } from "antd";
 import { Option } from "antd/es/mentions";
 import ModalImportExcelEvent from "./ModalImportExcelEvent";
@@ -30,6 +31,7 @@ export default function EventManager() {
   const [dataPreview, setDataPreview] = useState([]);
   const previewImport = useAppSelector(GetImport);
   const [openConfirm, setOpenConfirm] = useState(false);
+  const [numberHoney, setNumberHoney] = useState(null);
 
   const fetchDataCate = () => {
     AddPointStudentAPI.getCategory().then((respose) => {
@@ -37,9 +39,45 @@ export default function EventManager() {
     });
   };
 
+  const handleHoneyChange = (e) => {
+    const value = e.target.value;
+    setNumberHoney(value);
+  };
+
+  const handleCategoryChange = (value, option) => {
+    if (value) {
+      setCategory(value);
+    }
+  };
+
   useEffect(() => {
     fetchDataCate();
   }, []);
+
+  const isDataValid = () => {
+    if (!data.numberHoney) {
+      message.error("Vui lòng nhập số lượng mật ong");
+      return false;
+    }
+
+    if (data.numberHoney < 1) {
+      message.error("Số lượng mật ong phải lớn hơn hoặc bằng 1");
+      return false;
+    }
+
+    if (!data.categoryId) {
+      message.error("Vui lòng chọn thể loại");
+      return false;
+    }
+
+    return true;
+  };
+
+  const data = {
+    numberHoney: numberHoney,
+    categoryId: category,
+    lstStudentId: dataPreview,
+  };
 
   const categoryData = useAppSelector(GetCategory);
   const columsPreview = [
@@ -48,10 +86,10 @@ export default function EventManager() {
       dataIndex: "email",
       key: "email",
       render: (_, record) => {
-        return record.userName === null ? (
+        return record.email === null ? (
           <span style={{ color: "orange" }}>không có dữ liệu</span>
         ) : (
-          <span>{record.userName}</span>
+          <span>{record.email}</span>
         );
       },
     },
@@ -81,48 +119,33 @@ export default function EventManager() {
       <section id="project_manager">
         <Card style={{ borderTop: "5px solid #FFCC00", marginBottom: 30 }}>
           <div className="filter__auction">
-            {/* <FontAwesomeIcon
-              icon={faFilter}
-              size="2px"
-              style={{ fontSize: "26px" }}
-            />{" "} */}
-            {/* <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span> */}
             <Row gutter={24} style={{ paddingTop: "20px" }}>
               <Form.Item
-                name="code"
-                rules={[
-                  {
-                    required: true,
-                    whitespace: true,
-                    message: "Vui lòng nhập số lượng mật ong",
-                  },
-                  {
-                    type: "number",
-                    min: 0,
-                    message: "Số lượng mật ong phải lớn hơn hoặc bằng 0",
-                  },
-                ]}
+                name="numberHoney"
                 style={{ width: 500, marginRight: 10 }}
               >
                 <Input
                   size="small"
                   type="number"
                   placeholder="Nhập số lượng mật ong"
-                  defaultValue={1}
+                  onChange={handleHoneyChange}
                 />
               </Form.Item>
-
               <Select
                 placeholder="Thể loại"
-                style={{ width: 400, marginRight: "10px" }}
+                style={{ width: "400px", marginRight: "10px" }}
                 value={category}
-                onChange={(value) => setCategory(value)}
+                onChange={(value, option) =>
+                  handleCategoryChange(value, option)
+                }
               >
-                <Option value="" disabled={true}>
+                <Option key="" value="" disabled={true}>
                   Chọn thể loại
                 </Option>
                 {categoryData.map((category) => (
-                  <Option value={category.id}>{category.name}</Option>
+                  <Option key={category.id} value={category.id} data={category}>
+                    {category.name}
+                  </Option>
                 ))}
               </Select>
 
@@ -195,13 +218,17 @@ export default function EventManager() {
                 <Button
                   disabled={previewImport.totalError < 1 ? false : true}
                   className="button-css"
-                  onClick={() => setOpenConfirm(true)}
+                  onClick={() => {
+                    if (isDataValid()) {
+                      setOpenConfirm(true);
+                    }
+                  }}
                 >
                   Thêm
                 </Button>
                 {openConfirm && (
                   <ModalConfirmEvent
-                    dataPreview={dataPreview}
+                    dataPreview={data}
                     openConfirm={openConfirm}
                     setOpenConfirm={setOpenConfirm}
                     setDataPreview={setDataPreview}

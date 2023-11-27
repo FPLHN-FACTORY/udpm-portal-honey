@@ -24,6 +24,7 @@ import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
+import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.repository.HistoryDetailRepository;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,9 +92,13 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
 
                 int deductedPoints = createRequest.getHoneyPoint();
                 int quantity = createRequest.getQuantity();
+                int moneyPoint = (deductedPoints * quantity);
+                if (honey.getHoneyPoint() < moneyPoint) {
+                    throw new RestApiException("Số lượng mật ong không đủ!");
+                }
                 honey.setHoneyPoint(honey.getHoneyPoint() - (deductedPoints * quantity));
                 honey = honeyRepository.save(honey);
-                if(gift.getQuantity() != null){
+                if (gift.getQuantity() != null) {
                     gift.setQuantity(gift.getQuantity() - createRequest.getQuantity());
                     giftRepository.save(gift);
                 }
@@ -106,13 +111,13 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
 
             Archive getArchive = archiveRepository.findByStudentId(createRequest.getStudentId()).orElse(archive);
             archiveRepository.save(getArchive);
-            ArchiveGift archiveGift1 = giftArchiveRepository.findByGiftIdAndArchiveId(createRequest.getGiftId(),getArchive.getId());
-            if(archiveGift1 != null){
+            ArchiveGift archiveGift1 = giftArchiveRepository.findByGiftIdAndArchiveId(createRequest.getGiftId(), getArchive.getId());
+            if (archiveGift1 != null) {
                 int currentQuantity = archiveGift1.getQuantity();
                 int additionalQuantity = createRequest.getQuantity();
                 archiveGift1.setQuantity(currentQuantity + additionalQuantity);
                 giftArchiveRepository.save(archiveGift1);
-            }else if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
+            } else if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
                 archiveGift.setGiftId(createRequest.getGiftId());
                 archiveGift.setNote(createRequest.getNote());
                 archiveGift.setArchiveId(getArchive.getId());
@@ -123,7 +128,7 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
 
         // Tiếp tục với việc thêm yêu cầu vào bảng History
         Long dateNow = Calendar.getInstance().getTimeInMillis();
-        history.setCreatedAt(dateNow);
+        history.setChangeDate(dateNow);
         history.setNote(createRequest.getNote());
         history.setStudentId(createRequest.getStudentId());
         studentCreateRequestConversionRepository.save(history);

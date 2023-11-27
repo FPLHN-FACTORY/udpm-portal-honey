@@ -1,5 +1,4 @@
 import { Button, Modal, Space, message } from "antd";
-import { RandomAddPointAPI } from "../../../apis/censor/random-add-point/random-add-point.api";
 import {
   connectStompClient,
   getStompClient,
@@ -7,6 +6,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../app/hooks";
 import { getToken } from "../../../helper/userToken";
+import { AddPointStudentAPI } from "../../../apis/censor/add-point/add-point-student.api";
 
 export default function ModalConfirmEvent(props) {
   const {
@@ -14,8 +14,9 @@ export default function ModalConfirmEvent(props) {
     setOpenConfirm,
     dataPreview,
     setDataPreview,
-    setNameFileUpload,
+    setNameFile,
   } = props;
+
   const [isLoad, setIsLoad] = useState(false);
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -41,11 +42,11 @@ export default function ModalConfirmEvent(props) {
     if (stompClient != null) {
       connect();
     }
-    // return () => {
-    //   if (stompClient != null) {
-    //     getStompClient().disconnect();
-    //   }
-    // };
+    return () => {
+      if (stompClient != null) {
+        getStompClient().disconnect();
+      }
+    };
   }, [stompClient, isLoad]);
 
   const handleConfirm = (dataPreview) => {
@@ -53,10 +54,9 @@ export default function ModalConfirmEvent(props) {
     const headers = {
       Authorization: "Bearer " + bearerToken,
     };
-    RandomAddPointAPI.createImportData(dataPreview)
+    AddPointStudentAPI.createImportDataEvent(dataPreview)
       .then(() => {
-        stompClient.send("/action/create-notification-user", headers, {});
-
+        // stompClient.send("/action/create-notification-user", headers, {});
         message.success("Import thành công");
       })
       .catch((error) => {
@@ -65,7 +65,7 @@ export default function ModalConfirmEvent(props) {
       });
 
     setDataPreview([]);
-    setNameFileUpload("");
+    setNameFile("");
     setOpenConfirm(false);
   };
 

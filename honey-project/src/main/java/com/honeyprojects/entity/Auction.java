@@ -49,4 +49,7 @@ public class Auction extends PrimaryEntity {
 
     private Status status;
 
+    @Column
+    private Integer quantity;
+
 }

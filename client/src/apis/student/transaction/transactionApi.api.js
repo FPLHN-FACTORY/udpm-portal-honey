@@ -31,4 +31,11 @@ export class TransactionApi {
       params: { categoryId },
     });
   };
+  static doneTransaction = (data) => {
+    return request({
+      method: "POST",
+      url: `/${this.COMPONENT_NAME}`,
+      data: { ...data },
+    });
+  };
 }

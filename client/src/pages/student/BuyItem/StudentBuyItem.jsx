@@ -187,7 +187,6 @@ export default function StudentBuyItem(props) {
     return category ? category.name : "";
   };
 
-
   return (
     <>
       <Card style={{ marginTop: "20px" }} className="cartAllConversion">

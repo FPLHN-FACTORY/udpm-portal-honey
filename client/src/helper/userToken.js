@@ -8,7 +8,9 @@ export const getToken = () => {
 };
 
 export const setToken = (token, remember) => {
-  remember ? localStorage.setItem("userToken", token) : setCookie("userToken", token, 1);
+  remember
+    ? localStorage.setItem("userToken", token)
+    : setCookie("userToken", token, 1);
 };
 
 export const deleteToken = () => {
@@ -30,17 +32,14 @@ export const isTokenValid = (token) => {
 };
 
 export const getRolesUse = () => {
-  return getCookie("rolesUse") !== undefined
-    ? getCookie("rolesUse")
-    : null;
-
-}
+  return getCookie("rolesUse") !== undefined ? getCookie("rolesUse") : null;
+};
 export const setRolesUse = (roles) => {
   setCookie("rolesUse", roles, 1);
-}
+};
 export const deleteRolesUse = () => {
   setCookie("rolesUse", "", 1);
-}
+};
 
 export const userToken = () => {
   return getCookie("accountUser") !== undefined
@@ -55,4 +54,3 @@ export const setAccountUser = (user) => {
 export const deleteAccountUser = () => {
   setCookie("accountUser", "", 1);
 };
-

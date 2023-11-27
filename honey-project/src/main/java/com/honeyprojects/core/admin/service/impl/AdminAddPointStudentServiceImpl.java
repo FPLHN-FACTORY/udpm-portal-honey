@@ -2,12 +2,15 @@ package com.honeyprojects.core.admin.service.impl;
 
 import com.honeyprojects.core.admin.model.request.AdminAddPointStudentLabReportBOO;
 import com.honeyprojects.core.admin.model.request.AdminAddPointStudentLabReportRequestt;
+import com.honeyprojects.core.admin.model.request.AdminAddPointStudentPortalEventsBO;
 import com.honeyprojects.core.admin.model.request.AdminAddPointStudentPortalEventsBOO;
+import com.honeyprojects.core.admin.model.request.AdminAddPointStudentPortalEventsRequest;
 import com.honeyprojects.core.admin.model.request.AdminCreateNotificationDetailRandomRequest;
 import com.honeyprojects.core.admin.model.request.AdminNotificationRandomRequest;
 import com.honeyprojects.core.admin.repository.AdNotificationRespository;
 import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
 import com.honeyprojects.core.admin.service.AdminAddPointStudentService;
+import com.honeyprojects.core.admin.service.ExportExcelServiceService;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.president.model.response.PresidentAddItemBO;
 import com.honeyprojects.core.president.model.response.PresidentAddItemDTO;
@@ -36,6 +39,7 @@ import com.honeyprojects.util.DataUtils;
 import com.honeyprojects.util.DateUtils;
 import com.honeyprojects.util.ExcelUtils;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -50,6 +54,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -82,6 +87,9 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
     @Autowired
     private ConvertRequestApiidentity convertRequestApiidentity;
 
+    @Autowired
+    private ExportExcelServiceService exportExcelService;
+
     @Override
     public Boolean addPointToStudentLabReport(AdminAddPointStudentLabReportBOO requestAddPointStudentBO) {
 
@@ -92,7 +100,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
 
         for (AdminAddPointStudentLabReportRequestt adminAddPointStudentLabReportRequest :
                 requestAddPointStudentBO.getListStudent()) {
-            if (category.getCategoryStatus().equals(enumCategoryFREE)) {
+            if (category.getCategoryStatus().equals(CategoryStatus.FREE)) {
                 Notification notification = createNotification(adminAddPointStudentLabReportRequest.getId());
                 if (!DataUtils.isNullObject(requestAddPointStudentBO.getListStudent())) {
                     try {
@@ -103,7 +111,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
                     }
                 }
             }
-            if (category.getCategoryStatus().equals(enumCategoryACCEPT)) {
+            if (category.getCategoryStatus().equals(CategoryStatus.ACCEPT)) {
                 TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
                 getPointRequest.setStudentId(adminAddPointStudentLabReportRequest.getId());
                 getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
@@ -130,96 +138,6 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
             }
         }
         return true;
-    }
-
-    @Override
-    public Boolean exportExcelLabReport() {
-        try {
-            // Lấy đường dẫn thư mục "Downloads" trong hệ thống
-            String userHome = System.getProperty("user.home");
-            String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_add_honey_point_lab_report" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
-
-            // Tạo một workbook (bảng tính) mới cho bản xem trước dữ liệu
-            Workbook workbook = new XSSFWorkbook();
-            Sheet sheet = workbook.createSheet("Trang 1");
-
-            // Thiết lập kiểu cho phần tiêu đề của bảng tính
-            CellStyle headerStyle = workbook.createCellStyle();
-            Font font = workbook.createFont();
-            font.setBold(true);
-            font.setFontHeightInPoints((short) 13);
-            headerStyle.setFont(font);
-            font.setColor(IndexedColors.WHITE.getIndex());
-            headerStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
-            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-
-            headerStyle.setBorderTop(BorderStyle.THIN);
-            headerStyle.setBorderBottom(BorderStyle.THIN);
-            headerStyle.setBorderLeft(BorderStyle.THIN);
-            headerStyle.setBorderRight(BorderStyle.THIN);
-
-            // Dòng thứ 1 - Chữ "Chú ý"
-            Row noteRow = sheet.createRow(0);
-            Cell noteCell = noteRow.createCell(0);
-            noteCell.setCellValue("Chú ý");
-
-            // Tạo một kiểu cho ô "Lưu ý"
-            CellStyle noteStyle = workbook.createCellStyle();
-            Font noteFont = workbook.createFont();
-            noteFont.setBold(true);
-            noteFont.setFontHeightInPoints((short) 13);
-            noteStyle.setFont(noteFont);
-            noteFont.setColor(IndexedColors.RED.getIndex());
-            noteStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-            noteStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            noteCell.setCellStyle(noteStyle);
-
-            // Dòng thứ 2 - cách viết đúng định dạng quà tặng
-            Row formatGiftRow = sheet.createRow(1);
-            Cell formatGiftCell = formatGiftRow.createCell(1);
-            formatGiftCell.setCellValue("Định dạng cột email: haipxph26772@fpt.edu.vn - Định dạng cột số lượng mật ong: 29");
-
-            // Tạo một kiểu cho các ô định dạng
-            CellStyle formatStyle = workbook.createCellStyle();
-            Font formatFont = workbook.createFont();
-            formatFont.setBold(true);
-            formatFont.setFontHeightInPoints((short) 13);
-            formatFont.setColor(IndexedColors.BLACK.getIndex());
-            formatStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
-            formatStyle.setFont(formatFont);
-            formatGiftCell.setCellStyle(formatStyle);
-
-            // Tạo hàng tiêu đề và đặt các tiêu đề cột
-            Row headerRow = sheet.createRow(3);
-            String[] headers = {"Email", "Số lượng mật ong"};
-            int columnCount = headers.length;
-
-            for (int i = 0; i < columnCount; i++) {
-                Cell headerCell = headerRow.createCell(i);
-                headerCell.setCellValue(headers[i]);
-                headerCell.setCellStyle(headerStyle);
-
-                // Thiết lập cỡ cột
-                sheet.setColumnWidth(i, Constants.COLUMN_WIDTH); // Sử dụng một constant cho cỡ cột
-            }
-
-            // Tạo kiểu cho ô tiêu đề trống
-            CellStyle emptyHeaderStyle = workbook.createCellStyle();
-            Font emptyHeaderFont = workbook.createFont();
-            emptyHeaderFont.setColor(IndexedColors.RED.getIndex());
-            emptyHeaderStyle.setFont(emptyHeaderFont);
-            // Lưu workbook vào tệp Excel tại đường dẫn đã xác định
-            try (FileOutputStream outputStream = new FileOutputStream(outputPath)) {
-                workbook.write(outputStream);
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     @Override
@@ -255,8 +173,51 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
     }
 
     @Override
-    public void importDataLabReport(AdminAddPointStudentLabReportBOO adminAddPointStudentBO) throws IOException {
+    public void importDataLabReport(AdminAddPointStudentLabReportBOO requestAddPointStudentBO) throws IOException {
+        Category category = adminCategoryRepository.findById(requestAddPointStudentBO.getCategoryId()).orElse(null);
 
+        String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
+        String enumCategoryACCEPT = String.valueOf(CategoryStatus.ACCEPT.ordinal());
+
+        for (AdminAddPointStudentLabReportRequestt adminAddPointStudentLabReportRequest :
+                requestAddPointStudentBO.getListStudent()) {
+            if (category.getCategoryStatus().equals(CategoryStatus.FREE)) {
+                Notification notification = createNotification(adminAddPointStudentLabReportRequest.getId());
+                if (!DataUtils.isNullObject(requestAddPointStudentBO.getListStudent())) {
+                    try {
+                        Integer honeyPoint = adminAddPointStudentLabReportRequest.getNumberHoney();
+                        createNotificationDetailHoney(category, notification.getId(), honeyPoint);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            if (category.getCategoryStatus().equals(CategoryStatus.ACCEPT)) {
+                TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
+                getPointRequest.setStudentId(adminAddPointStudentLabReportRequest.getId());
+                getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
+                TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
+
+                History history = new History();
+                history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+//                history.setHoneyPoint(adminAddPointStudentLabReportRequest.getNumberHoney());
+                history.setType(TypeHistory.CONG_DIEM);
+                history.setCreatedAt(new Date().getTime());
+                if (teacherPointResponse == null) {
+                    Honey honey = new Honey();
+                    honey.setStatus(Status.HOAT_DONG);
+                    honey.setHoneyPoint(0);
+                    honey.setStudentId(adminAddPointStudentLabReportRequest.getId());
+                    honey.setHoneyCategoryId(requestAddPointStudentBO.getCategoryId());
+//                    history.setHoneyId(honeyRepository.save(honey).getId());
+                } else {
+                    Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
+//                    history.setHoneyId(honey.getId());
+                }
+                history.setStudentId(adminAddPointStudentLabReportRequest.getId());
+                historyRepository.save(history);
+            }
+        }
     }
 
     private AdminAddPointStudentLabReportRequestt processRowLabReport(Row row) {
@@ -306,93 +267,116 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
     }
 
     @Override
-    public Boolean exportExcelPortalEvents() {
-        try {
-            // Lấy đường dẫn thư mục "Downloads" trong hệ thống
-            String userHome = System.getProperty("user.home");
-            String outputPath = userHome + File.separator + "Downloads" + File.separator + "file_template_add_honey_point_portal_events" + DateUtils.date2yyyyMMddHHMMssNoSlash(new Date()) + ".xlsx";
+    public AdminAddPointStudentPortalEventsBO previewDataPortalEventsImportExcel(MultipartFile file) throws IOException {
+        // Lấy đối tượng InputStream từ tệp Excel được tải lên
+        InputStream inputStream = file.getInputStream();
 
-            // Tạo một workbook (bảng tính) mới cho bản xem trước dữ liệu
-            Workbook workbook = new XSSFWorkbook();
-            Sheet sheet = workbook.createSheet("Trang 1");
+        // Tạo một Workbook (bảng tính) từ InputStream sử dụng thư viện Apache POI
+        Workbook workbook = new XSSFWorkbook(inputStream);
 
-            // Thiết lập kiểu cho phần tiêu đề của bảng tính
-            CellStyle headerStyle = workbook.createCellStyle();
-            Font font = workbook.createFont();
-            font.setBold(true);
-            font.setFontHeightInPoints((short) 13);
-            headerStyle.setFont(font);
-            font.setColor(IndexedColors.WHITE.getIndex());
-            headerStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
-            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        // Lấy bảng tính đầu tiên từ Workbook
+        Sheet sheet = workbook.getSheetAt(0);
 
-            headerStyle.setBorderTop(BorderStyle.THIN);
-            headerStyle.setBorderBottom(BorderStyle.THIN);
-            headerStyle.setBorderLeft(BorderStyle.THIN);
-            headerStyle.setBorderRight(BorderStyle.THIN);
+        // Đọc dữ liệu từ bảng tính và tạo danh sách các đối tượng AdminAddItemDTO
+        List<AdminAddPointStudentPortalEventsRequest> lstUserImportDTO = StreamSupport.stream(sheet.spliterator(), false)
+                .skip(3) // Bỏ qua 4 dòng đầu tiên
+                .filter(row -> !ExcelUtils.checkNullLCells(row, 1))
+                .map(row -> processPortalEvent(row))
+                .collect(Collectors.toList());
 
-            // Dòng thứ 1 - Chữ "Chú ý"
-            Row noteRow = sheet.createRow(0);
-            Cell noteCell = noteRow.createCell(0);
-            noteCell.setCellValue("Chú ý");
+        // Nhóm dữ liệu theo trạng thái lỗi (error) và đếm số lượng mỗi trạng thái
+        Map<Boolean, Long> importStatusCounts = lstUserImportDTO.stream()
+                .collect(Collectors.groupingBy(AdminAddPointStudentPortalEventsRequest::isError, Collectors.counting()));
 
-            // Tạo một kiểu cho ô "Lưu ý"
-            CellStyle noteStyle = workbook.createCellStyle();
-            Font noteFont = workbook.createFont();
-            noteFont.setBold(true);
-            noteFont.setFontHeightInPoints((short) 13);
-            noteStyle.setFont(noteFont);
-            noteFont.setColor(IndexedColors.RED.getIndex());
-            noteStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-            noteStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            noteCell.setCellStyle(noteStyle);
+        // Tạo đối tượng AdminAddItemBO để lưu trữ thông tin bản xem trước
+        AdminAddPointStudentPortalEventsBO presidentAddItemBO = new AdminAddPointStudentPortalEventsBO();
+        presidentAddItemBO.setLstStudentId(lstUserImportDTO);
+        presidentAddItemBO.setTotal(Long.parseLong(String.valueOf(lstUserImportDTO.size())));
+        presidentAddItemBO.setTotalError(importStatusCounts.getOrDefault(true, 0L));
+        presidentAddItemBO.setTotalSuccess(importStatusCounts.getOrDefault(false, 0L));
 
-            // Dòng thứ 2 - cách viết đúng định dạng quà tặng
-            Row formatGiftRow = sheet.createRow(1);
-            Cell formatGiftCell = formatGiftRow.createCell(1);
-            formatGiftCell.setCellValue("Định dạng cột email: haipxph26772@fpt.edu.vn");
+        return presidentAddItemBO;
+    }
 
-            // Tạo một kiểu cho các ô định dạng
-            CellStyle formatStyle = workbook.createCellStyle();
-            Font formatFont = workbook.createFont();
-            formatFont.setBold(true);
-            formatFont.setFontHeightInPoints((short) 13);
-            formatFont.setColor(IndexedColors.BLACK.getIndex());
-            formatStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
-            formatStyle.setFont(formatFont);
-            formatGiftCell.setCellStyle(formatStyle);
+    @Override
+    public void importDataPortalEvents(AdminAddPointStudentPortalEventsBO requestAddPointStudentBO) {
+        Category category = adminCategoryRepository.findById(requestAddPointStudentBO.getCategoryId()).orElse(null);
+        Integer honeyPoint = requestAddPointStudentBO.getNumberHoney();
+        String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
+        String enumCategoryACCEPT = String.valueOf(CategoryStatus.ACCEPT.ordinal());
 
-            // Tạo hàng tiêu đề và đặt các tiêu đề cột
-            Row headerRow = sheet.createRow(3);
-            String[] headers = {"Email"};
-            int columnCount = headers.length;
-
-            for (int i = 0; i < columnCount; i++) {
-                Cell headerCell = headerRow.createCell(i);
-                headerCell.setCellValue(headers[i]);
-                headerCell.setCellStyle(headerStyle);
-
-                // Thiết lập cỡ cột
-                sheet.setColumnWidth(i, Constants.COLUMN_WIDTH); // Sử dụng một constant cho cỡ cột
+        for (AdminAddPointStudentPortalEventsRequest studentId :
+                requestAddPointStudentBO.getLstStudentId()) {
+            if (category.getCategoryStatus().equals(CategoryStatus.FREE)) {
+                Notification notification = createNotification(studentId.getId());
+                if (!DataUtils.isNullObject(requestAddPointStudentBO.getLstStudentId())) {
+                    try {
+                        createNotificationDetailHoney(category, notification.getId(), honeyPoint);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
+            if (category.getCategoryStatus().equals(CategoryStatus.ACCEPT)) {
+                TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
+                getPointRequest.setStudentId(studentId.getId());
+                getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
+                TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
 
-            // Tạo kiểu cho ô tiêu đề trống
-            CellStyle emptyHeaderStyle = workbook.createCellStyle();
-            Font emptyHeaderFont = workbook.createFont();
-            emptyHeaderFont.setColor(IndexedColors.RED.getIndex());
-            emptyHeaderStyle.setFont(emptyHeaderFont);
-            // Lưu workbook vào tệp Excel tại đường dẫn đã xác định
-            try (FileOutputStream outputStream = new FileOutputStream(outputPath)) {
-                workbook.write(outputStream);
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
+                History history = new History();
+                history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+//                history.setHoneyPoint(honeyPoint);
+                history.setType(TypeHistory.CONG_DIEM);
+                history.setCreatedAt(new Date().getTime());
+                if (teacherPointResponse == null) {
+                    Honey honey = new Honey();
+                    honey.setStatus(Status.HOAT_DONG);
+                    honey.setHoneyPoint(0);
+                    honey.setStudentId(studentId.getId());
+                    honey.setHoneyCategoryId(requestAddPointStudentBO.getCategoryId());
+//                    history.setHoneyId(honeyRepository.save(honey).getId());
+                } else {
+                    Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
+//                    history.setHoneyId(honey.getId());
+                }
+                history.setStudentId(studentId.getId());
+                historyRepository.save(history);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
         }
+    }
+
+    private AdminAddPointStudentPortalEventsRequest processPortalEvent(Row row) {
+        AdminAddPointStudentPortalEventsRequest userDTO = new AdminAddPointStudentPortalEventsRequest();
+        String email = ExcelUtils.getCellString(row.getCell(0));
+
+        // Gọi API để kiểm tra sự tồn tại của người dùng
+        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmail(email);
+
+        // Biến để kiểm tra sự tồn tại của lỗi
+        boolean hasError = false;
+
+        // Kiểm tra dữ liệu và xác định trạng thái lỗi (error)
+        if (DataUtils.isNullObject(email)) {
+            userDTO.setImportMessage("Email không được để trống");
+            userDTO.setError(true);
+            hasError = true;
+        }
+        if (DataUtils.isNullObject(response)) {
+            userDTO.setImportMessage("Sinh viên không tồn tại");
+            userDTO.setError(true);
+            hasError = true;
+        }
+
+        // Xác định trạng thái thành công hoặc lỗi và cung cấp thông báo
+        if (!hasError) {
+            userDTO.setImportMessage("SUCCESS");
+            userDTO.setError(false);
+        }
+        // Đặt các thuộc tính của đối tượng AdminAddItemDTO
+        userDTO.setId(response != null ? response.getId() : null);
+        userDTO.setEmail(email != null ? email : null);
+
+        return userDTO;
     }
 
     @Override
@@ -404,7 +388,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
 
         for (String studentId :
                 requestAddPointStudentBO.getLstStudentId()) {
-            if (category.getCategoryStatus().equals(enumCategoryFREE)) {
+            if (category.getCategoryStatus().equals(CategoryStatus.FREE)) {
                 Notification notification = createNotification(studentId);
                 if (!DataUtils.isNullObject(requestAddPointStudentBO.getLstStudentId())) {
                     try {
@@ -414,7 +398,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
                     }
                 }
             }
-            if (category.getCategoryStatus().equals(enumCategoryACCEPT)) {
+            if (category.getCategoryStatus().equals(CategoryStatus.ACCEPT)) {
                 TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
                 getPointRequest.setStudentId(studentId);
                 getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
@@ -457,5 +441,18 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
                 NotificationDetailType.NOTIFICATION_DETAIL_HONEY, Integer.parseInt(String.valueOf(roundedQuantity)));
         NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
         return studentNotificationDetailRepository.save(notificationDetail);
+    }
+
+    @Override
+    public ByteArrayOutputStream exportExcelPortalEventsClass(HttpServletResponse response) {
+        return exportExcelService.export(response, null, null,
+                "Định dạng cột email: haipxph26772@fpt.edu.vn", new String[]{"Email"});
+    }
+
+    @Override
+    public ByteArrayOutputStream exportExcelLabReportClass(HttpServletResponse response) {
+        return exportExcelService.export(response, null, null,
+                "Định dạng cột email: haipxph26772@fpt.edu.vn - Định dạng cột số lượng mật ong: 29"
+                , new String[]{"Email", "Số lượng mật ong"});
     }
 }

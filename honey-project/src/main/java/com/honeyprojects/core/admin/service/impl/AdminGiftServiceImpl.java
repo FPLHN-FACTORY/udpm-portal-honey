@@ -53,16 +53,16 @@ public class AdminGiftServiceImpl implements AdminGiftService {
     public PageableObject<AdminGiftResponse> getAllCategoryByAdmin(AdminGiftRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         Page<AdminGiftResponse> pageRes = adGiftRepository.getAllGiftByAdmin(pageable, request);
-        StringBuilder contentLogger = new StringBuilder();
-        LoggerFunction loggerObject = new LoggerFunction();
-        loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
-        contentLogger.append("Lấy tất cả quà đang hoạt động tại trang quà.");
-        loggerObject.setContent(contentLogger.toString());
-        try {
-            rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//        StringBuilder contentLogger = new StringBuilder();
+//        LoggerFunction loggerObject = new LoggerFunction();
+//        loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
+//        contentLogger.append("Lấy tất cả quà đang hoạt động tại trang quà.");
+//        loggerObject.setContent(contentLogger.toString());
+//        try {
+//            rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
         return new PageableObject<>(pageRes);
     }
 
@@ -106,36 +106,16 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         gift.setTransactionGift(TransactionGift.values()[request.getTransactionGift()]);
         gift.setNote(request.getNote());
 
-        if (request.getNumberDateEnd() != null) {
-            gift.setNumberEndDate(Long.valueOf(request.getNumberDateEnd()));
-        }
         Long fromDate = null;
         Long toDate = null;
-        if (request.getFromDate() != null) {
-            fromDate = DateUtils.truncate(new Date(request.getFromDate()), Calendar.DATE).getTime();
-        }
-        if (request.getToDate() != null) {
-            toDate = DateUtils.truncate(new Date(request.getToDate()), Calendar.DATE).getTime();
-        }
-        gift.setToDate(toDate);
-        gift.setFromDate(fromDate);
-        if (request.getFromDate() == null && request.getToDate() == null) {
-            gift.setExpiry(ExpiryGift.VINH_VIEN);
-        }
-        Long currentTime = DateUtils.truncate(new Date(), Calendar.DATE).getTime();
-        if (request.getFromDate() != null && request.getToDate() == null) {
-            if (currentTime < gift.getFromDate()) {
-                gift.setExpiry(ExpiryGift.CHUA_HOAT_DONG);
-            } else {
-                gift.setExpiry(ExpiryGift.VINH_VIEN);
-            }
-        } else if (request.getFromDate() == null && request.getToDate() != null) {
-            if (gift.getToDate() < currentTime) {
-                gift.setExpiry(ExpiryGift.HET_HAN);
-            } else {
-                gift.setExpiry(ExpiryGift.DANG_HOAT_DONG);
-            }
+        if (request.getNumberDateEnd() != null) {
+            gift.setExpiry(ExpiryGift.DANG_HOAT_DONG);
         } else if (request.getFromDate() != null && request.getToDate() != null) {
+            fromDate = DateUtils.truncate(new Date(request.getFromDate()), Calendar.DATE).getTime();
+            toDate = DateUtils.truncate(new Date(request.getToDate()), Calendar.DATE).getTime();
+            gift.setToDate(toDate);
+            gift.setFromDate(fromDate);
+            Long currentTime = DateUtils.truncate(new Date(), Calendar.DATE).getTime();
             if (gift.getFromDate() <= currentTime && currentTime <= gift.getToDate()) {
                 gift.setExpiry(ExpiryGift.DANG_HOAT_DONG);
             } else if (gift.getFromDate() > currentTime && currentTime < gift.getToDate()) {
@@ -143,6 +123,8 @@ public class AdminGiftServiceImpl implements AdminGiftService {
             } else if (currentTime > gift.getToDate()) {
                 gift.setExpiry(ExpiryGift.HET_HAN);
             }
+        } else {
+            gift.setExpiry(ExpiryGift.VINH_VIEN);
         }
 
         gift.setImage(cloudinaryUploadImages.uploadImage(request.getImage()));
@@ -183,33 +165,20 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         existingGift.setTransactionGift(TransactionGift.values()[request.getTransactionGift()]);
         existingGift.setNote(request.getNote());
 
+        if (request.getImage() != null) {
+            existingGift.setImage(setImageToCloud(request, existingGift.getImage()));
+        }
+
         Long fromDate = null;
         Long toDate = null;
-        if (request.getFromDate() != null) {
-            fromDate = DateUtils.truncate(new Date(request.getFromDate()), Calendar.DATE).getTime();
-        }
-        if (request.getToDate() != null) {
-            toDate = DateUtils.truncate(new Date(request.getToDate()), Calendar.DATE).getTime();
-        }
-        existingGift.setToDate(toDate);
-        existingGift.setFromDate(fromDate);
-        if (request.getFromDate() == null && request.getToDate() == null) {
-            existingGift.setExpiry(ExpiryGift.VINH_VIEN);
-        }
-        Long currentTime = DateUtils.truncate(new Date(), Calendar.DATE).getTime();
-        if (request.getFromDate() != null && request.getToDate() == null) {
-            if (currentTime < existingGift.getFromDate()) {
-                existingGift.setExpiry(ExpiryGift.CHUA_HOAT_DONG);
-            } else {
-                existingGift.setExpiry(ExpiryGift.VINH_VIEN);
-            }
-        } else if (request.getFromDate() == null && request.getToDate() != null) {
-            if (existingGift.getToDate() < currentTime) {
-                existingGift.setExpiry(ExpiryGift.HET_HAN);
-            } else {
-                existingGift.setExpiry(ExpiryGift.DANG_HOAT_DONG);
-            }
+        if (request.getNumberEndDate() != null) {
+            existingGift.setExpiry(ExpiryGift.DANG_HOAT_DONG);
         } else if (request.getFromDate() != null && request.getToDate() != null) {
+            fromDate = DateUtils.truncate(new Date(request.getFromDate()), Calendar.DATE).getTime();
+            toDate = DateUtils.truncate(new Date(request.getToDate()), Calendar.DATE).getTime();
+            existingGift.setToDate(toDate);
+            existingGift.setFromDate(fromDate);
+            Long currentTime = DateUtils.truncate(new Date(), Calendar.DATE).getTime();
             if (existingGift.getFromDate() <= currentTime && currentTime <= existingGift.getToDate()) {
                 existingGift.setExpiry(ExpiryGift.DANG_HOAT_DONG);
             } else if (existingGift.getFromDate() > currentTime && currentTime < existingGift.getToDate()) {
@@ -217,10 +186,45 @@ public class AdminGiftServiceImpl implements AdminGiftService {
             } else if (currentTime > existingGift.getToDate()) {
                 existingGift.setExpiry(ExpiryGift.HET_HAN);
             }
+        } else {
+            existingGift.setExpiry(ExpiryGift.VINH_VIEN);
         }
-        if (request.getImage() != null) {
-            existingGift.setImage(setImageToCloud(request, existingGift.getImage()));
-        }
+
+//        Long fromDate = null;
+//        Long toDate = null;
+//        if (request.getFromDate() != null) {
+//            fromDate = DateUtils.truncate(new Date(request.getFromDate()), Calendar.DATE).getTime();
+//        }
+//        if (request.getToDate() != null) {
+//            toDate = DateUtils.truncate(new Date(request.getToDate()), Calendar.DATE).getTime();
+//        }
+//        existingGift.setToDate(toDate);
+//        existingGift.setFromDate(fromDate);
+//        if (request.getFromDate() == null && request.getToDate() == null) {
+//            existingGift.setExpiry(ExpiryGift.VINH_VIEN);
+//        }
+//        Long currentTime = DateUtils.truncate(new Date(), Calendar.DATE).getTime();
+//        if (request.getFromDate() != null && request.getToDate() == null) {
+//            if (currentTime < existingGift.getFromDate()) {
+//                existingGift.setExpiry(ExpiryGift.CHUA_HOAT_DONG);
+//            } else {
+//                existingGift.setExpiry(ExpiryGift.VINH_VIEN);
+//            }
+//        } else if (request.getFromDate() == null && request.getToDate() != null) {
+//            if (existingGift.getToDate() < currentTime) {
+//                existingGift.setExpiry(ExpiryGift.HET_HAN);
+//            } else {
+//                existingGift.setExpiry(ExpiryGift.DANG_HOAT_DONG);
+//            }
+//        } else if (request.getFromDate() != null && request.getToDate() != null) {
+//            if (existingGift.getFromDate() <= currentTime && currentTime <= existingGift.getToDate()) {
+//                existingGift.setExpiry(ExpiryGift.DANG_HOAT_DONG);
+//            } else if (existingGift.getFromDate() > currentTime && currentTime < existingGift.getToDate()) {
+//                existingGift.setExpiry(ExpiryGift.CHUA_HOAT_DONG);
+//            } else if (currentTime > existingGift.getToDate()) {
+//                existingGift.setExpiry(ExpiryGift.HET_HAN);
+//            }
+//        }
         return adGiftRepository.save(existingGift);
     }
 
@@ -256,7 +260,8 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         LoggerFunction loggerObject = new LoggerFunction();
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
         Optional<Gift> optional = adGiftRepository.findById(id);
-        contentLogger.append("Cập nhật trạng thái về không hoạt động của Gift có tên là: '" + optional.get().getName() + "' . ");
+        contentLogger.append("Vật phẩm '" + optional.get().getName() + " - " + optional.get().getCode()
+                + "' đã cập nhật trạng thái thành không hoạt động. ");
         loggerObject.setContent(contentLogger.toString());
         try {
             rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
@@ -274,16 +279,6 @@ public class AdminGiftServiceImpl implements AdminGiftService {
 
     @Override
     public List<CensorGiftSelectResponse> getAllGiftExist() {
-        StringBuilder contentLogger = new StringBuilder();
-        LoggerFunction loggerObject = new LoggerFunction();
-        loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
-        contentLogger.append("Lấy tất cả quà đang hoạt động.");
-        loggerObject.setContent(contentLogger.toString());
-        try {
-            rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
         return adGiftRepository.getAllGiftExist();
     }
 }

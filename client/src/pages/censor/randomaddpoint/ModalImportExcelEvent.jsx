@@ -5,21 +5,39 @@ import "./index.css";
 import { AddPointStudentAPI } from "../../../apis/censor/add-point/add-point-student.api";
 import { useAppDispatch } from "../../../app/hooks";
 import { SetImport } from "../../../app/reducers/import/import.president.reducer";
+import { convertLongToDate } from "../../util/DateUtil";
 
-export default function ModalImportExcelLab(props) {
+export default function ModalImportExcelEvent(props) {
   const { open, setOpen, nameFile, setNameFile, setDataPreview } = props;
   const dispatch = useAppDispatch();
   const [file, setFile] = useState(null);
 
   const handleExportExcel = () => {
-    AddPointStudentAPI.createExportExcelEvent()
-      .then(() => {
-        message.success("Tải file mẫu thành công");
-      })
-      .catch((err) => {
-        message.error("Tải file mẫu thất bại");
+    AddPointStudentAPI.createExportExcelEvent({}).then((response) => {
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download =
+        "File mẫu import sự kiện" +
+        convertLongToDate(new Date().getTime()) +
+        ".xlsx";
+      link.click();
+      window.URL.revokeObjectURL(url);
+    });
   };
+
+  // const handleExportExcel = () => {
+  //   AddPointStudentAPI.createExportExcelEvent()
+  //     .then(() => {
+  //       message.success("Tải file mẫu thành công");
+  //     })
+  //     .catch((err) => {
+  //       message.error("Tải file mẫu thất bại");
+  //     });
+  // };
 
   const handleFileInputChange = (e) => {
     if (file !== null) {
@@ -27,10 +45,7 @@ export default function ModalImportExcelLab(props) {
       formData.append("file", file.file.originFileObj);
       AddPointStudentAPI.previewDataExcelEvent(formData)
         .then((response) => {
-          console.log('====================================');
-          console.log(response);
-          console.log('====================================');
-          setDataPreview(response.data.data.listStudent);
+          setDataPreview(response.data.data.lstStudentId);
           dispatch(SetImport(response.data.data));
           message.success("Import excel thành công");
         })
@@ -83,6 +98,7 @@ export default function ModalImportExcelLab(props) {
           <Upload.Dragger
             type="file"
             accept=".xlsx,.xls"
+            maxCount={1}
             onChange={(e) => handleOnChangeFile(e)}
           >
             {nameFile === "" ? (

@@ -89,11 +89,11 @@ export class RequestManagerAPI {
       params: filter,
     });
   };
-  static changeStatus = (idHistory, status) => {
+  static changeStatus = (idHistory, idHistoryDetail, status) => {
     return request({
       method: "PUT",
       url: `/${this.COMPONENT_NAME}/change-status`,
-      data: { idHistory, status },
+      data: { idHistory, idHistoryDetail, status },
     });
   };
 

@@ -15,6 +15,7 @@ public interface StudentNotificationRepository extends NotificationRepository {
             SELECT n.id, n.status, n.type, n.created_date, n.student_id, n.title
                 FROM notification n 
                 WHERE n.student_id = :usersId 
+                AND n.status IN(0,1)
                 AND ( :#{#request.title} IS NULL 
                         OR :#{#request.title} LIKE ''
                     )
@@ -23,6 +24,7 @@ public interface StudentNotificationRepository extends NotificationRepository {
             SELECT COUNT(*)
                 FROM notification n
                 WHERE n.student_id = :usersId 
+                AND n.status IN(0,1)
                 AND ( :#{#request.title} IS NULL 
                         OR :#{#request.title} LIKE ''
                     )
@@ -54,4 +56,12 @@ public interface StudentNotificationRepository extends NotificationRepository {
                 WHERE n.student_id = :usersId AND n.status = 0;
             """, nativeQuery = true)
     int countNotification(@Param("usersId") String usersId);
+
+    @Query(value = """
+            SELECT n.id
+            FROM notification n
+            WHERE n.student_id = :idStudent
+            GROUP BY n.id
+            """, nativeQuery = true)
+    List<String> getAllIdNotificationByIdStudent(String idStudent);
 }

@@ -22,7 +22,12 @@ const ModalCreateUpgradeRate = ({
       const updatedCurrentItem = {
         originalHoney: currentItem.originalId,
         destinationHoney: currentItem.destinationId,
-        idGifts: currentItem.giftId.split(", "),
+        idGifts:
+          currentItem.giftId === null
+            ? []
+            : currentItem.giftId.indexOf(", ") !== -1
+            ? currentItem.giftId.split(", ")
+            : [currentItem.giftId],
         ratio: currentItem.ratio,
         quantityOriginal: currentItem.quantityOriginal,
         quantityDestination: currentItem.quantityDestination,
@@ -155,7 +160,7 @@ const ModalCreateUpgradeRate = ({
                       return Promise.resolve();
                     }
                     return Promise.reject(
-                      "Số lượng mật quy đổi không được nhò hơn 0"
+                      "Số lượng mật quy đổi không được nhỏ hơn 0"
                     );
                   },
                 },
@@ -196,7 +201,7 @@ const ModalCreateUpgradeRate = ({
                       return Promise.resolve();
                     }
                     return Promise.reject(
-                      "Số lượng mật nâng cấp không được nhò hơn 0"
+                      "Số lượng mật nâng cấp không được nhỏ hơn 0"
                     );
                   },
                 },
@@ -218,7 +223,6 @@ const ModalCreateUpgradeRate = ({
                 className="w-full"
                 closeMenuOnSelect={false}
                 mode="multiple"
-                key={"idGifts"}
                 options={listGift.map((gift) => ({
                   value: gift.id,
                   label: gift.name,
@@ -259,7 +263,7 @@ const ModalCreateUpgradeRate = ({
                   type="primary"
                   htmlType="submit"
                 >
-                  Thêm
+                  {id ? "Cập nhật" : "Thêm"}
                 </Button>
                 <Button
                   style={{

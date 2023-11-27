@@ -29,12 +29,13 @@ public interface AdRequestConversionHistoryRepository extends HistoryRepository 
                                                            Pageable pageable);
 
     @Query(value = """
-                SELECT c.name as nameCategory,c.id as categoryId, hd.gift_id , h.id,hd.name_gift, hd.honey_point, h.last_modified_date,hd.quantity_gift ,
-                h.created_date, h.status, h.student_id, h.note FROM history h 
-                inner join history_detail hd on hd.history_id = h.id
-                inner join honey hn on hn.id = hd.honey_id 
-                inner join category c on hn.honey_category_id = c.id     
-                  WHERE (:#{#filter.status} IS NULL OR h.status = :#{#filter.status})
+            SELECT c.name AS nameCategory,c.id AS categoryId, hd.gift_id , 
+            h.id,hd.name_gift, hd.honey_point, h.last_modified_date, hd.quantity_gift, h.change_date,
+            h.created_date, h.status, h.student_id, h.note FROM history h 
+            JOIN history_detail hd ON hd.history_id = h.id
+            JOIN honey hn ON hn.id = hd.honey_id 
+            JOIN category c ON hn.honey_category_id = c.id     
+            WHERE (:#{#filter.status} IS NULL OR h.status = :#{#filter.status})
             AND (:#{#filter.idCategory} IS NULL OR c.id = :#{#filter.idCategory})
             AND (:#{#filter.idStudent} IS NULL OR h.student_id = :#{#filter.idStudent})
             AND h.type = 2 AND h.status in (1,2) ORDER BY h.last_modified_date DESC

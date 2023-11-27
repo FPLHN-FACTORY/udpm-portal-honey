@@ -6,7 +6,6 @@ import {
   Pagination,
   Select,
   Space,
-  Table,
   Tag,
   message,
 } from "antd";
@@ -161,15 +160,15 @@ export default function BuyGiftHistory() {
               <div className="list__point__title">
                 <p>
                   <strong className="text-slate-500 mr-[8px]">
-                    Số điểm được cộng:
+                    Nhận được:
                   </strong>
-                  {item.honeyPoint} vật phẩm {item.nameCategory}
+                  {item.quantityGift} vật phẩm {item.nameGift}
                 </p>
                 <p>
                   <strong className="text-slate-500 mr-[8px]">
                     Thời gian:
                   </strong>
-                  {moment(item.createdDate).format("DD-MM-YYYY HH:mm:ss")}
+                  {moment(item.changeDate).format("DD-MM-YYYY HH:mm:ss")}
                 </p>
               </div>
             </div>
