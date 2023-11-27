@@ -455,7 +455,7 @@ const ModalThem = (props) => {
               </Form.Item>
             )}
 
-            {selectedCategories.map((categoryId) => {
+            {selectType !== 2 && selectedCategories.map((categoryId) => {
               const category = listCategory.find(
                 (item) => item.id === categoryId
               );

@@ -36,16 +36,22 @@ public interface AdUpgradeRateGiftRepository extends UpgradeRateGiftRepository {
         JOIN honey_project.category c1 ON c1.id = ur.destination_honey
         JOIN honey_project.category c2 ON c2.id = ur.original_honey
         LEFT JOIN gif_selected gs ON ur.id = gs.id_upgrade_rate
-        WHERE (:#{#req.originalHoneyId} IS NULL OR ur.id = :#{#req.originalHoneyId})
-        AND (:#{#req.destinationHoneyId} IS NULL OR ur.id = :#{#req.destinationHoneyId})
+        WHERE (:#{#req.originalHoneyId} IS NULL OR c2.id = :#{#req.originalHoneyId})
+        AND (:#{#req.destinationHoneyId} IS NULL OR c1.id = :#{#req.destinationHoneyId})
         AND (:#{#req.status} IS NULL OR ur.status = :#{#req.status})
         GROUP BY ur.id;
     """, countQuery = """
+        WITH gif_selected AS (
+        	SELECT urg.id_upgrade_rate, g.name, g.id
+        	FROM honey_project.upgrade_rate_gift urg
+        	JOIN honey_project.gift g ON urg.id_gift = g.id
+        )
         SELECT
         	ur.id AS id
         FROM honey_project.upgrade_rate ur
         JOIN honey_project.category c1 ON c1.id = ur.destination_honey
         JOIN honey_project.category c2 ON c2.id = ur.original_honey
+        LEFT JOIN gif_selected gs ON ur.id = gs.id_upgrade_rate
         WHERE (:#{#req.originalHoneyId} IS NULL OR c2.id = :#{#req.originalHoneyId})
         AND (:#{#req.destinationHoneyId} IS NULL OR c1.id = :#{#req.destinationHoneyId})
         AND (:#{#req.status} IS NULL OR ur.status = :#{#req.status})

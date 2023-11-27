@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { message, Modal, Form, Input, Slider, Select } from "antd";
+import { message, Modal, Form, Input, Slider, Select, Col, InputNumber, Row } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 import { SetGiftArchive } from "../../../app/reducers/archive-gift/gift-archive.reducer";
@@ -67,13 +67,16 @@ const UsingGift = (props) => {
 
 
   const onChange = (value) => {
-    const classStudent = dataClass.filter(el => el.classId = value)[0];
+    const classStudent = dataClass.filter(el => el.classId === value)[0];
     form.setFieldValue("maMon", classStudent.subjectName)
     form.setFieldValue("emailGV", classStudent.teacherEmail)
 
     ArchiveAPI.getScoreClass({ classId: classStudent.classId, subjectId: classStudent.subjectId }).then((response) => {
       setDataScore(response.data);
     })
+  };
+  const onChangeInput = (newValue) => {
+    setSoLuong(newValue);
   };
 
   // Filter `option.label` match the user type `input`
@@ -108,18 +111,16 @@ const UsingGift = (props) => {
             ]}>
             <Select
               placeholder="Vui lòng nhập mã lớp!"
-              onChange={onChange}
-              name="maLopSelect"
-              key={"maLopSelect"}
+              showSearch
+              optionFilterProp="children"
+              onChange={(el) => onChange(el)}
               filterOption={filterOption}
-            >
-              {
-                dataClass.map(option => (
-                  <Option value={option.classId} key={option.classId} > {option.className}</Option>
-                ))
+              options={dataClass.map(option => ({
+                value: option.classId,
+                label: option.className
               }
-              
-            </Select>
+              ))}
+            />
           </Form.Item>
           <Form.Item
             name="maMon"
@@ -178,20 +179,29 @@ const UsingGift = (props) => {
                 required: true,
                 message: "Vui lòng không được để trống số lượng"
               },
-              {
-                min: 0,
-                message: "Vui lòng nhập số lượng lớn hơn 0"
-              }
             ]}
           >
-            <Slider
-              value={soLuong}
-              onChange={(e) => {
-                setSoLuong(e);
-              }}
-              max={parseInt(archivegift.quantity)}
-              min={0}
-            />
+            <Row>
+              <Col span={14}>
+                <Slider
+                  value={typeof soLuong === 'number' ? soLuong : 0}
+                  onChange={(e) => {
+                    setSoLuong(e);
+                  }}
+                  max={parseInt(archivegift.quantity) + 1}
+                  min={1}
+                />
+              </Col>
+              <Col span={4}>
+                <InputNumber
+                  max={parseInt(archivegift.quantity) + 1}
+                  min={1}
+                  style={{ margin: '0 0 0 16px' }}
+                  value={soLuong}
+                  onChange={onChangeInput}
+                />
+              </Col>
+            </Row>
           </Form.Item>
         </Form>
       </Modal>

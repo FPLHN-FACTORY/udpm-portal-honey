@@ -144,19 +144,7 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
         Optional<Gift> optional = adGiftRepository.findById(id);
         Gift existingGift = optional.get();
-        contentLogger.append("Cập nhật Gift: '" + existingGift.getName() + "'. ");
-        if (!request.getName().isEmpty()) {
-            contentLogger.append("Cập nhật tên từ: '" + existingGift.getName() + "' sang '" + request.getName() + "'.");
-        }
-        if (request.getQuantity() != null) {
-            contentLogger.append("Cập nhật số lượng từ: " + existingGift.getQuantity() + " sang " + request.getQuantity() + ".");
-        }
-        loggerObject.setContent(contentLogger.toString());
-        try {
-            rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+
         existingGift.setName(request.getName());
         existingGift.setStatus(StatusGift.values()[request.getStatus()]);
         existingGift.setQuantity(request.getQuantity());
@@ -173,11 +161,14 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         Long toDate = null;
         if (request.getNumberEndDate() != null) {
             existingGift.setExpiry(ExpiryGift.DANG_HOAT_DONG);
+            existingGift.setToDate(null);
+            existingGift.setFromDate(null);
         } else if (request.getFromDate() != null && request.getToDate() != null) {
             fromDate = DateUtils.truncate(new Date(request.getFromDate()), Calendar.DATE).getTime();
             toDate = DateUtils.truncate(new Date(request.getToDate()), Calendar.DATE).getTime();
             existingGift.setToDate(toDate);
             existingGift.setFromDate(fromDate);
+            existingGift.setNumberEndDate(null);
             Long currentTime = DateUtils.truncate(new Date(), Calendar.DATE).getTime();
             if (existingGift.getFromDate() <= currentTime && currentTime <= existingGift.getToDate()) {
                 existingGift.setExpiry(ExpiryGift.DANG_HOAT_DONG);
@@ -188,43 +179,24 @@ public class AdminGiftServiceImpl implements AdminGiftService {
             }
         } else {
             existingGift.setExpiry(ExpiryGift.VINH_VIEN);
+            existingGift.setToDate(null);
+            existingGift.setFromDate(null);
+            existingGift.setNumberEndDate(null);
         }
 
-//        Long fromDate = null;
-//        Long toDate = null;
-//        if (request.getFromDate() != null) {
-//            fromDate = DateUtils.truncate(new Date(request.getFromDate()), Calendar.DATE).getTime();
-//        }
-//        if (request.getToDate() != null) {
-//            toDate = DateUtils.truncate(new Date(request.getToDate()), Calendar.DATE).getTime();
-//        }
-//        existingGift.setToDate(toDate);
-//        existingGift.setFromDate(fromDate);
-//        if (request.getFromDate() == null && request.getToDate() == null) {
-//            existingGift.setExpiry(ExpiryGift.VINH_VIEN);
-//        }
-//        Long currentTime = DateUtils.truncate(new Date(), Calendar.DATE).getTime();
-//        if (request.getFromDate() != null && request.getToDate() == null) {
-//            if (currentTime < existingGift.getFromDate()) {
-//                existingGift.setExpiry(ExpiryGift.CHUA_HOAT_DONG);
-//            } else {
-//                existingGift.setExpiry(ExpiryGift.VINH_VIEN);
-//            }
-//        } else if (request.getFromDate() == null && request.getToDate() != null) {
-//            if (existingGift.getToDate() < currentTime) {
-//                existingGift.setExpiry(ExpiryGift.HET_HAN);
-//            } else {
-//                existingGift.setExpiry(ExpiryGift.DANG_HOAT_DONG);
-//            }
-//        } else if (request.getFromDate() != null && request.getToDate() != null) {
-//            if (existingGift.getFromDate() <= currentTime && currentTime <= existingGift.getToDate()) {
-//                existingGift.setExpiry(ExpiryGift.DANG_HOAT_DONG);
-//            } else if (existingGift.getFromDate() > currentTime && currentTime < existingGift.getToDate()) {
-//                existingGift.setExpiry(ExpiryGift.CHUA_HOAT_DONG);
-//            } else if (currentTime > existingGift.getToDate()) {
-//                existingGift.setExpiry(ExpiryGift.HET_HAN);
-//            }
-//        }
+        contentLogger.append("Cập nhật Gift: '" + existingGift.getName() + "'. ");
+        if (!request.getName().isEmpty()) {
+            contentLogger.append("Cập nhật tên từ: '" + existingGift.getName() + "' sang '" + request.getName() + "'.");
+        }
+        if (request.getQuantity() != null) {
+            contentLogger.append("Cập nhật số lượng từ: " + existingGift.getQuantity() + " sang " + request.getQuantity() + ".");
+        }
+        loggerObject.setContent(contentLogger.toString());
+        try {
+            rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return adGiftRepository.save(existingGift);
     }
 
