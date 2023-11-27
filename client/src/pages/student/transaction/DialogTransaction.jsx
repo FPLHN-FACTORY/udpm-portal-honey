@@ -99,6 +99,9 @@ const DialogTransaction = ({ setOpen, transaction, open }) => {
             ...preItem[index],
             quantity: preItem[index].quantity + result.quantity,
           };
+          if (preItem[index].quantity === 0) {
+            preItem.splice(index, 1);
+          }
         } else {
           preItem.push({
             id: result.id,
@@ -182,6 +185,56 @@ const DialogTransaction = ({ setOpen, transaction, open }) => {
               idUser: ruongDi.idUser,
               ...item,
               quantity: inputValue,
+              honey: ruongDi.honey,
+              lock: ruongDen.lock,
+              xacNhan: ruongDen.xacNhan,
+            })
+          );
+        } else {
+          message.error("Số lượng không hợp lệ");
+        }
+      } else {
+        message.error("Vui lòng nhập số lớn hơn 0");
+      }
+    } else {
+      message.error("Vui lòng nhập số!");
+    }
+  }
+  function rollbackItem(item) {
+    if (!isNaN(inputSoLuong)) {
+      const inputValue = parseInt(inputSoLuong);
+      if (inputValue > 0) {
+        if (inputValue <= item.quantity) {
+          const preItem = ruongDi.item;
+          const index = preItem.findIndex((item2) => item.id === item2.id);
+          if (index !== -1) {
+            preItem[index] = {
+              ...preItem[index],
+              quantity: preItem[index].quantity - inputValue,
+            };
+          }
+          if (preItem[index].quantity === 0) {
+            preItem.splice(index, 1);
+          }
+          setRuongDi({ ...ruongDi, item: preItem });
+
+          const preChestItem = chestItem;
+          const indexChest = preChestItem.findIndex(
+            (item2) => item.id === item2.id
+          );
+          preChestItem[indexChest] = {
+            ...preChestItem[indexChest],
+            quantity: preChestItem[indexChest].quantity + inputValue,
+          };
+          setChestItem(preChestItem);
+          setRuongDi({ ...ruongDi, item: preItem });
+          getStompClient().send(
+            `/transaction/send-item/${transaction.idTransaction}`,
+            {},
+            JSON.stringify({
+              idUser: ruongDi.idUser,
+              ...item,
+              quantity: inputValue - inputValue * 2,
               honey: ruongDi.honey,
               lock: ruongDen.lock,
               xacNhan: ruongDen.xacNhan,
@@ -298,17 +351,45 @@ const DialogTransaction = ({ setOpen, transaction, open }) => {
                       <div className="item">
                         {ruongDi.item.length - 1 >= index ? (
                           <div className="item">
-                            <Popconfirm
-                              icon={<></>}
-                              title={
-                                <input
-                                  style={{ width: "100%", color: "black" }}
-                                  className="input-honey"
-                                  placeholder="Nhập số lượng"
-                                />
-                              }
-                              okText="Xác nhận"
-                              cancelText="Hủy">
+                            {!ruongDi.lock ? (
+                              <Popconfirm
+                                icon={<></>}
+                                title={
+                                  <input
+                                    type="number"
+                                    onChange={(e) => {
+                                      setInputSoLuong(e.target.value);
+                                    }}
+                                    style={{ width: "150px", color: "black" }}
+                                    className="input-honey"
+                                    placeholder="Nhập số lượng"
+                                  />
+                                }
+                                onConfirm={() => {
+                                  rollbackItem(ruongDi.item[index]);
+                                }}
+                                okText="Xác nhận"
+                                cancelText="Hủy">
+                                <Tooltip
+                                  placement="right"
+                                  title={ruongDi.item[index]?.name}>
+                                  <span
+                                    style={{
+                                      position: "absolute",
+                                      bottom: "2px",
+                                      right: "7px",
+                                      color: "white",
+                                    }}>
+                                    {ruongDi.item[index]?.quantity}
+                                  </span>
+                                  <img
+                                    className="img-item"
+                                    src={ruongDi.item[index]?.image}
+                                    alt="anh"
+                                  />
+                                </Tooltip>
+                              </Popconfirm>
+                            ) : (
                               <Tooltip
                                 placement="right"
                                 title={ruongDi.item[index]?.name}>
@@ -327,7 +408,7 @@ const DialogTransaction = ({ setOpen, transaction, open }) => {
                                   alt="anh"
                                 />
                               </Tooltip>
-                            </Popconfirm>
+                            )}
                           </div>
                         ) : (
                           <div className="item"></div>
@@ -458,18 +539,15 @@ const DialogTransaction = ({ setOpen, transaction, open }) => {
                         <Popconfirm
                           icon={<></>}
                           title={
-                            <>
-                              <input
-                                value={inputSoLuong}
-                                type="number"
-                                onChange={(e) => {
-                                  setInputSoLuong(e.target.value);
-                                }}
-                                style={{ width: "150px", color: "black" }}
-                                className="input-honey"
-                                placeholder="Nhập số lượng"
-                              />
-                            </>
+                            <input
+                              type="number"
+                              onChange={(e) => {
+                                setInputSoLuong(e.target.value);
+                              }}
+                              style={{ width: "150px", color: "black" }}
+                              className="input-honey"
+                              placeholder="Nhập số lượng"
+                            />
                           }
                           onConfirm={() => {
                             sendItem(item);
