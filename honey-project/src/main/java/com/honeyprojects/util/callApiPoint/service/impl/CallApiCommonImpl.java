@@ -151,7 +151,7 @@ public class CallApiCommonImpl implements CallApiCommonService {
             response = responseEntity.getBody();
         } catch (Exception ex) {
             ex.printStackTrace();
-            generateFakeDataScoreTemplateDto();
+            response = generateFakeDataScoreTemplateDto();
         }
         List<ScoreTemplate> scoreTemplateList = new ArrayList<>();
 
@@ -227,7 +227,7 @@ public class CallApiCommonImpl implements CallApiCommonService {
             response = responseEntity.getBody();
         } catch (Exception ex) {
             ex.printStackTrace();
-            generateFakeDataScoreTemplateVMDto();
+            response = generateFakeDataScoreTemplateVMDto();
         }
         List<ScoreTemplateVM> scoreTemplateList = new ArrayList<>();
 
