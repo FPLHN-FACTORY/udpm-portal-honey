@@ -5,7 +5,6 @@ import com.honeyprojects.core.admin.model.request.AdminUpdateGiftDetailRequest;
 import com.honeyprojects.core.admin.model.response.AdminGiftDetailResponse;
 import com.honeyprojects.core.admin.repository.AdGiftDetailRepository;
 import com.honeyprojects.core.admin.service.AdminGiftDetailService;
-import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.GiftDetail;
 import com.honeyprojects.infrastructure.logger.entity.LoggerFunction;
 import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
@@ -45,7 +44,7 @@ public class AdminGiftDetailServiceImpl implements AdminGiftDetailService {
         StringBuilder contentLogger = new StringBuilder();
         LoggerFunction loggerObject = new LoggerFunction();
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
-        contentLogger.append("xóa quà có id là '" + id + "' . ");
+        contentLogger.append("Gift có tên là '" + id + "' . ");
         loggerObject.setContent(contentLogger.toString());
         try {
             rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
