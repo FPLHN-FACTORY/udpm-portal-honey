@@ -25,6 +25,7 @@ import {
 } from "antd";
 import { ProfileApi } from "../../../apis/student/profile/profileApi.api";
 import soundClick from "../../../assets/sounds/sound_click.mp3";
+import soundTransaction from "../../../assets/sounds/transaction-notification.mp3";
 import "./index.css";
 import {
   connectStompClient,
@@ -69,6 +70,37 @@ function DashboardAuthUser({ children }) {
 
   const dataCountNotification = useAppSelector(GetCountNotification);
 
+  let userInteracted = false;
+
+  document.addEventListener("click", function (event) {
+    addClickEffect(event);
+    if (localStorage.getItem("onMusic") === "true") {
+      playSound();
+    }
+    if (!userInteracted) {
+      userInteracted = true;
+    }
+  });
+
+  function addClickEffect(event) {
+    const clickEffect = document.createElement("div");
+    clickEffect.classList.add("click-effect");
+    clickEffect.style.left = event.pageX + "px";
+    clickEffect.style.top = event.pageY + "px";
+
+    document.body.appendChild(clickEffect);
+
+    clickEffect.addEventListener("animationend", function () {
+      document.body.removeChild(clickEffect);
+    });
+  }
+
+  function playSoundNotificationTransaction() {
+    if (onMusic && userInteracted) {
+      const audio = new Audio(soundTransaction);
+      audio.play();
+    }
+  }
   useEffect(() => {
     connectStompClient();
     getStompClient().connect({}, () => {
@@ -78,8 +110,10 @@ function DashboardAuthUser({ children }) {
           (result) => {
             if (!open) {
               const transactionReq = JSON.parse(result.body);
-              if (transactionReq.success)
+              if (transactionReq.success) {
+                playSoundNotificationTransaction();
                 showRequestTransaction(transactionReq.data);
+              }
             }
           }
         );
@@ -144,6 +178,7 @@ function DashboardAuthUser({ children }) {
   const [onMusic, setOnMusic] = useState(
     localStorage.getItem("onMusic") === "true"
   );
+
   function playSound() {
     if (onMusic) {
       const audio = new Audio(soundClick);
@@ -153,33 +188,26 @@ function DashboardAuthUser({ children }) {
 
   const hanlderClickCuaHang = () => {
     navigate("/student/shop");
-    playSound();
   };
   const hanlderClickDauGia = () => {
-    playSound();
     navigate("/student/auction-new");
   };
   const hanlderClickNangCap = () => {
-    playSound();
     navigate("/student/upgrade-honey");
   };
   const hanlderClickGiaoDich = () => {
     setIsModalOpen(true);
-    playSound();
   };
   const hanlderClickKhoDo = () => {
-    playSound();
     navigate("/student/chest");
   };
 
   const hanlderClickTonVinh = () => {
-    playSound();
     navigate("/student/honor-student");
   };
 
   const [isSettingMenuOpen, setIsSettingMenuOpen] = useState(false);
   const hanlderClickCaiDat = () => {
-    playSound();
     setIsSettingMenuOpen(!isSettingMenuOpen);
   };
   const settingMenu = (
@@ -206,26 +234,18 @@ function DashboardAuthUser({ children }) {
 
   const hanlderClickHomThu = () => {
     navigate("/student/letter");
-    playSound();
   };
   const hanlderClickAmThanh = () => {
     localStorage.setItem("onMusic", !onMusic);
     setOnMusic(!onMusic);
-    playSound();
-  };
-  const hanlderClickDoiQua = () => {
-    playSound();
-    navigate("/student/create-conversion");
   };
   const hanlderClickProfile = () => {
-    playSound();
     navigate("/student/profile");
   };
 
   const [open, setOpen] = useState(false);
 
   const returnHome = () => {
-    playSound();
     navigate("/student");
   };
 
