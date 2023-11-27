@@ -165,7 +165,7 @@ public class AdminGiftServiceImpl implements AdminGiftService {
 
         Long fromDate = null;
         Long toDate = null;
-        if (request.getNumberDateEnd() != null) {
+        if (request.getNumberEndDate() != null) {
             existingGift.setExpiry(ExpiryGift.DANG_HOAT_DONG);
         } else if (request.getFromDate() != null && request.getToDate() != null) {
             fromDate = DateUtils.truncate(new Date(request.getFromDate()), Calendar.DATE).getTime();

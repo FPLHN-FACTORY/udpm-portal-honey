@@ -33,6 +33,6 @@ public class AdminUpdateGiftRequest {
 
     private Long fromDate;
 
-    private Long numberDateEnd;
+    private Long numberEndDate;
 
 }
