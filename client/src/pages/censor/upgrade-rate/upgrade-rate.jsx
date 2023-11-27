@@ -98,7 +98,7 @@ export default function UpgradeRate() {
       originalHoneyId: originalHoneyId,
       destinationHoneyId: destinationHoneyId,
       status: status,
-      page: current - 1,
+      page: 0,
     };
     UpgradeApi.fetchAll(filter).then((response) => {
       dispatch(SetUpgradeRate(response.data.data.data));
