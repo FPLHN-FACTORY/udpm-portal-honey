@@ -128,7 +128,7 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         }
 
         gift.setImage(cloudinaryUploadImages.uploadImage(request.getImage()));
-        contentLogger.append("Lưu quà có id là '" + gift.getId() + "' . ");
+        contentLogger.append("Gift có tên '" + gift.getName() + "' đã được thêm vào hệ thống. ");
         loggerObject.setContent(contentLogger.toString());
         try {
             rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
@@ -144,7 +144,13 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
         Optional<Gift> optional = adGiftRepository.findById(id);
         Gift existingGift = optional.get();
-        contentLogger.append("Cập nhật quà có id là '" + existingGift.getId() + "' . ");
+        contentLogger.append("Cập nhật Gift: '" + existingGift.getName() + "'. ");
+        if (!request.getName().isEmpty()) {
+            contentLogger.append("Cập nhật tên từ: '" + existingGift.getName() + "' sang '" + request.getName() + "'.");
+        }
+        if (request.getQuantity() != null) {
+            contentLogger.append("Cập nhật số lượng từ: " + existingGift.getQuantity() + " sang " + request.getQuantity() + ".");
+        }
         loggerObject.setContent(contentLogger.toString());
         try {
             rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
@@ -236,6 +242,17 @@ public class AdminGiftServiceImpl implements AdminGiftService {
     @Transactional
     public void deleteById(String id) {
         adGiftRepository.deleteById(id);
+        StringBuilder contentLogger = new StringBuilder();
+        LoggerFunction loggerObject = new LoggerFunction();
+        loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
+        Optional<Gift> optional = adGiftRepository.findById(id);
+        contentLogger.append("Gift có tên '" + optional.get().getName() + "' đã xóa khỏi hệ thống. ");
+        loggerObject.setContent(contentLogger.toString());
+        try {
+            rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public Gift updateStatusGift(String id) {
