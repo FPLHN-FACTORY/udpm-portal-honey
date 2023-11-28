@@ -19,15 +19,12 @@ import Sider from "antd/es/layout/Sider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCodePullRequest,
-  faCommentsDollar,
   faGift,
   faKaaba,
-  faPenRuler,
   faPlusCircle,
   faScaleUnbalanced,
   faStar,
   faToolbox,
-  faExchangeAlt,
 } from "@fortawesome/free-solid-svg-icons";
 const { Header: AntHeader, Content } = Layout;
 
@@ -45,9 +42,40 @@ function DashboardAuthUser({ children }) {
   useEffect(() => {
     setSelectedKey(location.pathname);
   }, [location]);
-
   let { pathname } = useLocation();
   pathname = pathname.replace("/", "");
+  let title = "";
+  if (pathname.includes("censor/category")) {
+    title = "Quản lý thể loại";
+  }
+  if (pathname.includes("censor/gift")) {
+    title = "Quản lý vật phẩm";
+  }
+  if (pathname.includes("censor/add-point")) {
+    title = "Cộng mật ong";
+  }
+  if (pathname.includes("censor/request-manager")) {
+    title = "Quản lý yêu cầu";
+  }
+  if (pathname.includes("censor/request-manager/random-add-point")) {
+    title = "Tặng vật phẩm";
+  }
+  if (pathname.includes("censor/event")) {
+    title = "Tặng vật phẩm";
+  }
+  if (pathname.includes("censor/project")) {
+    title = "Tặng vật phẩm";
+  }
+  if (pathname.includes("censor/chest")) {
+    title = "Quản lý rương";
+  }
+  if (pathname.includes("censor/auction-management")) {
+    title = "Quản lý đấu giá";
+  }
+  if (pathname.includes("censor/upgrade-rate")) {
+    title = "Quản lý nâng cấp";
+  }
+
   const [collapsed, setCollapsed] = useState(false);
   function getItem(label, key, icon, children) {
     return {
@@ -113,6 +141,7 @@ function DashboardAuthUser({ children }) {
     //     ),
     //   ]
     // ),
+    
     getItem(
       "Tặng vật phẩm",
       "Tặng vật phẩm",
@@ -252,6 +281,17 @@ function DashboardAuthUser({ children }) {
                   <button className="buttonSlider mobile" onClick={openDrawer}>
                     {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                   </button>
+                  <h1
+                    style={{
+                      marginLeft: "20px",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      maxWidth: "200px",
+                    }}
+                  >
+                    {title}
+                  </h1>
                 </Col>
               </Row>
             </Col>

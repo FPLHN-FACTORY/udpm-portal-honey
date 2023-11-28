@@ -309,77 +309,83 @@ const ModalDetailGift = (props) => {
           numberEndDate: numberEndDate
         }
 
-        console.log(data);
+        Modal.confirm({
+          title: "Bạn có chắc chắn muốn cập nhật dữ liệu không?",
+          onOk: () => {
+            GiftAPI.update(
+              data,
+              gift ? gift.id : null
+            )
+              .then((response) => {
+                // Handle success
+                const selectedCategoryIds = selectedCategories;
+                const honeyValues = { ...categoryQuantities };
+    
+                // Update or create GiftDetail entries
+                GiftDetail.fetchAll(gift.id).then((response) => {
+                  const detailData = response.data.data;
+                  const categoryIdsInDetail = detailData.map(
+                    (item) => item.categoryId
+                  );
+                  const categoryIdsToDelete = categoryIdsInDetail.filter(
+                    (categoryId) => !selectedCategoryIds.includes(categoryId)
+                  );
+    
+                  categoryIdsToDelete.forEach((categoryId) => {
+                    const detailItem = detailData.find(
+                      (item) => item.categoryId === categoryId
+                    );
+    
+                    if (detailItem) {
+                      GiftDetail.delete(detailItem.id)
+                        .then(() => {})
+                        .catch((err) => {
+                          message.error("Lỗi khi xóa: " + err.message);
+                        });
+                    }
+                  });
+    
+                  selectedCategoryIds.forEach((categoryId) => {
+                    const honey = honeyValues[categoryId];
+                    const existingItem = detailData.find(
+                      (item) => item.categoryId === categoryId
+                    );
+    
+                    if (existingItem) {
+                      GiftDetail.update({ honey }, existingItem.id)
+                        .then(() => {})
+                        .catch((err) => {
+                          message.error("Lỗi khi cập nhật: " + err.message);
+                        });
+                    } else {
+                      GiftDetail.create({
+                        giftId: gift.id,
+                        categoryId,
+                        honey,
+                      })
+                        .then(() => {})
+                        .catch((err) => {
+                          message.error("Lỗi khi thêm mới: " + err.message);
+                        });
+                    }
+                  });
+                });
+    
+                // Dispatch action and show success message
+                dispatch(UpdateGift(response.data.data));
+                message.success("Cập nhật thành công!");
+                onUpdate();
+                fetchData();
+              })
+              .catch((err) => {
+                // Handle update error
+                message.error("Lỗi: " + err.message);
+              });
+          },
+          okText: "Đồng ý",
+          cancelText: "Hủy"
+       })
         
-        GiftAPI.update(
-          data,
-          gift ? gift.id : null
-        )
-          .then((response) => {
-            // Handle success
-            const selectedCategoryIds = selectedCategories;
-            const honeyValues = { ...categoryQuantities };
-
-            // Update or create GiftDetail entries
-            GiftDetail.fetchAll(gift.id).then((response) => {
-              const detailData = response.data.data;
-              const categoryIdsInDetail = detailData.map(
-                (item) => item.categoryId
-              );
-              const categoryIdsToDelete = categoryIdsInDetail.filter(
-                (categoryId) => !selectedCategoryIds.includes(categoryId)
-              );
-
-              categoryIdsToDelete.forEach((categoryId) => {
-                const detailItem = detailData.find(
-                  (item) => item.categoryId === categoryId
-                );
-
-                if (detailItem) {
-                  GiftDetail.delete(detailItem.id)
-                    .then(() => {})
-                    .catch((err) => {
-                      message.error("Lỗi khi xóa: " + err.message);
-                    });
-                }
-              });
-
-              selectedCategoryIds.forEach((categoryId) => {
-                const honey = honeyValues[categoryId];
-                const existingItem = detailData.find(
-                  (item) => item.categoryId === categoryId
-                );
-
-                if (existingItem) {
-                  GiftDetail.update({ honey }, existingItem.id)
-                    .then(() => {})
-                    .catch((err) => {
-                      message.error("Lỗi khi cập nhật: " + err.message);
-                    });
-                } else {
-                  GiftDetail.create({
-                    giftId: gift.id,
-                    categoryId,
-                    honey,
-                  })
-                    .then(() => {})
-                    .catch((err) => {
-                      message.error("Lỗi khi thêm mới: " + err.message);
-                    });
-                }
-              });
-            });
-
-            // Dispatch action and show success message
-            dispatch(UpdateGift(response.data.data));
-            message.success("Cập nhật thành công!");
-            onUpdate();
-            fetchData();
-          })
-          .catch((err) => {
-            // Handle update error
-            message.error("Lỗi: " + err.message);
-          });
       })
       .catch((errorInfo) => {
         message.error("Vui lòng điền đầy đủ thông tin.");
@@ -482,6 +488,16 @@ const ModalDetailGift = (props) => {
                 {
                   max: 100,
                   message: "Tên vật phẩm phải tối đa 100 kí tự",
+                },
+                {
+                  validator: (_, value) => {
+                    if ((value + "").trim().length === 0) {
+                      return Promise.reject(
+                        new Error("Tên Quà không để trống")
+                      );
+                    }
+                    return Promise.resolve();
+                  },
                 },
               ]}
             >
@@ -668,7 +684,6 @@ const ModalDetailGift = (props) => {
                     },
                     {
                       validator: (_, value) => {
-                        console.log(value);
                         if ((value + "").trim().length === 0) {
                           return Promise.resolve();
                         }

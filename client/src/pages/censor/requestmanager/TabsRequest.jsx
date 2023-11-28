@@ -5,6 +5,7 @@ import RequestAddPoint from "./RequestAddPoint";
 import RequestAddItemHistory from "./RequestAddItemHistory";
 
 export default function TabsRequest() {
+  // eslint-disable-next-line no-sparse-arrays
   const items = [
     {
       key: "1",

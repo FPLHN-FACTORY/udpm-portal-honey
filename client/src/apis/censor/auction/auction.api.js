@@ -28,7 +28,7 @@ export class AuctionAPI {
   static update = (data, id) => {
     return request({
       method: "PUT",
-      url: `/${this.COMPONENT_NAME}` + `/update/` + id,
+      url: `/${this.COMPONENT_NAME}/update/${id}`,
       data: data,
     });
   };
@@ -36,14 +36,14 @@ export class AuctionAPI {
   static delete = (id) => {
     return request({
       method: "DELETE",
-      url: `/${this.COMPONENT_NAME}` + `/delete/` + id,
+      url: `/${this.COMPONENT_NAME}/delete/${id}`,
     });
   };
 
   static changeStatus = (id) => {
     return request({
       method: "PUT",
-      url: `/${this.COMPONENT_NAME}` + `/change-status/` + id,
+      url: `/${this.COMPONENT_NAME}/change-status/${id}`,
     });
   };
 }

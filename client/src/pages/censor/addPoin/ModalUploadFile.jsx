@@ -5,6 +5,7 @@ import { RandomAddPointAPI } from "../../../apis/censor/random-add-point/random-
 import { SetImport } from "../../../app/reducers/import/import.reducer";
 import { useAppDispatch } from "../../../app/hooks";
 import { convertLongToDate } from "../../util/DateUtil";
+import Dragger from "antd/es/upload/Dragger";
 
 export default function ModalUpLoadFile(props) {
   const {
@@ -98,11 +99,11 @@ export default function ModalUpLoadFile(props) {
       >
         <hr className="border-0 bg-gray-300 mt-3 mb-6" />
         <div style={{ marginTop: "16px", marginBottom: "16px" }}>
-          <Upload.Dragger
-            type="file"
+          <Dragger
             accept=".xlsx,.xls"
             maxCount={1}
             onChange={(e) => handleOnChangeFile(e)}
+            multiple={false}
           >
             {nameFileUpload === "" ? (
               <div>
@@ -114,7 +115,7 @@ export default function ModalUpLoadFile(props) {
             ) : (
               nameFileUpload
             )}
-          </Upload.Dragger>
+          </Dragger>
         </div>
       </Modal>
     </div>

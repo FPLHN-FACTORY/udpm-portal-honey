@@ -51,7 +51,6 @@ export default function Index() {
   useEffect(() => {
     CategoryAPI.fetchAll().then((response) => {
       dispatch(SetCategory(response.data.data.data));
-      console.log(response.data.data.data);
       setTotal(response.data.data.totalPages);
     });
   }, [dispatch]);
@@ -80,19 +79,25 @@ export default function Index() {
         message.success("Xóa thể loại thành công!");
       })
       .catch((error) => {
-        message.error("Lỗi xóa thể loại: " + error.message);
+        message.error("Lỗi xóa thể loại: " + error.response.data.message);
       })
       .finally(() => {
         setConfirmDelete(false);
       });
   };
 
-  const buttonClear = async () => {
+  const buttonClear = () => {
     setSearch("");
     setStatus("");
     setTransaction("");
     setCurrent(1);
-    await fetchData();
+    let filter = {
+      page: current - 1,
+    };
+    CategoryAPI.fetchAll(filter).then((response) => {
+      dispatch(SetCategory(response.data.data.data));
+      setTotal(response.data.data.totalPages);
+    });
   };
 
   const data = useAppSelector(GetCategory);
