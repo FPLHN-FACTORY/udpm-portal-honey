@@ -24,6 +24,7 @@ import com.honeyprojects.entity.Honey;
 import com.honeyprojects.entity.Notification;
 import com.honeyprojects.infrastructure.contant.*;
 import com.honeyprojects.util.ConvertRequestApiidentity;
+import com.honeyprojects.util.DataUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -96,17 +97,16 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     public History addPoint(TeacherAddPointRequest addPointRequest) {
         String idTeacher = udpmHoney.getIdUser();
         Long dateNow = Calendar.getInstance().getTimeInMillis();
-        Optional<Category>category = categoryRepository.findById(addPointRequest.getCategoryId());
-        System.out.println("------------"+category.get().getCategoryStatus());
+        Optional<Category> category = categoryRepository.findById(addPointRequest.getCategoryId());
         HistoryDetail historyDetail = new HistoryDetail();
         History history = new History();
         history.setTeacherId(idTeacher);
         history.setNote(addPointRequest.getNote());
         history.setType(TypeHistory.CONG_DIEM);
         history.setChangeDate(dateNow);
-        if(category.get().getCategoryStatus().equals(CategoryStatus.FREE)){
+        if (category.get().getCategoryStatus().equals(CategoryStatus.FREE)) {
             history.setStatus(HoneyStatus.DA_PHE_DUYET);
-            if (addPointRequest.getHoneyId() == null) {
+            if (DataUtils.isNullObject(addPointRequest.getHoneyId())) {
                 Honey honey = new Honey();
                 honey.setStatus(Status.HOAT_DONG);
                 honey.setHoneyPoint(addPointRequest.getHoneyPoint());
@@ -116,13 +116,13 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
                 historyDetail.setHoneyId(honey.getId());
             } else {
                 Honey honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();
-                honey.setHoneyPoint(addPointRequest.getHoneyPoint()+ honey.getHoneyPoint());
+                honey.setHoneyPoint(addPointRequest.getHoneyPoint() + honey.getHoneyPoint());
                 honeyRepository.save(honey);
                 historyDetail.setHoneyId(honey.getId());
             }
         }
-        else{
-            if (addPointRequest.getHoneyId() == null) {
+        if (category.get().getCategoryStatus().equals(CategoryStatus.ACCEPT)) {
+            if (DataUtils.isNullObject(addPointRequest.getHoneyId())) {
                 Honey honey = new Honey();
                 honey.setStatus(Status.KHONG_HOAT_DONG);
                 honey.setHoneyPoint(0);

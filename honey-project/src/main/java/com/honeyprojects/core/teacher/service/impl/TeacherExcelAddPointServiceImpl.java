@@ -1,37 +1,42 @@
 package com.honeyprojects.core.teacher.service.impl;
 
 import com.honeyprojects.core.admin.model.response.AdminExportCategoryResponse;
+import com.honeyprojects.core.admin.repository.AdHistoryDetailRepository;
 import com.honeyprojects.core.admin.service.ExportExcelServiceService;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.president.model.request.PresidentCreateNotificationDetailAddItemRequest;
 import com.honeyprojects.core.president.model.request.PresidentNotificationAddItemRequest;
+import com.honeyprojects.core.teacher.model.request.TeacherGetPointRequest;
 import com.honeyprojects.core.teacher.model.response.TeacherAddPointDTO;
 import com.honeyprojects.core.teacher.model.response.TeacherCategoryResponse;
 import com.honeyprojects.core.teacher.model.response.TeacherExcelAddPointBO;
+import com.honeyprojects.core.teacher.model.response.TeacherPointResponse;
 import com.honeyprojects.core.teacher.repository.TeacherCategoryRepository;
+import com.honeyprojects.core.teacher.repository.TeacherHistoryDetailRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHoneyRepository;
 import com.honeyprojects.core.teacher.repository.TeacherNotificationDetailRepository;
 import com.honeyprojects.core.teacher.repository.TeacherNotificationRepository;
 import com.honeyprojects.core.teacher.service.TeacherAddPointExcelService;
 import com.honeyprojects.entity.Category;
+import com.honeyprojects.entity.History;
+import com.honeyprojects.entity.HistoryDetail;
+import com.honeyprojects.entity.Honey;
 import com.honeyprojects.entity.Notification;
 import com.honeyprojects.entity.NotificationDetail;
+import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Constants;
+import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.NotificationDetailType;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
+import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import com.honeyprojects.util.DataUtils;
 import com.honeyprojects.util.ExcelUtils;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -43,9 +48,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -76,6 +83,9 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
 
     @Autowired
     private ExportExcelServiceService exportExcelService;
+
+    @Autowired
+    private TeacherHistoryDetailRepository historyDetailRepository;
 
     @Override
     public Boolean importFromExcel(MultipartFile file) {
@@ -169,6 +179,7 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
 //        }
         return false;
     }
+
     private Notification createNotification(String idStudent) {
         String title = Constants.TITLE_NOTIFICATION_SYSTEM;
         PresidentNotificationAddItemRequest request = new PresidentNotificationAddItemRequest(title, idStudent, NotificationType.HE_THONG, NotificationStatus.CHUA_DOC);
@@ -331,7 +342,7 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
     }
 
     private void saveImportData(List<TeacherAddPointDTO> lstImportUser) {
-         String idTeacher = udpmHoney.getIdUser();
+        String idTeacher = udpmHoney.getIdUser();
         try {
             for (TeacherAddPointDTO userDTO : lstImportUser) {
 //                if (response.getStudentId() == null || response.getCategoryId() == null) {
@@ -382,10 +393,66 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
                     List<TeacherCategoryResponse> categories = categoryRepository.getCategoriesByNames(honeyMap.keySet());
                     for (TeacherCategoryResponse category : categories) {
                         String categoryPoint = category.getName();
+                        String categoryId = category.getId();
+                        String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
+                        String enumCategoryACCEPT = String.valueOf(CategoryStatus.ACCEPT.ordinal());
+
+                        TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
+                        getPointRequest.setStudentId(simpleResponse.getId());
+                        getPointRequest.setCategoryId(categoryId);
+                        TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
+
+                        HistoryDetail historyDetail = new HistoryDetail();
+                        History history = new History();
+                        history.setTeacherId(idTeacher);
+                        history.setType(TypeHistory.CONG_DIEM);
+                        history.setChangeDate(new Date().getTime());
+
                         if (honeyMap.containsKey(categoryPoint)) {
-                            //tạo lịch sử detail
-//                            stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được hệ thống tặng: " + honeyMap.get(categoryPoint) + " " + category.getName() + ", ");
-//                            createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
+                            if (category.getStatus().equals(enumCategoryFREE)) {
+                                history.setStatus(HoneyStatus.DA_PHE_DUYET);
+                                if (DataUtils.isNullObject(teacherPointResponse)) {
+                                    Honey honey = new Honey();
+                                    honey.setStatus(Status.HOAT_DONG);
+                                    honey.setHoneyPoint(honeyMap.get(categoryPoint));
+                                    honey.setStudentId(simpleResponse.getId());
+                                    honey.setHoneyCategoryId(categoryId);
+                                    honeyRepository.save(honey);
+                                    historyDetail.setHoneyId(honey.getId());
+                                } else {
+                                    Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
+                                    honey.setHoneyPoint(honeyMap.get(categoryPoint) + honey.getHoneyPoint());
+                                    honeyRepository.save(honey);
+                                    historyDetail.setHoneyId(honey.getId());
+                                }
+                            }
+                            if (category.getStatus().equals(enumCategoryACCEPT)) {
+                                if (DataUtils.isNullObject(teacherPointResponse)) {
+                                    Honey honey = new Honey();
+                                    honey.setStatus(Status.KHONG_HOAT_DONG);
+                                    honey.setHoneyPoint(0);
+                                    honey.setStudentId(simpleResponse.getId());
+                                    honey.setHoneyCategoryId(categoryId);
+                                    honeyRepository.save(honey);
+                                    historyDetail.setHoneyId(honey.getId());
+                                } else {
+                                    Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
+                                    historyDetail.setHoneyId(honey.getId());
+                                }
+                                history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+                                Notification notification = new Notification();
+                                notification.setTitle("Yêu cầu cộng " + honeyMap.get(categoryPoint) + " mật ong loại " + categoryPoint + " cho sinh viên");
+                                notification.setStatus(NotificationStatus.CHUA_DOC);
+                                notification.setType(NotificationType.CHO_PHE_DUYET);
+                                notification.setStudentId(history.getId());
+                                teacherNotificationRepository.save(notification);
+                            }
+                            historyRepository.save(history);
+
+                            historyDetail.setHistoryId(history.getId());
+                            historyDetail.setHoneyPoint(honeyMap.get(categoryPoint));
+                            historyDetail.setStudentId(simpleResponse.getId());
+                            historyDetailRepository.save(historyDetail);
                         }
                     }
                 }

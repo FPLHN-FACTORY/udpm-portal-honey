@@ -1,9 +1,9 @@
-package com.honeyprojects.core.admin.repository;
+package com.honeyprojects.core.president.repository;
 
 import com.honeyprojects.repository.ArchiveRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface AdArchiveRepository extends ArchiveRepository {
+public interface PresidentArchiveRepository extends ArchiveRepository {
     @Query(value = """
             SELECT id
             FROM archive
