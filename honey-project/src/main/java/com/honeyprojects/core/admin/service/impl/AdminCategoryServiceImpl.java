@@ -5,6 +5,7 @@ import com.honeyprojects.core.admin.model.request.AdminCategoryRequest;
 import com.honeyprojects.core.admin.model.request.AdminCreateCategoryRequest;
 import com.honeyprojects.core.admin.model.request.AdminUpdateCategoryRequest;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
+import com.honeyprojects.core.admin.repository.AdGiftDetailRepository;
 import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
 import com.honeyprojects.core.admin.service.AdminCategoryService;
 import com.honeyprojects.core.common.base.PageableObject;
@@ -48,6 +49,9 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
 
     @Autowired
     private CloudinaryUploadImages cloudinaryUploadImages;
+
+    @Autowired
+    private AdGiftDetailRepository adGiftDetailRepository;
 
     @Override
     public PageableObject<AdminCategoryResponse> getAllCategoryByAdmin(AdminCategoryRequest request) {
@@ -254,6 +258,13 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     @Override
     @Transactional
     public Category updateCategoryByCategory(String id) {
+        if (adGiftDetailRepository.findAllByCategoryId(id).size() != 0) {
+            throw new RestApiException("Thể loại đang được sử dụng không thể xóa.");
+        }
+
+
+
+
         StringBuilder contentLogger = new StringBuilder();
         LoggerFunction loggerObject = new LoggerFunction();
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());

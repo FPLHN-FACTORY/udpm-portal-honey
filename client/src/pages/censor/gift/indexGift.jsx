@@ -91,7 +91,7 @@ export default function IndexGift() {
         message.success("Xóa vật phẩm thành công!");
       })
       .catch((error) => {
-        message.error("Lỗi xóa quà: " + error.message);
+        message.error("Lỗi xóa vật phẩm: " + error.response.data.message);
       })
       .finally(() => {
         setConfirmDelete(false);
@@ -161,7 +161,7 @@ export default function IndexGift() {
           case 1:
             return "Vật phẩm nâng cấp";
           case 2:
-            return "Dụng cụ";
+            return "Danh hiệu";
           default:
             return "Không xác định";
         }

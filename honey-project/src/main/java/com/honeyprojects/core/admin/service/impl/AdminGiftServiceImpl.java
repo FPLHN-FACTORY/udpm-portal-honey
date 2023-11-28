@@ -5,7 +5,13 @@ import com.honeyprojects.core.admin.model.request.AdminGiftRequest;
 import com.honeyprojects.core.admin.model.request.AdminUpdateGiftRequest;
 import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
 import com.honeyprojects.core.admin.model.response.CensorGiftSelectResponse;
+import com.honeyprojects.core.admin.repository.AdArchiveGiftRepository;
+import com.honeyprojects.core.admin.repository.AdAuctionRepository;
+import com.honeyprojects.core.admin.repository.AdChestGiftRepository;
+import com.honeyprojects.core.admin.repository.AdGiftDetailRepository;
 import com.honeyprojects.core.admin.repository.AdGiftRepository;
+import com.honeyprojects.core.admin.repository.AdHistoryDetailRepository;
+import com.honeyprojects.core.admin.repository.AdUpgradeRateGiftRepository;
 import com.honeyprojects.core.admin.service.AdminGiftService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Gift;
@@ -14,6 +20,7 @@ import com.honeyprojects.infrastructure.contant.ExpiryGift;
 import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TransactionGift;
 import com.honeyprojects.infrastructure.contant.TypeGift;
+import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.infrastructure.logger.entity.LoggerFunction;
 import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
 import com.honeyprojects.util.CloudinaryUtils;
@@ -49,6 +56,24 @@ public class AdminGiftServiceImpl implements AdminGiftService {
     @Autowired
     private CloudinaryUploadImages cloudinaryUploadImages;
 
+    @Autowired
+    private AdArchiveGiftRepository adArchiveGiftRepository;
+
+    @Autowired
+    private AdAuctionRepository adAuctionRepository;
+
+    @Autowired
+    private AdChestGiftRepository adChestGiftRepository;
+
+    @Autowired
+    private AdHistoryDetailRepository adHistoryDetailRepository;
+
+    @Autowired
+    private AdUpgradeRateGiftRepository adUpgradeRateGiftRepository;
+
+    @Autowired
+    private AdGiftDetailRepository adGiftDetailRepository;
+
     @Override
     public PageableObject<AdminGiftResponse> getAllCategoryByAdmin(AdminGiftRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
@@ -68,16 +93,16 @@ public class AdminGiftServiceImpl implements AdminGiftService {
 
     @Override
     public List<AdminGiftResponse> getAllListGift() {
-        StringBuilder contentLogger = new StringBuilder();
-        LoggerFunction loggerObject = new LoggerFunction();
-        loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
-        contentLogger.append("Lấy tất cả quà đang hoạt động 2.");
-        loggerObject.setContent(contentLogger.toString());
-        try {
-            rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//        StringBuilder contentLogger = new StringBuilder();
+//        LoggerFunction loggerObject = new LoggerFunction();
+//        loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
+//        contentLogger.append("Lấy tất cả quà đang hoạt động 2.");
+//        loggerObject.setContent(contentLogger.toString());
+//        try {
+//            rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
         return adGiftRepository.getAllListResponse();
     }
 
@@ -98,7 +123,7 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         String code = String.format("G%05d", number);
         Gift gift = new Gift();
         gift.setCode(code);
-        gift.setName(request.getName());
+        gift.setName(request.getName().trim());
         gift.setStatus(StatusGift.values()[request.getStatus()]);
         gift.setQuantity(request.getQuantity());
         gift.setLimitQuantity(request.getLimitQuantity());
@@ -145,7 +170,7 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         Optional<Gift> optional = adGiftRepository.findById(id);
         Gift existingGift = optional.get();
 
-        existingGift.setName(request.getName());
+        existingGift.setName(request.getName().trim());
         existingGift.setStatus(StatusGift.values()[request.getStatus()]);
         existingGift.setQuantity(request.getQuantity());
         existingGift.setLimitQuantity(request.getLimitQuantity());
@@ -213,7 +238,24 @@ public class AdminGiftServiceImpl implements AdminGiftService {
     @Override
     @Transactional
     public void deleteById(String id) {
+        if (adArchiveGiftRepository.findAllByGiftId(id).size() != 0) {
+            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
+        }
+        if (adAuctionRepository.findAllByGiftId(id).size() != 0) {
+            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
+        }
+        if (adChestGiftRepository.findAllByGiftId(id).size() != 0) {
+            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
+        }
+        if (adHistoryDetailRepository.findAllByGiftId(id).size() != 0) {
+            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
+        }
+        if (adUpgradeRateGiftRepository.findAllByIdGift(id).size() != 0) {
+            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
+        }
+
         adGiftRepository.deleteById(id);
+        adGiftDetailRepository.deleteAllByGiftId(id);
         StringBuilder contentLogger = new StringBuilder();
         LoggerFunction loggerObject = new LoggerFunction();
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
@@ -228,6 +270,22 @@ public class AdminGiftServiceImpl implements AdminGiftService {
     }
 
     public Gift updateStatusGift(String id) {
+        if (adArchiveGiftRepository.findAllByGiftId(id).size() != 0) {
+            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
+        }
+        if (adAuctionRepository.findAllByGiftId(id).size() != 0) {
+            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
+        }
+        if (adChestGiftRepository.findAllByGiftId(id).size() != 0) {
+            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
+        }
+        if (adHistoryDetailRepository.findAllByGiftId(id).size() != 0) {
+            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
+        }
+        if (adUpgradeRateGiftRepository.findAllByIdGift(id).size() != 0) {
+            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
+        }
+
         StringBuilder contentLogger = new StringBuilder();
         LoggerFunction loggerObject = new LoggerFunction();
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());

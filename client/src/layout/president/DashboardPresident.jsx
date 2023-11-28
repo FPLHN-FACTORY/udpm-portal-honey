@@ -38,7 +38,13 @@ function DashboardPresident({ children }) {
   },[location])
 
   let { pathname } = useLocation();
-  pathname = pathname.replace("/", "");
+  pathname = pathname.replace("/", ""); 
+
+  let title = "";
+  console.log(pathname);
+  if (pathname.includes("president/add-item")) {
+    title = "Cộng mật ong";
+  }
   const [collapsed, setCollapsed] = useState(false);
   function getItem(label, key, icon, children) {
     return {
@@ -157,6 +163,17 @@ function DashboardPresident({ children }) {
                   <button className="buttonSlider mobile" onClick={openDrawer}>
                     {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                   </button>
+                  <h1
+                    style={{
+                      marginLeft: "20px",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      maxWidth: "200px",
+                    }}
+                  >
+                    {title}
+                  </h1>
                 </Col>
               </Row>
             </Col>

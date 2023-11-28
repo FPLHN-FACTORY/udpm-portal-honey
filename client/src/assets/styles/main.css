@@ -42,7 +42,9 @@ body {
   font-weight: 400;
   font-family: open sans, Helvetica, Arial, sans-serif;
 }
-
+.ant-upload-list-item-actions {
+  display: none
+}
 :where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper
   .ant-table-thead
   > tr
