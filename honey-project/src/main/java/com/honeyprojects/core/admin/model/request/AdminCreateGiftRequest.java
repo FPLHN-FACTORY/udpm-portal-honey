@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-@ToString
 public class AdminCreateGiftRequest extends PageableRequest {
 
     private String code;

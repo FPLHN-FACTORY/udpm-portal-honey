@@ -284,9 +284,7 @@
 
 .chest__detail__button {
   margin: 10px auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
   background: linear-gradient(to top, rgba(60, 60, 60, 0.7), #ae691fd9);
   border: 1px solid #4c4c4c33;
   border-radius: 10px 0 10px 0;

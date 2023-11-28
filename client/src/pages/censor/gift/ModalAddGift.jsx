@@ -322,6 +322,7 @@ const ModalThem = (props) => {
           limitSoLuong: 1,
           note: "",
           numberDateEnd: 1,
+          checkTypeDate: 2
         }}
         autoComplete="off"
       >
@@ -364,7 +365,7 @@ const ModalThem = (props) => {
                 {
                   max: 100,
                   message: "Tên vật phẩm phải tối đa 100 kí tự",
-                },
+                }
               ]}
             >
               <Input />
@@ -444,7 +445,7 @@ const ModalThem = (props) => {
               </Form.Item>
             )}
 
-            {selectedCategories.map((categoryId) => {
+            {selectType !== 2 && selectedCategories.map((categoryId) => {
               const category = listCategory.find(
                 (item) => item.id === categoryId
               );
@@ -523,7 +524,7 @@ const ModalThem = (props) => {
                     {
                       validator: (_, value) => {
                         const regex = /^[0-9]+$/;
-                        if (!regex.test(value)) {
+                        if (!regex.test(value) || value === 0) {
                           return Promise.reject(
                             new Error("Vui lòng nhập một số nguyên dương")
                           );

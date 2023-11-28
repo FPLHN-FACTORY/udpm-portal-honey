@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { message, Modal, Form, Input, InputNumber, Slider, Select } from "antd";
+import { message, Modal, Form, Input, Slider, Select, Col, InputNumber, Row } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 import { SetGiftArchive } from "../../../app/reducers/archive-gift/gift-archive.reducer";
 import { SetArchiveCountGift } from "../../../app/reducers/archive-gift/archive-count-gift.reducer";
+import { Option } from "antd/es/mentions";
 
 const UsingGift = (props) => {
   const { archivegift, filter } = props;
@@ -64,16 +65,18 @@ const UsingGift = (props) => {
 
   const [soLuong, setSoLuong] = useState(1);
 
-  const [loading, setLoading] = useState(false);
 
   const onChange = (value) => {
-    const classStudent = dataClass.filter(el => el.classId = value)[0];
+    const classStudent = dataClass.filter(el => el.classId === value)[0];
     form.setFieldValue("maMon", classStudent.subjectName)
     form.setFieldValue("emailGV", classStudent.teacherEmail)
 
-    ArchiveAPI.getScoreClass({classId: classStudent.classId, subjectId: classStudent.subjectId}).then((response) => {
-      setDataScore(response.data)
+    ArchiveAPI.getScoreClass({ classId: classStudent.classId, subjectId: classStudent.subjectId }).then((response) => {
+      setDataScore(response.data);
     })
+  };
+  const onChangeInput = (newValue) => {
+    setSoLuong(newValue);
   };
 
   // Filter `option.label` match the user type `input`
@@ -87,8 +90,7 @@ const UsingGift = (props) => {
         title="Sử dụng quà tặng"
         visible={isModalOpen}
         onOk={handleOk}
-        onCancel={handleCancel}
-        okButtonProps={{ loading: loading }}>
+        onCancel={handleCancel}>
         <hr className="border-0 bg-gray-300 mt-3 mb-6" />
         <Form form={form}
             labelCol={{
@@ -108,11 +110,16 @@ const UsingGift = (props) => {
               },
             ]}>
             <Select
-              placeholder="Vui lòng chọn giảng viên"
-              onChange={onChange}
-              key={"classId"}
+              placeholder="Vui lòng nhập mã lớp!"
+              showSearch
+              optionFilterProp="children"
+              onChange={(el) => onChange(el)}
               filterOption={filterOption}
-              options={dataClass.map(option => ({ value: option.classId, label: option.className }))}
+              options={dataClass.map(option => ({
+                value: option.classId,
+                label: option.className
+              }
+              ))}
             />
           </Form.Item>
           <Form.Item
@@ -153,10 +160,15 @@ const UsingGift = (props) => {
             ]}>
             <Select
               showSearch
+              name="dauDiemSelect"
               placeholder="Vui lòng chọn đầu điểm"
               filterOption={filterOption}
-              options={dataScore.map(option => ({ value: option.id, label: option.name }))}
-            />
+              key={"dauDiemSelect"}
+            >
+              {dataScore.map(option => (
+                <Option value={option.id} key={option.id} > { option.name }</Option>
+              ))}
+            </Select>
           </Form.Item>
 
           <Form.Item
@@ -167,20 +179,29 @@ const UsingGift = (props) => {
                 required: true,
                 message: "Vui lòng không được để trống số lượng"
               },
-              {
-                min: 0,
-                message: "Vui lòng nhập số lượng lớn hơn 0"
-              }
             ]}
           >
-            <Slider
-              value={soLuong}
-              onChange={(e) => {
-                setSoLuong(e);
-              }}
-              max={parseInt(archivegift.quantity)}
-              min={0}
-            />
+            <Row>
+              <Col span={14}>
+                <Slider
+                  value={typeof soLuong === 'number' ? soLuong : 0}
+                  onChange={(e) => {
+                    setSoLuong(e);
+                  }}
+                  max={parseInt(archivegift.quantity) + 1}
+                  min={1}
+                />
+              </Col>
+              <Col span={4}>
+                <InputNumber
+                  max={parseInt(archivegift.quantity) + 1}
+                  min={1}
+                  style={{ margin: '0 0 0 16px' }}
+                  value={soLuong}
+                  onChange={onChangeInput}
+                />
+              </Col>
+            </Row>
           </Form.Item>
         </Form>
       </Modal>

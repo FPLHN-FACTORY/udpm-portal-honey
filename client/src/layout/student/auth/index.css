@@ -198,3 +198,22 @@
 .message-request-transaction>div {
   margin-top: 5px;
 }
+
+/* Thêm hiệu ứng click vào phần tử */
+@keyframes click-animation {
+  to {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+.click-effect {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border: 1px solid transparent;
+  background-image: url('/public/logo-udpm.png');
+  background-size: cover;
+  border-radius: 50%;
+  animation: click-animation 0.5s ease-out;
+}

@@ -81,8 +81,8 @@ export default function ModalImportExcel(props) {
 
   const handleRemoveFile = () => {
     setNameFile("");
-    setListStudentPoint([]);
-    setListStudentItem([]);
+    setListStudentPoint(dataRandomPoint);
+    setListStudentItem(dataRandomItem);
     setFile(null);
     setOpen(false);
   };
