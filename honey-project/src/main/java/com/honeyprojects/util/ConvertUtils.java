@@ -2,6 +2,9 @@ package com.honeyprojects.util;
 
 
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public final class ConvertUtils {
@@ -37,9 +40,9 @@ public final class ConvertUtils {
     }
 
     public static String convertDateNowToString() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date currentDate = new Date();
-        String formattedDate = simpleDateFormat.format(currentDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        ZonedDateTime currentDateTime = ZonedDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        String formattedDate = currentDateTime.format(formatter);
         return formattedDate;
     }
 
