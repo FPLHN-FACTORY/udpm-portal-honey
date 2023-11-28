@@ -1,11 +1,8 @@
 package com.honeyprojects.util;
 
-
-import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public final class ConvertUtils {
     public static String removeVietnameseChars(String input) {
