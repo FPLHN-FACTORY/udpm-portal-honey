@@ -76,19 +76,24 @@ const ModalAddGiftToChest = (props) => {
           <PlusCircleOutlined className="icon" style={{ color: "white" }} />
         </Button>
       </Tooltip>
+      {modalOpen && 
       <Modal
         title="Vật phẩm"
         open={modalOpen}
         onCancel={handleCancel}
         onOk={handleOk}
       >
-        <Table
+          <Table
+            className="text-center"
           rowSelection={rowSelection}
           columns={columns}
           dataSource={data}
-          rowKey="id"
+          rowKey={"id"}
+          pagination={{
+            pageSize: 5,
+          }}
         />
-      </Modal>
+      </Modal>}
     </>
   );
 };

@@ -15,6 +15,8 @@ import java.util.List;
 @Repository
 public interface AdAuctionRepository extends AuctionRepository {
 
+    List<Auction> findAllByGiftId(String giftId);
+
     @Query(value = """
              select *
              from auction
@@ -48,7 +50,7 @@ public interface AdAuctionRepository extends AuctionRepository {
             JOIN category ca ON ca.id = a.honey_category_id 
             WHERE (:#{#req.nameGift} IS NULL OR :#{#req.nameGift} LIKE '' OR g.name LIKE %:#{#req.nameGift}%) 
             AND (:#{#req.type} IS NULL OR :#{#req.type} LIKE '' OR g.type = :#{#req.type}) 
-            AND (:#{#req.startingPrice} IS NULL OR :#{#req.startingPrice} LIKE ''  OR a.starting_price = :#{#req.startingPrice}) 
+            AND (:#{#req.startingPrice} IS NULL OR :#{#req.startingPrice} LIKE ''  OR a.starting_price >= :#{#req.startingPrice}) 
             AND (:#{#req.category} IS NULL OR :#{#req.category} LIKE '' OR ca.id LIKE %:#{#req.category}%)
             """, countQuery = """
             SELECT COUNT(a.id)
@@ -57,7 +59,7 @@ public interface AdAuctionRepository extends AuctionRepository {
             JOIN category ca ON ca.id = a.honey_category_id 
             WHERE (:#{#req.nameGift} IS NULL OR :#{#req.nameGift} LIKE '' OR g.name LIKE %:#{#req.nameGift}%) 
             AND (:#{#req.type} IS NULL OR :#{#req.type} LIKE '' OR g.type = :#{#req.type}) 
-            AND (:#{#req.startingPrice} IS NULL OR :#{#req.startingPrice} LIKE ''  OR a.starting_price = :#{#req.startingPrice}) 
+            AND (:#{#req.startingPrice} IS NULL OR :#{#req.startingPrice} LIKE ''  OR a.starting_price >= :#{#req.startingPrice}) 
             AND (:#{#req.category} IS NULL OR :#{#req.category} LIKE '' OR ca.id LIKE %:#{#req.category}%)
             """, nativeQuery = true)
     Page<AdminAuctionResponse> findAllAuction(@Param("req") AdminFindAuctionRequest req, Pageable pageable);

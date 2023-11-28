@@ -40,6 +40,16 @@ function DashboardTeacher({ children }) {
 
   let { pathname } = useLocation();
   pathname = pathname.replace("/", "");
+
+  let title = "";
+  console.log(pathname);
+  if (pathname.includes("teacher/add-point")) {
+    title = "Cộng mật ong";
+  }
+  if (pathname.includes("teacher/convertion-honey")) {
+    title = "Yêu cầu đổi quà";
+  }
+
   const [collapsed, setCollapsed] = useState(false);
   function getItem(label, key, icon, children) {
     return {
@@ -173,6 +183,17 @@ function DashboardTeacher({ children }) {
                   <button className="buttonSlider mobile" onClick={openDrawer}>
                     {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                   </button>
+                  <h1
+                    style={{
+                      marginLeft: "20px",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      maxWidth: "200px",
+                    }}
+                  >
+                    {title}
+                  </h1>
                 </Col>
               </Row>
             </Col>

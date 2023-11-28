@@ -12,6 +12,8 @@ import java.util.List;
 @Repository
 public interface AdChestGiftRepository extends ChestGiftRepository {
 
+    List<ChestGift> findAllByGiftId(String giftId);
+
     @Query(value = """
             SELECT cg.id, cg.chest_id, cg.created_date, cg.last_modified_date, cg.gift_id FROM chest_gift cg WHERE cg.chest_id = :chestId
             """, nativeQuery = true)

@@ -8,8 +8,6 @@ import {
   Card,
   Input,
   Tooltip,
-  Row,
-  Col,
 } from "antd";
 import {
   PlusOutlined,
@@ -95,7 +93,8 @@ export default function ChestGift() {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
-      render: (text, record, index) => index + 1,
+      width: 60,
+      align: "center",
     },
     {
       title: "Tên",
@@ -104,8 +103,9 @@ export default function ChestGift() {
       render: (text) => <span>{text}</span>,
     },
     {
-      title: () => <div>Hành động</div>,
+      title: "Hành động",
       key: "action",
+      width: 60,
       render: (_, record) => (
         <Space size="small">
           <Tooltip title="Cập nhật">

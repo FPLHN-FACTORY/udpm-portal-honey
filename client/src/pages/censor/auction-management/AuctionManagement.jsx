@@ -21,14 +21,12 @@ import {
   faPlus,
   faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { useParams } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useEffect, useState } from "react";
 import { AuctionAPI } from "../../../apis/censor/auction/auction.api";
 import {
   GetAuction,
   SetAuction,
-  DeleteAuction,
   ChangeAuctionStatus,
 } from "../../../app/reducers/auction/auction.reducer";
 import ModalCreateAuction from "./modal-create/ModalCreateAuction.jsx";
@@ -37,14 +35,9 @@ import { CountdownTimer } from "../../util/CountdownTimer";
 
 export default function AuctionMangement() {
   const [auction, setAuction] = useState(null);
-  const [name, setName] = useState("");
-  const [status, setStatus] = useState("");
-  const [honeyCategoryId, setHoneyCategoryId] = useState("");
   const [listCategorySearch, setListCategorySearch] = useState([]);
-  const { id } = useParams();
   const [current, setCurrent] = useState(0);
   const [total, setTotal] = useState(0);
-  const [size, setSize] = useState(10);
   const dispatch = useAppDispatch();
   const [modalCreate, setModalCreate] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
@@ -58,19 +51,19 @@ export default function AuctionMangement() {
 
   const listType = [
     {
-      label: "Quà tặng ",
+      label: "Quà tặng",
       value: 0,
     },
     {
-      label: "Vật phẩm ",
+      label: "Vật phẩm",
       value: 1,
     },
     {
-      label: "Dụng cụ ",
+      label: "Dụng cụ",
       value: 2,
     },
     {
-      label: "Danh hiệu ",
+      label: "Danh hiệu",
       value: 3,
     },
   ];
@@ -80,12 +73,10 @@ export default function AuctionMangement() {
     return () => {
       dispatch(SetAuction([]));
     };
-  }, [current]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current, searchParams]);
 
   useEffect(() => {
-    setName("");
-    setStatus("");
-    setHoneyCategoryId("");
     fetchDataCategory();
   }, []);
 
@@ -98,7 +89,7 @@ export default function AuctionMangement() {
     const data = {
       ...searchParams,
       page: current,
-      size: size,
+      size: 2
     };
     AuctionAPI.fetchAll(data).then((response) => {
       dispatch(SetAuction(response.data.data.data));
@@ -120,7 +111,6 @@ export default function AuctionMangement() {
       dataIndex: "stt",
       key: "stt",
       align: "center",
-      render: (text, record, index) => index + 1,
     },
     {
       title: "Tên phòng",
@@ -150,7 +140,6 @@ export default function AuctionMangement() {
       dataIndex: "toDate",
       key: "toDate",
       align: "center",
-      width: "17%",
       render: (_, record) => {
         if (record.status === "HOAT_DONG") {
           return (
@@ -217,7 +206,7 @@ export default function AuctionMangement() {
     },
   ];
 
-  const buttonSearch = async () => {
+  const buttonSearch = () => {
     const values = form.getFieldsValue();
     setSearchParams({
       nameGift: values.nameGift,
@@ -228,7 +217,7 @@ export default function AuctionMangement() {
     setCurrent(0);
   };
 
-  const buttonClear = async () => {
+  const buttonClear = () => {
     form.resetFields();
     setSearchParams({
       nameGift: "",
@@ -245,11 +234,6 @@ export default function AuctionMangement() {
   const buttonCreateCancel = () => {
     setModalCreate(false);
     setAuction(null);
-  };
-
-  const buttonUpdate = (record) => {
-    setModalUpdate(true);
-    setAuction(record);
   };
 
   const buttonUpdateCancel = () => {
@@ -295,7 +279,7 @@ export default function AuctionMangement() {
                         e.preventDefault();
                       }
                     }}
-                    style={{ textAlign: "center", height: "30px" }}
+                    style={{ height: "30px" }}
                     placeholder="Tên vật phẩm"
                   />
                 </Form.Item>
@@ -303,9 +287,11 @@ export default function AuctionMangement() {
               <Col span={6}>
                 <Form.Item name="category">
                   <Select
-                    style={{ textAlign: "center" }}
                     placeholder="Chọn loại mật"
                   >
+                  <Select.Option value={""}>
+                    Chọn tất cả
+                  </Select.Option>
                     {listCategorySearch?.map((item) => {
                       return (
                         <Select.Option value={item.id}>
@@ -319,9 +305,11 @@ export default function AuctionMangement() {
               <Col span={6}>
                 <Form.Item name="type">
                   <Select
-                    style={{ textAlign: "center" }}
                     placeholder="Chọn loại vật phẩm"
                   >
+                  <Select.Option value={""}>
+                    Chọn tất cả
+                  </Select.Option>
                     {listType?.map((item) => {
                       return (
                         <Select.Option value={item.value}>
@@ -337,7 +325,6 @@ export default function AuctionMangement() {
                   <Input
                     type="number"
                     style={{
-                      textAlign: "center",
                       height: "30px",
                       width: "100%",
                     }}
@@ -358,7 +345,7 @@ export default function AuctionMangement() {
           <Row>
             <Col span={12}>
               <Button
-                onClick={buttonSearch}
+                onClick={() => buttonSearch()}
                 style={{
                   marginRight: "8px",
                   backgroundColor: "rgb(55, 137, 220)",
@@ -438,30 +425,38 @@ export default function AuctionMangement() {
             pagination={false}
           />
           <br></br>
-          <div className="pagination__box">
-            <Pagination
-              simple
-              onChange={(value) => {
-                setCurrent(value - 1);
-              }}
-              current={current + 1}
-              total={total * size}
-            />
-          </div>
+          {
+            total > 1 && 
+            <div className="pagination__box">
+              <Pagination
+                simple
+                onChange={(value) => {
+                  setCurrent(value - 1);
+                }}
+                current={current + 1}
+                total={total * 10}
+              />
+            </div>
+          }
         </div>
       </Card>
-
-      <ModalCreateAuction
-        visible={modalCreate}
-        onCancel={buttonCreateCancel}
-        fetchAllData={fetchData}
-      />
-      <ModalUpdateAuction
-        visible={modalUpdate}
-        onCancel={buttonUpdateCancel}
-        auction={auction}
-        fetchAllData={fetchData}
-      />
+      {
+        modalCreate && 
+          <ModalCreateAuction
+            visible={modalCreate}
+            onCancel={buttonCreateCancel}
+            fetchAllData={fetchData}
+          />
+      }
+      {
+        modalUpdate && 
+          <ModalUpdateAuction
+            visible={modalUpdate}
+            onCancel={buttonUpdateCancel}
+            auction={auction}
+            fetchAllData={fetchData}
+          />
+      }
     </div>
   );
 }

@@ -235,48 +235,57 @@ const ModalThem = (props) => {
               ? formValues.numberDateEnd
               : null,
         };
-        GiftAPI.create(dataCreate)
-          .then((result) => {
-            selectedCategories.forEach((categoryId) => {
-              const category = listCategory.find(
-                (item) => item.id === categoryId
-              );
-              const honeyValue = categoryQuantities[category.name];
+        
+        Modal.confirm({
+          title: "Bạn có chắc chắn muốn cập nhật dữ liệu không?",
+          onOk: () => {
+              GiftAPI.create(dataCreate)
+                .then((result) => {
+                  selectedCategories.forEach((categoryId) => {
+                    const category = listCategory.find(
+                      (item) => item.id === categoryId
+                    );
+                    const honeyValue = categoryQuantities[category.name];
 
-              GiftDetail.create({
-                giftId: result.data.data.id,
-                categoryId: categoryId,
-                honey: honeyValue,
-              })
-                .then(() => {
+                    GiftDetail.create({
+                      giftId: result.data.data.id,
+                      categoryId: categoryId,
+                      honey: honeyValue,
+                    })
+                      .then(() => {
+                        fetchData();
+                      })
+                      .catch((err) => {
+                        message.error("Lỗi hệ thống !!!");
+                      });
+                  });
+
+                  dispatch(AddGift(result.data.data));
+                  message.success("Thành công!");
                   fetchData();
+                  setModalOpen(false);
+                  form.resetFields();
+                  const newGift = {
+                    id: result.data.data.id,
+                    name: result.data.data.name,
+                    status: result.data.data.status,
+                    image: image,
+                    quantity: quantity,
+                    limitQuantity: limitSL,
+                    type: result.data.data.type,
+                    honey: result.data.data.honey,
+                    honeyCategoryId: result.data.data.honeyCategoryId,
+                  };
+                  onSave && onSave(newGift);
                 })
                 .catch((err) => {
-                  message.error("Lỗi hệ thống !!!");
+                  message.error("Lỗi: " + err.message);
                 });
-            });
 
-            dispatch(AddGift(result.data.data));
-            message.success("Thành công!");
-            fetchData();
-            setModalOpen(false);
-            form.resetFields();
-            const newGift = {
-              id: result.data.data.id,
-              name: result.data.data.name,
-              status: result.data.data.status,
-              image: image,
-              quantity: quantity,
-              limitQuantity: limitSL,
-              type: result.data.data.type,
-              honey: result.data.data.honey,
-              honeyCategoryId: result.data.data.honeyCategoryId,
-            };
-            onSave && onSave(newGift);
+          },
+          okText: "Đồng ý",
+          cancelText: "Hủy"
           })
-          .catch((err) => {
-            message.error("Lỗi: " + err.message);
-          });
       })
       .catch(() => {
         message.error("Vui lòng điền đầy đủ thông tin.");
@@ -365,7 +374,17 @@ const ModalThem = (props) => {
                 {
                   max: 100,
                   message: "Tên vật phẩm phải tối đa 100 kí tự",
-                }
+                },
+                {
+                  validator: (_, value) => {
+                    if ((value + "").trim().length === 0) {
+                      return Promise.reject(
+                        new Error("Tên Quà không để trống")
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
               ]}
             >
               <Input />
