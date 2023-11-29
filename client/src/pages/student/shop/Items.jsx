@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { Button, Col, InputNumber, Modal, message } from "antd";
 import React, { memo, useEffect } from "react";
 import { useState } from "react";
@@ -32,6 +33,10 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
       setInitialQuantity(selectedConversion.quantity);
     }
   }, [selectedConversion]);
+
+  useEffect(() => {
+    setSelectedConversion(null)
+  }, [filteredItem]);
 
   useEffect(() => {
     fechUserApiById();
