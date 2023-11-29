@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { Button, Col, InputNumber, Modal, message } from "antd";
 import React, { memo, useEffect } from "react";
 import { useState } from "react";
@@ -6,19 +7,6 @@ import "./shop-gift.css";
 import { ResquestConversion } from "../../../apis/user/ResquestConversiton/ResquestConversion.api";
 import { StarTwoTone } from "@ant-design/icons";
 
-function ImageRenderer({ image }) {
-  if (image) {
-    return (
-      <img
-        src={image}
-        style={{ width: "100px", height: "100px" }}
-        alt="Hình ảnh"
-      />
-    );
-  } else {
-    return <div>Chưa có ảnh</div>; // Xử lý trường hợp không có hình ảnh
-  }
-}
 const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
   const [selectedConversion, setSelectedConversion] = useState(null);
   const [fillUserApi, setFillUserApi] = useState([]);
@@ -41,6 +29,9 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
   };
   useEffect(() => {
     fechUserApiById();
+    return (() => {
+      setSelectedConversion(null)
+    })
   }, []);
 
   useEffect(() => {
@@ -48,6 +39,10 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
       setInitialQuantity(selectedConversion.quantity);
     }
   }, [selectedConversion]);
+
+  useEffect(() => {
+    setSelectedConversion(null)
+  }, [filteredConversions]);
 
   const fechUserApiById = () => {
     ResquestConversion.getUserAPiByid().then((response) => {

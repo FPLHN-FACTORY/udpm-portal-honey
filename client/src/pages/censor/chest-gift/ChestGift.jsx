@@ -8,6 +8,8 @@ import {
   Card,
   Input,
   Tooltip,
+  Popconfirm,
+  message,
 } from "antd";
 import {
   PlusOutlined,
@@ -22,9 +24,9 @@ import { ChestAPI } from "../../../apis/censor/chest/chest.api";
 import ModalAdd from "./ModalCreateChest";
 import ModalAddGiftToChest from "./ModalAddGiftsToChest";
 import ModalDetail from "./ModalDetailChestGift";
-import DeleteChest from "./ModalDeleteChestGift";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter, faRectangleList } from "@fortawesome/free-solid-svg-icons";
+import { ChestGiftAPI } from "../../../apis/censor/chest-gift/chest-gift.api";
 
 export default function ChestGift() {
   const dispatch = useAppDispatch();
@@ -33,12 +35,24 @@ export default function ChestGift() {
   const [total, setTotal] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [detailChest, setDetailChest] = useState();
+  // useEffect(() => {
+  //   ChestAPI.fetchAll().then((response) => {
+  //     dispatch(SetChest(response.data.data.data));
+  //     setTotal(response.data.data.totalPages);
+  //     setCurrent(1);
+  //     console.log("aaaaaaaaaa");
+  //   });
+  // }, [dispatch]);
+
   useEffect(() => {
-    ChestAPI.fetchAll().then((response) => {
-      dispatch(SetChest(response.data.data.data));
-      setTotal(response.data.data.totalPages);
-    });
-  }, [dispatch]);
+    if (!showModal) {
+      ChestAPI.fetchAll().then((response) => {
+        dispatch(SetChest(response.data.data.data));
+        setTotal(response.data.data.totalPages);
+        setCurrent(1);
+      });
+    }
+  }, [showModal]);
 
   useEffect(() => {
     fetchData();
@@ -66,6 +80,7 @@ export default function ChestGift() {
 
   const buttonClear = () => {
     setSearch("");
+    setCurrent(1);
     ChestAPI.fetchAll({
       search: "",
       page: current - 1,
@@ -84,6 +99,18 @@ export default function ChestGift() {
       dispatch(SetChest(response.data.data.data));
       setTotal(response.data.data.totalPages);
     });
+  };
+
+  const confirm = (chest) => {
+    ChestGiftAPI.deleteChest(chest.id).then(
+      (response) => {
+        setCurrent(1);
+        message.success("Xóa thành công");
+      },
+      (err) => {
+        message.error("Xóa thất bại");
+      }
+    );
   };
 
   const data = useAppSelector(GetChest);
@@ -121,7 +148,24 @@ export default function ChestGift() {
           </Tooltip>
           <ModalDetail chest={record} icon={<EyeOutlined />} />
           <ModalAddGiftToChest chest={record} icon={<PlusCircleOutlined />} />
-          <DeleteChest chest={record} icon={<DeleteOutlined />} />
+          
+          <Popconfirm
+            title="Xóa rương"
+            description="Bạn có chắc chắn muốn xóa?"
+            onConfirm={() => {confirm(record)}}
+            color="cyan"
+            okText="Yes"
+            cancelText="No"
+          >
+            <Tooltip title="Xóa">
+              <Button
+                type="primary"
+                className="bg-red-400 text-white hover:bg-red-300"
+              >
+                <DeleteOutlined style={{ fontSize: "15px" }} />
+              </Button>
+            </Tooltip>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -234,6 +278,7 @@ export default function ChestGift() {
             pagination={false}
           />
         </div>
+        {total >= 1 && 
         <div className="mt-5 text-center" style={{ marginTop: "20px" }}>
           <Pagination
             simple
@@ -243,7 +288,7 @@ export default function ChestGift() {
             }}
             total={total * 10}
           />
-        </div>
+        </div>}
       </Card>
     </>
   );
