@@ -67,6 +67,6 @@ jobs:
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-          text: "Ah, deployed to the server successfully. It's great that you caught it !!! 😒😒😒"
+          text: "Code mới hiện đã được deploy lên server, bạn có thể truy cập vào đường link https://honey.udpm-hn.com/ để trải nghiệm ứng dụng. Xin cảm ơn !!! 😒😒😒"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

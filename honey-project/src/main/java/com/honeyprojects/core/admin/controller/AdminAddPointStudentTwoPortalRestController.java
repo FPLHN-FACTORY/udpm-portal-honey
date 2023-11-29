@@ -35,21 +35,21 @@ public class AdminAddPointStudentTwoPortalRestController {
 
     // api dùng để cộng mật ong danh sách sinh viên đã pass xưởng
     @PostMapping("/lab-report")
-    public ResponseObject addPointToStudentLabReport(@RequestBody AdminAddPointStudentLabReportBOO adminAddPointStudentBO) throws IOException {
-        return new ResponseObject(addPointService.addPointToStudentLabReport(adminAddPointStudentBO));
+    public ResponseEntity addPointToStudentLabReport(@RequestBody AdminAddPointStudentLabReportBOO adminAddPointStudentBO) throws IOException {
+        return ResponseEntity.ok(addPointService.addPointToStudentLabReport(adminAddPointStudentBO));
     }
 
     // api dùng để lấy danh sách thể loại
     @GetMapping("/list-category")
-    public ResponseObject getAllListCategory() {
-        return new ResponseObject(adminCategoryService.getAllListCategory());
+    public ResponseEntity getAllListCategory() {
+        return ResponseEntity.ok(adminCategoryService.getAllListCategory());
     }
 
     //========================
     // api dùng để cộng mật ong danh sách sinh viên tham gia sự kiện
     @PostMapping("/portal-events")
-    public ResponseObject createPointToStudentPortalEvents(@RequestBody AdminAddPointStudentPortalEventsBOO adminAddPointStudentBO) throws IOException {
-        return new ResponseObject(addPointService.createPointToStudentPortalEvents(adminAddPointStudentBO));
+    public ResponseEntity createPointToStudentPortalEvents(@RequestBody AdminAddPointStudentPortalEventsBOO adminAddPointStudentBO) throws IOException {
+        return ResponseEntity.ok(addPointService.createPointToStudentPortalEvents(adminAddPointStudentBO));
     }
 }
 
