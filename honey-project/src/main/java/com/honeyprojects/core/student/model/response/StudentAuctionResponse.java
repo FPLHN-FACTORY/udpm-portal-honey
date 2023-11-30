@@ -42,4 +42,16 @@ public interface StudentAuctionResponse {
 
     @Value("#{target.idCategory}")
     String getIDCategory();
+
+    @Value("#{target.gift_image}")
+    String getGiftImage();
+
+    @Value("#{target.auctioneer_create_user_name}")
+    String getUserCreate();
+
+    @Value("#{target.auctioneer_user_name}")
+    String getUserAuction();
+
+    @Value("#{target.quantity}")
+    Long getQuantity();
 }

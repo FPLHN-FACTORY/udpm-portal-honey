@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
+  Avatar,
   Button,
   Card,
   Col,
@@ -7,10 +8,7 @@ import {
   Input,
   InputNumber,
   Modal,
-  Pagination,
   Row,
-  Select,
-  Table,
   Tooltip,
   message,
 } from "antd";
@@ -18,7 +16,7 @@ import React, { useEffect, useState } from "react";
 import "./AuctionRoomInside.css";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter, faGavel } from "@fortawesome/free-solid-svg-icons";
+import { faGavel } from "@fortawesome/free-solid-svg-icons";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import {
   GetAuction,
@@ -32,12 +30,17 @@ import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 import { GetUser } from "../../../app/reducers/users/users.reducer";
 import { AppConfig } from "../../../AppConfig";
+import { Content } from "antd/es/layout/layout";
+import { Link } from "react-router-dom";
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
+
 export default function StudentAuctionRoomNew() {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
   const [current, setCurrent] = useState(0);
   const [total, setTotal] = useState(0);
-  const [size, setSize] = useState(10);
+  const [size, setSize] = useState(3);
   const listCategory = useAppSelector(GetAuction);
   const user = useAppSelector(GetUser);
 
@@ -90,11 +93,7 @@ export default function StudentAuctionRoomNew() {
       dispatch(SetAuction(res.data.data.data));
       setTotal(res.data.data.totalPages);
       setCurrent(res.data.data.currentPage);
-      if (total > res.data.data.totalPages) {
-        setCurrent(0);
-      } else {
-        setCurrent(res.data.data.currentPage);
-      }
+      console.log(res.data.data);
     });
   };
 
@@ -200,6 +199,19 @@ export default function StudentAuctionRoomNew() {
   const [modalAuction, setModalAuction] = useState(false);
   const [auction, setAuction] = useState(null);
 
+  // detail phiên đấu giá
+  const [detail, setDetail] = useState(null);
+  const [isShowDetail, setIsShowDetail] = useState(false);
+
+  const showModalDetail = (el) => {
+    setIsShowDetail(true);
+    setDetail(el);
+    setAuction(el)
+  }
+  const unShowModalDetail = () => {
+    setIsShowDetail(false);
+  }
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -232,20 +244,25 @@ export default function StudentAuctionRoomNew() {
       return;
     }
     if (stompClientAll && stompClientAll.connected) {
-      stompClientAll.send(
-        `/action/update-last-price-auction`,
-        {},
-        JSON.stringify({
-          idAuction: auction.id,
-          lastPrice: value.lastPrice,
-          idUser: user.idUser,
-        })
-      );
+      Modal.confirm({
+        title: "Bạn có chắc chắn muốn đấu giá vật phẩm không?",
+        onOk: () => {
+        stompClientAll.send(
+          `/action/update-last-price-auction`,
+          {},
+          JSON.stringify({
+            idAuction: auction.id,
+            lastPrice: value.lastPrice,
+            idUser: user.idUser,
+          })
+          );
+        }
+      })
     } else {
       message.error("Không có kết nối STOMP hoặc kết nối không hợp lệ.");
       return;
     }
-
+    form.setFieldValue("lastPrice", null)
     setAuction(null);
     setModalAuction(false);
   };
@@ -267,7 +284,7 @@ export default function StudentAuctionRoomNew() {
     });
 
     stompClient.connect({}, () => {
-      let sessionId = /\/([^\/]+)\/websocket/.exec(
+      let sessionId = /\/([^\\/]+)\/websocket/.exec(
         stompClient.ws._transport.url
       )[1];
 
@@ -303,34 +320,191 @@ export default function StudentAuctionRoomNew() {
 
   return (
     <>
-      <Modal
-        title="Đấu giá"
-        open={modalAuction}
-        onOk={handleOkAuction}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="cancel" onClick={handleCancel}>
-            Hủy
-          </Button>,
-          <Button key="submit" type="primary" onClick={handleOkAuction}>
-            Đấu giá
-          </Button>,
-        ]}
-      >
-        <Form form={form} layout="vertical">
-          <Form.Item name="lastPrice" label="Mức giá :">
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-        </Form>
-      </Modal>
-      <ModalAddAuction
-        visible={isModalOpen}
-        onOK={handleOk}
-        onCancel={handleCancel}
-        stompClientAll={stompClientAll}
-      />
+      {
+        isShowDetail && 
+          <Modal
+            title="Xem chi tiết phiên"
+            open={isShowDetail}
+            width={800}
+            onCancel={unShowModalDetail}
+            footer={[
+              <Button key="cancel" onClick={unShowModalDetail}>
+                Hủy
+              </Button>,
+              <Button type="primary" onClick={() => { setModalAuction(detail); setIsShowDetail(false)}}>
+                Đấu giá
+              </Button>,
+              ]}>
+            <hr className="border-0 bg-gray-300 mt-3 mb-3" />
+
+            <Row gutter={16} className="px-4">
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Tên vật phẩm:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ detail.name }</span>
+                  </Col>
+                </Row>
+              </Col>
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Thể loại:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ detail.nameCategory }</span>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row gutter={16} className="px-4">
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Số lượng:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ detail.quantity }</span>
+                  </Col>
+                </Row>
+              </Col>
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Bước nhảy:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ detail.jump }</span>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className="px-4">
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Người tạo:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ detail.userCreate }</span>
+                  </Col>
+                </Row>
+              </Col>
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Người đấu giá hiện tại:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ detail.userAuction }</span>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row gutter={16} className="px-4">
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Giá khởi điểm:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{detail.startingPrice}</span>
+                  </Col>
+                </Row>
+              </Col>
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Giá hiện tại:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ detail.lastPrice }</span>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row gutter={16} className="px-4">
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Thời gian bắt đầu:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ moment(detail.fromDate).format('DD-mm-yyyy, h:mm:ss a') }</span>
+                  </Col>
+                </Row>
+              </Col>
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Ngày kết thúc:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ moment(detail.toDate).format('DD-mm-yyyy, h:mm:ss a') }</span>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </Modal>
+      }
+      {
+        modalAuction && 
+        <Modal
+          title="Đấu giá"
+          open={modalAuction}
+          onOk={handleOkAuction}
+          onCancel={handleCancel}
+          footer={[
+            <Button key="cancel" onClick={handleCancel}>
+              Hủy
+            </Button>,
+            <Button type="primary" onClick={handleOkAuction}>
+              Đấu giá
+            </Button>,
+          ]}
+        >
+          <Form form={form} layout="vertical">
+            <Form.Item 
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng chọn thời gian hết hạn",
+                    },
+                    {
+                      validator: (_, value) => {
+                        if ((value + "").trim().length === 0) {
+                          return Promise.resolve();
+                        }
+                        const regex = /^[0-9]+$/;
+                        if (!regex.test(value) || value === 0) {
+                          return Promise.reject(
+                            new Error("Vui lòng nhập một số nguyên dương")
+                          );
+                        }
+
+                        return Promise.resolve();
+                      },
+                    },
+                  ]} name="lastPrice" label="Mức giá :">
+              <Input type="number" style={{ width: "100%" }} />
+            </Form.Item>
+          </Form>
+        </Modal>
+      }
+      {
+        isModalOpen && 
+        <ModalAddAuction
+          visible={isModalOpen}
+          onOK={handleOk}
+          onCancel={handleCancel}
+          stompClientAll={stompClientAll}
+        />
+      }
       <div className="auction-main-inside">
-        <Card title={""} className="cartAllConversion">
+        <Card title={""} className="cartAllConversion border-0 w-full" style={{minHeight: "80vh"}} >
           <div className="title">
             <p style={{ fontSize: "20px", color: "#A55600" }}>
               <img
@@ -361,9 +535,8 @@ export default function StudentAuctionRoomNew() {
             </div>
           </div>
 
-          <Row>
-            <Col span={6} style={{ marginLeft: "15px" }}>
-              <Card style={{ height: "70vh" }}>
+          <Row className="w-full">
+            {/* <Col xl={6} lg={24} >
                 <div className="sidebar">
                   <FontAwesomeIcon icon={faFilter} size="2xl" />
                   <span
@@ -395,7 +568,7 @@ export default function StudentAuctionRoomNew() {
                                 e.preventDefault();
                               }
                             }}
-                            style={{ textAlign: "center", height: "30px" }}
+                            style={{ height: "30px" }}
                             placeholder="Vui lòng nhập Tên."
                           />
                         </Form.Item>
@@ -409,7 +582,6 @@ export default function StudentAuctionRoomNew() {
                           }
                         >
                           <Select
-                            style={{ textAlign: "center" }}
                             placeholder="Chọn thể loại"
                           >
                             {listCategory?.map((item) => {
@@ -432,7 +604,6 @@ export default function StudentAuctionRoomNew() {
                           }
                         >
                           <Select
-                            style={{ textAlign: "center" }}
                             placeholder="Thể loại vật phẩm"
                           >
                             {listType?.map((item) => {
@@ -454,7 +625,6 @@ export default function StudentAuctionRoomNew() {
                         >
                           <InputNumber
                             style={{
-                              textAlign: "center",
                               height: "30px",
                               width: "100%",
                             }}
@@ -493,11 +663,9 @@ export default function StudentAuctionRoomNew() {
                     </Col>
                   </Row>
                 </div>
-              </Card>
-            </Col>
+            </Col> */}
 
-            <Col span={17} style={{ marginLeft: "15px" }}>
-              <Card style={{ height: "100%" }} className="table-dau-gia">
+            <Col  xl={24} lg={24}>
                 <Row justify="center">
                   {listAuctionRoom.length <= 0 ? (
                     <Col span={24} style={{ textAlign: "center" }}>
@@ -516,35 +684,102 @@ export default function StudentAuctionRoomNew() {
                       </div>
                     </Col>
                   ) : (
-                    <Col span={24} style={{ textAlign: "center" }}>
-                      <Table
-                        columns={columns}
-                        dataSource={listAuctionRoom}
-                        rowKey={"id"}
-                        width={"100%"}
-                        scroll={{
-                          y: 370,
-                        }}
-                        pagination={false}
-                      />
-                      <div
-                        className="mt-5 text-center"
-                        style={{ marginTop: "30px" }}
-                      >
-                        <Pagination
-                          showSizeChanger
-                          onShowSizeChange={onShowSizeChange}
-                          onChange={(value) => {
-                            setCurrent(value - 1);
-                          }}
-                          current={current + 1}
-                          total={total * size}
-                        />
-                      </div>
+                      <Col span={24} style={{ textAlign: "center" }}>
+                        
+                        <Content className="horor__table pl-[100px] pr-[100px]">
+                          <Row className="w-full">
+                            <div className="live-leaderboard w-full">
+                              <div className="live-leaderboard-table">
+                                <div className="live-leaderboard-table-header">
+                                  <div className="col-player-rank-header">STT</div>
+                                  <div className="col-player-name-header">Tên vật phẩm</div>
+                                  <div className="col-player-name-header">Thời gian còn lại</div>
+                                  <div className="col-player-name-header">Giá khởi điểm</div>
+                                  <div className="col-player-name-header">Giá hiện tại</div>
+                                  <div className="col-player-name-header">Loại</div>
+                                  <div className="col-player-points-header">Action</div>
+                                </div>
+                                <div>
+                                {listAuctionRoom.map((el) => (
+                                  <Link
+                                    className="live-leaderboard-player-row">
+                                    <div className="col-player-rank-header" onClick={() => {showModalDetail(el)}}>
+                                      <span className="col-player-text">{el.stt}</span>
+                                      <div className="sub-avatar-fire avatar-fire">
+                                        <Avatar className="col-player-avatar"
+                                          alt="avatar"
+                                          size={50}
+                                          src={el.giftImage}
+                                        />
+                                      </div>
+                                    </div>
+                                    <div className="col-player-name-header" onClick={() => {showModalDetail(el)}}>
+                                      <span className="col-player-text">{el.giftName}</span>
+                                    </div>
+                                    <div className="col-player-name-header" onClick={() => {showModalDetail(el)}}>
+                                      <span className="col-player-text">
+                                        <CountdownTimer key={el.id} initialTime={el.toDate - new Date().getTime()} />
+                                      </span>
+                                    </div>
+                                    <div className="col-player-name-header" onClick={() => {showModalDetail(el)}}>
+                                      <span className="col-player-text">{el.startingPrice}</span>
+                                    </div>
+                                    <div className="col-player-name-header" onClick={() => {showModalDetail(el)}}>
+                                      <span className="col-player-text">{el.lastPrice == null ? "?" : el.lastPrice}</span>
+                                    </div>
+                                    <div className="col-player-name-header" onClick={() => {showModalDetail(el)}}>
+                                      <span className="col-player-text">{el.nameCategory}</span>
+                                    </div>
+                                    <div className="col-player-points-header">
+                                      <span className="col-player-text">
+                                        <Tooltip placement="top" title={"Đấu giá " + el.name}>
+                                          <Button
+                                            style={{ backgroundColor: "#ffcc00", color: "white" }}
+                                            onClick={() => showModalAuction(el)}
+                                          >
+                                            <FontAwesomeIcon icon={faGavel} />
+                                          </Button>
+                                        </Tooltip>
+                                      </span>
+                                    </div>
+                                  </Link>
+                                  ))}
+                                  
+                                </div>
+                              </div>
+                            </div>
+                          </Row>
+                          <div className="pagination__ui">
+                            <Row>
+                              <Col span={10} >
+                                <button disabled={current <= 0}
+                                  onClick={() => {setCurrent(current - 1)}}
+                                  className="button button--left"
+                                >
+                                  <FontAwesomeIcon icon={faArrowLeft} />
+                                  Previous
+                                </button> 
+                              </Col>
+                              <Col span={4} className="d-flex align-items-center justify-content-center">
+                                <h3 className="text-center rank__tilte text-white">
+                                  {`${current + 1}/${total}`}
+                                </h3>
+                              </Col>
+                              <Col span={10} >
+                              <button disabled={current + 1 >= total}
+                                onClick={() => {setCurrent(current + 1)}}
+                                  className="button button--right"
+                                >
+                                  Next
+                                  <FontAwesomeIcon icon={faArrowRight} />
+                                </button>
+                              </Col>
+                            </Row>
+                          </div>
+                      </Content>
                     </Col>
                   )}
                 </Row>
-              </Card>
             </Col>
           </Row>
         </Card>
