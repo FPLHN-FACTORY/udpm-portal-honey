@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Input, message, Button } from "antd";
-import { useAppDispatch } from "../../../app/hooks";
 import { ChestAPI } from "../../../apis/censor/chest/chest.api";
-import {
-  AddChest,
-  UpdateChest,
-} from "../../../app/reducers/chest/chest.reducer";
 
 const ModalAdd = (props) => {
   const { modalOpen, setModalOpen, chest } = props;
   const [itemName, setItemName] = useState("");
-
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (chest) {
@@ -20,11 +13,9 @@ const ModalAdd = (props) => {
   }, [chest]);
 
   const onSaveSuccess = (result) => {
-    if (chest === null) {
-      dispatch(AddChest(result.data.data));
-    } else {
-      dispatch(UpdateChest(result.data.data));
-    }
+    // ChestAPI.fetchAll().then((response) => {
+    //   dispatch(SetChest(response.data.data.data));
+    // });
     message.success("Thành công!");
     setModalOpen(false);
   };
@@ -48,11 +39,21 @@ const ModalAdd = (props) => {
     };
 
     if (chest === null) {
-      ChestAPI.create(formValues).then(onSaveSuccess).catch(onSaveError);
+      Modal.confirm({
+        title: "Bạn có chắc chắn muốn thêm mới rương không?",
+        onOk: () => {
+          ChestAPI.create(formValues).then(onSaveSuccess).catch(onSaveError);
+        }
+      })
     } else {
-      ChestAPI.update(formValues, chest.id)
-        .then(onSaveSuccess)
-        .catch(onSaveError);
+      Modal.confirm({
+        title: "Bạn có chắc chắn muốn cập nhật rương không?",
+        onOk: () => {
+          ChestAPI.update(formValues, chest.id)
+            .then(onSaveSuccess)
+            .catch(onSaveError);
+        }
+      })
     }
   };
 

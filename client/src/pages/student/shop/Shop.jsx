@@ -18,7 +18,7 @@ const Shop = memo(() => {
   const [fillUserApi, setFillUserApi] = useState([]);
   const [filteredConversions, setFilteredConversions] = useState([]);
   const [filteredItem, setFilteredItem] = useState([]);
-  const [mode, setMode] = useState("top");
+  // const [mode, setMode] = useState("");
 
   const fechCategory = () => {
     ResquestConversion.fetchAllCategory().then((response) => {
@@ -137,7 +137,7 @@ const Shop = memo(() => {
         </div>
         <div className="shop__menu__category">
           <Tabs
-            tabPosition={mode}
+            tabPosition={"top"}
             style={{
               height: "100%",
               width: 300,
