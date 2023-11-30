@@ -370,11 +370,11 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
         Category category = adminCategoryRepository.findById(requestAddPointStudentBO.getCategoryId()).orElse(null);
         Integer honeyPoint = requestAddPointStudentBO.getNumberHoney();
 
-        for (String studentId :
-                requestAddPointStudentBO.getLstStudentId()) {
+        for (AdminAddPointStudentPortalEventsBOO.User studentId :
+                requestAddPointStudentBO.getListUser()) {
             if (category.getCategoryStatus().equals(CategoryStatus.FREE)) {
-                Notification notification = createNotification(studentId);
-                if (!DataUtils.isNullObject(requestAddPointStudentBO.getLstStudentId())) {
+                Notification notification = createNotification(studentId.getId());
+                if (!DataUtils.isNullObject(requestAddPointStudentBO.getListUser())) {
                     try {
                         createNotificationDetailHoney(category, notification.getId(), honeyPoint);
                     } catch (NumberFormatException e) {
@@ -384,13 +384,13 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
             }
             if (category.getCategoryStatus().equals(CategoryStatus.ACCEPT)) {
                 TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
-                getPointRequest.setStudentId(studentId);
+                getPointRequest.setStudentId(studentId.getId());
                 getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
                 TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
 
                 Long dateNow = Calendar.getInstance().getTimeInMillis();
                 History history = new History();
-                history.setStudentId(studentId);
+                history.setStudentId(studentId.getId());
                 history.setType(TypeHistory.CONG_DIEM);
                 history.setChangeDate(dateNow);
                 historyRepository.save(history);
@@ -404,7 +404,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
                     Honey honey = new Honey();
                     honey.setStatus(Status.HOAT_DONG);
                     honey.setHoneyPoint(honeyPoint);
-                    honey.setStudentId(studentId);
+                    honey.setStudentId(studentId.getId());
                     honey.setHoneyCategoryId(requestAddPointStudentBO.getCategoryId());
                     honeyRepository.save(honey);
                     historyDetail.setHoneyId(honey.getId());
