@@ -1,16 +1,13 @@
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Form, Input, Modal, Radio, Tooltip, message } from "antd";
 import { useEffect, useState } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { useAppDispatch } from "../../../app/hooks";
 import { UpdateCategory } from "../../../app/reducers/category/category.reducer";
 const ModalDetail = (props) => {
-  const { category, fetchData } = props;
+  const { visible, onCancel, onUpdate, category, fetchData } = props;
   const [form] = Form.useForm();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState([]);
   const [errorImage, setErrorImage] = useState("");
 
   useEffect(() => {
@@ -19,16 +16,18 @@ const ModalDetail = (props) => {
     }
   }, [category]);
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
   const handleCancel = () => {
-    setIsModalOpen(false);
+    onCancel();
+    form.resetFields();
   };
-  form.setFieldsValue(category);
+
+  const onFinishFailed = () => {
+    if (selectedImageUrl.length === 0) {
+      setErrorImage("Ảnh không được để trống");
+    } else {
+      setErrorImage("");
+    }
+  };
 
   const handleFileInputChange = (event) => {
     var selectedFile = event.target.files[0];
@@ -39,40 +38,33 @@ const ModalDetail = (props) => {
         setSelectedImageUrl("");
         setImage([]);
       } else {
-        const fileSize = selectedFile.size;
-        const checkFileSize = Math.round(fileSize / 1024 / 1024);
-        if (checkFileSize > 1) {
-          setErrorImage("Ảnh không thể lớn hơn 1 MB");
+        var Extension = FileUploadName.substring(
+          FileUploadName.lastIndexOf(".") + 1
+        ).toLowerCase();
+        if (
+          Extension == "gif" ||
+          Extension == "png" ||
+          Extension == "bmp" ||
+          Extension == "jpeg" ||
+          Extension == "jpg" ||
+          Extension == "webp"
+        ) {
+          setImage(selectedFile);
+          var imageUrl = URL.createObjectURL(selectedFile);
+          setSelectedImageUrl(imageUrl);
+          setErrorImage("");
+        } else {
+          setErrorImage(
+            "Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. "
+          );
           setSelectedImageUrl("");
           setImage([]);
-        } else {
-          var Extension = FileUploadName.substring(
-            FileUploadName.lastIndexOf(".") + 1
-          ).toLowerCase();
-          if (
-            Extension == "gif" ||
-            Extension == "png" ||
-            Extension == "bmp" ||
-            Extension == "jpeg" ||
-            Extension == "jpg" ||
-            Extension == "webp"
-          ) {
-            setImage(selectedFile);
-            var imageUrl = URL.createObjectURL(selectedFile);
-            setSelectedImageUrl(imageUrl);
-            setErrorImage("");
-          } else {
-            setErrorImage(
-              "Chỉ nhận ảnh có type WEBP, GIF, PNG, JPG, JPEG và BMP. "
-            );
-            setSelectedImageUrl("");
-            setImage([]);
-          }
         }
       }
     }
   };
   const dispatch = useAppDispatch();
+
   form.setFieldsValue(category);
 
   const onFinish = () => {
@@ -115,21 +107,24 @@ const ModalDetail = (props) => {
   };
 
   const handleUpdateCategory = (formValues) => {
-    CategoryAPI.update({ ...formValues, image: image }, category.id)
+    const data = { ...formValues, image: image };
+
+    CategoryAPI.update(data, category.id)
       .then((response) => {
         dispatch(UpdateCategory(response.data.data));
         message.success("Thành công!");
-        setIsModalOpen(false);
         form.resetFields();
+        onCancel();
         fetchData();
       })
       .catch((err) => {
         message.error("Lỗi: " + err.message);
       });
   };
+
   return (
     <>
-      <Tooltip title="Chi tiết">
+      {/* <Tooltip title="Chi tiết thể loại">
         <Button
           style={{
             backgroundColor: "yellowgreen",
@@ -139,18 +134,20 @@ const ModalDetail = (props) => {
         >
           <FontAwesomeIcon icon={faPenToSquare} />
         </Button>
-      </Tooltip>
+      </Tooltip> */}
       <Modal
         title="Chi tiết thể loại"
-        open={isModalOpen}
+        // open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
+        visible={visible}
       >
         <Form
           id="detailCategory"
           form={form}
           name="basic"
           onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
           labelCol={{
             span: 4,
           }}
