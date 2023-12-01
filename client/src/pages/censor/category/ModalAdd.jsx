@@ -24,9 +24,7 @@ const ModalThem = (props) => {
   }, []);
 
   const handleFileInputChange = (event) => {
-    console.log("====================================");
-    console.log("đéo vào đây");
-    console.log("====================================");
+
     var selectedFile = event.target.files[0];
     if (selectedFile) {
       var FileUploadName = selectedFile.name;

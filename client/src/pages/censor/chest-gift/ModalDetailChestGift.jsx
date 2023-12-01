@@ -60,9 +60,6 @@ const ModalDetail = (props) => {
   };
 
   const dataChest = useAppSelector(GetChestGift);
-  console.log("====================================");
-  console.log(dataChest);
-  console.log("====================================");
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);

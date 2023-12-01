@@ -70,7 +70,6 @@ export default function HistoryAddPoint() {
   };
 
   const data = useAppSelector(GetHistory).map((data) => {
-    console.log(data);
 
     return {
       ...data,
