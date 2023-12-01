@@ -3,6 +3,7 @@ package com.honeyprojects.core.student.repository;
 import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.repository.ArchiveGiftRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,5 +18,8 @@ public interface StudentArchiveGiftRepository extends ArchiveGiftRepository {
 
     Optional<ArchiveGift> findByGiftIdAndAndArchiveId(String idGift, String archiveId);
 
-    List<ArchiveGift> findAllByGiftIdIn(List<String> id);
+    @Query(value = """
+        SELECT ag.* FROM archive_gift ag JOIN gift g ON ag.gift_id = g.id WHERE g.status <> 2 AND ag.gift_id in (:id)
+    """, nativeQuery = true)
+    List<ArchiveGift> findAllByGiftIdIn(@Param("id") List<String> id);
 }
