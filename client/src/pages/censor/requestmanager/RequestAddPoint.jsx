@@ -209,7 +209,7 @@ export default function RequestAddPoint() {
                   style={{ width: "500px" }}
                   name="userName"
                   size="small"
-                  placeholder="Nhập mã sinh viên cần tìm"
+                  placeholder="Nhập username sinh viên cần tìm"
                   prefix={<SearchOutlined />}
                 />
               </Form.Item>

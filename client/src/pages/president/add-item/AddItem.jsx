@@ -168,7 +168,6 @@ export default function AddItem() {
         <Card className="mb-2 py-1">
           <Form form={formSearch} className="d-flex" onFinish={onFinishSearch}>
             <Row>
-
               <Form.Item
                 name="code"
                 // rules={[
@@ -179,11 +178,11 @@ export default function AddItem() {
                 //   },
                 // ]}
                 className="search-input mr-10"
-                style={{width : 845}}
+                style={{ width: 845 }}
               >
                 <Input
                   size="small"
-                  placeholder="Nhập mã sinh viên cần tìm"
+                  placeholder="Nhập username sinh viên cần tìm"
                   prefix={<SearchOutlined />}
                 />
               </Form.Item>

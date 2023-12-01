@@ -90,7 +90,6 @@ export default function StudentAuctionRoomNew() {
     };
     StudentAuctionAPI.fetchRoom(data).then((res) => {
       dispatch(SetAuction(res.data.data.data));
-      console.log(res.data.data.data);
       setTotal(res.data.data.totalPages);
       setCurrent(res.data.data.currentPage);
     });

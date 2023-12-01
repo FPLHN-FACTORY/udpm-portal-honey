@@ -70,7 +70,6 @@ export default function HistoryAddPoint() {
   };
 
   const data = useAppSelector(GetHistory).map((data) => {
-    console.log(data);
 
     return {
       ...data,
@@ -116,7 +115,7 @@ export default function HistoryAddPoint() {
               <Input
                 style={{ width: "500px" }}
                 size="small"
-                placeholder="Nhập mã sinh viên cần tìm"
+                placeholder="Nhập username sinh viên cần tìm"
                 prefix={<SearchOutlined />}
               />
             </Form.Item>

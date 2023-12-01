@@ -174,7 +174,7 @@ export default function HistoryAddPoint() {
               <Input
                 style={{ width: "500px" }}
                 size="small"
-                placeholder="Nhập mã sinh viên cần tìm"
+                placeholder="Nhập username sinh viên cần tìm"
                 prefix={<SearchOutlined />}
               />
             </Form.Item>
@@ -197,14 +197,15 @@ export default function HistoryAddPoint() {
             <Button
               htmlType="submit"
               type="primary"
-              className="mr-10 search-button">
+              className="mr-10 search-button"
+            >
               Lọc
             </Button>
           </Space>
         </Form>
       </Card>
       <Card title="Lịch sử cộng điểm">
-      {data.map((item) => (
+        {data.map((item) => (
           <div className="list__point ">
             <h3 className="text-slate-600"> Sinh viên {item.nameStudent}</h3>
             <div className="list__point__title">

@@ -41,7 +41,6 @@ function DashboardPresident({ children }) {
   pathname = pathname.replace("/", ""); 
 
   let title = "";
-  console.log(pathname);
   if (pathname.includes("president/add-item")) {
     title = "Cộng mật ong";
   }
