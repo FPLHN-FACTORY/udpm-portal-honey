@@ -5,10 +5,14 @@ import com.honeyprojects.repository.HoneyRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface AdHoneyRepository extends HoneyRepository {
+
+    List<Honey> findAllByHoneyCategoryId(String id);
+
     @Query("SELECT h FROM Honey h WHERE h.studentId = :studentId AND h.honeyCategoryId = :honeyCategoryId")
     Honey getPoint(String studentId, String honeyCategoryId);
 

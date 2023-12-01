@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface AdHistoryDetailRepository extends HistoryDetailRepository {
     List<HistoryDetail> findAllByGiftId(String giftId);
+    List<HistoryDetail> findAllByChestId(String chestId);
 }

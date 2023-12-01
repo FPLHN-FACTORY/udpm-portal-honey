@@ -27,4 +27,6 @@ public class StudentAuctionCreateRequest {
 
     private Integer quantity;
 
+    private String mail;
+
 }

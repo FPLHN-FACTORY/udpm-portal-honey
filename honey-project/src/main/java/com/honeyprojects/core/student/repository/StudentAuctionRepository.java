@@ -39,7 +39,8 @@ public interface StudentAuctionRepository extends AuctionRepository {
             WHERE a.status = 0 AND
              (:#{#req.nameGift} IS NULL OR :#{#req.nameGift} LIKE '' OR g.name LIKE %:#{#req.nameGift}%) 
             AND (:#{#req.type} IS NULL OR :#{#req.type} LIKE '' OR g.type = :#{#req.type}) 
-            AND (:#{#req.startingPrice} IS NULL OR :#{#req.startingPrice} LIKE ''  OR a.starting_price = :#{#req.startingPrice}) 
+            AND (:#{#req.startingPrice} IS NULL  OR a.starting_price >= :#{#req.startingPrice}) 
+            AND (:#{#req.endPrice} IS NULL   OR a.starting_price <= :#{#req.endPrice}) 
             AND (:#{#req.category} IS NULL OR :#{#req.category} LIKE '' OR ca.id LIKE %:#{#req.category}%)
             """, countQuery = """
             SELECT
@@ -65,7 +66,8 @@ public interface StudentAuctionRepository extends AuctionRepository {
             WHERE a.status = 0 AND
              (:#{#req.nameGift} IS NULL OR :#{#req.nameGift} LIKE '' OR g.name LIKE %:#{#req.nameGift}%) 
             AND (:#{#req.type} IS NULL OR :#{#req.type} LIKE '' OR g.type = :#{#req.type}) 
-            AND (:#{#req.startingPrice} IS NULL OR :#{#req.startingPrice} LIKE ''  OR a.starting_price = :#{#req.startingPrice}) 
+            AND (:#{#req.startingPrice} IS NULL  OR a.starting_price >= :#{#req.startingPrice}) 
+            AND (:#{#req.endPrice} IS NULL  OR a.starting_price <= :#{#req.endPrice}) 
             AND (:#{#req.category} IS NULL OR :#{#req.category} LIKE '' OR ca.id LIKE %:#{#req.category}%)
             """, nativeQuery = true)
     Page<StudentAuctionResponse> findAllAuctionRoom(@Param("req") StudentAuctionRoomFilterRequest req, Pageable pageable);

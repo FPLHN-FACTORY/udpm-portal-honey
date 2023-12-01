@@ -18,4 +18,6 @@ public class MessageAuction {
     private String idUser;
 
     private Long lastPrice;
+
+    private String mail;
 }

@@ -238,22 +238,14 @@ public class AdminGiftServiceImpl implements AdminGiftService {
     @Override
     @Transactional
     public void deleteById(String id) {
-        if (adArchiveGiftRepository.findAllByGiftId(id).size() != 0) {
+        if (adArchiveGiftRepository.findAllByGiftId(id).size() != 0 ||
+                adAuctionRepository.findAllByGiftId(id).size() != 0 ||
+                adChestGiftRepository.findAllByGiftId(id).size() != 0 ||
+                adHistoryDetailRepository.findAllByGiftId(id).size() != 0 ||
+                adUpgradeRateGiftRepository.findAllByIdGift(id).size() != 0
+        ) {
             throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
         }
-        if (adAuctionRepository.findAllByGiftId(id).size() != 0) {
-            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
-        }
-        if (adChestGiftRepository.findAllByGiftId(id).size() != 0) {
-            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
-        }
-        if (adHistoryDetailRepository.findAllByGiftId(id).size() != 0) {
-            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
-        }
-        if (adUpgradeRateGiftRepository.findAllByIdGift(id).size() != 0) {
-            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
-        }
-
         adGiftRepository.deleteById(id);
         adGiftDetailRepository.deleteAllByGiftId(id);
         StringBuilder contentLogger = new StringBuilder();
@@ -270,19 +262,12 @@ public class AdminGiftServiceImpl implements AdminGiftService {
     }
 
     public Gift updateStatusGift(String id) {
-        if (adArchiveGiftRepository.findAllByGiftId(id).size() != 0) {
-            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
-        }
-        if (adAuctionRepository.findAllByGiftId(id).size() != 0) {
-            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
-        }
-        if (adChestGiftRepository.findAllByGiftId(id).size() != 0) {
-            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
-        }
-        if (adHistoryDetailRepository.findAllByGiftId(id).size() != 0) {
-            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
-        }
-        if (adUpgradeRateGiftRepository.findAllByIdGift(id).size() != 0) {
+        if (adArchiveGiftRepository.findAllByGiftId(id).size() != 0 ||
+                adAuctionRepository.findAllByGiftId(id).size() != 0 ||
+                adChestGiftRepository.findAllByGiftId(id).size() != 0 ||
+                adHistoryDetailRepository.findAllByGiftId(id).size() != 0 ||
+                adUpgradeRateGiftRepository.findAllByIdGift(id).size() != 0
+        ) {
             throw new RestApiException("Vật phẩm đã được sử dụng. Không thể xóa");
         }
 
