@@ -17,6 +17,8 @@ public interface AdAuctionRepository extends AuctionRepository {
 
     List<Auction> findAllByGiftId(String giftId);
 
+    List<Auction> findAllByHoneyCategoryId(String categoryId);
+
     @Query(value = """
              select *
              from auction

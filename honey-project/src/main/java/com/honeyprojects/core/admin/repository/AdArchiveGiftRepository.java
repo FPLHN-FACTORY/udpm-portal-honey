@@ -8,4 +8,5 @@ import java.util.List;
 public interface AdArchiveGiftRepository extends ArchiveGiftRepository {
 
     List<ArchiveGift> findAllByGiftId(String idGift);
+    List<ArchiveGift> findAllByChestId(String chestId);
 }

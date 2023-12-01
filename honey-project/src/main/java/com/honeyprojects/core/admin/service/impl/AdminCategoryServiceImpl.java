@@ -5,7 +5,9 @@ import com.honeyprojects.core.admin.model.request.AdminCategoryRequest;
 import com.honeyprojects.core.admin.model.request.AdminCreateCategoryRequest;
 import com.honeyprojects.core.admin.model.request.AdminUpdateCategoryRequest;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
+import com.honeyprojects.core.admin.repository.AdAuctionRepository;
 import com.honeyprojects.core.admin.repository.AdGiftDetailRepository;
+import com.honeyprojects.core.admin.repository.AdHoneyRepository;
 import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
 import com.honeyprojects.core.admin.service.AdminCategoryService;
 import com.honeyprojects.core.common.base.PageableObject;
@@ -52,6 +54,12 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
 
     @Autowired
     private AdGiftDetailRepository adGiftDetailRepository;
+
+    @Autowired
+    private AdAuctionRepository adAuctionRepository;
+
+    @Autowired
+    private AdHoneyRepository adHoneyRepository;
 
     @Override
     public PageableObject<AdminCategoryResponse> getAllCategoryByAdmin(AdminCategoryRequest request) {
@@ -212,6 +220,13 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     @Override
     @Transactional
     public void deleteCategory(String id) {
+        if (adGiftDetailRepository.findAllByCategoryId(id).size() != 0 ||
+            adAuctionRepository.findAllByHoneyCategoryId(id).size() != 0 ||
+            adHoneyRepository.findAllByHoneyCategoryId(id).size() != 0
+        ) {
+            throw new RestApiException("Thể loại đang được sử dụng không thể xóa.");
+        }
+
         StringBuilder contentLogger = new StringBuilder();
         LoggerFunction loggerObject = new LoggerFunction();
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
@@ -258,13 +273,6 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     @Override
     @Transactional
     public Category updateCategoryByCategory(String id) {
-        if (adGiftDetailRepository.findAllByCategoryId(id).size() != 0) {
-            throw new RestApiException("Thể loại đang được sử dụng không thể xóa.");
-        }
-
-
-
-
         StringBuilder contentLogger = new StringBuilder();
         LoggerFunction loggerObject = new LoggerFunction();
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
