@@ -51,6 +51,7 @@ import Login from "./pages/login/Login";
 import AuthorSwitch from "./pages/login/AuthorSwitch";
 import ProjectManager from "./pages/censor/randomaddpoint/ProjectManager";
 import EventManager from "./pages/censor/randomaddpoint/EventManager";
+import AuctionManagementChart from "./pages/censor/auction-management/chart/AuctionManagementChart";
 
 function App() {
   const data = useAppSelector(SelectLoading);
@@ -216,7 +217,7 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardCensor>
-                    <EventManager/>
+                    <EventManager />
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -226,7 +227,7 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardCensor>
-                    <ProjectManager/>
+                    <ProjectManager />
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -389,6 +390,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <AuctionMangement />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/auction-management/chart"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <AuctionManagementChart />
                   </DashboardCensor>
                 </AuthGuard>
               }

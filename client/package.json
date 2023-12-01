@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ant-design/icons": "^5.1.4",
+    "@ant-design/charts": "^1.4.3",
+    "@ant-design/icons": "^5.2.6",
     "@ant-design/plots": "^1.2.5",
     "@coreui/coreui": "^4.2.6",
     "@fireworks-js/react": "^2.10.7",
