@@ -3,10 +3,14 @@ package com.honeyprojects.core.admin.service.impl;
 import com.honeyprojects.core.admin.model.request.AdminChestRequest;
 import com.honeyprojects.core.admin.model.request.AdminCreateChestRequest;
 import com.honeyprojects.core.admin.model.response.AdminChestReponse;
+import com.honeyprojects.core.admin.repository.AdArchiveGiftRepository;
+import com.honeyprojects.core.admin.repository.AdChestGiftRepository;
 import com.honeyprojects.core.admin.repository.AdChestRepository;
+import com.honeyprojects.core.admin.repository.AdHistoryDetailRepository;
 import com.honeyprojects.core.admin.service.AdminChestService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Chest;
+import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.infrastructure.logger.entity.LoggerFunction;
 import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
 import com.honeyprojects.util.LoggerUtil;
@@ -30,6 +34,15 @@ public class AdminChestServiceImpl implements AdminChestService {
 
     @Autowired
     private RabbitProducer producer;
+
+    @Autowired
+    private AdHistoryDetailRepository adHistoryDetailRepository;
+
+    @Autowired
+    private AdChestGiftRepository adChestGiftRepository;
+
+    @Autowired
+    private AdArchiveGiftRepository adArchiveGiftRepository;
 
     @Override
     public PageableObject<AdminChestReponse> getAllChestByAdmin(AdminChestRequest request) {
@@ -60,6 +73,13 @@ public class AdminChestServiceImpl implements AdminChestService {
     @Transactional
     public void deleteChest(String id) {
         Optional<Chest> chestOptional = chestRepository.findById(id);
+        if (adHistoryDetailRepository.findAllByChestId(id).size() != 0 ||
+                adArchiveGiftRepository.findAllByChestId(id).size() != 0
+        ) {
+            throw new RestApiException("Rương đã được sử dụng. Không thể xóa");
+        }
+
+        adChestGiftRepository.deleteAllByChestId(id);
         chestRepository.delete(chestOptional.get());
     }
 

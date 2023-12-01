@@ -104,7 +104,7 @@ export default function ChestGift() {
   const confirm = (chest) => {
     ChestGiftAPI.deleteChest(chest.id).then(
       (response) => {
-        setCurrent(1);
+        handleSearch()
         message.success("Xóa thành công");
       },
       (err) => {
