@@ -168,23 +168,23 @@ export default function AddPoint() {
       <div className="add-point">
         <Card className="mb-2 py-1">
           <Form form={formSearch} className="d-flex" onFinish={onFinishSearch}>
-            <Row className="">  
+            <Row className="">
               <Form.Item
                 name="code"
                 rules={[
                   {
                     required: true,
                     whitespace: true,
-                    message: "Vui lòng nhập mã sinh viên",
+                    message: "Vui lòng nhập username sinh viên",
                   },
                 ]}
                 className="search-input"
               >
                 <Input
                   size="small"
-                  placeholder="Nhập mã sinh viên cần tìm"
+                  placeholder="Nhập username sinh viên cần tìm"
                   prefix={<SearchOutlined />}
-                  style={{ width: 835, marginRight : 20}}
+                  style={{ width: 835, marginRight: 20 }}
                 />
               </Form.Item>
               <Button

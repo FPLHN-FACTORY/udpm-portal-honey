@@ -14,7 +14,7 @@ export class GiftAPI {
   static create = (data) => {
     const formData = new FormData();
     formData.append("code", data.code);
-    formData.append("name", data.name);
+    formData.append("name", data.name.trim());
     formData.append("image", data.image);
     if (!isNaN(data.quantity) && data.quantity !== null) {
       formData.append("quantity", data.quantity);
@@ -31,7 +31,9 @@ export class GiftAPI {
     if (data.toDate !== null) {
       formData.append("toDate", data.toDate);
     }
-    formData.append("note", data.note);
+    if (data.note !== null) {
+      formData.append("note", data.note.trim());
+    }
 
     if (data.numberDateEnd !== null) {
       formData.append("numberDateEnd", data.numberDateEnd);
@@ -46,7 +48,7 @@ export class GiftAPI {
   static update = (data, id) => {
     const formData = new FormData();
     formData.append("code", data.code);
-    formData.append("name", data.name);
+    formData.append("name", data.name.trim());
     if (data.image !== null) {
       formData.append("image", data.image);
     }
@@ -66,7 +68,9 @@ export class GiftAPI {
     if (data.toDate !== null) {
       formData.append("toDate", data.toDate);
     }
-    formData.append("note", data.note);
+    if (data.note !== null) {
+      formData.append("note", data.note.trim());
+    }
     if (data.numberDateEnd !== null) {
       formData.append("numberDateEnd", data.numberDateEnd);
     }

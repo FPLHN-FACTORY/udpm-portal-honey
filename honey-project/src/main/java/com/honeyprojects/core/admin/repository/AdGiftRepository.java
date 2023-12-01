@@ -20,7 +20,7 @@ public interface AdGiftRepository extends GiftRepository {
     @Query(value = """
             SELECT ROW_NUMBER() OVER(ORDER BY g.created_date DESC) AS stt, 
             g.id, g.code, g.name, g.note, g.quantity, g.status, g.type, g.from_date, g.to_date, g.limit_quantity, 
-            g.transaction_gift ,g.last_modified_date, g.image, g.number_end_date
+            g.transaction_gift ,g.last_modified_date, g.image, g.number_end_date, g.expiry
             FROM gift g LEFT JOIN gift_detail gd ON gd.gift_id = g.id
              WHERE (status =0 or status = 1) 
              AND ( ( :#{#request.categoryId} IS NULL 
@@ -32,13 +32,9 @@ public interface AdGiftRepository extends GiftRepository {
             OR ( :#{#request.search} IS NULL
                     OR :#{#request.search} LIKE '' 
                     OR g.name LIKE %:#{#request.search}% ) ) 
-            GROUP BY g.id, g.code, g.name, g.note, g.quantity, g.status, g.type,
-                g.from_date, g.to_date, g.limit_quantity,
-                g.last_modified_date, g.image
+            GROUP BY g.id
             """, countQuery = """
-            SELECT ROW_NUMBER() OVER(ORDER BY g.created_date DESC) AS stt, 
-            g.id, g.code, g.name, g.note, g.quantity, g.status, g.type, g.from_date, g.to_date, g.limit_quantity, 
-            g.transaction_gift ,g.last_modified_date, g.image, g.number_end_date
+            SELECT count(g.id)
             FROM gift g LEFT JOIN gift_detail gd ON gd.gift_id = g.id
              WHERE (status =0 or status = 1 ) AND ( ( :#{#request.categoryId} IS NULL 
              OR :#{#request.categoryId} LIKE '' 
@@ -49,9 +45,7 @@ public interface AdGiftRepository extends GiftRepository {
             OR ( :#{#request.search} IS NULL
                     OR :#{#request.search} LIKE '' 
                     OR g.name LIKE %:#{#request.search}% ) ) 
-            GROUP BY g.id, g.code, g.name, g.note, g.quantity, g.status, g.type,
-                g.from_date, g.to_date, g.limit_quantity,
-                g.last_modified_date, g.image
+            GROUP BY g.id
             """, nativeQuery = true)
     Page<AdminGiftResponse> getAllGiftByAdmin(Pageable pageable, @Param("request") AdminGiftRequest request);
 

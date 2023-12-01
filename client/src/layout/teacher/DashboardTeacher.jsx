@@ -42,7 +42,6 @@ function DashboardTeacher({ children }) {
   pathname = pathname.replace("/", "");
 
   let title = "";
-  console.log(pathname);
   if (pathname.includes("teacher/add-point")) {
     title = "Cộng mật ong";
   }

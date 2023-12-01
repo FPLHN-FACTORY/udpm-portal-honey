@@ -57,7 +57,6 @@ export default function IndexGift() {
       categoryId: honeyCategoryId,
       page: current - 1,
     }).then((response) => {
-      console.log(response.data.data.data);
       dispatch(SetGift(response.data.data.data));
       setTotal(response.data.data.totalPages);
     });
@@ -72,7 +71,6 @@ export default function IndexGift() {
       categoryId: "",
       page: current - 1,
     }).then((response) => {
-      console.log(response.data.data.data);
       dispatch(SetGift(response.data.data.data));
       setTotal(response.data.data.totalPages);
     });
