@@ -167,10 +167,25 @@ function DashboardAuthUser({ children }) {
       <FontAwesomeIcon icon={faToolbox} />
     ),
     getItem(
-      <Link to="/censor/auction-management">Quản lý đấu giá</Link>,
-      "/censor/auction-management",
-      <FontAwesomeIcon icon={faScaleUnbalanced} />
+      "Quản lý đấu giá",
+      "Quản lý đấu giá",
+      <FontAwesomeIcon icon={faScaleUnbalanced} />,
+      [
+        getItem(
+          <Link to="/censor/auction-management">Quản lý đấu giá</Link>,
+          "/censor/auction-management"
+        ),
+        getItem(
+          <Link to={"/censor/auction-management/chart"}>Thống kê</Link>,
+          "/censor/auction-management/chart"
+        ),
+      ]
     ),
+    // getItem(
+    //   <Link to="/censor/auction-management">Quản lý đấu giá</Link>,
+    //   "/censor/auction-management",
+    //   <FontAwesomeIcon icon={faScaleUnbalanced} />
+    // ),
     getItem(
       <Link to="/censor/upgrade-rate">Quản lý nâng cấp</Link>,
       "/censor/upgrade-rate",
@@ -184,6 +199,7 @@ function DashboardAuthUser({ children }) {
   return (
     <Layout
       id="authe"
+      style={{ background: "#f2f3f8" }}
       className={`layout-dashboard ${
         pathname === "profile" ? "layout-profile" : ""
       } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
