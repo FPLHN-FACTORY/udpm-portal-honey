@@ -1,6 +1,7 @@
 package com.honeyprojects.core.student.service.impl;
 
 import com.honeyprojects.core.common.base.PageableObject;
+import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.student.model.request.auction.StudentAuctionCreateRequest;
 import com.honeyprojects.core.student.model.request.auction.StudentAuctionRoomFilterRequest;
 import com.honeyprojects.core.student.model.response.StudentAuctionResponse;
@@ -29,6 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -52,9 +55,6 @@ public class StudentAuctionServiceImpl implements StudentAuctionService {
 
     @Autowired
     private StudentArchiveRepository studentArchiveRepository;
-
-    @Autowired
-    private HttpSession session;
 
     @Override
     public Auction getOneByid(String id) {
@@ -95,7 +95,7 @@ public class StudentAuctionServiceImpl implements StudentAuctionService {
             auction.setHoneyCategoryId(request.getIdCategory());
             auction.setStatus(Status.HOAT_DONG);
             auction.setQuantity(request.getQuantity());
-            auction.setAuctioneerCreateUserName(session.getAttribute(SessionConstant.USER_NAME).toString());
+            auction.setAuctioneerCreateUserName(request.getMail());
             return studentAuctionRepository.save(auction);
         }
     }
@@ -104,10 +104,10 @@ public class StudentAuctionServiceImpl implements StudentAuctionService {
     public Auction updateLastPrice(MessageAuction messageAuction) {
         var auction = studentAuctionRepository.findById(messageAuction.getIdAuction());
         if (!auction.isPresent()) {
-            throw new RestApiException("Không tìm thấy phiên dấu giá.");
+            throw new MessageHandlingException("Không tìm thấy phiên dấu giá.");
         }
-        if (auction.get().getAuctioneerCreateUserName().equals(session.getAttribute(SessionConstant.USER_NAME).toString())) {
-            throw new RestApiException("Bạn không thể đấu giá phiên của chính mình");
+        if (auction.get().getAuctioneerCreateUserName().equals(messageAuction.getMail())) {
+            throw new MessageHandlingException("Bạn không thể đấu giá phiên của chính mình");
         }
         Date date = new Date();
         if (auction.get().getToDate() < date.getTime()) {
@@ -119,7 +119,7 @@ public class StudentAuctionServiceImpl implements StudentAuctionService {
         }
 
         auction.get().setLastPrice(new BigDecimal(messageAuction.getLastPrice()));
-        auction.get().setAuctioneerUserName(session.getAttribute(SessionConstant.USER_NAME).toString());
+        auction.get().setAuctioneerUserName(messageAuction.getMail());
         studentAuctionRepository.save(auction.get());
         return auction.get();
     }

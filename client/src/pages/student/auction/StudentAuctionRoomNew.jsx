@@ -6,9 +6,9 @@ import {
   Col,
   Form,
   Input,
-  InputNumber,
   Modal,
   Row,
+  Select,
   Tooltip,
   message,
 } from "antd";
@@ -16,7 +16,7 @@ import React, { useEffect, useState } from "react";
 import "./AuctionRoomInside.css";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGavel } from "@fortawesome/free-solid-svg-icons";
+import { faFilter, faGavel } from "@fortawesome/free-solid-svg-icons";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import {
   GetAuction,
@@ -40,8 +40,7 @@ export default function StudentAuctionRoomNew() {
   const dispatch = useAppDispatch();
   const [current, setCurrent] = useState(0);
   const [total, setTotal] = useState(0);
-  const [size, setSize] = useState(3);
-  const listCategory = useAppSelector(GetAuction);
+  const [listCategory, setListCategory] = useState([]);
   const user = useAppSelector(GetUser);
 
   const listType = [
@@ -72,7 +71,7 @@ export default function StudentAuctionRoomNew() {
 
   const loadDataCategory = () => {
     CategoryAPI.fetchAllCategory().then((res) => {
-      dispatch(SetAuction(res.data.data.data));
+      setListCategory(res.data.data)
     });
   };
 
@@ -87,91 +86,19 @@ export default function StudentAuctionRoomNew() {
     const data = {
       ...searchParams,
       page: current,
-      size: size,
+      size: 3,
     };
     StudentAuctionAPI.fetchRoom(data).then((res) => {
       dispatch(SetAuction(res.data.data.data));
+      console.log(res.data.data.data);
       setTotal(res.data.data.totalPages);
       setCurrent(res.data.data.currentPage);
-      console.log(res.data.data);
     });
   };
 
   useEffect(() => {
     loadData();
-  }, [size, current, searchParams]);
-
-  const onShowSizeChange = (current, pageSize) => {
-    setCurrent(0);
-    setSize(pageSize);
-  };
-
-  const columns = [
-    {
-      title: "STT",
-      dataIndex: "stt",
-      key: "stt",
-      align: "center",
-      width: "7%",
-    },
-    {
-      title: "Tên vật phẩm",
-      dataIndex: "giftName",
-      key: "giftName",
-      align: "center",
-    },
-    {
-      title: "Thời gian còn lại",
-      dataIndex: "toDate",
-      key: "toDate",
-      align: "center",
-      width: "17%",
-      render: (_, record) => (
-        <CountdownTimer initialTime={record.toDate - new Date().getTime()} />
-      ),
-    },
-    {
-      title: "Giá cố định",
-      dataIndex: "startingPrice",
-      key: "startingPrice",
-      align: "center",
-    },
-    {
-      title: "Giá hiện tại",
-      dataIndex: "lastPrice",
-      key: "lastPrice",
-      align: "center",
-      render: (_, record) => {
-        if (record.lastPrice === null) {
-          return "?";
-        } else {
-          return record.lastPrice;
-        }
-      },
-    },
-    {
-      title: "Loại mật ong",
-      dataIndex: "nameCategory",
-      key: "nameCategory",
-      align: "center",
-    },
-    {
-      title: "Hành động",
-      dataIndex: "action",
-      key: "action",
-      align: "center",
-      render: (_, record) => (
-        <Tooltip placement="top" title={"Đấu giá " + record.name}>
-          <Button
-            style={{ backgroundColor: "#ffcc00", color: "white" }}
-            onClick={() => showModalAuction(record)}
-          >
-            <FontAwesomeIcon icon={faGavel} />
-          </Button>
-        </Tooltip>
-      ),
-    },
-  ];
+  }, [current, searchParams]);
 
   const buttonClear = () => {
     form.resetFields();
@@ -179,19 +106,24 @@ export default function StudentAuctionRoomNew() {
       nameGift: "",
       category: "",
       type: "",
-      startingPrice: "",
+      startingPrice: null,
+      endPrice: null
     });
   };
 
   const buttonSearch = () => {
     const values = form.getFieldsValue();
-    setSearchParams({
-      nameGift: values.nameGift,
-      category: values.category,
-      type: values.type,
-      startingPrice: values.startingPrice,
-    });
-    setCurrent(0);
+    if (values) {
+      setSearchParams({
+        nameGift: values.nameGift ? values.nameGift.trim() : '',
+        category: values.category ? values.category.trim() : '',
+        type: values.type,
+        startingPrice: values.startingPrice,
+        endPrice: values.endPrice
+      });
+      setCurrent(0);
+    }
+    setIsShowSearch(false);
   };
 
   // tạo phiên dấu giá
@@ -202,6 +134,8 @@ export default function StudentAuctionRoomNew() {
   // detail phiên đấu giá
   const [detail, setDetail] = useState(null);
   const [isShowDetail, setIsShowDetail] = useState(false);
+
+  const [isShowSearch, setIsShowSearch] = useState(false);
 
   const showModalDetail = (el) => {
     setIsShowDetail(true);
@@ -254,12 +188,13 @@ export default function StudentAuctionRoomNew() {
             idAuction: auction.id,
             lastPrice: value.lastPrice,
             idUser: user.idUser,
+            mail: user.email
           })
           );
         }
       })
     } else {
-      message.error("Không có kết nối STOMP hoặc kết nối không hợp lệ.");
+      message.info("Mất kết nối đến máy chủ!");
       return;
     }
     form.setFieldValue("lastPrice", null)
@@ -277,8 +212,14 @@ export default function StudentAuctionRoomNew() {
     const socket = new SockJS(
       AppConfig.apiUrl + "/portal-honey-websocket-endpoint"
     );
-    const stompClient = Stomp.over(socket);
+    // const stompClient = Stomp.over(socket);
 
+    const stompClient = Stomp.over(socket, {
+      heartbeatIncoming: 10000,
+      heartbeatOutgoing: 10000,
+    });
+
+    stompClient.activate();
     stompClient.onWebSocketClose(() => {
       message.info("Mất kết nối đến máy chủ !");
     });
@@ -323,7 +264,7 @@ export default function StudentAuctionRoomNew() {
       {
         isShowDetail && 
           <Modal
-            title="Xem chi tiết phiên"
+            title={`Xem chi tiết phòng ${detail.name}`}
             open={isShowDetail}
             width={800}
             onCancel={unShowModalDetail}
@@ -344,7 +285,7 @@ export default function StudentAuctionRoomNew() {
                     <span className="font-semibold text-sm">Tên vật phẩm:</span>
                   </Col>
                   <Col span={16}>
-                    <span className="pl-5 text-sm">{ detail.name }</span>
+                    <span className="pl-5 text-sm">{ detail.giftName }</span>
                   </Col>
                 </Row>
               </Col>
@@ -399,7 +340,7 @@ export default function StudentAuctionRoomNew() {
                     <span className="font-semibold text-sm">Người đấu giá hiện tại:</span>
                   </Col>
                   <Col span={16}>
-                    <span className="pl-5 text-sm">{ detail.userAuction }</span>
+                    <span className="pl-5 text-sm">{ detail.userAuction ? detail.userAuction : "Chưa có người đấu giá" }</span>
                   </Col>
                 </Row>
               </Col>
@@ -421,7 +362,7 @@ export default function StudentAuctionRoomNew() {
                     <span className="font-semibold text-sm">Giá hiện tại:</span>
                   </Col>
                   <Col span={16}>
-                    <span className="pl-5 text-sm">{ detail.lastPrice }</span>
+                    <span className="pl-5 text-sm">{ detail.lastPrice ? detail.lastPrice : "Chưa có người đấu giá"  }</span>
                   </Col>
                 </Row>
               </Col>
@@ -503,6 +444,171 @@ export default function StudentAuctionRoomNew() {
           stompClientAll={stompClientAll}
         />
       }
+      {
+        isShowSearch && 
+        <Modal
+          title={(<><FontAwesomeIcon icon={faFilter} size="2xl" />
+          <span
+            style={{
+              marginLeft: "5px",
+              fontWeight: "bold",
+              fontSize: "22px",
+            }}
+          >
+            Bộ lọc
+          </span></>)}
+            open={isShowSearch}
+            onCancel={() => {
+              setIsShowSearch(false);
+              form.resetFields();
+            }}
+          footer={[
+            <Button key="cancel" onClick={() => {
+              setIsShowSearch(false);
+              form.resetFields();
+            }}>
+              Hủy
+            </Button>,
+            <Button
+              onClick={() => buttonClear()}
+              style={{
+                marginLeft: "8px",
+                height: "35px",
+                backgroundColor: "#FF9900",
+                color: "white",
+                outline: "none",
+                border: "none",
+              }}
+            >
+              Làm mới
+            </Button>,
+            <Button
+              onClick={() => buttonSearch()}
+              style={{
+                marginRight: "8px",
+                height: "35px",
+                backgroundColor: "rgb(55, 137, 220)",
+                color: "white",
+              }}
+            >
+              Tìm kiếm
+            </Button>,
+            ]}
+          >
+          <hr className="border-0 bg-gray-300 mt-3 mb-3" />
+                <div className="sidebar">
+                  
+                  <Form form={form}>
+                    <Row style={{ marginTop: "10px" }}>
+                      <Col span={24}>
+                        <Form.Item
+                          name="nameGift"
+                          labelCol={{ span: 6 }}
+                          wrapperCol={{ span: 18 }}
+                          label={
+                            <span>Tên vật phẩm</span>
+                          }
+                        >
+                          <Input
+                            onKeyPress={(e) => {
+                              if (
+                                e.key === " " &&
+                                e.target.selectionStart === 0
+                              ) {
+                                e.preventDefault();
+                              }
+                            }}
+                            style={{ height: "30px" }}
+                            placeholder="Vui lòng nhập Tên."
+                          />
+                        </Form.Item>
+
+                        <Form.Item
+                          name="category"
+                          labelCol={{ span: 6 }}
+                          wrapperCol={{ span: 18 }}
+                          label={
+                            <span>Loại mật ong</span>
+                          }
+                        >
+                          <Select
+                            placeholder="Chọn thể loại"
+                          >
+                            <Select.Option value={""}>
+                              Chọn tất cả
+                            </Select.Option>
+                            {listCategory?.map((item) => {
+                              return (
+                                <Select.Option value={item.id}>
+                                  {item.name}
+                                </Select.Option>
+                              );
+                            })}
+                          </Select>
+                        </Form.Item>
+                        <Form.Item
+                          name="type"
+                          labelCol={{ span: 6 }}
+                          wrapperCol={{ span: 18 }}
+                          label={
+                            <span>
+                              Loại vật phẩm
+                            </span>
+                          }
+                        >
+                          <Select
+                            placeholder="Thể loại vật phẩm"
+                          >
+                            <Select.Option value={""}>
+                              Chọn tất cả
+                            </Select.Option>
+                            {listType?.map((item) => {
+                              return (
+                                <Select.Option value={item.value}>
+                                  {item.label}
+                                </Select.Option>
+                              );
+                            })}
+                          </Select>
+                        </Form.Item>
+                          <Form.Item
+                            name="startingPrice"
+                            labelCol={{ span: 6 }}
+                            wrapperCol={{ span: 18 }}
+                            label={
+                              <span>Giá khởi điểm từ</span>
+                            }
+                          >
+                            <Input
+                              style={{
+                                height: "30px",
+                                width: "100%",
+                              }}
+                              placeholder="Vui lòng nhập giá từ."
+                            />
+                          </Form.Item>
+                          <Form.Item
+                            name="endPrice"
+                            labelCol={{ span: 6 }}
+                            wrapperCol={{ span: 18 }}
+                            label={
+                              <span>Giá khởi điểm đến</span>
+                            }
+                          >
+                            <Input type="number"
+                              style={{
+                                height: "30px",
+                                width: "100%",
+                              }}
+                              placeholder="Vui lòng nhập giá từ."
+                            />
+                          </Form.Item>
+                      </Col>
+                    </Row>
+                  </Form>
+                </div>
+        </Modal>
+      }
       <div className="auction-main-inside">
         <Card title={""} className="cartAllConversion border-0 w-full" style={{minHeight: "80vh"}} >
           <div className="title">
@@ -524,146 +630,31 @@ export default function StudentAuctionRoomNew() {
             </p>
             <div>
               {" "}
-              <img
-                src={require("../../../assets/images/ui-student/btn-add-auction-inside.png")}
-                alt="Gift"
-                height={30}
-                width={30}
-                className="btn-add-auction-inside"
-                onClick={showModal}
-              />
+              <Tooltip title="Tạo phiên đấu giá">
+                <img
+                  src={require("../../../assets/images/ui-student/btn-add-auction-inside.png")}
+                  alt="Gift"
+                  height={30}
+                  width={30}
+                  className="btn-add-auction-inside cursor-pointer"
+                  onClick={showModal}
+                />
+              </Tooltip>
+              <Tooltip title="Tìm kiếm">
+                <img
+                  src={require("../../../assets/images/search.png")}
+                  alt="Gift"
+                  height={30}
+                  width={30}
+                  className="btn-add-auction-inside mx-10 cursor-pointer"
+                  onClick={() => setIsShowSearch(true)}
+                />
+              </Tooltip>
+              
             </div>
           </div>
 
           <Row className="w-full">
-            {/* <Col xl={6} lg={24} >
-                <div className="sidebar">
-                  <FontAwesomeIcon icon={faFilter} size="2xl" />
-                  <span
-                    style={{
-                      marginLeft: "5px",
-                      fontWeight: "bold",
-                      fontSize: "22px",
-                    }}
-                  >
-                    Bộ lọc
-                  </span>
-                  <Form form={form}>
-                    <Row style={{ marginTop: "10px" }}>
-                      <Col span={24}>
-                        <Form.Item
-                          name="nameGift"
-                          labelCol={{ span: 9 }}
-                          wrapperCol={{ span: 17 }}
-                          label={
-                            <span style={{ color: "white" }}>Tên vật phẩm</span>
-                          }
-                        >
-                          <Input
-                            onKeyPress={(e) => {
-                              if (
-                                e.key === " " &&
-                                e.target.selectionStart === 0
-                              ) {
-                                e.preventDefault();
-                              }
-                            }}
-                            style={{ height: "30px" }}
-                            placeholder="Vui lòng nhập Tên."
-                          />
-                        </Form.Item>
-
-                        <Form.Item
-                          name="category"
-                          labelCol={{ span: 9 }}
-                          wrapperCol={{ span: 17 }}
-                          label={
-                            <span style={{ color: "white" }}>Loại mật ong</span>
-                          }
-                        >
-                          <Select
-                            placeholder="Chọn thể loại"
-                          >
-                            {listCategory?.map((item) => {
-                              return (
-                                <Select.Option value={item.id}>
-                                  {item.name}
-                                </Select.Option>
-                              );
-                            })}
-                          </Select>
-                        </Form.Item>
-                        <Form.Item
-                          name="type"
-                          labelCol={{ span: 9 }}
-                          wrapperCol={{ span: 17 }}
-                          label={
-                            <span style={{ color: "white" }}>
-                              Loại vật phẩm
-                            </span>
-                          }
-                        >
-                          <Select
-                            placeholder="Thể loại vật phẩm"
-                          >
-                            {listType?.map((item) => {
-                              return (
-                                <Select.Option value={item.value}>
-                                  {item.label}
-                                </Select.Option>
-                              );
-                            })}
-                          </Select>
-                        </Form.Item>
-                        <Form.Item
-                          name="startingPrice"
-                          labelCol={{ span: 9 }}
-                          wrapperCol={{ span: 17 }}
-                          label={
-                            <span style={{ color: "white" }}>Giá bắt đầu</span>
-                          }
-                        >
-                          <InputNumber
-                            style={{
-                              height: "30px",
-                              width: "100%",
-                            }}
-                            placeholder="Vui lòng nhập giá."
-                          />
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                  </Form>
-                  <Row justify={"center"} style={{ marginTop: "10px" }}>
-                    <Col>
-                      <Button
-                        onClick={buttonSearch}
-                        style={{
-                          marginRight: "8px",
-                          height: "35px",
-                          backgroundColor: "rgb(55, 137, 220)",
-                          color: "white",
-                        }}
-                      >
-                        Tìm kiếm
-                      </Button>
-                      <Button
-                        onClick={buttonClear}
-                        style={{
-                          marginLeft: "8px",
-                          height: "35px",
-                          backgroundColor: "#FF9900",
-                          color: "white",
-                          outline: "none",
-                          border: "none",
-                        }}
-                      >
-                        Làm mới
-                      </Button>
-                    </Col>
-                  </Row>
-                </div>
-            </Col> */}
 
             <Col  xl={24} lg={24}>
                 <Row justify="center">
