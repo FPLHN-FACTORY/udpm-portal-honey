@@ -11,7 +11,7 @@ import {
   Space,
   message,
 } from "antd";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector } from "../../../../app/hooks";
 import { GetUser } from "../../../../app/reducers/users/users.reducer";
 import { ArchiveAPI } from "../../../../apis/student/archive/ArchiveAPI";
@@ -50,6 +50,7 @@ export default function ModalAddAuction({
         form.setFieldsValue({ time: 8 });
       };
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
   const handleSubmit = () => {
@@ -97,6 +98,7 @@ export default function ModalAddAuction({
         }
         const dataUpload = {
           idUser: user?.idUser,
+          mail: user?.email,
           idGift: archiveGift?.idGift,
           jump,
           startingPrice,
