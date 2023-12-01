@@ -129,36 +129,41 @@ export default function CreateTransaction({ setData, setCurrent }) {
                 {
                   required: true,
                   whitespace: true,
-                  message: "Vui lòng nhập mã sinh viên",
+                  message: "Vui lòng nhập username sinh viên",
                 },
               ]}
-              className="search-input">
+              className="search-input"
+            >
               <Input
                 size="small"
-                placeholder="Nhập mã sinh viên cần tìm"
+                placeholder="Nhập username sinh viên cần tìm"
                 prefix={<SearchOutlined />}
               />
             </Form.Item>
             <Button
               htmlType="submit"
               type="primary"
-              className="ml-10 search-button">
+              className="ml-10 search-button"
+            >
               Search
             </Button>
           </Form>
-        }>
+        }
+      >
         {Object.keys(student).length > 0 ? (
           <Row>
             <Col
               span={12}
               className="p-25"
-              style={{ borderRight: "1px solid #F0F0F0" }}>
+              style={{ borderRight: "1px solid #F0F0F0" }}
+            >
               <Row className="font-semibold">
                 <Col span={24}>
                   <Descriptions title="Thông tin người nhận" column={1}>
                     <Descriptions.Item
                       label="User name"
-                      style={{ paddingBottom: "16px" }}>
+                      style={{ paddingBottom: "16px" }}
+                    >
                       <Tag>{student.userName}</Tag>
                     </Descriptions.Item>
                     <Descriptions.Item label="Họ và tên">
@@ -166,7 +171,8 @@ export default function CreateTransaction({ setData, setCurrent }) {
                     </Descriptions.Item>
                     <Descriptions.Item
                       label="Email"
-                      style={{ paddingTop: "15px" }}>
+                      style={{ paddingTop: "15px" }}
+                    >
                       <Tag>{student.email}</Tag>
                     </Descriptions.Item>
                   </Descriptions>
@@ -186,7 +192,8 @@ export default function CreateTransaction({ setData, setCurrent }) {
                         backgroundColor: `rgb(${interpolatedColor[0]}, ${interpolatedColor[1]}, ${interpolatedColor[2]})`,
                         fontWeight: "bold",
                         color: "white",
-                      }}>
+                      }}
+                    >
                       {honeyStudent.point} điểm
                     </Tag>
                   </Col>
@@ -232,7 +239,8 @@ export default function CreateTransaction({ setData, setCurrent }) {
                           max: parseInt(honeyStudent.point),
                           message: `Số điểm phải nhỏ hơn ${honeyStudent.point}`,
                         },
-                      ]}>
+                      ]}
+                    >
                       <InputNumber
                         onChange={(value) => {
                           setPercent((value / honeyStudent.point) * 100);
@@ -260,7 +268,8 @@ export default function CreateTransaction({ setData, setCurrent }) {
                           max: 100,
                           message: "Nội dung không được vượt quá 100 ký tự",
                         },
-                      ]}>
+                      ]}
+                    >
                       <Input.TextArea style={{ width: "100%" }} />
                     </Form.Item>
                   </Col>
@@ -269,7 +278,8 @@ export default function CreateTransaction({ setData, setCurrent }) {
                   <Button
                     htmlType="submit"
                     className="send-button"
-                    type="primary">
+                    type="primary"
+                  >
                     Tiếp tục
                     <SendOutlined className="m-0 pl-5" />
                   </Button>

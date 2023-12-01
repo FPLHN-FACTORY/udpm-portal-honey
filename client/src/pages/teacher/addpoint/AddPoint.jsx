@@ -164,7 +164,7 @@ export default function AddPoint() {
                 {
                   required: true,
                   whitespace: true,
-                  message: "Vui lòng nhập mã sinh viên",
+                  message: "Vui lòng nhập username sinh viên",
                 },
               ]}
               className="search-input"
@@ -172,7 +172,7 @@ export default function AddPoint() {
             >
               <Input
                 size="small"
-                placeholder="Nhập mã sinh viên cần tìm"
+                placeholder="Nhập username sinh viên cần tìm"
                 prefix={<SearchOutlined />}
               />
             </Form.Item>

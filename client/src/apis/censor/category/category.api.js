@@ -28,10 +28,10 @@ export class CategoryAPI {
   static update = (data, id) => {
     const formData = new FormData();
     formData.append("code", data.code);
-    formData.append("name", data.name);
+    formData.append("name", data.name.trim());
     formData.append("categoryStatus", data.categoryStatus);
     formData.append("transactionRights", data.transactionRights);
-    if (data.image !== null) {
+    if (data.image.length !== 0) {
       formData.append("image", data.image);
     }
     return request({

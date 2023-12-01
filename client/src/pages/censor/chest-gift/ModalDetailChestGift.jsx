@@ -30,11 +30,21 @@ const ModalDetail = (props) => {
       title: "Ngày bắt đầu",
       dataIndex: "toDate",
       key: "toDate",
+      render: (toDate, record) => {
+        return record.toDate === "Invalid date" || !record.toDate
+          ? "Không có"
+          : toDate;
+      },
     },
     {
       title: "Ngày kết thúc",
       dataIndex: "fromDate",
       key: "fromDate",
+      render: (fromDate, record) => {
+        return record.fromDate === "Invalid date" || !record.fromDate
+          ? "Không có"
+          : fromDate;
+      },
     },
   ];
 
@@ -50,6 +60,9 @@ const ModalDetail = (props) => {
   };
 
   const dataChest = useAppSelector(GetChestGift);
+  console.log("====================================");
+  console.log(dataChest);
+  console.log("====================================");
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -88,7 +101,7 @@ const ModalDetail = (props) => {
   const handleCancel = () => {
     setModalVisible(false);
     setSelectedRowKeys([]);
-  }
+  };
 
   return (
     <div>
