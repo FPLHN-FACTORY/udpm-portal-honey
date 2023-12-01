@@ -15,7 +15,7 @@ const ModalThem = (props) => {
   const [categoryName, setCategoryName] = useState("");
   const [errorCategoryName, setErrorCategoryName] = useState("");
 
-  const { fetchData } = props;
+  // const { fetchData } = props;
 
   useEffect(() => {
     CategoryAPI.fetchAll().then((response) => {
@@ -24,6 +24,7 @@ const ModalThem = (props) => {
   }, []);
 
   const handleFileInputChange = (event) => {
+
     var selectedFile = event.target.files[0];
     if (selectedFile) {
       var FileUploadName = selectedFile.name;
@@ -67,11 +68,16 @@ const ModalThem = (props) => {
   };
 
   const onFinishFailed = () => {
-    message.error("Error");
+    if (selectedImageUrl.length === 0) {
+      setErrorImage("Ảnh không được để trống");
+    } else {
+      setErrorImage("");
+    }
   };
 
-  const { modalOpen, setModalOpen, category, onSave } = props;
+  const { modalOpen, setModalOpen, category, onSave, fetchData } = props;
   const [form] = Form.useForm();
+
   form.setFieldsValue(category);
 
   const dispatch = useAppDispatch();
@@ -84,6 +90,7 @@ const ModalThem = (props) => {
           (listCategory) => listCategory.name === categoryName
         );
         let check = 0;
+
         if (selectedImageUrl.length === 0) {
           setErrorImage("Ảnh không được để trống");
           check++;
@@ -133,7 +140,7 @@ const ModalThem = (props) => {
       CategoryAPI.create({
         ...formValues,
         image: image,
-        name: categoryName,
+        name: categoryName.trim(),
       })
         .then((result) => {
           dispatch(AddCategory(result.data.data));
@@ -142,7 +149,7 @@ const ModalThem = (props) => {
           form.resetFields();
           const newCategory = {
             id: result.data.data.id,
-            name: categoryName,
+            name: categoryName.trim(),
             image: image,
           };
           onSave && onSave(newCategory);

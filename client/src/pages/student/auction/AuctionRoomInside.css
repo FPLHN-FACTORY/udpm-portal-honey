@@ -1,10 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
 .auction-main-inside .ant-card {
-  background-image: url("../../../assets/images/bar-transaction.png");
+  background-image: url("../../../assets/images/honor/background/background3.png");
 }
+  
 .menu-auction{
   background-image: url("../../../assets/images/bar-transaction.png");
   color: white;
+}
+.auction-main-inside .ant-card-body {
+  padding-top: 0;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  min-height: 80vh;
 }
 .button-xac-nhan.auction-room-inside {
   cursor: pointer;

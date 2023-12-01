@@ -34,8 +34,10 @@ import {
   faFilter,
   faRectangleList,
   faTrash,
+  faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { Option } from "antd/es/mentions";
+import React from "react";
 
 export default function Index() {
   const [showModal, setShowModal] = useState(false);
@@ -47,6 +49,7 @@ export default function Index() {
   const [total, setTotal] = useState(0);
   const [status, setStatus] = useState("");
   const [transaction, setTransaction] = useState("");
+  const [showModalDetail, setShowModalDetail] = useState(false);
 
   useEffect(() => {
     CategoryAPI.fetchAll().then((response) => {
@@ -191,11 +194,25 @@ export default function Index() {
       align: "center",
       render: (_, record) => (
         <Space size="small">
-          <ModalDetail
+          {/* <ModalDetail
             category={record}
             fetchData={fetchData}
             icon={<FormOutlined />}
-          />
+          /> */}
+          <Tooltip title="Cập nhật">
+            <Button
+              onClick={() => {
+                setDetailCategory(record);
+                setShowModalDetail(true);
+              }}
+              style={{
+                backgroundColor: "yellowgreen",
+                color: "white",
+              }}
+            >
+              <FontAwesomeIcon icon={faPenToSquare} />
+            </Button>
+          </Tooltip>
           <Tooltip title="Xóa">
             <Button
               onClick={() => {
@@ -224,6 +241,17 @@ export default function Index() {
           category={detailCategory}
           SetCategory={setDetailCategory}
           fetchData={fetchData}
+        />
+      )}
+      {showModalDetail && (
+        <ModalDetail
+          category={detailCategory}
+          fetchData={fetchData}
+          visible={showModalDetail}
+          onCancel={() => setShowModalDetail(false)}
+          onUpdate={() => {
+            setShowModalDetail(false);
+          }}
         />
       )}
       <Modal

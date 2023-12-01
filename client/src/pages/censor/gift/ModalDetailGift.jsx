@@ -310,7 +310,7 @@ const ModalDetailGift = (props) => {
         }
 
         Modal.confirm({
-          title: "Bạn có chắc chắn muốn cập nhật dữ liệu không?",
+          title: "Bạn có chắc chắn muốn thêm mới dữ liệu không?",
           onOk: () => {
             GiftAPI.update(
               data,
@@ -620,6 +620,18 @@ const ModalDetailGift = (props) => {
                       {
                         min: 0,
                         message: `Vui lòng không được để trống số lượng mật ${category.name}`,
+                      },
+                      {
+                        validator: (_, value) => {
+                          const regex = /^[0-9]+$/;
+                          if (!regex.test(value) || value === 0) {
+                            return Promise.reject(
+                              new Error("Vui lòng nhập một số nguyên dương")
+                            );
+                          }
+  
+                          return Promise.resolve();
+                        },
                       },
                     ]}
                     style={{ height: 40 }}

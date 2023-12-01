@@ -1,6 +1,7 @@
 package com.honeyprojects.core.student.service.impl;
 
 import com.honeyprojects.core.common.base.PageableObject;
+import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.student.model.request.auction.StudentAuctionCreateRequest;
 import com.honeyprojects.core.student.model.request.auction.StudentAuctionRoomFilterRequest;
 import com.honeyprojects.core.student.model.response.StudentAuctionResponse;
@@ -16,9 +17,11 @@ import com.honeyprojects.entity.Auction;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.infrastructure.configws.modelmessage.MessageAuction;
+import com.honeyprojects.infrastructure.contant.SessionConstant;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.exception.rest.MessageHandlingException;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
@@ -27,9 +30,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -89,6 +95,7 @@ public class StudentAuctionServiceImpl implements StudentAuctionService {
             auction.setHoneyCategoryId(request.getIdCategory());
             auction.setStatus(Status.HOAT_DONG);
             auction.setQuantity(request.getQuantity());
+            auction.setAuctioneerCreateUserName(request.getMail());
             return studentAuctionRepository.save(auction);
         }
     }
@@ -97,13 +104,22 @@ public class StudentAuctionServiceImpl implements StudentAuctionService {
     public Auction updateLastPrice(MessageAuction messageAuction) {
         var auction = studentAuctionRepository.findById(messageAuction.getIdAuction());
         if (!auction.isPresent()) {
-            throw new RestApiException("Không tìm thấy phiên dấu giá.");
+            throw new MessageHandlingException("Không tìm thấy phiên dấu giá.");
+        }
+        if (auction.get().getAuctioneerCreateUserName().equals(messageAuction.getMail())) {
+            throw new MessageHandlingException("Bạn không thể đấu giá phiên của chính mình");
+        }
+        Date date = new Date();
+        if (auction.get().getToDate() < date.getTime()) {
+            throw new MessageHandlingException("Phiên đấu giá đã kết thúc.");
         }
         Honey honey = studentHoneyRepository.findByStudentIdAndHoneyCategoryId(messageAuction.getIdUser(), auction.get().getHoneyCategoryId());
         if (honey == null || honey.getHoneyPoint() < messageAuction.getLastPrice()) {
             throw new MessageHandlingException("Không đủ mật ong.");
         }
+
         auction.get().setLastPrice(new BigDecimal(messageAuction.getLastPrice()));
+        auction.get().setAuctioneerUserName(messageAuction.getMail());
         studentAuctionRepository.save(auction.get());
         return auction.get();
     }

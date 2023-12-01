@@ -1,16 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
+  Avatar,
   Button,
   Card,
   Col,
   Form,
   Input,
-  InputNumber,
   Modal,
-  Pagination,
   Row,
   Select,
-  Table,
   Tooltip,
   message,
 } from "antd";
@@ -32,13 +30,17 @@ import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 import { GetUser } from "../../../app/reducers/users/users.reducer";
 import { AppConfig } from "../../../AppConfig";
+import { Content } from "antd/es/layout/layout";
+import { Link } from "react-router-dom";
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
+
 export default function StudentAuctionRoomNew() {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
   const [current, setCurrent] = useState(0);
   const [total, setTotal] = useState(0);
-  const [size, setSize] = useState(10);
-  const listCategory = useAppSelector(GetAuction);
+  const [listCategory, setListCategory] = useState([]);
   const user = useAppSelector(GetUser);
 
   const listType = [
@@ -69,7 +71,7 @@ export default function StudentAuctionRoomNew() {
 
   const loadDataCategory = () => {
     CategoryAPI.fetchAllCategory().then((res) => {
-      dispatch(SetAuction(res.data.data.data));
+      setListCategory(res.data.data)
     });
   };
 
@@ -84,95 +86,18 @@ export default function StudentAuctionRoomNew() {
     const data = {
       ...searchParams,
       page: current,
-      size: size,
+      size: 3,
     };
     StudentAuctionAPI.fetchRoom(data).then((res) => {
       dispatch(SetAuction(res.data.data.data));
       setTotal(res.data.data.totalPages);
       setCurrent(res.data.data.currentPage);
-      if (total > res.data.data.totalPages) {
-        setCurrent(0);
-      } else {
-        setCurrent(res.data.data.currentPage);
-      }
     });
   };
 
   useEffect(() => {
     loadData();
-  }, [size, current, searchParams]);
-
-  const onShowSizeChange = (current, pageSize) => {
-    setCurrent(0);
-    setSize(pageSize);
-  };
-
-  const columns = [
-    {
-      title: "STT",
-      dataIndex: "stt",
-      key: "stt",
-      align: "center",
-      width: "7%",
-    },
-    {
-      title: "Tên vật phẩm",
-      dataIndex: "giftName",
-      key: "giftName",
-      align: "center",
-    },
-    {
-      title: "Thời gian còn lại",
-      dataIndex: "toDate",
-      key: "toDate",
-      align: "center",
-      width: "17%",
-      render: (_, record) => (
-        <CountdownTimer initialTime={record.toDate - new Date().getTime()} />
-      ),
-    },
-    {
-      title: "Giá cố định",
-      dataIndex: "startingPrice",
-      key: "startingPrice",
-      align: "center",
-    },
-    {
-      title: "Giá hiện tại",
-      dataIndex: "lastPrice",
-      key: "lastPrice",
-      align: "center",
-      render: (_, record) => {
-        if (record.lastPrice === null) {
-          return "?";
-        } else {
-          return record.lastPrice;
-        }
-      },
-    },
-    {
-      title: "Loại mật ong",
-      dataIndex: "nameCategory",
-      key: "nameCategory",
-      align: "center",
-    },
-    {
-      title: "Hành động",
-      dataIndex: "action",
-      key: "action",
-      align: "center",
-      render: (_, record) => (
-        <Tooltip placement="top" title={"Đấu giá " + record.name}>
-          <Button
-            style={{ backgroundColor: "#ffcc00", color: "white" }}
-            onClick={() => showModalAuction(record)}
-          >
-            <FontAwesomeIcon icon={faGavel} />
-          </Button>
-        </Tooltip>
-      ),
-    },
-  ];
+  }, [current, searchParams]);
 
   const buttonClear = () => {
     form.resetFields();
@@ -180,25 +105,45 @@ export default function StudentAuctionRoomNew() {
       nameGift: "",
       category: "",
       type: "",
-      startingPrice: "",
+      startingPrice: null,
+      endPrice: null
     });
   };
 
   const buttonSearch = () => {
     const values = form.getFieldsValue();
-    setSearchParams({
-      nameGift: values.nameGift,
-      category: values.category,
-      type: values.type,
-      startingPrice: values.startingPrice,
-    });
-    setCurrent(0);
+    if (values) {
+      setSearchParams({
+        nameGift: values.nameGift ? values.nameGift.trim() : '',
+        category: values.category ? values.category.trim() : '',
+        type: values.type,
+        startingPrice: values.startingPrice,
+        endPrice: values.endPrice
+      });
+      setCurrent(0);
+    }
+    setIsShowSearch(false);
   };
 
   // tạo phiên dấu giá
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalAuction, setModalAuction] = useState(false);
   const [auction, setAuction] = useState(null);
+
+  // detail phiên đấu giá
+  const [detail, setDetail] = useState(null);
+  const [isShowDetail, setIsShowDetail] = useState(false);
+
+  const [isShowSearch, setIsShowSearch] = useState(false);
+
+  const showModalDetail = (el) => {
+    setIsShowDetail(true);
+    setDetail(el);
+    setAuction(el)
+  }
+  const unShowModalDetail = () => {
+    setIsShowDetail(false);
+  }
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -232,20 +177,26 @@ export default function StudentAuctionRoomNew() {
       return;
     }
     if (stompClientAll && stompClientAll.connected) {
-      stompClientAll.send(
-        `/action/update-last-price-auction`,
-        {},
-        JSON.stringify({
-          idAuction: auction.id,
-          lastPrice: value.lastPrice,
-          idUser: user.idUser,
-        })
-      );
+      Modal.confirm({
+        title: "Bạn có chắc chắn muốn đấu giá vật phẩm không?",
+        onOk: () => {
+        stompClientAll.send(
+          `/action/update-last-price-auction`,
+          {},
+          JSON.stringify({
+            idAuction: auction.id,
+            lastPrice: value.lastPrice,
+            idUser: user.idUser,
+            mail: user.email
+          })
+          );
+        }
+      })
     } else {
-      message.error("Không có kết nối STOMP hoặc kết nối không hợp lệ.");
+      message.info("Mất kết nối đến máy chủ!");
       return;
     }
-
+    form.setFieldValue("lastPrice", null)
     setAuction(null);
     setModalAuction(false);
   };
@@ -260,14 +211,20 @@ export default function StudentAuctionRoomNew() {
     const socket = new SockJS(
       AppConfig.apiUrl + "/portal-honey-websocket-endpoint"
     );
-    const stompClient = Stomp.over(socket);
+    // const stompClient = Stomp.over(socket);
 
+    const stompClient = Stomp.over(socket, {
+      heartbeatIncoming: 10000,
+      heartbeatOutgoing: 10000,
+    });
+
+    stompClient.activate();
     stompClient.onWebSocketClose(() => {
       message.info("Mất kết nối đến máy chủ !");
     });
 
     stompClient.connect({}, () => {
-      let sessionId = /\/([^\/]+)\/websocket/.exec(
+      let sessionId = /\/([^\\/]+)\/websocket/.exec(
         stompClient.ws._transport.url
       )[1];
 
@@ -303,34 +260,356 @@ export default function StudentAuctionRoomNew() {
 
   return (
     <>
-      <Modal
-        title="Đấu giá"
-        open={modalAuction}
-        onOk={handleOkAuction}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="cancel" onClick={handleCancel}>
-            Hủy
-          </Button>,
-          <Button key="submit" type="primary" onClick={handleOkAuction}>
-            Đấu giá
-          </Button>,
-        ]}
-      >
-        <Form form={form} layout="vertical">
-          <Form.Item name="lastPrice" label="Mức giá :">
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-        </Form>
-      </Modal>
-      <ModalAddAuction
-        visible={isModalOpen}
-        onOK={handleOk}
-        onCancel={handleCancel}
-        stompClientAll={stompClientAll}
-      />
+      {
+        isShowDetail && 
+          <Modal
+            title={`Xem chi tiết phòng ${detail.name}`}
+            open={isShowDetail}
+            width={800}
+            onCancel={unShowModalDetail}
+            footer={[
+              <Button key="cancel" onClick={unShowModalDetail}>
+                Hủy
+              </Button>,
+              <Button type="primary" onClick={() => { setModalAuction(detail); setIsShowDetail(false)}}>
+                Đấu giá
+              </Button>,
+              ]}>
+            <hr className="border-0 bg-gray-300 mt-3 mb-3" />
+
+            <Row gutter={16} className="px-4">
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Tên vật phẩm:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ detail.giftName }</span>
+                  </Col>
+                </Row>
+              </Col>
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Thể loại:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ detail.nameCategory }</span>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row gutter={16} className="px-4">
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Số lượng:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ detail.quantity }</span>
+                  </Col>
+                </Row>
+              </Col>
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Bước nhảy:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ detail.jump }</span>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className="px-4">
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Người tạo:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ detail.userCreate }</span>
+                  </Col>
+                </Row>
+              </Col>
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Người đấu giá hiện tại:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ detail.userAuction ? detail.userAuction : "Chưa có người đấu giá" }</span>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row gutter={16} className="px-4">
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Giá khởi điểm:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{detail.startingPrice}</span>
+                  </Col>
+                </Row>
+              </Col>
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Giá hiện tại:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ detail.lastPrice ? detail.lastPrice : "Chưa có người đấu giá"  }</span>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row gutter={16} className="px-4">
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Thời gian bắt đầu:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ moment(detail.fromDate).format('DD-mm-yyyy, h:mm:ss a') }</span>
+                  </Col>
+                </Row>
+              </Col>
+              <Col sm={12} xl={12} xs={24} className="mt-2">
+                <Row>
+                  <Col span={8} className="pr-5 text-right">
+                    <span className="font-semibold text-sm">Ngày kết thúc:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span className="pl-5 text-sm">{ moment(detail.toDate).format('DD-mm-yyyy, h:mm:ss a') }</span>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </Modal>
+      }
+      {
+        modalAuction && 
+        <Modal
+          title="Đấu giá"
+          open={modalAuction}
+          onOk={handleOkAuction}
+          onCancel={handleCancel}
+          footer={[
+            <Button key="cancel" onClick={handleCancel}>
+              Hủy
+            </Button>,
+            <Button type="primary" onClick={handleOkAuction}>
+              Đấu giá
+            </Button>,
+          ]}
+        >
+          <Form form={form} layout="vertical">
+            <Form.Item 
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng chọn thời gian hết hạn",
+                    },
+                    {
+                      validator: (_, value) => {
+                        if ((value + "").trim().length === 0) {
+                          return Promise.resolve();
+                        }
+                        const regex = /^[0-9]+$/;
+                        if (!regex.test(value) || value === 0) {
+                          return Promise.reject(
+                            new Error("Vui lòng nhập một số nguyên dương")
+                          );
+                        }
+
+                        return Promise.resolve();
+                      },
+                    },
+                  ]} name="lastPrice" label="Mức giá :">
+              <Input type="number" style={{ width: "100%" }} />
+            </Form.Item>
+          </Form>
+        </Modal>
+      }
+      {
+        isModalOpen && 
+        <ModalAddAuction
+          visible={isModalOpen}
+          onOK={handleOk}
+          onCancel={handleCancel}
+          stompClientAll={stompClientAll}
+        />
+      }
+      {
+        isShowSearch && 
+        <Modal
+          title={(<><FontAwesomeIcon icon={faFilter} size="2xl" />
+          <span
+            style={{
+              marginLeft: "5px",
+              fontWeight: "bold",
+              fontSize: "22px",
+            }}
+          >
+            Bộ lọc
+          </span></>)}
+            open={isShowSearch}
+            onCancel={() => {
+              setIsShowSearch(false);
+              form.resetFields();
+            }}
+          footer={[
+            <Button key="cancel" onClick={() => {
+              setIsShowSearch(false);
+              form.resetFields();
+            }}>
+              Hủy
+            </Button>,
+            <Button
+              onClick={() => buttonClear()}
+              style={{
+                marginLeft: "8px",
+                height: "35px",
+                backgroundColor: "#FF9900",
+                color: "white",
+                outline: "none",
+                border: "none",
+              }}
+            >
+              Làm mới
+            </Button>,
+            <Button
+              onClick={() => buttonSearch()}
+              style={{
+                marginRight: "8px",
+                height: "35px",
+                backgroundColor: "rgb(55, 137, 220)",
+                color: "white",
+              }}
+            >
+              Tìm kiếm
+            </Button>,
+            ]}
+          >
+          <hr className="border-0 bg-gray-300 mt-3 mb-3" />
+                <div className="sidebar">
+                  
+                  <Form form={form}>
+                    <Row style={{ marginTop: "10px" }}>
+                      <Col span={24}>
+                        <Form.Item
+                          name="nameGift"
+                          labelCol={{ span: 6 }}
+                          wrapperCol={{ span: 18 }}
+                          label={
+                            <span>Tên vật phẩm</span>
+                          }
+                        >
+                          <Input
+                            onKeyPress={(e) => {
+                              if (
+                                e.key === " " &&
+                                e.target.selectionStart === 0
+                              ) {
+                                e.preventDefault();
+                              }
+                            }}
+                            style={{ height: "30px" }}
+                            placeholder="Vui lòng nhập Tên."
+                          />
+                        </Form.Item>
+
+                        <Form.Item
+                          name="category"
+                          labelCol={{ span: 6 }}
+                          wrapperCol={{ span: 18 }}
+                          label={
+                            <span>Loại mật ong</span>
+                          }
+                        >
+                          <Select
+                            placeholder="Chọn thể loại"
+                          >
+                            <Select.Option value={""}>
+                              Chọn tất cả
+                            </Select.Option>
+                            {listCategory?.map((item) => {
+                              return (
+                                <Select.Option value={item.id}>
+                                  {item.name}
+                                </Select.Option>
+                              );
+                            })}
+                          </Select>
+                        </Form.Item>
+                        <Form.Item
+                          name="type"
+                          labelCol={{ span: 6 }}
+                          wrapperCol={{ span: 18 }}
+                          label={
+                            <span>
+                              Loại vật phẩm
+                            </span>
+                          }
+                        >
+                          <Select
+                            placeholder="Thể loại vật phẩm"
+                          >
+                            <Select.Option value={""}>
+                              Chọn tất cả
+                            </Select.Option>
+                            {listType?.map((item) => {
+                              return (
+                                <Select.Option value={item.value}>
+                                  {item.label}
+                                </Select.Option>
+                              );
+                            })}
+                          </Select>
+                        </Form.Item>
+                          <Form.Item
+                            name="startingPrice"
+                            labelCol={{ span: 6 }}
+                            wrapperCol={{ span: 18 }}
+                            label={
+                              <span>Giá khởi điểm từ</span>
+                            }
+                          >
+                            <Input
+                              style={{
+                                height: "30px",
+                                width: "100%",
+                              }}
+                              placeholder="Vui lòng nhập giá từ."
+                            />
+                          </Form.Item>
+                          <Form.Item
+                            name="endPrice"
+                            labelCol={{ span: 6 }}
+                            wrapperCol={{ span: 18 }}
+                            label={
+                              <span>Giá khởi điểm đến</span>
+                            }
+                          >
+                            <Input type="number"
+                              style={{
+                                height: "30px",
+                                width: "100%",
+                              }}
+                              placeholder="Vui lòng nhập giá từ."
+                            />
+                          </Form.Item>
+                      </Col>
+                    </Row>
+                  </Form>
+                </div>
+        </Modal>
+      }
       <div className="auction-main-inside">
-        <Card title={""} className="cartAllConversion">
+        <Card title={""} className="cartAllConversion border-0 w-full" style={{minHeight: "80vh"}} >
           <div className="title">
             <p style={{ fontSize: "20px", color: "#A55600" }}>
               <img
@@ -350,154 +629,33 @@ export default function StudentAuctionRoomNew() {
             </p>
             <div>
               {" "}
-              <img
-                src={require("../../../assets/images/ui-student/btn-add-auction-inside.png")}
-                alt="Gift"
-                height={30}
-                width={30}
-                className="btn-add-auction-inside"
-                onClick={showModal}
-              />
+              <Tooltip title="Tạo phiên đấu giá">
+                <img
+                  src={require("../../../assets/images/ui-student/btn-add-auction-inside.png")}
+                  alt="Gift"
+                  height={30}
+                  width={30}
+                  className="btn-add-auction-inside cursor-pointer"
+                  onClick={showModal}
+                />
+              </Tooltip>
+              <Tooltip title="Tìm kiếm">
+                <img
+                  src={require("../../../assets/images/search.png")}
+                  alt="Gift"
+                  height={30}
+                  width={30}
+                  className="btn-add-auction-inside mx-10 cursor-pointer"
+                  onClick={() => setIsShowSearch(true)}
+                />
+              </Tooltip>
+              
             </div>
           </div>
 
-          <Row>
-            <Col span={6} style={{ marginLeft: "15px" }}>
-              <Card style={{ height: "70vh" }}>
-                <div className="sidebar">
-                  <FontAwesomeIcon icon={faFilter} size="2xl" />
-                  <span
-                    style={{
-                      marginLeft: "5px",
-                      fontWeight: "bold",
-                      fontSize: "22px",
-                    }}
-                  >
-                    Bộ lọc
-                  </span>
-                  <Form form={form}>
-                    <Row style={{ marginTop: "10px" }}>
-                      <Col span={24}>
-                        <Form.Item
-                          name="nameGift"
-                          labelCol={{ span: 9 }}
-                          wrapperCol={{ span: 17 }}
-                          label={
-                            <span style={{ color: "white" }}>Tên vật phẩm</span>
-                          }
-                        >
-                          <Input
-                            onKeyPress={(e) => {
-                              if (
-                                e.key === " " &&
-                                e.target.selectionStart === 0
-                              ) {
-                                e.preventDefault();
-                              }
-                            }}
-                            style={{ textAlign: "center", height: "30px" }}
-                            placeholder="Vui lòng nhập Tên."
-                          />
-                        </Form.Item>
+          <Row className="w-full">
 
-                        <Form.Item
-                          name="category"
-                          labelCol={{ span: 9 }}
-                          wrapperCol={{ span: 17 }}
-                          label={
-                            <span style={{ color: "white" }}>Loại mật ong</span>
-                          }
-                        >
-                          <Select
-                            style={{ textAlign: "center" }}
-                            placeholder="Chọn thể loại"
-                          >
-                            {listCategory?.map((item) => {
-                              return (
-                                <Select.Option value={item.id}>
-                                  {item.name}
-                                </Select.Option>
-                              );
-                            })}
-                          </Select>
-                        </Form.Item>
-                        <Form.Item
-                          name="type"
-                          labelCol={{ span: 9 }}
-                          wrapperCol={{ span: 17 }}
-                          label={
-                            <span style={{ color: "white" }}>
-                              Loại vật phẩm
-                            </span>
-                          }
-                        >
-                          <Select
-                            style={{ textAlign: "center" }}
-                            placeholder="Thể loại vật phẩm"
-                          >
-                            {listType?.map((item) => {
-                              return (
-                                <Select.Option value={item.value}>
-                                  {item.label}
-                                </Select.Option>
-                              );
-                            })}
-                          </Select>
-                        </Form.Item>
-                        <Form.Item
-                          name="startingPrice"
-                          labelCol={{ span: 9 }}
-                          wrapperCol={{ span: 17 }}
-                          label={
-                            <span style={{ color: "white" }}>Giá bắt đầu</span>
-                          }
-                        >
-                          <InputNumber
-                            style={{
-                              textAlign: "center",
-                              height: "30px",
-                              width: "100%",
-                            }}
-                            placeholder="Vui lòng nhập giá."
-                          />
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                  </Form>
-                  <Row justify={"center"} style={{ marginTop: "10px" }}>
-                    <Col>
-                      <Button
-                        onClick={buttonSearch}
-                        style={{
-                          marginRight: "8px",
-                          height: "35px",
-                          backgroundColor: "rgb(55, 137, 220)",
-                          color: "white",
-                        }}
-                      >
-                        Tìm kiếm
-                      </Button>
-                      <Button
-                        onClick={buttonClear}
-                        style={{
-                          marginLeft: "8px",
-                          height: "35px",
-                          backgroundColor: "#FF9900",
-                          color: "white",
-                          outline: "none",
-                          border: "none",
-                        }}
-                      >
-                        Làm mới
-                      </Button>
-                    </Col>
-                  </Row>
-                </div>
-              </Card>
-            </Col>
-
-            <Col span={17} style={{ marginLeft: "15px" }}>
-              <Card style={{ height: "100%" }} className="table-dau-gia">
+            <Col  xl={24} lg={24}>
                 <Row justify="center">
                   {listAuctionRoom.length <= 0 ? (
                     <Col span={24} style={{ textAlign: "center" }}>
@@ -516,35 +674,102 @@ export default function StudentAuctionRoomNew() {
                       </div>
                     </Col>
                   ) : (
-                    <Col span={24} style={{ textAlign: "center" }}>
-                      <Table
-                        columns={columns}
-                        dataSource={listAuctionRoom}
-                        rowKey={"id"}
-                        width={"100%"}
-                        scroll={{
-                          y: 370,
-                        }}
-                        pagination={false}
-                      />
-                      <div
-                        className="mt-5 text-center"
-                        style={{ marginTop: "30px" }}
-                      >
-                        <Pagination
-                          showSizeChanger
-                          onShowSizeChange={onShowSizeChange}
-                          onChange={(value) => {
-                            setCurrent(value - 1);
-                          }}
-                          current={current + 1}
-                          total={total * size}
-                        />
-                      </div>
+                      <Col span={24} style={{ textAlign: "center" }}>
+                        
+                        <Content className="horor__table pl-[100px] pr-[100px]">
+                          <Row className="w-full">
+                            <div className="live-leaderboard w-full">
+                              <div className="live-leaderboard-table">
+                                <div className="live-leaderboard-table-header">
+                                  <div className="col-player-rank-header">STT</div>
+                                  <div className="col-player-name-header">Tên vật phẩm</div>
+                                  <div className="col-player-name-header">Thời gian còn lại</div>
+                                  <div className="col-player-name-header">Giá khởi điểm</div>
+                                  <div className="col-player-name-header">Giá hiện tại</div>
+                                  <div className="col-player-name-header">Loại</div>
+                                  <div className="col-player-points-header">Action</div>
+                                </div>
+                                <div>
+                                {listAuctionRoom.map((el) => (
+                                  <Link
+                                    className="live-leaderboard-player-row">
+                                    <div className="col-player-rank-header" onClick={() => {showModalDetail(el)}}>
+                                      <span className="col-player-text">{el.stt}</span>
+                                      <div className="sub-avatar-fire avatar-fire">
+                                        <Avatar className="col-player-avatar"
+                                          alt="avatar"
+                                          size={50}
+                                          src={el.giftImage}
+                                        />
+                                      </div>
+                                    </div>
+                                    <div className="col-player-name-header" onClick={() => {showModalDetail(el)}}>
+                                      <span className="col-player-text">{el.giftName}</span>
+                                    </div>
+                                    <div className="col-player-name-header" onClick={() => {showModalDetail(el)}}>
+                                      <span className="col-player-text">
+                                        <CountdownTimer key={el.id} initialTime={el.toDate - new Date().getTime()} />
+                                      </span>
+                                    </div>
+                                    <div className="col-player-name-header" onClick={() => {showModalDetail(el)}}>
+                                      <span className="col-player-text">{el.startingPrice}</span>
+                                    </div>
+                                    <div className="col-player-name-header" onClick={() => {showModalDetail(el)}}>
+                                      <span className="col-player-text">{el.lastPrice == null ? "?" : el.lastPrice}</span>
+                                    </div>
+                                    <div className="col-player-name-header" onClick={() => {showModalDetail(el)}}>
+                                      <span className="col-player-text">{el.nameCategory}</span>
+                                    </div>
+                                    <div className="col-player-points-header">
+                                      <span className="col-player-text">
+                                        <Tooltip placement="top" title={"Đấu giá " + el.name}>
+                                          <Button
+                                            style={{ backgroundColor: "#ffcc00", color: "white" }}
+                                            onClick={() => showModalAuction(el)}
+                                          >
+                                            <FontAwesomeIcon icon={faGavel} />
+                                          </Button>
+                                        </Tooltip>
+                                      </span>
+                                    </div>
+                                  </Link>
+                                  ))}
+                                  
+                                </div>
+                              </div>
+                            </div>
+                          </Row>
+                          <div className="pagination__ui">
+                            <Row>
+                              <Col span={10} >
+                                <button disabled={current <= 0}
+                                  onClick={() => {setCurrent(current - 1)}}
+                                  className="button button--left"
+                                >
+                                  <FontAwesomeIcon icon={faArrowLeft} />
+                                  Previous
+                                </button> 
+                              </Col>
+                              <Col span={4} className="d-flex align-items-center justify-content-center">
+                                <h3 className="text-center rank__tilte text-white">
+                                  {`${current + 1}/${total}`}
+                                </h3>
+                              </Col>
+                              <Col span={10} >
+                              <button disabled={current + 1 >= total}
+                                onClick={() => {setCurrent(current + 1)}}
+                                  className="button button--right"
+                                >
+                                  Next
+                                  <FontAwesomeIcon icon={faArrowRight} />
+                                </button>
+                              </Col>
+                            </Row>
+                          </div>
+                      </Content>
                     </Col>
                   )}
                 </Row>
-              </Card>
             </Col>
           </Row>
         </Card>

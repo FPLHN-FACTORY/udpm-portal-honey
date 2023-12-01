@@ -35,14 +35,6 @@ export default function ChestGift() {
   const [total, setTotal] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [detailChest, setDetailChest] = useState();
-  // useEffect(() => {
-  //   ChestAPI.fetchAll().then((response) => {
-  //     dispatch(SetChest(response.data.data.data));
-  //     setTotal(response.data.data.totalPages);
-  //     setCurrent(1);
-  //     console.log("aaaaaaaaaa");
-  //   });
-  // }, [dispatch]);
 
   useEffect(() => {
     if (!showModal) {
@@ -105,6 +97,7 @@ export default function ChestGift() {
     ChestGiftAPI.deleteChest(chest.id).then(
       (response) => {
         setCurrent(1);
+        fetchData();
         message.success("Xóa thành công");
       },
       (err) => {
@@ -146,13 +139,17 @@ export default function ChestGift() {
               <EditOutlined className="icon" />
             </Button>
           </Tooltip>
-          <ModalDetail chest={record} icon={<EyeOutlined />} />
-          <ModalAddGiftToChest chest={record} icon={<PlusCircleOutlined />} />
           
+          <ModalDetail chest={record} icon={<EyeOutlined />} />
+
+          <ModalAddGiftToChest chest={record} icon={<PlusCircleOutlined />} />
+
           <Popconfirm
             title="Xóa rương"
             description="Bạn có chắc chắn muốn xóa?"
-            onConfirm={() => {confirm(record)}}
+            onConfirm={() => {
+              confirm(record);
+            }}
             color="cyan"
             okText="Yes"
             cancelText="No"
@@ -278,17 +275,18 @@ export default function ChestGift() {
             pagination={false}
           />
         </div>
-        {total >= 1 && 
-        <div className="mt-5 text-center" style={{ marginTop: "20px" }}>
-          <Pagination
-            simple
-            current={current}
-            onChange={(value) => {
-              setCurrent(value);
-            }}
-            total={total * 10}
-          />
-        </div>}
+        {total >= 1 && (
+          <div className="mt-5 text-center" style={{ marginTop: "20px" }}>
+            <Pagination
+              simple
+              current={current}
+              onChange={(value) => {
+                setCurrent(value);
+              }}
+              total={total * 10}
+            />
+          </div>
+        )}
       </Card>
     </>
   );

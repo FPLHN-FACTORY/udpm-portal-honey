@@ -14,6 +14,7 @@ public class StudentAuctionRoomFilterRequest extends PageableRequest {
 
     private String type;
 
-    private String startingPrice;
+    private Long startingPrice;
 
+    private Long endPrice;
 }

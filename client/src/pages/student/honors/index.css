@@ -349,3 +349,9 @@
     font-weight: 700;
     color: #ffff;
 }
+.col-player-text>div>span {
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffff !important;
+    background: none;
+}
