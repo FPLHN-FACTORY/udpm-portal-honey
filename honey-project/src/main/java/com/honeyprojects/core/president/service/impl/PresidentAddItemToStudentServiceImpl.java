@@ -2,6 +2,7 @@ package com.honeyprojects.core.president.service.impl;
 
 import com.honeyprojects.core.admin.model.response.AdminExportCategoryResponse;
 import com.honeyprojects.core.admin.service.ExportExcelServiceService;
+import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.president.model.request.PresidentCreateNotificationDetailAddItemRequest;
 import com.honeyprojects.core.president.model.request.PresidentNotificationAddItemRequest;
@@ -12,19 +13,30 @@ import com.honeyprojects.core.president.model.response.PresidentExportGiftRespon
 import com.honeyprojects.core.president.model.response.PresidentGiftResponse;
 import com.honeyprojects.core.president.repository.PresidentAddItemRepository;
 import com.honeyprojects.core.president.repository.PresidentGiftRepository;
+import com.honeyprojects.core.president.repository.PresidentHistoryDetailRepository;
 import com.honeyprojects.core.president.repository.PresidentNotificationRepository;
 import com.honeyprojects.core.president.service.PresidentAddItemToStudentService;
 import com.honeyprojects.core.president.repository.PresidentHistoryRepository;
 import com.honeyprojects.core.president.repository.PresidentHoneyRepository;
 import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
+import com.honeyprojects.core.teacher.model.request.TeacherGetPointRequest;
+import com.honeyprojects.core.teacher.model.response.TeacherPointResponse;
 import com.honeyprojects.core.teacher.repository.TeacherCategoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
+import com.honeyprojects.entity.History;
+import com.honeyprojects.entity.HistoryDetail;
+import com.honeyprojects.entity.Honey;
 import com.honeyprojects.entity.Notification;
 import com.honeyprojects.entity.NotificationDetail;
+import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Constants;
+import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.NotificationDetailType;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
+import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.StatusGift;
+import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import com.honeyprojects.util.DataUtils;
@@ -51,6 +63,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -74,19 +87,25 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
     private StudentNotificationDetailRepository studentNotificationDetailRepository;
 
     @Autowired
-    private LoggerUtil loggerUtil;
-
-    @Autowired
-    private RabbitProducer producer;
-
-    @Autowired
     private TeacherCategoryRepository categoryRepository;
 
     @Autowired
     private PresidentGiftRepository giftRepository;
 
     @Autowired
+    private PresidentHistoryDetailRepository historyDetailRepository;
+
+    @Autowired
+    private PresidentHoneyRepository honeyRepository;
+
+    @Autowired
+    private PresidentHistoryRepository historyRepository;
+
+    @Autowired
     private ExportExcelServiceService exportExcelService;
+
+    @Autowired
+    private UdpmHoney udpmHoney;
 
     @Override
     public ByteArrayOutputStream exportExcel(HttpServletResponse response) {
@@ -304,127 +323,135 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
     }
 
     private void saveImportData(List<PresidentAddItemDTO> lstImportUser) throws IOException {
-//        StringBuilder stringBuilder = new StringBuilder();
-//        for (PresidentAddItemDTO userDTO : lstImportUser) {
-//            // Duyệt qua danh sách đối tượng AdminAddItemDTO đã được kiểm tra lỗi
-//            if (userDTO.isError()) {
-//                // Nếu đối tượng có lỗi, bỏ qua và tiếp tục với đối tượng tiếp theo trong danh sách
-//                continue;
-//            }
-//
-//            // Gọi API để lấy thông tin người dùng bằng địa chỉ email
-//            String emailSimple = userDTO.getUserName() + "@fpt.edu.vn";
-//            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
-//
-//            // Xử lý vật phẩm (gift)
-//            if (!DataUtils.isNullObject(userDTO.getLstGift())) {
-//                String[] partsGift = userDTO.getLstGift().split(", ");
-//                Map<String, Integer> giftMap = new HashMap<>();
-//
-//                for (String part : partsGift) {
-//                    String[] subParts = part.split(" ", 2);
-//                    if (subParts.length == 2) {
-//                        String numberItemStr = subParts[0];
-//                        String nameItem = subParts[1];
-//                        Integer numberItem = Integer.parseInt(numberItemStr);
-//                        // Lưu trữ số lượng quà dựa trên tên quà
-//                        giftMap.put(nameItem, numberItem);
-//                    }
-//                }
-//                List<PresidentGiftResponse> gifts = presidentAddItemRepository.getGiftsByNames(giftMap.keySet());
-//
-//                for (PresidentGiftResponse gift : gifts) {
-//                    String nameItem = gift.getName();
-//                    String status = gift.getStatus();
-//
-//                    String enumStatusFREE = String.valueOf(StatusGift.FREE.ordinal());
-//                    if (status.equals(enumStatusFREE)) {
-//                        // gửi thẳng cho sinh viên
-//                        // gửi thông báo cho sinh viên
-//                        stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được chủ tịch câu lạc bộ tặng: " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
-//                        Notification notification = createNotification(simpleResponse.getId());
-//                        createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
-//                    }
-//                    String enumStatusACCEPT = String.valueOf(StatusGift.ACCEPT.ordinal());
-//                    if(status.equals(enumStatusACCEPT)){
-//                        // gửi yêu cầu phê duyệt cho admin
-//                        // gửi thông báo cho admin
-//                        stringBuilder.append("Đã gửi yêu cầu phê duyệt tới admin " + "Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + ": " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
-//
-//                        History history = new History();
-//                        history.setStatus(HoneyStatus.CHO_PHE_DUYET);
-//                        history.setType(TypeHistory.CONG_VAT_PHAM);
-//                        history.setCreatedAt(new Date().getTime());
-//                        history.setGiftId(gift.getId());
-//                        history.setNameGift(nameItem);
-//                        history.setQuantity(giftMap.get(nameItem));
-//                        history.setPresidentId(simpleResponse.getId());
-//                        history.setHoneyId(simpleResponse.getId());
-//                        history.setNote(null);
-//                        history.setStudentId(simpleResponse.getId());
-//                        presidentHistoryRepository.save(history);
-//                    }
-//                }
-//            }
-//
-//            // Xử lý điểm mật ong (honey)
-//            if (!DataUtils.isNullObject(userDTO.getLstHoney())) {
-//                String[] partsHoney = userDTO.getLstHoney().split(", ");
-//                Map<String, Integer> honeyMap = new HashMap<>();
-//
-//                for (String part : partsHoney) {
-//                    String[] subParts = part.split(" ", 2);
-//                    if (subParts.length == 2) {
-//                        String numberPointStr = subParts[0].trim();
-//                        String categoryPoint = subParts[1].trim().replace("-", "");
-//                        Integer numberPoint = Integer.parseInt(numberPointStr);
-//                        // Lưu trữ số lượng điểm mật ong dựa trên tên loại điểm
-//                        honeyMap.put(categoryPoint, numberPoint);
-//                    }
-//                }
-//                List<PresidentCategoryResponse> categories = presidentAddItemRepository.getCategoriesByNames(honeyMap.keySet());
-//                for (PresidentCategoryResponse category : categories) {
-//                    String categoryPoint = category.getName();
-//                    String categoryId = category.getId();
-//                    String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
-//                    String enumCategoryACCEPT = String.valueOf(CategoryStatus.ACCEPT.ordinal());
-//                    if (honeyMap.containsKey(categoryPoint)) {
-//                        if(category.getStatus().equals(enumCategoryFREE)){
-//                            // gủi cho sinh viên
-//                            Notification notification = createNotification(simpleResponse.getId());
-//                            createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
-//                        }
-//                        if(category.getStatus().equals(enumCategoryACCEPT)){
-//                            // gửi cho admin phê duyệt
-//                            // gửi thông báo cho admin
-//                            TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
-//                            getPointRequest.setStudentId(simpleResponse.getId());
-//                            getPointRequest.setCategoryId(categoryId);
-//                            TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
-//
-//                            History history = new History();
-//                            history.setStatus(HoneyStatus.CHO_PHE_DUYET);
-//                            history.setHoneyPoint(honeyMap.get(categoryPoint));
-//                            history.setType(TypeHistory.CONG_DIEM);
-//                            history.setCreatedAt(new Date().getTime());
-//                            if (teacherPointResponse == null) {
-//                                Honey honey = new Honey();
-//                                honey.setStatus(Status.HOAT_DONG);
-//                                honey.setHoneyPoint(0);
-//                                honey.setStudentId(simpleResponse.getId());
-//                                honey.setHoneyCategoryId(categoryId);
-//                                history.setHoneyId(honeyRepository.save(honey).getId());
-//                            } else {
-//                                Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
-//                                history.setHoneyId(honey.getId());
-//                            }
-//                            history.setStudentId(simpleResponse.getId());
-//                            historyRepository.save(history);
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (PresidentAddItemDTO userDTO : lstImportUser) {
+            // Duyệt qua danh sách đối tượng AdminAddItemDTO đã được kiểm tra lỗi
+            if (userDTO.isError()) {
+                // Nếu đối tượng có lỗi, bỏ qua và tiếp tục với đối tượng tiếp theo trong danh sách
+                continue;
+            }
+
+            // Gọi API để lấy thông tin người dùng bằng địa chỉ email
+            String emailSimple = userDTO.getUserName() + "@fpt.edu.vn";
+            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
+
+            // Xử lý vật phẩm (gift)
+            if (!DataUtils.isNullObject(userDTO.getLstGift())) {
+                String[] partsGift = userDTO.getLstGift().split(", ");
+                Map<String, Integer> giftMap = new HashMap<>();
+
+                for (String part : partsGift) {
+                    String[] subParts = part.split(" ", 2);
+                    if (subParts.length == 2) {
+                        String numberItemStr = subParts[0];
+                        String nameItem = subParts[1];
+                        Integer numberItem = Integer.parseInt(numberItemStr);
+                        // Lưu trữ số lượng quà dựa trên tên quà
+                        giftMap.put(nameItem, numberItem);
+                    }
+                }
+                List<PresidentGiftResponse> gifts = presidentAddItemRepository.getGiftsByNames(giftMap.keySet());
+
+                for (PresidentGiftResponse gift : gifts) {
+                    String nameItem = gift.getName();
+                    String status = gift.getStatus();
+                    String enumStatusFREE = String.valueOf(StatusGift.FREE.ordinal());
+                    Long dateNow = Calendar.getInstance().getTimeInMillis();
+                    History history = new History();
+                    history.setChangeDate(dateNow);
+                    history.setPresidentId(udpmHoney.getIdUser());
+                    history.setStudentId(simpleResponse.getId());
+                    history.setType(TypeHistory.MAT_ONG_VA_VAT_PHAM);
+                    if (status.equals(enumStatusFREE)) {
+                        // gửi thẳng cho sinh viên
+                        // gửi thông báo cho sinh viên
+                        stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được chủ tịch câu lạc bộ tặng: " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
+                        Notification notification = createNotification(simpleResponse.getId());
+                        createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
+                        history.setStatus(HoneyStatus.DA_PHE_DUYET);
+                    }
+                    String enumStatusACCEPT = String.valueOf(StatusGift.ACCEPT.ordinal());
+                    if (status.equals(enumStatusACCEPT)) {
+                        // gửi yêu cầu phê duyệt cho admin
+                        // gửi thông báo cho admin
+                        stringBuilder.append("Đã gửi yêu cầu phê duyệt tới admin " + "Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + ": " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
+                        history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+                    }
+                    historyRepository.save(history);
+                    HistoryDetail historyDetail = new HistoryDetail();
+                    historyDetail.setHistoryId(history.getId());
+                    historyDetail.setGiftId(gift.getId());
+                    historyDetail.setQuantityGift(giftMap.get(nameItem));
+                    historyDetail.setStudentId(simpleResponse.getId());
+                    historyDetail.setNameGift(nameItem);
+                    historyDetailRepository.save(historyDetail);
+                }
+            }
+
+            // Xử lý điểm mật ong (honey)
+            if (!DataUtils.isNullObject(userDTO.getLstHoney())) {
+                String[] partsHoney = userDTO.getLstHoney().split(", ");
+                Map<String, Integer> honeyMap = new HashMap<>();
+
+                for (String part : partsHoney) {
+                    String[] subParts = part.split(" ", 2);
+                    if (subParts.length == 2) {
+                        String numberPointStr = subParts[0].trim();
+                        String categoryPoint = subParts[1].trim().replace("-", "");
+                        Integer numberPoint = Integer.parseInt(numberPointStr);
+                        // Lưu trữ số lượng điểm mật ong dựa trên tên loại điểm
+                        honeyMap.put(categoryPoint, numberPoint);
+                    }
+                }
+                List<PresidentCategoryResponse> categories = presidentAddItemRepository.getCategoriesByNames(honeyMap.keySet());
+                for (PresidentCategoryResponse category : categories) {
+                    String categoryPoint = category.getName();
+                    String categoryId = category.getId();
+                    String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
+                    String enumCategoryACCEPT = String.valueOf(CategoryStatus.ACCEPT.ordinal());
+                    if (honeyMap.containsKey(categoryPoint)) {
+                        TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
+                        getPointRequest.setStudentId(simpleResponse.getId());
+                        getPointRequest.setCategoryId(categoryId);
+                        TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
+                        Long dateNow = Calendar.getInstance().getTimeInMillis();
+
+                        History history = new History();
+                        history.setPresidentId(udpmHoney.getIdUser());
+                        if (category.getStatus().equals(enumCategoryFREE)) {
+                            // gủi cho sinh viên
+                            Notification notification = createNotification(simpleResponse.getId());
+                            createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
+                            history.setStatus(HoneyStatus.DA_PHE_DUYET);
+                        }
+                        if (category.getStatus().equals(enumCategoryACCEPT)) {
+                            history.setStatus(HoneyStatus.DA_PHE_DUYET);
+                        }
+                        history.setType(TypeHistory.CONG_DIEM);
+                        history.setChangeDate(dateNow);
+                        historyRepository.save(history);
+
+                        HistoryDetail historyDetail = new HistoryDetail();
+                        historyDetail.setHistoryId(history.getId());
+                        historyDetail.setHoneyPoint(honeyMap.get(categoryPoint));
+                        historyDetail.setStudentId(getPointRequest.getStudentId());
+                        if (teacherPointResponse == null) {
+                            Honey honey = new Honey();
+                            honey.setStatus(Status.HOAT_DONG);
+                            honey.setHoneyPoint(0);
+                            honey.setStudentId(simpleResponse.getId());
+                            honey.setHoneyCategoryId(categoryId);
+                            historyDetail.setHoneyId(honeyRepository.save(honey).getId());
+                        } else {
+                            Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
+                            historyDetail.setHoneyId(honey.getId());
+                        }
+                        history.setStudentId(simpleResponse.getId());
+                        historyDetailRepository.save(historyDetail);
+                    }
+                }
+            }
+        }
     }
 
 

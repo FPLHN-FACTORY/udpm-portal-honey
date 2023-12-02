@@ -122,7 +122,7 @@ export default function RequestApprovedHistory() {
         .catch((error) => console.error(error));
     }
   };
-
+  console.log(data);
   return (
     <div className="request-manager">
       <Card className="mb-2 py-1">
@@ -186,7 +186,7 @@ export default function RequestApprovedHistory() {
             <div className="list__point__title">
               <p>
                 <strong className="text-slate-500 mr-[8px]">
-                  Số điểm được cộng:
+                  {item.acction.status == 2 ? 'Đã bị hủy yêu cầu cộng: ' : 'Đã được chấp nhận yêu cầu cộng: '}
                 </strong>
                 {item.honeyPoint} mật ong {item.nameCategory}
               </p>

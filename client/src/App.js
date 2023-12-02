@@ -24,7 +24,6 @@ import DashboardTeacher from "./layout/teacher/DashboardTeacher";
 import MyProfile from "./pages/student/profile/MyProfile";
 import StArchive from "./pages/student/archive/StArchive";
 import RandomAddPoint from "./pages/censor/randomaddpoint/RandomAddPoint";
-// import RequestConversionHistory from "./pages/censor/requestmanager/RequestConversionHistory";
 import ChestGift from "./pages/censor/chest-gift/ChestGift";
 import AuctionMangement from "./pages/censor/auction-management/AuctionManagement";
 import ListDataImport from "./pages/censor/randomaddpoint/ListDataImport";

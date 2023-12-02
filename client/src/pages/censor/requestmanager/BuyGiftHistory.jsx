@@ -10,7 +10,6 @@ import {
   message,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { ResquestConversion } from "../../../apis/user/ResquestConversiton/ResquestConversion.api";
 import moment from "moment";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
@@ -98,6 +97,7 @@ export default function BuyGiftHistory() {
         .catch((error) => console.error(error));
     }
   };
+  console.log(getHistory);
   return (
     <>
       <Card className="mb-2">
@@ -160,7 +160,9 @@ export default function BuyGiftHistory() {
               <div className="list__point__title">
                 <p>
                   <strong className="text-slate-500 mr-[8px]">
-                    Nhận được:
+                    {item.status === 2
+                      ? "Đã bị hủy yêu cầu mua: "
+                      : "Đã được chấp nhận yêu cầu mua: "}
                   </strong>
                   {item.quantityGift} vật phẩm {item.nameGift}
                 </p>

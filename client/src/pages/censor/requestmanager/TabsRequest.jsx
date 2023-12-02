@@ -18,11 +18,11 @@ export default function TabsRequest() {
       children: <RequestConversionHistory />,
     },
     ,
-    {
-      key: "3",
-      label: "Cộng vật phẩm",
-      children: <RequestAddItemHistory />,
-    },
+    // {
+    //   key: "3",
+    //   label: "Cộng vật phẩm",
+    //   children: <RequestAddItemHistory />,
+    // },
   ];
 
   return <Tabs defaultActiveKey="1" items={items} />;
