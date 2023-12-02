@@ -39,8 +39,6 @@ export default function RequestAddItemHistory() {
   const [fillCategory, setFillCategory] = useState([]);
   const [totalPages, setTotalPages] = useState([]);
   const [filter, setFilter] = useState({ page: 0 });
-  const [fillPoint, setFillPoint] = useState(0);
-  const [type, setType] = useState();
 
   const fetchData = (filter) => {
     const fetchData = async (filter) => {
@@ -72,12 +70,6 @@ export default function RequestAddItemHistory() {
       }
     };
     fetchData(filter);
-  };
-
-  const fechFillPoint = (idStudent, idCategory) => {
-    RequestManagerAPI.getPoint(idStudent, idCategory).then((response) => {
-      setFillPoint(response.data.data);
-    });
   };
 
   const fechCategory = () => {
@@ -134,7 +126,6 @@ export default function RequestAddItemHistory() {
       if (response.data.success) {
         if (status === 1) message.success("Đã xác nhận yêu cầu mua vật phẩm!");
         if (status === 2) message.error("Hủy yêu cầu thành công!");
-        setType(response.data.data.type);
       }
       // message.success("Phê duyệt thành công");
       fetchData();
@@ -146,6 +137,7 @@ export default function RequestAddItemHistory() {
       values.studentId,
       values.categoryId
     );
+    console.log(values.categoryId);
     const newFillPoint = response.data.data;
 
     const totalPoint = values.quantity * values.honeyPoint;
@@ -173,11 +165,6 @@ export default function RequestAddItemHistory() {
       title: "Tên sinh viên",
       dataIndex: "studentName",
       key: "studentName",
-    },
-    {
-      title: "Tên sinh viên",
-      dataIndex: "userName",
-      key: "userName",
     },
     {
       title: "Tên quà",
@@ -287,7 +274,7 @@ export default function RequestAddItemHistory() {
               htmlType="submit"
               type="primary"
               className="mr-10 search-button"
-              style={{ marginBottom: "25px", backgroundColor: '#EEB30D'  }}
+              style={{ marginBottom: "25px", backgroundColor: "#EEB30D" }}
             >
               Lọc
             </Button>

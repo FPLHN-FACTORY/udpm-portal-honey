@@ -11,7 +11,7 @@ public class AdminChangeStatusGiftRequest {
 
     String idHistoryDetail;
 
-    int status;
+    Integer status;
 
     String idGift;
 
