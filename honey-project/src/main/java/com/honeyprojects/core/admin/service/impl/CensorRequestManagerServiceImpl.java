@@ -102,36 +102,37 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
 
     @Override
     public History changeStatusConversion(AdminChangeStatusGiftRequest request) {
-        Long dateNow = Calendar.getInstance().getTimeInMillis();
-
+        Long dateNow = Calendar.getInstance().getTimeInMillis();    
         History history = historyRepository.findById(request.getIdHistory()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
         history.setStatus(HoneyStatus.values()[request.getStatus()]);
         HistoryDetail historyDetail = historyDetailRepository.findById(request.getIdHistoryDetail()).orElse(null);
         ArchiveGift archiveGift = new ArchiveGift();
         Gift gift = giftRepository.findById(request.getIdGift()).orElse(null);
-
         Archive archive = new Archive();
         archive.setStudentId(request.getIdStudent());
         archive.setStatus(Status.HOAT_DONG);
-        if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && history.getType().equals(TypeHistory.DOI_QUA)) {
-            Honey honey = honeyRepository.findById(historyDetail.getHoneyId()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
-            honey.setHoneyPoint(honey.getHoneyPoint() - (historyDetail.getHoneyPoint() * request.getQuantityGift()));
-            honeyRepository.save(honey);
-            if(gift.getQuantity() != null) {
+        if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) &&
+                history.getType().equals(TypeHistory.DOI_QUA) ||
+                history.getType().equals(TypeHistory.MAT_ONG_VA_VAT_PHAM)) {
+            if(historyDetail.getHoneyId() != null){
+                Honey honey = honeyRepository.findById(historyDetail.getHoneyId()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
+                honey.setHoneyPoint(honey.getHoneyPoint() - (historyDetail.getHoneyPoint() * request.getQuantityGift()));
+                honeyRepository.save(honey);
+            }
+            if (gift.getQuantity() != null) {
                 gift.setQuantity(gift.getQuantity() - request.getQuantityGift());
                 giftRepository.save(gift);
                 history.setChangeDate(dateNow);
             }
-
-                Archive getArchive = archiveRepository.findByStudentId(request.getIdStudent()).orElse(archive);
-                archiveRepository.save(getArchive);
-            ArchiveGift archiveGift1 = giftArchiveRepository.findByGiftIdAndArchiveId(request.getIdGift(),getArchive.getId());
-            if(archiveGift1 != null){
+            Archive getArchive = archiveRepository.findByStudentId(request.getIdStudent()).orElse(archive);
+            archiveRepository.save(getArchive);
+            ArchiveGift archiveGift1 = giftArchiveRepository.findByGiftIdAndArchiveId(request.getIdGift(), getArchive.getId());
+            if (archiveGift1 != null) {
                 int currentQuantity = archiveGift1.getQuantity();
                 int additionalQuantity = request.getQuantityGift();
                 archiveGift1.setQuantity(currentQuantity + additionalQuantity);
                 giftArchiveRepository.save(archiveGift1);
-            }else{
+            } else {
                 archiveGift.setGiftId(request.getIdGift());
                 archiveGift.setNote(request.getNote());
                 archiveGift.setArchiveId(getArchive.getId());
@@ -200,11 +201,13 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
         Pageable pageable = PageRequest.of(searchParams.getPage(), searchParams.getSize());
         return new PageableObject<>(historyRepository.getHistoryApprovedAllStatus(searchParams, pageable));
     }
+
     @Override
     public PageableObject<CensorTransactionRequestResponse> getExchangeGiftAllStatus(AdminHistoryApprovedSearchRequest searchParams) {
         Pageable pageable = PageRequest.of(searchParams.getPage(), searchParams.getSize());
         return new PageableObject<>(historyRepository.getExchangeGiftAllStatus(searchParams, pageable));
     }
+
     @Override
     public PageableObject<CensorTransactionRequestResponse> getExchangeGiftByStatus(AdminHistoryApprovedSearchRequest searchParams) {
         Pageable pageable = PageRequest.of(searchParams.getPage(), searchParams.getSize());
@@ -225,7 +228,7 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
 
     @Override
     public Integer getPointByIdStudentAndIdCategory(String studentId, String honeyCategoryId) {
-        return honeyRepository.getPointByIdStudentAndIdCategory(studentId,honeyCategoryId);
+        return honeyRepository.getPointByIdStudentAndIdCategory(studentId, honeyCategoryId);
     }
 }
 

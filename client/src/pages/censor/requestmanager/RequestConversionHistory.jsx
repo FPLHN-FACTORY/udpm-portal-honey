@@ -116,27 +116,28 @@ export default function RequestConversionHistory() {
       fetchData();
     });
   };
-  const handCheckvalide = async (values) => {
-    // Gọi hàm fechFillPoint và đợi cho đến khi hoàn thành
-    const response = await RequestManagerAPI.getPoint(
-      values.studentId,
-      values.categoryId
-    );
-    const newFillPoint = response.data.data;
 
-    const totalPoint = values.quantityGift * values.honeyPoint;
-    if (totalPoint > newFillPoint) {
-      message.error("Sinh viên Không còn đủ điểm để mua quà!");
-    } else {
-      changeStatusConversion(
-        values.studentId,
-        values.giftId,
-        values.id,
-        values.idHistoryDetail,
-        1,
-        values.quantityGift
-      );
-    }
+  const handCheckvalide = async (values) => {
+    // const response = await RequestManagerAPI.getPoint(
+    //   values.studentId,
+    //   values.categoryId
+    // );
+    // const newFillPoint = response.data.data;
+
+    // const totalPoint = values.quantityGift * values.honeyPoint;
+    // if (totalPoint > newFillPoint) {
+    // message.error("Sinh viên Không còn đủ điểm để mua quà!");
+    // } else {
+    console.log(values.historyDetailId);
+    changeStatusConversion(
+      values.studentId,
+      values.giftId,
+      values.id,
+      values.historyDetailId,
+      1,
+      values.quantityGift
+    );
+    // }
   };
 
   const columns = [
@@ -152,11 +153,6 @@ export default function RequestConversionHistory() {
       key: "studentName",
     },
     {
-      title: "Loại điểm",
-      dataIndex: "nameCategory",
-      key: "nameCategory",
-    },
-    {
       title: "Loại quà",
       dataIndex: "nameGift",
       key: "nameGift",
@@ -165,12 +161,6 @@ export default function RequestConversionHistory() {
       title: "Số lượng",
       dataIndex: "quantityGift",
       key: "quantityGift",
-    },
-    {
-      title: "Điểm trừ",
-      dataIndex: "honeyPoint",
-      key: "honeyPoint",
-      render: (text) => <span>{`-${text} điểm`}</span>,
     },
     {
       title: "Ngày tạo",
@@ -229,7 +219,7 @@ export default function RequestConversionHistory() {
                     values.studentId,
                     values.giftId,
                     values.id,
-                    values.idHistoryDetail,
+                    values.historyDetailId,
                     2
                   );
                 }}
