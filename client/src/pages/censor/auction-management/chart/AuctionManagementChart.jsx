@@ -3,10 +3,12 @@ import { Card, Col, Row, Statistic } from 'antd';
 import React from 'react';
 import { DemoLine } from './ChartLine';
 import { DemoPie } from './PieDemo';
+import './index.css';
+import AuctionTableGift from './AuctionTableGift';
 
 const AuctionManagementChart = () => {
     return (
-        <div>
+        <div id='auction_chart'>
             <Row gutter={12}>
                 <Col xl={6} lg={12} sm={24} md={24} className="mb-6">
                 <Card bordered={false}>
@@ -67,18 +69,18 @@ const AuctionManagementChart = () => {
 
             </Row>
             <Row gutter={12}>
-                <Col xl={16} lg={24} sm={24} md={24} className="mb-6">
+                <Col xl={16} lg={24} sm={24} md={24} className="mb-6 min-h-screen">
                     <Card bordered={false}>
                         <h4>Biểu đồ thống kê số lượng vật phẩm đấu giá</h4>
                         <hr className="border-0 bg-gray-300 mt-3 mb-6" />
                         <DemoLine></DemoLine>
                     </Card>
                 </Col>
-                <Col xl={8} lg={24} sm={24} md={24} className="mb-6">
-                    <Card bordered={false}>
-                        <h4>Biểu đồ thống kê tỉ lệ vật phẩm đánh giá</h4>
+                <Col xl={8} lg={24} sm={24} md={24} className="mb-6 min-h-screen">
+                    <Card bordered={false} className='h-100%'>
+                        <h4>Vật phẩm</h4>
                         <hr className="border-0 bg-gray-300 mt-3 mb-6" />
-                        <DemoPie>   </DemoPie>
+                        <AuctionTableGift></AuctionTableGift>
                     </Card>
                 </Col>
             </Row>

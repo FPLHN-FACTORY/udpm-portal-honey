@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Line } from '@ant-design/plots';
+import { AuctionChartAPI } from '../../../../apis/censor/auction/auctionLine.api';
 
 export const DemoLine = () => {
   const [data, setData] = useState([]);
@@ -9,21 +10,26 @@ export const DemoLine = () => {
   }, []);
 
   const asyncFetch = () => {
-    fetch('https://gw.alipayobjects.com/os/bmw-prod/e00d52f4-2fa6-47ee-a0d7-105dd95bde20.json')
-      .then((response) => response.json())
-      .then((json) => setData(json))
-      .catch((error) => {
-        console.log('fetch data failed', error);
-      });
+    AuctionChartAPI.fetchLine().then((response) => {
+      console.log(response.data.data);
+      setData(response.data.data);
+    });
+    // fetch('https://gw.alipayobjects.com/os/bmw-prod/e00d52f4-2fa6-47ee-a0d7-105dd95bde20.json')
+    //   .then((response) => response.json())
+    //   .then((json) => )
+    //   .catch((error) => {
+    //     console.log('fetch data failed', error);
+    //   });
   };
   const config = {
     data,
-    xField: 'year',
-    yField: 'gdp',
-    seriesField: 'name',
+    xField: 'date',
+    yField: 'quantity',
+    seriesField: 'giftName',
     yAxis: {
       label: {
-        formatter: (v) => `${(v / 10e8).toFixed(1)}`,
+        // 数值格式化为千分位
+        formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
       },
     },
     legend: {
