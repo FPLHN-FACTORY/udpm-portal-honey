@@ -1,0 +1,11 @@
+#auction_chart :where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper .ant-table-thead>tr>th,
+#auction_chart :where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper .ant-table-thead>tr>td {
+    position: none;
+    color: #000;
+    font-weight: bold;
+    text-align: start;
+    background: #fafafa;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s ease;
+    font-size: 14px;
+}
