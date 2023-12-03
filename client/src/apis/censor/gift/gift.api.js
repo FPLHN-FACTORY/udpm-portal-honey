@@ -49,7 +49,7 @@ export class GiftAPI {
     const formData = new FormData();
     formData.append("code", data.code);
     formData.append("name", data.name.trim());
-    if (data.image !== null) {
+    if (data.image.length !== 0) {
       formData.append("image", data.image);
     }
     if (!isNaN(data.quantity) && data.quantity !== null) {

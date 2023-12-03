@@ -145,7 +145,7 @@ const ModalThem = (props) => {
       return Promise.reject("Điểm số phải là số nguyên dương.");
     }
     if (!value || value <= 0) {
-      return Promise.reject("Điểm (điểm số) phải lớn hơn 0.");
+      return Promise.reject("Số lượng mật phải lớn hơn 0.");
     }
     return Promise.resolve();
   };
@@ -526,18 +526,18 @@ const ModalThem = (props) => {
                     form.setFieldValue("end", null);
                   }}
                 >
-                  <Radio value={0}>Theo ngày bắt đầu</Radio>
+                  {/* <Radio value={0}>Từ lúc vào rương</Radio> */}
                   <Radio value={1}>Theo khoảng ngày</Radio>
                   <Radio value={2}>Vô hạn</Radio>
                 </Radio.Group>
               </Form.Item>
             )}
-            {checkTypeTime === 0 && selectType !== 2 ? (
+            {/* {checkTypeTime === 0 && selectType !== 2 ? (
               <>
                 <Form.Item
                   label={
                     <span>
-                      Thời gian hết hạn <br />
+                      Tính từ lúc sinh viên nhận<br /> 
                       (Theo ngày)
                     </span>
                   }
@@ -564,38 +564,38 @@ const ModalThem = (props) => {
                   <Input type="number" />
                 </Form.Item>
               </>
-            ) : checkTypeTime === 1 && selectType !== 2 ? (
-              <>
-                <Form.Item
-                  label="Thời gian bắt đầu"
-                  name="start"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Vui lòng chọn thời gian hết hạn",
-                    },
-                    {
-                      validator: validateStartDate,
-                    },
-                  ]}
-                >
-                  <Input type="date" />
-                </Form.Item>
+            ) :  */}
+            {checkTypeTime === 1 && selectType !== 2 ? (
+            <>
+              <Form.Item
+                label="Thời gian bắt đầu"
+                name="start"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng chọn thời gian hết hạn",
+                  },
+                  {
+                    validator: validateStartDate,
+                  },
+                ]}
+              >
+                <Input type="date" />
+              </Form.Item>
 
-                <Form.Item
-                  label="Thời gian kết thúc"
-                  name="end"
-                  rules={[
-                    {
-                      validator: validateEndDate,
-                    },
-                  ]}
-                >
-                  <Input type="date" />
-                </Form.Item>
-              </>
-            ) : (
-              <></>
+              <Form.Item
+                label="Thời gian kết thúc"
+                name="end"
+                rules={[
+                  {
+                    validator: validateEndDate,
+                  },
+                ]}
+              >
+                <Input type="date" />
+              </Form.Item>
+            </>
+            ) : (<></>
             )}
             <Form.Item
               label="Yêu cầu phê duyệt"
@@ -646,7 +646,7 @@ const ModalThem = (props) => {
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng chọn tùy chọn số lượng",
+                  message: "Vui lòng chọn cấu hình cộng dồn",
                 },
               ]}
               style={{

@@ -66,7 +66,6 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
   };
 
   const onSubmitCreate = () => {
-    handleCancel();
     if (!selectedConversion) {
       message.error("Vui lòng chọn một mục trong danh sách chọn");
       return;
@@ -124,6 +123,7 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
         } else {
           message.error("Số lượng mật ong không đủ!");
         }
+        handleCancel();
       })
       .catch((error) => {
         console.log(error);
@@ -166,7 +166,7 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
             className="btn-xac-nhan"
             onClick={onSubmitCreate}
           >
-            xác nhận
+            Xác nhận
           </Button>
           <Button type="primary" className="btn-huy" onClick={handleCancel}>
             Hủy
