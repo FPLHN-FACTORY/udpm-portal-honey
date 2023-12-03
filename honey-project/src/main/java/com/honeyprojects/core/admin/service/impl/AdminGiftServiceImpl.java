@@ -164,11 +164,22 @@ public class AdminGiftServiceImpl implements AdminGiftService {
     }
 
     public Gift updateGift(AdminUpdateGiftRequest request, String id) throws IOException {
+
+        if (adArchiveGiftRepository.findAllByGiftId(id).size() != 0 ||
+                adAuctionRepository.findAllByGiftId(id).size() != 0 ||
+                adChestGiftRepository.findAllByGiftId(id).size() != 0 ||
+                adHistoryDetailRepository.findAllByGiftId(id).size() != 0 ||
+                adUpgradeRateGiftRepository.findAllByIdGift(id).size() != 0
+        ) {
+            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể cập nhật");
+        }
+
         StringBuilder contentLogger = new StringBuilder();
         LoggerFunction loggerObject = new LoggerFunction();
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
         Optional<Gift> optional = adGiftRepository.findById(id);
         Gift existingGift = optional.get();
+
 
         existingGift.setName(request.getName().trim());
         existingGift.setStatus(StatusGift.values()[request.getStatus()]);

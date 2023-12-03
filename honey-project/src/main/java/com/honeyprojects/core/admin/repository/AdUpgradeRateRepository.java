@@ -3,6 +3,7 @@ package com.honeyprojects.core.admin.repository;
 import com.honeyprojects.core.admin.model.request.AdminUpgradeRateRequest;
 import com.honeyprojects.core.admin.model.response.AdminGiftResponse;
 import com.honeyprojects.core.admin.model.response.AdminUpgradeRateResponse;
+import com.honeyprojects.entity.UpgradeRate;
 import com.honeyprojects.repository.UpgradeRateRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,4 +49,12 @@ public interface AdUpgradeRateRepository extends UpgradeRateRepository {
                             """,
             nativeQuery = true)
     Page<AdminUpgradeRateResponse> getUpgradeRate(@Param("searchParams") AdminUpgradeRateRequest searchParams, Pageable pageable);
+
+    @Query(value = """ 
+        SELECT * FROM upgrade_rate r 
+        WHERE r.original_honey = :originalHoney
+        AND r.destination_honey = :destinationHoney
+        AND r.id <> :id
+    """, nativeQuery = true)
+    List<UpgradeRate> findOriginalHoneyAndDestinationHoneyAndId(String originalHoney, String destinationHoney, String id);
 }

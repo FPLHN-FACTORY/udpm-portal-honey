@@ -188,11 +188,11 @@ const UsingGift = (props) => {
                   onChange={(e) => {
                     setSoLuong(e);
                   }}
-                  max={parseInt(archivegift.quantity) + 1}
+                  max={parseInt(archivegift.quantity)}
                   min={1}
                 />
               </Col>
-              <Col span={4}>
+              {/* <Col span={4}>
                 <InputNumber
                   max={parseInt(archivegift.quantity) + 1}
                   min={1}
@@ -200,7 +200,7 @@ const UsingGift = (props) => {
                   value={soLuong}
                   onChange={onChangeInput}
                 />
-              </Col>
+              </Col> */}
             </Row>
           </Form.Item>
         </Form>

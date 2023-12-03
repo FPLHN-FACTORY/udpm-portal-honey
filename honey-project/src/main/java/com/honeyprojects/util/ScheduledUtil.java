@@ -14,9 +14,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * @author hieundph25894 - duchieu212
- */
 @Component
 public class ScheduledUtil {
 

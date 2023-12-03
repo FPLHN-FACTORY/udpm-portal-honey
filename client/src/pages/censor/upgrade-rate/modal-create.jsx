@@ -97,6 +97,8 @@ const ModalCreateUpgradeRate = ({
     });
   };
 
+  const isUpdateDisabled = currentItem.status;
+
   return (
     <>
       <Modal
@@ -109,7 +111,7 @@ const ModalCreateUpgradeRate = ({
         <div style={{ paddingTop: "0", borderBottom: "1px solid black" }}>
           <span style={{ fontSize: "18px" }}>
             {" "}
-            {id ? "Cập nhật nâng hạng" : "Thêm mới nâng hạng"}
+            {id ? "Cập nhật nâng cấp" : "Thêm mới nâng cấp"}
           </span>
         </div>
         <div style={{ marginTop: "15px" }}>
@@ -144,6 +146,7 @@ const ModalCreateUpgradeRate = ({
                   value: category.id,
                   label: category.name,
                 }))}
+                disabled={isUpdateDisabled === 1}
               />
             </Form.Item>
             <Form.Item
@@ -172,7 +175,11 @@ const ModalCreateUpgradeRate = ({
                 },
               ]}
             >
-              <Input className="w-full" type="number" />
+              <Input
+                className="w-full"
+                type="number"
+                disabled={isUpdateDisabled === 1}
+              />
             </Form.Item>
             <Form.Item
               name="destinationHoney"
@@ -191,6 +198,7 @@ const ModalCreateUpgradeRate = ({
                   value: category.id,
                   label: category.name,
                 }))}
+                disabled={isUpdateDisabled === 1}
               />
             </Form.Item>
             <Form.Item
@@ -219,7 +227,11 @@ const ModalCreateUpgradeRate = ({
                 },
               ]}
             >
-              <Input className="w-full" type="number" />
+              <Input
+                className="w-full"
+                type="number"
+                disabled={isUpdateDisabled === 1}
+              />
             </Form.Item>
             <Form.Item
               name="idGifts"
@@ -239,6 +251,7 @@ const ModalCreateUpgradeRate = ({
                   value: gift.id,
                   label: gift.name,
                 }))}
+                disabled={isUpdateDisabled === 1}
               />
             </Form.Item>
             <Form.Item
@@ -268,7 +281,11 @@ const ModalCreateUpgradeRate = ({
                 },
               ]}
             >
-              <Input className="w-full" type="number" />
+              <Input
+                className="w-full"
+                type="number"
+                disabled={isUpdateDisabled === 1}
+              />
             </Form.Item>
             <div style={{ textAlign: "right" }}>
               <div style={{ paddingTop: "15px" }}>
@@ -280,6 +297,7 @@ const ModalCreateUpgradeRate = ({
                   }}
                   type="primary"
                   htmlType="submit"
+                  disabled={isUpdateDisabled === 1}
                 >
                   {id ? "Cập nhật" : "Thêm"}
                 </Button>
