@@ -4,13 +4,13 @@ package com.honeyprojects.core.student.repository;
 import com.honeyprojects.core.student.model.request.StudentHoneyRequest;
 import com.honeyprojects.core.student.model.response.StudentHoneyResponse;
 import com.honeyprojects.entity.Honey;
-
 import com.honeyprojects.repository.HoneyRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface StudentHoneyRepository extends HoneyRepository {
@@ -37,4 +37,6 @@ public interface StudentHoneyRepository extends HoneyRepository {
              """,
             nativeQuery = true)
     List<Honey> getListIdCategory(@Param("id") String id);
+
+    Optional<Honey> findByHoneyCategoryIdAndStudentId(String id, String studentId);
 }
