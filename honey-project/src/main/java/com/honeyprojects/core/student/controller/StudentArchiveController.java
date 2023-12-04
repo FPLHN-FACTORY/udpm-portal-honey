@@ -42,7 +42,6 @@ public class StudentArchiveController {
     @PostMapping("/list-class")
     public List<ClassSubjectVM> getListClass() {
         FilterClassSubject filterClassSubject = new FilterClassSubject();
-        filterClassSubject.setEmailStudent("dongbdph35416@fpt.edu.vn");
         return callApiCommonService.callApiClassSubjectVM(filterClassSubject);
     }
 
