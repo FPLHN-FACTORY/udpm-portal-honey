@@ -156,7 +156,7 @@ const UsingGift = (props) => {
                 const el = form.getFieldValue("number")
                 if (el) {
                   let dataDauDiem = dataScore.filter(el => dauDiemId === el.id)[0];
-                  form.setFieldValue("score", el*(archivegift.score/archivegift.scoreRatio)*dataDauDiem.scoreRatio)
+                  form.setFieldValue("score", el.target.value*((archivegift.score*archivegift.scoreRatio)/dataDauDiem.scoreRatio))
                 }
               }}
             >
