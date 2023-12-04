@@ -175,16 +175,18 @@ const ModalThem = (props) => {
     if (selectedType === 0) {
       form.setFieldsValue({
         status: 0,
+        honeyCategoryId: [],
       });
     } else if (selectedType === 1) {
       form.setFieldsValue({
         limitQuantity: 0,
+        honeyCategoryId: [],
       });
     } else if (selectedType === 2) {
       form.setFieldsValue({
         status: 0,
         limitQuantity: 0,
-        honeyCategoryId: null,
+        honeyCategoryId: [],
         checkTypeDate: 2,
       });
     }
@@ -237,9 +239,21 @@ const ModalThem = (props) => {
             formValues.end === null
               ? null
               : Date.parse(new Date(formValues.end)),
-          numberDateEnd:
-            formValues.numberDateEnd !== undefined
-              ? formValues.numberDateEnd
+          scoreRatio:
+            formValues.scoreRatio !== undefined
+              ? parseInt(formValues.scoreRatio)
+              : null,
+          score:
+            formValues.score !== undefined
+              ? parseFloat(formValues.score)
+              : null,
+          scoreRatioMin:
+            formValues.scoreRatioMin !== undefined
+              ? parseInt(formValues.scoreRatioMin)
+              : null,
+          scoreRatioMax:
+            formValues.scoreRatioMax !== undefined
+              ? parseInt(formValues.scoreRatioMax)
               : null,
         };
 
@@ -680,6 +694,106 @@ const ModalThem = (props) => {
                 <Input type="number" />
               </Form.Item>
             )}
+            {selectType === 0 && <>
+              <Form.Item
+              label="Điểm quy đổi"
+              name="score"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập Điểm quy đổi giới hạn cho phép",
+                },
+                {
+                  validator: (_, value) => {
+                    if (value <= 0 || value > 10) {
+                      return Promise.reject(
+                        new Error("Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 10")
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
+            >
+              <Input type="number" />
+            </Form.Item>
+              <Form.Item
+                label="Trọng số quy đổi"
+                name="scoreRatio"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập Trọng số quy đổi giới hạn cho phép",
+                  },
+                  {
+                    validator: (_, value) => {
+                      const regex = /^[0-9]+$/;
+                      if (!regex.test(value) || value === 0) {
+                        return Promise.reject(
+                          new Error("Vui lòng nhập một số nguyên dương")
+                        );
+                      }
+                      if (value <= 0 || value > 100) {
+                        return Promise.reject(
+                          new Error("Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 100")
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+              >
+                <Input type="number" />
+              </Form.Item>
+              <Form.Item
+                label="Trọng số nhỏ nhất"
+                name="scoreRatioMin"
+                rules={[
+                  {
+                    validator: (_, value) => {
+                      const regex = /^[0-9]+$/;
+                      if (!regex.test(value) || value === 0) {
+                        return Promise.reject(
+                          new Error("Vui lòng nhập một số nguyên dương")
+                        );
+                      }
+                      if (value <= 0 || value > 100) {
+                        return Promise.reject(
+                          new Error("Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 100")
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+              >
+                <Input type="number" />
+              </Form.Item>
+              <Form.Item
+                label="Trọng số lớn nhất"
+                name="scoreRatioMax"
+                rules={[
+                  {
+                    validator: (_, value) => {
+                      const regex = /^[0-9]+$/;
+                      if (!regex.test(value)) {
+                        return Promise.reject(
+                          new Error("Vui lòng nhập một số nguyên dương")
+                        );
+                      }
+                      if (value <= 0 || value > 100) {
+                        return Promise.reject(
+                          new Error("Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 100")
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+              >
+                <Input type="number" />
+              </Form.Item>
+            </>}
             <Form.Item label="Ghi chú" name="note">
               <TextArea
                 cols="30"

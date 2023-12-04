@@ -13,4 +13,8 @@ public class FilterScoreTemplate {
 
     private String classId;
     private String subjectId;
+    private Long scoreRatio;
+    private Double score;
+    private Long scoreRatioMin;
+    private Long scoreRatioMax;
 }

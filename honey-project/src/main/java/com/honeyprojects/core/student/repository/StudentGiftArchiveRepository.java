@@ -53,7 +53,8 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
     List<String> listGiftId(@Param("req") StudentArchiveOpenChestRequest req);
 
     @Query(value = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.id, ag.quantity, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
+                    SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.id, ag.quantity, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image , 
+                    g.score, g.score_ratio, g.score_ratio_min, g.score_ratio_max
                     FROM gift g 
                     JOIN archive_gift ag ON ag.gift_id = g.id 
                     JOIN archive a ON ag.archive_id = a.id 

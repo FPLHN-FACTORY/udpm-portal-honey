@@ -87,10 +87,8 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
 
     @Override
     public History addPoint(AdminAddPointRequest addPointRequest) {
-        String idAdmin = udpmHoney.getIdUser();
         Long dateNow = Calendar.getInstance().getTimeInMillis();
         History history = new History();
-        history.setAdminId(idAdmin);
         history.setNote(addPointRequest.getNote());
         history.setType(TypeHistory.CONG_DIEM);
         history.setCreatedAt(dateNow);

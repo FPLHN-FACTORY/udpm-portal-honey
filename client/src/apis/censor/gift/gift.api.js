@@ -34,9 +34,17 @@ export class GiftAPI {
     if (data.note !== null) {
       formData.append("note", data.note.trim());
     }
-
-    if (data.numberDateEnd !== null) {
-      formData.append("numberDateEnd", data.numberDateEnd);
+    if (data.scoreRatio !== null) {
+      formData.append("scoreRatio", data.scoreRatio);
+    }
+    if (data.score !== null) {
+      formData.append("score", data.score);
+    }
+    if (data.scoreRatioMin !== null) {
+      formData.append("scoreRatioMin", data.scoreRatioMin);
+    }
+    if (data.scoreRatioMax !== null) {
+      formData.append("scoreRatioMax", data.scoreRatioMax);
     }
     return request({
       method: "POST",
@@ -71,8 +79,17 @@ export class GiftAPI {
     if (data.note !== null) {
       formData.append("note", data.note.trim());
     }
-    if (data.numberDateEnd !== null) {
-      formData.append("numberDateEnd", data.numberDateEnd);
+    if (data.scoreRatio !== null) {
+      formData.append("scoreRatio", data.scoreRatio);
+    }
+    if (data.score !== null) {
+      formData.append("score", data.score);
+    }
+    if (data.scoreRatioMin !== null) {
+      formData.append("scoreRatioMin", data.scoreRatioMin);
+    }
+    if (data.scoreRatioMax !== null) {
+      formData.append("scoreRatioMax", data.scoreRatioMax);
     }
     return request({
       method: "PUT",
