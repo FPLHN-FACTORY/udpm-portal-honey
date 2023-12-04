@@ -82,45 +82,45 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     @Override
     @Transactional
     public ArchiveGift studentUsingGift(StudentRequestChangeGift request) {
-//        SimpleResponse teacher = requestApiidentity.handleCallApiGetUserByEmail(request.getEmailGV());
-//        if (teacher == null) {
-//            throw new RestApiException("Email giảng viên không tồn tại trong hệ thống!");
-//        }
-//        ArchiveGift archiveGift = archiveGiftRepository.findById(request.getArchiveGiftId()).orElse(null);
-//        if (archiveGift != null) {
-//////            Semester semester = semesterRepository.findByStatus(SemesterStatus.DANG_HOAT_DONG)
-//////                    .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
-//////            StudentSumHistoryParam sumHistoryParam = new StudentSumHistoryParam(
-//////                    archiveGift.getGiftId(), request.getMaLop(), request.getMaMon(), semester.getFromDate(),
-//////                    semester.getToDate());
-//////            Integer total = historyRepository.getTotalUseGift(sumHistoryParam);
-//////            Gift gift = giftRepository.findById(archiveGift.getGiftId())
-//////                    .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
-////            if (total == null) {
-////                total = 0;
-////            }
-////            if (gift.getLimitQuantity() != null
-////                    && gift.getLimitQuantity() < (total + request.getQuantity())) {
-////                throw new RestApiException("Số lượng sử dụng quá giới hạn!");
-////            }
-//            History history = new History();
-//            history.setQuantity(request.getQuantity());
-//            history.setStudentId(udpmHoney.getIdUser());
-//            history.setTeacherId(teacher.getId());
-//            history.setClassName(request.getMaLop());
-//            history.setSubject(request.getMaMon());
-//            history.setType(TypeHistory.PHE_DUYET_QUA);
-//            history.setStatus(HoneyStatus.CHO_PHE_DUYET);
-//            history.setGiftId(archiveGift.getGiftId());
-//            historyRepository.save(history);
-//            archiveGift.setQuantity(archiveGift.getQuantity() - request.getQuantity());
-//            if (archiveGift.getQuantity() <= 0) {
-//                archiveGiftRepository.delete(archiveGift);
-//            } else {
-//                archiveGiftRepository.save(archiveGift);
+        SimpleResponse teacher = requestApiidentity.handleCallApiGetUserByEmail("huynqph26782@fpt.edu.vn");
+        if (teacher == null) {
+            throw new RestApiException("Email giảng viên không tồn tại trong hệ thống!");
+        }
+        ArchiveGift archiveGift = archiveGiftRepository.findById(request.getArchiveGiftId()).orElse(null);
+        if (archiveGift != null) {
+////            Semester semester = semesterRepository.findByStatus(SemesterStatus.DANG_HOAT_DONG)
+////                    .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
+////            StudentSumHistoryParam sumHistoryParam = new StudentSumHistoryParam(
+////                    archiveGift.getGiftId(), request.getMaLop(), request.getMaMon(), semester.getFromDate(),
+////                    semester.getToDate());
+////            Integer total = historyRepository.getTotalUseGift(sumHistoryParam);
+////            Gift gift = giftRepository.findById(archiveGift.getGiftId())
+////                    .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
+//            if (total == null) {
+//                total = 0;
 //            }
-//            return archiveGift;
-//        }
+//            if (gift.getLimitQuantity() != null
+//                    && gift.getLimitQuantity() < (total + request.getQuantity())) {
+//                throw new RestApiException("Số lượng sử dụng quá giới hạn!");
+//            }
+            History history = new History();
+//            history.setQuantity(request.getQuantity());
+            history.setStudentId(udpmHoney.getIdUser());
+            history.setTeacherId(teacher.getId());
+            history.setClassName(request.getMaLop());
+            history.setSubject(request.getMaMon());
+            history.setType(TypeHistory.PHE_DUYET_QUA);
+            history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+//            history.setGiftId(archiveGift.getGiftId());
+            historyRepository.save(history);
+            archiveGift.setQuantity(archiveGift.getQuantity() - request.getQuantity());
+            if (archiveGift.getQuantity() <= 0) {
+                archiveGiftRepository.delete(archiveGift);
+            } else {
+                archiveGiftRepository.save(archiveGift);
+            }
+            return archiveGift;
+        }
         return null;
     }
 
