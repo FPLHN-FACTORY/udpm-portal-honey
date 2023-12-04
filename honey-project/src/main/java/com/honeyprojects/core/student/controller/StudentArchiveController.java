@@ -11,6 +11,7 @@ import com.honeyprojects.core.student.model.response.StudentArchiveGetChestRespo
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
 import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
 import com.honeyprojects.core.student.service.StudentArchiveService;
+import com.honeyprojects.infrastructure.contant.SessionConstant;
 import com.honeyprojects.util.callApiPoint.model.request.FilterClassSubject;
 import com.honeyprojects.util.callApiPoint.model.request.FilterScoreTemplate;
 import com.honeyprojects.util.callApiPoint.model.request.FilterScoreTemplateVM;
@@ -18,6 +19,7 @@ import com.honeyprojects.util.callApiPoint.model.response.ClassSubjectVM;
 import com.honeyprojects.util.callApiPoint.model.response.ScoreTemplate;
 import com.honeyprojects.util.callApiPoint.model.response.ScoreTemplateVM;
 import com.honeyprojects.util.callApiPoint.service.CallApiCommonService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,9 +41,13 @@ public class StudentArchiveController {
     @Autowired
     private CallApiCommonService callApiCommonService;
 
+    @Autowired
+    private HttpSession session;
+
     @PostMapping("/list-class")
     public List<ClassSubjectVM> getListClass() {
         FilterClassSubject filterClassSubject = new FilterClassSubject();
+        filterClassSubject.setEmailStudent(session.getAttribute(SessionConstant.EMAIL).toString());
         return callApiCommonService.callApiClassSubjectVM(filterClassSubject);
     }
 
