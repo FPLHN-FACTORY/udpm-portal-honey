@@ -41,6 +41,7 @@ const UsingGift = (props) => {
           ...values,
           archiveGiftId: archivegift.id,
           quantity: values.number,
+          scoreId: values.dauDiem
         };
         ArchiveAPI.openGift(data)
           .then((result) => {
@@ -160,7 +161,7 @@ const UsingGift = (props) => {
               }}
             >
               {dataScore.map(option => (
-                <Option value={option.id} key={option.id} > { option.name }</Option>
+                <Option value={option.id} key={option.id} > { `${option.name} Trọng số ${option.scoreRatio}/100` }</Option>
               ))}
             </Select>
           </Form.Item>
@@ -195,7 +196,7 @@ const UsingGift = (props) => {
               const dauDiemId = form.getFieldValue("dauDiem")
               if (dauDiemId) {
                 let dataDauDiem = dataScore.filter(el => dauDiemId === el.id)[0];
-                form.setFieldValue("score", el.target.value*(archivegift.score/archivegift.scoreRatio)*dataDauDiem.scoreRatio)
+                form.setFieldValue("score", el.target.value*((archivegift.score*archivegift.scoreRatio)/dataDauDiem.scoreRatio))
               }
             }} type="number"/>
           </Form.Item>
