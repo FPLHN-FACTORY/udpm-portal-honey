@@ -33,6 +33,11 @@ public class AdminUpdateGiftRequest {
 
     private Long fromDate;
 
-    private Long numberEndDate;
+    private Long scoreRatio;
 
+    private Double score;
+
+    private Long scoreRatioMin;
+
+    private Long scoreRatioMax;
 }

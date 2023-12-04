@@ -35,4 +35,16 @@ public interface StudentGetListGiftResponse extends IsIdentified {
     @Value("#{target.quantity}")
     String getQuantity();
 
+    @Value("#{target.score_ratio}")
+    Long getScoreRatio();
+
+    @Value("#{target.score}")
+    Double getScore();
+
+    @Value("#{target.score_ratio_min}")
+    Long getScoreRatioMin();
+
+    @Value("#{target.score_ratio_max}")
+    Long getScoreRatioMax();
+
 }

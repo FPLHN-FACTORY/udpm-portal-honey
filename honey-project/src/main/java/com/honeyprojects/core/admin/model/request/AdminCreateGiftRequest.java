@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
@@ -36,6 +35,12 @@ public class AdminCreateGiftRequest extends PageableRequest {
 
     private Long fromDate;
 
-    private Long numberDateEnd;
+    private Long scoreRatio;
+
+    private Double score;
+
+    private Long scoreRatioMin;
+
+    private Long scoreRatioMax;
 
 }

@@ -1720,6 +1720,9 @@ ul.ant-menu.ant-menu-root.ant-menu-inline.ant-menu-light.left-nav
   margin: 0px;
 }
 
+.ant-table-tbody>tr>td {
+  word-break: break-word;
+}
 .tag-primary {
   border-radius: 6px;
   padding: 2px 12px;
