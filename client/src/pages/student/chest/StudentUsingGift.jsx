@@ -40,7 +40,7 @@ const UsingGift = (props) => {
         const data = {
           ...values,
           archiveGiftId: archivegift.id,
-          quantity: soLuong,
+          quantity: values.number,
         };
         ArchiveAPI.openGift(data)
           .then((result) => {
