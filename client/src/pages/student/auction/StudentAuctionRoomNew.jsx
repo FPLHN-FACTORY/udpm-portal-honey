@@ -230,8 +230,9 @@ export default function StudentAuctionRoomNew() {
 
       stompClient.subscribe(
         "/portal-honey/update-last-price-auction",
-        (message) => {
-          let data = JSON.parse(message.body);
+        (mes) => {
+          let data = JSON.parse(mes.body);
+          console.log(data);
           dispatch(UpdateAuction(data.data));
           form.resetFields();
           message.success("Đấu giá thành công.");
