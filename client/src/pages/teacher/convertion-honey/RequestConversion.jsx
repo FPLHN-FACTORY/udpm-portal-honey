@@ -40,16 +40,9 @@ export default function RequestConversion() {
       align: "center",
     },
     {
-      title: "Email sinh viên",
-      dataIndex: "emailStudent",
-      key: "emailStudent",
-      align: "center",
-    },
-    {
-      title: "Loại quà",
-      dataIndex: "nameGift",
-      key: "nameGift",
-      align: "center",
+      title: "Yêu cầu",
+      dataIndex: "note",
+      key: "note",
     },
     {
       title: "Lớp",
@@ -355,9 +348,10 @@ export default function RequestConversion() {
             rowKey="key"
             pagination={false}
         />
+        <div className="mt-10 text-center mb-10">
         {
           totalPage > 1 &&
-          <div className="mt-10 text-center mb-10">
+          
             <Pagination
               simple
               current={filter.page + 1}
@@ -366,8 +360,9 @@ export default function RequestConversion() {
               }}
               total={totalPage * 10}
             />
-          </div>
-        }
+          
+          }
+        </div>
         </Card>
       </div>
   );

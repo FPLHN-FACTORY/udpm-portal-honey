@@ -17,7 +17,7 @@ public interface TeacherUseGiftRequestRepository extends HistoryRepository {
 
     @Query(value = """
             select ROW_NUMBER() over (ORDER BY h.created_date desc ) as stt,h.id,
-            h.student_id, h.class_name as lop,h.subject as mon, h.created_date, h.status as status
+            h.student_id, h.class_name as lop,h.subject as mon, h.created_date, h.status as status, h.note
              from history h
              where h.type = 3
              and h.status = :#{#request.status}

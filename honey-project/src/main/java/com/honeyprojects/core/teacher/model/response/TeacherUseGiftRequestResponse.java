@@ -18,4 +18,6 @@ public interface TeacherUseGiftRequestResponse extends IsIdentified {
     long getCreatedDate();
 
     String getStatus();
+
+    String getNote();
 }
