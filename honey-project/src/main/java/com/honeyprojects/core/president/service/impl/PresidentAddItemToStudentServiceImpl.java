@@ -425,7 +425,7 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                             history.setStatus(HoneyStatus.DA_PHE_DUYET);
                         }
                         if (category.getStatus().equals(enumCategoryACCEPT)) {
-                            history.setStatus(HoneyStatus.DA_PHE_DUYET);
+                            history.setStatus(HoneyStatus.CHO_PHE_DUYET);
                         }
                         history.setType(TypeHistory.CONG_DIEM);
                         history.setChangeDate(dateNow);

@@ -41,7 +41,7 @@ import StudentRequest from "./pages/student/history/StudentRequest";
 import TabsRequest from "./pages/censor/requestmanager/TabsRequest";
 import ListHistory from "./pages/censor/requestmanager/ListHistory";
 import DashboardPresident from "./layout/president/DashboardPresident";
-import AddItem from "./pages/president/add-item/AddItem";
+import AddItem from "./pages/president/AddItem";
 import HonorsStudent from "./pages/student/honors/HonorsStudent";
 import TopStudent from "./pages/student/honors/TopStudent";
 import { SelectLoading } from "./app/reducers/loading/loading.reducer";
@@ -51,6 +51,9 @@ import AuthorSwitch from "./pages/login/AuthorSwitch";
 import ProjectManager from "./pages/censor/randomaddpoint/ProjectManager";
 import EventManager from "./pages/censor/randomaddpoint/EventManager";
 import AuctionManagementChart from "./pages/censor/auction-management/chart/AuctionManagementChart";
+import HoneyHistory from "./pages/president/HoneyHistory";
+import GiftHistory from "./pages/president/GiftHistory";
+import PresidentHistory from "./pages/president/PresidentHistory";
 
 function App() {
   const data = useAppSelector(SelectLoading);
@@ -460,6 +463,16 @@ function App() {
                 <AuthGuard>
                   <DashboardPresident>
                     <AddItem />
+                  </DashboardPresident>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/president/history-honey"
+              element={
+                <AuthGuard>
+                  <DashboardPresident>
+                    <PresidentHistory />
                   </DashboardPresident>
                 </AuthGuard>
               }

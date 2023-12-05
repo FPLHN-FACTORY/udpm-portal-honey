@@ -35,10 +35,10 @@ function DashboardPresident({ children }) {
 
   useEffect(() => {
     setSelectedKey(location.pathname);
-  },[location])
+  }, [location]);
 
   let { pathname } = useLocation();
-  pathname = pathname.replace("/", ""); 
+  pathname = pathname.replace("/", "");
 
   let title = "";
   if (pathname.includes("president/add-item")) {
@@ -55,7 +55,14 @@ function DashboardPresident({ children }) {
   }
   const items = [
     getItem("Cộng mật ong", "Cộng mật ong", <PlusCircleFilled />, [
-      getItem(<Link to={"/president/add-item"}>Tạo yêu cầu</Link>, "/president/add-item"),
+      getItem(
+        <Link to={"/president/add-item"}>Tạo yêu cầu</Link>,
+        "/president/add-item"
+      ),
+      getItem(
+        <Link to={"/president/history-honey"}>Lịch sử</Link>,
+        "/president/history-honey"
+      ),
     ]),
   ];
   const toggleCollapse = () => {
@@ -127,7 +134,7 @@ function DashboardPresident({ children }) {
             style={{ height: "80px" }}
           />
 
-          <Menu mode="inline" items={items}  selectedKeys={selectedKey}/>
+          <Menu mode="inline" items={items} selectedKeys={selectedKey} />
         </Sider>
       </div>
       <Layout className="pb-14">

@@ -6,99 +6,50 @@ import {
   Pagination,
   Select,
   Space,
-  Table,
   Tag,
   message,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import "./index.css";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { SearchOutlined } from "@ant-design/icons";
+
+import moment from "moment";
+import { CategoryAPI } from "../../apis/censor/category/category.api";
+import { RequestManagerAPI } from "../../apis/censor/request-manager/requestmanager.api";
 import {
   GetHistory,
   SetHistory,
-} from "../../../app/reducers/history/history.reducer";
-import { AddPointAPI } from "../../../apis/censor/add-point/add-point.api";
+} from "../../app/reducers/history/history.reducer";
 import {
   GetCategory,
   SetCategory,
-} from "../../../app/reducers/category/category.reducer";
-import { SearchOutlined } from "@ant-design/icons";
-import moment from "moment";
+} from "../../app/reducers/category/category.reducer";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { PresidentHistoryAPI } from "../../apis/president/history/history.api";
 
-// const statusHistory = (status) => {
-//   switch (status) {
-//     case 1:
-//       return (
-//         <Tag style={{ width: "80px", textAlign: "center" }} color="green">
-//           Gửi thành công
-//         </Tag>
-//       ); // Màu xanh lá cây
-//     case 2:
-//       return (
-//         <Tag style={{ width: "80px", textAlign: "center" }} color="volcano">
-//           Gửi thất bại
-//         </Tag>
-//       ); // Màu đỏ
-//     default:
-//       return <Tag>Không xác định</Tag>;
-//   }
-// };
+const statusHistory = (status) => {
+  switch (status) {
+    case 1:
+      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
+    case 2:
+      return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
+    default:
+      return <Tag>Không xác định</Tag>;
+  }
+};
 
-export default function HistoryAddPoint() {
+export default function HoneyHistory() {
   const dispatch = useAppDispatch();
-  const columns = [
-    {
-      title: "STT",
-      dataIndex: "stt",
-      key: "stt",
-      align: "center",
-    },
-    {
-      title: "Tên sinh viên",
-      dataIndex: "nameStudent",
-      key: "nameStudent",
-      align: "center",
-    },
-    {
-      title: "Loại điểm",
-      dataIndex: "nameCategory",
-      key: "nameCategory",
-      align: "center",
-    },
-    {
-      title: "Số điểm",
-      dataIndex: "honeyPoint",
-      key: "honeyPoint",
-      align: "center",
-    },
-    {
-      title: "Ngày tạo",
-      dataIndex: "createdDate",
-      key: "createdDate",
-      align: "center",
-    },
-    {
-      title: "Lý do",
-      dataIndex: "note",
-      key: "note",
-      align: "center",
-    },
-    // {
-    //   title: "Trạng thái",
-    //   dataIndex: "status",
-    //   key: "status",
-    // },
-  ];
-
   const [totalPage, setTotalPage] = useState(1);
-  const [filter, setFilter] = useState({ page: 0 });
+  const [filter, setFilter] = useState({ page: 0, status: null });
 
   useEffect(() => {
     fetchData(dispatch, filter);
   }, [dispatch, filter]);
 
   const fetchData = (dispatch, filter) => {
-    AddPointAPI.getCategory()
+    dispatch(SetHistory([]));
+    CategoryAPI.fetchAllCategory()
       .then((response) => {
         dispatch(SetCategory(response.data.data));
       })
@@ -108,11 +59,13 @@ export default function HistoryAddPoint() {
       .finally(() => {
         const fetchData = async (filter) => {
           try {
-            const response = await AddPointAPI.getHistory(filter);
+            const response = await PresidentHistoryAPI.getHoneyHistory(filter);
             const listHistory = await Promise.all(
               response.data.data.map(async (data) => {
                 try {
-                  const user = await AddPointAPI.getStudent(data.studentId);
+                  const user = await RequestManagerAPI.getUserAPiById(
+                    data.studentId
+                  );
                   return {
                     ...data,
                     nameStudent: user.data.data.name,
@@ -138,11 +91,12 @@ export default function HistoryAddPoint() {
     return {
       ...data,
       key: data.id,
-      // status: statusHistory(data.status),
-      createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
+      status: statusHistory(data.status),
+      createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
   });
+
   const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
@@ -154,7 +108,7 @@ export default function HistoryAddPoint() {
         status: value.status,
       });
     } else {
-      AddPointAPI.searchStudent(value.userName.trim())
+      RequestManagerAPI.getUserAPiByCode(value.userName.trim())
         .then((result) => {
           if (result.data.success) {
             setFilter({
@@ -164,29 +118,29 @@ export default function HistoryAddPoint() {
               status: value.status,
             });
           } else {
-            message.error("Mã sinh viên không chính xác!");
+            message.error("User name sinh viên không chính xác!");
           }
         })
         .catch((error) => console.error(error));
     }
   };
-
   return (
-    <div className="add-point">
+    <div className="request-manager">
       <Card className="mb-2 py-1">
         <Form onFinish={onFinishSearch}>
           <Space size={"large"}>
             <Form.Item name="userName" className="search-input">
               <Input
-                style={{ width: "300px" }}
+                style={{ width: "400px" }}
+                name="userName"
                 size="small"
-                placeholder="Nhập username sinh viên cần tìm"
+                placeholder="Nhập user name sinh viên cần tìm"
                 prefix={<SearchOutlined />}
               />
             </Form.Item>
             <Form.Item name={"idCategory"}>
               <Select
-                style={{ width: "150px" }}
+                style={{ width: "250px" }}
                 size="large"
                 placeholder="Loại điểm"
                 options={[
@@ -195,6 +149,22 @@ export default function HistoryAddPoint() {
                     return {
                       value: category.id,
                       label: category.name,
+                    };
+                  }),
+                ]}
+              />
+            </Form.Item>
+            <Form.Item name={"status"} initialValue={null}>
+              <Select
+                style={{ width: "260px" }}
+                size="large"
+                placeholder="Trạng thái"
+                options={[
+                  { value: null, label: "Tất cả" },
+                  ...[1, 2].map((value) => {
+                    return {
+                      value: value,
+                      label: statusHistory(value),
                     };
                   }),
                 ]}
@@ -211,12 +181,25 @@ export default function HistoryAddPoint() {
         </Form>
       </Card>
       <Card title="Lịch sử cộng điểm">
-        <Table
-          columns={columns}
-          dataSource={data}
-          rowKey="key"
-          pagination={false}
-        />
+        {data.map((item) => (
+          <div className="list__point ">
+            <h3 className="text-slate-600"> Sinh viên {item.nameStudent}</h3>
+            <div className="list__point__title">
+              <p>
+                <strong className="text-slate-500 mr-[8px]">
+                  {item.acction.status == 2
+                    ? "Đã bị hủy yêu cầu tặng: "
+                    : "Đã nhận được: "}
+                </strong>
+                {item.honeyPoint} mật ong {item.nameCategory}
+              </p>
+              <p>
+                <strong className="text-slate-500 mr-[8px]">Thời gian:</strong>
+                {item.createdDate}
+              </p>
+            </div>
+          </div>
+        ))}
         <div className="mt-10 text-center mb-10">
           <Pagination
             simple
