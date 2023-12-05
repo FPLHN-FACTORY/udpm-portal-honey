@@ -2,7 +2,6 @@ import { CheckCircleOutlined, FlagOutlined, SendOutlined, StopOutlined } from '@
 import { Card, Col, Row, Statistic } from 'antd';
 import React from 'react';
 import { DemoLine } from './ChartLine';
-import { DemoPie } from './PieDemo';
 import './index.css';
 import AuctionTableGift from './AuctionTableGift';
 

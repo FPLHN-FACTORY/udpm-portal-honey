@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { message, Modal, Form, Input, Slider, Select, Col, InputNumber, Row } from "antd";
+import { message, Modal, Form, Input, Select } from "antd";
 import { useAppDispatch } from "../../../app/hooks";
 import { ArchiveAPI } from "../../../apis/student/archive/ArchiveAPI";
 import { SetGiftArchive } from "../../../app/reducers/archive-gift/gift-archive.reducer";
@@ -40,7 +40,8 @@ const UsingGift = (props) => {
         const data = {
           ...values,
           archiveGiftId: archivegift.id,
-          quantity: soLuong,
+          quantity: values.number,
+          scoreId: values.dauDiem
         };
         ArchiveAPI.openGift(data)
           .then((result) => {
@@ -55,7 +56,9 @@ const UsingGift = (props) => {
           .finally(() => {
             fetchData();
           });
-      })
+      }).catch(() => {
+        message.error("Vui lòng điền đầy đủ thông tin.");
+      });
   };
 
   const handleCancel = () => {
@@ -63,22 +66,21 @@ const UsingGift = (props) => {
     setIsModalOpen(false);
   };
 
-  const [soLuong, setSoLuong] = useState(1);
-
-
   const onChange = (value) => {
     const classStudent = dataClass.filter(el => el.classId === value)[0];
     form.setFieldValue("maMon", classStudent.subjectName)
     form.setFieldValue("emailGV", classStudent.teacherEmail)
 
-    ArchiveAPI.getScoreClass({ classId: classStudent.classId, subjectId: classStudent.subjectId }).then((response) => {
+    const data = {
+      classId: classStudent.classId,
+      subjectId: classStudent.subjectId,
+
+    }
+
+    ArchiveAPI.getScoreClass(data).then((response) => {
       setDataScore(response.data);
     })
   };
-  const onChangeInput = (newValue) => {
-    setSoLuong(newValue);
-  };
-
   // Filter `option.label` match the user type `input`
   const filterOption = (input, option) =>
     (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
@@ -89,6 +91,7 @@ const UsingGift = (props) => {
       <Modal
         title="Sử dụng quà tặng"
         visible={isModalOpen}
+        width={700}
         onOk={handleOk}
         onCancel={handleCancel}>
         <hr className="border-0 bg-gray-300 mt-3 mb-6" />
@@ -124,28 +127,12 @@ const UsingGift = (props) => {
           </Form.Item>
           <Form.Item
             name="maMon"
-            label="Mã môn học"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập mã môn học!",
-              },
-            ]}>
+            label="Mã môn học">
             <Input disabled />
           </Form.Item>
           <Form.Item
             name="emailGV"
-            label="Email giảng viên"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập email giảng viên!",
-              },
-              {
-                type: "email",
-                message: "Email không hợp lệ!",
-              },
-            ]}>
+            label="Email giảng viên">
             <Input disabled />
           </Form.Item>
 
@@ -164,44 +151,61 @@ const UsingGift = (props) => {
               placeholder="Vui lòng chọn đầu điểm"
               filterOption={filterOption}
               key={"dauDiemSelect"}
+              onChange={() => {
+                const dauDiemId = form.getFieldValue("dauDiem")
+                const el = form.getFieldValue("number")
+                if (el) {
+                  let dataDauDiem = dataScore.filter(el => dauDiemId === el.id)[0];
+                  form.setFieldValue("score", el.target.value*((archivegift.score*archivegift.scoreRatio)/dataDauDiem.scoreRatio))
+                }
+              }}
             >
               {dataScore.map(option => (
-                <Option value={option.id} key={option.id} > { option.name }</Option>
+                <Option value={option.id} key={option.id} > { `${option.name} Trọng số ${option.scoreRatio}/100` }</Option>
               ))}
             </Select>
           </Form.Item>
 
           <Form.Item
-            label={"Số lượng"}
+            label={"Số lượng quà sử dụng"}
             name={"number"}
             rules={[
               {
                 required: true,
                 message: "Vui lòng không được để trống số lượng"
               },
+              {
+                validator: (_, value) => {
+                  const regex = /^[0-9]+$/;
+                  if (!regex.test(value) || value === 0) {
+                    return Promise.reject(
+                      new Error("Vui lòng nhập một số nguyên dương")
+                    );
+                  }
+                  if (value <= 0 || value > 100) {
+                    return Promise.reject(
+                      new Error("Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 100")
+                    );
+                  }
+                  return Promise.resolve();
+                },
+              },
             ]}
           >
-            <Row>
-              <Col span={14}>
-                <Slider
-                  value={typeof soLuong === 'number' ? soLuong : 0}
-                  onChange={(e) => {
-                    setSoLuong(e);
-                  }}
-                  max={parseInt(archivegift.quantity) + 1}
-                  min={1}
-                />
-              </Col>
-              <Col span={4}>
-                <InputNumber
-                  max={parseInt(archivegift.quantity) + 1}
-                  min={1}
-                  style={{ margin: '0 0 0 16px' }}
-                  value={soLuong}
-                  onChange={onChangeInput}
-                />
-              </Col>
-            </Row>
+            <Input onChange={(el) => {
+              const dauDiemId = form.getFieldValue("dauDiem")
+              if (dauDiemId) {
+                let dataDauDiem = dataScore.filter(el => dauDiemId === el.id)[0];
+                form.setFieldValue("score", el.target.value*((archivegift.score*archivegift.scoreRatio)/dataDauDiem.scoreRatio))
+              }
+            }} type="number"/>
+          </Form.Item>
+          
+          <Form.Item
+            label={"Số lượng điểm nhận được"}
+            name={"score"}
+          >
+            <Input disabled/>
           </Form.Item>
         </Form>
       </Modal>

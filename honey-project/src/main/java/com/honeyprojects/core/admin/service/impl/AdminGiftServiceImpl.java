@@ -130,12 +130,14 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         gift.setType(TypeGift.values()[request.getType()]);
         gift.setTransactionGift(TransactionGift.values()[request.getTransactionGift()]);
         gift.setNote(request.getNote());
+        gift.setScore(request.getScore());
+        gift.setScoreRatio(request.getScoreRatio());
+        gift.setScoreRatioMax(request.getScoreRatioMax());
+        gift.setScoreRatioMin(request.getScoreRatioMin());
 
         Long fromDate = null;
         Long toDate = null;
-        if (request.getNumberDateEnd() != null) {
-            gift.setExpiry(ExpiryGift.DANG_HOAT_DONG);
-        } else if (request.getFromDate() != null && request.getToDate() != null) {
+        if (request.getFromDate() != null && request.getToDate() != null) {
             fromDate = DateUtils.truncate(new Date(request.getFromDate()), Calendar.DATE).getTime();
             toDate = DateUtils.truncate(new Date(request.getToDate()), Calendar.DATE).getTime();
             gift.setToDate(toDate);
@@ -164,11 +166,22 @@ public class AdminGiftServiceImpl implements AdminGiftService {
     }
 
     public Gift updateGift(AdminUpdateGiftRequest request, String id) throws IOException {
+
+        if (adArchiveGiftRepository.findAllByGiftId(id).size() != 0 ||
+                adAuctionRepository.findAllByGiftId(id).size() != 0 ||
+                adChestGiftRepository.findAllByGiftId(id).size() != 0 ||
+                adHistoryDetailRepository.findAllByGiftId(id).size() != 0 ||
+                adUpgradeRateGiftRepository.findAllByIdGift(id).size() != 0
+        ) {
+            throw new RestApiException("Vật phẩm đã được sử dụng. Không thể cập nhật");
+        }
+
         StringBuilder contentLogger = new StringBuilder();
         LoggerFunction loggerObject = new LoggerFunction();
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
         Optional<Gift> optional = adGiftRepository.findById(id);
         Gift existingGift = optional.get();
+
 
         existingGift.setName(request.getName().trim());
         existingGift.setStatus(StatusGift.values()[request.getStatus()]);
@@ -177,6 +190,10 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         existingGift.setType(TypeGift.values()[request.getType()]);
         existingGift.setTransactionGift(TransactionGift.values()[request.getTransactionGift()]);
         existingGift.setNote(request.getNote());
+        existingGift.setScore(request.getScore());
+        existingGift.setScoreRatio(request.getScoreRatio());
+        existingGift.setScoreRatioMax(request.getScoreRatioMax());
+        existingGift.setScoreRatioMin(request.getScoreRatioMin());
 
         if (request.getImage() != null) {
             existingGift.setImage(setImageToCloud(request, existingGift.getImage()));
@@ -184,16 +201,11 @@ public class AdminGiftServiceImpl implements AdminGiftService {
 
         Long fromDate = null;
         Long toDate = null;
-        if (request.getNumberEndDate() != null) {
-            existingGift.setExpiry(ExpiryGift.DANG_HOAT_DONG);
-            existingGift.setToDate(null);
-            existingGift.setFromDate(null);
-        } else if (request.getFromDate() != null && request.getToDate() != null) {
+        if (request.getFromDate() != null && request.getToDate() != null) {
             fromDate = DateUtils.truncate(new Date(request.getFromDate()), Calendar.DATE).getTime();
             toDate = DateUtils.truncate(new Date(request.getToDate()), Calendar.DATE).getTime();
             existingGift.setToDate(toDate);
             existingGift.setFromDate(fromDate);
-            existingGift.setNumberEndDate(null);
             Long currentTime = DateUtils.truncate(new Date(), Calendar.DATE).getTime();
             if (existingGift.getFromDate() <= currentTime && currentTime <= existingGift.getToDate()) {
                 existingGift.setExpiry(ExpiryGift.DANG_HOAT_DONG);
@@ -206,7 +218,6 @@ public class AdminGiftServiceImpl implements AdminGiftService {
             existingGift.setExpiry(ExpiryGift.VINH_VIEN);
             existingGift.setToDate(null);
             existingGift.setFromDate(null);
-            existingGift.setNumberEndDate(null);
         }
 
         contentLogger.append("Cập nhật Gift: '" + existingGift.getName() + "'. ");

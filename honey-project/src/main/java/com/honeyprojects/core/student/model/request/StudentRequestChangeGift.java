@@ -18,4 +18,6 @@ public class StudentRequestChangeGift {
     private String maMon;
 
     private Integer quantity;
+
+    private String scoreId;
 }

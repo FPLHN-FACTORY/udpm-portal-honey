@@ -34,9 +34,17 @@ export class GiftAPI {
     if (data.note !== null) {
       formData.append("note", data.note.trim());
     }
-
-    if (data.numberDateEnd !== null) {
-      formData.append("numberDateEnd", data.numberDateEnd);
+    if (data.scoreRatio !== null) {
+      formData.append("scoreRatio", data.scoreRatio);
+    }
+    if (data.score !== null) {
+      formData.append("score", data.score);
+    }
+    if (data.scoreRatioMin !== null) {
+      formData.append("scoreRatioMin", data.scoreRatioMin);
+    }
+    if (data.scoreRatioMax !== null) {
+      formData.append("scoreRatioMax", data.scoreRatioMax);
     }
     return request({
       method: "POST",
@@ -49,7 +57,7 @@ export class GiftAPI {
     const formData = new FormData();
     formData.append("code", data.code);
     formData.append("name", data.name.trim());
-    if (data.image !== null) {
+    if (data.image.length !== 0) {
       formData.append("image", data.image);
     }
     if (!isNaN(data.quantity) && data.quantity !== null) {
@@ -71,8 +79,17 @@ export class GiftAPI {
     if (data.note !== null) {
       formData.append("note", data.note.trim());
     }
-    if (data.numberDateEnd !== null) {
-      formData.append("numberDateEnd", data.numberDateEnd);
+    if (data.scoreRatio !== null) {
+      formData.append("scoreRatio", data.scoreRatio);
+    }
+    if (data.score !== null) {
+      formData.append("score", data.score);
+    }
+    if (data.scoreRatioMin !== null) {
+      formData.append("scoreRatioMin", data.scoreRatioMin);
+    }
+    if (data.scoreRatioMax !== null) {
+      formData.append("scoreRatioMax", data.scoreRatioMax);
     }
     return request({
       method: "PUT",

@@ -31,7 +31,7 @@ const ModalDetailGift = (props) => {
   const { Option } = Select;
   const { visible, onCancel, onUpdate, gift, fetchData } = props;
   const [form] = Form.useForm();
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState([]);
   const [isLimitedQuantity, setIsLimitedQuantity] = useState(true);
   const [isLimitedQuantity2, setIsLimitedQuantity2] = useState(true);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
@@ -156,7 +156,11 @@ const ModalDetailGift = (props) => {
     } else {
       newFieldErrors[categoryId] = false;
     }
-
+    if (!/^\d*$/.test(value)) {
+      newFieldErrors[categoryId] = true;
+    } else {
+      newFieldErrors[categoryId] = false;
+    }
     setFieldErrors(newFieldErrors);
   };
   const handleFileInputChange = (event) => {
@@ -215,9 +219,15 @@ const ModalDetailGift = (props) => {
     if (quantityValue === 1 && (!value || value <= 0)) {
       return Promise.reject("Số lượng phải lớn hơn 0.");
     }
+    if (!/^\d*$/.test(value)) {
+      return Promise.reject("Số lượng phải là số nguyên dương.");
+    }
     return Promise.resolve();
   };
   const validateLimitQuantity = (rule, value) => {
+    if (!/^\d*$/.test(value)) {
+      return Promise.reject("Số lượng phải là số nguyên dương.");
+    }
     const limitQuantityValue = form.getFieldValue("limitQuantity");
     if (limitQuantityValue === 1 && (!value || value <= 0)) {
       return Promise.reject("Số lượng phải lớn hơn 0.");
@@ -252,8 +262,9 @@ const ModalDetailGift = (props) => {
         const hasCategoryErrors = Object.values(fieldErrors).some(
           (hasError) => hasError
         );
+
         if (hasCategoryErrors) {
-          message.error("Vui lòng kiểm tra lại các cấp bậc và số mật.");
+          message.error("Số lượng mật phải là số nguyên dương lớn hơn 0");
           return;
         }
 
@@ -269,7 +280,6 @@ const ModalDetailGift = (props) => {
           ? parseInt(formValues.limitQuantity)
           : null;
 
-        
         if (checkTypeTime === 0) {
           formValues.end = null;
           formValues.start = null;
@@ -280,11 +290,6 @@ const ModalDetailGift = (props) => {
           formValues.start = null;
           formValues.numberEndDate = undefined;
         }
-
-        const numberEndDate = formValues.numberEndDate !== undefined
-        ? parseInt(formValues.numberEndDate)
-          : null;
-        
         const data = {
           ...formValues,
           image: image,
@@ -306,21 +311,33 @@ const ModalDetailGift = (props) => {
             formValues.end == null
               ? null
               : Date.parse(new Date(formValues.end)),
-          numberEndDate: numberEndDate
-        }
+          scoreRatio:
+            formValues.scoreRatio !== undefined
+              ? parseInt(formValues.scoreRatio)
+              : null,
+          score:
+            formValues.score !== undefined
+              ? parseFloat(formValues.score)
+              : null,
+          scoreRatioMin:
+            formValues.scoreRatioMin !== undefined
+              ? parseInt(formValues.scoreRatioMin)
+              : null,
+          scoreRatioMax:
+            formValues.scoreRatioMax !== undefined
+              ? parseInt(formValues.scoreRatioMax)
+              : null,
+        };
 
         Modal.confirm({
           title: "Bạn có chắc chắn muốn thêm mới dữ liệu không?",
           onOk: () => {
-            GiftAPI.update(
-              data,
-              gift ? gift.id : null
-            )
+            GiftAPI.update(data, gift ? gift.id : null)
               .then((response) => {
                 // Handle success
                 const selectedCategoryIds = selectedCategories;
                 const honeyValues = { ...categoryQuantities };
-    
+
                 // Update or create GiftDetail entries
                 GiftDetail.fetchAll(gift.id).then((response) => {
                   const detailData = response.data.data;
@@ -330,12 +347,12 @@ const ModalDetailGift = (props) => {
                   const categoryIdsToDelete = categoryIdsInDetail.filter(
                     (categoryId) => !selectedCategoryIds.includes(categoryId)
                   );
-    
+
                   categoryIdsToDelete.forEach((categoryId) => {
                     const detailItem = detailData.find(
                       (item) => item.categoryId === categoryId
                     );
-    
+
                     if (detailItem) {
                       GiftDetail.delete(detailItem.id)
                         .then(() => {})
@@ -344,13 +361,13 @@ const ModalDetailGift = (props) => {
                         });
                     }
                   });
-    
+
                   selectedCategoryIds.forEach((categoryId) => {
                     const honey = honeyValues[categoryId];
                     const existingItem = detailData.find(
                       (item) => item.categoryId === categoryId
                     );
-    
+
                     if (existingItem) {
                       GiftDetail.update({ honey }, existingItem.id)
                         .then(() => {})
@@ -370,7 +387,7 @@ const ModalDetailGift = (props) => {
                     }
                   });
                 });
-    
+
                 // Dispatch action and show success message
                 dispatch(UpdateGift(response.data.data));
                 message.success("Cập nhật thành công!");
@@ -383,9 +400,8 @@ const ModalDetailGift = (props) => {
               });
           },
           okText: "Đồng ý",
-          cancelText: "Hủy"
-       })
-        
+          cancelText: "Hủy",
+        });
       })
       .catch((errorInfo) => {
         message.error("Vui lòng điền đầy đủ thông tin.");
@@ -414,8 +430,11 @@ const ModalDetailGift = (props) => {
     timeType: gift.fromDate && gift.toDate ? "thời hạn" : "vĩnh viễn",
     start: gift.fromDate != null ? formattedFromDate : null,
     end: gift.toDate != null ? formattedToDate : null,
-    numberEndDate: gift.numberEndDate != null ? gift.numberEndDate : null,
-    checkTypeDate: 2
+    scoreRatio: gift.scoreRatio != null ? gift.scoreRatio : null,
+    score: gift.score != null ? gift.score : null,
+    scoreRatioMin: gift.scoreRatioMin != null ? gift.scoreRatioMin : null,
+    scoreRatioMax: gift.scoreRatioMax != null ? gift.scoreRatioMax : null,
+    checkTypeDate: 2,
   };
 
   return (
@@ -595,60 +614,44 @@ const ModalDetailGift = (props) => {
                 </Select>
               </Form.Item>
             )}
-            {
-              selectType !== 2 &&  (<div style={{ color: "red", textAlign: "center", marginTop: "-2" }}>
-              {fieldErrors.selectedCategories}
-            </div>)
-            }
-            
-            {selectType !== 2 && listCategory.map((category) => {
-              const categoryId = category.id;
-              const honeyValue =
-                categoryId in categoryQuantities
-                  ? categoryQuantities[categoryId]
-                  : "";
+            {selectType !== 2 && (
+              <div
+                style={{ color: "red", textAlign: "center", marginTop: "-2" }}
+              >
+                {fieldErrors.selectedCategories}
+              </div>
+            )}
 
-              if (selectedCategories.includes(categoryId)) {
-                return (
-                  <Form.Item
-                    label={`Số mật ${category.name}`}
-                    rules={[
-                      {
-                        required: true,
-                        message: `Loại mật ${category.name} không được để trống.`,
-                      },
-                      {
-                        min: 0,
-                        message: `Vui lòng không được để trống số lượng mật ${category.name}`,
-                      },
-                      {
-                        validator: (_, value) => {
-                          const regex = /^[0-9]+$/;
-                          if (!regex.test(value) || value === 0) {
-                            return Promise.reject(
-                              new Error("Vui lòng nhập một số nguyên dương")
-                            );
-                          }
-  
-                          return Promise.resolve();
-                        },
-                      },
-                    ]}
-                    style={{ height: 40 }}
-                  >
-                    <Input
-                      type="number"
-                      id={`honey_${category.name}`}
-                      value={honeyValue}
-                      onChange={(e) =>
-                        handleCategoryQuantityChange(categoryId, e.target.value)
-                      }
-                    />
-                  </Form.Item>
-                );
-              }
-              return null;
-            })}
+            {selectType !== 2 &&
+              listCategory.map((category) => {
+                const categoryId = category.id;
+                const honeyValue =
+                  categoryId in categoryQuantities
+                    ? categoryQuantities[categoryId]
+                    : "";
+
+                if (selectedCategories.includes(categoryId)) {
+                  return (
+                    <Form.Item
+                      label={`Số mật ${category.name}`}
+                      style={{ height: 40 }}
+                    >
+                      <Input
+                        type="number"
+                        id={`honey_${category.name}`}
+                        value={honeyValue}
+                        onChange={(e) =>
+                          handleCategoryQuantityChange(
+                            categoryId,
+                            e.target.value
+                          )
+                        }
+                      />
+                    </Form.Item>
+                  );
+                }
+                return null;
+              })}
           </Col>
 
           <Col xl={10} xs={10} className="pl-2">
@@ -670,12 +673,31 @@ const ModalDetailGift = (props) => {
                     setCheckTypeTime(e.target.value);
                   }}
                 >
+                  {/* <Radio
+                    defaultChecked={gift && gift.numberEndDate !== null}
+                    value={0}
+                  >
+                    Theo ngày bắt đầu
+                  </Radio> */}
                   <Radio
-                    defaultChecked={gift && gift.numberEndDate !== null} value={0}>Theo ngày bắt đầu</Radio>
+                    defaultChecked={
+                      gift && gift.toDate !== null && gift.fromDate !== null
+                    }
+                    value={1}
+                  >
+                    Theo khoảng ngày
+                  </Radio>
                   <Radio
-                    defaultChecked={gift && gift.toDate !== null && gift.fromDate !== null}  value={1}>Theo khoảng ngày</Radio>
-                  <Radio
-                    defaultChecked={gift && gift.numberEndDate !== null && gift.toDate !== null && gift.fromDate !== null}  value={2}>Vô hạn</Radio>
+                    defaultChecked={
+                      gift &&
+                      gift.numberEndDate !== null &&
+                      gift.toDate !== null &&
+                      gift.fromDate !== null
+                    }
+                    value={2}
+                  >
+                    Vô hạn
+                  </Radio>
                 </Radio.Group>
               </Form.Item>
             )}
@@ -796,14 +818,14 @@ const ModalDetailGift = (props) => {
                 <Radio value={1}>Không cho phép</Radio>
               </Radio.Group>
             </Form.Item>
-            {selectType === 0 && 
+            {selectType === 0 && (
               <Form.Item
                 label="Cộng dồn"
                 name="limitQuantity"
                 rules={[
                   {
                     required: true,
-                    message: "Vui lòng chọn tùy chọn số lượng",
+                    message: "Vui lòng chọn cấu hình cộng dồn",
                   },
                 ]}
               >
@@ -831,7 +853,7 @@ const ModalDetailGift = (props) => {
                   </Radio>
                 </Radio.Group>
               </Form.Item>
-            }
+            )}
             {isLimitedQuantity2 && selectType === 0 ? (
               <Form.Item
                 label="Số lượng tối đa"
@@ -849,6 +871,107 @@ const ModalDetailGift = (props) => {
                 <Input type="number" />
               </Form.Item>
             ) : null}
+            
+            {selectType === 0 && <>
+              <Form.Item
+              label="Điểm quy đổi"
+              name="score"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập Điểm quy đổi giới hạn cho phép",
+                },
+                {
+                  validator: (_, value) => {
+                    if (value <= 0 || value > 10) {
+                      return Promise.reject(
+                        new Error("Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 10")
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
+            >
+              <Input type="number" />
+            </Form.Item>
+              <Form.Item
+                label="Trọng số quy đổi"
+                name="scoreRatio"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập Trọng số quy đổi giới hạn cho phép",
+                  },
+                  {
+                    validator: (_, value) => {
+                      const regex = /^[0-9]+$/;
+                      if (!regex.test(value) || value === 0) {
+                        return Promise.reject(
+                          new Error("Vui lòng nhập một số nguyên dương")
+                        );
+                      }
+                      if (value <= 0 || value > 100) {
+                        return Promise.reject(
+                          new Error("Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 100")
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+              >
+                <Input type="number" />
+              </Form.Item>
+              <Form.Item
+                label="Trọng số nhỏ nhất"
+                name="scoreRatioMin"
+                rules={[
+                  {
+                    validator: (_, value) => {
+                      const regex = /^[0-9]+$/;
+                      if (!regex.test(value) || value === 0) {
+                        return Promise.reject(
+                          new Error("Vui lòng nhập một số nguyên dương")
+                        );
+                      }
+                      if (value <= 0 || value > 100) {
+                        return Promise.reject(
+                          new Error("Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 100")
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+              >
+                <Input type="number" />
+              </Form.Item>
+              <Form.Item
+                label="Trọng số lớn nhất"
+                name="scoreRatioMax"
+                rules={[
+                  {
+                    validator: (_, value) => {
+                      const regex = /^[0-9]+$/;
+                      if (!regex.test(value)) {
+                        return Promise.reject(
+                          new Error("Vui lòng nhập một số nguyên dương")
+                        );
+                      }
+                      if (value <= 0 || value > 100) {
+                        return Promise.reject(
+                          new Error("Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 100")
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+              >
+                <Input type="number" />
+              </Form.Item>
+            </>}
             <Form.Item label="Ghi chú" name="note">
               <TextArea
                 cols="30"

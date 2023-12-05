@@ -43,10 +43,18 @@ public interface AdminGiftResponse extends IsIdentified {
     @Value("#{target.note}")
     String getNote();
 
-    @Value("#{target.number_end_date}")
-    Long getNumberEndDate();
-
     @Value("#{target.expiry}")
     String getExpiry();
 
+    @Value("#{target.score_ratio}")
+    Long getScoreRatio();
+
+    @Value("#{target.score}")
+    Double getScore();
+
+    @Value("#{target.score_ratio_min}")
+    Long getScoreRatioMin();
+
+    @Value("#{target.score_ratio_max}")
+    Long getScoreRatioMax();
 }

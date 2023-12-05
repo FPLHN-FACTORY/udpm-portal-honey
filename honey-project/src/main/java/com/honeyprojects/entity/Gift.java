@@ -47,12 +47,22 @@ public class Gift extends PrimaryEntity {
 
     private Long fromDate;
 
-    private Long numberEndDate;
-
     private String note;
 
     private Integer limitQuantity;
 
     private String image;
+
+    @Column(name = "score_ratio")
+    private Long scoreRatio;
+
+    @Column(name = "score")
+    private Double score;
+
+    @Column(name = "score_ratio_min")
+    private Long scoreRatioMin;
+
+    @Column(name = "score_ratio_max")
+    private Long scoreRatioMax;
 
 }

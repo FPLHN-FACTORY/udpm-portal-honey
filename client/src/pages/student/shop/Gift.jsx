@@ -164,7 +164,7 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
             className="btn-xac-nhan"
             onClick={onSubmitCreate}
           >
-            xác nhận
+            Xác nhận
           </Button>
           <Button type="primary" className="btn-huy" onClick={handleCancel}>
             Hủy

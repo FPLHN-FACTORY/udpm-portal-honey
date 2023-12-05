@@ -34,9 +34,6 @@ public class CallApiCommonImpl implements CallApiCommonService {
     private HoneySession honeySession;
 
     @Autowired
-    private HttpSession session;
-
-    @Autowired
     private RestTemplate restTemplate;
 
     @Value("${domain.identity}")
@@ -51,7 +48,7 @@ public class CallApiCommonImpl implements CallApiCommonService {
         String apiConnect = scoreClassDomain +
                 ApiConstants.API_GET_ALL_SUBJECT_BY_EMAIL
                 + "?emailStudent=" + request.getEmailStudent();
-
+        System.out.println(apiConnect + " aaaaaaaaaaaaaaaaaaaaa");
         HttpHeaders headers = new HttpHeaders();
         String authorizationToken = "Bearer " + honeySession.getToken();
         headers.set("Authorization", authorizationToken);
@@ -137,6 +134,7 @@ public class CallApiCommonImpl implements CallApiCommonService {
                 ApiConstants.API_GET_ALL_SCORE_ELEMENT_BY_ID
                 + "?idClass=" + request.getClassId();
 
+        System.out.println(apiConnect + " aaaaaaaaaaaaaaaaaaaaa");
         HttpHeaders headers = new HttpHeaders();
         String authorizationToken = "Bearer " + honeySession.getToken();
         headers.set("Authorization", authorizationToken);
@@ -158,20 +156,32 @@ public class CallApiCommonImpl implements CallApiCommonService {
         if (response != null && response.size() > 0) {
             response.stream()
                     .forEach(el -> {
-                        if (el.getStatus() == 1) {
-                            ScoreTemplate scoreTemplate = new ScoreTemplate();
-                            scoreTemplate.setId(el.getId());
-                            scoreTemplate.setSubjectId(el.getSubjectId());
-                            scoreTemplate.setName(el.getName());
-                            scoreTemplate.setScoreType(el.getScoreType());
-                            scoreTemplate.setMinScore(el.getMinScore());
-                            scoreTemplate.setMaxScore(el.getMaxScore());
-                            scoreTemplate.setScoreRatio(el.getScoreRatio());
-                            scoreTemplate.setCreatedDate(el.getCreatedDate());
-                            scoreTemplate.setStatus(el.getStatus());
-                            scoreTemplate.setGroup(el.getGroup());
-                            scoreTemplate.setIndex(el.getIndex());
-                            scoreTemplateList.add(scoreTemplate);
+                        if (el.getStatus() != null || el.getStatus() == 1) {
+                            if (el.getIndex() != null) {
+                                if (request.getScoreRatioMin() != null) {
+                                    if (request.getScoreRatioMin() > el.getScoreRatio()) {
+                                        return;
+                                    }
+                                }
+                                if (request.getScoreRatioMax() != null) {
+                                    if (request.getScoreRatioMax() < el.getScoreRatio()) {
+                                        return;
+                                    }
+                                }
+                                ScoreTemplate scoreTemplate = new ScoreTemplate();
+                                scoreTemplate.setId(el.getId());
+                                scoreTemplate.setSubjectId(el.getSubjectId());
+                                scoreTemplate.setName(el.getName());
+                                scoreTemplate.setScoreType(el.getScoreType());
+                                scoreTemplate.setMinScore(el.getMinScore());
+                                scoreTemplate.setMaxScore(el.getMaxScore());
+                                scoreTemplate.setScoreRatio(el.getScoreRatio());
+                                scoreTemplate.setCreatedDate(el.getCreatedDate());
+                                scoreTemplate.setStatus(el.getStatus());
+                                scoreTemplate.setGroup(el.getGroup());
+                                scoreTemplate.setIndex(el.getIndex());
+                                scoreTemplateList.add(scoreTemplate);
+                            }
                         }
                     });
         }
@@ -197,7 +207,7 @@ public class CallApiCommonImpl implements CallApiCommonService {
                 .scoreType((long) index)
                 .minScore(60L)
                 .maxScore(100L)
-                .scoreRatio(10L)
+                .scoreRatio(10L + index)
                 .createdDate("2023-11-24")
                 .status(1L)
                 .group("Group" + index)
@@ -213,6 +223,7 @@ public class CallApiCommonImpl implements CallApiCommonService {
                 + "?StudentCode=" + request.getStudentName()
                 + "&idScoreElement=" + request.getScoreTemplateId();
 
+        System.out.println(apiConnect + " aaaaaaaaaaaaaaaaaaaaa");
         HttpHeaders headers = new HttpHeaders();
         String authorizationToken = "Bearer " + honeySession.getToken();
         headers.set("Authorization", authorizationToken);
