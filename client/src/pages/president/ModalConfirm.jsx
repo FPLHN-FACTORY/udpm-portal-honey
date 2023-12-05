@@ -1,12 +1,12 @@
 import { Button, Modal, Space, message } from "antd";
-import { AddItemExcelAPI } from "../../../apis/president/add-item/add-item-excel.api";
+import { AddItemExcelAPI } from "../../apis/president/add-item/add-item-excel.api";
 import {
   connectStompClient,
   getStompClient,
-} from "../../../helper/stomp-client/config";
+} from "../../helper/stomp-client/config";
 import React, { useEffect, useState } from "react";
-import { useAppDispatch } from "../../../app/hooks";
-import { getToken } from "../../../helper/userToken";
+import { useAppDispatch } from "../../app/hooks";
+import { getToken } from "../../helper/userToken";
 
 export default function ModalConfirm(props) {
   const {

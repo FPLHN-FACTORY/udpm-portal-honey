@@ -102,7 +102,7 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
 
     @Override
     public History changeStatusConversion(AdminChangeStatusGiftRequest request) {
-        Long dateNow = Calendar.getInstance().getTimeInMillis();    
+        Long dateNow = Calendar.getInstance().getTimeInMillis();
         History history = historyRepository.findById(request.getIdHistory()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
         history.setStatus(HoneyStatus.values()[request.getStatus()]);
         HistoryDetail historyDetail = historyDetailRepository.findById(request.getIdHistoryDetail()).orElse(null);

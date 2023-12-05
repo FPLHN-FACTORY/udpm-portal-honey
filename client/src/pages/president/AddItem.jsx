@@ -17,14 +17,14 @@ import {
   message,
 } from "antd";
 import { SearchOutlined, SendOutlined } from "@ant-design/icons";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   GetCategory,
   SetCategory,
-} from "../../../app/reducers/category/category.reducer";
-import { AddItemAPI } from "../../../apis/president/add-item/add-item.api";
+} from "../../app/reducers/category/category.reducer";
+import { AddItemAPI } from "../../apis/president/add-item/add-item.api";
 import ModalUpLoadFile from "./ModalUploadFile";
-import { GetImport } from "../../../app/reducers/import/import.president.reducer";
+import { GetImport } from "../../app/reducers/import/import.president.reducer";
 import ModalConfirm from "./ModalConfirm";
 
 export default function AddItem() {
@@ -92,14 +92,13 @@ export default function AddItem() {
   };
 
   const getHoney = (studentId, categoryId) => {
-    AddItemAPI.getHoney(studentId, categoryId)
-      .then((response) => {
-        if (response.data.success) {
-          setHoneyStudent(response.data.data);
-        } else {
-          setHoneyStudent({ point: 0 });
-        }
-      })
+    AddItemAPI.getHoney(studentId, categoryId).then((response) => {
+      if (response.data.success) {
+        setHoneyStudent(response.data.data);
+      } else {
+        setHoneyStudent({ point: 0 });
+      }
+    });
   };
 
   const handleClostPreview = () => {
