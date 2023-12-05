@@ -61,12 +61,6 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
         return historyRepository.filterClass();
     }
 
-    @Override
-    @Transactional
-    public List<Gift> getFilterGift() {
-        List<String> listIdGift = historyRepository.filterGift();
-        return listIdGift.stream().map(id -> giftRepository.findById(id).get()).toList();
-    }
 
     @Override
     public History acceptRequest(String id) {

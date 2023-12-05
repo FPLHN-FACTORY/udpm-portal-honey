@@ -378,6 +378,7 @@ export default function UpgradeRate() {
               <FontAwesomeIcon icon={faEye} />
             </Button>
           </Tooltip>
+          {record.status !== 1 && 
           <Tooltip title="Sửa">
             <Button
               onClick={() => {
@@ -390,7 +391,7 @@ export default function UpgradeRate() {
             >
               <FontAwesomeIcon icon={faPenToSquare} />
             </Button>
-          </Tooltip>
+          </Tooltip>}
         </Space>
       ),
     },

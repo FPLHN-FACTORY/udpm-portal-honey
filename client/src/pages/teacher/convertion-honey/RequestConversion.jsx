@@ -129,14 +129,10 @@ export default function RequestConversion() {
   const [totalPage, setTotalPage] = useState(1);
   const [filter, setFilter] = useState({ page: 0, status: 0 });
   const [filterClass, setFilterClass] = useState([]);
-  const [filterGift, setFilterGift] = useState([]);
 
   useEffect(() => {
     TeacherUseGiftApi.getFilterClass().then((result) => {
       setFilterClass(result.data.data);
-    });
-    TeacherUseGiftApi.getFilterGift().then((result) => {
-      setFilterGift(result.data.data);
     });
   }, []);
 
@@ -275,12 +271,6 @@ export default function RequestConversion() {
                   placeholder="Loại quà"
                   options={[
                     { value: null, label: "Tất cả" },
-                    ...filterGift.map((gift) => {
-                      return {
-                        value: gift.id,
-                        label: gift.name,
-                      };
-                    }),
                   ]}
                 />
               </Form.Item>
