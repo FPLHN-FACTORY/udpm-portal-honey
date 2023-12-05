@@ -22,12 +22,16 @@ import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.History;
+import com.honeyprojects.infrastructure.contant.ExpiryGift;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.SemesterStatus;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.repository.ArchiveGiftRepository;
 import com.honeyprojects.util.ConvertRequestApiidentity;
+import com.honeyprojects.util.callApiPoint.model.request.FilterScoreTemplateVM;
+import com.honeyprojects.util.callApiPoint.model.response.ScoreTemplateVM;
+import com.honeyprojects.util.callApiPoint.service.CallApiCommonService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -62,6 +66,9 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     @Autowired
     private ConvertRequestApiidentity requestApiidentity;
 
+    @Autowired
+    private CallApiCommonService callApiCommonService;
+
     @Override
     public PageableObject<StudentArchiveResponse> getAllGiftArchive(StudentArchiveFilterRequest filterRequest) {
         System.err.println("--------------------------");
@@ -87,31 +94,54 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
             throw new RestApiException("Email giảng viên không tồn tại trong hệ thống!");
         }
         ArchiveGift archiveGift = archiveGiftRepository.findById(request.getArchiveGiftId()).orElse(null);
+        Gift gift = giftRepository.findById(archiveGift.getGiftId()).get();
+        if (gift.getExpiry().equals(ExpiryGift.HET_HAN) || gift.getExpiry().equals(ExpiryGift.CHUA_HOAT_DONG)) {
+            return null;
+        }
         if (archiveGift != null) {
-////            Semester semester = semesterRepository.findByStatus(SemesterStatus.DANG_HOAT_DONG)
-////                    .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
-////            StudentSumHistoryParam sumHistoryParam = new StudentSumHistoryParam(
-////                    archiveGift.getGiftId(), request.getMaLop(), request.getMaMon(), semester.getFromDate(),
-////                    semester.getToDate());
-////            Integer total = historyRepository.getTotalUseGift(sumHistoryParam);
-////            Gift gift = giftRepository.findById(archiveGift.getGiftId())
-////                    .orElseThrow(() -> new RestApiException("Lỗi hệ thống vui lòng thử lại!"));
-//            if (total == null) {
-//                total = 0;
-//            }
-//            if (gift.getLimitQuantity() != null
-//                    && gift.getLimitQuantity() < (total + request.getQuantity())) {
-//                throw new RestApiException("Số lượng sử dụng quá giới hạn!");
-//            }
+            FilterScoreTemplateVM filterScoreTemplate = new FilterScoreTemplateVM();
+            filterScoreTemplate.setScoreTemplateId(request.getScoreId());
+            filterScoreTemplate.setStudentName(udpmHoney.getUserName());
+            ScoreTemplateVM scoreTemplateVM = callApiCommonService.callApiScoreTemplateVM(filterScoreTemplate).get(0);
+
+            if (gift.getScoreRatioMin() != null) {
+                if (scoreTemplateVM.getScoreRatio() < gift.getScoreRatioMin()) {
+                    throw new RestApiException("Đầu điểm " + scoreTemplateVM.getName() + " không đủ điều kiện.");
+                }
+            }
+
+            if (gift.getScoreRatioMax() != null) {
+                if (scoreTemplateVM.getScoreRatio() > gift.getScoreRatioMax()) {
+                    throw new RestApiException("Đầu điểm " + scoreTemplateVM.getName() + " không đủ điều kiện.");
+                }
+            }
+
+            Double scoreGift = 0.0;
+            if (scoreTemplateVM.getScoreRatio() == 0) {
+                throw new RestApiException("Đầu điểm " + scoreTemplateVM.getName() + " không đủ điều kiện.");
+            }
+
+            scoreGift = request.getQuantity() * ((gift.getScore() * gift.getScoreRatio())/scoreTemplateVM.getScoreRatio());
+            if (scoreTemplateVM.getScore() + scoreGift > 10) {
+                throw new RestApiException("Đầu điểm " + scoreTemplateVM.getName() + " đã đủ không thể đổi.");
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("Sinh viên '")
+                    .append(udpmHoney.getUserName())
+                    .append("' đã gửi yêu cầu cộng '")
+                    .append(scoreGift)
+                    .append("' Điểm cho đầu điểm '")
+                    .append(scoreTemplateVM.getName())
+                    .append("'")
+            ;
             History history = new History();
-//            history.setQuantity(request.getQuantity());
             history.setStudentId(udpmHoney.getIdUser());
             history.setTeacherId(teacher.getId());
             history.setClassName(request.getMaLop());
             history.setSubject(request.getMaMon());
             history.setType(TypeHistory.PHE_DUYET_QUA);
             history.setStatus(HoneyStatus.CHO_PHE_DUYET);
-//            history.setGiftId(archiveGift.getGiftId());
+            history.setNote(stringBuilder.toString());
             historyRepository.save(history);
             archiveGift.setQuantity(archiveGift.getQuantity() - request.getQuantity());
             if (archiveGift.getQuantity() <= 0) {

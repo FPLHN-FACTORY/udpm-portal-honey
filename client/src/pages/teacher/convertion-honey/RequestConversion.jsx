@@ -4,6 +4,7 @@ import {
   Card,
   Form,
   Input,
+  Modal,
   Pagination,
   Popconfirm,
   Select,
@@ -14,10 +15,8 @@ import {
 } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { AddPointAPI } from "../../../apis/teacher/add-point/add-point.api";
 import { TeacherUseGiftApi } from "../../../apis/teacher/convertion-honey/convertion-honey.api";
 import {
-  DeleteHistory,
   GetHistory,
   SetHistory,
 } from "../../../app/reducers/history/history.reducer";
@@ -113,6 +112,7 @@ export default function RequestConversion() {
           </Tooltip>
           <Tooltip title="Xác nhận">
             <Button
+              onClick={() => accept(values.idHistory)}
               style={{
                 backgroundColor: "yellowgreen",
                 color: "white",
@@ -139,21 +139,22 @@ export default function RequestConversion() {
   const fetchData = async (filter) => {
     try {
       const response = await TeacherUseGiftApi.getRequestUseGift(filter);
-      const listHistory = await Promise.all(
-        response.data.data.data.map(async (data) => {
-          try {
-            const user = await AddPointAPI.getStudent(data.studentId);
-            return {
-              ...data,
-              emailStudent: user.data.data.email,
-            };
-          } catch (error) {
-            console.error(error);
-            return data;
-          }
-        })
-      );
-      dispatch(SetHistory(listHistory));
+      // const listHistory = await Promise.all(
+      //   response.data.data.data.map(async (data) => {
+      //     try {
+      //       const user = await AddPointAPI.getStudent(data.studentId);
+      //       return {
+      //         ...data,
+      //         emailStudent: user.data.data.email,
+      //       };
+      //     } catch (error) {
+      //       console.error(error);
+      //       return data;
+      //     }
+      //   })
+      // );
+      console.log(response);
+      dispatch(SetHistory(response.data.data.data));
       setTotalPage(response.data.data.totalPages);
     } catch (error) {
       console.error(error);
@@ -161,6 +162,7 @@ export default function RequestConversion() {
   };
   useEffect(() => {
     fetchData(filter);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const data = useAppSelector(GetHistory).map((data) => {
@@ -190,22 +192,34 @@ export default function RequestConversion() {
   };
 
   const accept = (id) => {
-    TeacherUseGiftApi.accpect(id)
-      .then((result) => {
-        dispatch(DeleteHistory(result.data.data));
-      })
-      .finally(() => {
-        message.success("Phê duyệt thành công");
-      });
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn phê duyệt không?",
+      onOk: () => {
+        TeacherUseGiftApi.accpect(id)
+        .then((result) => {
+        fetchData(filter);
+          message.success("Phê duyệt thành công");
+        })
+        .catch((error) => {
+          message.success("Lỗi hệ thống");
+        })
+      }
+    })
   };
   const cancel = (id) => {
-    TeacherUseGiftApi.cancel(id, note)
-      .then((result) => {
-        dispatch(DeleteHistory(result.data.data));
-      })
-      .finally(() => {
-        message.error("Đã hủy yêu cầu");
-      });
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn từ chối không?",
+      onOk: () => {
+        TeacherUseGiftApi.cancel(id, note)
+        .then((result) => {
+          fetchData(filter);
+          message.success("Từ chối thành công");
+        })
+        .catch((error) => {
+          message.success("Lỗi hệ thống");
+        })
+      }
+    })
   };
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -340,7 +354,9 @@ export default function RequestConversion() {
             dataSource={data}
             rowKey="key"
             pagination={false}
-          />
+        />
+        {
+          totalPage > 1 &&
           <div className="mt-10 text-center mb-10">
             <Pagination
               simple
@@ -351,6 +367,7 @@ export default function RequestConversion() {
               total={totalPage * 10}
             />
           </div>
+        }
         </Card>
       </div>
   );
