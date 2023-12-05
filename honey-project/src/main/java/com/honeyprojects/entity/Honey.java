@@ -5,6 +5,8 @@ import com.honeyprojects.infrastructure.contant.EntityProperties;
 import com.honeyprojects.infrastructure.contant.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,8 +23,9 @@ public class Honey extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_NOTE)
     private String reason;
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String honeyCategoryId;
+    @JoinColumn
+    @ManyToOne
+    private Category honeyCategoryId;
 
     @Column(length = EntityProperties.LENGTH_ID)
     private String studentId;

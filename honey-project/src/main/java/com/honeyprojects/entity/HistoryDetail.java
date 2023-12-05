@@ -5,6 +5,8 @@ import com.honeyprojects.infrastructure.contant.EntityProperties;
 import com.honeyprojects.infrastructure.contant.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,8 +17,9 @@ import lombok.Setter;
 @Table(name = "history_detail")
 public class HistoryDetail extends PrimaryEntity {
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String historyId;
+    @JoinColumn
+    @ManyToOne
+    private History historyId;
 
     @Column(length = EntityProperties.LENGTH_ID)
     private String studentId;
@@ -27,14 +30,17 @@ public class HistoryDetail extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_ID)
     private String teacherId;
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String honeyId;
+    @JoinColumn
+    @ManyToOne
+    private Honey honeyId;
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String giftId;
+    @JoinColumn
+    @ManyToOne
+    private Gift giftId;
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String chestId;
+    @JoinColumn
+    @ManyToOne
+    private Chest chestId;
 
     private Status status;
 

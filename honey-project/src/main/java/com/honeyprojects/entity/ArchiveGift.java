@@ -6,6 +6,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,14 +20,17 @@ import lombok.ToString;
 @ToString
 public class ArchiveGift extends PrimaryEntity {
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String archiveId;
+    @JoinColumn
+    @ManyToOne
+    private Archive archiveId;
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String giftId;
+    @JoinColumn
+    @ManyToOne
+    private Gift giftId;
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String chestId;
+    @JoinColumn
+    @ManyToOne
+    private Chest chestId;
 
     private String note;
 

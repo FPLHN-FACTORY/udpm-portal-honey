@@ -10,6 +10,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -32,8 +33,9 @@ public class Auction extends PrimaryEntity {
     @Column
     private Long toDate;
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String giftId;
+    @JoinColumn
+    @ManyToOne
+    private Gift giftId;
 
     @Column
     private BigDecimal startingPrice;
@@ -44,8 +46,9 @@ public class Auction extends PrimaryEntity {
     @Column
     private BigDecimal lastPrice;
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String honeyCategoryId;
+    @JoinColumn
+    @ManyToOne
+    private Category honeyCategoryId;
 
     private Status status;
 

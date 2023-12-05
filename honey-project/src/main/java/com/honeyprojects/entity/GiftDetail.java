@@ -4,6 +4,8 @@ import com.honeyprojects.entity.base.PrimaryEntity;
 import com.honeyprojects.infrastructure.contant.EntityProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,11 +20,13 @@ import lombok.Setter;
 @Table(name = "giftDetail")
 public class GiftDetail extends PrimaryEntity {
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String giftId;
+    @JoinColumn
+    @ManyToOne
+    private Gift giftId;
 
-    @Column(length = EntityProperties.LENGTH_ID)
-    private String categoryId;
+    @JoinColumn
+    @ManyToOne
+    private Category categoryId;
 
     private Integer honey;
 }
