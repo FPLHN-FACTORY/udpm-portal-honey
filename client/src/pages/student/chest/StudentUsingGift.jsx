@@ -156,7 +156,12 @@ const UsingGift = (props) => {
                 const el = form.getFieldValue("number")
                 if (el) {
                   let dataDauDiem = dataScore.filter(el => dauDiemId === el.id)[0];
-                  form.setFieldValue("score", el.target.value*((archivegift.score*archivegift.scoreRatio)/dataDauDiem.scoreRatio))
+                  
+                  if (dataDauDiem.scoreRatio === 0) {
+                    form.setFieldValue("score", 0);
+                  } else {
+                    form.setFieldValue("score", el.target.value*((archivegift.score*archivegift.scoreRatio)/dataDauDiem.scoreRatio))
+                  }
                 }
               }}
             >
@@ -196,7 +201,11 @@ const UsingGift = (props) => {
               const dauDiemId = form.getFieldValue("dauDiem")
               if (dauDiemId) {
                 let dataDauDiem = dataScore.filter(el => dauDiemId === el.id)[0];
-                form.setFieldValue("score", el.target.value*((archivegift.score*archivegift.scoreRatio)/dataDauDiem.scoreRatio))
+                if (dataDauDiem.scoreRatio === 0) {
+                  form.setFieldValue("score", 0);
+                } else {
+                  form.setFieldValue("score", el.target.value*((archivegift.score*archivegift.scoreRatio)/dataDauDiem.scoreRatio))
+                }
               }
             }} type="number"/>
           </Form.Item>
