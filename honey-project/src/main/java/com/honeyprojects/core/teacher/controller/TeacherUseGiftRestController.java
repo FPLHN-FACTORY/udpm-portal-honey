@@ -25,11 +25,6 @@ public class TeacherUseGiftRestController {
         return new ResponseObject(service.getFilterClass());
     }
 
-    @GetMapping("/get-filter/gift")
-    public ResponseObject getFilterGift() {
-        return new ResponseObject(service.getFilterGift());
-    }
-
     @GetMapping("/accept/{id}")
     public ResponseObject acceptRequest(@PathVariable String id) {
         return new ResponseObject(service.acceptRequest(id));

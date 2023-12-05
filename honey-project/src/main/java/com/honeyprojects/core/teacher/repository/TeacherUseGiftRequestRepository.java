@@ -16,14 +16,12 @@ import java.util.List;
 public interface TeacherUseGiftRequestRepository extends HistoryRepository {
 
     @Query(value = """
-            select ROW_NUMBER() over (ORDER BY h.created_date desc ) as stt,h.id,h.quantity,
-            h.student_id, g.name as nameGift, h.class_name as lop,h.subject as mon, h.created_date, h.status as status
+            select ROW_NUMBER() over (ORDER BY h.created_date desc ) as stt,h.id,
+            h.student_id, h.class_name as lop,h.subject as mon, h.created_date, h.status as status
              from history h
-             join gift g on g.id = h.gift_id
              where h.type = 3
              and h.status = :#{#request.status}
              and (:#{#request.idStudent} is null or h.student_id = :#{#request.idStudent})
-             and (:#{#request.gift} is null or h.gift_id = :#{#request.gift})
              and (:#{#request.lop} is null or h.class_name = :#{#request.lop})
              and :#{#request.idTeacher} = h.teacher_id
             """, nativeQuery = true)
@@ -36,10 +34,4 @@ public interface TeacherUseGiftRequestRepository extends HistoryRepository {
             """, nativeQuery = true)
     List<String> filterClass();
 
-    @Query(value = """
-            select h.gift_id from history h
-            where h.status = 0 and h.type = 3
-            group by h.gift_id
-            """, nativeQuery = true)
-    List<String> filterGift();
 }
