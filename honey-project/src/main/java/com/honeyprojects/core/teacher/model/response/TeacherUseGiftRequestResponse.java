@@ -10,8 +10,6 @@ public interface TeacherUseGiftRequestResponse extends IsIdentified {
     @Value("#{target.student_id}")
     String getStudentId();
 
-    String getNameGift();
-
     String getLop();
 
     String getMon();
@@ -20,6 +18,4 @@ public interface TeacherUseGiftRequestResponse extends IsIdentified {
     long getCreatedDate();
 
     String getStatus();
-
-    String getQuantity();
 }

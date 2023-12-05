@@ -15,8 +15,6 @@ public interface TeacherUseGiftRequest {
 
     List<String> getFilterClass();
 
-    List<Gift> getFilterGift();
-
     History acceptRequest(String id);
 
     List<History> acceptAllRequest(TeacherAcceptAllRequest request);

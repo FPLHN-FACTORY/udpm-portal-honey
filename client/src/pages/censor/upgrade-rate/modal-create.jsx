@@ -97,8 +97,6 @@ const ModalCreateUpgradeRate = ({
     });
   };
 
-  const isUpdateDisabled = currentItem.status;
-
   return (
     <>
       <Modal
@@ -146,7 +144,6 @@ const ModalCreateUpgradeRate = ({
                   value: category.id,
                   label: category.name,
                 }))}
-                disabled={isUpdateDisabled === 1}
               />
             </Form.Item>
             <Form.Item
@@ -178,7 +175,6 @@ const ModalCreateUpgradeRate = ({
               <Input
                 className="w-full"
                 type="number"
-                disabled={isUpdateDisabled === 1}
               />
             </Form.Item>
             <Form.Item
@@ -198,7 +194,6 @@ const ModalCreateUpgradeRate = ({
                   value: category.id,
                   label: category.name,
                 }))}
-                disabled={isUpdateDisabled === 1}
               />
             </Form.Item>
             <Form.Item
@@ -230,7 +225,6 @@ const ModalCreateUpgradeRate = ({
               <Input
                 className="w-full"
                 type="number"
-                disabled={isUpdateDisabled === 1}
               />
             </Form.Item>
             <Form.Item
@@ -251,7 +245,6 @@ const ModalCreateUpgradeRate = ({
                   value: gift.id,
                   label: gift.name,
                 }))}
-                disabled={isUpdateDisabled === 1}
               />
             </Form.Item>
             <Form.Item
@@ -284,7 +277,6 @@ const ModalCreateUpgradeRate = ({
               <Input
                 className="w-full"
                 type="number"
-                disabled={isUpdateDisabled === 1}
               />
             </Form.Item>
             <div style={{ textAlign: "right" }}>
@@ -297,7 +289,6 @@ const ModalCreateUpgradeRate = ({
                   }}
                   type="primary"
                   htmlType="submit"
-                  disabled={isUpdateDisabled === 1}
                 >
                   {id ? "Cập nhật" : "Thêm"}
                 </Button>
