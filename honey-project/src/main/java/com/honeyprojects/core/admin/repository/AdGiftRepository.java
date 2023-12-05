@@ -20,7 +20,7 @@ public interface AdGiftRepository extends GiftRepository {
     @Query(value = """
             SELECT ROW_NUMBER() OVER(ORDER BY g.created_date DESC) AS stt, 
             g.id, g.code, g.name, g.note, g.quantity, g.status, g.type, g.from_date, g.to_date, g.limit_quantity, 
-            g.transaction_gift ,g.last_modified_date, g.image, g.number_end_date, g.expiry,
+            g.transaction_gift ,g.last_modified_date, g.image, g.expiry,
              g.score, g.score_ratio, g.score_ratio_min, g.score_ratio_max
             FROM gift g LEFT JOIN gift_detail gd ON gd.gift_id = g.id
              WHERE (status =0 or status = 1) 
