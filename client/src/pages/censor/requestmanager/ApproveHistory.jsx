@@ -122,7 +122,6 @@ export default function RequestApprovedHistory() {
         .catch((error) => console.error(error));
     }
   };
-  console.log(data);
   return (
     <div className="request-manager">
       <Card className="mb-2 py-1">

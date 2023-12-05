@@ -1,10 +1,10 @@
 import { DownloadOutlined, InboxOutlined } from "@ant-design/icons";
 import { Button, Modal, Upload, message } from "antd";
 import React, { useState } from "react";
-import { AddItemExcelAPI } from "../../../apis/president/add-item/add-item-excel.api";
-import { SetImport } from "../../../app/reducers/import/import.president.reducer";
-import { useAppDispatch } from "../../../app/hooks";
-import { convertLongToDate } from "../../util/DateUtil";
+import { AddItemExcelAPI } from "../../apis/president/add-item/add-item-excel.api";
+import { SetImport } from "../../app/reducers/import/import.president.reducer";
+import { useAppDispatch } from "../../app/hooks";
+import { convertLongToDate } from "../util/DateUtil";
 
 export default function ModalUpLoadFile(props) {
   const {
@@ -27,9 +27,7 @@ export default function ModalUpLoadFile(props) {
       const link = document.createElement("a");
       link.href = url;
       link.download =
-        "File mẫu import" +
-        convertLongToDate(new Date().getTime()) +
-        ".xlsx";
+        "File mẫu import" + convertLongToDate(new Date().getTime()) + ".xlsx";
       link.click();
       window.URL.revokeObjectURL(url);
     });
@@ -112,76 +110,76 @@ export default function ModalUpLoadFile(props) {
   );
 }
 // <div>
-    //   <Modal
-    //     title="Import Excel"
-    //     open={open}
-    //     onCancel={() => setOpen(false)}
-    //     footer={null}
-    //   >
-    //     <hr className="border-0 bg-gray-300 mt-3 mb-6" />
-    //     <Row>
-    //       <Col span={8}></Col>
-    //       <Col span={8}>
-    //         <Button
-    //           htmlFor="file-input"
-    //           style={{
-    //             marginTop: "16px",
-    //             marginBottom: "16px",
-    //             width: "100%",
-    //           }}
-    //           onClick={() => setOpen(true)}
-    //         >
-    //           <Input
-    //             type="file"
-    //             accept=".xlsx,.xls"
-    //             onChange={(e) => handleFileInputChange(e)}
-    //             style={{
-    //               position: "absolute",
-    //               top: 0,
-    //               left: 0,
-    //               cursor: "pointer",
-    //               opacity: 0,
-    //               zIndex: 1,
-    //               width: "100%",
-    //               height: "100%",
-    //             }}
-    //           />
-    //           <UploadOutlined />
-    //           {nameFile === "" ? "Tải lên file" : nameFile}
-    //         </Button>
-    //       </Col>
-    //       <Col span={8}>
-    //         {nameFile && (
-    //           <Button
-    //             style={{
-    //               marginTop: "16px",
-    //               marginBottom: "16px",
-    //               border: "none",
-    //             }}
-    //             onClick={() => handleRemoveFile()}
-    //           >
-    //             <CloseCircleOutlined
-    //               style={{ fontSize: "20px", color: "red" }}
-    //             />
-    //           </Button>
-    //         )}
-    //       </Col>
-    //     </Row>
+//   <Modal
+//     title="Import Excel"
+//     open={open}
+//     onCancel={() => setOpen(false)}
+//     footer={null}
+//   >
+//     <hr className="border-0 bg-gray-300 mt-3 mb-6" />
+//     <Row>
+//       <Col span={8}></Col>
+//       <Col span={8}>
+//         <Button
+//           htmlFor="file-input"
+//           style={{
+//             marginTop: "16px",
+//             marginBottom: "16px",
+//             width: "100%",
+//           }}
+//           onClick={() => setOpen(true)}
+//         >
+//           <Input
+//             type="file"
+//             accept=".xlsx,.xls"
+//             onChange={(e) => handleFileInputChange(e)}
+//             style={{
+//               position: "absolute",
+//               top: 0,
+//               left: 0,
+//               cursor: "pointer",
+//               opacity: 0,
+//               zIndex: 1,
+//               width: "100%",
+//               height: "100%",
+//             }}
+//           />
+//           <UploadOutlined />
+//           {nameFile === "" ? "Tải lên file" : nameFile}
+//         </Button>
+//       </Col>
+//       <Col span={8}>
+//         {nameFile && (
+//           <Button
+//             style={{
+//               marginTop: "16px",
+//               marginBottom: "16px",
+//               border: "none",
+//             }}
+//             onClick={() => handleRemoveFile()}
+//           >
+//             <CloseCircleOutlined
+//               style={{ fontSize: "20px", color: "red" }}
+//             />
+//           </Button>
+//         )}
+//       </Col>
+//     </Row>
 
-    //     <Space
-    //       style={{
-    //         justifyContent: "space-between",
-    //         display: "flex",
-    //         marginBottom: "16px",
-    //       }}
-    //     >
-    //       <Button className="button-css" onClick={() => handleExportExcel()}>
-    //         <DownloadOutlined />
-    //         Tải file mẫu
-    //       </Button>
-    //       <Button className="button-css" onClick={() => setOpen(false)}>
-    //         Xác nhận
-    //       </Button>
-    //     </Space>
-    //   </Modal>
-    // </div>
+//     <Space
+//       style={{
+//         justifyContent: "space-between",
+//         display: "flex",
+//         marginBottom: "16px",
+//       }}
+//     >
+//       <Button className="button-css" onClick={() => handleExportExcel()}>
+//         <DownloadOutlined />
+//         Tải file mẫu
+//       </Button>
+//       <Button className="button-css" onClick={() => setOpen(false)}>
+//         Xác nhận
+//       </Button>
+//     </Space>
+//   </Modal>
+// </div>

@@ -8,8 +8,6 @@ import lombok.Setter;
 @Setter
 public class AdminCreateConversionHistoryRequest extends PageableRequest {
     private String status;
-
     private String idCategory;
-
     private String idStudent;
 }

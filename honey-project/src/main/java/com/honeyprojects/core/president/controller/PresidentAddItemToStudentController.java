@@ -1,15 +1,20 @@
 package com.honeyprojects.core.president.controller;
 
+import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.ResponseObject;
+import com.honeyprojects.core.president.model.request.PresidentFindGiftHistoryRequest;
+import com.honeyprojects.core.president.model.request.PresidentFindHoneyHistoryRequest;
 import com.honeyprojects.core.president.model.response.PresidentAddItemDTO;
+import com.honeyprojects.core.president.model.response.PresidentGiftHistoryResponse;
+import com.honeyprojects.core.president.model.response.PresidentHoneyHistoryResponse;
 import com.honeyprojects.core.president.service.PresidentAddItemToStudentService;
+import com.honeyprojects.core.president.service.PresidentHistoryService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +33,9 @@ public class PresidentAddItemToStudentController {
 
     @Autowired
     private PresidentAddItemToStudentService presidentAddItemToStudentService;
+
+    @Autowired
+    private PresidentHistoryService presidentHistoryService;
 
     @GetMapping("/export")
     public ResponseEntity<byte[]> exportExcel(HttpServletResponse response) {
@@ -53,5 +61,15 @@ public class PresidentAddItemToStudentController {
     @PostMapping("/import-data")
     public void importData(@RequestBody List<PresidentAddItemDTO> lstPresidentAddItemDTO) throws IOException {
         presidentAddItemToStudentService.importData(lstPresidentAddItemDTO);
+    }
+
+    @GetMapping("/history-honey")
+    public PageableObject<PresidentHoneyHistoryResponse> getHoneyHistory(PresidentFindHoneyHistoryRequest request) {
+        return presidentHistoryService.getHoneyHistory(request);
+    }
+
+    @GetMapping("/history-gift")
+    public PageableObject<PresidentGiftHistoryResponse> getGiftHistory(PresidentFindGiftHistoryRequest request) {
+        return presidentHistoryService.getGiftHistory(request);
     }
 }
