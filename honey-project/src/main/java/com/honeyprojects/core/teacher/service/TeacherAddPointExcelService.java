@@ -11,12 +11,7 @@ import java.util.List;
 
 public interface TeacherAddPointExcelService {
 
-    Boolean importFromExcel(MultipartFile file);
-
-//    Boolean exportExcel();
-
     ByteArrayOutputStream exportExcel(HttpServletResponse response);
-
 
     TeacherExcelAddPointBO previewDataImportExcel(MultipartFile file) throws IOException;
 
