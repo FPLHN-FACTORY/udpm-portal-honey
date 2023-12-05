@@ -95,9 +95,9 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
         }
         ArchiveGift archiveGift = archiveGiftRepository.findById(request.getArchiveGiftId()).orElse(null);
         Gift gift = giftRepository.findById(archiveGift.getGiftId()).get();
-//        if (gift.getExpiry().equals(ExpiryGift.HET_HAN) || gift.getExpiry().equals(ExpiryGift.CHUA_HOAT_DONG)) {
-//            return null;
-//        }
+        if (gift.getExpiry().equals(ExpiryGift.HET_HAN) || gift.getExpiry().equals(ExpiryGift.CHUA_HOAT_DONG)) {
+            return null;
+        }
         if (archiveGift != null) {
             FilterScoreTemplateVM filterScoreTemplate = new FilterScoreTemplateVM();
             filterScoreTemplate.setScoreTemplateId(request.getScoreId());
