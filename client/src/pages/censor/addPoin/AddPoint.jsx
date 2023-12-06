@@ -46,11 +46,12 @@ export default function AddPoint() {
   const previewImport = useAppSelector(GetImport);
 
   useEffect(() => {
-    AddPointAPI.getCategory()
-      .then((response) => {
+    AddPointAPI.getCategory().then((response) => {
+      if (response.data.data.length > 0) {
         setCategorySelected(response.data.data[0].id);
-        dispatch(SetCategory(response.data.data));
-      })
+      }
+      dispatch(SetCategory(response.data.data));
+    });
   }, [dispatch]);
 
   const onFinishSearch = (value) => {
@@ -93,14 +94,13 @@ export default function AddPoint() {
   };
 
   const getHoney = (studentId, categoryId) => {
-    AddPointAPI.getHoney(studentId, categoryId)
-      .then((response) => {
-        if (response.data.success) {
-          setHoneyStudent(response.data.data);
-        } else {
-          setHoneyStudent({ point: 0 });
-        }
-      })
+    AddPointAPI.getHoney(studentId, categoryId).then((response) => {
+      if (response.data.success) {
+        setHoneyStudent(response.data.data);
+      } else {
+        setHoneyStudent({ point: 0 });
+      }
+    });
   };
 
   const handleClostPreview = () => {

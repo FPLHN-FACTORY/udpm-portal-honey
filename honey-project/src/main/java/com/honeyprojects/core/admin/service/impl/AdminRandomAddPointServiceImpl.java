@@ -1,20 +1,64 @@
 package com.honeyprojects.core.admin.service.impl;
 
-import com.honeyprojects.core.admin.model.request.*;
-import com.honeyprojects.core.admin.model.response.*;
-import com.honeyprojects.core.admin.repository.*;
+import com.honeyprojects.core.admin.model.request.AdminCreateArchiveGiftRequest;
+import com.honeyprojects.core.admin.model.request.AdminCreateHoneyRequest;
+import com.honeyprojects.core.admin.model.request.AdminCreateNotificationDetailRandomRequest;
+import com.honeyprojects.core.admin.model.request.AdminHistoryRandomDetailRequest;
+import com.honeyprojects.core.admin.model.request.AdminHistoryRandomRequest;
+import com.honeyprojects.core.admin.model.request.AdminNotificationRandomRequest;
+import com.honeyprojects.core.admin.model.request.AdminRandomPointRequest;
+import com.honeyprojects.core.admin.model.response.AdminAddItemBO;
+import com.honeyprojects.core.admin.model.response.AdminAddItemDTO;
+import com.honeyprojects.core.admin.model.response.AdminAddPointBO;
+import com.honeyprojects.core.admin.model.response.AdminAddPointDTO;
+import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
+import com.honeyprojects.core.admin.model.response.AdminChestGiftResponse;
+import com.honeyprojects.core.admin.model.response.AdminChestReponse;
+import com.honeyprojects.core.admin.model.response.AdminExportCategoryResponse;
+import com.honeyprojects.core.admin.model.response.AdminImportCategoryResponse;
+import com.honeyprojects.core.admin.model.response.AdminImportGiftResponse;
+import com.honeyprojects.core.admin.repository.AdArchiveGiftRepository;
+import com.honeyprojects.core.admin.repository.AdArchiveRepository;
+import com.honeyprojects.core.admin.repository.AdChestGiftRepository;
+import com.honeyprojects.core.admin.repository.AdChestRepository;
+import com.honeyprojects.core.admin.repository.AdGiftRepository;
+import com.honeyprojects.core.admin.repository.AdHistoryDetailRandomRepository;
+import com.honeyprojects.core.admin.repository.AdHoneyRepository;
+import com.honeyprojects.core.admin.repository.AdNotificationRespository;
+import com.honeyprojects.core.admin.repository.AdRandomAddPointRepository;
+import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
+import com.honeyprojects.core.admin.repository.AdminHistoryRandomRepository;
 import com.honeyprojects.core.admin.service.AdRandomAddPointService;
 import com.honeyprojects.core.admin.service.ExportExcelServiceService;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.president.model.response.PresidentExportGiftResponse;
 import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
-import com.honeyprojects.entity.*;
-import com.honeyprojects.infrastructure.contant.*;
+import com.honeyprojects.entity.Archive;
+import com.honeyprojects.entity.ArchiveGift;
+import com.honeyprojects.entity.Chest;
+import com.honeyprojects.entity.Gift;
+import com.honeyprojects.entity.History;
+import com.honeyprojects.entity.HistoryDetail;
+import com.honeyprojects.entity.Honey;
+import com.honeyprojects.entity.Notification;
+import com.honeyprojects.entity.NotificationDetail;
+import com.honeyprojects.infrastructure.contant.Constants;
+import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.NotificationDetailType;
+import com.honeyprojects.infrastructure.contant.NotificationStatus;
+import com.honeyprojects.infrastructure.contant.NotificationType;
+import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.logger.entity.LoggerFunction;
 import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
-import com.honeyprojects.util.*;
+import com.honeyprojects.util.ConvertRequestApiidentity;
+import com.honeyprojects.util.DataUtils;
+import com.honeyprojects.util.ExcelUtils;
+import com.honeyprojects.util.LoggerUtil;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +66,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -162,7 +211,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     continue;
                 } else {
                     SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(honey.getStudentId());
-                    History history = createHistory(honey.getStudentId(), TypeHistory.CONG_DIEM);
+                    History history = createHistory(honey.getStudentId(), TypeHistory.CONG_DIEM, HoneyStatus.DA_PHE_DUYET);
                     createHistoryDetail(honey.getStudentId(), honey.getId(), null, null, history.getId(), null, randomPoint, null);
                     Notification notification = createNotification(honey.getStudentId());
                     stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được hệ thống tặng: " + randomPoint + " " + categoryResponse.getName());
@@ -193,7 +242,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     if (optionalChest.isPresent()) {
                         Chest chest = optionalChest.get();
                         String archiveId = adArchiveRepository.getIdArchiveByIdStudent(simple.getId());
-                        History history = createHistory(simple.getId(), TypeHistory.CONG_RUONG);
+                        History history = createHistory(simple.getId(), TypeHistory.CONG_RUONG, HoneyStatus.DA_PHE_DUYET);
                         if (archiveId == null) {
                             Archive archive = createArchive(simple.getId());
                             createArchiveGift(archive.getId(), chest.getId(), null, 1);
@@ -214,7 +263,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(idStudent);
                     if (optionalChest.isPresent()) {
                         Chest chest = optionalChest.get();
-                        History history = createHistory(simpleResponse.getId(), TypeHistory.CONG_RUONG);
+                        History history = createHistory(simpleResponse.getId(), TypeHistory.CONG_RUONG, HoneyStatus.DA_PHE_DUYET);
                         String archiveId = adArchiveRepository.getIdArchiveByIdStudent(simpleResponse.getId());
                         if (archiveId == null) {
                             Archive archive = createArchive(simpleResponse.getId());
@@ -345,7 +394,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 idArchive = archiveId;
             }
             Notification notification = createNotification(simpleResponse.getId());
-            History history = createHistory(simpleResponse.getId(), TypeHistory.MAT_ONG_VA_VAT_PHAM);
+            History history = createHistory(simpleResponse.getId(), TypeHistory.MAT_ONG_VA_VAT_PHAM, HoneyStatus.ADMIN_DA_THEM);
             // Xử lý vật phẩm (gift)
             if (!DataUtils.isNullObject(userDTO.getLstGift())) {
                 String[] partsGift = userDTO.getLstGift().split(", ");
@@ -449,8 +498,8 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     }
 
 
-    private History createHistory(String idStudent, TypeHistory typeHistory) {
-        AdminHistoryRandomRequest request = new AdminHistoryRandomRequest(idStudent, typeHistory);
+    private History createHistory(String idStudent, TypeHistory typeHistory, HoneyStatus status) {
+        AdminHistoryRandomRequest request = new AdminHistoryRandomRequest(idStudent, typeHistory, status);
         History history = request.createHistory(new History());
         return adHistoryRepository.save(history);
     }

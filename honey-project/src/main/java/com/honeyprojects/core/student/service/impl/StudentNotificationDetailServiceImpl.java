@@ -4,12 +4,30 @@ import com.honeyprojects.core.admin.model.request.AdminCreateArchiveGiftRequest;
 import com.honeyprojects.core.admin.model.request.AdminCreateHoneyRequest;
 import com.honeyprojects.core.admin.model.request.AdminHistoryRandomDetailRequest;
 import com.honeyprojects.core.admin.model.request.AdminHistoryRandomRequest;
-import com.honeyprojects.core.admin.repository.*;
+import com.honeyprojects.core.admin.repository.AdArchiveGiftRepository;
+import com.honeyprojects.core.admin.repository.AdArchiveRepository;
+import com.honeyprojects.core.admin.repository.AdRandomAddPointRepository;
+import com.honeyprojects.core.admin.repository.AdminHoneyRepository;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.student.model.response.StudentNotificationDetaiRespone;
-import com.honeyprojects.core.student.repository.*;
+import com.honeyprojects.core.student.repository.StudentCategoryRepository;
+import com.honeyprojects.core.student.repository.StudentChestRepository;
+import com.honeyprojects.core.student.repository.StudentGiftRepository;
+import com.honeyprojects.core.student.repository.StudentHistoryRepository;
+import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
+import com.honeyprojects.core.student.repository.StudentNotificationRepository;
 import com.honeyprojects.core.student.service.StudentNotificationDetailService;
-import com.honeyprojects.entity.*;
+import com.honeyprojects.entity.Archive;
+import com.honeyprojects.entity.ArchiveGift;
+import com.honeyprojects.entity.Category;
+import com.honeyprojects.entity.Chest;
+import com.honeyprojects.entity.Gift;
+import com.honeyprojects.entity.History;
+import com.honeyprojects.entity.HistoryDetail;
+import com.honeyprojects.entity.Honey;
+import com.honeyprojects.entity.Notification;
+import com.honeyprojects.entity.NotificationDetail;
+import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.NotificationDetailType;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.Status;
@@ -31,9 +49,6 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
 
     @Autowired
     private StudentNotificationDetailRepository studentNotificationDetailRepository;
-
-    @Autowired
-    private AdminCategoryRepository adminCategoryRepository;
 
     @Autowired
     private AdminHoneyRepository adminHoneyRepository;
@@ -85,7 +100,7 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
         if (lstIdNotificationDetail.isEmpty()) {
             return false;
         } else {
-            History history = createHistory(idStudent, TypeHistory.MAT_ONG_VA_VAT_PHAM);
+            History history = createHistory(idStudent, TypeHistory.MAT_ONG_VA_VAT_PHAM, HoneyStatus.DA_PHE_DUYET);
             List<NotificationDetail> lstHoney = new ArrayList<>();
             List<NotificationDetail> lstGift = new ArrayList<>();
             List<NotificationDetail> lstChest = new ArrayList<>();
@@ -194,8 +209,8 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
         return adArchiveGiftRepository.save(archiveGift);
     }
 
-    private History createHistory(String idStudent, TypeHistory typeHistory) {
-        AdminHistoryRandomRequest request = new AdminHistoryRandomRequest(idStudent, typeHistory);
+    private History createHistory(String idStudent, TypeHistory typeHistory, HoneyStatus status) {
+        AdminHistoryRandomRequest request = new AdminHistoryRandomRequest(idStudent, typeHistory, status);
         History history = request.createHistory(new History());
         return studentHistoryRepository.save(history);
     }
