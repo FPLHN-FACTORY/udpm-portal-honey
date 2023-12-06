@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/student/notification")
-@CrossOrigin("*")
 public class StudentNotificationRestController extends BaseController {
 
     @Autowired
