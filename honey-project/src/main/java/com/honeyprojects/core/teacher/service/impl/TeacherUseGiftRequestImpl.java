@@ -72,6 +72,7 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
         notification.setStudentId(history.getStudentId());
         notification.setTitle("Yêu cầu cộng điểm");
         notification.setType(NotificationType.TEACHER);
+        notification.setStatus(NotificationStatus.CHUA_DOC);
         notificationRepository.save(notification);
 
         NotificationDetail notificationDetail = new NotificationDetail();
@@ -150,6 +151,7 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
         notification.setStudentId(history.getStudentId());
         notification.setTitle("Yêu cầu cộng điểm");
         notification.setType(NotificationType.TEACHER);
+        notification.setStatus(NotificationStatus.CHUA_DOC);
         notificationRepository.save(notification);
 
         NotificationDetail notificationDetail = new NotificationDetail();

@@ -1,12 +1,10 @@
-import { Card, Col, Row, message, notification } from "antd";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ClockCircleOutlined, HeatMapOutlined } from "@ant-design/icons";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { Col, message } from "antd";
+import { ClockCircleOutlined } from "@ant-design/icons";
 import React, { memo, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./letter.css";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { NotificationAPI } from "../../../apis/student/notification/notification.api";
 import {
   GetNotification,
@@ -17,16 +15,10 @@ import imageNotification from "../../../assets/images/bell.png";
 
 const Letter = memo(() => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const [allRead, setAllRead] = useState(false);
   const [current, setCurrent] = useState(0);
   const [crease, setCrease] = useState(false);
-  const [notificationHasData, setNotificationHasData] = useState(false);
   const dataCountNotification = useAppSelector(GetCountNotification);
 
-  const toggleAllRead = () => {
-    setAllRead(!allRead);
-  };
 
   const readAllNotification = () => {
     NotificationAPI.readAllNotification().then((response) => {
@@ -49,11 +41,6 @@ const Letter = memo(() => {
       setCurrent(response.data.data.currentPage);
 
       setCrease(true);
-      if (response.data.data.totalPages - current <= 1) {
-        setNotificationHasData(false);
-      } else {
-        setNotificationHasData(true);
-      }
     } catch (error) {}
   };
 
@@ -81,6 +68,7 @@ const Letter = memo(() => {
 
   useEffect(() => {
     fetchNotification();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current, dataCountNotification]);
 
   const dataNotification = useAppSelector(GetNotification);
