@@ -22,9 +22,6 @@ public interface PresidentGiftHistoryResponse extends IsIdentified {
     @Value("#{target.president_id}")
     String getPresidentId();
 
-    @Value("#{target.honey_point}")
-    Integer getHoneyPoint();
-
     @Value("#{target.change_date}")
     Long getChangeDate();
 

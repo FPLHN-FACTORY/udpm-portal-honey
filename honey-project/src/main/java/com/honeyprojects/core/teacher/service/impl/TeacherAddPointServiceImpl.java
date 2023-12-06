@@ -97,7 +97,6 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
         String idTeacher = udpmHoney.getIdUser();
         Long dateNow = Calendar.getInstance().getTimeInMillis();
         Optional<Category>category = categoryRepository.findById(addPointRequest.getCategoryId());
-        System.out.println("------------"+category.get().getCategoryStatus());
         HistoryDetail historyDetail = new HistoryDetail();
         History history = new History();
         history.setTeacherId(idTeacher);
@@ -105,7 +104,7 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
         history.setType(TypeHistory.CONG_DIEM);
         history.setChangeDate(dateNow);
         if(category.get().getCategoryStatus().equals(CategoryStatus.FREE)){
-            history.setStatus(HoneyStatus.DA_PHE_DUYET);
+            history.setStatus(HoneyStatus.TEACHER_DA_THEM);
             if (addPointRequest.getHoneyId() == null) {
                 Honey honey = new Honey();
                 honey.setStatus(Status.HOAT_DONG);
