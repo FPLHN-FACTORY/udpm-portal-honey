@@ -26,6 +26,7 @@ import ModalAddChest from "./ModalAddChest";
 import ModalAddChestGift from "./ModalAddChestGift";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GetChest, SetChest } from "../../../app/reducers/chest/chest.reducer";
+import AddPoint from "../addPoin/AddPoint";
 
 const initialDataRandomPoint = {
   minPoint: null,
@@ -650,6 +651,12 @@ export default function RandomAddPoint() {
             )}
         </div>
       ),
+    },
+    {
+      key: "3",
+      label: "Tặng mật ong và vật phẩm",
+      children: <AddPoint
+       />,
     },
   ];
 

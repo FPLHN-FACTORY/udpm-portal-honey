@@ -53,18 +53,12 @@ function DashboardAuthUser({ children }) {
     title = "Quản lý vật phẩm";
   }
   if (pathname.includes("censor/add-point")) {
-    title = "Cộng mật ong";
+    title = "Tặng quà";
   }
   if (pathname.includes("censor/request-manager")) {
     title = "Quản lý yêu cầu";
   }
   if (pathname.includes("censor/request-manager/random-add-point")) {
-    title = "Tặng vật phẩm";
-  }
-  if (pathname.includes("censor/event")) {
-    title = "Tặng vật phẩm";
-  }
-  if (pathname.includes("censor/project")) {
     title = "Tặng vật phẩm";
   }
   if (pathname.includes("censor/chest")) {
@@ -106,21 +100,21 @@ function DashboardAuthUser({ children }) {
       "/censor/gift",
       <FontAwesomeIcon icon={faGift} />
     ),
-    getItem(
-      "Cộng mật ong",
-      "Cộng mật ong",
-      <FontAwesomeIcon icon={faPlusCircle} />,
-      [
-        getItem(
-          <Link to={"/censor/add-point"}>Cộng mật ong</Link>,
-          "/censor/add-point"
-        ),
-        getItem(
-          <Link to={"/censor/add-point/history"}>Lịch sử</Link>,
-          "/censor/add-point/history"
-        ),
-      ]
-    ),
+    // getItem(
+    //   "Tặng quà",
+    //   "Tặng quà",
+    //   <FontAwesomeIcon icon={faPlusCircle} />,
+    //   [
+    //     getItem(
+    //       <Link to={"/censor/add-point"}>Tặng quà</Link>,
+    //       "/censor/add-point"
+    //     ),
+    // getItem(
+    //   <Link to={"/censor/add-point/history"}>Lịch sử</Link>,
+    //   "/censor/add-point/history"
+    // ),
+    //   ]
+    // ),
     getItem(
       "Quản lý yêu cầu",
       "Quản lý yêu cầu",
@@ -137,15 +131,19 @@ function DashboardAuthUser({ children }) {
       ]
     ),
     getItem(
-      "Tặng vật phẩm",
-      "Tặng vật phẩm",
+      "Tặng quà",
+      "Tặng quà",
       <FontAwesomeIcon icon={faCodePullRequest} />,
       [
         getItem(
           <Link to={"/censor/request-manager/random-add-point"}>
-            Tặng vật phẩm
+            Tặng quà
           </Link>,
           "/censor/request-manager/random-add-point"
+        ),
+        getItem(
+          <Link to={"/censor/add-point/history"}>Lịch sử</Link>,
+          "/censor/add-point/history"
         ),
       ]
     ),
