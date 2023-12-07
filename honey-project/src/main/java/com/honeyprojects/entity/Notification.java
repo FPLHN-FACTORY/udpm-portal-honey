@@ -28,4 +28,8 @@ public class Notification extends PrimaryEntity {
 
     private String idHistoryDetail;
 
+    private String presidentId;
+
+    private String teacherId;
+
 }
