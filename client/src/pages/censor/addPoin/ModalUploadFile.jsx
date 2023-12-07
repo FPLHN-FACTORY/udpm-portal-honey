@@ -45,18 +45,18 @@ export default function ModalUpLoadFile(props) {
           if (response.data.data.total > 0) {
             setDataPreview(response.data.data.lstAdminAddItemDTO);
             dispatch(SetImport(response.data.data));
-            message.success("Import excel thành công");
+            message.success("Tải file excel thành công");
           } else {
-            message.error("Import excel thất bại");
+            message.error("Tải file excel thất bại");
             setDataPreview([]);
           }
         })
         .catch(() => {
-          message.error("Import excel thất bại");
+          message.error("Tải file excel thất bại");
           setDataPreview([]);
         });
     } else {
-      message.error("Import excel thất bại");
+      message.error("Tải file excel thất bại");
       setDataPreview([]);
     }
     setNameFileUpload("");

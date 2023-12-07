@@ -19,7 +19,7 @@ public interface TeacherHistoryRepository extends HistoryRepository {
             LEFT JOIN history h ON hd.history_id = h.id
             LEFT JOIN honey ho ON hd.honey_id = ho.id
             JOIN category c ON c.id = ho.honey_category_id
-            WHERE (h.status = 1 or h.status = 2)
+            WHERE (h.status = 1 OR h.status = 2 OR h.status = 4)
             AND (:#{#searchParams.idCategory} IS NULL OR c.id = :#{#searchParams.idCategory})
             AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent})
             AND h.type = 0 AND h.teacher_id = :#{#searchParams.idTeacher}

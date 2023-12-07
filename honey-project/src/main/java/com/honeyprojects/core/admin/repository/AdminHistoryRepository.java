@@ -20,7 +20,7 @@ public interface AdminHistoryRepository extends HistoryRepository {
             JOIN category c ON c.id = ho.honey_category_id
             AND (:#{#searchParams.idCategory} IS NULL OR c.id = :#{#searchParams.idCategory})
             AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent})
-            AND h.type = 0 
+            AND h.type IN (0, 6) AND h.status = 3
             """, nativeQuery = true)
     Page<AdminAddHoneyHistoryResponse> getHistory(@Param("searchParams") AdminSearchHistoryRequest searchParams,
                                                   Pageable pageable);

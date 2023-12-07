@@ -21,8 +21,6 @@ public interface CensorRequestManagerService {
 
     History changeStatusConversion(AdminChangeStatusGiftRequest changeStatusRequest);
 
-    History approvalAddGiftToStudent(AdminChangeStatusGiftRequest changeStatusRequest);
-
     PageableObject<CensorAddHoneyRequestResponse> getHistoryAddPoint(
             CensorSearchHistoryRequest historyRequest);
 

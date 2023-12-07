@@ -91,7 +91,8 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
         History history = new History();
         history.setNote(addPointRequest.getNote());
         history.setType(TypeHistory.CONG_DIEM);
-        history.setCreatedAt(dateNow);
+        history.setChangeDate(dateNow);
+        history.setStatus(HoneyStatus.ADMIN_DA_THEM);
         historyRepository.save(history);
 
         HistoryDetail historyDetail = new HistoryDetail();

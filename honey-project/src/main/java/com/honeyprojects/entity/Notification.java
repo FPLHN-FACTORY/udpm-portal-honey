@@ -26,4 +26,10 @@ public class Notification extends PrimaryEntity {
 
     private NotificationStatus status;
 
+    private String idHistoryDetail;
+
+    private String presidentId;
+
+    private String teacherId;
+
 }

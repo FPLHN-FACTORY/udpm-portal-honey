@@ -369,28 +369,22 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                         String title = Constants.TITLE_NOTIFICATION_PRESIDENT;
                         Notification notification = presidentNotificationService.createNotification(title, simpleResponse.getId(), NotificationType.PRESIDENT);
                         createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
-                        history.setStatus(HoneyStatus.DA_PHE_DUYET);
-
-                        historyRepository.save(history);
-                        HistoryDetail historyDetail = new HistoryDetail();
-                        historyDetail.setHistoryId(history.getId());
-                        historyDetail.setGiftId(gift.getId());
-                        historyDetail.setQuantityGift(giftMap.get(nameItem));
-                        historyDetail.setStudentId(simpleResponse.getId());
-                        historyDetail.setNameGift(nameItem);
-                        historyDetailRepository.save(historyDetail);
+                        history.setStatus(HoneyStatus.PRESIDENT_DA_THEM);
                     }
-
                     if (status.equals(enumStatusACCEPT)) {
                         // gửi yêu cầu phê duyệt cho admin
+                        // gửi thông báo cho admin
                         stringBuilder.append("Đã gửi yêu cầu phê duyệt tới admin " + "Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + ": " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
                         history.setStatus(HoneyStatus.CHO_PHE_DUYET);
-                        // gửi thông báo cho admin
-                        String title = Constants.TITLE_NOTIFICATION_PRESIDENT_TO_ADMIN;
-                        Notification notification = presidentNotificationService.createNotification(title, simpleResponse.getId(), NotificationType.CHO_PHE_DUYET);
-                        createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
                     }
-
+                    historyRepository.save(history);
+                    HistoryDetail historyDetail = new HistoryDetail();
+                    historyDetail.setHistoryId(history.getId());
+                    historyDetail.setGiftId(gift.getId());
+                    historyDetail.setQuantityGift(giftMap.get(nameItem));
+                    historyDetail.setStudentId(simpleResponse.getId());
+                    historyDetail.setNameGift(nameItem);
+                    historyDetailRepository.save(historyDetail);
                 }
             }
 
@@ -428,7 +422,7 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                             // gủi cho sinh viên
                             Notification notification = createNotification(simpleResponse.getId());
                             createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
-                            history.setStatus(HoneyStatus.DA_PHE_DUYET);
+                            history.setStatus(HoneyStatus.PRESIDENT_DA_THEM);
                         }
                         if (category.getStatus().equals(enumCategoryACCEPT)) {
                             history.setStatus(HoneyStatus.CHO_PHE_DUYET);
