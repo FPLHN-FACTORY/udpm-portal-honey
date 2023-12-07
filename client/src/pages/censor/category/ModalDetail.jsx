@@ -9,6 +9,7 @@ const ModalDetail = (props) => {
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
   const [image, setImage] = useState([]);
   const [errorImage, setErrorImage] = useState("");
+  const [errorCategoryName, setErrorCategoryName] = useState("");
 
   useEffect(() => {
     if (category.image) {
@@ -72,6 +73,7 @@ const ModalDetail = (props) => {
       .validateFields()
       .then((formValues) => {
         let check = 0;
+
         if (selectedImageUrl.length === 0) {
           setErrorImage("Ảnh không được để trống");
           check++;
@@ -92,12 +94,9 @@ const ModalDetail = (props) => {
             onOk: () => {
               handleUpdateCategory(formValues);
             },
-            onCancel: () => {
-              // Do nothing on cancel
-            },
+            onCancel: () => {},
           });
         } else {
-          // If transactionRights is 1, directly update the category
           handleUpdateCategory(formValues);
         }
       })
@@ -118,23 +117,12 @@ const ModalDetail = (props) => {
         fetchData();
       })
       .catch((err) => {
-        message.error("Lỗi: " + err.message);
+        message.error(err.response.data.message);
       });
   };
 
   return (
     <>
-      {/* <Tooltip title="Chi tiết thể loại">
-        <Button
-          style={{
-            backgroundColor: "yellowgreen",
-            color: "white",
-          }}
-          onClick={showModal}
-        >
-          <FontAwesomeIcon icon={faPenToSquare} />
-        </Button>
-      </Tooltip> */}
       <Modal
         title="Chi tiết thể loại"
         // open={isModalOpen}
@@ -182,7 +170,31 @@ const ModalDetail = (props) => {
             <Input disabled />
           </Form.Item>
 
-          <Form.Item label="Tên" name="name">
+          <Form.Item
+            label="Tên"
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "Tên thể loại không để trống",
+              },
+              {
+                validator: (_, value) => {
+                  if ((value + "").trim().length < 4) {
+                    return Promise.reject(
+                      new Error("Tên thể loại phải tối thiểu 4 kí tự")
+                    );
+                  }
+                  if ((value + "").trim().length > 100) {
+                    return Promise.reject(
+                      new Error("Tên thể loại tối đa 100 kí tự")
+                    );
+                  }
+                  return Promise.resolve();
+                },
+              },
+            ]}
+          >
             <Input />
           </Form.Item>
           <Form.Item

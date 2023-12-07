@@ -4,6 +4,7 @@ import com.honeyprojects.core.admin.model.request.AdminCategoryRequest;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminExportCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminImportCategoryResponse;
+import com.honeyprojects.entity.Category;
 import com.honeyprojects.repository.CategoryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -79,6 +80,16 @@ public interface AdminCategoryRepository extends CategoryRepository {
             ORDER BY c.last_modified_date DESC
             """, nativeQuery = true)
     AdminImportCategoryResponse getOneCategoryResponse(String id);
+
+    @Query(value = """
+            SELECT *
+            FROM category c 
+            WHERE c.category_status <> 0 
+            AND c.name = :name
+            AND c.id <> :id
+            ORDER BY c.last_modified_date DESC
+            """, nativeQuery = true)
+    Category getNameExists(String name, String id);
 
     @Query(value = """
             SELECT c.name, c.category_status FROM category c

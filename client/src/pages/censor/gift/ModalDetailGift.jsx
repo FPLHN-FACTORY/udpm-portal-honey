@@ -43,7 +43,6 @@ const ModalDetailGift = (props) => {
   const [fieldErrors, setFieldErrors] = useState({});
 
   const [checkTypeTime, setCheckTypeTime] = useState(null);
-
   useEffect(() => {
     GiftDetail.fetchAll(gift.id).then((response) => {
       const detailData = response.data.data;
@@ -330,7 +329,7 @@ const ModalDetailGift = (props) => {
         };
 
         Modal.confirm({
-          title: "Bạn có chắc chắn muốn thêm mới dữ liệu không?",
+          title: "Bạn có chắc chắn cập nhật dữ liệu không?",
           onOk: () => {
             GiftAPI.update(data, gift ? gift.id : null)
               .then((response) => {
@@ -395,8 +394,7 @@ const ModalDetailGift = (props) => {
                 fetchData();
               })
               .catch((err) => {
-                // Handle update error
-                message.error("Lỗi: " + err.message);
+                message.error(err.response.data.message);
               });
           },
           okText: "Đồng ý",
@@ -498,13 +496,16 @@ const ModalDetailGift = (props) => {
               rules={[
                 {
                   required: true,
+                  message: "Tên vật phẩm không để trống",
+                },
+                {
                   validator: (_, value) => {
-                    if ((value + "").trim().length === 0) {
-                      return Promise.reject(
-                        new Error("Tên vật phẩm không để trống")
-                      );
-                    }
-                    if ((value + "").trim().length < 5) {
+                    // if ((value + "").trim().length === 0) {
+                    //   return Promise.reject(
+                    //     new Error("Tên vật phẩm không để trống")
+                    //   );
+                    // }
+                    if ((value + "").trim().length < 4) {
                       return Promise.reject(
                         new Error("Tên vật phẩm phải tối thiểu 4 kí tự")
                       );

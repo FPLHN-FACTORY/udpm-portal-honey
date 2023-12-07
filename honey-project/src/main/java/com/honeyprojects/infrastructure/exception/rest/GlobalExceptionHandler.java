@@ -51,7 +51,6 @@ public class GlobalExceptionHandler {
 
     @MessageExceptionHandler(MessageHandlingException.class)
     public void handleMessageException(MessageHandlingException ex, @Header("simpSessionId") String sessionId) {
-        System.out.println("1111111111 "+ex);
         System.out.println(sessionId);
         ErrorObject errorObject = new ErrorObject(ex.getMessage());
         simpMessagingTemplate.convertAndSend("/portal-honey/error/" + sessionId, errorObject);

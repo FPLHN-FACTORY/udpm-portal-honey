@@ -142,9 +142,9 @@ const ModalThem = (props) => {
 
   const validateHoney = (rule, value) => {
     if (!/^\d*$/.test(value)) {
-      return Promise.reject("Điểm số phải là số nguyên dương.");
+      return Promise.reject("Số lượng mật phải là số nguyên dương.");
     }
-    if (!value || value <= 0) {
+    if (value <= 0) {
       return Promise.reject("Số lượng mật phải lớn hơn 0.");
     }
     return Promise.resolve();
@@ -286,21 +286,21 @@ const ModalThem = (props) => {
                 fetchData();
                 setModalOpen(false);
                 form.resetFields();
-                const newGift = {
-                  id: result.data.data.id,
-                  name: result.data.data.name.trim(),
-                  status: result.data.data.status,
-                  image: image,
-                  quantity: quantity,
-                  limitQuantity: limitSL,
-                  type: result.data.data.type,
-                  honey: result.data.data.honey,
-                  honeyCategoryId: result.data.data.honeyCategoryId,
-                };
-                onSave && onSave(newGift);
+                // const newGift = {
+                //   id: result.data.data.id,
+                //   name: result.data.data.name.trim(),
+                //   status: result.data.data.status,
+                //   image: image,
+                //   quantity: quantity,
+                //   limitQuantity: limitSL,
+                //   type: result.data.data.type,
+                //   honey: result.data.data.honey,
+                //   honeyCategoryId: result.data.data.honeyCategoryId,
+                // };
+                // onSave && onSave(newGift);
               })
               .catch((err) => {
-                message.error("Lỗi: " + err.message);
+                message.error(err.response.data.message);
               });
           },
           okText: "Đồng ý",
@@ -385,13 +385,11 @@ const ModalThem = (props) => {
               rules={[
                 {
                   required: true,
+                  message: "Tên vật phẩm không để trống",
+                },
+                {
                   validator: (_, value) => {
-                    if ((value + "").trim().length === 0) {
-                      return Promise.reject(
-                        new Error("Tên vật phẩm không để trống")
-                      );
-                    }
-                    if ((value + "").trim().length < 5) {
+                    if ((value + "").trim().length < 4) {
                       return Promise.reject(
                         new Error("Tên vật phẩm phải tối thiểu 4 kí tự")
                       );
