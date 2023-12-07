@@ -21,7 +21,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "gift")
 @ToString
 public class Gift extends PrimaryEntity {

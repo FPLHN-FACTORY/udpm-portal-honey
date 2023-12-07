@@ -6,6 +6,8 @@ import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +28,9 @@ public class Notification extends PrimaryEntity {
 
     private NotificationStatus status;
 
-    private String idHistoryDetail;
+    @ManyToOne
+    @JoinColumn
+    private HistoryDetail idHistoryDetail;
 
     private String presidentId;
 
