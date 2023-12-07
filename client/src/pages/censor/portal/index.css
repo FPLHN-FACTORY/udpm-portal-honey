@@ -1,0 +1,60 @@
+.button-css {
+  background-color: #1c315e !important;
+  color: white !important;
+  border: 0 solid #dbdbdb !important;
+  border-radius: 1.5rem !important;
+  width: 120px !important;
+  height: 40px;
+}
+
+.button-css:hover {
+  background-color: #ffcc00 !important;
+  color: black !important;
+}
+
+.error {
+  color: red !important;
+  font-size: 12px !important;
+}
+
+#project_manager
+  :where(.css-dev-only-do-not-override-14wwjjs).ant-select-single:not(
+    .ant-select-customize-input
+  )
+  .ant-select-selector {
+  width: 100%;
+  height: 40px;
+}
+
+#project_manager
+  :where(.css-dev-only-do-not-override-14wwjjs).ant-select
+  .ant-select-arrow {
+  display: flex;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.25);
+  font-style: normal;
+  line-height: 1;
+  text-align: center;
+  text-transform: none;
+  vertical-align: -0.125em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: absolute;
+  top: 50%;
+  inset-inline-start: auto;
+  inset-inline-end: 11px;
+  height: 12px;
+  margin-top: -18px;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+#project_manager
+  :where(
+    .css-dev-only-do-not-override-14wwjjs
+  ).ant-select-single.ant-select-open
+  .ant-select-selection-item {
+  margin-top: 3px;
+  color: rgba(0, 0, 0, 0.25);
+}

@@ -54,6 +54,7 @@ import AuctionManagementChart from "./pages/censor/auction-management/chart/Auct
 import HoneyHistory from "./pages/president/HoneyHistory";
 import GiftHistory from "./pages/president/GiftHistory";
 import PresidentHistory from "./pages/president/PresidentHistory";
+import HistoryPortal from "./pages/censor/portal/HistoryPortal";
 
 function App() {
   const data = useAppSelector(SelectLoading);
@@ -230,6 +231,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <ProjectManager />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/censor/history-portal"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <HistoryPortal />
                   </DashboardCensor>
                 </AuthGuard>
               }

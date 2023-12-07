@@ -26,6 +26,7 @@ import {
   faStar,
   faToolbox,
 } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
 const { Header: AntHeader, Content } = Layout;
 
 function DashboardAuthUser({ children }) {
@@ -52,18 +53,12 @@ function DashboardAuthUser({ children }) {
     title = "Quản lý vật phẩm";
   }
   if (pathname.includes("censor/add-point")) {
-    title = "Cộng mật ong";
+    title = "Tặng quà";
   }
   if (pathname.includes("censor/request-manager")) {
     title = "Quản lý yêu cầu";
   }
   if (pathname.includes("censor/request-manager/random-add-point")) {
-    title = "Tặng vật phẩm";
-  }
-  if (pathname.includes("censor/event")) {
-    title = "Tặng vật phẩm";
-  }
-  if (pathname.includes("censor/project")) {
     title = "Tặng vật phẩm";
   }
   if (pathname.includes("censor/chest")) {
@@ -74,6 +69,15 @@ function DashboardAuthUser({ children }) {
   }
   if (pathname.includes("censor/upgrade-rate")) {
     title = "Quản lý nâng cấp";
+  }
+  if (pathname.includes("censor/event")) {
+    title = "Module sự kiện";
+  }
+  if (pathname.includes("censor/project")) {
+    title = "Module xưởng dự án";
+  }
+  if (pathname.includes("censor/history-portal")) {
+    title = "Lịch sử";
   }
 
   const [collapsed, setCollapsed] = useState(false);
@@ -96,21 +100,21 @@ function DashboardAuthUser({ children }) {
       "/censor/gift",
       <FontAwesomeIcon icon={faGift} />
     ),
-    getItem(
-      "Cộng mật ong",
-      "Cộng mật ong",
-      <FontAwesomeIcon icon={faPlusCircle} />,
-      [
-        getItem(
-          <Link to={"/censor/add-point"}>Cộng mật ong</Link>,
-          "/censor/add-point"
-        ),
-        getItem(
-          <Link to={"/censor/add-point/history"}>Lịch sử</Link>,
-          "/censor/add-point/history"
-        ),
-      ]
-    ),
+    // getItem(
+    //   "Tặng quà",
+    //   "Tặng quà",
+    //   <FontAwesomeIcon icon={faPlusCircle} />,
+    //   [
+    //     getItem(
+    //       <Link to={"/censor/add-point"}>Tặng quà</Link>,
+    //       "/censor/add-point"
+    //     ),
+    // getItem(
+    //   <Link to={"/censor/add-point/history"}>Lịch sử</Link>,
+    //   "/censor/add-point/history"
+    // ),
+    //   ]
+    // ),
     getItem(
       "Quản lý yêu cầu",
       "Quản lý yêu cầu",
@@ -126,38 +130,20 @@ function DashboardAuthUser({ children }) {
         ),
       ]
     ),
-    // getItem(
-    //   <Link to="/censor/request-manager/random-add-point">Tặng vật phẩm</Link>,
-    //   "/censor/request-manager/random-add-point",
-    //   <FontAwesomeIcon icon={faCommentsDollar} />,
-    //   [
-    //     getItem(
-    //       <Link to={"/censor/event"}>Module sự kiện</Link>,
-    //       "/censor/event"
-    //     ),
-    //     getItem(
-    //       <Link to={"/censor/project"}>Module dự án</Link>,
-    //       "/censor/project"
-    //     ),
-    //   ]
-    // ),
-    
     getItem(
-      "Tặng vật phẩm",
-      "Tặng vật phẩm",
+      "Tặng quà",
+      "Tặng quà",
       <FontAwesomeIcon icon={faCodePullRequest} />,
       [
         getItem(
-          <Link to={"/censor/request-manager/random-add-point"}>Tặng vật phẩm</Link>,
+          <Link to={"/censor/request-manager/random-add-point"}>
+            Tặng quà
+          </Link>,
           "/censor/request-manager/random-add-point"
         ),
         getItem(
-          <Link to={"/censor/event"}>Module sự kiện</Link>,
-          "/censor/event"
-        ),
-        getItem(
-          <Link to={"/censor/project"}>Module dự án</Link>,
-          "/censor/project"
+          <Link to={"/censor/add-point/history"}>Lịch sử</Link>,
+          "/censor/add-point/history"
         ),
       ]
     ),
@@ -181,15 +167,29 @@ function DashboardAuthUser({ children }) {
         ),
       ]
     ),
-    // getItem(
-    //   <Link to="/censor/auction-management">Quản lý đấu giá</Link>,
-    //   "/censor/auction-management",
-    //   <FontAwesomeIcon icon={faScaleUnbalanced} />
-    // ),
     getItem(
       <Link to="/censor/upgrade-rate">Quản lý nâng cấp</Link>,
       "/censor/upgrade-rate",
       <FontAwesomeIcon icon={faStar} />
+    ),
+    getItem(
+      "Cổng thông tin",
+      "Cổng thông tin",
+      <FontAwesomeIcon icon={faCodePullRequest} />,
+      [
+        getItem(
+          <Link to={"/censor/event"}>Module sự kiện</Link>,
+          "/censor/event"
+        ),
+        getItem(
+          <Link to={"/censor/project"}>Module dự án</Link>,
+          "/censor/project"
+        ),
+        getItem(
+          <Link to={"/censor/history-portal"}>Lịch sử</Link>,
+          "/censor/history-portal"
+        ),
+      ]
     ),
   ];
   const toggleCollapse = () => {
