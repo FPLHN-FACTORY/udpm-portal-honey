@@ -15,6 +15,7 @@ const UsingGift = (props) => {
 
   const [dataClass, setDataClass] = useState([]);
   const [dataScore, setDataScore] = useState([]);
+  const [className, setClassName] = useState("");
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -41,7 +42,8 @@ const UsingGift = (props) => {
           ...values,
           archiveGiftId: archivegift.id,
           quantity: values.number,
-          scoreId: values.dauDiem
+          scoreId: values.dauDiem,
+          maLop: className
         };
         ArchiveAPI.openGift(data)
           .then((result) => {
@@ -70,6 +72,10 @@ const UsingGift = (props) => {
     const classStudent = dataClass.filter(el => el.classId === value)[0];
     form.setFieldValue("maMon", classStudent.subjectName)
     form.setFieldValue("emailGV", classStudent.teacherEmail)
+    form.setFieldValue("dauDiemSelect", null);
+    form.setFieldValue("number", null)
+    form.setFieldValue("score", null)
+    setClassName(classStudent.className);
 
     const data = {
       classId: classStudent.classId,
@@ -156,7 +162,12 @@ const UsingGift = (props) => {
                 const el = form.getFieldValue("number")
                 if (el) {
                   let dataDauDiem = dataScore.filter(el => dauDiemId === el.id)[0];
-                  form.setFieldValue("score", el.target.value*((archivegift.score*archivegift.scoreRatio)/dataDauDiem.scoreRatio))
+                  
+                  if (dataDauDiem.scoreRatio === 0) {
+                    form.setFieldValue("score", 0);
+                  } else {
+                    form.setFieldValue("score", el.target.value*((archivegift.score*archivegift.scoreRatio)/dataDauDiem.scoreRatio))
+                  }
                 }
               }}
             >
@@ -196,7 +207,11 @@ const UsingGift = (props) => {
               const dauDiemId = form.getFieldValue("dauDiem")
               if (dauDiemId) {
                 let dataDauDiem = dataScore.filter(el => dauDiemId === el.id)[0];
-                form.setFieldValue("score", el.target.value*((archivegift.score*archivegift.scoreRatio)/dataDauDiem.scoreRatio))
+                if (dataDauDiem.scoreRatio === 0) {
+                  form.setFieldValue("score", 0);
+                } else {
+                  form.setFieldValue("score", el.target.value*((archivegift.score*archivegift.scoreRatio)/dataDauDiem.scoreRatio))
+                }
               }
             }} type="number"/>
           </Form.Item>

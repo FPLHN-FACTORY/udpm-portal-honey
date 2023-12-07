@@ -41,7 +41,22 @@ export default function RequestAddPoint() {
       key: "stt",
     },
     {
-      title: "Tên sinh viên",
+      title: "Người gửi",
+      dataIndex: "name",
+      key: "name",
+      render: (text, record) => {
+        console.log(record);
+        if (record.teacherId !== null) {
+          return record.nameTeacher;
+        } else if (record.presidentId !== null) {
+          return record.namePresident;
+        } else {
+          return null;
+        }
+      },
+    },
+    {
+      title: "Người nhận",
       dataIndex: "nameStudent",
       key: "nameStudent",
     },
@@ -56,7 +71,7 @@ export default function RequestAddPoint() {
       key: "nameCategory",
     },
     {
-      title: "Ngày tạo",
+      title: "Ngày gửi",
       dataIndex: "createdDate",
       key: "createdDate",
     },
@@ -115,10 +130,28 @@ export default function RequestAddPoint() {
                   const user = await RequestManagerAPI.getUserAPiById(
                     data.studentId
                   );
+                  let teacher = null;
+                  if (data.teacherId !== null) {
+                    teacher = await RequestManagerAPI.getUserAPiById(
+                      data.teacherId
+                    );
+                  }
+                  let president = null;
+                  if (data.presidentId !== null) {
+                    president = await RequestManagerAPI.getUserAPiById(
+                      data.presidentId
+                    );
+                  }
                   return {
                     ...data,
                     nameStudent: user.data.data.name,
                     userName: user.data.data.userName,
+                    nameTeacher: teacher ? teacher.data.data.name : null,
+                    userTeacher: teacher ? teacher.data.data.userName : null,
+                    namePresident: president ? president.data.data.name : null,
+                    userPresident: president
+                      ? president.data.data.userName
+                      : null,
                   };
                 } catch (error) {
                   console.error(error);
@@ -148,6 +181,8 @@ export default function RequestAddPoint() {
       },
     };
   });
+
+  console.log(data);
 
   const listCategory = useAppSelector(GetCategory);
 
