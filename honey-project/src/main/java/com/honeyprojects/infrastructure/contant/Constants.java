@@ -38,7 +38,13 @@ public class Constants {
 
     public static String TITLE_NOTIFICATION_TEACHER = "THÔNG BÁO TỪ GIẢNG VIÊN";
 
+    public static String TITLE_NOTIFICATION_PRESIDENT = "THÔNG BÁO TỪ CHỦ TỊCH XƯỞNG";
+
+    public static String TITLE_NOTIFICATION_PRESIDENT_TO_ADMIN = "CHỦ TỊCH XƯỞNG ĐÃ GỬI MỘT DANH SÁCH YÊU CẦU";
+
     public static String CONTENT_NOTIFICATION_SYSTEM = "Hệ thống đã tặng cho bạn: ";
+
+    public static String CONTENT_NOTIFICATION_LAB = "Chủ tịch xưởng thực hành đã tặng bạn: ";
 
     public static String CONTENT_NOTIFICATION_MODULE_LAB_REPORT = "Xưởng dự án đã tặng bạn: ";
 

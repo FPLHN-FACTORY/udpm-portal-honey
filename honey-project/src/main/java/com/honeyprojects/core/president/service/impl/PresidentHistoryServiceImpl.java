@@ -1,9 +1,5 @@
 package com.honeyprojects.core.president.service.impl;
 
-import com.honeyprojects.core.admin.model.request.AdminCreateConversionHistoryRequest;
-import com.honeyprojects.core.admin.model.request.AdminHistoryApprovedSearchRequest;
-import com.honeyprojects.core.admin.model.response.AdminRequestConversionHistoryResponse;
-import com.honeyprojects.core.admin.model.response.CensorTransactionRequestResponse;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.president.model.request.PresidentFindGiftHistoryRequest;
