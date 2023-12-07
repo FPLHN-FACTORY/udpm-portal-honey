@@ -77,7 +77,15 @@ public interface AdGiftRepository extends GiftRepository {
 
     @Query(value = """
             SELECT g.name, g.status from gift g
-            where status <> 2
+            where g.status <> 2
             """, nativeQuery = true)
     List<PresidentExportGiftResponse> getGiftToExport();
+
+    @Query(value = """
+            SELECT * from gift
+            where status <> 2
+            and name = :name 
+            and id <> :id
+            """, nativeQuery = true)
+    Gift getNameExists(String name, String id );
 }

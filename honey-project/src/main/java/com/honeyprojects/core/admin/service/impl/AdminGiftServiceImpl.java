@@ -17,6 +17,7 @@ import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.infrastructure.configution.CloudinaryUploadImages;
 import com.honeyprojects.infrastructure.contant.ExpiryGift;
+import com.honeyprojects.infrastructure.contant.Message;
 import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TransactionGift;
 import com.honeyprojects.infrastructure.contant.TypeGift;
@@ -24,6 +25,7 @@ import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.infrastructure.logger.entity.LoggerFunction;
 import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
 import com.honeyprojects.util.CloudinaryUtils;
+import com.honeyprojects.util.DataUtils;
 import com.honeyprojects.util.LoggerUtil;
 import lombok.Synchronized;
 import org.apache.commons.lang3.time.DateUtils;
@@ -78,31 +80,11 @@ public class AdminGiftServiceImpl implements AdminGiftService {
     public PageableObject<AdminGiftResponse> getAllCategoryByAdmin(AdminGiftRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         Page<AdminGiftResponse> pageRes = adGiftRepository.getAllGiftByAdmin(pageable, request);
-//        StringBuilder contentLogger = new StringBuilder();
-//        LoggerFunction loggerObject = new LoggerFunction();
-//        loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
-//        contentLogger.append("Lấy tất cả quà đang hoạt động tại trang quà.");
-//        loggerObject.setContent(contentLogger.toString());
-//        try {
-//            rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
         return new PageableObject<>(pageRes);
     }
 
     @Override
     public List<AdminGiftResponse> getAllListGift() {
-//        StringBuilder contentLogger = new StringBuilder();
-//        LoggerFunction loggerObject = new LoggerFunction();
-//        loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
-//        contentLogger.append("Lấy tất cả quà đang hoạt động 2.");
-//        loggerObject.setContent(contentLogger.toString());
-//        try {
-//            rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
         return adGiftRepository.getAllListResponse();
     }
 
@@ -115,6 +97,7 @@ public class AdminGiftServiceImpl implements AdminGiftService {
     @Transactional
     @Synchronized
     public Gift addGift(AdminCreateGiftRequest request) throws IOException {
+        validateName(request.getName(), "");
         StringBuilder contentLogger = new StringBuilder();
         LoggerFunction loggerObject = new LoggerFunction();
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
@@ -165,8 +148,15 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         return adGiftRepository.save(gift);
     }
 
-    public Gift updateGift(AdminUpdateGiftRequest request, String id) throws IOException {
+    private void validateName(String name, String id) {
+        Gift gift = adGiftRepository.getNameExists(name, id);
+        if (!DataUtils.isNullObject(gift)) {
+            throw new RestApiException(Message.GIFT_EXIST);
+        }
+    }
 
+    public Gift updateGift(AdminUpdateGiftRequest request, String id) throws IOException {
+        validateName(request.getName(), id);
         if (adArchiveGiftRepository.findAllByGiftId(id).size() != 0 ||
                 adAuctionRepository.findAllByGiftId(id).size() != 0 ||
                 adChestGiftRepository.findAllByGiftId(id).size() != 0 ||

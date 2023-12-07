@@ -21,6 +21,7 @@ import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.infrastructure.logger.entity.LoggerFunction;
 import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
 import com.honeyprojects.util.CloudinaryUtils;
+import com.honeyprojects.util.DataUtils;
 import com.honeyprojects.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -107,7 +108,8 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     @Override
     @Transactional
     public Category addCategory(AdminCreateCategoryRequest request) throws IOException {
-        List<Category> getAllCate = adminCategoryRepository.findAll();
+        validateName(request.getName(), "");
+//        List<Category> getAllCate = adminCategoryRepository.findAll();
         StringBuilder contentLogger = new StringBuilder();
         LoggerFunction loggerObject = new LoggerFunction();
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
@@ -133,12 +135,12 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
         ca.setCategoryStatus(CategoryStatus.values()[request.getCategoryStatus()]);
         ca.setTransactionRights(request.getTransactionRights() == 0 ? CategoryTransaction.FREE : CategoryTransaction.LIMIT);
         adminCategoryRepository.save(ca);
-        for(Category cate : getAllCate  ){
-            if(request.getTransactionRights() == 0 ){
-                cate.setTransactionRights(CategoryTransaction.LIMIT);
-                adminCategoryRepository.save(cate);
-            }
-        }
+//        for(Category cate : getAllCate  ){
+//            if(request.getTransactionRights() == 0 ){
+//                cate.setTransactionRights(CategoryTransaction.LIMIT);
+//                adminCategoryRepository.save(cate);
+//            }
+//        }
         contentLogger.append("Đã lưu thể loại có id là: " + ca.getId() + ".");
         try {
             rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
@@ -148,10 +150,17 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
         return ca;
     }
 
+    private void validateName(String name, String id){
+        Category category = adminCategoryRepository.getNameExists(name, id);
+        if(!DataUtils.isNullObject(category)){
+            throw new RestApiException(Message.CATEGORY_EXIST);
+        }
+    }
     @Override
     @Transactional
     public Category updateCategory(AdminUpdateCategoryRequest request, String id) throws IOException {
-        List<Category> getAllCate = adminCategoryRepository.findAll();
+//        List<Category> getAllCate = adminCategoryRepository.findAll();
+        validateName(request.getName(), id);
         StringBuilder contentLogger = new StringBuilder();
         LoggerFunction loggerObject = new LoggerFunction();
         loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
@@ -191,12 +200,12 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-            for(Category cate : getAllCate  ){
-                if(request.getTransactionRights() == 0 && !cate.getId().equals(id) ){
-                    cate.setTransactionRights(CategoryTransaction.LIMIT);
-                }
-                adminCategoryRepository.save(cate);
-            }
+//            for(Category cate : getAllCate  ){
+//                if(request.getTransactionRights() == 0 && !cate.getId().equals(id) ){
+//                    cate.setTransactionRights(CategoryTransaction.LIMIT);
+//                }
+//                adminCategoryRepository.save(cate);
+//            }
 
             return adminCategoryRepository.save(category);
 
