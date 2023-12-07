@@ -142,9 +142,9 @@ const ModalThem = (props) => {
 
   const validateHoney = (rule, value) => {
     if (!/^\d*$/.test(value)) {
-      return Promise.reject("Điểm số phải là số nguyên dương.");
+      return Promise.reject("Số lượng mật phải là số nguyên dương.");
     }
-    if (!value || value <= 0) {
+    if (value <= 0) {
       return Promise.reject("Số lượng mật phải lớn hơn 0.");
     }
     return Promise.resolve();
@@ -286,21 +286,21 @@ const ModalThem = (props) => {
                 fetchData();
                 setModalOpen(false);
                 form.resetFields();
-                const newGift = {
-                  id: result.data.data.id,
-                  name: result.data.data.name.trim(),
-                  status: result.data.data.status,
-                  image: image,
-                  quantity: quantity,
-                  limitQuantity: limitSL,
-                  type: result.data.data.type,
-                  honey: result.data.data.honey,
-                  honeyCategoryId: result.data.data.honeyCategoryId,
-                };
-                onSave && onSave(newGift);
+                // const newGift = {
+                //   id: result.data.data.id,
+                //   name: result.data.data.name.trim(),
+                //   status: result.data.data.status,
+                //   image: image,
+                //   quantity: quantity,
+                //   limitQuantity: limitSL,
+                //   type: result.data.data.type,
+                //   honey: result.data.data.honey,
+                //   honeyCategoryId: result.data.data.honeyCategoryId,
+                // };
+                // onSave && onSave(newGift);
               })
               .catch((err) => {
-                message.error("Lỗi: " + err.message);
+                message.error(err.response.data.message);
               });
           },
           okText: "Đồng ý",
@@ -388,18 +388,15 @@ const ModalThem = (props) => {
                   message: "Tên vật phẩm không để trống",
                 },
                 {
-                  min: 4,
-                  message: "Tên vật phẩm phải tối thiểu 4 kí tự",
-                },
-                {
-                  max: 100,
-                  message: "Tên vật phẩm phải tối đa 100 kí tự",
-                },
-                {
                   validator: (_, value) => {
-                    if ((value + "").trim().length === 0) {
+                    if ((value + "").trim().length < 4) {
                       return Promise.reject(
-                        new Error("Tên vật phẩm không để trống")
+                        new Error("Tên vật phẩm phải tối thiểu 4 kí tự")
+                      );
+                    }
+                    if ((value + "").trim().length > 100) {
+                      return Promise.reject(
+                        new Error("Tên vật phẩm tối đa 100 kí tự")
                       );
                     }
                     return Promise.resolve();
@@ -580,36 +577,37 @@ const ModalThem = (props) => {
               </>
             ) :  */}
             {checkTypeTime === 1 && selectType !== 2 ? (
-            <>
-              <Form.Item
-                label="Thời gian bắt đầu"
-                name="start"
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng chọn thời gian hết hạn",
-                  },
-                  {
-                    validator: validateStartDate,
-                  },
-                ]}
-              >
-                <Input type="date" />
-              </Form.Item>
+              <>
+                <Form.Item
+                  label="Thời gian bắt đầu"
+                  name="start"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng chọn thời gian hết hạn",
+                    },
+                    {
+                      validator: validateStartDate,
+                    },
+                  ]}
+                >
+                  <Input type="date" />
+                </Form.Item>
 
-              <Form.Item
-                label="Thời gian kết thúc"
-                name="end"
-                rules={[
-                  {
-                    validator: validateEndDate,
-                  },
-                ]}
-              >
-                <Input type="date" />
-              </Form.Item>
-            </>
-            ) : (<></>
+                <Form.Item
+                  label="Thời gian kết thúc"
+                  name="end"
+                  rules={[
+                    {
+                      validator: validateEndDate,
+                    },
+                  ]}
+                >
+                  <Input type="date" />
+                </Form.Item>
+              </>
+            ) : (
+              <></>
             )}
             <Form.Item
               label="Yêu cầu phê duyệt"
@@ -694,106 +692,117 @@ const ModalThem = (props) => {
                 <Input type="number" />
               </Form.Item>
             )}
-            {selectType === 0 && <>
-              <Form.Item
-              label="Điểm quy đổi"
-              name="score"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập Điểm quy đổi giới hạn cho phép",
-                },
-                {
-                  validator: (_, value) => {
-                    if (value <= 0 || value > 10) {
-                      return Promise.reject(
-                        new Error("Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 10")
-                      );
-                    }
-                    return Promise.resolve();
-                  },
-                },
-              ]}
-            >
-              <Input type="number" />
-            </Form.Item>
-              <Form.Item
-                label="Trọng số quy đổi"
-                name="scoreRatio"
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập Trọng số quy đổi giới hạn cho phép",
-                  },
-                  {
-                    validator: (_, value) => {
-                      const regex = /^[0-9]+$/;
-                      if (!regex.test(value) || value === 0) {
-                        return Promise.reject(
-                          new Error("Vui lòng nhập một số nguyên dương")
-                        );
-                      }
-                      if (value <= 0 || value > 100) {
-                        return Promise.reject(
-                          new Error("Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 100")
-                        );
-                      }
-                      return Promise.resolve();
+            {selectType === 0 && (
+              <>
+                <Form.Item
+                  label="Điểm quy đổi"
+                  name="score"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng nhập Điểm quy đổi giới hạn cho phép",
                     },
-                  },
-                ]}
-              >
-                <Input type="number" />
-              </Form.Item>
-              <Form.Item
-                label="Trọng số nhỏ nhất"
-                name="scoreRatioMin"
-                rules={[
-                  {
-                    validator: (_, value) => {
-                      const regex = /^[0-9]+$/;
-                      if (!regex.test(value) || value === 0) {
-                        return Promise.reject(
-                          new Error("Vui lòng nhập một số nguyên dương")
-                        );
-                      }
-                      if (value <= 0 || value > 100) {
-                        return Promise.reject(
-                          new Error("Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 100")
-                        );
-                      }
-                      return Promise.resolve();
+                    {
+                      validator: (_, value) => {
+                        if (value <= 0 || value > 10) {
+                          return Promise.reject(
+                            new Error(
+                              "Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 10"
+                            )
+                          );
+                        }
+                        return Promise.resolve();
+                      },
                     },
-                  },
-                ]}
-              >
-                <Input type="number" />
-              </Form.Item>
-              <Form.Item
-                label="Trọng số lớn nhất"
-                name="scoreRatioMax"
-                rules={[
-                  {
-                    validator: (_, value) => {
-                      const regex = /^[0-9]+$/;
-                      if (!regex.test(value)) {
-                        return Promise.reject(
-                          new Error("Vui lòng nhập một số nguyên dương")
-                        );
-                      }
-                      if (value <= 0 || value > 100) {
-                        return Promise.reject(
-                          new Error("Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 100")
-                        );
-                      }
-                      return Promise.resolve();
+                  ]}
+                >
+                  <Input type="number" />
+                </Form.Item>
+                <Form.Item
+                  label="Trọng số quy đổi"
+                  name="scoreRatio"
+                  rules={[
+                    {
+                      required: true,
+                      message:
+                        "Vui lòng nhập Trọng số quy đổi giới hạn cho phép",
                     },
-                  },
-                ]}
-              >
-                <Input type="number" />
-              </Form.Item>
-            </>}
+                    {
+                      validator: (_, value) => {
+                        const regex = /^[0-9]+$/;
+                        if (!regex.test(value) || value === 0) {
+                          return Promise.reject(
+                            new Error("Vui lòng nhập một số nguyên dương")
+                          );
+                        }
+                        if (value <= 0 || value > 100) {
+                          return Promise.reject(
+                            new Error(
+                              "Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 100"
+                            )
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
+                >
+                  <Input type="number" />
+                </Form.Item>
+                <Form.Item
+                  label="Trọng số nhỏ nhất"
+                  name="scoreRatioMin"
+                  rules={[
+                    {
+                      validator: (_, value) => {
+                        const regex = /^[0-9]+$/;
+                        if (!regex.test(value) || value === 0) {
+                          return Promise.reject(
+                            new Error("Vui lòng nhập một số nguyên dương")
+                          );
+                        }
+                        if (value <= 0 || value > 100) {
+                          return Promise.reject(
+                            new Error(
+                              "Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 100"
+                            )
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
+                >
+                  <Input type="number" />
+                </Form.Item>
+                <Form.Item
+                  label="Trọng số lớn nhất"
+                  name="scoreRatioMax"
+                  rules={[
+                    {
+                      validator: (_, value) => {
+                        const regex = /^[0-9]+$/;
+                        if (!regex.test(value)) {
+                          return Promise.reject(
+                            new Error("Vui lòng nhập một số nguyên dương")
+                          );
+                        }
+                        if (value <= 0 || value > 100) {
+                          return Promise.reject(
+                            new Error(
+                              "Vui lòng nhập một số lớn hơn 0 và nhỏ hơn 100"
+                            )
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
+                >
+                  <Input type="number" />
+                </Form.Item>
+              </>
+            )}
             <Form.Item label="Ghi chú" name="note">
               <TextArea
                 cols="30"

@@ -14,15 +14,16 @@ import com.honeyprojects.core.president.model.response.PresidentGiftResponse;
 import com.honeyprojects.core.president.repository.PresidentAddItemRepository;
 import com.honeyprojects.core.president.repository.PresidentGiftRepository;
 import com.honeyprojects.core.president.repository.PresidentHistoryDetailRepository;
-import com.honeyprojects.core.president.repository.PresidentNotificationRepository;
-import com.honeyprojects.core.president.service.PresidentAddItemToStudentService;
 import com.honeyprojects.core.president.repository.PresidentHistoryRepository;
 import com.honeyprojects.core.president.repository.PresidentHoneyRepository;
+import com.honeyprojects.core.president.repository.PresidentNotificationRepository;
+import com.honeyprojects.core.president.service.PresidentAddItemToStudentService;
+import com.honeyprojects.core.president.service.PresidentNotificationDetailService;
+import com.honeyprojects.core.president.service.PresidentNotificationService;
 import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
 import com.honeyprojects.core.teacher.model.request.TeacherGetPointRequest;
 import com.honeyprojects.core.teacher.model.response.TeacherPointResponse;
 import com.honeyprojects.core.teacher.repository.TeacherCategoryRepository;
-import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.HistoryDetail;
 import com.honeyprojects.entity.Honey;
@@ -37,19 +38,10 @@ import com.honeyprojects.infrastructure.contant.NotificationType;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
-import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import com.honeyprojects.util.DataUtils;
-import com.honeyprojects.util.DateUtils;
 import com.honeyprojects.util.ExcelUtils;
-import com.honeyprojects.util.LoggerUtil;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -59,8 +51,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
@@ -106,6 +96,12 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
 
     @Autowired
     private UdpmHoney udpmHoney;
+
+    @Autowired
+    private PresidentNotificationService presidentNotificationService;
+
+    @Autowired
+    private PresidentNotificationDetailService presidentNotificationDetailService;
 
     @Override
     public ByteArrayOutputStream exportExcel(HttpServletResponse response) {
@@ -355,22 +351,26 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                 for (PresidentGiftResponse gift : gifts) {
                     String nameItem = gift.getName();
                     String status = gift.getStatus();
+
                     String enumStatusFREE = String.valueOf(StatusGift.FREE.ordinal());
-                    Long dateNow = Calendar.getInstance().getTimeInMillis();
+                    String enumStatusACCEPT = String.valueOf(StatusGift.ACCEPT.ordinal());
+
                     History history = new History();
-                    history.setChangeDate(dateNow);
+                    history.setChangeDate(new Date().getTime());
                     history.setPresidentId(udpmHoney.getIdUser());
                     history.setStudentId(simpleResponse.getId());
                     history.setType(TypeHistory.MAT_ONG_VA_VAT_PHAM);
+
                     if (status.equals(enumStatusFREE)) {
                         // gửi thẳng cho sinh viên
                         // gửi thông báo cho sinh viên
                         stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được chủ tịch câu lạc bộ tặng: " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
-                        Notification notification = createNotification(simpleResponse.getId());
+                        // tạo mới thông báo cho sinh viên
+                        String title = Constants.TITLE_NOTIFICATION_PRESIDENT;
+                        Notification notification = presidentNotificationService.createNotification(title, simpleResponse.getId(), NotificationType.PRESIDENT);
                         createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
                         history.setStatus(HoneyStatus.PRESIDENT_DA_THEM);
                     }
-                    String enumStatusACCEPT = String.valueOf(StatusGift.ACCEPT.ordinal());
                     if (status.equals(enumStatusACCEPT)) {
                         // gửi yêu cầu phê duyệt cho admin
                         // gửi thông báo cho admin

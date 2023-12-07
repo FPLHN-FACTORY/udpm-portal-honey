@@ -17,14 +17,13 @@ const ModalThem = (props) => {
 
   // const { fetchData } = props;
 
-  useEffect(() => {
-    CategoryAPI.fetchAll().then((response) => {
-      setListCategory(response.data.data.data);
-    });
-  }, []);
+  // useEffect(() => {
+  //   CategoryAPI.fetchAll().then((response) => {
+  //     setListCategory(response.data.data.data);
+  //   });
+  // }, []);
 
   const handleFileInputChange = (event) => {
-
     var selectedFile = event.target.files[0];
     if (selectedFile) {
       var FileUploadName = selectedFile.name;
@@ -86,9 +85,9 @@ const ModalThem = (props) => {
     form
       .validateFields()
       .then((formValues) => {
-        const isNameExists = listCategory.some(
-          (listCategory) => listCategory.name === categoryName
-        );
+        // const isNameExists = listCategory.some(
+        //   (listCategory) => listCategory.name === categoryName
+        // );
         let check = 0;
 
         if (selectedImageUrl.length === 0) {
@@ -98,21 +97,24 @@ const ModalThem = (props) => {
           setErrorImage("");
         }
 
-        if (categoryName.trim().length === 0) {
-          setErrorCategoryName("Tên thể loại không được để trống");
-          check++;
-        } else {
-          if (categoryName.trim().length > 100) {
-            setErrorCategoryName("Tên thể loại không quá 100 ký tự");
-            check++;
-          } else if (isNameExists) {
-            setErrorCategoryName("Tên thể loại không được trùng");
-            check++;
-          } else {
-            setErrorCategoryName("");
-          }
-        }
-
+        // if (categoryName.trim().length === 0) {
+        //   setErrorCategoryName("Tên thể loại không được để trống");
+        //   check++;
+        // } else {
+        //   if (categoryName.trim().length > 100) {
+        //     setErrorCategoryName("Tên thể loại không quá 100 ký tự");
+        //     check++;
+        //   } else if (isNameExists) {
+        //     setErrorCategoryName("Tên thể loại không được trùng");
+        //     check++;
+        //   } else {
+        //     setErrorCategoryName("");
+        //   }
+        // }
+        // if (isNameExists) {
+        //   message.error("Tên thể loại không được trùng");
+        //   check++;
+        // }
         if (check === 0) {
           if (formValues.transactionRights === "0") {
             // If transactionRights is 0, show confirmation modal
@@ -140,23 +142,23 @@ const ModalThem = (props) => {
       CategoryAPI.create({
         ...formValues,
         image: image,
-        name: categoryName.trim(),
+        name: formValues.name.trim(),
       })
         .then((result) => {
           dispatch(AddCategory(result.data.data));
           message.success("Thành công!");
           setModalOpen(false);
           form.resetFields();
-          const newCategory = {
-            id: result.data.data.id,
-            name: categoryName.trim(),
-            image: image,
-          };
-          onSave && onSave(newCategory);
+          // const newCategory = {
+          //   id: result.data.data.id,
+          //   name: categoryName.trim(),
+          //   image: image,
+          // };
+          // onSave && onSave(newCategory);
           fetchData();
         })
         .catch((err) => {
-          message.error("Lỗi: " + err.message);
+          message.error(err.response.data.message);
         });
     } else {
       CategoryAPI.update(formValues, category.id)
@@ -225,12 +227,32 @@ const ModalThem = (props) => {
             onChange={(event) => handleFileInputChange(event)}
           />
           <span className="error errorImageMes">{errorImage}</span>
-          <Form.Item label="Tên">
-            <Input
-              value={categoryName}
-              onChange={(e) => setCategoryName(e.target.value)}
-            />
-            <p className="error">{errorCategoryName}</p>
+          <Form.Item
+            label="Tên"
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "Tên thể loại không để trống",
+              },
+              {
+                validator: (_, value) => {
+                  if ((value + "").trim().length < 4) {
+                    return Promise.reject(
+                      new Error("Tên thể loại phải tối thiểu 4 kí tự")
+                    );
+                  }
+                  if ((value + "").trim().length > 100) {
+                    return Promise.reject(
+                      new Error("Tên thể loại tối đa 100 kí tự")
+                    );
+                  }
+                  return Promise.resolve();
+                },
+              },
+            ]}
+          >
+            <Input />
           </Form.Item>
           <Form.Item
             label="Phê duyệt"
