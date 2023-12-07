@@ -368,7 +368,7 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                         stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được chủ tịch câu lạc bộ tặng: " + giftMap.get(nameItem) + " " + gift.getName() + ", ");
                         Notification notification = createNotification(simpleResponse.getId());
                         createNotificationDetailItem(gift, notification.getId(), giftMap.get(nameItem));
-                        history.setStatus(HoneyStatus.DA_PHE_DUYET);
+                        history.setStatus(HoneyStatus.PRESIDENT_DA_THEM);
                     }
                     String enumStatusACCEPT = String.valueOf(StatusGift.ACCEPT.ordinal());
                     if (status.equals(enumStatusACCEPT)) {
@@ -422,7 +422,7 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                             // gủi cho sinh viên
                             Notification notification = createNotification(simpleResponse.getId());
                             createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
-                            history.setStatus(HoneyStatus.DA_PHE_DUYET);
+                            history.setStatus(HoneyStatus.PRESIDENT_DA_THEM);
                         }
                         if (category.getStatus().equals(enumCategoryACCEPT)) {
                             history.setStatus(HoneyStatus.CHO_PHE_DUYET);

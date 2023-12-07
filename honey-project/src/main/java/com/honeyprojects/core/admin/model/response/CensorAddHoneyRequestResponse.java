@@ -16,6 +16,12 @@ public interface CensorAddHoneyRequestResponse extends IsIdentified {
     @Value("#{target.student_id}")
     String getStudentId();
 
+    @Value("#{target.teacher_id}")
+    String getTeacherId();
+
+    @Value("#{target.president_id}")
+    String getPresidentId();
+
     @Value("#{target.nameCategory}")
     String getNameCategory();
 

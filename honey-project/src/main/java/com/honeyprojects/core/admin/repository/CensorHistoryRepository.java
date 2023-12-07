@@ -18,7 +18,8 @@ public interface CensorHistoryRepository extends HistoryRepository {
 
     @Query(value = """
             SELECT ROW_NUMBER() over (ORDER BY hd.created_date desc ) as stt, hd.id, h.id AS idHistory, h.note,
-            hd.honey_point, h.change_date, hd.student_id, hd.honey_id, c.name as nameCategory, h.status
+            hd.honey_point, h.change_date, hd.student_id, hd.honey_id, c.name as nameCategory, h.status,
+            h.teacher_id, h.president_id
             FROM history_detail hd
             RIGHT JOIN history h ON hd.history_id = h.id
             LEFT JOIN honey ho ON hd.honey_id = ho.id
@@ -26,7 +27,7 @@ public interface CensorHistoryRepository extends HistoryRepository {
             WHERE (:#{#searchParams.status} IS NULL OR h.status = :#{#searchParams.status})
             AND (:#{#searchParams.idCategory} IS NULL OR c.id = :#{#searchParams.idCategory})
             AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent})
-            AND h.type = 0 
+            AND h.type = 0 AND h.status = 0
             """, nativeQuery = true)
     Page<CensorAddHoneyRequestResponse> getHistoryAddPoint(@Param("searchParams") CensorSearchHistoryRequest searchParams,
                                                            Pageable pageable);
@@ -83,10 +84,25 @@ public interface CensorHistoryRepository extends HistoryRepository {
             WHERE h.status = :#{#searchParams.status}
             AND (:#{#searchParams.idCategory} IS NULL OR c.id = :#{#searchParams.idCategory}) 
             AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent}) 
-            AND h.type = 0
+            AND h.type = 0 
             """, nativeQuery = true)
     Page<CensorTransactionRequestResponse> getHistoryApprovedByStatus(@Param("searchParams") AdminHistoryApprovedSearchRequest searchParams,
                                                                       Pageable pageable);
+
+    @Query(value = """
+            SELECT ROW_NUMBER() over (ORDER BY hd.created_date desc ) as stt, h.id, h.note,
+            hd.honey_point, h.change_date, h.created_date, hd.student_id, hd.honey_id, c.name as nameCategory, h.status
+            FROM history_detail hd
+            LEFT JOIN history h ON hd.history_id = h.id
+            LEFT JOIN honey ho ON hd.honey_id = ho.id
+            JOIN category c ON c.id = ho.honey_category_id
+            WHERE h.status IN (1,2) AND :#{#searchParams.status} IS NULL
+            AND (:#{#searchParams.idCategory} IS NULL OR c.id = :#{#searchParams.idCategory}) 
+            AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent}) 
+            AND h.type = 0
+            """, nativeQuery = true)
+    Page<CensorTransactionRequestResponse> getHistoryApprovedAllStatus(@Param("searchParams") AdminHistoryApprovedSearchRequest searchParams,
+                                                                       Pageable pageable);
 
     @Query(value = """
             SELECT ROW_NUMBER() over (ORDER BY c.created_date desc ) as stt, h.id, h.note, 
@@ -115,21 +131,6 @@ public interface CensorHistoryRepository extends HistoryRepository {
             AND h.type = 0""", nativeQuery = true)
     Page<CensorTransactionRequestResponse> getListRequestsByStatus(@Param("searchParams") AdminHistoryApprovedSearchRequest searchParams,
                                                                    Pageable pageable);
-
-    @Query(value = """
-            SELECT ROW_NUMBER() over (ORDER BY hd.created_date desc ) as stt, h.id, h.note,
-            hd.honey_point, h.change_date, h.created_date, hd.student_id, hd.honey_id, c.name as nameCategory, h.status
-            FROM history_detail hd
-            LEFT JOIN history h ON hd.history_id = h.id
-            LEFT JOIN honey ho ON hd.honey_id = ho.id
-            JOIN category c ON c.id = ho.honey_category_id
-            WHERE h.status IN (1,2) AND :#{#searchParams.status} IS NULL
-            AND (:#{#searchParams.idCategory} IS NULL OR c.id = :#{#searchParams.idCategory}) 
-            AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent}) 
-            AND h.type = 0
-            """, nativeQuery = true)
-    Page<CensorTransactionRequestResponse> getHistoryApprovedAllStatus(@Param("searchParams") AdminHistoryApprovedSearchRequest searchParams,
-                                                                       Pageable pageable);
 
     @Query(value = """
             SELECT ROW_NUMBER() over (ORDER BY c.created_date desc ) as stt, h.id, h.note, 
