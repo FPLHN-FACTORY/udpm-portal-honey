@@ -350,7 +350,6 @@ const ModalThem = (props) => {
           quantityLimit: 1,
           limitSoLuong: 1,
           note: "",
-          numberDateEnd: 1,
           checkTypeDate: 2,
         }}
         autoComplete="off"

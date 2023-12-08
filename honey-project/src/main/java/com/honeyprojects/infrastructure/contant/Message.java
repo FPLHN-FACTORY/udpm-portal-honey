@@ -14,6 +14,7 @@ public enum Message {
 
     VERIFICATION_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.VERIFICATION_NOT_EXIST)),
     HISTORY_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.VERIFICATION_NOT_EXIST)),
+    ARCHIVE_GIFT_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.ARCHIVE_GIFT_NOT_EXIST)),
     CATEGORY_NOT_EXIST(PropertiesReader.getProperty(PropertyKeys.CATEGORY_NOT_EXIST)),
     CATEGORY_EXIST(PropertiesReader.getProperty(PropertyKeys.CATEGORY_EXIST)),
     GIFT_EXIST(PropertiesReader.getProperty(PropertyKeys.GIFT_EXIST)),

@@ -26,6 +26,7 @@ import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.repository.HistoryDetailRepository;
+import com.honeyprojects.util.AddPointUtils;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -61,10 +62,12 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
     @Autowired
     private HistoryDetailRepository historyDetailRepository;
 
+    @Autowired
+    private AddPointUtils addPointUtils;
+
 
     @Override
     public History addBuyItem(StudentBuyItemRequest createRequest) {
-        Category category = categoryRepository.findById(createRequest.getCategoryId()).orElse(null);
         Gift gift = giftRepository.findById(createRequest.getGiftId()).orElse(null);
 
 
@@ -108,22 +111,22 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
         }
 
         if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
-
-            Archive getArchive = archiveRepository.findByStudentId(createRequest.getStudentId()).orElse(archive);
-            archiveRepository.save(getArchive);
-            ArchiveGift archiveGift1 = giftArchiveRepository.findByGiftIdAndArchiveId(createRequest.getGiftId(), getArchive.getId());
-            if (archiveGift1 != null) {
-                int currentQuantity = archiveGift1.getQuantity();
-                int additionalQuantity = createRequest.getQuantity();
-                archiveGift1.setQuantity(currentQuantity + additionalQuantity);
-                giftArchiveRepository.save(archiveGift1);
-            } else if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
-                archiveGift.setGiftId(createRequest.getGiftId());
-                archiveGift.setNote(createRequest.getNote());
-                archiveGift.setArchiveId(getArchive.getId());
-                archiveGift.setQuantity(createRequest.getQuantity());
-                giftArchiveRepository.save(archiveGift);
-            }
+            addPointUtils.addGiftUtils(createRequest.getStudentId(), createRequest.getGiftId(), createRequest.getQuantity());
+//            Archive getArchive = archiveRepository.findByStudentId(createRequest.getStudentId()).orElse(archive);
+//            archiveRepository.save(getArchive);
+//            ArchiveGift archiveGift1 = giftArchiveRepository.findByGiftIdAndArchiveId(createRequest.getGiftId(), getArchive.getId());
+//            if (archiveGift1 != null) {
+//                int currentQuantity = archiveGift1.getQuantity();
+//                int additionalQuantity = createRequest.getQuantity();
+//                archiveGift1.setQuantity(currentQuantity + additionalQuantity);
+//                giftArchiveRepository.save(archiveGift1);
+//            } else if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
+//                archiveGift.setGiftId(createRequest.getGiftId());
+//                archiveGift.setNote(createRequest.getNote());
+//                archiveGift.setArchiveId(getArchive.getId());
+//                archiveGift.setQuantity(createRequest.getQuantity());
+//                giftArchiveRepository.save(archiveGift);
+//            }
         }
 
         // Tiếp tục với việc thêm yêu cầu vào bảng History

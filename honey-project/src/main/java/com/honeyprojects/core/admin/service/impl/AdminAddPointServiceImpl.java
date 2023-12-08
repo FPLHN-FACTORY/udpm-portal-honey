@@ -22,6 +22,8 @@ import com.honeyprojects.entity.Honey;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
+import com.honeyprojects.infrastructure.exception.rest.RestApiException;
+import com.honeyprojects.util.AddPointUtils;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -51,6 +53,9 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
 
     @Autowired
     private ConvertRequestApiidentity requestApiidentity;
+
+    @Autowired
+    private AddPointUtils addPointUtils;
 
     @Override
     public List<AdminCategoryResponse> getCategory() {
@@ -99,19 +104,13 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
         historyDetail.setHistoryId(history.getId());
         historyDetail.setHoneyPoint(addPointRequest.getHoneyPoint());
         historyDetail.setStudentId(addPointRequest.getStudentId());
-
-        if (addPointRequest.getHoneyId() == null) {
-            Honey honey = new Honey();
-            honey.setStatus(Status.HOAT_DONG);
-            honey.setHoneyPoint(addPointRequest.getHoneyPoint());
-            honey.setStudentId(addPointRequest.getStudentId());
-            honey.setHoneyCategoryId(addPointRequest.getCategoryId());
-            honeyRepository.save(honey);
-            historyDetail.setHoneyId(honey.getId());
+        Honey honey = addPointUtils.
+                addHoneyUtils(addPointRequest.getStudentId(),
+                        addPointRequest.getCategoryId(),
+                        addPointRequest.getHoneyPoint());
+        if (honey == null) {
+            throw new RestApiException("Cộng mật ong thất bại");
         } else {
-            Honey honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();
-            honey.setHoneyPoint(addPointRequest.getHoneyPoint() + honey.getHoneyPoint());
-            honeyRepository.save(honey);
             historyDetail.setHoneyId(honey.getId());
         }
         historyDetailRandomRepository.save(historyDetail);

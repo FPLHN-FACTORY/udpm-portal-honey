@@ -153,43 +153,47 @@ const DialogTransaction = ({ setOpen, transaction, open }) => {
         if (inputValue <= item.quantity) {
           const preItem = ruongDi.item;
           const index = preItem.findIndex((item2) => item.id === item2.id);
-          if (index !== -1) {
-            preItem[index] = {
-              ...preItem[index],
-              quantity: preItem[index].quantity + inputValue,
-            };
+          if (ruongDi.item.length >= 12 && index === -1) {
+            message.error("Mỗi giao dịch tối thiếu 12 vật phẩm");
           } else {
-            preItem.push({
-              id: item.id,
-              name: item.name,
-              quantity: inputValue,
-              image: item.image,
-            });
-          }
-          setRuongDi({ ...ruongDi, item: preItem });
+            if (index !== -1) {
+              preItem[index] = {
+                ...preItem[index],
+                quantity: preItem[index].quantity + inputValue,
+              };
+            } else {
+              preItem.push({
+                id: item.id,
+                name: item.name,
+                quantity: inputValue,
+                image: item.image,
+              });
+            }
+            setRuongDi({ ...ruongDi, item: preItem });
 
-          const preChestItem = chestItem;
-          const indexChest = preChestItem.findIndex(
-            (item2) => item.id === item2.id
-          );
-          preChestItem[indexChest] = {
-            ...preChestItem[indexChest],
-            quantity: preChestItem[indexChest].quantity - inputValue,
-          };
-          setChestItem(preChestItem);
-          setRuongDi({ ...ruongDi, item: preItem });
-          getStompClient().send(
-            `/transaction/send-item/${transaction.idTransaction}`,
-            {},
-            JSON.stringify({
-              idUser: ruongDi.idUser,
-              ...item,
-              quantity: inputValue,
-              honey: ruongDi.honey,
-              lock: ruongDen.lock,
-              xacNhan: ruongDen.xacNhan,
-            })
-          );
+            const preChestItem = chestItem;
+            const indexChest = preChestItem.findIndex(
+              (item2) => item.id === item2.id
+            );
+            preChestItem[indexChest] = {
+              ...preChestItem[indexChest],
+              quantity: preChestItem[indexChest].quantity - inputValue,
+            };
+            setChestItem(preChestItem);
+            setRuongDi({ ...ruongDi, item: preItem });
+            getStompClient().send(
+              `/transaction/send-item/${transaction.idTransaction}`,
+              {},
+              JSON.stringify({
+                idUser: ruongDi.idUser,
+                ...item,
+                quantity: inputValue,
+                honey: ruongDi.honey,
+                lock: ruongDen.lock,
+                xacNhan: ruongDen.xacNhan,
+              })
+            );
+          }
         } else {
           message.error("Số lượng không hợp lệ");
         }
@@ -357,6 +361,7 @@ const DialogTransaction = ({ setOpen, transaction, open }) => {
                                 title={
                                   <input
                                     type="number"
+                                    value={inputSoLuong}
                                     onChange={(e) => {
                                       setInputSoLuong(e.target.value);
                                     }}
@@ -365,6 +370,9 @@ const DialogTransaction = ({ setOpen, transaction, open }) => {
                                     placeholder="Nhập số lượng"
                                   />
                                 }
+                                onOpenChange={() => {
+                                  setInputSoLuong("");
+                                }}
                                 onConfirm={() => {
                                   rollbackItem(ruongDi.item[index]);
                                 }}
@@ -476,36 +484,24 @@ const DialogTransaction = ({ setOpen, transaction, open }) => {
                         <div className="item">
                           {ruongDen.item.length - 1 >= index ? (
                             <div className="item">
-                              <Popconfirm
-                                icon={<></>}
-                                title={
-                                  <input
-                                    style={{ width: "100%", color: "black" }}
-                                    className="input-honey"
-                                    placeholder="Nhập số lượng"
-                                  />
-                                }
-                                okText="Xác nhận"
-                                cancelText="Hủy">
-                                <Tooltip
-                                  placement="right"
-                                  title={ruongDen.item[index]?.name}>
-                                  <span
-                                    style={{
-                                      position: "absolute",
-                                      bottom: "2px",
-                                      right: "7px",
-                                      color: "white",
-                                    }}>
-                                    {ruongDen.item[index]?.quantity}
-                                  </span>
-                                  <img
-                                    className="img-item"
-                                    src={ruongDen.item[index]?.image}
-                                    alt="anh"
-                                  />
-                                </Tooltip>
-                              </Popconfirm>
+                              <Tooltip
+                                placement="right"
+                                title={ruongDen.item[index]?.name}>
+                                <span
+                                  style={{
+                                    position: "absolute",
+                                    bottom: "2px",
+                                    right: "7px",
+                                    color: "white",
+                                  }}>
+                                  {ruongDen.item[index]?.quantity}
+                                </span>
+                                <img
+                                  className="img-item"
+                                  src={ruongDen.item[index]?.image}
+                                  alt="anh"
+                                />
+                              </Tooltip>
                             </div>
                           ) : (
                             <div className="item"></div>
@@ -541,6 +537,7 @@ const DialogTransaction = ({ setOpen, transaction, open }) => {
                           title={
                             <input
                               type="number"
+                              value={inputSoLuong}
                               onChange={(e) => {
                                 setInputSoLuong(e.target.value);
                               }}
@@ -549,6 +546,9 @@ const DialogTransaction = ({ setOpen, transaction, open }) => {
                               placeholder="Nhập số lượng"
                             />
                           }
+                          onOpenChange={() => {
+                            setInputSoLuong("");
+                          }}
                           onConfirm={() => {
                             sendItem(item);
                           }}
