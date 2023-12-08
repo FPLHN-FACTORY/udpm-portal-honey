@@ -158,10 +158,10 @@ public class AdminGiftServiceImpl implements AdminGiftService {
     public Gift updateGift(AdminUpdateGiftRequest request, String id) throws IOException {
         validateName(request.getName(), id);
         if (adArchiveGiftRepository.findAllByGiftId(id).size() != 0 ||
-                adAuctionRepository.findAllByGiftId(id).size() != 0 ||
-                adChestGiftRepository.findAllByGiftId(id).size() != 0 ||
-                adHistoryDetailRepository.findAllByGiftId(id).size() != 0 ||
-                adUpgradeRateGiftRepository.findAllByIdGift(id).size() != 0
+                adAuctionRepository.findAllByGiftId(id).size() != 0
+//               || adChestGiftRepository.findAllByGiftId(id).size() != 0 ||
+//                adHistoryDetailRepository.findAllByGiftId(id).size() != 0 ||
+//                adUpgradeRateGiftRepository.findAllByIdGift(id).size() != 0
         ) {
             throw new RestApiException("Vật phẩm đã được sử dụng. Không thể cập nhật");
         }

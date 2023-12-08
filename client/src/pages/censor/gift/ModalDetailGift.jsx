@@ -60,11 +60,7 @@ const ModalDetailGift = (props) => {
       setSelectedCategories(categoryIds);
       setCategoryQuantities(honeyValues);
     });
-    if (gift.numberEndDate !== null) {
-      setCheckTypeTime(0);
-      form.setFieldValue("checkTypeDate", 0);
-      form.setFieldValue("numberEndDate", gift.numberEndDate);
-    } else if (gift.toDate !== null && gift.fromDate !== null) {
+    if (gift.toDate !== null && gift.fromDate !== null) {
       form.setFieldValue("checkTypeDate", 1);
       setCheckTypeTime(1);
     } else {

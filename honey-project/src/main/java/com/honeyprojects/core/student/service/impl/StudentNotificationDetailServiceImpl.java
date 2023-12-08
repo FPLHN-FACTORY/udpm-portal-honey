@@ -35,6 +35,7 @@ import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.logger.entity.LoggerFunction;
 import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
 import com.honeyprojects.repository.HistoryDetailRepository;
+import com.honeyprojects.util.AddPointUtils;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import com.honeyprojects.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,9 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
     @Autowired
     private ConvertRequestApiidentity convertRequestApiidentity;
 
+    @Autowired
+    private AddPointUtils addPointUtils;
+
     @Override
     public List<StudentNotificationDetaiRespone> getAllNotificationDetailByIdNotification(String idStudent, String idNotification) {
         return studentNotificationDetailRepository.getAllNotificationDetialByIdNotification(idStudent, idNotification);
@@ -122,35 +126,33 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
 
             for (NotificationDetail detail : lstGift) {
                 Gift gift = studentGiftRepository.findById(detail.getIdObject()).orElse(null);
-                String archiveId = adArchiveRepository.getIdArchiveByIdStudent(idStudent);
+//                String archiveId = adArchiveRepository.getIdArchiveByIdStudent(idStudent);
                 SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(idStudent);
-                if (archiveId == null) {
-                    //tại archive mới của sinh viên
-                    Archive archive = createArchive(idStudent);
-                    // Tạo một bản ghi ArchiveGift mới và lưu vào cơ sở dữ liệu
-                    creaateArchiveGiftAndHistoryDetail(simpleResponse, archive.getId(), gift, history, detail.getQuantity(), stringBuilder);
-                } else {
-                    // Tạo một bản ghi ArchiveGift mới và lưu vào cơ sở dữ liệu
-                    creaateArchiveGiftAndHistoryDetail(simpleResponse, archiveId, gift, history, detail.getQuantity(), stringBuilder);
+
+                if (gift != null) {
+                    ArchiveGift archiveGift = addPointUtils.addGiftUtils(idStudent, detail.getIdObject(), detail.getQuantity());
+                    stringBuilder.append(detail.getQuantity() + " vật phẩm: " + gift.getName() + " được thêm vào túi đồ của sinh viên: " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + ", ");
+                    createHistoryDetail(simpleResponse.getId(), null, gift.getId(), null, history.getId(), detail.getQuantity(), null, gift.getName());
                 }
+//                if (archiveId == null) {
+//                    //tại archive mới của sinh viên
+//                    Archive archive = createArchive(idStudent);
+//                    // Tạo một bản ghi ArchiveGift mới và lưu vào cơ sở dữ liệu
+//
+//                } else {
+//                    // Tạo một bản ghi ArchiveGift mới và lưu vào cơ sở dữ liệu
+//                    creaateArchiveGiftAndHistoryDetail(simpleResponse, archiveId, gift, history, detail.getQuantity(), stringBuilder);
+//                }
             }
 
             for (NotificationDetail detail : lstHoney) {
-                Optional<Honey> optionalHoney = adRandomAddPointRepository.getHoneyByIdStudent(idStudent, detail.getIdObject());
+                Honey honey = addPointUtils.addHoneyUtils(idStudent, detail.getIdObject(), detail.getQuantity());
                 SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(idStudent);
-                if (optionalHoney.isPresent()) {
-                    Honey honey = optionalHoney.get();
+
+                if (honey != null) {
                     Category category = studentCategoryRepository.findById(honey.getHoneyCategoryId()).orElse(null);
-                    honey.setHoneyPoint(honey.getHoneyPoint() + detail.getQuantity());
+
                     stringBuilder.append(detail.getQuantity() + " mật ong: " + category.getName() + " được thêm vào túi đồ của sinh viên: " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + ", ");
-                    adminHoneyRepository.save(honey);
-                    createHistoryDetail(simpleResponse.getId(), honey.getId(), null, null, history.getId(), null, detail.getQuantity(), null);
-                } else {
-                    AdminCreateHoneyRequest adminCreateHoneyRequest = new AdminCreateHoneyRequest(detail.getIdObject(), idStudent, detail.getQuantity());
-                    Honey honey = adminCreateHoneyRequest.createHoney(new Honey());
-                    Category category = studentCategoryRepository.findById(honey.getHoneyCategoryId()).orElse(null);
-                    stringBuilder.append(detail.getQuantity() + " mật ong: " + category.getName() + " được thêm vào túi đồ của sinh viên: " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + ", ");
-                    adminHoneyRepository.save(honey);
                     createHistoryDetail(simpleResponse.getId(), honey.getId(), null, null, history.getId(), null, detail.getQuantity(), null);
                 }
             }
@@ -159,14 +161,18 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
                 Optional<Chest> optionalChest = chestRepository.findById(detail.getIdObject());
                 SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(idStudent);
                 if (optionalChest.isPresent()) {
+                    ArchiveGift archiveGift = addPointUtils.addChestUtils(idStudent, detail.getIdObject(), detail.getQuantity());
                     Chest chest = optionalChest.get();
-                    String archiveId = adArchiveRepository.getIdArchiveByIdStudent(idStudent);
-                    if (archiveId == null) {
-                        Archive archive = createArchive(idStudent);
-                        creaateArchiveChestAndHistoryDetail(simpleResponse, archive.getId(), chest, history, detail.getQuantity(), stringBuilder);
-                    } else {
-                        creaateArchiveChestAndHistoryDetail(simpleResponse, archiveId, chest, history, detail.getQuantity(), stringBuilder);
-                    }
+                    stringBuilder.append(detail.getQuantity() + " rương: " + chest.getName() + " được thêm vào túi đồ của sinh viên: " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + ", ");
+                    createHistoryDetail(simpleResponse.getId(), null, null, chest.getId(), history.getId(), null, null, null);
+
+//                    String archiveId = adArchiveRepository.getIdArchiveByIdStudent(idStudent);
+//                    if (archiveId == null) {
+//                        Archive archive = createArchive(idStudent);
+//                        creaateArchiveChestAndHistoryDetail(simpleResponse, archive.getId(), chest, history, detail.getQuantity(), stringBuilder);
+//                    } else {
+//                        creaateArchiveChestAndHistoryDetail(simpleResponse, archiveId, chest, history, detail.getQuantity(), stringBuilder);
+//                    }
                 }
             }
             createLogBug(stringBuilder);
