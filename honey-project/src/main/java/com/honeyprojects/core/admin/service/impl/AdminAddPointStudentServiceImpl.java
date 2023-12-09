@@ -113,6 +113,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
                 history.setStudentId(adminAddPointStudentLabReportRequest.getId());
                 history.setType(TypeHistory.CONG_DIEM);
                 history.setChangeDate(dateNow);
+                history.setStatus(HistoryStatus.CHO_PHE_DUYET);
                 historyRepository.save(history);
 
                 HistoryDetail historyDetail = new HistoryDetail();
