@@ -5,14 +5,19 @@ import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.teacher.model.request.TeacherAcceptAllRequest;
 import com.honeyprojects.core.teacher.model.request.TeacherGetUseGiftRequest;
 import com.honeyprojects.core.teacher.model.response.TeacherUseGiftRequestResponse;
-import com.honeyprojects.core.teacher.repository.*;
+import com.honeyprojects.core.teacher.repository.TeacherArchiveGiftRepository;
+import com.honeyprojects.core.teacher.repository.TeacherArchiveRepository;
+import com.honeyprojects.core.teacher.repository.TeacherGiftRepository;
+import com.honeyprojects.core.teacher.repository.TeacherNotificationDetailRepository;
+import com.honeyprojects.core.teacher.repository.TeacherNotificationRepository;
+import com.honeyprojects.core.teacher.repository.TeacherUseGiftRequestRepository;
 import com.honeyprojects.core.teacher.service.TeacherUseGiftRequest;
-import com.honeyprojects.entity.*;
-import com.honeyprojects.infrastructure.contant.Constants;
+import com.honeyprojects.entity.History;
+import com.honeyprojects.entity.Notification;
+import com.honeyprojects.entity.NotificationDetail;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
-import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +55,7 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         request.setIdTeacher(udpmHoney.getIdUser());
         if (request.getEmail() != null) {
-            String idStudent = apiidentity.handleCallApiGetUserByEmail(request.getEmail()).getId();
+            String idStudent = apiidentity.handleCallApiGetUserByEmailOrUsername(request.getEmail()).getId();
             request.setIdStudent(Objects.requireNonNullElse(idStudent, "idStudent"));
         }
         return historyRepository.getTeacherUseGiftRequest(request, pageable);

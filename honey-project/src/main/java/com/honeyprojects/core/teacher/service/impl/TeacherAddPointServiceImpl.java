@@ -15,14 +15,18 @@ import com.honeyprojects.core.teacher.repository.TeacherCategoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHoneyRepository;
 import com.honeyprojects.core.teacher.repository.TeacherNotificationRepository;
-import com.honeyprojects.core.teacher.service.TeacherAddPointExcelService;
 import com.honeyprojects.core.teacher.service.TeacherAddPointService;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.HistoryDetail;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.entity.Notification;
-import com.honeyprojects.infrastructure.contant.*;
+import com.honeyprojects.infrastructure.contant.CategoryStatus;
+import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.NotificationStatus;
+import com.honeyprojects.infrastructure.contant.NotificationType;
+import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,8 +159,8 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
 
     @Override
     public SimpleResponse searchUser(String username) {
-        String email = username + "@fpt.edu.vn";
-        return requestApiidentity.handleCallApiGetUserByEmail(email);
+        String email = username;
+        return requestApiidentity.handleCallApiGetUserByEmailOrUsername(email);
     }
 
     @Override

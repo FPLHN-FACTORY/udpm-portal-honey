@@ -149,7 +149,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             return listSimple;
         } else {
             List<SimpleResponse> simpleResponseList = new ArrayList<>();
-            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSearch + "@fpt.edu.vn");
+            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(emailSearch);
             simpleResponseList.add(simpleResponse);
             return simpleResponseList;
         }
@@ -383,8 +383,8 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             }
 
             // Gọi API để lấy thông tin người dùng bằng địa chỉ email
-            String emailSimple = userDTO.getUserName() + "@fpt.edu.vn";
-            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
+            String emailSimple = userDTO.getUserName();
+            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(emailSimple);
             String idArchive = null;
             String archiveId = adArchiveRepository.getIdArchiveByIdStudent(simpleResponse.getId());
             if (archiveId == null) {
@@ -554,9 +554,9 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         AdminAddPointDTO userDTO = new AdminAddPointDTO();
         String userName = ExcelUtils.getCellString(row.getCell(0));
         // Tạo địa chỉ email giả định từ tên đăng nhập
-        String emailSimple = userName + "@fpt.edu.vn";
+        String emailSimple = userName;
         // Gọi API để kiểm tra sự tồn tại của người dùng
-        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
+        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(emailSimple);
         // Biến để kiểm tra sự tồn tại của lỗi
         boolean hasError = false;
         // Kiểm tra dữ liệu và xác định trạng thái lỗi (error)
@@ -588,9 +588,9 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         String listGift = ExcelUtils.getCellString(row.getCell(1));
         String listHoney = ExcelUtils.getCellString(row.getCell(2));
         // Tạo địa chỉ email giả định từ tên đăng nhập
-        String emailSimple = userName + "@fpt.edu.vn";
+        String emailSimple = userName;
         // Gọi API để kiểm tra sự tồn tại của người dùng
-        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
+        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(emailSimple);
         // Biến để kiểm tra sự tồn tại của lỗi
         boolean hasError = false;
         // Kiểm tra dữ liệu và xác định trạng thái lỗi (error)

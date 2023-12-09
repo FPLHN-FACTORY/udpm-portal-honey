@@ -7,7 +7,6 @@ import com.honeyprojects.core.admin.model.request.AdminSearchHistoryRequest;
 import com.honeyprojects.core.admin.model.response.AdminAddHoneyHistoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminPoinResponse;
-import com.honeyprojects.core.admin.repository.AdHistoryDetailRandomRepository;
 import com.honeyprojects.core.admin.repository.AdHistoryDetailRepository;
 import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
 import com.honeyprojects.core.admin.repository.AdminHistoryRepository;
@@ -120,8 +119,7 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
 
     @Override
     public SimpleResponse searchUser(String username) {
-        String email = username + "@fpt.edu.vn";
-        return requestApiidentity.handleCallApiGetUserByEmail(email);
+        return requestApiidentity.handleCallApiGetUserByEmailOrUsername(username);
     }
 
     @Override

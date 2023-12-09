@@ -9,6 +9,8 @@ public class ApiConstants {
 
     public static final String API_GET_USER_BY_EMAIL = "/api/UserSigns/FindByEmail";
 
+    public static final String API_GET_USER_BY_EMAIL_OR_USERNAME = "/api/UserSigns/FindByEmailOrUsername";
+
     public static final String API_GET_ROLE_BY_USER_AND_MODULE = "/api/UserSigns/GetRoleFromUserModule/";
 
     // api kết nối với điểm

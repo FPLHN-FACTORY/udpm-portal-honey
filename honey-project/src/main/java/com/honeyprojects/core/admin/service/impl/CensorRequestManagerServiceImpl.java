@@ -176,8 +176,8 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
 
     @Override
     public SimpleResponse searchUser(String username) {
-        String email = username + "@fpt.edu.vn";
-        return requestApiidentity.handleCallApiGetUserByEmail(email);
+        String email = username;
+        return requestApiidentity.handleCallApiGetUserByEmailOrUsername(email);
     }
 
     @Override

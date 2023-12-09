@@ -12,7 +12,6 @@ import com.honeyprojects.util.callApiPoint.model.response.ClassSubjectVM;
 import com.honeyprojects.util.callApiPoint.model.response.ScoreTemplate;
 import com.honeyprojects.util.callApiPoint.model.response.ScoreTemplateVM;
 import com.honeyprojects.util.callApiPoint.service.CallApiCommonService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -48,7 +47,6 @@ public class CallApiCommonImpl implements CallApiCommonService {
         String apiConnect = scoreClassDomain +
                 ApiConstants.API_GET_ALL_SUBJECT_BY_EMAIL
                 + "?emailStudent=" + request.getEmailStudent();
-        System.out.println(apiConnect + " aaaaaaaaaaaaaaaaaaaaa");
         HttpHeaders headers = new HttpHeaders();
         String authorizationToken = "Bearer " + honeySession.getToken();
         headers.set("Authorization", authorizationToken);

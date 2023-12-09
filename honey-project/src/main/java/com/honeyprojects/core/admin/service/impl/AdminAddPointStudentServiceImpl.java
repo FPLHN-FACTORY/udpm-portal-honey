@@ -48,7 +48,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -216,7 +215,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
         String numberHoney = ExcelUtils.getCellString(row.getCell(1));
 
         // Gọi API để kiểm tra sự tồn tại của người dùng
-        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmail(email);
+        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(email);
 
         // Biến để kiểm tra sự tồn tại của lỗi
         boolean hasError = false;
@@ -336,7 +335,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
         String email = ExcelUtils.getCellString(row.getCell(0));
 
         // Gọi API để kiểm tra sự tồn tại của người dùng
-        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmail(email);
+        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(email);
 
         // Biến để kiểm tra sự tồn tại của lỗi
         boolean hasError = false;

@@ -21,6 +21,9 @@ import upgradeRateReducer from "./reducers/upgrade-rate/upgrade-rate.reducer";
 import archiveReducer from "./reducers/archive/archive.reducer";
 import importPresidentReducer from "./reducers/import/import.president.reducer";
 import importTeacherReducer from "./reducers/import/import.teacher.reducer";
+import honorReducer from "./reducers/honor/honor.reducer";
+import pStudentReducer from "./reducers/honor/pStudent.reducer";
+
 export const store = configureStore({
   reducer: {
     gift: giftReducer,
@@ -45,6 +48,8 @@ export const store = configureStore({
     countNotification: countNotificationReducer,
     upgradeRate: upgradeRateReducer,
     archive: archiveReducer,
+    honor: honorReducer,
+    pStudent: pStudentReducer,
   },
 });
 

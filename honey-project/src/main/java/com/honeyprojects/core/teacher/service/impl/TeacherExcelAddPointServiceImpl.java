@@ -142,10 +142,10 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
         String note = ExcelUtils.getCellString(row.getCell(2));
 
         // Tạo địa chỉ email giả định từ tên đăng nhập
-        String emailSimple = userName + "@fpt.edu.vn";
+        String emailSimple = userName;
 
         // Gọi API để kiểm tra sự tồn tại của người dùng
-        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
+        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(emailSimple);
 
         // Biến để kiểm tra sự tồn tại của lỗi
         boolean hasError = false;
@@ -249,8 +249,8 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
         String idTeacher = udpmHoney.getIdUser();
         try {
             for (TeacherAddPointDTO userDTO : lstImportUser) {
-                String emailSimple = userDTO.getUserName() + "@fpt.edu.vn";
-                SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
+                String emailSimple = userDTO.getUserName();
+                SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(emailSimple);
                 if (!DataUtils.isNullObject(userDTO.getLstHoney())) {
                     String[] partsHoney = userDTO.getLstHoney().split(", ");
                     Map<String, Integer> honeyMap = new HashMap<>();
