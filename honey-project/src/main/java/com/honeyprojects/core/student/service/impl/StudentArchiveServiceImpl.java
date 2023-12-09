@@ -3,7 +3,6 @@ package com.honeyprojects.core.student.service.impl;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
-import com.honeyprojects.core.student.model.param.StudentSumHistoryParam;
 import com.honeyprojects.core.student.model.request.StudentArchiveFilterRequest;
 import com.honeyprojects.core.student.model.request.StudentArchiveOpenChestRequest;
 import com.honeyprojects.core.student.model.request.StudentGetArchiveChestRequest;
@@ -24,7 +23,6 @@ import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.infrastructure.contant.ExpiryGift;
 import com.honeyprojects.infrastructure.contant.HoneyStatus;
-import com.honeyprojects.infrastructure.contant.SemesterStatus;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.repository.ArchiveGiftRepository;
@@ -93,7 +91,7 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     @Override
     @Transactional
     public ArchiveGift studentUsingGift(StudentRequestChangeGift request) {
-        SimpleResponse teacher = requestApiidentity.handleCallApiGetUserByEmail("huynqph26782@fpt.edu.vn");
+        SimpleResponse teacher = requestApiidentity.handleCallApiGetUserByEmailOrUsername("huynqph26782@fpt.edu.vn");
         if (teacher == null) {
             throw new RestApiException("Email giảng viên không tồn tại trong hệ thống!");
         }

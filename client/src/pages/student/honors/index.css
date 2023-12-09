@@ -355,3 +355,236 @@
     color: #ffff !important;
     background: none;
 }
+
+/* profile */
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  list-style: none;
+}
+
+/* ------------------------student----------------- */
+.student {
+  width: 100%;
+  /* height: auto; */
+  height: 100% !important;
+  display: flex;
+  position: relative;
+  background-image: url("../../../assets/images/student-profile/Honey.jpg");
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100%;
+}
+
+.wrapper {
+  position: absolute;
+  background-color: black;
+  opacity: 0.4;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.student__profile {
+  background-color: transparent;
+  /* height: auto; */
+  height: 100%;
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.student__card {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+
+.student__card__image {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: #ddd;
+  border: 5px solid #d6a354;
+  overflow: hidden;
+}
+
+.infor__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.infor__image:hover {
+  transform: scale(1.2);
+}
+
+.student__card__infor {
+  margin-top: 20px;
+  text-align: center;
+  color: #f2cc8f;
+}
+
+.student__card__infor p {
+  font-weight: bold;
+  font-size: 23px;
+  font-family: "VT323", monospace;
+}
+
+.student__card__infor em {
+  font-size: 23px;
+  font-family: "VT323", monospace;
+}
+
+.category__button {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.show {
+  background: #f3b95d;
+  border: 2px solid transparent;
+  border-radius: 100px;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700px;
+  line-height: normal;
+  transition: all 0.3s;
+  padding: 10px 20px;
+  outline: none;
+  font-family: "VT323", monospace;
+}
+
+.show:hover {
+  background: #e07a5f;
+  color: #ffffff;
+  font-family: "VT323", monospace;
+}
+
+/* ---------------category slide------------- */
+.category__slide {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 40%;
+  width: 70%;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  overflow: hidden;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  background: transparent;
+}
+
+.category__item {
+  border-radius: 5px;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0px 0px 7px 0px rgba(214, 214, 214, 0.9);
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 150px;
+  padding: 10px;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  opacity: 0.5;
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #ddd;
+}
+
+.category__item:hover {
+  border-color: #d6a354;
+  border-width: 3px;
+}
+
+.category__image {
+  width: 50%;
+  height: 100%;
+  border-radius: 5px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.category__item:hover .category__image img {
+  transform: scale(0.9);
+}
+
+.category__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.category__name {
+  text-align: right;
+  margin-left: 5px;
+  width: 50%;
+}
+
+.category__name h4 {
+  font-size: 25px;
+  font-weight: bold;
+  color: #fff;
+  font-family: "VT323", monospace;
+}
+
+.category__name p {
+  font-size: 25px;
+  color: #fff;
+  font-family: "VT323", monospace;
+}
+
+.category__name h4,
+.category__name p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ------------category---------- */
+.category {
+  height: 50%;
+  width: 70%;
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 10px;
+  margin-top: 20px;
+}
+
+.category .category__item {
+  margin-bottom: 10px;
+}
+
+.hidden {
+  display: none;
+}

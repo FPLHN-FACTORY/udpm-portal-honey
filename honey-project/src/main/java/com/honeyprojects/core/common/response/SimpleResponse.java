@@ -12,4 +12,5 @@ public class SimpleResponse {
     private String name;
     private String userName;
     private String email;
+    private String picture;
 }

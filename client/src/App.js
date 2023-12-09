@@ -55,7 +55,7 @@ import HoneyHistory from "./pages/president/HoneyHistory";
 import GiftHistory from "./pages/president/GiftHistory";
 import PresidentHistory from "./pages/president/PresidentHistory";
 import HistoryPortal from "./pages/censor/portal/HistoryPortal";
-
+import StudentProfile from "./pages/student/honors/StudentProfile";
 function App() {
   const data = useAppSelector(SelectLoading);
   return (
@@ -448,7 +448,7 @@ function App() {
               }
             />
             <Route
-              path="/student/honor-student"
+              path="/student/hall-of-fame"
               element={
                 <AuthGuard>
                   {/* <DashboardAuthUser> */}
@@ -458,11 +458,11 @@ function App() {
               }
             />
             <Route
-              path="/student/top-student"
+              path="/student/hall-of-fame/:id"
               element={
                 <AuthGuard>
                   {/* <DashboardAuthUser> */}
-                  <TopStudent />
+                  <StudentProfile />
                   {/* </DashboardAuthUser> */}
                 </AuthGuard>
               }

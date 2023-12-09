@@ -258,7 +258,7 @@ const ModalThem = (props) => {
         };
 
         Modal.confirm({
-          title: "Bạn có chắc chắn muốn cập nhật dữ liệu không?",
+          title: "Bạn có chắc chắn muốn thêm mới dữ liệu không?",
           onOk: () => {
             GiftAPI.create(dataCreate)
               .then((result) => {
