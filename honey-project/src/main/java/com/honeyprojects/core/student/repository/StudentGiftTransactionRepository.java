@@ -14,7 +14,7 @@ public interface StudentGiftTransactionRepository extends GiftRepository {
             select g.id, g.name, g.image, ag.quantity from gift g
             join archive_gift ag on g.id = ag.gift_id
             join archive a on a.id = ag.archive_id
-            where a.student_id = :studentId and g.transaction_gift = 0 and ag.quantity > 0 and g.status = 'DANG_HOAT_DONG'
+            where a.student_id = :studentId and g.transaction_gift = 0 and ag.quantity > 0 and (g.expiry NOT IN ('HET_HAN', 'CHUA_HOAT_DONG'))
             """, nativeQuery = true)
     List<StudentGiftTransactionResponse> getGiftTransaction(String studentId);
 }
