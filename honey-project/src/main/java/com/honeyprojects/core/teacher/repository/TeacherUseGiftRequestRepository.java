@@ -2,8 +2,6 @@ package com.honeyprojects.core.teacher.repository;
 
 import com.honeyprojects.core.teacher.model.request.TeacherGetUseGiftRequest;
 import com.honeyprojects.core.teacher.model.response.TeacherUseGiftRequestResponse;
-import com.honeyprojects.infrastructure.contant.HoneyStatus;
-import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.repository.HistoryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -5,18 +5,23 @@ import org.springframework.beans.factory.annotation.Value;
 
 public interface CensorDetailRequestResponse extends IsIdentified {
 
+    @Value("#{target.history_detail_id}")
+    String getHistoryDetailId();
+
+    @Value("#{target.honey}")
+    String getHoney();
+
+    @Value("#{target.gift}")
+    String getGift();
+
+    @Value("#{target.status}")
+    Integer getStatus();
 
     @Value("#{target.type}")
     Integer getType();
 
-    @Value("#{target.nameCategory}")
-    String getNameCategory();
-
-    @Value("#{target.honey_point}")
-    Integer getHoneyPoint();
-
-    @Value("#{target.status}")
-    Integer getStatus();
+    @Value("#{target.created_date}")
+    Long getCreatedDate();
 
     @Value("#{target.change_date}")
     Long getChangeDate();
@@ -27,6 +32,9 @@ public interface CensorDetailRequestResponse extends IsIdentified {
     @Value("#{target.student_id}")
     String getStudentId();
 
-    @Value("#{target.nguoiGui}")
-    String getNguoiGui();
+    @Value("#{target.teacher_id}")
+    String getTeacherId();
+
+    @Value("#{target.president_id}")
+    String getPresidentId();
 }

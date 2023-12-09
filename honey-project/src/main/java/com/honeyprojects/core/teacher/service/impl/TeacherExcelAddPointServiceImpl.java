@@ -25,7 +25,7 @@ import com.honeyprojects.entity.Notification;
 import com.honeyprojects.entity.NotificationDetail;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Constants;
-import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.HistoryStatus;
 import com.honeyprojects.infrastructure.contant.NotificationDetailType;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
@@ -46,6 +46,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -246,57 +247,65 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
     }
 
     private void saveImportData(List<TeacherAddPointDTO> lstImportUser) {
-        String idTeacher = udpmHoney.getIdUser();
         try {
             for (TeacherAddPointDTO userDTO : lstImportUser) {
                 String emailSimple = userDTO.getUserName();
                 SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(emailSimple);
                 if (!DataUtils.isNullObject(userDTO.getLstHoney())) {
                     String[] partsHoney = userDTO.getLstHoney().split(", ");
-                    Map<String, Integer> honeyMap = new HashMap<>();
+                    Map<String, List<Integer>> honeyMap = new HashMap<>();
+
                     for (String part : partsHoney) {
                         String[] subParts = part.split(" ", 2);
                         if (subParts.length == 2) {
                             String numberPointStr = subParts[0].trim();
                             String categoryPoint = subParts[1].trim().replace("-", "");
                             Integer numberPoint = Integer.parseInt(numberPointStr);
-                            // Lưu trữ số lượng điểm mật ong dựa trên tên loại điểm
-                            honeyMap.put(categoryPoint, numberPoint);
+
+                            honeyMap.computeIfAbsent(categoryPoint, k -> new ArrayList<>()).add(numberPoint);
                         }
                     }
+
                     List<TeacherCategoryResponse> categories = categoryRepository.getCategoriesByNames(honeyMap.keySet());
+
                     for (TeacherCategoryResponse category : categories) {
                         String categoryPoint = category.getName();
                         String categoryId = category.getId();
                         String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
                         String enumCategoryACCEPT = String.valueOf(CategoryStatus.ACCEPT.ordinal());
+
                         if (honeyMap.containsKey(categoryPoint)) {
-                            if (honeyMap.containsKey(categoryPoint)) {
+                            List<Integer> honeyPoints = honeyMap.get(categoryPoint);
+
+                            for (Integer honeyPoint : honeyPoints) {
                                 TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
                                 getPointRequest.setStudentId(simpleResponse.getId());
                                 getPointRequest.setCategoryId(categoryId);
                                 TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
                                 Long dateNow = Calendar.getInstance().getTimeInMillis();
-
                                 History history = new History();
-                                history.setPresidentId(udpmHoney.getIdUser());
+                                history.setTeacherId(udpmHoney.getIdUser());
+                                history.setTeacherIdName(udpmHoney.getUserName());
+                                history.setNote(userDTO.getNote());
+
                                 if (category.getStatus().equals(enumCategoryFREE)) {
-                                    // gủi cho sinh viên
+                                    // gửi cho sinh viên
                                     Notification notification = createNotification(simpleResponse.getId());
-                                    createNotificationDetailHoney(category, notification.getId(), honeyMap.get(categoryPoint));
-                                    history.setStatus(HoneyStatus.DA_PHE_DUYET);
+                                    createNotificationDetailHoney(category, notification.getId(), honeyPoint);
+                                    history.setStatus(HistoryStatus.TEACHER_DA_THEM);
+                                } else if (category.getStatus().equals(enumCategoryACCEPT)) {
+                                    history.setStatus(HistoryStatus.CHO_PHE_DUYET);
                                 }
-                                if (category.getStatus().equals(enumCategoryACCEPT)) {
-                                    history.setStatus(HoneyStatus.CHO_PHE_DUYET);
-                                }
+
                                 history.setType(TypeHistory.CONG_DIEM);
                                 history.setChangeDate(dateNow);
                                 historyRepository.save(history);
 
                                 HistoryDetail historyDetail = new HistoryDetail();
                                 historyDetail.setHistoryId(history.getId());
-                                historyDetail.setHoneyPoint(honeyMap.get(categoryPoint));
+                                historyDetail.setHoneyPoint(honeyPoint);
                                 historyDetail.setStudentId(getPointRequest.getStudentId());
+
                                 if (teacherPointResponse == null) {
                                     Honey honey = new Honey();
                                     honey.setStatus(Status.HOAT_DONG);
@@ -308,13 +317,13 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
                                     Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
                                     historyDetail.setHoneyId(honey.getId());
                                 }
+
                                 history.setStudentId(simpleResponse.getId());
                                 teacherHistoryDetailRepository.save(historyDetail);
                             }
                         }
                     }
                 }
-
             }
         } catch (Exception e) {
             e.printStackTrace();

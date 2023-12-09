@@ -18,8 +18,7 @@ import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.HistoryDetail;
 import com.honeyprojects.entity.Honey;
-import com.honeyprojects.infrastructure.contant.HoneyStatus;
-import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.HistoryStatus;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.util.AddPointUtils;
@@ -85,7 +84,7 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
     @Override
     public History changeStatus(AdminChangeStatusRequest changeStatusRequest) {
         History history = historyRepository.findById(changeStatusRequest.getIdHistory()).get();
-        history.setStatus(HoneyStatus.values()[changeStatusRequest.getStatus()]);
+        history.setStatus(HistoryStatus.values()[changeStatusRequest.getStatus()]);
         return historyRepository.save(history);
     }
 
@@ -96,7 +95,7 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
         history.setNote(addPointRequest.getNote());
         history.setType(TypeHistory.CONG_DIEM);
         history.setChangeDate(dateNow);
-        history.setStatus(HoneyStatus.ADMIN_DA_THEM);
+        history.setStatus(HistoryStatus.ADMIN_DA_THEM);
         historyRepository.save(history);
 
         HistoryDetail historyDetail = new HistoryDetail();
