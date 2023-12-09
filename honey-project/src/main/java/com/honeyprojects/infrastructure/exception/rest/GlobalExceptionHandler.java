@@ -17,9 +17,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * @author thangncph26123
- */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -45,7 +42,7 @@ public class GlobalExceptionHandler {
             return ResponseEntity.notFound().build();
         } else {
             System.out.println(ex.getMessage());
-            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
