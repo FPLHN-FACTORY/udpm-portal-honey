@@ -26,6 +26,7 @@ import com.honeyprojects.infrastructure.contant.HoneyStatus;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.repository.ArchiveGiftRepository;
+import com.honeyprojects.util.AddPointUtils;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import com.honeyprojects.util.callApiPoint.model.request.FilterScoreTemplateVM;
 import com.honeyprojects.util.callApiPoint.model.response.ScoreTemplateVM;
@@ -66,6 +67,9 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
 
     @Autowired
     private CallApiCommonService callApiCommonService;
+
+    @Autowired
+    private AddPointUtils addPointUtils;
 
     @Override
     public PageableObject<StudentArchiveResponse> getAllGiftArchive(StudentArchiveFilterRequest filterRequest) {
@@ -158,23 +162,28 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
         List<String> listGiftId = studentGiftArchiveRepository.listGiftId(request);
         int indexRandom = random.nextInt(listGiftId.size());
         String idRandom = listGiftId.get(indexRandom);
-        Gift giftRandom = giftRepository.findById(idRandom).get();
 
-        Optional<Archive> archive = archiveRepository.findByStudentId(udpmHoney.getIdUser());
-        Optional<ArchiveGift> existingArchiveGift = studentGiftArchiveRepository.findByGiftId(idRandom);
-        if (existingArchiveGift.isPresent()) {
-            ArchiveGift archiveGiftExist = existingArchiveGift.get();
-            archiveGiftExist.setQuantity(archiveGiftExist.getQuantity() + 1);
-            archiveGiftExist.setChestId(null);
-            studentGiftArchiveRepository.save(archiveGiftExist);
-        } else {
-            ArchiveGift archiveGift = new ArchiveGift();
-            archiveGift.setGiftId(idRandom);
-            archiveGift.setArchiveId(archive.get().getId());
-            archiveGift.setQuantity(1);
-            archiveGift.setChestId(null);
-            studentGiftArchiveRepository.save(archiveGift);
+        Gift giftRandom = giftRepository.findById(idRandom).get();
+        if (giftRandom == null) {
+            throw new RestApiException("Không có vật phẩm nào được mở ra");
         }
+        addPointUtils.addGiftUtils(udpmHoney.getIdUser(), idRandom, 1);
+//
+//        Optional<Archive> archive = archiveRepository.findByStudentId(udpmHoney.getIdUser());
+//        Optional<ArchiveGift> existingArchiveGift = studentGiftArchiveRepository.findByGiftId(idRandom);
+//        if (existingArchiveGift.isPresent()) {
+//            ArchiveGift archiveGiftExist = existingArchiveGift.get();
+//            archiveGiftExist.setQuantity(archiveGiftExist.getQuantity() + 1);
+//            archiveGiftExist.setChestId(null);
+//            studentGiftArchiveRepository.save(archiveGiftExist);
+//        } else {
+//            ArchiveGift archiveGift = new ArchiveGift();
+//            archiveGift.setGiftId(idRandom);
+//            archiveGift.setArchiveId(archive.get().getId());
+//            archiveGift.setQuantity(1);
+//            archiveGift.setChestId(null);
+//            studentGiftArchiveRepository.save(archiveGift);
+//        }
         return giftRandom;
     }
 

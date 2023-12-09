@@ -27,6 +27,8 @@ import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
+import com.honeyprojects.infrastructure.contant.*;
+import com.honeyprojects.util.AddPointUtils;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +63,9 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
 
     @Autowired
     private AdHistoryDetailRepository historyDetailRepository;
+
+    @Autowired
+    private AddPointUtils addPointUtils;
 
     @Override
     public List<TeacherCategoryResponse> getCategory() {
@@ -109,34 +114,22 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
         history.setChangeDate(dateNow);
         if(category.get().getCategoryStatus().equals(CategoryStatus.FREE)){
             history.setStatus(HoneyStatus.TEACHER_DA_THEM);
-            if (addPointRequest.getHoneyId() == null) {
-                Honey honey = new Honey();
-                honey.setStatus(Status.HOAT_DONG);
-                honey.setHoneyPoint(addPointRequest.getHoneyPoint());
-                honey.setStudentId(addPointRequest.getStudentId());
-                honey.setHoneyCategoryId(addPointRequest.getCategoryId());
-                honeyRepository.save(honey);
-                historyDetail.setHoneyId(honey.getId());
-            } else {
-                Honey honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();
-                honey.setHoneyPoint(addPointRequest.getHoneyPoint()+ honey.getHoneyPoint());
-                honeyRepository.save(honey);
-                historyDetail.setHoneyId(honey.getId());
-            }
+            Honey honey = addPointUtils.addHoneyUtils(addPointRequest.getStudentId(), addPointRequest.getCategoryId(), addPointRequest.getHoneyPoint());
+            historyDetail.setHoneyId(honey.getId());
         }
         else{
+            Honey honey;
             if (addPointRequest.getHoneyId() == null) {
-                Honey honey = new Honey();
+                honey = new Honey();
                 honey.setStatus(Status.KHONG_HOAT_DONG);
                 honey.setHoneyPoint(0);
                 honey.setStudentId(addPointRequest.getStudentId());
                 honey.setHoneyCategoryId(addPointRequest.getCategoryId());
                 honeyRepository.save(honey);
-                historyDetail.setHoneyId(honey.getId());
             } else {
-                Honey honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();
-                historyDetail.setHoneyId(honey.getId());
+                honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();
             }
+            historyDetail.setHoneyId(honey.getId());
             history.setStatus(HoneyStatus.CHO_PHE_DUYET);
             Optional<Category> ca = categoryRepository.findById(addPointRequest.getCategoryId());
             Notification notification = new Notification();

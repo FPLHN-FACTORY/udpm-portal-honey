@@ -210,12 +210,6 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
             return adminCategoryRepository.save(category);
 
         } else {
-            contentLogger.append("Cập nhật không tồn tại category có id là: " + id + ".");
-            try {
-                rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
             throw new RestApiException("Cập nhật không tồn tại category có id là: " + id + ".");
         }
 

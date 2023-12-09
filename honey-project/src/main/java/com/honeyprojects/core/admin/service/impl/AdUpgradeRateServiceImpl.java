@@ -86,8 +86,9 @@ public class AdUpgradeRateServiceImpl implements AdUpgradeRateService {
             }
             if(check == true){
                 return adUpgradeRateRepository.save(entity.get());
-            }return null;
-        }else return null;
+            }
+        }
+        return null;
     }
 
     @Override

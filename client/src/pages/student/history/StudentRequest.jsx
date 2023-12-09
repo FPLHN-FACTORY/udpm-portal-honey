@@ -43,17 +43,16 @@ export default function StudentRequest() {
         <div className="button-group">
           <button
             className="button button__notactivebutton__notactive"
-            onClick={() => navigate("/student/history")}
-          >
+            onClick={() => navigate("/student/history")}>
             Lịch sử
           </button>
           <button
             className="button button__active"
-            onClick={() => navigate("/student/request")}
-          >
+            onClick={() => navigate("/student/request")}>
             Yêu cầu
           </button>
           <Select
+            className="select__history"
             style={{ width: "150px" }}
             value={type}
             onChange={(e) => setType(e)}
@@ -84,13 +83,11 @@ export default function StudentRequest() {
                   <div className={`student__history__point}`}>
                     <div
                       className={`student__history__point 
-                    }`}
-                    >
+                    }`}>
                       {e.point && (
                         <span
                           className={"red__text"}
-                          style={{ marginRight: "10px" }}
-                        >
+                          style={{ marginRight: "10px" }}>
                           {e.point}
                         </span>
                       )}
@@ -98,8 +95,7 @@ export default function StudentRequest() {
                       {e.pointGet && (
                         <span
                           className={"green__text"}
-                          style={{ marginRight: "10px" }}
-                        >
+                          style={{ marginRight: "10px" }}>
                           {e.pointGet}
                         </span>
                       )}
@@ -115,13 +111,11 @@ export default function StudentRequest() {
                   <div className={`student__history__point}`}>
                     <div
                       className={`student__history__point 
-                    }`}
-                    >
+                    }`}>
                       {e.point && (
                         <span
                           className={"red__text"}
-                          style={{ marginRight: "10px" }}
-                        >
+                          style={{ marginRight: "10px" }}>
                           {e.point}
                         </span>
                       )}
@@ -129,8 +123,7 @@ export default function StudentRequest() {
                       {e.pointGet && (
                         <span
                           className={"green__text"}
-                          style={{ marginRight: "10px" }}
-                        >
+                          style={{ marginRight: "10px" }}>
                           {e.pointGet}
                         </span>
                       )}
