@@ -12,7 +12,7 @@ public interface PresidentGiftRepository extends GiftRepository {
 
     @Query(value = """
             SELECT g.name, g.status from gift g
-            where status <> 2
+            where g.status <> 2 AND (g.expiry NOT IN ('HET_HAN', 'CHUA_HOAT_DONG'))
             """, nativeQuery = true)
     List<PresidentExportGiftResponse> getGiftToExport();
 }
