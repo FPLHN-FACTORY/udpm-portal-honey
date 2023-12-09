@@ -203,7 +203,7 @@ function DashboardAuthUser({ children }) {
   };
 
   const hanlderClickTonVinh = () => {
-    navigate("/student/honor-student");
+    navigate("/student/hall-of-fame");
   };
 
   const [isSettingMenuOpen, setIsSettingMenuOpen] = useState(false);

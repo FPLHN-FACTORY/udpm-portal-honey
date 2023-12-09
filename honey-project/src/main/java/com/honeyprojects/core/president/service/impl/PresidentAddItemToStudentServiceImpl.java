@@ -161,10 +161,10 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
         String listHoney = ExcelUtils.getCellString(row.getCell(2));
 
         // Tạo địa chỉ email giả định từ tên đăng nhập
-        String emailSimple = userName + "@fpt.edu.vn";
+        String emailSimple = userName;
 
         // Gọi API để kiểm tra sự tồn tại của người dùng
-        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
+        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(emailSimple);
 
         // Biến để kiểm tra sự tồn tại của lỗi
         boolean hasError = false;
@@ -328,8 +328,8 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
             }
 
             // Gọi API để lấy thông tin người dùng bằng địa chỉ email
-            String emailSimple = userDTO.getUserName() + "@fpt.edu.vn";
-            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
+            String emailSimple = userDTO.getUserName();
+            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(emailSimple);
 
             // Xử lý vật phẩm (gift)
             if (!DataUtils.isNullObject(userDTO.getLstGift())) {
