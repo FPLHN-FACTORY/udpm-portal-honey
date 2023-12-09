@@ -209,20 +209,20 @@ public class AdminGiftServiceImpl implements AdminGiftService {
             existingGift.setToDate(null);
             existingGift.setFromDate(null);
         }
-
-        contentLogger.append("Cập nhật Gift: '" + existingGift.getName() + "'. ");
-        if (!request.getName().isEmpty()) {
-            contentLogger.append("Cập nhật tên từ: '" + existingGift.getName() + "' sang '" + request.getName() + "'.");
-        }
-        if (request.getQuantity() != null) {
-            contentLogger.append("Cập nhật số lượng từ: " + existingGift.getQuantity() + " sang " + request.getQuantity() + ".");
-        }
-        loggerObject.setContent(contentLogger.toString());
-        try {
-            rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//
+//        contentLogger.append("Cập nhật Gift: '" + existingGift.getName() + "'. ");
+//        if (!request.getName().isEmpty()) {
+//            contentLogger.append("Cập nhật tên từ: '" + existingGift.getName() + "' sang '" + request.getName() + "'.");
+//        }
+//        if (request.getQuantity() != null) {
+//            contentLogger.append("Cập nhật số lượng từ: " + existingGift.getQuantity() + " sang " + request.getQuantity() + ".");
+//        }
+//        loggerObject.setContent(contentLogger.toString());
+//        try {
+//            rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
         return adGiftRepository.save(existingGift);
     }
 
@@ -249,17 +249,17 @@ public class AdminGiftServiceImpl implements AdminGiftService {
         }
         adGiftRepository.deleteById(id);
         adGiftDetailRepository.deleteAllByGiftId(id);
-        StringBuilder contentLogger = new StringBuilder();
-        LoggerFunction loggerObject = new LoggerFunction();
-        loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
-        Optional<Gift> optional = adGiftRepository.findById(id);
-        contentLogger.append("Gift có tên '" + optional.get().getName() + "' đã xóa khỏi hệ thống. ");
-        loggerObject.setContent(contentLogger.toString());
-        try {
-            rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//        StringBuilder contentLogger = new StringBuilder();
+//        LoggerFunction loggerObject = new LoggerFunction();
+//        loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
+//        Optional<Gift> optional = adGiftRepository.findById(id);
+//        contentLogger.append("Gift có tên '" + optional.get().getName() + "' đã xóa khỏi hệ thống. ");
+//        loggerObject.setContent(contentLogger.toString());
+//        try {
+//            rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
     }
 
     public Gift updateStatusGift(String id) {
