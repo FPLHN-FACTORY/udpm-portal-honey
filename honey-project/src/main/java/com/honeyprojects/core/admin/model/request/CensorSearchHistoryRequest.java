@@ -8,6 +8,5 @@ import lombok.Setter;
 @Setter
 public class CensorSearchHistoryRequest extends PageableRequest {
     private String idStudent;
-    private String status;
     private String idCategory;
 }

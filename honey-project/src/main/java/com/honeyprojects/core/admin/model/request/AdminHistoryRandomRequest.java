@@ -1,7 +1,7 @@
 package com.honeyprojects.core.admin.model.request;
 
 import com.honeyprojects.entity.History;
-import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.HistoryStatus;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import java.util.Date;
 public class AdminHistoryRandomRequest {
     private String studentId;
     private TypeHistory typeHistory;
-    private HoneyStatus status;
+    private HistoryStatus status;
 
     public History createHistory(History history) {
         history.setChangeDate(new Date().getTime());

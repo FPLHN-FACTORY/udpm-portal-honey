@@ -15,7 +15,7 @@ import com.honeyprojects.core.teacher.service.TeacherUseGiftRequest;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Notification;
 import com.honeyprojects.entity.NotificationDetail;
-import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.HistoryStatus;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
 import com.honeyprojects.util.ConvertRequestApiidentity;
@@ -71,7 +71,7 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
     public History acceptRequest(String id) {
         History history = historyRepository.findById(id).get();
 //        Gift gift = giftRepository.findById(history.getGiftId()).get();
-        history.setStatus(HoneyStatus.DA_PHE_DUYET);
+        history.setStatus(HistoryStatus.DA_PHE_DUYET);
         historyRepository.save(history);
         Notification notification = new Notification();
         notification.setStudentId(history.getStudentId());
@@ -100,7 +100,7 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
         List<History> historyList = new ArrayList<>();
         for (String idHistory : request.getListId()) {
             History history = historyRepository.findById(idHistory).get();
-            history.setStatus(HoneyStatus.DA_PHE_DUYET);
+            history.setStatus(HistoryStatus.DA_PHE_DUYET);
             historyList.add(history);
             historyRepository.saveAll(historyList);
 
@@ -133,7 +133,7 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
     public History cancelRequest(String id, String note) {
         History history = historyRepository.findById(id).get();
 //        Gift gift = giftRepository.findById(history.getGiftId()).get();
-        history.setStatus(HoneyStatus.DA_HUY);
+        history.setStatus(HistoryStatus.DA_HUY);
         history.setNote(note);
 //        Archive newArchive = new Archive();
 //        newArchive.setStudentId(history.getStudentId());

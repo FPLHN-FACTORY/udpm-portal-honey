@@ -95,6 +95,8 @@ export default function RequestApprovedHistory() {
     };
   });
 
+  console.log(data);
+
   const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
@@ -185,9 +187,11 @@ export default function RequestApprovedHistory() {
             <div className="list__point__title">
               <p>
                 <strong className="text-slate-500 mr-[8px]">
-                  {item.acction.status == 2 ? 'Đã bị hủy yêu cầu cộng: ' : 'Đã được chấp nhận yêu cầu cộng: '}
+                  {item.acction.status == 2
+                    ? "Đã bị hủy yêu cầu cộng: "
+                    : "Đã được chấp nhận yêu cầu cộng: "}
                 </strong>
-                {item.honeyPoint} mật ong {item.nameCategory}
+                {item.honey}
               </p>
               <p>
                 <strong className="text-slate-500 mr-[8px]">Thời gian:</strong>
