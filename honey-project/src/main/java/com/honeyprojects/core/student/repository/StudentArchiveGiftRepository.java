@@ -19,7 +19,10 @@ public interface StudentArchiveGiftRepository extends ArchiveGiftRepository {
     Optional<ArchiveGift> findByGiftIdAndAndArchiveId(String idGift, String archiveId);
 
     @Query(value = """
-        SELECT ag.* FROM archive_gift ag JOIN gift g ON ag.gift_id = g.id WHERE g.status <> 2 AND ag.gift_id in (:id)
+        SELECT ag.* FROM archive_gift ag 
+        JOIN gift g ON ag.gift_id = g.id
+         JOIN archive a ON a.id = ag.archive_id
+         WHERE expiry NOT IN ('HET_HAN', 'CHUA_HOAT_DONG') AND ag.gift_id in (:id) AND a.student_id in (:idUser)
     """, nativeQuery = true)
-    List<ArchiveGift> findAllByGiftIdIn(@Param("id") List<String> id);
+    List<ArchiveGift> findAllByGiftIdIn(@Param("id") List<String> id, @Param("idUser") String idUser);
 }
