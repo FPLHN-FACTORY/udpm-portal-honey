@@ -41,13 +41,13 @@ export default function ModalUpLoadFile(props) {
         .then((response) => {
           setDataPreview(response.data.data.lstPresidentAddItemDTO);
           dispatch(SetImport(response.data.data));
-          message.success("Import excel thành công");
+          message.success("Tải file excel thành công");
         })
         .catch(() => {
-          message.error("Import excel thất bại");
+          message.error("Tải file excel thất bại");
         });
     } else {
-      message.error("Import excel thất bại");
+      message.error("Tải file excel thất bại");
     }
     setNameFileUpload("");
     setOpenUpload(false);

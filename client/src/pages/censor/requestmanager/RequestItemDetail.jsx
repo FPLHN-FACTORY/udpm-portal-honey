@@ -13,6 +13,8 @@ const type = (status) => {
       return <Tag color="lime-inverse">Giao dịch</Tag>; // Màu xanh lá cây
     case 2:
       return <Tag color="magenta-inverse">Đổi quà</Tag>; // Màu xanh dương nhạt
+    case 6:
+      return <Tag color="magenta-inverse">Đổi quà</Tag>; // Màu xanh dương nhạt
     default:
       return <Tag>Không xác định</Tag>;
   }
@@ -29,6 +31,8 @@ const statusHistory = (status) => {
       return <Tag color="geekblue">Chờ phê duyệt</Tag>;
     case 5:
       return <Tag color="geekblue">Chờ phê duyệt</Tag>;
+    case 6:
+      return <Tag color="geekblue">Chờ phê duyệt</Tag>;
     default:
       return <Tag>Không xác định</Tag>;
   }
@@ -37,13 +41,16 @@ const fomatDate = (date) => {
   return moment(date).format("DD-MM-YYYY");
 };
 
-export default function RequestManagerDetail() {
+export default function RequestItemDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [request, setRequest] = useState({});
   const [student, setStudent] = useState({});
   const [sender, setSender] = useState({});
   const [idDetail, setIdDetail] = useState(null);
+  const [giftId, setGiftId] = useState(null);
+  const [studentId, setStudentId] = useState(null);
+  const [quantity, setQuantity] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -57,7 +64,6 @@ export default function RequestManagerDetail() {
           idStudent = response.data.data.studentId;
           idNguoiGui =
             response.data.data.teacherId || response.data.data.presidentId;
-          setIdDetail(response.data.data.historyDetailId);
           setRequest(response.data.data);
         } else {
           navigate("/not-found");
@@ -66,6 +72,14 @@ export default function RequestManagerDetail() {
       .catch((error) => {
         console.error(error);
       });
+    await RequestManagerAPI.detailRequestItem(id).then((response) => {
+      setIdDetail(response.data.data.historyDetailId);
+      setGiftId(response.data.data.giftId);
+      setGiftId(response.data.data.giftId);
+      setStudentId(response.data.data.studentId);
+      setQuantity(response.data.data.quantityGift);
+      console.log(response.data.data);
+    });
     await RequestManagerAPI.getUserAPiById(idStudent)
       .then((response) => {
         setStudent(response.data.data);
@@ -82,18 +96,21 @@ export default function RequestManagerDetail() {
       });
   };
 
-  const changeStatus = (status) => {
-    RequestManagerAPI.changeStatus(id, idDetail, status)
-      .then((response) => {
-        if (response.data.success) {
-          fetchData();
-          if (status === 1) message.success("Đã xác nhận yêu cầu!");
-          if (status === 2) message.error("Hủy yêu cầu thành công!");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  const changeStatusConversion = (status) => {
+    RequestManagerAPI.changeStatusConversion(
+      studentId,
+      giftId,
+      id,
+      idDetail,
+      status,
+      quantity
+    ).then((response) => {
+      if (response.data.success) {
+        if (status === 1) message.success("Đã xác nhận yêu cầu!");
+        if (status === 2) message.error("Hủy yêu cầu thành công!");
+      }
+      fetchData();
+    });
   };
 
   return (
@@ -107,13 +124,21 @@ export default function RequestManagerDetail() {
             request.status !== 1 && (
               <Space size={"middle"}>
                 <Button
-                  onClick={() => changeStatus(1)}
+                  onClick={() => {
+                    changeStatusConversion(2);
+                  }}
                   type="primary"
                   style={{ backgroundColor: "#EEB30D" }}
                 >
                   Phê duyệt
                 </Button>
-                <Button onClick={() => changeStatus(2)} type="primary" danger>
+                <Button
+                  onClick={() => {
+                    changeStatusConversion(2);
+                  }}
+                  type="primary"
+                  danger
+                >
                   Từ chối
                 </Button>
               </Space>
@@ -124,8 +149,8 @@ export default function RequestManagerDetail() {
             <Descriptions.Item label="Loại yêu cầu">
               {type(request.type)}
             </Descriptions.Item>
-            <Descriptions.Item label="Loại mật ong">
-              {request.honey}
+            <Descriptions.Item label="Vật phẩm">
+              {request.gift}
             </Descriptions.Item>
             <Descriptions.Item label="Ngày tạo">
               {fomatDate(request.createDate)}

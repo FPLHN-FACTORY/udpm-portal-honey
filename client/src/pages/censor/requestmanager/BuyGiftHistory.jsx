@@ -8,6 +8,8 @@ import {
   Space,
   Tag,
   message,
+  Row,
+  Col,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
@@ -41,10 +43,26 @@ export default function BuyGiftHistory() {
               const user = await RequestManagerAPI.getUserAPiById(
                 data.studentId
               );
+              let teacher = null;
+              if (data.teacherId !== null) {
+                teacher = await RequestManagerAPI.getUserAPiById(
+                  data.teacherId
+                );
+              }
+              let president = null;
+              if (data.presidentId !== null) {
+                president = await RequestManagerAPI.getUserAPiById(
+                  data.presidentId
+                );
+              }
               return {
                 ...data,
                 studentName: user.data.data.name,
                 userName: user.data.data.userName,
+                nameTeacher: teacher ? teacher.data.data.name : null,
+                userTeacher: teacher ? teacher.data.data.userName : null,
+                namePresident: president ? president.data.data.name : null,
+                userPresident: president ? president.data.data.userName : null,
               };
             } catch (error) {
               console.error(error);
@@ -97,7 +115,6 @@ export default function BuyGiftHistory() {
         .catch((error) => console.error(error));
     }
   };
-  console.log(getHistory);
   return (
     <>
       <Card className="mb-2">
@@ -156,23 +173,43 @@ export default function BuyGiftHistory() {
         <div className="mt-5">
           {getHistory.map((item) => (
             <div className="list__point ">
-              <h3 className="text-slate-600"> Sinh viên {item.studentName}</h3>
-              <div className="list__point__title">
-                <p>
-                  <strong className="text-slate-500 mr-[8px]">
-                    {item.status === 2
-                      ? "Đã bị hủy yêu cầu mua: "
-                      : "Đã được chấp nhận yêu cầu mua: "}
-                  </strong>
-                  {item.quantityGift} vật phẩm {item.nameGift}
-                </p>
-                <p>
-                  <strong className="text-slate-500 mr-[8px]">
-                    Thời gian:
-                  </strong>
-                  {moment(item.changeDate).format("DD-MM-YYYY HH:mm:ss")}
-                </p>
-              </div>
+              <Row>
+                <Col span={12}>
+                  <h4 className="text-slate-600">
+                    Người nhận: {item.studentName} ({item.userName})
+                  </h4>
+                </Col>
+                <Col span={12}>
+                  <h4 className="text-slate-600">
+                    Người gửi: {item.nameTeacher || item.namePresident} (
+                    {item.userTeacher || item.userPresident})
+                  </h4>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12}>
+                  <div className="list__point__title">
+                    <p>
+                      <strong className="text-slate-500 mr-[8px]">
+                        {item.status === 2
+                          ? "Đã bị hủy yêu cầu mua: "
+                          : "Đã được chấp nhận yêu cầu mua: "}
+                      </strong>
+                      {item.quantityGift} {item.gift}
+                    </p>
+                  </div>
+                </Col>
+                <Col>
+                  <div className="list__point__title">
+                    <p>
+                      <strong className="text-slate-500 mr-[8px]">
+                        Thời gian:
+                      </strong>
+                      {moment(item.changeDate).format("DD-MM-YYYY HH:mm:ss")}
+                    </p>
+                  </div>
+                </Col>
+              </Row>
             </div>
           ))}
         </div>

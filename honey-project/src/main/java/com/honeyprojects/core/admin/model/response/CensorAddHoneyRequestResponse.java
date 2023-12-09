@@ -22,11 +22,8 @@ public interface CensorAddHoneyRequestResponse extends IsIdentified {
     @Value("#{target.president_id}")
     String getPresidentId();
 
-    @Value("#{target.nameCategory}")
-    String getNameCategory();
-
-    @Value("#{target.honey_point}")
-    Integer getHoneyPoint();
+    @Value("#{target.honey}")
+    String getHoney();
 
     @Value("#{target.change_date}")
     Long getChangeDate();

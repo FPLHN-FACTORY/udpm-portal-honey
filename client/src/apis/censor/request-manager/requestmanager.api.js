@@ -126,6 +126,13 @@ export class RequestManagerAPI {
     });
   };
 
+  static detailRequestItem = (idRequest) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/request-item/${idRequest}`,
+    });
+  };
+
   static conuntRequest = (type) => {
     return request({
       method: "GET",

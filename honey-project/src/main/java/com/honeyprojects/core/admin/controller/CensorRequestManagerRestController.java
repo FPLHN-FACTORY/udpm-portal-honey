@@ -9,6 +9,7 @@ import com.honeyprojects.core.admin.model.response.AdminRequestConversionHistory
 import com.honeyprojects.core.admin.model.response.AdminRequestConversionHistoryResponse;
 import com.honeyprojects.core.admin.model.response.CensorAddHoneyRequestResponse;
 import com.honeyprojects.core.admin.model.response.CensorTransactionRequestResponse;
+import com.honeyprojects.core.admin.repository.AdRequestConversionHistoryRepository;
 import com.honeyprojects.core.admin.service.AdminRequestConversionService;
 import com.honeyprojects.core.admin.service.CensorRequestManagerService;
 import com.honeyprojects.core.common.base.PageableObject;
@@ -46,6 +47,9 @@ public class CensorRequestManagerRestController {
     @Autowired
     private AdminRequestConversionService requestConversionService;
 
+    @Autowired
+    private AdRequestConversionHistoryRepository conversionHistoryRepository;
+
     @GetMapping("/add-point")
     public PageableObject<CensorAddHoneyRequestResponse> getHistoryAddPoint(CensorSearchHistoryRequest historyRequest) {
         return requestManagerService.getHistoryAddPoint(historyRequest);
@@ -75,6 +79,11 @@ public class CensorRequestManagerRestController {
     @GetMapping("/request-manager/{id}")
     public ResponseObject getRequest(@PathVariable("id") String idRequest) {
         return new ResponseObject(requestManagerService.getRequest(idRequest));
+    }
+
+    @GetMapping("/request-item/{id}")
+    public ResponseObject getRequestItem(@PathVariable("id") String id) {
+        return new ResponseObject(conversionHistoryRepository.getHistoryItemDetail(id));
     }
 
     @PutMapping("/change-status")
