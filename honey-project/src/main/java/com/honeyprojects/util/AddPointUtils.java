@@ -75,10 +75,11 @@ public class AddPointUtils {
                 archiveGift.setArchiveId(archiveId);
                 archiveGift.setQuantity(giftPoint);
             } else {
-                optionalArchiveGift.get().setQuantity(giftPoint + optionalArchiveGift.get().getQuantity());
+                archiveGift = optionalArchiveGift.get();
+                archiveGift.setQuantity(giftPoint + optionalArchiveGift.get().getQuantity());
             }
 
-            return archiveGiftRepository.save(optionalArchiveGift.get());
+            return archiveGiftRepository.save(archiveGift);
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new RestApiException("Thêm mật ong thất bại");
@@ -108,10 +109,11 @@ public class AddPointUtils {
                 archiveGift.setArchiveId(archiveId);
                 archiveGift.setQuantity(giftPoint);
             } else {
-                optionalArchiveGift.get().setQuantity(giftPoint + optionalArchiveGift.get().getQuantity());
+                archiveGift = optionalArchiveGift.get();
+                archiveGift.setQuantity(giftPoint + optionalArchiveGift.get().getQuantity());
             }
 
-            return archiveGiftRepository.save(optionalArchiveGift.get());
+            return archiveGiftRepository.save(archiveGift);
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new RestApiException("Thêm mật ong thất bại");

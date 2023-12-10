@@ -27,7 +27,7 @@ import com.honeyprojects.entity.HistoryDetail;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.entity.Notification;
 import com.honeyprojects.entity.NotificationDetail;
-import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.HistoryStatus;
 import com.honeyprojects.infrastructure.contant.NotificationDetailType;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.Status;
@@ -104,7 +104,7 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
         if (lstIdNotificationDetail.isEmpty()) {
             return false;
         } else {
-            History history = createHistory(idStudent, TypeHistory.MAT_ONG_VA_VAT_PHAM, HoneyStatus.DA_PHE_DUYET);
+            History history = createHistory(idStudent, TypeHistory.MAT_ONG_VA_VAT_PHAM, HistoryStatus.DA_PHE_DUYET);
             List<NotificationDetail> lstHoney = new ArrayList<>();
             List<NotificationDetail> lstGift = new ArrayList<>();
             List<NotificationDetail> lstChest = new ArrayList<>();
@@ -215,7 +215,7 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
         return adArchiveGiftRepository.save(archiveGift);
     }
 
-    private History createHistory(String idStudent, TypeHistory typeHistory, HoneyStatus status) {
+    private History createHistory(String idStudent, TypeHistory typeHistory, HistoryStatus status) {
         AdminHistoryRandomRequest request = new AdminHistoryRandomRequest(idStudent, typeHistory, status);
         History history = request.createHistory(new History());
         return studentHistoryRepository.save(history);

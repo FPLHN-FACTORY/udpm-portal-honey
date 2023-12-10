@@ -15,13 +15,17 @@ import com.honeyprojects.core.teacher.repository.TeacherCategoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHoneyRepository;
 import com.honeyprojects.core.teacher.repository.TeacherNotificationRepository;
-import com.honeyprojects.core.teacher.service.TeacherAddPointExcelService;
 import com.honeyprojects.core.teacher.service.TeacherAddPointService;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.HistoryDetail;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.entity.Notification;
+import com.honeyprojects.infrastructure.contant.CategoryStatus;
+import com.honeyprojects.infrastructure.contant.NotificationStatus;
+import com.honeyprojects.infrastructure.contant.NotificationType;
+import com.honeyprojects.infrastructure.contant.Status;
+import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.contant.*;
 import com.honeyprojects.util.AddPointUtils;
 import com.honeyprojects.util.ConvertRequestApiidentity;
@@ -91,7 +95,7 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     @Override
     public History changeStatus(TeacherChangeStatusRequest changeReq) {
         History history = historyRepository.findById(changeReq.getIdHistory()).get();
-        history.setStatus(HoneyStatus.values()[changeReq.getStatus()]);
+        history.setStatus(HistoryStatus.values()[changeReq.getStatus()]);
         return historyRepository.save(history);
     }
 
@@ -103,12 +107,13 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
         Optional<Category>category = categoryRepository.findById(addPointRequest.getCategoryId());
         HistoryDetail historyDetail = new HistoryDetail();
         History history = new History();
+        history.setTeacherIdName(udpmHoney.getUserName());
         history.setTeacherId(idTeacher);
         history.setNote(addPointRequest.getNote());
         history.setType(TypeHistory.CONG_DIEM);
         history.setChangeDate(dateNow);
         if(category.get().getCategoryStatus().equals(CategoryStatus.FREE)){
-            history.setStatus(HoneyStatus.TEACHER_DA_THEM);
+            history.setStatus(HistoryStatus.TEACHER_DA_THEM);
             Honey honey = addPointUtils.addHoneyUtils(addPointRequest.getStudentId(), addPointRequest.getCategoryId(), addPointRequest.getHoneyPoint());
             historyDetail.setHoneyId(honey.getId());
         }
@@ -125,7 +130,7 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
                 honey = honeyRepository.findById(addPointRequest.getHoneyId()).orElseThrow();
             }
             historyDetail.setHoneyId(honey.getId());
-            history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+            history.setStatus(HistoryStatus.CHO_PHE_DUYET);
             Optional<Category> ca = categoryRepository.findById(addPointRequest.getCategoryId());
             Notification notification = new Notification();
             notification.setTitle("Yêu cầu cộng " + addPointRequest.getHoneyPoint() + " mật ong loại " + ca.get().getName() + " cho sinh viên");
@@ -147,8 +152,8 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
 
     @Override
     public SimpleResponse searchUser(String username) {
-        String email = username + "@fpt.edu.vn";
-        return requestApiidentity.handleCallApiGetUserByEmail(email);
+        String email = username;
+        return requestApiidentity.handleCallApiGetUserByEmailOrUsername(email);
     }
 
     @Override

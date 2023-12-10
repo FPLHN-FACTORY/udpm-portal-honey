@@ -2,7 +2,6 @@ import { Tabs } from "antd";
 import RequestConversionHistory from "./RequestConversionHistory";
 import "./index.css";
 import RequestAddPoint from "./RequestAddPoint";
-import RequestAddItemHistory from "./RequestAddItemHistory";
 
 export default function TabsRequest() {
   // eslint-disable-next-line no-sparse-arrays

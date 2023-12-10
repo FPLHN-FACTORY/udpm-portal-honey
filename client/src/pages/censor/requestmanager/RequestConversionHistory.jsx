@@ -7,18 +7,17 @@ import {
   Select,
   Space,
   Table,
-  Tag,
   message,
+  Tooltip,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
-import {
-  CheckCircleFilled,
-  CloseCircleFilled,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faEye, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 export default function RequestConversionHistory() {
   const [getHistory, setGetHistory] = useState([]);
@@ -36,10 +35,26 @@ export default function RequestConversionHistory() {
               const user = await RequestManagerAPI.getUserAPiById(
                 data.studentId
               );
+              let teacher = null;
+              if (data.teacherId !== null) {
+                teacher = await RequestManagerAPI.getUserAPiById(
+                  data.teacherId
+                );
+              }
+              let president = null;
+              if (data.presidentId !== null) {
+                president = await RequestManagerAPI.getUserAPiById(
+                  data.presidentId
+                );
+              }
               return {
                 ...data,
                 studentName: user.data.data.name,
                 userName: user.data.data.userName,
+                nameTeacher: teacher ? teacher.data.data.name : null,
+                userTeacher: teacher ? teacher.data.data.userName : null,
+                namePresident: president ? president.data.data.name : null,
+                userPresident: president ? president.data.data.userName : null,
               };
             } catch (error) {
               console.error(error);
@@ -110,7 +125,7 @@ export default function RequestConversionHistory() {
       quantityGift
     ).then((response) => {
       if (response.data.success) {
-        if (status === 1) message.success("Đã xác nhận yêu cầu mua vật phẩm!");
+        if (status === 1) message.success("Đã xác nhận yêu cầu!");
         if (status === 2) message.error("Hủy yêu cầu thành công!");
       }
       fetchData();
@@ -128,7 +143,6 @@ export default function RequestConversionHistory() {
     // if (totalPoint > newFillPoint) {
     // message.error("Sinh viên Không còn đủ điểm để mua quà!");
     // } else {
-    console.log(values.historyDetailId);
     changeStatusConversion(
       values.studentId,
       values.giftId,
@@ -145,75 +159,68 @@ export default function RequestConversionHistory() {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
+      align: "center",
       render: (text, record, index) => index + 1,
     },
     {
-      title: "Tên sinh viên",
-      dataIndex: "studentName",
-      key: "studentName",
+      title: "Người gửi",
+      dataIndex: "name",
+      key: "name",
+      align: "center",
+      render: (text, record) => {
+        if (record.teacherId !== null) {
+          return record.userTeacher;
+        } else if (record.presidentId !== null) {
+          return record.userPresident;
+        } else {
+          return null;
+        }
+      },
     },
     {
-      title: "Loại quà",
-      dataIndex: "nameGift",
-      key: "nameGift",
+      title: "Người nhận",
+      dataIndex: "userName",
+      key: "userName",
+      align: "center",
     },
     {
-      title: "Số lượng",
-      dataIndex: "quantityGift",
-      key: "quantityGift",
+      title: "Vật phẩm",
+      dataIndex: "gift",
+      key: "gift",
+      align: "center",
     },
     {
-      title: "Ngày tạo",
+      title: "Ngày gửi",
       dataIndex: "createdDate",
       key: "createdDate",
+      align: "center",
       render: (text) => <span>{moment(text).format("DD/MM/YYYY")}</span>,
-    },
-
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => (
-        <Tag
-          color={
-            status === 0
-              ? "geekblue"
-              : status === 1
-              ? "green"
-              : status === 2
-              ? "volcano"
-              : "default"
-          }
-        >
-          {status === 0
-            ? "Chờ phê duyệt"
-            : status === 1
-            ? "Đã phê duyệt"
-            : status === 2
-            ? "Đã hủy"
-            : "Không sác định"}
-        </Tag>
-      ),
     },
     {
       title: () => <div>Hành động</div>,
       key: "action",
+      align: "center",
       render: (_, values) => (
         <Space size="small">
-          <div
-            style={{ fontSize: "19px", textAlign: "center", color: "green" }}
-          >
-            {values.status !== 1 && values.status !== 2 && (
-              <CheckCircleFilled
+          {values.status !== 1 && values.status !== 2 && (
+            <Tooltip title="Xác nhận">
+              <Button
                 onClick={() => {
                   handCheckvalide(values);
                 }}
-              />
-            )}
+                style={{
+                  backgroundColor: "yellowgreen",
+                  color: "white",
+                }}
+              >
+                <FontAwesomeIcon icon={faCheck} />
+              </Button>
+            </Tooltip>
+          )}
 
-            {values.status !== 1 && values.status !== 2 && (
-              <CloseCircleFilled
-                style={{ fontSize: "19px", margin: "0px 10px", color: "red" }}
+          {values.status !== 1 && values.status !== 2 && (
+            <Tooltip title="Hủy">
+              <Button
                 onClick={() => {
                   changeStatusConversion(
                     values.studentId,
@@ -223,9 +230,27 @@ export default function RequestConversionHistory() {
                     2
                   );
                 }}
-              />
-            )}
-          </div>
+                style={{
+                  backgroundColor: "red",
+                  color: "white",
+                }}
+              >
+                <FontAwesomeIcon icon={faXmark} />
+              </Button>
+            </Tooltip>
+          )}
+          <Tooltip title="Xem chi tiết">
+            <Link to={"/censor/request-item/detail/" + values.id}>
+              <Button
+                style={{
+                  backgroundColor: "rgb(83, 209, 255)",
+                  color: "white",
+                }}
+              >
+                <FontAwesomeIcon icon={faEye} />
+              </Button>
+            </Link>
+          </Tooltip>
         </Space>
       ),
     },

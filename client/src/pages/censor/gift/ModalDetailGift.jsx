@@ -54,7 +54,7 @@ const ModalDetailGift = (props) => {
       fetchCategory(cateAddOption);
       const categoryIds = detailData.map((item) => item.categoryId);
       const honeyValues = detailData.reduce((acc, item) => {
-        acc[item.categoryId] = item.honey;
+        acc[item.categoryId] = parseInt(item.honey);
         return acc;
       }, {});
       setSelectedCategories(categoryIds);
@@ -144,9 +144,8 @@ const ModalDetailGift = (props) => {
     const newQuantities = { ...categoryQuantities };
     newQuantities[categoryId] = value;
     setCategoryQuantities(newQuantities);
-
     const newFieldErrors = { ...fieldErrors };
-    if (value <= 0) {
+    if (parseInt(value) <= 0) {
       newFieldErrors[categoryId] = true;
     } else {
       newFieldErrors[categoryId] = false;
@@ -401,6 +400,7 @@ const ModalDetailGift = (props) => {
         message.error("Vui lòng điền đầy đủ thông tin.");
       });
   };
+
   const fromDate = new Date(Number(gift.fromDate));
   const toDate = new Date(Number(gift.toDate));
 
@@ -581,7 +581,7 @@ const ModalDetailGift = (props) => {
             </Form.Item>
             {selectType !== 2 && (
               <Form.Item
-                label="Chọn cấp bậc"
+                label="Loại mật quy đổi"
                 rules={[
                   {
                     required: true,
@@ -593,13 +593,14 @@ const ModalDetailGift = (props) => {
                 <Select
                   className="select-custom"
                   mode="tags"
-                  placeholder="Chọn cấp bậc"
+                  placeholder="Loại mật quy đổi"
                   onChange={(value) => handleCategoryChange(value)}
                   value={selectedCategories}
                   maxTagCount={3}
                   showSearch
                   filterOption={(input, option) =>
-                    option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    // console.log(option)
+                    option.children.indexOf(input) >= 0
                   }
                 >
                   {listCategory.map((item) => (
@@ -625,17 +626,36 @@ const ModalDetailGift = (props) => {
                   categoryId in categoryQuantities
                     ? categoryQuantities[categoryId]
                     : "";
+                form.setFieldValue(`honey_${category.id}`, honeyValue)
 
                 if (selectedCategories.includes(categoryId)) {
                   return (
                     <Form.Item
-                      label={`Số mật ${category.name}`}
-                      style={{ height: 40 }}
+                    label={<span style={{wordBreak: "break-word", textWrap: "wrap"}}>Số mật {category.name}</span>}
+                    name={`honey_${category.id}`}
+                    key={category.id}
+                    rules={[
+                      {
+                        required: true,
+                        message: `Vui lòng nhập số mật ${category.name}`,
+                      },
+                      {
+                        validator: (_, value) => {
+                          const regex = /^[0-9]\d*$/;
+                          if (!regex.test(value) || value === 0) {
+                            return Promise.reject(
+                              new Error("Vui lòng nhập một số nguyên dương")
+                            );
+                          }
+
+                          return Promise.resolve();
+                        },
+                      },
+                    ]}
                     >
                       <Input
                         type="number"
                         id={`honey_${category.name}`}
-                        value={honeyValue}
                         onChange={(e) =>
                           handleCategoryQuantityChange(
                             categoryId,

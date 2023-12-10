@@ -25,8 +25,10 @@ const statusHistory = (status) => {
       return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
     case 2:
       return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
-    case 3:
-      return <Tag color="cyan">Gửi lại yêu cầu</Tag>; // Màu xanh dương nhạt
+    case 4:
+      return <Tag color="geekblue">Chờ phê duyệt</Tag>;
+    case 5:
+      return <Tag color="geekblue">Chờ phê duyệt</Tag>;
     default:
       return <Tag>Không xác định</Tag>;
   }
@@ -36,11 +38,12 @@ const fomatDate = (date) => {
 };
 
 export default function RequestManagerDetail() {
-  const {id} = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const [request, setRequest] = useState({});
   const [student, setStudent] = useState({});
-  const [teacher, setTeacher] = useState({});
+  const [sender, setSender] = useState({});
+  const [idDetail, setIdDetail] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -52,7 +55,9 @@ export default function RequestManagerDetail() {
       .then((response) => {
         if (response.data.success) {
           idStudent = response.data.data.studentId;
-          idNguoiGui = response.data.data.nguoiGui;
+          idNguoiGui =
+            response.data.data.teacherId || response.data.data.presidentId;
+          setIdDetail(response.data.data.historyDetailId);
           setRequest(response.data.data);
         } else {
           navigate("/not-found");
@@ -70,7 +75,7 @@ export default function RequestManagerDetail() {
       });
     await RequestManagerAPI.getUserAPiById(idNguoiGui)
       .then((response) => {
-        setTeacher(response.data.data);
+        setSender(response.data.data);
       })
       .catch((error) => {
         console.error(error);
@@ -78,29 +83,21 @@ export default function RequestManagerDetail() {
   };
 
   const changeStatus = (status) => {
-    RequestManagerAPI.changeStatus(id, status)
+    RequestManagerAPI.changeStatus(id, idDetail, status)
       .then((response) => {
         if (response.data.success) {
           fetchData();
-          if (status === 1) message.success("Đã xác nhận yêu cầu cộng điểm!");
+          if (status === 1) message.success("Đã xác nhận yêu cầu!");
           if (status === 2) message.error("Hủy yêu cầu thành công!");
         }
       })
       .catch((error) => {
         console.error(error);
-      })
-      .finally(() => {});
+      });
   };
 
   return (
     <div className="request-manager">
-      <Button
-        onClick={() => navigate(-1)}
-        type="primary"
-        style={{ backgroundColor: "black" }}
-      >
-        Quay lại
-      </Button>
       {request.id !== null && (
         <Card
           className="m-25 request-manager-detail"
@@ -127,11 +124,8 @@ export default function RequestManagerDetail() {
             <Descriptions.Item label="Loại yêu cầu">
               {type(request.type)}
             </Descriptions.Item>
-            <Descriptions.Item label="Loại điểm">
-              {request.nameCategory}
-            </Descriptions.Item>
-            <Descriptions.Item label="Số điểm">
-              {request.honeyPoint}
+            <Descriptions.Item label="Loại mật ong">
+              {request.honey}
             </Descriptions.Item>
             <Descriptions.Item label="Ngày tạo">
               {fomatDate(request.createDate)}
@@ -144,11 +138,13 @@ export default function RequestManagerDetail() {
                 ? fomatDate(request.changeDate)
                 : "Chưa phê duyệt"}
             </Descriptions.Item>
-            <Descriptions.Item label="Lý do">{request.note}</Descriptions.Item>
+            <Descriptions.Item label="Lý do">
+              {request.note !== null ? request.note : "Không có"}
+            </Descriptions.Item>
           </Descriptions>
           <hr />
           <Descriptions title="Thông tin sinh viên">
-            <Descriptions.Item label="User name">
+            <Descriptions.Item label="User name sinh viên">
               {student.userName}
             </Descriptions.Item>
             <Descriptions.Item label="Họ & tên">
@@ -159,12 +155,12 @@ export default function RequestManagerDetail() {
           <hr />
           <Descriptions title="Thông tin người gửi">
             <Descriptions.Item label="User name người gửi">
-              {teacher.userName}
+              {sender.userName}
             </Descriptions.Item>
             <Descriptions.Item label="Họ & tên">
-              {teacher.name}
+              {sender.name}
             </Descriptions.Item>
-            <Descriptions.Item label="Email">{teacher.email}</Descriptions.Item>
+            <Descriptions.Item label="Email">{sender.email}</Descriptions.Item>
           </Descriptions>
         </Card>
       )}

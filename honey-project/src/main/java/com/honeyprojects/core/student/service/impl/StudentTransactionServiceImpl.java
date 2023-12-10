@@ -9,7 +9,11 @@ import com.honeyprojects.core.student.model.response.StudentCategoryResponse;
 import com.honeyprojects.core.student.model.response.StudentHoneyResponse;
 import com.honeyprojects.core.student.model.response.transaction.StudentGiftTransactionResponse;
 import com.honeyprojects.core.student.model.response.transaction.TransactionResponse;
-import com.honeyprojects.core.student.repository.*;
+import com.honeyprojects.core.student.repository.StudentArchiveGiftRepository;
+import com.honeyprojects.core.student.repository.StudentArchiveRepository;
+import com.honeyprojects.core.student.repository.StudentCategoryRepository;
+import com.honeyprojects.core.student.repository.StudentGiftTransactionRepository;
+import com.honeyprojects.core.student.repository.StudentHoneyRepository;
 import com.honeyprojects.core.student.service.StudentTransactionService;
 import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
@@ -55,7 +59,7 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
 
     @Override
     public String searchUser(String email) {
-        SimpleResponse simpleResponse = requestApiidentity.handleCallApiGetUserByEmail(email);
+        SimpleResponse simpleResponse = requestApiidentity.handleCallApiGetUserByEmailOrUsername(email);
         if (simpleResponse != null) {
             if (udpmHoney.getIdUser().equals(simpleResponse.getId())) {
                 throw new RestApiException("Không thể giao dịch với bản thân!");

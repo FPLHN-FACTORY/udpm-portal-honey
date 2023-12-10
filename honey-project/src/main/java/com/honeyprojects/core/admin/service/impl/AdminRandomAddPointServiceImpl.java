@@ -43,7 +43,7 @@ import com.honeyprojects.entity.Honey;
 import com.honeyprojects.entity.Notification;
 import com.honeyprojects.entity.NotificationDetail;
 import com.honeyprojects.infrastructure.contant.Constants;
-import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.HistoryStatus;
 import com.honeyprojects.infrastructure.contant.NotificationDetailType;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
@@ -149,7 +149,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             return listSimple;
         } else {
             List<SimpleResponse> simpleResponseList = new ArrayList<>();
-            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSearch + "@fpt.edu.vn");
+            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(emailSearch);
             simpleResponseList.add(simpleResponse);
             return simpleResponseList;
         }
@@ -211,7 +211,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     continue;
                 } else {
                     SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(honey.getStudentId());
-                    History history = createHistory(honey.getStudentId(), TypeHistory.CONG_DIEM, HoneyStatus.DA_PHE_DUYET);
+                    History history = createHistory(honey.getStudentId(), TypeHistory.CONG_DIEM, HistoryStatus.DA_PHE_DUYET);
                     createHistoryDetail(honey.getStudentId(), honey.getId(), null, null, history.getId(), null, randomPoint, null);
                     Notification notification = createNotification(honey.getStudentId());
                     stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được hệ thống tặng: " + randomPoint + " " + categoryResponse.getName());
@@ -242,7 +242,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     if (optionalChest.isPresent()) {
                         Chest chest = optionalChest.get();
                         String archiveId = adArchiveRepository.getIdArchiveByIdStudent(simple.getId());
-                        History history = createHistory(simple.getId(), TypeHistory.CONG_RUONG, HoneyStatus.DA_PHE_DUYET);
+                        History history = createHistory(simple.getId(), TypeHistory.CONG_RUONG, HistoryStatus.DA_PHE_DUYET);
                         if (archiveId == null) {
                             Archive archive = createArchive(simple.getId());
                             createArchiveGift(archive.getId(), chest.getId(), null, 1);
@@ -263,7 +263,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(idStudent);
                     if (optionalChest.isPresent()) {
                         Chest chest = optionalChest.get();
-                        History history = createHistory(simpleResponse.getId(), TypeHistory.CONG_RUONG, HoneyStatus.DA_PHE_DUYET);
+                        History history = createHistory(simpleResponse.getId(), TypeHistory.CONG_RUONG, HistoryStatus.DA_PHE_DUYET);
                         String archiveId = adArchiveRepository.getIdArchiveByIdStudent(simpleResponse.getId());
                         if (archiveId == null) {
                             Archive archive = createArchive(simpleResponse.getId());
@@ -383,8 +383,8 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
             }
 
             // Gọi API để lấy thông tin người dùng bằng địa chỉ email
-            String emailSimple = userDTO.getUserName() + "@fpt.edu.vn";
-            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
+            String emailSimple = userDTO.getUserName();
+            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(emailSimple);
             String idArchive = null;
             String archiveId = adArchiveRepository.getIdArchiveByIdStudent(simpleResponse.getId());
             if (archiveId == null) {
@@ -394,7 +394,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                 idArchive = archiveId;
             }
             Notification notification = createNotification(simpleResponse.getId());
-            History history = createHistory(simpleResponse.getId(), TypeHistory.MAT_ONG_VA_VAT_PHAM, HoneyStatus.ADMIN_DA_THEM);
+            History history = createHistory(simpleResponse.getId(), TypeHistory.MAT_ONG_VA_VAT_PHAM, HistoryStatus.ADMIN_DA_THEM);
             // Xử lý vật phẩm (gift)
             if (!DataUtils.isNullObject(userDTO.getLstGift())) {
                 String[] partsGift = userDTO.getLstGift().split(", ");
@@ -498,7 +498,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     }
 
 
-    private History createHistory(String idStudent, TypeHistory typeHistory, HoneyStatus status) {
+    private History createHistory(String idStudent, TypeHistory typeHistory, HistoryStatus status) {
         AdminHistoryRandomRequest request = new AdminHistoryRandomRequest(idStudent, typeHistory, status);
         History history = request.createHistory(new History());
         return adHistoryRepository.save(history);
@@ -554,9 +554,9 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         AdminAddPointDTO userDTO = new AdminAddPointDTO();
         String userName = ExcelUtils.getCellString(row.getCell(0));
         // Tạo địa chỉ email giả định từ tên đăng nhập
-        String emailSimple = userName + "@fpt.edu.vn";
+        String emailSimple = userName;
         // Gọi API để kiểm tra sự tồn tại của người dùng
-        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
+        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(emailSimple);
         // Biến để kiểm tra sự tồn tại của lỗi
         boolean hasError = false;
         // Kiểm tra dữ liệu và xác định trạng thái lỗi (error)
@@ -588,9 +588,9 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         String listGift = ExcelUtils.getCellString(row.getCell(1));
         String listHoney = ExcelUtils.getCellString(row.getCell(2));
         // Tạo địa chỉ email giả định từ tên đăng nhập
-        String emailSimple = userName + "@fpt.edu.vn";
+        String emailSimple = userName;
         // Gọi API để kiểm tra sự tồn tại của người dùng
-        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmail(emailSimple);
+        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(emailSimple);
         // Biến để kiểm tra sự tồn tại của lỗi
         boolean hasError = false;
         // Kiểm tra dữ liệu và xác định trạng thái lỗi (error)

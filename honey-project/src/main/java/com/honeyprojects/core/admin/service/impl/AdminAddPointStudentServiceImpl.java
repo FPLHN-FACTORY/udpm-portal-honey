@@ -26,7 +26,7 @@ import com.honeyprojects.entity.Notification;
 import com.honeyprojects.entity.NotificationDetail;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
 import com.honeyprojects.infrastructure.contant.Constants;
-import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.HistoryStatus;
 import com.honeyprojects.infrastructure.contant.NotificationDetailType;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
@@ -49,7 +49,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -114,6 +113,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
                 history.setStudentId(adminAddPointStudentLabReportRequest.getId());
                 history.setType(TypeHistory.CONG_DIEM);
                 history.setChangeDate(dateNow);
+                history.setStatus(HistoryStatus.CHO_PHE_DUYET);
                 historyRepository.save(history);
 
                 HistoryDetail historyDetail = new HistoryDetail();
@@ -183,10 +183,10 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
 
         for (AdminAddPointStudentLabReportRequestt adminAddPointStudentLabReportRequest :
                 requestAddPointStudentBO.getListStudent()) {
-//            TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
-//            getPointRequest.setStudentId(adminAddPointStudentLabReportRequest.getId());
-//            getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
-//            TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
+            TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
+            getPointRequest.setStudentId(adminAddPointStudentLabReportRequest.getId());
+            getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
+            TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
 
             Long dateNow = Calendar.getInstance().getTimeInMillis();
             History history = new History();
@@ -198,12 +198,22 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
             HistoryDetail historyDetail = new HistoryDetail();
             historyDetail.setHistoryId(history.getId());
             historyDetail.setHoneyPoint(adminAddPointStudentLabReportRequest.getNumberHoney());
+            historyDetail.setStudentId(getPointRequest.getStudentId());
 
-            historyDetail.setStudentId(adminAddPointStudentLabReportRequest.getId());
-
-            Honey honey = addPointUtils.addHoneyUtils(adminAddPointStudentLabReportRequest.getId(),
-                    requestAddPointStudentBO.getCategoryId(), adminAddPointStudentLabReportRequest.getNumberHoney());
-            historyDetail.setHoneyId(honey.getId());
+            if (teacherPointResponse == null) {
+                Honey honey = new Honey();
+                honey.setStatus(Status.HOAT_DONG);
+                honey.setHoneyPoint(adminAddPointStudentLabReportRequest.getNumberHoney());
+                honey.setStudentId(adminAddPointStudentLabReportRequest.getId());
+                honey.setHoneyCategoryId(requestAddPointStudentBO.getCategoryId());
+                honeyRepository.save(honey);
+                historyDetail.setHoneyId(honey.getId());
+            } else {
+                Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(getPointRequest.getStudentId(), category.getId());
+                honey.setHoneyPoint(adminAddPointStudentLabReportRequest.getNumberHoney() + honey.getHoneyPoint());
+                honeyRepository.save(honey);
+                historyDetail.setHoneyId(honey.getId());
+            }
             historyDetailRepository.save(historyDetail);
         }
     }
@@ -214,7 +224,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
         String numberHoney = ExcelUtils.getCellString(row.getCell(1));
 
         // Gọi API để kiểm tra sự tồn tại của người dùng
-        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmail(email);
+        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(email);
 
         // Biến để kiểm tra sự tồn tại của lỗi
         boolean hasError = false;
@@ -293,11 +303,11 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
 
         for (AdminAddPointStudentPortalEventsRequest studentId :
                 requestAddPointStudentBO.getLstStudentId()) {
-//
-//            TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
-//            getPointRequest.setStudentId(studentId.getId());
-//            getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
-//            TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
+
+            TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
+            getPointRequest.setStudentId(studentId.getId());
+            getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
+            TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
 
             Long dateNow = Calendar.getInstance().getTimeInMillis();
             History history = new History();
@@ -309,12 +319,22 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
             HistoryDetail historyDetail = new HistoryDetail();
             historyDetail.setHistoryId(history.getId());
             historyDetail.setHoneyPoint(honeyPoint);
+            historyDetail.setStudentId(getPointRequest.getStudentId());
 
-            historyDetail.setStudentId(studentId.getId());
-
-            Honey honey = addPointUtils.addHoneyUtils(studentId.getId(),
-                    requestAddPointStudentBO.getCategoryId(), requestAddPointStudentBO.getNumberHoney());
-            historyDetail.setHoneyId(honey.getId());
+            if (teacherPointResponse == null) {
+                Honey honey = new Honey();
+                honey.setStatus(Status.HOAT_DONG);
+                honey.setHoneyPoint(honeyPoint);
+                honey.setStudentId(studentId.getId());
+                honey.setHoneyCategoryId(requestAddPointStudentBO.getCategoryId());
+                honeyRepository.save(honey);
+                historyDetail.setHoneyId(honey.getId());
+            } else {
+                Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(getPointRequest.getStudentId(), category.getId());
+                honey.setHoneyPoint(requestAddPointStudentBO.getNumberHoney() + honey.getHoneyPoint());
+                honeyRepository.save(honey);
+                historyDetail.setHoneyId(honey.getId());
+            }
             historyDetailRepository.save(historyDetail);
         }
     }
@@ -324,7 +344,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
         String email = ExcelUtils.getCellString(row.getCell(0));
 
         // Gọi API để kiểm tra sự tồn tại của người dùng
-        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmail(email);
+        SimpleResponse response = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(email);
 
         // Biến để kiểm tra sự tồn tại của lỗi
         boolean hasError = false;
@@ -360,76 +380,51 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
 
         for (AdminAddPointStudentPortalEventsBOO.User studentId :
                 requestAddPointStudentBO.getListUser()) {
-//            TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
-//            getPointRequest.setStudentId(studentId.getId());
-//            getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
-//            TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
+            TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
+            getPointRequest.setStudentId(studentId.getId());
+            getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
+            TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
             Long dateNow = Calendar.getInstance().getTimeInMillis();
             History history = new History();
-            history.setStudentId(studentId.getId());
-            history.setType(TypeHistory.MAT_ONG_VA_VAT_PHAM);
-            history.setChangeDate(dateNow);
-
             if (category.getCategoryStatus().equals(CategoryStatus.FREE)) {
-                history.setStatus(HoneyStatus.DA_PHE_DUYET);
+                history.setStatus(HistoryStatus.DA_PHE_DUYET);
                 Notification notification = createNotification(studentId.getId());
                 if (!DataUtils.isNullObject(requestAddPointStudentBO.getListUser())) {
                     try {
                         createNotificationDetailHoney(category, notification.getId(), honeyPoint);
-
-                        HistoryDetail historyDetail = new HistoryDetail();
-                        historyDetail.setHistoryId(history.getId());
-                        historyDetail.setHoneyPoint(honeyPoint);
-                        historyDetail.setStudentId(studentId.getId());
-                        Honey honey = addPointUtils.addHoneyUtils(studentId.getId(), requestAddPointStudentBO.getCategoryId(), honeyPoint);
-                        historyDetail.setHoneyId(honey.getId());
-//                        if (teacherPointResponse == null) {
-//                            Honey honey = new Honey();
-//                            honey.setStatus(Status.HOAT_DONG);
-//                            honey.setHoneyPoint(honeyPoint);
-//                            honey.setStudentId(studentId.getId());
-//                            honey.setHoneyCategoryId(requestAddPointStudentBO.getCategoryId());
-//                            honeyRepository.save(honey);
-//
-//                        } else {
-//                            Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(getPointRequest.getStudentId(), category.getId());
-//                            honey.setHoneyPoint(requestAddPointStudentBO.getNumberHoney() + honey.getHoneyPoint());
-//                            honeyRepository.save(honey);
-//                            historyDetail.setHoneyId(honey.getId());
-//                        }
-                        historyDetailRepository.save(historyDetail);
-
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                     }
                 }
             }
             if (category.getCategoryStatus().equals(CategoryStatus.ACCEPT)) {
-                history.setStatus(HoneyStatus.CHO_PHE_DUYET);
-                HistoryDetail historyDetail = new HistoryDetail();
-                historyDetail.setHistoryId(history.getId());
-                historyDetail.setHoneyPoint(honeyPoint);
-
-                Honey honey = addPointUtils.addHoneyUtils(studentId.getId(), requestAddPointStudentBO.getCategoryId(), honeyPoint);
-                historyDetail.setHoneyId(honey.getId());
-//                historyDetail.setStudentId(getPointRequest.getStudentId());
-//                if (teacherPointResponse == null) {
-//                    Honey honey = new Honey();
-//                    honey.setStatus(Status.HOAT_DONG);
-//                    honey.setHoneyPoint(honeyPoint);
-//                    honey.setStudentId(studentId.getId());
-//                    honey.setHoneyCategoryId(requestAddPointStudentBO.getCategoryId());
-//                    honeyRepository.save(honey);
-//                    historyDetail.setHoneyId(honey.getId());
-//                } else {
-//                    Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(getPointRequest.getStudentId(), category.getId());
-//                    honey.setHoneyPoint(requestAddPointStudentBO.getNumberHoney() + honey.getHoneyPoint());
-//                    honeyRepository.save(honey);
-//                    historyDetail.setHoneyId(honey.getId());
-//                }
-                historyDetailRepository.save(historyDetail);
+            history.setStatus(HistoryStatus.CHO_PHE_DUYET);
             }
+            history.setStudentId(studentId.getId());
+            history.setType(TypeHistory.MAT_ONG_VA_VAT_PHAM);
+            history.setChangeDate(dateNow);
             historyRepository.save(history);
+
+            HistoryDetail historyDetail = new HistoryDetail();
+            historyDetail.setHistoryId(history.getId());
+            historyDetail.setHoneyPoint(honeyPoint);
+            historyDetail.setStudentId(getPointRequest.getStudentId());
+
+            if (teacherPointResponse == null) {
+                Honey honey = new Honey();
+                honey.setStatus(Status.HOAT_DONG);
+                honey.setHoneyPoint(honeyPoint);
+                honey.setStudentId(studentId.getId());
+                honey.setHoneyCategoryId(requestAddPointStudentBO.getCategoryId());
+                honeyRepository.save(honey);
+                historyDetail.setHoneyId(honey.getId());
+            } else {
+                Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(getPointRequest.getStudentId(), category.getId());
+                honey.setHoneyPoint(requestAddPointStudentBO.getNumberHoney() + honey.getHoneyPoint());
+                honeyRepository.save(honey);
+                historyDetail.setHoneyId(honey.getId());
+            }
+            historyDetailRepository.save(historyDetail);
         }
         return true;
     }

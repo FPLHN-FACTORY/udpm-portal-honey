@@ -115,4 +115,11 @@ export class ArchiveAPI {
       data: data,
     });
   };
+
+  static getCategoryByIdGift = (id) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/category-id-gift?id=${id}`,
+    });
+  };
 }

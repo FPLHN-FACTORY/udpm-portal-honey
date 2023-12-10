@@ -43,7 +43,6 @@ import ListHistory from "./pages/censor/requestmanager/ListHistory";
 import DashboardPresident from "./layout/president/DashboardPresident";
 import AddItem from "./pages/president/AddItem";
 import HonorsStudent from "./pages/student/honors/HonorsStudent";
-import TopStudent from "./pages/student/honors/TopStudent";
 import { SelectLoading } from "./app/reducers/loading/loading.reducer";
 import { useAppSelector } from "./app/hooks";
 import Login from "./pages/login/Login";
@@ -51,11 +50,11 @@ import AuthorSwitch from "./pages/login/AuthorSwitch";
 import ProjectManager from "./pages/censor/randomaddpoint/ProjectManager";
 import EventManager from "./pages/censor/randomaddpoint/EventManager";
 import AuctionManagementChart from "./pages/censor/auction-management/chart/AuctionManagementChart";
-import HoneyHistory from "./pages/president/HoneyHistory";
-import GiftHistory from "./pages/president/GiftHistory";
 import PresidentHistory from "./pages/president/PresidentHistory";
 import HistoryPortal from "./pages/censor/portal/HistoryPortal";
+import RequestItemDetail from "./pages/censor/requestmanager/RequestItemDetail";
 
+import StudentProfile from "./pages/student/honors/StudentProfile";
 function App() {
   const data = useAppSelector(SelectLoading);
   return (
@@ -171,6 +170,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <RequestManagerDetail />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+             <Route
+              path="/censor/request-item/detail/:id"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <RequestItemDetail />
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -448,7 +457,7 @@ function App() {
               }
             />
             <Route
-              path="/student/honor-student"
+              path="/student/hall-of-fame"
               element={
                 <AuthGuard>
                   {/* <DashboardAuthUser> */}
@@ -458,11 +467,11 @@ function App() {
               }
             />
             <Route
-              path="/student/top-student"
+              path="/student/hall-of-fame/:id"
               element={
                 <AuthGuard>
                   {/* <DashboardAuthUser> */}
-                  <TopStudent />
+                  <StudentProfile />
                   {/* </DashboardAuthUser> */}
                 </AuthGuard>
               }
