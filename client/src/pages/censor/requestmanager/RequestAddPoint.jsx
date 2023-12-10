@@ -34,6 +34,7 @@ import moment from "moment";
 
 export default function RequestAddPoint() {
   const dispatch = useAppDispatch();
+  const [hasData, setHasData] = useState(false);
   const columns = [
     {
       title: "STT",
@@ -45,7 +46,6 @@ export default function RequestAddPoint() {
       dataIndex: "name",
       key: "name",
       render: (text, record) => {
-        console.log(record);
         if (record.teacherId !== null) {
           return record.nameTeacher;
         } else if (record.presidentId !== null) {
@@ -161,6 +161,11 @@ export default function RequestAddPoint() {
             );
             dispatch(SetHistory(listHistory));
             setTotalPage(response.data.totalPages);
+            if (response.data.data.length > 0) {
+              setHasData(true);
+            } else {
+              setHasData(false);
+            }
           } catch (error) {
             console.error(error);
           }
@@ -182,14 +187,13 @@ export default function RequestAddPoint() {
     };
   });
 
-  console.log(data);
-
   const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
     if (value.userName === undefined || value.userName.trim().length === 0) {
       setFilter({
-        ...filter,
+        page: 0,
+        status: 0,
         idStudent: null,
         idCategory: value.idCategory,
         status: value.status,
@@ -199,7 +203,8 @@ export default function RequestAddPoint() {
         .then((result) => {
           if (result.data.success) {
             setFilter({
-              ...filter,
+              page: 0,
+              status: 0,
               idStudent: result.data.data.id,
               idCategory: value.idCategory,
               status: value.status,
@@ -293,14 +298,16 @@ export default function RequestAddPoint() {
           }}
         />
         <div className="mt-10 text-center mb-10">
-          <Pagination
-            simple
-            current={filter.page + 1}
-            onChange={(page) => {
-              setFilter({ ...filter, page: page - 1 });
-            }}
-            total={totalPage * 10}
-          />
+          {hasData && (
+            <Pagination
+              simple
+              current={filter.page + 1}
+              onChange={(page) => {
+                setFilter({ ...filter, page: page - 1 });
+              }}
+              total={totalPage * 10}
+            />
+          )}
         </div>
       </Card>
     </div>
