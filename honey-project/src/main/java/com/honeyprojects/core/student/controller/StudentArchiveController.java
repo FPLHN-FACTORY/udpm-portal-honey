@@ -116,4 +116,9 @@ public class StudentArchiveController {
         return new ResponseObject(service.deleteItem(id, request));
     }
 
+    @GetMapping("/category-id-gift")
+    public ResponseObject getCategoryByIdGift(@RequestParam("id") String idGift) {
+        return new ResponseObject(service.findCategoryByIdGift(idGift));
+    }
+
 }

@@ -4,9 +4,11 @@ import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.student.model.request.*;
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
+import com.honeyprojects.core.student.model.response.StudentCategoryResponse;
 import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
 import com.honeyprojects.core.student.model.response.archive.StudentArchiveByUserResponse;
 import com.honeyprojects.entity.ArchiveGift;
+import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Gift;
 import org.springframework.data.repository.query.Param;
 
@@ -36,4 +38,5 @@ public interface StudentArchiveService {
 
     ArchiveGift deleteItem(String id, StudentGetArchiveGiftRequest request);
 
+    List<StudentCategoryResponse> findCategoryByIdGift(String igGift);
 }

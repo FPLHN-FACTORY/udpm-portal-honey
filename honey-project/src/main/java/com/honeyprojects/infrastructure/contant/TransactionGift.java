@@ -1,7 +1,8 @@
 package com.honeyprojects.infrastructure.contant;
 
+// được phép giao dịch hay không
 public enum TransactionGift {
-    ALLOW,
+    ALLOW, // được phép
 
-    DONT,
+    DONT, // Không được phép
 }
