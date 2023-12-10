@@ -4,9 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 public interface StudentArchiveByUserResponse {
 
-    @Value("#{target.stt}")
-    String getStt();
-
     @Value("#{target.idStudent}")
     String getIdStudent();
 
@@ -18,9 +15,5 @@ public interface StudentArchiveByUserResponse {
 
     @Value("#{target.nameGift}")
     String getNameGift();
-
-    @Value("#{target.idCategory}")
-    String getIdCategory();
-
 
 }

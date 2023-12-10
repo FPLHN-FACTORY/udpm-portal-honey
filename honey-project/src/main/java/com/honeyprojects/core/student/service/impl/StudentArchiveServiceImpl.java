@@ -10,6 +10,7 @@ import com.honeyprojects.core.student.model.request.StudentGetArchiveGiftRequest
 import com.honeyprojects.core.student.model.request.StudentRequestChangeGift;
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
+import com.honeyprojects.core.student.model.response.StudentCategoryResponse;
 import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
 import com.honeyprojects.core.student.model.response.archive.StudentArchiveByUserResponse;
 import com.honeyprojects.core.student.repository.StudentArchiveRepository;
@@ -18,6 +19,7 @@ import com.honeyprojects.core.student.repository.StudentGiftRepository;
 import com.honeyprojects.core.student.repository.StudentHistoryRepository;
 import com.honeyprojects.core.student.service.StudentArchiveService;
 import com.honeyprojects.entity.ArchiveGift;
+import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.infrastructure.contant.ExpiryGift;
@@ -238,6 +240,11 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
             archiveGiftRepository.delete(archiveGift);
         }
         return archiveGift;
+    }
+
+    @Override
+    public List<StudentCategoryResponse> findCategoryByIdGift(String idGift) {
+        return archiveRepository.findCategoryByIdGift(idGift);
     }
 
 }

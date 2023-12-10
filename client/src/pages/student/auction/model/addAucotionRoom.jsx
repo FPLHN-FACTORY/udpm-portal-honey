@@ -8,6 +8,7 @@ import {
   Modal,
   Radio,
   Row,
+  Select,
   Space,
   message,
 } from "antd";
@@ -29,11 +30,25 @@ export default function ModalAddAuction({
   const [quantity, setQuantity] = useState(0);
   const [jump, setJump] = useState(0);
   const [startingPrice, setStartingPrice] = useState(0);
+  const [categorySelect, setCategorySelect] = useState(null);
+  const [listCategory, setListCategory] = useState([]);
   const loadListArchive = () => {
     ArchiveAPI.findAllUser(user.idUser).then((res) => {
+      console.log(res.data.data);
       setListArchiveUser(res.data.data);
     });
   };
+  
+  const loadDataCategory = (idGift) => {
+    ArchiveAPI.getCategoryByIdGift(idGift).then((res) => {
+      setListCategory(res.data.data)
+    });
+  };
+
+  // useEffect(() => {
+  //   loadDataCategory();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   useEffect(() => {
     if (visible) {
@@ -41,6 +56,7 @@ export default function ModalAddAuction({
       setJump(0);
       setStartingPrice(0);
       form.setFieldsValue({ time: 8 });
+      setListCategory([]);
       loadListArchive();
       return () => {
         setArchiveGift(null);
@@ -57,7 +73,29 @@ export default function ModalAddAuction({
     form
       .validateFields()
       .then((values) => {
-        return new Promise((resolve, reject) => {
+        const { time } = values;
+        if (time === undefined) {
+          message.error("Vui lòng chọn thời hạn");
+          return;
+        }
+        if (categorySelect === undefined || categorySelect === null) {
+          message.error("Vui lòng chọn thể loại");
+          return;
+        }
+        if (!archiveGift) {
+          message.error("Vui lòng chọn vật phẩm để đấu giá");
+          return;
+        }
+        if (startingPrice === undefined || startingPrice <= 0) {
+          message.error("Vui lòng nhập giá trị khởi điểm lớn hơn hoặc bằng 0");
+          return;
+        }
+        if (startingPrice === undefined || quantity <= 0) {
+          message.error(
+            "Số lượng vật phẩm đấu giá là số nguyên dương lớn hơn 0"
+          );
+          return;
+        }
           Modal.confirm({
             title: "Xác nhận",
             content: (
@@ -71,47 +109,26 @@ export default function ModalAddAuction({
             ),
             okText: "Đồng ý",
             cancelText: "Hủy",
-            onOk: () => resolve(values),
-            onCancel: () => reject(),
+            onOk: () => {
+              
+              const dataUpload = {
+                idUser: user?.idUser,
+                mail: user?.email,
+                idGift: archiveGift?.idGift,
+                jump,
+                startingPrice,
+                time,
+                name: archiveGift?.nameGift,
+                idCategory: categorySelect,
+                quantity,
+              };
+              stompClientAll.send(
+                `/action/add-auction`,
+                {},
+                JSON.stringify(dataUpload)
+              );
+            },
           });
-        });
-      })
-      .then((values) => {
-        const { time } = values;
-        if (time === undefined) {
-          message.error("Vui lòng chọn thời hạn");
-          return;
-        }
-        if (!archiveGift) {
-          message.error("Vui lòng chọn vật phẩm để đấu giá");
-          return;
-        }
-        if (startingPrice === undefined) {
-          message.error("Vui lòng nhập giá trị khởi điểm lớn hơn hoặc bằng 0");
-          return;
-        }
-        if (quantity === 0 || quantity > 1000000000) {
-          message.error(
-            "Số lượng vật phẩm đấu giá là số nguyên dương lớn hơn 0 và nhỏ hơn bằng 1 tỷ"
-          );
-          return;
-        }
-        const dataUpload = {
-          idUser: user?.idUser,
-          mail: user?.email,
-          idGift: archiveGift?.idGift,
-          jump,
-          startingPrice,
-          time,
-          name: archiveGift?.nameGift,
-          idCategory: archiveGift?.idCategory,
-          quantity,
-        };
-        stompClientAll.send(
-          `/action/add-auction`,
-          {},
-          JSON.stringify(dataUpload)
-        );
       })
       .catch((errorInfo) => {
         console.error("Lỗi xảy ra:", errorInfo);
@@ -134,6 +151,7 @@ export default function ModalAddAuction({
       cancelText: "Hủy",
       onOk: () => {
         setArchiveGift(item);
+        loadDataCategory(item.idGift)
       },
     });
   };
@@ -152,7 +170,13 @@ export default function ModalAddAuction({
           className="modal-create-auction"
           style={{ minWidth: "800px", Height: "1000px" }}
         >
-          <Form form={form}>
+          <Form form={form}
+            labelCol={{
+            span: 10,
+          }}
+          wrapperCol={{
+            span: 14,
+          }} >
             <Card>
               <div className="bar-transaction" />
               <Row
@@ -218,8 +242,36 @@ export default function ModalAddAuction({
                           }}
                         />
                         <br />
+                        
+                        <Form.Item
+                          className="w-full text-start"
+                          label={
+                            <span
+                              style={{
+                                color: "white",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              Loại mật ong :
+                            </span>
+                          }
+                          colon={false}
+                        >
+                        <Select
+                            placeholder="Chọn thể loại"
+                            onSelect={(el) => setCategorySelect(el)}
+                        >
+                          {listCategory?.map((item) => {
+                            return (
+                              <Select.Option value={item.id}>
+                                {item.name}
+                              </Select.Option>
+                            );
+                          })}
+                        </Select>
+                        </Form.Item>
                         <Row gutter={16}>
-                          <Col span={10}>
+                          <Col span={10} className="text-end">
                             <span
                               style={{
                                 color: "white",
@@ -247,7 +299,7 @@ export default function ModalAddAuction({
                           </Col>
                         </Row>
                         <Row gutter={16}>
-                          <Col span={10}>
+                          <Col span={10}  className="text-end">
                             <span
                               style={{
                                 color: "white",
@@ -275,7 +327,7 @@ export default function ModalAddAuction({
                           </Col>
                         </Row>
                         <Row gutter={16}>
-                          <Col span={10}>
+                          <Col span={10}  className="text-end">
                             <span
                               style={{
                                 color: "white",
@@ -302,7 +354,9 @@ export default function ModalAddAuction({
                             />{" "}
                           </Col>
                         </Row>
+                        
                         <Form.Item
+                          className="w-full text-start"
                           label={
                             <span
                               style={{
@@ -315,10 +369,8 @@ export default function ModalAddAuction({
                           }
                           colon={false}
                           name="time"
-                          style={{ marginRight: "auto", marginLeft: "0px" }}
                         >
-                          <Radio.Group
-                            style={{ marginLeft: "5px", marginTop: "30%" }}
+                          <Radio.Group className="ml-3"
                           >
                             <Space direction="vertical">
                               <Radio value={8}>08 giờ</Radio>
