@@ -647,7 +647,7 @@ const ModalDetailGift = (props) => {
                               new Error("Vui lòng nhập một số nguyên dương")
                             );
                           }
-  
+
                           return Promise.resolve();
                         },
                       },
