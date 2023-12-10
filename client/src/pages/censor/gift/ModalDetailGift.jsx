@@ -144,9 +144,11 @@ const ModalDetailGift = (props) => {
     const newQuantities = { ...categoryQuantities };
     newQuantities[categoryId] = value;
     setCategoryQuantities(newQuantities);
-
+    console.log("====================================");
+    console.log(value);
+    console.log("====================================");
     const newFieldErrors = { ...fieldErrors };
-    if (value <= 0) {
+    if (value < 1) {
       newFieldErrors[categoryId] = true;
     } else {
       newFieldErrors[categoryId] = false;
@@ -257,8 +259,10 @@ const ModalDetailGift = (props) => {
         const hasCategoryErrors = Object.values(fieldErrors).some(
           (hasError) => hasError
         );
-
+        console.log("====================================");
+        console.log(hasCategoryErrors);
         if (hasCategoryErrors) {
+          console.log("====================================");
           message.error("Số lượng mật phải là số nguyên dương lớn hơn 0");
           return;
         }

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,9 +42,11 @@ public class StudentHallOfFameServiceImpl implements StudentHallOfFameService {
     @Override
     public Page<StudentHallOfFameBO> getPageHallOfFame(StudentSearchHallOfFameRequest request) {
 
+        SimpleResponse result = requestApiIdentity.handleCallApiGetUserByEmailOrUsername(request.getSearch());
+
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
 
-        Page<StudentPageStudentResponse> pageStudentResponses = studentUserRepository.getPageHallOfFame(pageable, request.getSearch());
+        Page<StudentPageStudentResponse> pageStudentResponses = studentUserRepository.getPageHallOfFame(pageable, result.getId());
 
         List<String> lstStudentId = pageStudentResponses.getContent().stream()
                 .map(StudentPageStudentResponse::getStudentId).collect(Collectors.toList());
@@ -52,8 +55,13 @@ public class StudentHallOfFameServiceImpl implements StudentHallOfFameService {
 
         Map<String, List<StudentCategoryDTO>> mCategory = getMapCategory(lstStudentId);
 
+        List<SimpleResponse> lstSimpleResponses = requestApiIdentity.handleCallApiGetListUserByListId(lstStudentId);
+
+        Map<String, SimpleResponse> studentIdToResponseMap = lstSimpleResponses.stream()
+                .collect(Collectors.toMap(SimpleResponse::getId, Function.identity()));
+
         for (StudentPageStudentResponse student : pageStudentResponses.getContent()) {
-            SimpleResponse simpleResponse = requestApiIdentity.handleCallApiGetUserById(student.getStudentId());
+            SimpleResponse simpleResponse = studentIdToResponseMap.get(student.getStudentId());
             StudentHallOfFameBO studentHallOfFame = new StudentHallOfFameBO();
             studentHallOfFame.setStt(student.getStt());
             studentHallOfFame.setName(simpleResponse.getName());
@@ -77,8 +85,18 @@ public class StudentHallOfFameServiceImpl implements StudentHallOfFameService {
     public List<Top3StudentDTO> getTop3Student() {
         List<Top3StudentDTO> lstTop3Student = new ArrayList<>();
         List<StudentPageStudentResponse> listStudentResponse = studentUserRepository.getTop3Student();
+
+        List<String> lstStudentId = listStudentResponse.stream()
+                .map(StudentPageStudentResponse::getStudentId)
+                .collect(Collectors.toList());
+
+        List<SimpleResponse> lstSimpleResponses = requestApiIdentity.handleCallApiGetListUserByListId(lstStudentId);
+
+        Map<String, SimpleResponse> studentIdToResponseMap = lstSimpleResponses.stream()
+                .collect(Collectors.toMap(SimpleResponse::getId, Function.identity()));
+
         for (StudentPageStudentResponse response : listStudentResponse) {
-            SimpleResponse simpleResponse = requestApiIdentity.handleCallApiGetUserById(response.getStudentId());
+            SimpleResponse simpleResponse = studentIdToResponseMap.get(response.getStudentId());
             Top3StudentDTO studentDTO = Top3StudentDTO.builder()
                     .stt(response.getStt())
                     .totalHoney(response.getTotalHoney())
