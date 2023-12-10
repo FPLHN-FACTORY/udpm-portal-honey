@@ -10,6 +10,7 @@ import com.honeyprojects.core.student.model.request.StudentGetArchiveGiftRequest
 import com.honeyprojects.core.student.model.request.StudentRequestChangeGift;
 import com.honeyprojects.core.student.model.response.StudentArchiveGetChestResponse;
 import com.honeyprojects.core.student.model.response.StudentArchiveResponse;
+import com.honeyprojects.core.student.model.response.StudentCategoryResponse;
 import com.honeyprojects.core.student.model.response.StudentGetListGiftResponse;
 import com.honeyprojects.core.student.model.response.archive.StudentArchiveByUserResponse;
 import com.honeyprojects.core.student.repository.StudentArchiveRepository;
@@ -17,12 +18,12 @@ import com.honeyprojects.core.student.repository.StudentGiftArchiveRepository;
 import com.honeyprojects.core.student.repository.StudentGiftRepository;
 import com.honeyprojects.core.student.repository.StudentHistoryRepository;
 import com.honeyprojects.core.student.service.StudentArchiveService;
-import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
+import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.infrastructure.contant.ExpiryGift;
-import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.HistoryStatus;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.repository.ArchiveGiftRepository;
@@ -142,7 +143,7 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
             history.setClassName(request.getMaLop());
             history.setSubject(request.getMaMon());
             history.setType(TypeHistory.PHE_DUYET_QUA);
-            history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+            history.setStatus(HistoryStatus.CHO_PHE_DUYET);
             history.setNote(stringBuilder.toString());
             historyRepository.save(history);
             archiveGift.setQuantity(archiveGift.getQuantity() - request.getQuantity());
@@ -239,6 +240,11 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
             archiveGiftRepository.delete(archiveGift);
         }
         return archiveGift;
+    }
+
+    @Override
+    public List<StudentCategoryResponse> findCategoryByIdGift(String idGift) {
+        return archiveRepository.findCategoryByIdGift(idGift);
     }
 
 }

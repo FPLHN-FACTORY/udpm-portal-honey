@@ -20,13 +20,12 @@ import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.HistoryDetail;
 import com.honeyprojects.entity.Honey;
-import com.honeyprojects.infrastructure.contant.HoneyStatus;
+import com.honeyprojects.infrastructure.contant.HistoryStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.StatusGift;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.repository.HistoryDetailRepository;
-import com.honeyprojects.util.AddPointUtils;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -62,12 +61,10 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
     @Autowired
     private HistoryDetailRepository historyDetailRepository;
 
-    @Autowired
-    private AddPointUtils addPointUtils;
-
 
     @Override
     public History addBuyItem(StudentBuyItemRequest createRequest) {
+        Category category = categoryRepository.findById(createRequest.getCategoryId()).orElse(null);
         Gift gift = giftRepository.findById(createRequest.getGiftId()).orElse(null);
 
 
@@ -87,10 +84,10 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
             honey = honeyRepository.save(honey);
         } else {
             if (gift.getStatus().equals(StatusGift.ACCEPT)) {
-                history.setStatus(HoneyStatus.CHO_PHE_DUYET);
+                history.setStatus(HistoryStatus.CHO_PHE_DUYET);
                 history.setType(TypeHistory.DOI_QUA);
             } else {
-                history.setStatus(HoneyStatus.DA_PHE_DUYET);
+                history.setStatus(HistoryStatus.DA_PHE_DUYET);
                 history.setType(TypeHistory.DOI_QUA);
 
                 int deductedPoints = createRequest.getHoneyPoint();
@@ -110,23 +107,23 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
 
         }
 
-        if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
-            addPointUtils.addGiftUtils(createRequest.getStudentId(), createRequest.getGiftId(), createRequest.getQuantity());
-//            Archive getArchive = archiveRepository.findByStudentId(createRequest.getStudentId()).orElse(archive);
-//            archiveRepository.save(getArchive);
-//            ArchiveGift archiveGift1 = giftArchiveRepository.findByGiftIdAndArchiveId(createRequest.getGiftId(), getArchive.getId());
-//            if (archiveGift1 != null) {
-//                int currentQuantity = archiveGift1.getQuantity();
-//                int additionalQuantity = createRequest.getQuantity();
-//                archiveGift1.setQuantity(currentQuantity + additionalQuantity);
-//                giftArchiveRepository.save(archiveGift1);
-//            } else if (history.getStatus().equals(HoneyStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
-//                archiveGift.setGiftId(createRequest.getGiftId());
-//                archiveGift.setNote(createRequest.getNote());
-//                archiveGift.setArchiveId(getArchive.getId());
-//                archiveGift.setQuantity(createRequest.getQuantity());
-//                giftArchiveRepository.save(archiveGift);
-//            }
+        if (history.getStatus().equals(HistoryStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
+
+            Archive getArchive = archiveRepository.findByStudentId(createRequest.getStudentId()).orElse(archive);
+            archiveRepository.save(getArchive);
+            ArchiveGift archiveGift1 = giftArchiveRepository.findByGiftIdAndArchiveId(createRequest.getGiftId(), getArchive.getId());
+            if (archiveGift1 != null) {
+                int currentQuantity = archiveGift1.getQuantity();
+                int additionalQuantity = createRequest.getQuantity();
+                archiveGift1.setQuantity(currentQuantity + additionalQuantity);
+                giftArchiveRepository.save(archiveGift1);
+            } else if (history.getStatus().equals(HistoryStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
+                archiveGift.setGiftId(createRequest.getGiftId());
+                archiveGift.setNote(createRequest.getNote());
+                archiveGift.setArchiveId(getArchive.getId());
+                archiveGift.setQuantity(createRequest.getQuantity());
+                giftArchiveRepository.save(archiveGift);
+            }
         }
 
         // Tiếp tục với việc thêm yêu cầu vào bảng History

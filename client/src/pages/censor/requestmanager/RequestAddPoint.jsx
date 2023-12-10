@@ -9,6 +9,8 @@ import {
   Select,
   Table,
   message,
+  Space,
+  Tooltip,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import "./index.css";
@@ -21,16 +23,13 @@ import {
   GetCategory,
   SetCategory,
 } from "../../../app/reducers/category/category.reducer";
-import {
-  CheckCircleFilled,
-  CloseCircleFilled,
-  EyeFilled,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faEye, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 export default function RequestAddPoint() {
   const dispatch = useAppDispatch();
@@ -39,17 +38,18 @@ export default function RequestAddPoint() {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
+      align: "center",
     },
     {
       title: "Người gửi",
       dataIndex: "name",
       key: "name",
+      align: "center",
       render: (text, record) => {
-        console.log(record);
         if (record.teacherId !== null) {
-          return record.nameTeacher;
+          return record.userTeacher;
         } else if (record.presidentId !== null) {
-          return record.namePresident;
+          return record.userPresident;
         } else {
           return null;
         }
@@ -57,49 +57,73 @@ export default function RequestAddPoint() {
     },
     {
       title: "Người nhận",
-      dataIndex: "nameStudent",
-      key: "nameStudent",
+      dataIndex: "userName",
+      key: "userName",
+      align: "center",
     },
     {
-      title: "Số điểm",
-      dataIndex: "honeyPoint",
-      key: "honeyPoint",
-    },
-    {
-      title: "Loại điểm",
-      dataIndex: "nameCategory",
-      key: "nameCategory",
+      title: "Số mật ong",
+      dataIndex: "honey",
+      key: "honey",
+      align: "center",
     },
     {
       title: "Ngày gửi",
       dataIndex: "createdDate",
       key: "createdDate",
+      align: "center",
     },
     {
       title: "Hành động",
       dataIndex: "acction",
       key: "acction",
+      align: "center",
       render: (values) => (
-        <div style={{ fontSize: "19px", textAlign: "center", color: "green" }}>
+        <Space size="small">
           {values.status !== 1 && values.status !== 2 && (
-            <CheckCircleFilled
-              onClick={() =>
-                changeStatus(values.idHistory, values.idHistoryDetail, 1)
-              }
-            />
+            <Tooltip title="Xác nhận">
+              <Button
+                onClick={() =>
+                  changeStatus(values.idHistory, values.idHistoryDetail, 1)
+                }
+                style={{
+                  backgroundColor: "yellowgreen",
+                  color: "white",
+                }}
+              >
+                <FontAwesomeIcon icon={faCheck} />
+              </Button>
+            </Tooltip>
           )}
+
           {values.status !== 1 && values.status !== 2 && (
-            <CloseCircleFilled
-              style={{ fontSize: "19px", margin: "0px 10px", color: "red" }}
-              onClick={() =>
-                changeStatus(values.idHistory, values.idHistoryDetail, 2)
-              }
-            />
+            <Tooltip title="Hủy">
+              <Button
+                onClick={() =>
+                  changeStatus(values.idHistory, values.idHistoryDetail, 2)
+                }
+                style={{
+                  backgroundColor: "red",
+                  color: "white",
+                }}
+              >
+                <FontAwesomeIcon icon={faXmark} />
+              </Button>
+            </Tooltip>
           )}
-          <Link to={"/censor/request-manager/detail/" + values.idHistory}>
-            <EyeFilled style={{ fontSize: "20px", color: "#3498db" }} />
-          </Link>
-        </div>
+          <Tooltip title="Xem chi tiết">
+            <Link to={"/censor/request-manager/detail/" + values.idHistory}>
+              <Button
+                style={{
+                  backgroundColor: "rgb(83, 209, 255)",
+                  color: "white",
+                }}
+              >
+                <FontAwesomeIcon icon={faEye} />
+              </Button>
+            </Link>
+          </Tooltip>
+        </Space>
       ),
     },
   ];
@@ -181,8 +205,6 @@ export default function RequestAddPoint() {
       },
     };
   });
-
-  console.log(data);
 
   const listCategory = useAppSelector(GetCategory);
 
@@ -283,14 +305,6 @@ export default function RequestAddPoint() {
           dataSource={data}
           rowKey="key"
           pagination={false}
-          expandable={{
-            expandedRowRender: (record) => (
-              <p>
-                <b style={{ color: "#EEB30D" }}>Lý do cộng: </b>
-                {record.note}
-              </p>
-            ),
-          }}
         />
         <div className="mt-10 text-center mb-10">
           <Pagination

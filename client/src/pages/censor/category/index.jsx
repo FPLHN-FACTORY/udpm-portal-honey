@@ -194,11 +194,6 @@ export default function Index() {
       align: "center",
       render: (_, record) => (
         <Space size="small">
-          {/* <ModalDetail
-            category={record}
-            fetchData={fetchData}
-            icon={<FormOutlined />}
-          /> */}
           <Tooltip title="Cập nhật">
             <Button
               onClick={() => {

@@ -23,7 +23,7 @@ import {
   SetCategory,
 } from "../../../app/reducers/category/category.reducer";
 import { AddPointAPI } from "../../../apis/teacher/add-point/add-point.api";
-import { GetImport } from "../../../app/reducers/import/import.president.reducer";
+import { GetImport } from "../../../app/reducers/import/import.teacher.reducer";
 import ModalImportExcel from "./ModalImportExcel";
 import ModalConfirm from "./ModalConfirm";
 
@@ -184,26 +184,6 @@ export default function AddPoint() {
               Search
             </Button>
             <Form.Item>
-              {/* <Button
-              className="button-css"
-              htmlFor="file-input"
-              style={{
-                marginLeft: "8px",
-                padding: "10px",
-              }}
-              onClick={() => setOpen(true)}
-            >
-              <VerticalAlignBottomOutlined />
-              Import Excel
-            </Button>
-            {open && (
-              <ModalImportExcel
-                open={open}
-                setOpen={setOpen}
-                nameFile={nameFile}
-                setNameFile={setNameFile}
-              />
-            )} */}
               <Button
                 className="ml-auto import-button"
                 type="primary"

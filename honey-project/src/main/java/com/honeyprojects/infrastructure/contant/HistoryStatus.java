@@ -1,6 +1,6 @@
 package com.honeyprojects.infrastructure.contant;
 
-public enum HoneyStatus {
+public enum HistoryStatus {
     CHO_PHE_DUYET,
     DA_PHE_DUYET,
     DA_HUY,

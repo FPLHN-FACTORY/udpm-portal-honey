@@ -467,9 +467,15 @@ const ModalThem = (props) => {
                 ]}
               >
                 <Select
-                  mode="multiple"
+                  className="select-custom"
+                  mode="tags"
                   placeholder="Chọn loại mật quy đổi"
                   onChange={handleCategoryChange}
+                  showSearch
+                  filterOption={(input, option) =>
+                    // console.log(option)
+                    option.children.indexOf(input) >= 0
+                  }
                 >
                   {listCategory.map((category) => (
                     <Option key={category.id} value={category.id}>

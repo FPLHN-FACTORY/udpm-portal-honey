@@ -13,11 +13,8 @@ public interface CensorTransactionRequestResponse extends IsIdentified {
     @Value("#{target.student_id}")
     String getStudentId();
 
-    @Value("#{target.nameCategory}")
-    String getNameCategory();
-
-    @Value("#{target.honey_point}")
-    Integer getHoneyPoint();
+    @Value("#{target.honey}")
+    String getHoney();
 
     @Value("#{target.created_date}")
     Long getCreatedDate();
