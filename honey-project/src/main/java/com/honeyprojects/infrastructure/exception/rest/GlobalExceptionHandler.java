@@ -1,5 +1,6 @@
 package com.honeyprojects.infrastructure.exception.rest;
 
+import com.google.gson.Gson;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Path;
@@ -25,8 +26,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handlerException(Exception ex) {
+        Gson gson = new Gson();
         if (ex instanceof RestApiException) {
             ApiError apiError = new ApiError(ex.getMessage());
+            System.out.println(gson.toJson(apiError) + "RestApiException nho");
             return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
         } else if (ex instanceof ConstraintViolationException) {
             Set<ConstraintViolation<?>> violations = ((ConstraintViolationException) ex).getConstraintViolations();
@@ -34,14 +37,16 @@ public class GlobalExceptionHandler {
                     .map(violation ->
                             new ErrorModel(getPropertyName(violation.getPropertyPath()), violation.getMessage()))
                     .collect(Collectors.toList());
+            System.out.println(gson.toJson(errors) + "ConstraintViolationException nho");
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         } else if (ex instanceof CustomException) {
             ApiError apiError = new ApiError(ex.getMessage());
+            System.out.println(gson.toJson(apiError) + "CustomException nho");
             return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
         } else if (ex instanceof NoSuchElementException) {
             return ResponseEntity.notFound().build();
         } else {
-            System.out.println(ex.getMessage());
+            System.out.println(gson.toJson(ex.getMessage()) + "INTERNAL_SERVER_ERROR nho");
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
