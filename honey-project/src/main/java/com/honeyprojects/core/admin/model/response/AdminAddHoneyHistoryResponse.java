@@ -7,19 +7,16 @@ public interface AdminAddHoneyHistoryResponse  extends IsIdentified {
 
     String getStt();
 
-    @Value("#{target.note}")
-    String getNote();
-
     @Value("#{target.student_id}")
     String getStudentId();
 
-    @Value("#{target.nameCategory}")
-    String getNameCategory();
+    @Value("#{target.student_name}")
+    String getStudentName();
 
-    @Value("#{target.honey_point}")
-    Integer getHoneyPoint();
+    @Value("#{target.honey}")
+    String getHoney();
 
-    @Value("#{target.created_at}")
-    Long getCreatedAt();
+    @Value("#{target.change_date}")
+    Long getChangeDate();
 
 }

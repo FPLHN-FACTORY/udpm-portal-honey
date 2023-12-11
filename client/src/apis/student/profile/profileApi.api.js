@@ -17,4 +17,10 @@ export class ProfileApi {
     });
   };
 
+  static checkCategoryUser = () => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/check-category`,
+    });
+  };
 }

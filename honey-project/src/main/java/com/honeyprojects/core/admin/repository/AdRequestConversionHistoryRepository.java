@@ -53,7 +53,9 @@ public interface AdRequestConversionHistoryRepository extends HistoryRepository 
             LEFT JOIN honey hn ON hn.id = hd.honey_id    
             WHERE (:#{#filter.status} IS NULL OR h.status = :#{#filter.status})
             AND (:#{#filter.idStudent} IS NULL OR h.student_id = :#{#filter.idStudent})
-            AND h.type IN (2,4,6) AND h.status IN (1,2) ORDER BY h.last_modified_date DESC
+            AND h.type IN (2,4,6) AND h.status IN (1,2) 
+            GROUP BY hd.history_id
+            ORDER BY h.last_modified_date DESC;
                 """, nativeQuery = true)
     Page<AdminRequestConversionHistoryResponse> getBuyGiftHistory(@Param("filter") AdminCreateConversionHistoryRequest filter,
                                                                   Pageable pageable);

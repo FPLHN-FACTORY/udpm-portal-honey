@@ -41,41 +41,43 @@ export default function HistoryAddPoint() {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
+      align: "center",
     },
     {
       title: "User name",
       dataIndex: "userName",
       key: "userName",
+      align: "center",
     },
     {
       title: "Tên sinh viên",
       dataIndex: "nameStudent",
       key: "nameStudent",
+      align: "center",
     },
     {
-      title: "Loại điểm",
-      dataIndex: "nameCategory",
-      key: "nameCategory",
-    },
-    {
-      title: "Số điểm",
-      dataIndex: "honeyPoint",
-      key: "honeyPoint",
+      title: "Số mật ong",
+      dataIndex: "honey",
+      key: "honey",
+      align: "center",
     },
     {
       title: "Ngày tạo",
       dataIndex: "createdDate",
       key: "createdDate",
+      align: "center",
     },
     {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
+      align: "center",
     },
     {
       title: "Hành động",
       dataIndex: "acction",
       key: "acction",
+      align: "center",
       render: (values) => (
         <div style={{ textAlign: "center" }}>
           <Button
@@ -150,6 +152,7 @@ export default function HistoryAddPoint() {
       acction: { idHistory: data.id, status: data.status },
     };
   });
+
   const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
@@ -234,14 +237,6 @@ export default function HistoryAddPoint() {
           dataSource={data}
           rowKey="key"
           pagination={false}
-          expandable={{
-            expandedRowRender: (record) => (
-              <p>
-                <b style={{ color: "#EEB30D" }}>Lý do cộng: </b>
-                {record.note}
-              </p>
-            ),
-          }}
         />
         <div className="mt-10 text-center mb-10">
           <Pagination

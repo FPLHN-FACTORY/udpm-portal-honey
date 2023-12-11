@@ -6,10 +6,7 @@ import {
   Pagination,
   Select,
   Space,
-  Tag,
   message,
-  Row,
-  Col,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import "./index.css";
@@ -18,38 +15,25 @@ import {
   GetHistory,
   SetHistory,
 } from "../../../app/reducers/history/history.reducer";
+import { AddPointAPI } from "../../../apis/censor/add-point/add-point.api";
 import {
   GetCategory,
   SetCategory,
 } from "../../../app/reducers/category/category.reducer";
 import { SearchOutlined } from "@ant-design/icons";
-import { CategoryAPI } from "../../../apis/censor/category/category.api";
-import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import moment from "moment";
 
-const statusHistory = (status) => {
-  switch (status) {
-    case 1:
-      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
-    case 2:
-      return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
-    default:
-      return <Tag>Không xác định</Tag>;
-  }
-};
-
-export default function RequestApprovedHistory() {
+export default function HistoryGift() {
   const dispatch = useAppDispatch();
   const [totalPage, setTotalPage] = useState(1);
-  const [filter, setFilter] = useState({ page: 0, status: null });
+  const [filter, setFilter] = useState({ page: 0 });
 
   useEffect(() => {
     fetchData(dispatch, filter);
   }, [dispatch, filter]);
 
   const fetchData = (dispatch, filter) => {
-    dispatch(SetHistory([]));
-    CategoryAPI.fetchAllCategory()
+    AddPointAPI.getCategory()
       .then((response) => {
         dispatch(SetCategory(response.data.data));
       })
@@ -59,35 +43,15 @@ export default function RequestApprovedHistory() {
       .finally(() => {
         const fetchData = async (filter) => {
           try {
-            const response = await RequestManagerAPI.historyApproved(filter);
+            const response = await AddPointAPI.getHistoryGift(filter);
             const listHistory = await Promise.all(
               response.data.data.map(async (data) => {
                 try {
-                  const user = await RequestManagerAPI.getUserAPiById(
-                    data.studentId
-                  );
-                  let teacher = null;
-                  if (data.teacherId !== null) {
-                    teacher = await RequestManagerAPI.getUserAPiById(
-                      data.teacherId
-                    );
-                  }
-                  let president = null;
-                  if (data.presidentId !== null) {
-                    president = await RequestManagerAPI.getUserAPiById(
-                      data.presidentId
-                    );
-                  }
+                  const user = await AddPointAPI.getStudent(data.studentId);
                   return {
                     ...data,
                     nameStudent: user.data.data.name,
                     userName: user.data.data.userName,
-                    nameTeacher: teacher ? teacher.data.data.name : null,
-                    userTeacher: teacher ? teacher.data.data.userName : null,
-                    namePresident: president ? president.data.data.name : null,
-                    userPresident: president
-                      ? president.data.data.userName
-                      : null,
                   };
                 } catch (error) {
                   console.error(error);
@@ -109,12 +73,11 @@ export default function RequestApprovedHistory() {
     return {
       ...data,
       key: data.id,
-      status: statusHistory(data.status),
       createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
+      changeDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
   });
-
   const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
@@ -126,7 +89,7 @@ export default function RequestApprovedHistory() {
         status: value.status,
       });
     } else {
-      RequestManagerAPI.getUserAPiByCode(value.userName.trim())
+      AddPointAPI.searchStudent(value.userName.trim())
         .then((result) => {
           if (result.data.success) {
             setFilter({
@@ -136,29 +99,30 @@ export default function RequestApprovedHistory() {
               status: value.status,
             });
           } else {
-            message.error("User name sinh viên không chính xác!");
+            message.error("Mã sinh viên không chính xác!");
           }
         })
         .catch((error) => console.error(error));
     }
   };
+  console.log(data);
+
   return (
-    <div className="request-manager">
+    <div className="add-point">
       <Card className="mb-2 py-1">
         <Form onFinish={onFinishSearch}>
           <Space size={"large"}>
             <Form.Item name="userName" className="search-input">
               <Input
-                style={{ width: "400px" }}
-                name="userName"
+                style={{ width: "500px" }}
                 size="small"
-                placeholder="Nhập user name sinh viên cần tìm"
+                placeholder="Nhập username sinh viên cần tìm"
                 prefix={<SearchOutlined />}
               />
             </Form.Item>
             <Form.Item name={"idCategory"}>
               <Select
-                style={{ width: "250px" }}
+                style={{ width: "450px" }}
                 size="large"
                 placeholder="Loại điểm"
                 options={[
@@ -167,22 +131,6 @@ export default function RequestApprovedHistory() {
                     return {
                       value: category.id,
                       label: category.name,
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
-            <Form.Item name={"status"} initialValue={null}>
-              <Select
-                style={{ width: "260px" }}
-                size="large"
-                placeholder="Trạng thái"
-                options={[
-                  { value: null, label: "Tất cả" },
-                  ...[1, 2].map((value) => {
-                    return {
-                      value: value,
-                      label: statusHistory(value),
                     };
                   }),
                 ]}
@@ -201,42 +149,25 @@ export default function RequestApprovedHistory() {
       <Card title="Lịch sử cộng điểm">
         {data.map((item) => (
           <div className="list__point ">
-            <Row>
-              <Col span={12}>
-                <h4 className="text-slate-600">
-                  Người nhận: {item.nameStudent} ({item.userName})
-                </h4>
-              </Col>
-              <Col span={12}>
-                <h4 className="text-slate-600">
-                  Người gửi: {item.nameTeacher || item.namePresident} (
-                  {item.userTeacher || item.userPresident})
-                </h4>
-              </Col>
-            </Row>
+            <h3 className="text-slate-600">
+              {" "}
+              Sinh viên {item.nameStudent} ({item.userName}){" "}
+            </h3>
             <div className="list__point__title">
               <p>
                 <strong className="text-slate-500 mr-[8px]">
-                  {item.acction.status == 2
-                    ? "Đã bị hủy yêu cầu cộng: "
-                    : "Đã được chấp nhận yêu cầu cộng: "}
+                  Đã được cộng:
                 </strong>
-                {item.honey}
+                {item.gift}
               </p>
               <p>
                 <strong className="text-slate-500 mr-[8px]">Thời gian:</strong>
-                {item.createdDate}
-              </p>
-              <p
-                title={item.note}
-                className="w-[300px] overflow-hidden whitespace-nowrap text-ellipsis"
-              >
-                <strong className="text-slate-500 mr-[8px]">Lý do:</strong>
-                {item.note}
+                {item.changeDate}
               </p>
             </div>
           </div>
         ))}
+        <div className="mt-10 text-center mb-10"></div>
         <div className="mt-10 text-center mb-10">
           <Pagination
             simple

@@ -265,13 +265,11 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
                             honeyMap.computeIfAbsent(categoryPoint, k -> new ArrayList<>()).add(numberPoint);
                         }
                     }
-
                     List<TeacherCategoryResponse> categories = categoryRepository.getCategoriesByNames(honeyMap.keySet());
-
+                    Map<String, History> historyMap = new HashMap<>();
                     for (TeacherCategoryResponse category : categories) {
                         String categoryPoint = category.getName();
                         String categoryId = category.getId();
-                        String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
                         String enumCategoryACCEPT = String.valueOf(CategoryStatus.ACCEPT.ordinal());
 
                         if (honeyMap.containsKey(categoryPoint)) {
@@ -283,22 +281,21 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
                                 getPointRequest.setCategoryId(categoryId);
                                 TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
                                 Long dateNow = Calendar.getInstance().getTimeInMillis();
-                                History history = new History();
-                                history.setTeacherId(udpmHoney.getIdUser());
-                                history.setTeacherIdName(udpmHoney.getUserName());
-                                history.setNote(userDTO.getNote());
 
-                                if (category.getStatus().equals(enumCategoryFREE)) {
-                                    // gửi cho sinh viên
-                                    Notification notification = createNotification(simpleResponse.getId());
-                                    createNotificationDetailHoney(category, notification.getId(), honeyPoint);
-                                    history.setStatus(HistoryStatus.TEACHER_DA_THEM);
-                                } else if (category.getStatus().equals(enumCategoryACCEPT)) {
-                                    history.setStatus(HistoryStatus.CHO_PHE_DUYET);
-                                }
+                                History history = historyMap.computeIfAbsent(category.getStatus(), k -> {
+                                    History newHistory = new History();
+                                    newHistory.setTeacherId(udpmHoney.getIdUser());
+                                    newHistory.setTeacherIdName(udpmHoney.getUserName());
+                                    newHistory.setStudentName(simpleResponse.getUserName());
+                                    newHistory.setNote(userDTO.getNote());
+                                    newHistory.setType(TypeHistory.CONG_DIEM);
+                                    newHistory.setChangeDate(dateNow);
+                                    historyRepository.save(newHistory);
+                                    return newHistory;
+                                });
 
-                                history.setType(TypeHistory.CONG_DIEM);
-                                history.setChangeDate(dateNow);
+                                history.setStatus(category.getStatus().equals(enumCategoryACCEPT) ? HistoryStatus.CHO_PHE_DUYET : HistoryStatus.TEACHER_DA_THEM);
+                                history.setStudentId(simpleResponse.getId());
                                 historyRepository.save(history);
 
                                 HistoryDetail historyDetail = new HistoryDetail();
@@ -317,8 +314,6 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
                                     Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
                                     historyDetail.setHoneyId(honey.getId());
                                 }
-
-                                history.setStudentId(simpleResponse.getId());
                                 teacherHistoryDetailRepository.save(historyDetail);
                             }
                         }

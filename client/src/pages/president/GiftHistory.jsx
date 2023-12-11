@@ -166,7 +166,7 @@ export default function GiftHistory() {
                       ? "Đã bị hủy yêu cầu tặng: "
                       : "Đã nhân được: "}
                   </strong>
-                  {item.quantityGift} vật phẩm {item.nameGift}
+                  {item.gift}
                 </p>
                 <p>
                   <strong className="text-slate-500 mr-[8px]">

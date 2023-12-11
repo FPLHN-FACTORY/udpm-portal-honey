@@ -48,6 +48,11 @@ public class AdminCategoryRestController {
         return new ResponseObject(adminCategoryService.updateCategory(request, id));
     }
 
+    @GetMapping("/update-type/{id}")
+    public ResponseObject updateTypeCategory(@PathVariable("id") String id) {
+        return new ResponseObject(adminCategoryService.updateTypeCategory(id));
+    }
+
     @PutMapping("/delete/{id}")
     public ResponseObject delete(@Valid @PathVariable("id") String id) {
         return new ResponseObject(adminCategoryService.updateCategoryByCategory(id));

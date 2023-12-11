@@ -55,6 +55,7 @@ import HistoryPortal from "./pages/censor/portal/HistoryPortal";
 import RequestItemDetail from "./pages/censor/requestmanager/RequestItemDetail";
 
 import StudentProfile from "./pages/student/honors/StudentProfile";
+import ListHistoryAddPoint from "./pages/censor/addPoin/ListHistory";
 function App() {
   const data = useAppSelector(SelectLoading);
   return (
@@ -129,7 +130,7 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardCensor>
-                    <HistoryAddPointCensor />
+                    <ListHistoryAddPoint />
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -174,7 +175,7 @@ function App() {
                 </AuthGuard>
               }
             />
-             <Route
+            <Route
               path="/censor/request-item/detail/:id"
               element={
                 <AuthGuard>

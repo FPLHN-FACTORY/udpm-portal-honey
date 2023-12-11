@@ -38,6 +38,13 @@ export class AddPointAPI {
       params: filter,
     });
   };
+  static getHistoryGift = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/get-history-gift`,
+      params: filter,
+    });
+  };
   static getListRequest = (filter) => {
     return request({
       method: "GET",

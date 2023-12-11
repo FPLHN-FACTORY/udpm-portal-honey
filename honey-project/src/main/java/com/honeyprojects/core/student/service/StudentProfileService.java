@@ -8,4 +8,6 @@ public interface StudentProfileService {
 
     List<StudentMyHoneyResponse> getHoneyByUser();
 
+    boolean checkCategory();
+
 }

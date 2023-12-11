@@ -115,6 +115,7 @@ export default function BuyGiftHistory() {
         .catch((error) => console.error(error));
     }
   };
+
   return (
     <>
       <Card className="mb-2">

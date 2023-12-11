@@ -15,10 +15,12 @@ import com.honeyprojects.core.admin.service.AdminAddPointService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
+import com.honeyprojects.core.president.model.response.PresidentGiftHistoryResponse;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.HistoryDetail;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.infrastructure.contant.HistoryStatus;
+import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.util.AddPointUtils;
@@ -55,6 +57,9 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
     @Autowired
     private AddPointUtils addPointUtils;
 
+    @Autowired
+    private ConvertRequestApiidentity convertRequestApiidentity;
+
     @Override
     public List<AdminCategoryResponse> getCategory() {
         return categoryRepository.getAllCategory();
@@ -71,6 +76,14 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
         String idAdmin = udpmHoney.getIdUser();
         historyRequest.setIdAdmin(idAdmin);
         return new PageableObject<>(historyRepository.getHistory(historyRequest, pageable));
+    }
+
+    @Override
+    public PageableObject<PresidentGiftHistoryResponse> getHistoryGift(AdminSearchHistoryRequest historyRequest) {
+        Pageable pageable = PageRequest.of(historyRequest.getPage(), historyRequest.getSize());
+        String idAdmin = udpmHoney.getIdUser();
+        historyRequest.setIdAdmin(idAdmin);
+        return new PageableObject<>(historyRepository.getGiftHistory(historyRequest, pageable));
     }
 
     @Override
@@ -91,17 +104,21 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
     @Override
     public History addPoint(AdminAddPointRequest addPointRequest) {
         Long dateNow = Calendar.getInstance().getTimeInMillis();
+        SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(addPointRequest.getStudentId());
         History history = new History();
         history.setNote(addPointRequest.getNote());
         history.setType(TypeHistory.CONG_DIEM);
         history.setChangeDate(dateNow);
         history.setStatus(HistoryStatus.ADMIN_DA_THEM);
+        history.setStudentName(simpleResponse.getUserName());
+        history.setStudentId(addPointRequest.getStudentId());
         historyRepository.save(history);
 
         HistoryDetail historyDetail = new HistoryDetail();
         historyDetail.setHistoryId(history.getId());
         historyDetail.setHoneyPoint(addPointRequest.getHoneyPoint());
         historyDetail.setStudentId(addPointRequest.getStudentId());
+        historyDetail.setStatus(Status.HOAT_DONG);
         Honey honey = addPointUtils.
                 addHoneyUtils(addPointRequest.getStudentId(),
                         addPointRequest.getCategoryId(),

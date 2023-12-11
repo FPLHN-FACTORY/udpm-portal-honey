@@ -5,6 +5,8 @@ import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminExportCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminImportCategoryResponse;
 import com.honeyprojects.entity.Category;
+import com.honeyprojects.infrastructure.contant.CategoryStatus;
+import com.honeyprojects.infrastructure.contant.CategoryTransaction;
 import com.honeyprojects.repository.CategoryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -96,4 +98,6 @@ public interface AdminCategoryRepository extends CategoryRepository {
             WHERE c.category_status <> 0
             """, nativeQuery = true)
     List<AdminExportCategoryResponse> getCategoryToExport();
+
+    List<Category> findAllByTransactionRightsAndCategoryStatusNot(CategoryTransaction categoryTransaction, CategoryStatus categoryStatus);
 }

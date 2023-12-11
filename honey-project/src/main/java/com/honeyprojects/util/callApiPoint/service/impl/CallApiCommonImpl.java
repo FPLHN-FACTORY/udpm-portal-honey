@@ -132,7 +132,6 @@ public class CallApiCommonImpl implements CallApiCommonService {
                 ApiConstants.API_GET_ALL_SCORE_ELEMENT_BY_ID
                 + "?idClass=" + request.getClassId();
 
-        System.out.println(apiConnect + " aaaaaaaaaaaaaaaaaaaaa");
         HttpHeaders headers = new HttpHeaders();
         String authorizationToken = "Bearer " + honeySession.getToken();
         headers.set("Authorization", authorizationToken);

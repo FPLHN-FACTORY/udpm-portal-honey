@@ -16,7 +16,11 @@ import {
   Tooltip,
   message,
 } from "antd";
-import { SearchOutlined, SendOutlined } from "@ant-design/icons";
+import {
+  DownloadOutlined,
+  SearchOutlined,
+  SendOutlined,
+} from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   GetCategory,
@@ -26,6 +30,8 @@ import { AddItemAPI } from "../../apis/president/add-item/add-item.api";
 import ModalUpLoadFile from "./ModalUploadFile";
 import { GetImport } from "../../app/reducers/import/import.president.reducer";
 import ModalConfirm from "./ModalConfirm";
+import { AddItemExcelAPI } from "../../apis/president/add-item/add-item-excel.api";
+import { convertLongToDate } from "../util/DateUtil";
 
 export default function AddItem() {
   const dispatch = useAppDispatch();
@@ -44,30 +50,6 @@ export default function AddItem() {
 
   const [nameFileUpload, setNameFileUpload] = useState("");
   const previewImport = useAppSelector(GetImport);
-
-  useEffect(() => {
-    AddItemAPI.getCategory().then((response) => {
-      setCategorySelected(response.data.data[0].id);
-      dispatch(SetCategory(response.data.data));
-    });
-  }, [dispatch]);
-
-  const onFinishSearch = (value) => {
-    AddItemAPI.searchStudent(value.code.trim()).then((response) => {
-      if (response.data.success) {
-        setStudent(response.data.data);
-        getHoney(response.data.data.id, categorySelected);
-      } else {
-        setStudent({});
-        formSearch.setFields([
-          {
-            name: "code",
-            errors: ["Không tìm thấy thông tin sinh viên!"],
-          },
-        ]);
-      }
-    });
-  };
 
   const onFinishAdd = (values) => {
     addPoint({
@@ -104,6 +86,21 @@ export default function AddItem() {
   const handleClostPreview = () => {
     setDataPreview([]);
     setNameFileUpload("");
+  };
+
+  const handleExportExcel = () => {
+    AddItemExcelAPI.exportExcel({}).then((response) => {
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download =
+        "File mẫu import" + convertLongToDate(new Date().getTime()) + ".xlsx";
+      link.click();
+      window.URL.revokeObjectURL(url);
+    });
   };
 
   const columsPreview = [
@@ -165,51 +162,32 @@ export default function AddItem() {
     <div>
       <div className="add-point">
         <Card className="mb-2 py-1">
-          <Form form={formSearch} className="d-flex" onFinish={onFinishSearch}>
-            <Row>
-              <Form.Item
-                name="code"
-                // rules={[
-                //   {
-                //     required: true,
-                //     whitespace: true,
-                //     message: "Vui lòng nhập mã sinh viên",
-                //   },
-                // ]}
-                className="search-input mr-10"
-                style={{ width: 845 }}
-              >
-                <Input
-                  size="small"
-                  placeholder="Nhập username sinh viên cần tìm"
-                  prefix={<SearchOutlined />}
-                />
-              </Form.Item>
-              <Button
-                htmlType="submit"
-                type="primary"
-                className="mr-10 search-button"
-              >
-                Search
-              </Button>
-              <Button
-                className="ml-auto import-button"
-                type="primary"
-                onClick={() => setOpenUpload(true)}
-              >
-                Import excel
-              </Button>
-              {openUpload && (
-                <ModalUpLoadFile
-                  openUpload={openUpload}
-                  setOpenUpload={setOpenUpload}
-                  setDataPreview={setDataPreview}
-                  nameFileUpload={nameFileUpload}
-                  setNameFileUpload={setNameFileUpload}
-                />
-              )}
-            </Row>
-          </Form>
+          <Row justify="center">
+            <Button
+              className="import-button"
+              type="primary"
+              onClick={() => setOpenUpload(true)}
+            >
+              Import excel
+            </Button>
+            <Button
+              className="ml-2"
+              key="download"
+              onClick={() => handleExportExcel()}
+            >
+              <DownloadOutlined />
+              Tải file mẫu
+            </Button>
+            {openUpload && (
+              <ModalUpLoadFile
+                openUpload={openUpload}
+                setOpenUpload={setOpenUpload}
+                setDataPreview={setDataPreview}
+                nameFileUpload={nameFileUpload}
+                setNameFileUpload={setNameFileUpload}
+              />
+            )}
+          </Row>
         </Card>
         {Object.keys(student).length > 0 ? (
           <Card

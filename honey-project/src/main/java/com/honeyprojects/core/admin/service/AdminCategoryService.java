@@ -27,4 +27,6 @@ public interface AdminCategoryService {
     Category getOne(String id);
 
     Category updateCategoryByCategory( String id);
+
+    Category updateTypeCategory(String id);
 }
