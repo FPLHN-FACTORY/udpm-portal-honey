@@ -196,7 +196,15 @@ function DashboardAuthUser({ children }) {
     navigate("/student/upgrade-honey");
   };
   const hanlderClickGiaoDich = () => {
-    setIsModalOpen(true);
+    console.log("aaaaaaaaaaa");
+    ProfileApi.checkCategoryUser().then((response) => {
+      console.log(response.data.data);
+      if (response.data.data) {
+        setIsModalOpen(true);
+      } else {
+        message.warning("Tính năng sắp ra mắt");
+      }
+    })
   };
   const hanlderClickKhoDo = () => {
     navigate("/student/chest");
@@ -308,55 +316,58 @@ function DashboardAuthUser({ children }) {
 
   return (
     <div className="main-ui-student" style={{ display: "flex" }}>
-      <Modal
-        open={isModalOpen}
-        onOk={handleCancel}
-        onCancel={handleCancel}
-        closeIcon={<></>}
-        footer={null}
-        width={400}
-        className="css-modal-confim-buy-gift">
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <Form
-            form={formFindUser}
-            onFinish={requestTransaction}
-            style={{ width: "90%" }}>
-            <h2
-              style={{
-                color: "white",
-                fontWeight: "bold",
-                marginBottom: "5px",
-                marginTop: "-5px",
-                textAlign: "center",
-              }}>
-              GIAO DỊCH
-            </h2>
-            <Form.Item
-              name={"email"}
-              rules={[
-                {
-                  required: true,
-                  whitespace: true,
-                  message: "Vui lòng nhập email sinh viên cần tìm!",
-                },
-              ]}>
-              <Input placeholder="Nhập email sinh viên!" />
-            </Form.Item>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-              }}>
-              <Button htmlType="submit" type="primary" className="btn-xac-nhan">
-                Gửi yêu cầu
-              </Button>
-              <Button type="primary" className="btn-huy" onClick={handleCancel}>
-                Hủy
-              </Button>
-            </div>
-          </Form>
-        </div>
-      </Modal>
+      {isModalOpen && 
+        <Modal
+          open={isModalOpen}
+          onOk={handleCancel}
+          onCancel={handleCancel}
+          closeIcon={<></>}
+          footer={null}
+          width={400}
+          className="css-modal-confim-buy-gift">
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Form
+              form={formFindUser}
+              onFinish={requestTransaction}
+              style={{ width: "90%" }}>
+              <h2
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  marginBottom: "5px",
+                  marginTop: "-5px",
+                  textAlign: "center",
+                }}>
+                GIAO DỊCH
+              </h2>
+              <Form.Item
+                name={"email"}
+                rules={[
+                  {
+                    required: true,
+                    whitespace: true,
+                    message: "Vui lòng nhập email sinh viên cần tìm!",
+                  },
+                ]}>
+                <Input placeholder="Nhập email sinh viên!" />
+              </Form.Item>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}>
+                <Button htmlType="submit" type="primary" className="btn-xac-nhan">
+                  Gửi yêu cầu
+                </Button>
+                <Button type="primary" className="btn-huy" onClick={handleCancel}>
+                  Hủy
+                </Button>
+              </div>
+            </Form>
+          </div>
+        </Modal>
+      }
+      
       {open && (
         <DialogTransaction
           key={"transaction.idTransaction"}

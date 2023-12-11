@@ -133,6 +133,10 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
         ca.setName(request.getName());
         ca.setImage(cloudinaryUploadImages.uploadImage(request.getImage()));
         ca.setCategoryStatus(CategoryStatus.values()[request.getCategoryStatus()]);
+        if (request.getTransactionRights() == 1 &&
+                adminCategoryRepository.findAllByTransactionRightsAndCategoryStatusNot(CategoryTransaction.FREE, CategoryStatus.INACTIVE).size() != 0) {
+            throw new RestApiException("Đã tồn tại mật ong có để giao dịch mặc định");
+        }
         ca.setTransactionRights(request.getTransactionRights() == 0 ? CategoryTransaction.FREE : CategoryTransaction.LIMIT);
         adminCategoryRepository.save(ca);
 //        for(Category cate : getAllCate  ){
@@ -161,30 +165,6 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     public Category updateCategory(AdminUpdateCategoryRequest request, String id) throws IOException {
 //        List<Category> getAllCate = adminCategoryRepository.findAll();
         validateName(request.getName(), id);
-        StringBuilder contentLogger = new StringBuilder();
-        LoggerFunction loggerObject = new LoggerFunction();
-        loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
-        loggerObject.setContent(contentLogger.toString());
-        Optional<AdminUpdateCategoryRequest> optionalAdminCreateCategoryRequest = Optional.of(request);
-        if (optionalAdminCreateCategoryRequest.isPresent()) {
-            if (optionalAdminCreateCategoryRequest.isEmpty()) {
-                contentLogger.append("Cập nhật thể loại có request là: '" + request.toString() + "' . ");
-            } else {
-                contentLogger.append("Cập nhật thể loại không có request truyền vào.");
-            }
-        } else {
-            contentLogger.append("Cập nhật thể loại không có req model truyền vào.");
-        }
-        Optional<String> optionalId = Optional.of(id);
-        if (optionalId.isPresent()) {
-            if (optionalId.isEmpty()) {
-                contentLogger.append("Cập nhật thể loại có id là: '" + id.toString() + "' . ");
-            } else {
-                contentLogger.append("Cập nhật thể loại không có id truyền vào.");
-            }
-        } else {
-            contentLogger.append("Cập nhật thể loại không có id truyền vào.");
-        }
         Optional<Category> categoryOptional = adminCategoryRepository.findById(id);
         if (categoryOptional.isPresent()) {
             Category category = categoryOptional.get();
@@ -193,12 +173,13 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
                 category.setImage(setImageToCloud(request, category.getImage()));
             }
             category.setCategoryStatus(CategoryStatus.values()[request.getCategoryStatus()]);
-            category.setTransactionRights(request.getTransactionRights() == 0 ? CategoryTransaction.FREE : CategoryTransaction.LIMIT);
-            contentLogger.append("Đã Cập nhật thể loại có id truyền vào là: " + id + ".");
-            try {
-                rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            if (!((category.getTransactionRights() == CategoryTransaction.FREE && request.getTransactionRights() == 0)
+                    || (category.getTransactionRights() == CategoryTransaction.LIMIT && request.getTransactionRights() == 1))) {
+                if (request.getTransactionRights() == 0 &&
+                        adminCategoryRepository.findAllByTransactionRightsAndCategoryStatusNot(CategoryTransaction.FREE, CategoryStatus.INACTIVE).size() != 0) {
+                    throw new RestApiException("Đã tồn tại mật ong có để giao dịch mặc định");
+                }
+                category.setTransactionRights(request.getTransactionRights() == 0 ? CategoryTransaction.FREE : CategoryTransaction.LIMIT);
             }
 //            for(Category cate : getAllCate  ){
 //                if(request.getTransactionRights() == 0 && !cate.getId().equals(id) ){
@@ -276,39 +257,38 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     @Override
     @Transactional
     public Category updateCategoryByCategory(String id) {
-        StringBuilder contentLogger = new StringBuilder();
-        LoggerFunction loggerObject = new LoggerFunction();
-        loggerObject.setPathFile(loggerUtil.getPathFileAdmin());
-        loggerObject.setContent(contentLogger.toString());
-        Optional<String> optionalId = Optional.of(id);
-        if (optionalId.isPresent()) {
-            if (optionalId.isEmpty()) {
-                contentLogger.append("Cập nhật trạng thái thể loại có id là: '" + id.toString() + "' . ");
-            } else {
-                contentLogger.append("Cập nhật trạng thái thể loại không có id truyền vào.");
-            }
-        } else {
-            contentLogger.append("Cập nhật trạng thái thể loại không có id truyền vào.");
-        }
         Optional<Category> categoryOptional = adminCategoryRepository.findById(id);
         if (categoryOptional.isPresent()) {
+            if (adGiftDetailRepository.findAllByCategoryId(id).size() != 0 ||
+                    adAuctionRepository.findAllByHoneyCategoryId(id).size() != 0 ||
+                    adHoneyRepository.findAllByHoneyCategoryId(id).size() != 0
+            ) {
+                throw new RestApiException("Thể loại đang được sử dụng không thể xóa.");
+            }
             categoryOptional.get().setCategoryStatus(CategoryStatus.INACTIVE);
             adminCategoryRepository.save(categoryOptional.get());
-            contentLogger.append("Cập nhật trạng thái thể loại thành công có id là: " + id + ".");
-            try {
-                rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
             return categoryOptional.get();
         } else {
-            contentLogger.append("Cập nhật trạng thái thể loại thất bại có id là: " + id + ".");
-            try {
-                rabbitProducer.sendLogMessageFunction(loggerUtil.genLoggerFunction(loggerObject));
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            throw new RestApiException("Loại mật ong không tồn tại");
+        }
+    }
+
+    @Override
+    public Category updateTypeCategory(String id) {
+        Optional<Category> categoryOptional = adminCategoryRepository.findById(id);
+        if (categoryOptional.isPresent()) {
+            if (categoryOptional.get().getTransactionRights() == CategoryTransaction.FREE) {
+                if (adminCategoryRepository.findAllByTransactionRightsAndCategoryStatusNot(CategoryTransaction.FREE, CategoryStatus.INACTIVE).size() != 0) {
+                    throw new RestApiException("Đã tồn tại mật ong có để giao dịch mặc định");
+                }
+                categoryOptional.get().setTransactionRights(CategoryTransaction.LIMIT);
+            } else {
+                categoryOptional.get().setTransactionRights(CategoryTransaction.FREE);
             }
-            throw new RestApiException("Không tồn tại category có id là: " + id + ".");
+            adminCategoryRepository.save(categoryOptional.get());
+            return categoryOptional.get();
+        } else {
+            throw new RestApiException("Loại mật ong không tồn tại");
         }
     }
 

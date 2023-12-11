@@ -148,7 +148,7 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
 
             scoreGift = request.getQuantity() * ((gift.getScore() * gift.getScoreRatio())/scoreTemplateVM.getScoreRatio());
             if (scoreTemplateVM.getScore() + scoreGift > 10) {
-                throw new RestApiException("Đầu điểm " + scoreTemplateVM.getName() + " đã đủ không thể đổi.");
+                throw new RestApiException("Đầu điểm " + scoreTemplateVM.getName() + " của bạn đã đủ. Không thể đổi thêm");
             }
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("Sinh viên '")

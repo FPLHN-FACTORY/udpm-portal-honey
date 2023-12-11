@@ -29,4 +29,9 @@ public class StudentProfileRestController {
         return new ResponseObject(studentProfileService.getHoneyByUser());
     }
 
+    @GetMapping("/check-category")
+    public ResponseObject getCheckCategory(){
+        return new ResponseObject(studentProfileService.checkCategory());
+    }
+
 }
