@@ -626,32 +626,38 @@ const ModalDetailGift = (props) => {
                   categoryId in categoryQuantities
                     ? categoryQuantities[categoryId]
                     : "";
-                form.setFieldValue(`honey_${category.id}`, honeyValue)
+                form.setFieldValue(`honey_${category.id}`, honeyValue);
 
                 if (selectedCategories.includes(categoryId)) {
                   return (
                     <Form.Item
-                    label={<span style={{wordBreak: "break-word", textWrap: "wrap"}}>Số mật {category.name}</span>}
-                    name={`honey_${category.id}`}
-                    key={category.id}
-                    rules={[
-                      {
-                        required: true,
-                        message: `Vui lòng nhập số mật ${category.name}`,
-                      },
-                      {
-                        validator: (_, value) => {
-                          const regex = /^[0-9]\d*$/;
-                          if (!regex.test(value) || value === 0) {
-                            return Promise.reject(
-                              new Error("Vui lòng nhập một số nguyên dương")
-                            );
-                          }
-
-                          return Promise.resolve();
+                      label={
+                        <span
+                          style={{ wordBreak: "break-word", textWrap: "wrap" }}
+                        >
+                          Số mật {category.name}
+                        </span>
+                      }
+                      name={`honey_${category.id}`}
+                      key={category.id}
+                      rules={[
+                        {
+                          required: true,
+                          message: `Vui lòng nhập số mật ${category.name}`,
                         },
-                      },
-                    ]}
+                        {
+                          validator: (_, value) => {
+                            const regex = /^[1-9]\d*$/;
+                            if (!regex.test(value) || value === 0) {
+                              return Promise.reject(
+                                new Error("Vui lòng nhập một số nguyên dương")
+                              );
+                            }
+
+                            return Promise.resolve();
+                          },
+                        },
+                      ]}
                     >
                       <Input
                         type="number"
