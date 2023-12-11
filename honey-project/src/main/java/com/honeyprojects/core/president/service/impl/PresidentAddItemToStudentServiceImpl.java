@@ -367,8 +367,8 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                             newHistory.setChangeDate(dateNow);
                             newHistory.setPresidentName(udpmHoney.getUserName());
                             newHistory.setPresidentId(udpmHoney.getIdUser());
-                            newHistory.setStudentId(simpleResponse.getId());
-                            newHistory.setType(TypeHistory.MAT_ONG_VA_VAT_PHAM);
+                            newHistory.setStudentName(simpleResponse.getUserName());
+                            newHistory.setType(TypeHistory.CONG_VAT_PHAM);
                             return newHistory;
                         });
 
@@ -439,6 +439,7 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                                 History newHistory = new History();
                                 newHistory.setPresidentName(udpmHoney.getUserName());
                                 newHistory.setPresidentId(udpmHoney.getIdUser());
+                                newHistory.setStudentName(simpleResponse.getUserName());
                                 newHistory.setType(TypeHistory.CONG_DIEM);
                                 newHistory.setChangeDate(dateNow);
                                 historyRepository.save(newHistory);
@@ -465,7 +466,6 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                                 Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
                                 historyDetail.setHoneyId(honey.getId());
                             }
-
                             historyDetailRepository.save(historyDetail);
                         }
                     }

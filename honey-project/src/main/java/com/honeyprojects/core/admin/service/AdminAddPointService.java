@@ -9,6 +9,7 @@ import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminPoinResponse;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.response.SimpleResponse;
+import com.honeyprojects.core.president.model.response.PresidentGiftHistoryResponse;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.Honey;
 
@@ -20,6 +21,8 @@ public interface AdminAddPointService {
     AdminPoinResponse getPointStudent(AdminGetPointRequest getPointRequest);
 
     PageableObject<AdminAddHoneyHistoryResponse> getHistory(AdminSearchHistoryRequest historyRequest);
+
+    PageableObject<PresidentGiftHistoryResponse> getHistoryGift(AdminSearchHistoryRequest historyRequest);
 
     PageableObject<AdminAddHoneyHistoryResponse> getListRequest(AdminSearchHistoryRequest historyRequest);
 

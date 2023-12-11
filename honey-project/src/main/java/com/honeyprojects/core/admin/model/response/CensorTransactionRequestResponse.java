@@ -25,4 +25,10 @@ public interface CensorTransactionRequestResponse extends IsIdentified {
     @Value("#{target.status}")
     Integer getStatus();
 
+    @Value("#{target.teacher_id}")
+    String getTeacherId();
+
+    @Value("#{target.president_id}")
+    String getPresidentId();
+
 }
