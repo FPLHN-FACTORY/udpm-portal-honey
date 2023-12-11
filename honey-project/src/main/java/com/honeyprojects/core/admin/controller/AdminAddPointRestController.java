@@ -10,6 +10,7 @@ import com.honeyprojects.core.admin.service.AdminAddPointService;
 import com.honeyprojects.core.admin.service.AdminCategoryService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.ResponseObject;
+import com.honeyprojects.core.president.model.response.PresidentGiftHistoryResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +43,11 @@ public class AdminAddPointRestController {
     @GetMapping("/get-history")
     public PageableObject<AdminAddHoneyHistoryResponse> getHistory(AdminSearchHistoryRequest historyRequest) {
         return addPointService.getHistory(historyRequest);
+    }
+
+    @GetMapping("/get-history-gift")
+    public PageableObject<PresidentGiftHistoryResponse> getHistoryGift(AdminSearchHistoryRequest historyRequest) {
+        return addPointService.getHistoryGift(historyRequest);
     }
 
     @GetMapping("/get-list-request")

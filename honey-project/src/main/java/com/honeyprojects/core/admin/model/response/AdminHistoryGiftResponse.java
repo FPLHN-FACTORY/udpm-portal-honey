@@ -1,9 +1,9 @@
-package com.honeyprojects.core.president.model.response;
+package com.honeyprojects.core.admin.model.response;
 
 import com.honeyprojects.entity.base.IsIdentified;
 import org.springframework.beans.factory.annotation.Value;
 
-public interface PresidentGiftHistoryResponse extends IsIdentified {
+public interface AdminHistoryGiftResponse extends IsIdentified {
 
     @Value("#{target.student_id}")
     String getStudentId();
@@ -19,5 +19,8 @@ public interface PresidentGiftHistoryResponse extends IsIdentified {
 
     @Value("#{target.status}")
     Integer getStatus();
+
+    @Value("#{target.student_name}")
+    String getStudentName();
 
 }

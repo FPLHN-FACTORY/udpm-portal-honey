@@ -1,5 +1,5 @@
 import { Button, Modal, Space, message } from "antd";
-import { AddItemExcelAPI } from "../../../apis/president/add-item/add-item-excel.api";
+import { AddPointExcelAPI } from "../../../apis/teacher/add-point/add-point-excel.api";
 import {
   connectStompClient,
   getStompClient,
@@ -53,7 +53,7 @@ export default function ModalConfirm(props) {
     const headers = {
       Authorization: "Bearer " + bearerToken,
     };
-    AddItemExcelAPI.importExcel(dataPreview)
+    AddPointExcelAPI.importExcel(dataPreview)
       .then(() => {
         stompClient.send("/action/create-notification-user", headers, {});
 

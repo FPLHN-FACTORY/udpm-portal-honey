@@ -37,8 +37,6 @@ const statusHistory = (status) => {
   switch (status) {
     case 0:
       return <Tag color="geekblue">Chờ phê duyệt</Tag>;
-    case 3:
-      return <Tag color="cyan">Gửi lại chờ phê duyệt</Tag>;
     default:
       return <Tag>Không xác định</Tag>;
   }

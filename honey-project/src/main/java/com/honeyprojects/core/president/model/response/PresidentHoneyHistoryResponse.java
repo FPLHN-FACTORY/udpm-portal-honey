@@ -5,17 +5,11 @@ import org.springframework.beans.factory.annotation.Value;
 
 public interface PresidentHoneyHistoryResponse extends IsIdentified {
 
-    @Value("#{target.note}")
-    String getNote();
-
     @Value("#{target.student_id}")
     String getStudentId();
 
-    @Value("#{target.nameCategory}")
-    String getNameCategory();
-
-    @Value("#{target.honey_point}")
-    Integer getHoneyPoint();
+    @Value("#{target.honey}")
+    String getHoney();
 
     @Value("#{target.created_date}")
     Long getCreatedDate();

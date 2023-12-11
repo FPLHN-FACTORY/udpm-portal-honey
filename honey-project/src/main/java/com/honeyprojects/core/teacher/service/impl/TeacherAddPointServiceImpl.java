@@ -66,6 +66,9 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     @Autowired
     private AddPointUtils addPointUtils;
 
+    @Autowired
+    private ConvertRequestApiidentity convertRequestApiidentity;
+
     @Override
     public List<TeacherCategoryResponse> getCategory() {
         return categoryRepository.getAllCategory();
@@ -105,10 +108,12 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
         String idTeacher = udpmHoney.getIdUser();
         Long dateNow = Calendar.getInstance().getTimeInMillis();
         Optional<Category>category = categoryRepository.findById(addPointRequest.getCategoryId());
+        SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(addPointRequest.getStudentId());
         HistoryDetail historyDetail = new HistoryDetail();
         History history = new History();
         history.setTeacherIdName(udpmHoney.getUserName());
         history.setTeacherId(idTeacher);
+        history.setStudentName(simpleResponse.getUserName());
         history.setNote(addPointRequest.getNote());
         history.setType(TypeHistory.CONG_DIEM);
         history.setChangeDate(dateNow);
@@ -145,6 +150,7 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
         historyDetail.setHistoryId(history.getId());
         historyDetail.setHoneyPoint(addPointRequest.getHoneyPoint());
         historyDetail.setStudentId(addPointRequest.getStudentId());
+        historyDetail.setStatus(Status.HOAT_DONG);
         historyDetailRepository.save(historyDetail);
 
         return history;

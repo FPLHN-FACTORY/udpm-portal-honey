@@ -191,7 +191,7 @@ export default function HoneyHistory() {
                     ? "Đã bị hủy yêu cầu tặng: "
                     : "Đã nhận được: "}
                 </strong>
-                {item.honeyPoint} mật ong {item.nameCategory}
+                {item.honey}
               </p>
               <p>
                 <strong className="text-slate-500 mr-[8px]">Thời gian:</strong>
