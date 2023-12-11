@@ -16,6 +16,7 @@ import com.honeyprojects.entity.Honey;
 import com.honeyprojects.entity.UpgradeRate;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
+import com.honeyprojects.util.AddPointUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,9 @@ public class StudentUpgradeRateServiceImpl implements StudentUpgradeRateService 
 
     @Autowired
     private StudentArchiveGiftRepository archiveGiftRepository;
+
+    @Autowired
+    private AddPointUtils addPointUtils;
 
     @Override
     public List<StudentArchiveUpgradeRateResponse> getArchiveByUser(StudentArchiveUpgradeRateRequest request) {
@@ -65,11 +69,10 @@ public class StudentUpgradeRateServiceImpl implements StudentUpgradeRateService 
         Double rate = random.nextDouble();
         Double ratio = checkRatio.get().getRatio() / 100;
 //        List<StudentConditionResponse> listCondition = studentUpgradeRateRepository.getListGiftCondition(request.getIdUpgrade());
-        List<ArchiveGift> listArchive = archiveGiftRepository.findAllByGiftIdIn(request.getIdGift());
+        List<ArchiveGift> listArchive = archiveGiftRepository.findAllByGiftIdIn(request.getIdGift(), udpmHoney.getIdUser());
         List<ArchiveGift> listArchiveNew = new ArrayList<>();
 
         if (rate <= ratio && listArchive.size() == request.getIdGift().size()) {
-            List<Honey> honey = new ArrayList<>();
 
             // update honey
             Optional<Honey> honeyPoint = honeyRepository.findByHoneyCategoryIdAndStudentId(checkRatio.get().getOriginalHoney(), udpmHoney.getIdUser());
@@ -82,27 +85,29 @@ public class StudentUpgradeRateServiceImpl implements StudentUpgradeRateService 
                 honeyPoint.get().setHoneyPoint(honeyPoint.get().getHoneyPoint() - request.getOriginalHoney());
                 if (honeyPoint.get().getHoneyPoint() - request.getOriginalHoney() == 0) {
                     honeyRepository.deleteById(honeyPoint.get().getId());
+                } else {
+                    honeyRepository.save(honeyPoint.get());
                 }
-                honey.add(honeyPoint.get());
             } else {
                 throw new RestApiException("Bạn không đủ mật ong để nâng cấp");
             }
 //        }
+
             Optional<Honey> honeyPointDestination = honeyRepository.findByHoneyCategoryIdAndStudentId(checkRatio.get().getDestinationHoney(), udpmHoney.getIdUser());
             if (honeyPointDestination.isEmpty()) {
-                honeyPointDestination.get().setHoneyPoint(honeyPointDestination.get().getHoneyPoint() + request.getDestinationHoney());
-            } else {
                 // Tạo một đối tượng Honey mới và thêm vào danh sách
                 Honey newHoney = new Honey();
                 newHoney.setHoneyCategoryId(checkRatio.get().getDestinationHoney());
                 newHoney.setHoneyPoint(request.getDestinationHoney());
                 newHoney.setStudentId(udpmHoney.getIdUser());
                 newHoney.setStatus(Status.HOAT_DONG);
-                honey.add(newHoney);
+                honeyRepository.save(newHoney);
+            } else {
+                honeyPointDestination.get().setHoneyPoint(honeyPointDestination.get().getHoneyPoint() + request.getDestinationHoney());
+                honeyRepository.save(honeyPointDestination.get());
             }
-            honey.add(honeyPoint.get());
+//            honey.add(honeyPoint.get());
 //        }
-            honeyRepository.saveAll(honey);
             // update quantity archive
             for (ArchiveGift archiveGift : listArchive) {
                 if (archiveGift.getQuantity() > 1) {

@@ -38,6 +38,7 @@ request.interceptors.response.use(
       window.location.href = window.location.origin + "/401";
       return;
     }
+    console.log(error);
     // if (error.response && error.response.status === 400) {
     //   message.error(error.response.data.message);
     // }

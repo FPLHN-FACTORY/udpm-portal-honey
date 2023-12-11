@@ -123,7 +123,7 @@ const ModalThem = (props) => {
     if (quantityValue === 1 && (!value || value <= 0)) {
       return Promise.reject("Số lượng phải lớn hơn 0.");
     }
-    if (!/^\d*$/.test(value)) {
+    if (!/^\d*$/.test(value) || !regex.test(value) || value === 0) {
       return Promise.reject("Số lượng phải là số nguyên dương.");
     }
     return Promise.resolve();
@@ -131,7 +131,7 @@ const ModalThem = (props) => {
 
   const validateLimitQuantity = (rule, value) => {
     const limitQuantityValue = form.getFieldValue("limitQuantity");
-    if (!/^\d*$/.test(value)) {
+    if (!/^\d*$/.test(value) || !regex.test(value) || value === 0) {
       return Promise.reject("Số lượng phải là số nguyên dương.");
     }
     if (limitQuantityValue === 1 && (!value || value <= 0)) {
@@ -139,9 +139,9 @@ const ModalThem = (props) => {
     }
     return Promise.resolve();
   };
-
+  const regex = /^[1-9]\d*$/;
   const validateHoney = (rule, value) => {
-    if (!/^\d*$/.test(value)) {
+    if (!/^\d*$/.test(value) || !regex.test(value) || value === 0) {
       return Promise.reject("Số lượng mật phải là số nguyên dương.");
     }
     if (value <= 0) {
@@ -467,9 +467,15 @@ const ModalThem = (props) => {
                 ]}
               >
                 <Select
-                  mode="multiple"
+                  className="select-custom"
+                  mode="tags"
                   placeholder="Chọn loại mật quy đổi"
                   onChange={handleCategoryChange}
+                  showSearch
+                  filterOption={(input, option) =>
+                    // console.log(option)
+                    option.children.indexOf(input) >= 0
+                  }
                 >
                   {listCategory.map((category) => (
                     <Option key={category.id} value={category.id}>

@@ -45,19 +45,26 @@ export default function IndexGift() {
   }, []);
 
   useEffect(() => {
+    GiftAPI.fetchAll().then((response) => {
+      dispatch(SetGift(response.data.data.data));
+      setTotal(response.data.data.totalPages);
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
     document.title = "Quản lý vật phẩm";
     fetchAllCate();
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
 
   const fetchData = () => {
-    GiftAPI.fetchAll({
+    const data = {
       search: search,
       categoryId: honeyCategoryId,
       page: current - 1,
-    }).then((response) => {
-      console.log(response.data.data.data);
+    };
+    GiftAPI.fetchAll(data).then((response) => {
       dispatch(SetGift(response.data.data.data));
       setTotal(response.data.data.totalPages);
     });
@@ -195,7 +202,6 @@ export default function IndexGift() {
             <Button
               onClick={() => {
                 setDetailGift(record);
-                console.log(record);
                 setShowModalDetail(true);
               }}
               style={{

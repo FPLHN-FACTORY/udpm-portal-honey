@@ -30,7 +30,7 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
                     FROM gift g
                     JOIN archive_gift ag ON g.id = ag.gift_id
                     JOIN archive a ON ag.archive_id = a.id 
-                    WHERE (a.student_id = :#{#req.idStudent})
+                    WHERE (a.student_id = :#{#req.idStudent}) AND expiry NOT IN ('HET_HAN', 'CHUA_HOAT_DONG')
                     AND (:#{#req.status} IS NULL OR g.status = :#{#req.status})
                     AND (:#{#req.type} IS NULL OR g.type = :#{#req.type});
             """, nativeQuery = true)
@@ -58,7 +58,7 @@ public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
                     FROM gift g 
                     JOIN archive_gift ag ON ag.gift_id = g.id 
                     JOIN archive a ON ag.archive_id = a.id 
-                    WHERE (a.student_id = :#{#req.idStudent})
+                    WHERE (a.student_id = :#{#req.idStudent}) AND expiry NOT IN ('HET_HAN', 'CHUA_HOAT_DONG')
                     AND (:#{#req.status} IS NULL OR g.status = :#{#req.status})
                     AND (:#{#req.type} IS NULL OR g.type = :#{#req.type})
             """, nativeQuery = true)

@@ -89,7 +89,7 @@ export default function AuctionMangement() {
     const data = {
       ...searchParams,
       page: current,
-      size: 2
+      size: 5
     };
     AuctionAPI.fetchAll(data).then((response) => {
       dispatch(SetAuction(response.data.data.data));
