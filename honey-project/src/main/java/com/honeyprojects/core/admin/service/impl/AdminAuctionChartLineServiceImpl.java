@@ -3,6 +3,7 @@ package com.honeyprojects.core.admin.service.impl;
 import com.honeyprojects.core.admin.model.request.AdminAuctionChartLineRequest;
 import com.honeyprojects.core.admin.model.request.AdminAuctionChartTableRequest;
 import com.honeyprojects.core.admin.model.response.AdminAuctionChartLineResponse;
+import com.honeyprojects.core.admin.model.response.AdminAuctionStatisticResponse;
 import com.honeyprojects.core.admin.repository.AdAuctionChartLineRepository;
 import com.honeyprojects.core.admin.service.AdminAuctionChartLineService;
 import com.honeyprojects.core.common.base.PageableObject;
@@ -28,5 +29,10 @@ public class AdminAuctionChartLineServiceImpl implements AdminAuctionChartLineSe
     public PageableObject getAuctionChartTable(AdminAuctionChartTableRequest adminAuctionChartTableRequest) {
         Pageable pageable = PageRequest.of(adminAuctionChartTableRequest.getPage(), adminAuctionChartTableRequest.getSize());
         return new PageableObject(adAuctionChartLineRepository.getAuctionTable(adminAuctionChartTableRequest, pageable));
+    }
+
+    @Override
+    public AdminAuctionStatisticResponse getAuctionStatistic() {
+        return adAuctionChartLineRepository.getAuctionStatistic();
     }
 }
