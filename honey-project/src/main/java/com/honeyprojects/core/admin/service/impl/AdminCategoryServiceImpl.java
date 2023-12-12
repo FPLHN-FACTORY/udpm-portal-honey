@@ -133,7 +133,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
         ca.setName(request.getName());
         ca.setImage(cloudinaryUploadImages.uploadImage(request.getImage()));
         ca.setCategoryStatus(CategoryStatus.values()[request.getCategoryStatus()]);
-        if (request.getTransactionRights() == 1 &&
+        if (request.getTransactionRights() == 0 &&
                 adminCategoryRepository.findAllByTransactionRightsAndCategoryStatusNot(CategoryTransaction.FREE, CategoryStatus.INACTIVE).size() != 0) {
             throw new RestApiException("Đã tồn tại mật ong có để giao dịch mặc định");
         }
