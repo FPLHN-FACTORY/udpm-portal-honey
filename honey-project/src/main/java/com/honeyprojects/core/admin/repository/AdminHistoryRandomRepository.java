@@ -3,7 +3,9 @@ package com.honeyprojects.core.admin.repository;
 import com.honeyprojects.core.admin.model.response.AdminHistoryRandomRespone;
 import com.honeyprojects.repository.HistoryRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface AdminHistoryRandomRepository extends HistoryRepository {
 
     @Query(value = """

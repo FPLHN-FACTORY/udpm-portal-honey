@@ -10,14 +10,26 @@ import {
   message,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import moment from "moment";
+import "./index.css";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import {
+  GetHistory,
+  SetHistory,
+} from "../../../app/reducers/history/history.reducer";
+import {
+  GetCategory,
+  SetCategory,
+} from "../../../app/reducers/category/category.reducer";
+import { SearchOutlined } from "@ant-design/icons";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
-import { SearchOutlined } from "@ant-design/icons";
+import moment from "moment";
+import { AddPointStudentAPI } from "../../../apis/censor/add-point/add-point-student.api";
+
 const statusHistory = (status) => {
   switch (status) {
     case 1:
-      return <Tag color="green">Đổi thành công</Tag>; // Màu xanh lá cây
+      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
     case 2:
       return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
     default:
@@ -26,50 +38,72 @@ const statusHistory = (status) => {
 };
 
 export default function ProjectHistory() {
-  const [getHistory, setGetHistory] = useState([]);
-  const [fillCategory, setFillCategory] = useState([]);
-  const [totalPages, setTotalPages] = useState([]);
-  const [filter, setFilter] = useState({ page: 0 });
+  const dispatch = useAppDispatch();
+  const [totalPage, setTotalPage] = useState(1);
+  const [filter, setFilter] = useState({ page: 0, status: null });
 
-  const fetchData = (filter) => {
-    const fetchData = async (filter) => {
-      try {
-        const response = await RequestManagerAPI.getHistoryBuyGifft(filter);
-        const listHistory = await Promise.all(
-          response.data.data.map(async (data) => {
-            try {
-              const user = await RequestManagerAPI.getUserAPiById(
-                data.studentId
-              );
-              return {
-                ...data,
-                studentName: user.data.data.name,
-                userName: user.data.data.userName,
-              };
-            } catch (error) {
-              console.error(error);
-              return data;
-            }
-          })
-        );
-        setGetHistory(listHistory);
-        setTotalPages(response.data.totalPages);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData(filter);
-  };
-
-  const fechCategory = () => {
-    CategoryAPI.fetchAllCategory().then((response) => {
-      setFillCategory(response.data.data);
-    });
-  };
   useEffect(() => {
-    fechCategory();
-    fetchData(filter);
-  }, [filter]);
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      status: 7,
+    }));
+  }, []);
+
+  useEffect(() => {
+    fetchData(dispatch, filter);
+  }, [dispatch, filter]);
+
+  const fetchData = (dispatch, filter) => {
+    dispatch(SetHistory([]));
+    CategoryAPI.fetchAllCategory()
+      .then((response) => {
+        dispatch(SetCategory(response.data.data));
+      })
+      .catch((error) => {
+        message.error(error);
+      })
+      .finally(() => {
+        const fetchData = async (filter) => {
+          try {
+            const response = await AddPointStudentAPI.getHistoryEvent(filter);
+            const listHistory = await Promise.all(
+              response.data.data.map(async (data) => {
+                try {
+                  const user = await RequestManagerAPI.getUserAPiById(
+                    data.studentId
+                  );
+                  return {
+                    ...data,
+                    nameStudent: user.data.data.name,
+                    userName: user.data.data.userName,
+                  };
+                } catch (error) {
+                  console.error(error);
+                  return data;
+                }
+              })
+            );
+            dispatch(SetHistory(listHistory));
+            setTotalPage(response.data.totalPages);
+          } catch (error) {
+            console.error(error);
+          }
+        };
+        fetchData(filter);
+      });
+  };
+
+  const data = useAppSelector(GetHistory).map((data) => {
+    return {
+      ...data,
+      key: data.id,
+      status: statusHistory(data.status),
+      createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
+      acction: { idHistory: data.id, status: data.status },
+    };
+  });
+
+  const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
     if (value.userName === undefined || value.userName.trim().length === 0) {
@@ -90,17 +124,15 @@ export default function ProjectHistory() {
               status: value.status,
             });
           } else {
-            fetchData();
             message.error("User name sinh viên không chính xác!");
           }
         })
         .catch((error) => console.error(error));
     }
   };
-  console.log(getHistory);
   return (
-    <>
-      <Card className="mb-2">
+    <div className="request-manager">
+      <Card className="mb-2 py-1">
         <Form onFinish={onFinishSearch}>
           <Space size={"large"}>
             <Form.Item name="userName" className="search-input">
@@ -118,24 +150,11 @@ export default function ProjectHistory() {
                 size="large"
                 placeholder="Loại điểm"
                 options={[
-                  { value: null, label: "tất cả" },
-                  ...fillCategory.map((item) => {
-                    return { label: item.name, value: item.id };
-                  }),
-                ]}
-              />
-            </Form.Item>
-            <Form.Item name={"status"} initialValue={null}>
-              <Select
-                style={{ width: "260px" }}
-                size="large"
-                placeholder="Trạng thái"
-                options={[
                   { value: null, label: "Tất cả" },
-                  ...[1, 2].map((value) => {
+                  ...listCategory.map((category) => {
                     return {
-                      value: value,
-                      label: statusHistory(value),
+                      value: category.id,
+                      label: category.name,
                     };
                   }),
                 ]}
@@ -145,48 +164,41 @@ export default function ProjectHistory() {
               htmlType="submit"
               type="primary"
               className="mr-10 search-button"
-              style={{ marginBottom: "25px" }}
             >
               Lọc
             </Button>
           </Space>
         </Form>
       </Card>
-      <Card title="Lịch sử đổi quà">
-        <div className="mt-5">
-          {getHistory.map((item) => (
-            <div className="list__point ">
-              <h3 className="text-slate-600"> Sinh viên {item.studentName}</h3>
-              <div className="list__point__title">
-                <p>
-                  <strong className="text-slate-500 mr-[8px]">
-                    {item.status === 2
-                      ? "Đã bị hủy yêu cầu mua: "
-                      : "Đã được chấp nhận yêu cầu mua: "}
-                  </strong>
-                  {item.quantityGift} vật phẩm {item.nameGift}
-                </p>
-                <p>
-                  <strong className="text-slate-500 mr-[8px]">
-                    Thời gian:
-                  </strong>
-                  {moment(item.changeDate).format("DD-MM-YYYY HH:mm:ss")}
-                </p>
-              </div>
+      <Card title="Lịch sử">
+        {data.map((item) => (
+          <div className="list__point ">
+            <h3 className="text-slate-600"> Sinh viên {item.nameStudent}</h3>
+            <div className="list__point__title">
+              <p>
+                <strong className="text-slate-500 mr-[8px]">
+                  Đã được cộng:
+                </strong>
+                {item.honey}
+              </p>
+              <p>
+                <strong className="text-slate-500 mr-[8px]">Thời gian:</strong>
+                {item.createdDate}
+              </p>
             </div>
-          ))}
-        </div>
-        <div className="mt-5 text-center">
+          </div>
+        ))}
+        <div className="mt-10 text-center mb-10">
           <Pagination
             simple
             current={filter.page + 1}
             onChange={(page) => {
               setFilter({ ...filter, page: page - 1 });
             }}
-            total={totalPages * 10}
+            total={totalPage * 10}
           />
         </div>
       </Card>
-    </>
+    </div>
   );
 }

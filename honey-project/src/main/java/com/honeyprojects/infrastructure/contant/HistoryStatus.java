@@ -7,4 +7,6 @@ public enum HistoryStatus {
     ADMIN_DA_THEM,
     TEACHER_DA_THEM,
     PRESIDENT_DA_THEM,
+    SƯ_KIEN,
+    DU_AN
 }
