@@ -16,4 +16,10 @@ export class AuctionChartAPI {
       params: filter,
     });
   };
+  static fetchStatistic = () => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/statistic`,
+    });
+  };
 }

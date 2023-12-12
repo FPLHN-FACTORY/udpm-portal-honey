@@ -4,6 +4,7 @@ import com.honeyprojects.core.admin.model.request.AdminAuctionChartLineRequest;
 import com.honeyprojects.core.admin.model.request.AdminAuctionChartTableRequest;
 import com.honeyprojects.core.admin.model.response.AdminAuctionChartLineResponse;
 import com.honeyprojects.core.admin.model.response.AdminAuctionChartTableResponse;
+import com.honeyprojects.core.admin.model.response.AdminAuctionStatisticResponse;
 import com.honeyprojects.repository.AuctionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,4 +39,14 @@ public interface AdAuctionChartLineRepository extends AuctionRepository {
     """, nativeQuery = true)
     Page<AdminAuctionChartTableResponse> getAuctionTable(@Param("req") AdminAuctionChartTableRequest req,
                                                          Pageable pageable);
+
+    @Query(value = """
+        SELECT
+            CAST(COALESCE(COUNT(a.id), 0) AS SIGNED) AS id_count,
+            CAST(COALESCE(SUM(quantity), 0) AS SIGNED) AS total_quantity,
+            CAST(COALESCE(SUM(starting_price), 0) AS SIGNED) AS total_starting_price,
+            CAST(COALESCE(SUM(last_price), 0) AS SIGNED) AS total_last_price
+        FROM honey_project.auction a;
+    """, nativeQuery = true)
+    AdminAuctionStatisticResponse getAuctionStatistic();
 }

@@ -110,7 +110,6 @@ export default function Index() {
       dataIndex: "stt",
       key: "stt",
       align: "center",
-      render: (text, record, index) => index + 1,
     },
     {
       title: "Ảnh",

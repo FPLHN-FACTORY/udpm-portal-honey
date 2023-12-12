@@ -33,13 +33,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws IOException, ServletException {
         String jwtToken = extractJwtToken(request);
         HttpSession session = request.getSession();
-        session.setAttribute(Constants.TOKEN, jwtToken);
         if (jwtToken != null) {
             if (jwtTokenProvider.validateToken(jwtToken)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(jwtToken);
                 session.setAttribute(Constants.TOKEN, jwtToken);
                 if (jwtTokenProvider.checkRoleIdentity()) {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                } else {
+                    jwtTokenProvider.logout();
                 }
             }
         }
