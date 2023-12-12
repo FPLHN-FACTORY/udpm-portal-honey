@@ -16,7 +16,7 @@ public interface AdminHistoryRepository extends HistoryRepository {
     @Query(value = """
             SELECT ROW_NUMBER() over (ORDER BY hd.created_date desc ) as stt, h.id, h.note, 
             h.change_date, hd.student_id, h.student_name,
-            GROUP_CONCAT(CONCAT(hd.honey_point, ' ', c.name) SEPARATOR ', ') AS honey
+            GROUP_CONCAT(CONCAT(hd.honey_point, ' mật ong ', c.name) SEPARATOR ', ') AS honey
             FROM history_detail hd
             LEFT JOIN history h ON hd.history_id = h.id
             LEFT JOIN honey ho ON hd.honey_id = ho.id

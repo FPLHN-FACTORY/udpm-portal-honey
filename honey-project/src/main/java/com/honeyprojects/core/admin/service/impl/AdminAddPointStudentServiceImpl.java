@@ -6,12 +6,16 @@ import com.honeyprojects.core.admin.model.request.AdminAddPointStudentPortalEven
 import com.honeyprojects.core.admin.model.request.AdminAddPointStudentPortalEventsBOO;
 import com.honeyprojects.core.admin.model.request.AdminAddPointStudentPortalEventsRequest;
 import com.honeyprojects.core.admin.model.request.AdminCreateNotificationDetailRandomRequest;
+import com.honeyprojects.core.admin.model.request.AdminHistoryApprovedSearchRequest;
 import com.honeyprojects.core.admin.model.request.AdminNotificationRandomRequest;
+import com.honeyprojects.core.admin.model.response.CensorTransactionRequestResponse;
+import com.honeyprojects.core.admin.repository.AdAddPointStudentRepository;
 import com.honeyprojects.core.admin.repository.AdHistoryDetailRepository;
 import com.honeyprojects.core.admin.repository.AdNotificationRespository;
 import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
 import com.honeyprojects.core.admin.service.AdminAddPointStudentService;
 import com.honeyprojects.core.admin.service.ExportExcelServiceService;
+import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
 import com.honeyprojects.core.teacher.model.request.TeacherGetPointRequest;
@@ -42,6 +46,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -84,6 +90,17 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
     @Autowired
     private AddPointUtils addPointUtils;
 
+    @Autowired
+    private AdAddPointStudentRepository adAddPointStudentRepository;
+
+    @Override
+
+    public PageableObject<CensorTransactionRequestResponse> getHistoryEvent(AdminHistoryApprovedSearchRequest searchParams) {
+        Pageable pageable = PageRequest.of(searchParams.getPage(), searchParams.getSize());
+        System.out.println("============"+searchParams.getStatus());
+        return new PageableObject<>(adAddPointStudentRepository.getHistoryEvent(searchParams, pageable));
+    }
+
     @Override
     public Boolean addPointToStudentLabReport(AdminAddPointStudentLabReportBOO requestAddPointStudentBO) {
 
@@ -107,10 +124,11 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
 //                getPointRequest.setStudentId(adminAddPointStudentLabReportRequest.getId());
 //                getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
 //                TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
-
+                SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(adminAddPointStudentLabReportRequest.getId());
                 Long dateNow = Calendar.getInstance().getTimeInMillis();
                 History history = new History();
                 history.setStudentId(adminAddPointStudentLabReportRequest.getId());
+                history.setStudentName(simpleResponse.getUserName());
                 history.setType(TypeHistory.CONG_DIEM);
                 history.setChangeDate(dateNow);
                 history.setStatus(HistoryStatus.CHO_PHE_DUYET);
@@ -187,12 +205,14 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
             getPointRequest.setStudentId(adminAddPointStudentLabReportRequest.getId());
             getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
             TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
-
+            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(adminAddPointStudentLabReportRequest.getId());
             Long dateNow = Calendar.getInstance().getTimeInMillis();
             History history = new History();
             history.setStudentId(adminAddPointStudentLabReportRequest.getId());
+            history.setStudentName(simpleResponse.getUserName());
             history.setType(TypeHistory.CONG_DIEM);
             history.setChangeDate(dateNow);
+            history.setStatus(HistoryStatus.DU_AN);
             historyRepository.save(history);
 
             HistoryDetail historyDetail = new HistoryDetail();
@@ -303,7 +323,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
 
         for (AdminAddPointStudentPortalEventsRequest studentId :
                 requestAddPointStudentBO.getLstStudentId()) {
-
+            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(studentId.getId());
             TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
             getPointRequest.setStudentId(studentId.getId());
             getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
@@ -312,8 +332,10 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
             Long dateNow = Calendar.getInstance().getTimeInMillis();
             History history = new History();
             history.setStudentId(studentId.getId());
+            history.setStudentName(simpleResponse.getUserName());
             history.setType(TypeHistory.CONG_DIEM);
             history.setChangeDate(dateNow);
+            history.setStatus(HistoryStatus.SƯ_KIEN);
             historyRepository.save(history);
 
             HistoryDetail historyDetail = new HistoryDetail();
@@ -385,9 +407,10 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
             getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
             TeacherPointResponse teacherPointResponse = honeyRepository.getPoint(getPointRequest);
             Long dateNow = Calendar.getInstance().getTimeInMillis();
+            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(studentId.getId());
             History history = new History();
             if (category.getCategoryStatus().equals(CategoryStatus.FREE)) {
-                history.setStatus(HistoryStatus.DA_PHE_DUYET);
+                history.setStatus(HistoryStatus.SƯ_KIEN);
                 Notification notification = createNotification(studentId.getId());
                 if (!DataUtils.isNullObject(requestAddPointStudentBO.getListUser())) {
                     try {
@@ -398,10 +421,11 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
                 }
             }
             if (category.getCategoryStatus().equals(CategoryStatus.ACCEPT)) {
-            history.setStatus(HistoryStatus.CHO_PHE_DUYET);
+                history.setStatus(HistoryStatus.CHO_PHE_DUYET);
             }
             history.setStudentId(studentId.getId());
-            history.setType(TypeHistory.MAT_ONG_VA_VAT_PHAM);
+            history.setStudentName(simpleResponse.getUserName());
+            history.setType(TypeHistory.CONG_DIEM);
             history.setChangeDate(dateNow);
             historyRepository.save(history);
 

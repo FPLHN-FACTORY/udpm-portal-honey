@@ -51,6 +51,7 @@ import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.logger.entity.LoggerFunction;
 import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
+import com.honeyprojects.repository.ArchiveGiftRepository;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import com.honeyprojects.util.DataUtils;
 import com.honeyprojects.util.ExcelUtils;
@@ -128,6 +129,9 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
     @Autowired
     private ExportExcelServiceService exportExcelService;
+
+    @Autowired
+    private ArchiveGiftRepository archiveGiftRepository;
 
     @Override
     public List<AdminCategoryResponse> getAllCategory() {
@@ -477,9 +481,15 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     }
 
     private ArchiveGift createArchiveGift(String archive, String idChest, String idGift, Integer quantity) {
-        AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archive, idChest, idGift, quantity);
-        ArchiveGift archiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
-        return adArchiveGiftRepository.save(archiveGift);
+       Optional<ArchiveGift>  existingArchiveGift = adArchiveGiftRepository.findByArchiveIdAndGiftId(archive, idGift);
+        if (existingArchiveGift.isPresent()) {
+            existingArchiveGift.get().setQuantity(existingArchiveGift.get().getQuantity() + quantity);
+            return adArchiveGiftRepository.save(existingArchiveGift.get());
+        } else {
+            AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archive, idChest, idGift, quantity);
+            ArchiveGift newArchiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
+            return adArchiveGiftRepository.save(newArchiveGift);
+        }
     }
 
     private HistoryDetail createHistoryDetailGift(SimpleResponse simpleResponse, Gift gift, History history, Integer quantity, StringBuilder stringBuilder) {
