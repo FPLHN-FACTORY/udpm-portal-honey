@@ -72,4 +72,9 @@ public class PresidentAddItemToStudentController {
     public PageableObject<PresidentGiftHistoryResponse> getGiftHistory(PresidentFindGiftHistoryRequest request) {
         return presidentHistoryService.getGiftHistory(request);
     }
+
+    @GetMapping("/list-request")
+    public PageableObject<PresidentGiftHistoryResponse> getHoneyRequest(PresidentFindGiftHistoryRequest request) {
+        return presidentHistoryService.getHoneyRequest(request);
+    }
 }
