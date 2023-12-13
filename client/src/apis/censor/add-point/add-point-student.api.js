@@ -3,6 +3,23 @@ import { request } from "../../../helper/request.helper";
 export class AddPointStudentAPI {
   static COMPONENT_NAME = "censor/add-point-student";
 
+
+  static getHistoryEvent = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/history-event`,
+      params: filter,
+    });
+  };
+
+  static getHistoryProject = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/history-project`,
+      params: filter,
+    });
+  };
+
   static getCategory = () => {
     return request({
       method: "GET",

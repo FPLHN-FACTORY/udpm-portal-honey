@@ -24,6 +24,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import moment from "moment";
+import { AddPointStudentAPI } from "../../../apis/censor/add-point/add-point-student.api";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -57,7 +58,7 @@ export default function EventHistory() {
       .finally(() => {
         const fetchData = async (filter) => {
           try {
-            const response = await RequestManagerAPI.historyApproved(filter);
+            const response = await AddPointStudentAPI.getHistoryEvent(filter);
             const listHistory = await Promise.all(
               response.data.data.map(async (data) => {
                 try {
@@ -152,22 +153,6 @@ export default function EventHistory() {
                 ]}
               />
             </Form.Item>
-            <Form.Item name={"status"} initialValue={null}>
-              <Select
-                style={{ width: "260px" }}
-                size="large"
-                placeholder="Trạng thái"
-                options={[
-                  { value: null, label: "Tất cả" },
-                  ...[1, 2].map((value) => {
-                    return {
-                      value: value,
-                      label: statusHistory(value),
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
             <Button
               htmlType="submit"
               type="primary"
@@ -178,27 +163,20 @@ export default function EventHistory() {
           </Space>
         </Form>
       </Card>
-      <Card title="Lịch sử cộng điểm">
+      <Card title="Lịch sử">
         {data.map((item) => (
           <div className="list__point ">
             <h3 className="text-slate-600"> Sinh viên {item.nameStudent}</h3>
             <div className="list__point__title">
               <p>
                 <strong className="text-slate-500 mr-[8px]">
-                  {item.acction.status == 2 ? 'Đã bị hủy yêu cầu cộng: ' : 'Đã được chấp nhận yêu cầu cộng: '}
+                  Đã được cộng:
                 </strong>
-                {item.honeyPoint} mật ong {item.nameCategory}
+                {item.honey}
               </p>
               <p>
                 <strong className="text-slate-500 mr-[8px]">Thời gian:</strong>
                 {item.createdDate}
-              </p>
-              <p
-                title={item.note}
-                className="w-[300px] overflow-hidden whitespace-nowrap text-ellipsis"
-              >
-                <strong className="text-slate-500 mr-[8px]">Lý do:</strong>
-                {item.note}
               </p>
             </div>
           </div>
