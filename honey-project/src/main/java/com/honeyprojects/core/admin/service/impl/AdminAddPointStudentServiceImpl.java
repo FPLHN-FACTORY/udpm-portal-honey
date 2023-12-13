@@ -94,11 +94,15 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
     private AdAddPointStudentRepository adAddPointStudentRepository;
 
     @Override
-
     public PageableObject<CensorTransactionRequestResponse> getHistoryEvent(AdminHistoryApprovedSearchRequest searchParams) {
         Pageable pageable = PageRequest.of(searchParams.getPage(), searchParams.getSize());
-        System.out.println("============"+searchParams.getStatus());
         return new PageableObject<>(adAddPointStudentRepository.getHistoryEvent(searchParams, pageable));
+    }
+
+    @Override
+    public PageableObject<CensorTransactionRequestResponse> getHistoryProject(AdminHistoryApprovedSearchRequest searchParams) {
+        Pageable pageable = PageRequest.of(searchParams.getPage(), searchParams.getSize());
+        return new PageableObject<>(adAddPointStudentRepository.getHistoryProject(searchParams, pageable));
     }
 
     @Override

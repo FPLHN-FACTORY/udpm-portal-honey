@@ -11,15 +11,6 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import "./index.css";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import {
-  GetHistory,
-  SetHistory,
-} from "../../../app/reducers/history/history.reducer";
-import {
-  GetCategory,
-  SetCategory,
-} from "../../../app/reducers/category/category.reducer";
 import { SearchOutlined } from "@ant-design/icons";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
@@ -38,26 +29,20 @@ const statusHistory = (status) => {
 };
 
 export default function ProjectHistory() {
-  const dispatch = useAppDispatch();
   const [totalPage, setTotalPage] = useState(1);
+  const [category, setCategory] = useState([]);
+  const [history, setHistory] = useState([]);
   const [filter, setFilter] = useState({ page: 0, status: null });
 
   useEffect(() => {
-    setFilter((prevFilter) => ({
-      ...prevFilter,
-      status: 7,
-    }));
-  }, []);
+    fetchData(filter);
+  }, [filter]);
 
-  useEffect(() => {
-    fetchData(dispatch, filter);
-  }, [dispatch, filter]);
-
-  const fetchData = (dispatch, filter) => {
-    dispatch(SetHistory([]));
+  const fetchData = (filter) => {
+    setHistory([]);
     CategoryAPI.fetchAllCategory()
       .then((response) => {
-        dispatch(SetCategory(response.data.data));
+        setCategory(response.data.data);
       })
       .catch((error) => {
         message.error(error);
@@ -65,7 +50,7 @@ export default function ProjectHistory() {
       .finally(() => {
         const fetchData = async (filter) => {
           try {
-            const response = await AddPointStudentAPI.getHistoryEvent(filter);
+            const response = await AddPointStudentAPI.getHistoryProject(filter);
             const listHistory = await Promise.all(
               response.data.data.map(async (data) => {
                 try {
@@ -83,7 +68,7 @@ export default function ProjectHistory() {
                 }
               })
             );
-            dispatch(SetHistory(listHistory));
+            setHistory(listHistory);
             setTotalPage(response.data.totalPages);
           } catch (error) {
             console.error(error);
@@ -93,7 +78,7 @@ export default function ProjectHistory() {
       });
   };
 
-  const data = useAppSelector(GetHistory).map((data) => {
+  const data = history.map((data) => {
     return {
       ...data,
       key: data.id,
@@ -102,8 +87,6 @@ export default function ProjectHistory() {
       acction: { idHistory: data.id, status: data.status },
     };
   });
-
-  const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
     if (value.userName === undefined || value.userName.trim().length === 0) {
@@ -151,7 +134,7 @@ export default function ProjectHistory() {
                 placeholder="Loại điểm"
                 options={[
                   { value: null, label: "Tất cả" },
-                  ...listCategory.map((category) => {
+                  ...category.map((category) => {
                     return {
                       value: category.id,
                       label: category.name,

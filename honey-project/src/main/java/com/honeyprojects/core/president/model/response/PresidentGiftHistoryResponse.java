@@ -14,10 +14,16 @@ public interface PresidentGiftHistoryResponse extends IsIdentified {
     @Value("#{target.gift}")
     String getGift();
 
+    @Value("#{target.chest}")
+    String getChest();
+
     @Value("#{target.change_date}")
     Long getChangeDate();
 
     @Value("#{target.status}")
     Integer getStatus();
+
+    @Value("#{target.type}")
+    Integer getType();
 
 }

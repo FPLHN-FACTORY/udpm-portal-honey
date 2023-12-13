@@ -14,8 +14,8 @@ public interface TeacherHistoryRepository extends HistoryRepository {
 
     @Query(value = """
             SELECT ROW_NUMBER() over (ORDER BY hd.created_date desc ) as stt, h.id, h.note,
-            h.change_date, hd.student_id, hd.honey_id, h.status
-            GROUP_CONCAT(CONCAT(hd.honey_point, ' ', c.name) SEPARATOR ', ') AS honey
+            h.change_date, hd.student_id, hd.honey_id, h.status,
+            GROUP_CONCAT(CONCAT(hd.honey_point, ' mật ong ', c.name) SEPARATOR ', ') AS honey
             FROM history_detail hd
             LEFT JOIN history h ON hd.history_id = h.id
             LEFT JOIN honey ho ON hd.honey_id = ho.id
@@ -38,7 +38,7 @@ public interface TeacherHistoryRepository extends HistoryRepository {
             LEFT JOIN history h ON hd.history_id = h.id
             LEFT JOIN honey ho ON hd.honey_id = ho.id
             JOIN category c ON c.id = ho.honey_category_id
-            WHERE (h.status = 0)
+            WHERE h.status = 0
             AND (:#{#searchParams.idCategory} IS NULL OR c.id = :#{#searchParams.idCategory})
             AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent})
             AND h.type = 0 AND h.teacher_id = :#{#searchParams.idTeacher}

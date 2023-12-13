@@ -18,6 +18,8 @@ public interface AdminAddPointStudentService {
 
     PageableObject<CensorTransactionRequestResponse> getHistoryEvent(AdminHistoryApprovedSearchRequest searchParams);
 
+    PageableObject<CensorTransactionRequestResponse> getHistoryProject(AdminHistoryApprovedSearchRequest searchParams);
+
     Boolean addPointToStudentLabReport(AdminAddPointStudentLabReportBOO adminAddPointStudentBO);
 
     AdminAddPointStudentLabReportBOO previewDataLabReportImportExcel(MultipartFile file) throws IOException;

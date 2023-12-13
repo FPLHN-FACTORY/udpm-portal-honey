@@ -74,7 +74,7 @@ export default function HistoryAddPoint() {
       ...data,
       key: data.id,
       createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
-      changeDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
+      changeDate: moment(data.changeDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
   });
@@ -105,6 +105,8 @@ export default function HistoryAddPoint() {
         .catch((error) => console.error(error));
     }
   };
+
+  console.log(data);
 
   return (
     <div className="add-point">
@@ -145,7 +147,7 @@ export default function HistoryAddPoint() {
           </Space>
         </Form>
       </Card>
-      <Card title="Lịch sử cộng điểm">
+      <Card title="Lịch sử">
         {data.map((item) => (
           <div className="list__point ">
             <h3 className="text-slate-600">
@@ -155,7 +157,7 @@ export default function HistoryAddPoint() {
             <div className="list__point__title">
               <p>
                 <strong className="text-slate-500 mr-[8px]">
-                  Đã được cộng:
+                  Đã nhận được:
                 </strong>
                 {item.honey}
               </p>
