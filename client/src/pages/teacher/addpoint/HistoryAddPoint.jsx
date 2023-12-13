@@ -169,7 +169,10 @@ export default function HistoryAddPoint() {
       <Card title="Lịch sử cộng điểm">
         {data.map((item) => (
           <div className="list__point ">
-            <h3 className="text-slate-600"> Sinh viên {item.nameStudent}</h3>
+            <h3 className="text-slate-600">
+              {" "}
+              Sinh viên {item.nameStudent} ({item.userName})
+            </h3>
             <div className="list__point__title">
               <p>
                 <strong className="text-slate-500 mr-[8px]">

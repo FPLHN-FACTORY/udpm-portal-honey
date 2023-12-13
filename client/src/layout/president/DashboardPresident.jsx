@@ -60,6 +60,10 @@ function DashboardPresident({ children }) {
         "/president/add-item"
       ),
       getItem(
+        <Link to={"/president/add-item"}>Danh sách yêu cầu</Link>,
+        "/president/add-item"
+      ),
+      getItem(
         <Link to={"/president/history-honey"}>Lịch sử</Link>,
         "/president/history-honey"
       ),

@@ -11,10 +11,6 @@ import {
 import React, { useEffect, useState } from "react";
 import "./index.css";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import {
-  GetHistory,
-  SetHistory,
-} from "../../../app/reducers/history/history.reducer";
 import { AddPointAPI } from "../../../apis/censor/add-point/add-point.api";
 import {
   GetCategory,
@@ -26,6 +22,7 @@ import moment from "moment";
 export default function HistoryGift() {
   const dispatch = useAppDispatch();
   const [totalPage, setTotalPage] = useState(1);
+  const [history, setHistory] = useState([]);
   const [filter, setFilter] = useState({ page: 0 });
 
   useEffect(() => {
@@ -59,7 +56,7 @@ export default function HistoryGift() {
                 }
               })
             );
-            dispatch(SetHistory(listHistory));
+            setHistory(listHistory);
             setTotalPage(response.data.totalPages);
           } catch (error) {
             console.error(error);
@@ -69,12 +66,12 @@ export default function HistoryGift() {
       });
   };
 
-  const data = useAppSelector(GetHistory).map((data) => {
+  const data = history.map((data) => {
     return {
       ...data,
       key: data.id,
       createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
-      changeDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
+      changeDate: moment(data.changeDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
   });
@@ -105,7 +102,6 @@ export default function HistoryGift() {
         .catch((error) => console.error(error));
     }
   };
-  console.log(data);
 
   return (
     <div className="add-point">
@@ -146,7 +142,7 @@ export default function HistoryGift() {
           </Space>
         </Form>
       </Card>
-      <Card title="Lịch sử cộng điểm">
+      <Card title="Lịch sử">
         {data.map((item) => (
           <div className="list__point ">
             <h3 className="text-slate-600">
@@ -156,9 +152,9 @@ export default function HistoryGift() {
             <div className="list__point__title">
               <p>
                 <strong className="text-slate-500 mr-[8px]">
-                  Đã được cộng:
+                  Đã nhận được:
                 </strong>
-                {item.gift}
+                {item.type === 5 ? item.chest : item.gift}
               </p>
               <p>
                 <strong className="text-slate-500 mr-[8px]">Thời gian:</strong>
