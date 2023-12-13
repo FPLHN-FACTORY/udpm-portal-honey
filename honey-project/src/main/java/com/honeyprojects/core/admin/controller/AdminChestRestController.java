@@ -5,7 +5,6 @@ import com.honeyprojects.core.admin.model.request.AdminCreateChestRequest;
 import com.honeyprojects.core.admin.service.AdminChestService;
 import com.honeyprojects.core.common.base.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +30,7 @@ public class AdminChestRestController {
         return new ResponseObject(chestService.addChest(request));
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/delete/{id}")
     public void deleteChest(@PathVariable("id") String id) {
         chestService.deleteChest(id);
     }

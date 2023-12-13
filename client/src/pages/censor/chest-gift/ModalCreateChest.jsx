@@ -42,18 +42,24 @@ const ModalAdd = (props) => {
       Modal.confirm({
         title: "Bạn có chắc chắn muốn thêm mới rương không?",
         onOk: () => {
-          ChestAPI.create(formValues).then(onSaveSuccess).catch(onSaveError);
-        }
-      })
+          ChestAPI.create(formValues)
+            .then(onSaveSuccess)
+            .catch((err) => {
+              message.error(err.response.data.message);
+            });
+        },
+      });
     } else {
       Modal.confirm({
         title: "Bạn có chắc chắn muốn cập nhật rương không?",
         onOk: () => {
           ChestAPI.update(formValues, chest.id)
             .then(onSaveSuccess)
-            .catch(onSaveError);
-        }
-      })
+            .catch((err) => {
+              message.error(err.response.data.message);
+            });
+        },
+      });
     }
   };
 

@@ -27,6 +27,7 @@ import ModalDetail from "./ModalDetailChestGift";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter, faRectangleList } from "@fortawesome/free-solid-svg-icons";
 import { ChestGiftAPI } from "../../../apis/censor/chest-gift/chest-gift.api";
+import React from "react";
 
 export default function ChestGift() {
   const dispatch = useAppDispatch();
@@ -94,7 +95,7 @@ export default function ChestGift() {
   };
 
   const confirm = (chest) => {
-    ChestGiftAPI.deleteChest(chest.id).then(
+    ChestAPI.delete(chest.id).then(
       (response) => {
         setCurrent(1);
         fetchData();
@@ -139,7 +140,7 @@ export default function ChestGift() {
               <EditOutlined className="icon" />
             </Button>
           </Tooltip>
-          
+
           <ModalDetail chest={record} icon={<EyeOutlined />} />
 
           <ModalAddGiftToChest chest={record} icon={<PlusCircleOutlined />} />
