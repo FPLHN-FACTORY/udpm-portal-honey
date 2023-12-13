@@ -43,13 +43,6 @@ export default function EventHistory() {
   const [filter, setFilter] = useState({ page: 0, status: null });
 
   useEffect(() => {
-    setFilter((prevFilter) => ({
-      ...prevFilter,
-      status: 6,
-    }));
-  }, []);
-
-  useEffect(() => {
     fetchData(dispatch, filter);
   }, [dispatch, filter]);
 

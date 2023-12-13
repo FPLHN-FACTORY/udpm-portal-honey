@@ -32,13 +32,15 @@ public interface AdminHistoryRepository extends HistoryRepository {
 
     @Query(value = """
             SELECT hd.id AS history_detail_id, h.id, h.change_date,
-            h.created_date, h.status, hd.student_id, h.student_name,
-            GROUP_CONCAT(CONCAT(hd.quantity_gift, ' ', hd.name_gift) SEPARATOR ', ') AS gift
+            h.created_date, h.status, hd.student_id, h.student_name, h.type,
+            GROUP_CONCAT(CONCAT(hd.quantity_gift, ' vật phẩm ', hd.name_gift) SEPARATOR ', ') AS gift,
+            GROUP_CONCAT(CONCAT(' rương ', c.name) SEPARATOR ', ') AS chest
             FROM history h
             JOIN history_detail hd ON hd.history_id = h.id
+            JOIN chest c ON c.id = hd.chest_id
             WHERE (:#{#request.status} IS NULL OR h.status = :#{#request.status})
             AND (:#{#request.idStudent} IS NULL OR h.student_id = :#{#request.idStudent})
-            AND h.type = 4 AND h.status = 3
+            AND h.type IN (4,5) AND h.status = 3
             GROUP BY hd.history_id
             ORDER BY h.last_modified_date DESC
                 """, nativeQuery = true)
@@ -51,7 +53,7 @@ public interface AdminHistoryRepository extends HistoryRepository {
             FROM history h
             LEFT JOIN honey ho ON h.honey_id = ho.id
             LEFT JOIN category c ON c.id = ho.honey_category_id
-            WHERE h.status in (0,3)
+            WHERE h.status IN (0,3)
             AND (:#{#searchParams.idCategory} IS NULL OR c.id = :#{#searchParams.idCategory})
             AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent})
             AND h.type = 0 AND h.teacher_id = :#{#searchParams.idAdmin}

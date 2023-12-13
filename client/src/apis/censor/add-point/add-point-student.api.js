@@ -12,6 +12,14 @@ export class AddPointStudentAPI {
     });
   };
 
+  static getHistoryProject = (filter) => {
+    return request({
+      method: "GET",
+      url: `/${this.COMPONENT_NAME}/history-project`,
+      params: filter,
+    });
+  };
+
   static getCategory = () => {
     return request({
       method: "GET",

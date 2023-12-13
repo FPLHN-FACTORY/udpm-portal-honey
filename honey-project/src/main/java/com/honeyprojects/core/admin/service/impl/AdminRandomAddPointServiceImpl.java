@@ -215,7 +215,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     continue;
                 } else {
                     SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(honey.getStudentId());
-                    History history = createHistory(honey.getStudentId(), TypeHistory.CONG_DIEM, HistoryStatus.DA_PHE_DUYET, simpleResponse.getUserName());
+                    History history = createHistory(honey.getStudentId(), TypeHistory.CONG_DIEM, HistoryStatus.ADMIN_DA_THEM, simpleResponse.getUserName());
                     createHistoryDetail(honey.getStudentId(), honey.getId(), null, null, history.getId(), null, randomPoint, null);
                     Notification notification = createNotification(honey.getStudentId());
                     stringBuilder.append("Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + " được hệ thống tặng: " + randomPoint + " " + categoryResponse.getName());
@@ -246,7 +246,18 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     if (optionalChest.isPresent()) {
                         Chest chest = optionalChest.get();
                         String archiveId = adArchiveRepository.getIdArchiveByIdStudent(simple.getId());
-                        History history = createHistory(simple.getId(), TypeHistory.CONG_RUONG, HistoryStatus.DA_PHE_DUYET, simple.getUserName());
+                        History history = new History();
+                        history.setStudentId(simple.getId());
+                        history.setStudentName(simple.getUserName());
+                        history.setStatus(HistoryStatus.ADMIN_DA_THEM);
+                        history.setType(TypeHistory.CONG_RUONG);
+                        adHistoryRepository.save(history);
+                        HistoryDetail historyDetail = new HistoryDetail();
+                        historyDetail.setStudentId(simple.getId());
+                        historyDetail.setChestId(chest.getId());
+                        historyDetail.setHistoryId(history.getId());
+                        historyDetail.setStatus(Status.HOAT_DONG);
+                        adHistoryDetailRepository.save(historyDetail);
                         if (archiveId == null) {
                             Archive archive = createArchive(simple.getId());
                             createArchiveGift(archive.getId(), chest.getId(), null, 1);
@@ -267,7 +278,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
                     SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(idStudent);
                     if (optionalChest.isPresent()) {
                         Chest chest = optionalChest.get();
-                        History history = createHistory(simpleResponse.getId(), TypeHistory.CONG_RUONG, HistoryStatus.DA_PHE_DUYET, simpleResponse.getUserName());
+                        History history = createHistory(simpleResponse.getId(), TypeHistory.CONG_RUONG, HistoryStatus.ADMIN_DA_THEM, simpleResponse.getUserName());
                         String archiveId = adArchiveRepository.getIdArchiveByIdStudent(simpleResponse.getId());
                         if (archiveId == null) {
                             Archive archive = createArchive(simpleResponse.getId());

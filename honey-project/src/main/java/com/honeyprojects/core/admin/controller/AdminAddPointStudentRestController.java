@@ -36,8 +36,13 @@ public class AdminAddPointStudentRestController {
     private AdminCategoryService adminCategoryService;
 
     @GetMapping("/history-event")
-    public PageableObject<CensorTransactionRequestResponse> historyApproved(AdminHistoryApprovedSearchRequest dataSearch) {
+    public PageableObject<CensorTransactionRequestResponse> historyEvent(AdminHistoryApprovedSearchRequest dataSearch) {
             return addPointService.getHistoryEvent(dataSearch);
+    }
+
+    @GetMapping("/history-project")
+    public PageableObject<CensorTransactionRequestResponse> historyProject(AdminHistoryApprovedSearchRequest dataSearch) {
+        return addPointService.getHistoryProject(dataSearch);
     }
 
     @PostMapping("/lab-report/preview-data")
