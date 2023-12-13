@@ -56,6 +56,7 @@ import RequestItemDetail from "./pages/censor/requestmanager/RequestItemDetail";
 
 import StudentProfile from "./pages/student/honors/StudentProfile";
 import ListHistoryAddPoint from "./pages/censor/addPoin/ListHistory";
+import TabsRequestPresident from "./pages/teacher/addpoint/TabsRequest";
 function App() {
   const data = useAppSelector(SelectLoading);
   return (
@@ -484,6 +485,16 @@ function App() {
                 <AuthGuard>
                   <DashboardPresident>
                     <AddItem />
+                  </DashboardPresident>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/president/list-request"
+              element={
+                <AuthGuard>
+                  <DashboardPresident>
+                    <TabsRequestPresident />
                   </DashboardPresident>
                 </AuthGuard>
               }

@@ -58,12 +58,13 @@ public interface PresidentHistoryRepository extends HistoryRepository {
             LEFT JOIN honey ho ON hd.honey_id = ho.id
             JOIN category c ON c.id = ho.honey_category_id
             WHERE h.status = 0
+            AND (:#{#request.status} IS NULL OR h.status = :#{#request.status})
             AND (:#{#request.idCategory} IS NULL OR c.id = :#{#request.idCategory})
             AND (:#{#request.idStudent} IS NULL OR h.student_id = :#{#request.idStudent})
             AND h.type = 0 AND h.president_id = :id
             GROUP BY hd.history_id
             ORDER BY h.last_modified_date DESC
             """, nativeQuery = true)
-    Page<PresidentGiftHistoryResponse> getListRequest(@Param("searchParams") PresidentFindGiftHistoryRequest request,
+    Page<PresidentGiftHistoryResponse> getHoneyRequest(@Param("request") PresidentFindGiftHistoryRequest request,
                                                         Pageable pageable, @Param("id") String idPresident);
 }
