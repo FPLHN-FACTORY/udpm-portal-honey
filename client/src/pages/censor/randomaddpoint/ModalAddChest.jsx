@@ -104,7 +104,7 @@ export default function ModalAddChest(props) {
                     value={itemName}
                     onChange={(e) => setItemName(e.target.value)}
                   />
-                  <span>{errorChest}</span>
+                  <span className="text-danger">{errorChest}</span>
                 </div>
               </div>
             </div>
