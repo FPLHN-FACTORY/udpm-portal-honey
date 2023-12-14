@@ -471,9 +471,9 @@ function App() {
               path="/student/hall-of-fame/:id"
               element={
                 <AuthGuard>
-                  {/* <DashboardAuthUser> */}
-                  <StudentProfile />
-                  {/* </DashboardAuthUser> */}
+                  <DashboardAuthUser>
+                    <StudentProfile />
+                  </DashboardAuthUser>
                 </AuthGuard>
               }
             />
