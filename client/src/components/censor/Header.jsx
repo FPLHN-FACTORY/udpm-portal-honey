@@ -6,7 +6,6 @@ import {
   Dropdown,
   Avatar,
   List,
-  Menu,
   Button,
 } from "antd";
 
@@ -16,13 +15,7 @@ import {
 } from "@ant-design/icons";
 
 import avtar from "../../assets/images/team-2.jpg";
-import tym from "../../assets/images/38064371 (2).jpg";
-import comment from "../../assets/images/38064371 (3).jpg";
-import approved from "../../assets/images/check.png";
-import refuse from "../../assets/images/cancel.png";
-import evaluate from "../../assets/images/star.png";
 
-import SubMenu from "antd/es/menu/SubMenu";
 import { deleteToken, getToken } from "../../helper/userToken";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
@@ -128,14 +121,36 @@ function Header({ onSlidebar, onPress, name, subName }) {
   const handleItemHover = (itemId) => {
     setHoveredItem(itemId);
   };
-  const AvatarMap = {
-    1: comment,
-    2: approved,
-    3: evaluate,
-    4: tym,
-    5: refuse,
-  };
-
+  
+  const items = [
+    {
+      key: "1",
+      label: (
+        <div
+          type="ghost"
+          onClick={() => {
+            navigate(`/author-switch?Token=${getToken()}`);
+          }}
+        >
+          Đổi quyền
+        </div>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <div
+          type="ghost"
+          onClick={() => {
+            deleteToken();
+            navigate(`/home`);
+          }}
+        >
+          Đăng xuất
+        </div>
+      ),
+    },
+  ];
   // const deleteNotification = async (id) => {
   //   try {
   //     const response = await NotificationAPI.delete(id);
@@ -287,24 +302,11 @@ function Header({ onSlidebar, onPress, name, subName }) {
           </Badge>
           {/* fake user login */}
           
-          <Menu
-            mode="horizontal">
-            <SubMenu
-              title={
-                <span>
-                  <span>{user === null ? "Không có tài khoản" : user.name}</span>
-                </span>
-              }>
-              {user !== null &&
-                <Menu.Item key={"logout"} onClick={() => {
-                  deleteToken();
-                  navigate(`/author-switch`);
-                }}>
-                  Đăng xuất
-                </Menu.Item>
-              }
-            </SubMenu>
-          </Menu>
+          <Dropdown menu={{ items }} placement="bottom">
+            <span className="mx-1 cursor-pointer">
+              {user === null ? "Không có tài khoản" : user.name}
+            </span>
+          </Dropdown>
           {/* fake user login */}
         </Col>
       </Row>

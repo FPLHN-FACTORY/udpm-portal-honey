@@ -156,7 +156,6 @@ function DashboardTeacher({ children }) {
           <Row>
             <Col span={8}>
               <Row>
-                {!collapsed ? (
                   <Col span={12}>
                     <div className="brand text-center">
                       <Link to="/" className="active">
@@ -170,9 +169,6 @@ function DashboardTeacher({ children }) {
                       </Link>
                     </div>
                   </Col>
-                ) : (
-                  <Col span={4}></Col>
-                )}
                 <Col span={12} className="flex items-center">
                   <button
                     className="buttonSlider desktop"
@@ -196,8 +192,8 @@ function DashboardTeacher({ children }) {
                 </Col>
               </Row>
             </Col>
-            <Col span={16}>
-              <Row>
+            <Col span={16} className="flex items-center justify-end">
+              <Row className="w-full">
                 <Col span={15}></Col>
                 <Col span={9}>
                   <Header
@@ -214,13 +210,15 @@ function DashboardTeacher({ children }) {
         {collapsed ? (
           <Content
             className="content-ant"
-            style={{ paddingLeft: "6%", marginTop: "7%" }}>
+            style={{ paddingLeft: "80px", marginTop: "125px" }}
+          >
             {children}
           </Content>
         ) : (
           <Content
             className="content-ant"
-            style={{ paddingLeft: "19%", marginTop: "9%" }}>
+            style={{ paddingLeft: "250px", marginTop: "125px" }}
+          >
             {children}
           </Content>
         )}
