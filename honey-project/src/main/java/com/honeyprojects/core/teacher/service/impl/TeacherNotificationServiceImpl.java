@@ -1,10 +1,10 @@
-package com.honeyprojects.core.president.service.impl;
+package com.honeyprojects.core.teacher.service.impl;
 
 import com.honeyprojects.core.admin.model.request.AdminNotificationRequest;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.UdpmHoney;
-import com.honeyprojects.core.president.repository.PresidentNotificationRepository;
-import com.honeyprojects.core.president.service.PresidentNotificationService;
+import com.honeyprojects.core.teacher.repository.TeacherNotificationRepository;
+import com.honeyprojects.core.teacher.service.TeacherNotificationService;
 import com.honeyprojects.entity.Notification;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
@@ -20,13 +20,13 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class PresidentNotificationServiceImpl implements PresidentNotificationService {
+public class TeacherNotificationServiceImpl implements TeacherNotificationService {
 
     @Autowired
     private UdpmHoney udpmHoney;
 
     @Autowired
-    private PresidentNotificationRepository presidentNotificationRepository;
+    private TeacherNotificationRepository teacherNotificationRepository;
 
     @Override
     public Notification createNotification(String title, String idStudent, NotificationType type) {
@@ -36,42 +36,42 @@ public class PresidentNotificationServiceImpl implements PresidentNotificationSe
         notification.setStudentId(idStudent);
         notification.setStatus(NotificationStatus.CHUA_DOC);
         notification.setType(NotificationType.ADMIN_CHO_PHE_DUYET);
-        return presidentNotificationRepository.save(notification);
+        return teacherNotificationRepository.save(notification);
     }
 
     @Override
     public PageableObject<Notification> getAllNotification(AdminNotificationRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Notification> res = presidentNotificationRepository.getAllNotification(pageable, udpmHoney.getIdUser());
+        Page<Notification> res = teacherNotificationRepository.getAllNotification(pageable, udpmHoney.getIdUser());
         return new PageableObject<>(res);
     }
 
     @Override
     public Integer getNumberNotifications() {
-        return presidentNotificationRepository.getNumberNotifications(udpmHoney.getIdUser());
+        return teacherNotificationRepository.getNumberNotifications(udpmHoney.getIdUser());
     }
 
     @Override
     @Transactional
     public void updateAllStatus() {
-        List<Notification> notifications = presidentNotificationRepository.findByTypeInAndStatusAndPresidentId(Arrays.asList(3, 4),
+        List<Notification> notifications = teacherNotificationRepository.findByTypeInAndStatusAndTeacherId(Arrays.asList(1, 2, 6),
                 NotificationStatus.CHUA_DOC, udpmHoney.getIdUser());
         if (!DataUtils.isNullObject(notifications)) {
             for (Notification notification : notifications) {
                 notification.setStatus(NotificationStatus.DA_DOC);
             }
-            presidentNotificationRepository.saveAll(notifications);
+            teacherNotificationRepository.saveAll(notifications);
         }
     }
 
     @Override
     @Transactional
     public Notification updateStatus(String id) {
-        Notification optionalNotification = presidentNotificationRepository.findByIdAndStatusAndPresidentId(
+        Notification optionalNotification = teacherNotificationRepository.findByIdAndStatusAndTeacherId(
                 id, NotificationStatus.CHUA_DOC, udpmHoney.getIdUser());
         if (!DataUtils.isNullObject(optionalNotification)) {
             optionalNotification.setStatus(NotificationStatus.DA_DOC);
-            presidentNotificationRepository.save(optionalNotification);
+            teacherNotificationRepository.save(optionalNotification);
         }
         return optionalNotification;
     }
