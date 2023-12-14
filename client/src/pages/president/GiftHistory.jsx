@@ -72,8 +72,6 @@ export default function GiftHistory() {
     fetchData(filter);
   }, [filter]);
 
-  console.log(getHistory);
-
   const onFinishSearch = (value) => {
     if (value.userName === undefined || value.userName.trim().length === 0) {
       setFilter({
@@ -114,35 +112,6 @@ export default function GiftHistory() {
                 prefix={<SearchOutlined />}
               />
             </Form.Item>
-            <Form.Item name={"idCategory"}>
-              <Select
-                style={{ width: "250px" }}
-                size="large"
-                placeholder="Loại điểm"
-                options={[
-                  { value: null, label: "tất cả" },
-                  ...fillCategory.map((item) => {
-                    return { label: item.name, value: item.id };
-                  }),
-                ]}
-              />
-            </Form.Item>
-            <Form.Item name={"status"} initialValue={null}>
-              <Select
-                style={{ width: "260px" }}
-                size="large"
-                placeholder="Trạng thái"
-                options={[
-                  { value: null, label: "Tất cả" },
-                  ...[1, 2].map((value) => {
-                    return {
-                      value: value,
-                      label: statusHistory(value),
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
             <Button
               htmlType="submit"
               type="primary"
@@ -154,7 +123,7 @@ export default function GiftHistory() {
           </Space>
         </Form>
       </Card>
-      <Card title="Lịch sử đổi quà">
+      <Card title="Lịch sử">
         <div className="mt-5">
           {getHistory.map((item) => (
             <div className="list__point ">

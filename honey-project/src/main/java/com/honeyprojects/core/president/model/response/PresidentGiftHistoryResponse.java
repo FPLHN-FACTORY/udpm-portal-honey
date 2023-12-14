@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 
 public interface PresidentGiftHistoryResponse extends IsIdentified {
 
+    Integer getStt();
+
     @Value("#{target.student_id}")
     String getStudentId();
 
@@ -13,9 +15,6 @@ public interface PresidentGiftHistoryResponse extends IsIdentified {
 
     @Value("#{target.gift}")
     String getGift();
-
-    @Value("#{target.chest}")
-    String getChest();
 
     @Value("#{target.change_date}")
     Long getChangeDate();

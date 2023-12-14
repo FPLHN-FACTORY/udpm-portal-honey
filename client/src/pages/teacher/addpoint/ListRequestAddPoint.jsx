@@ -34,7 +34,7 @@ const statusHistory = (status) => {
   }
 };
 
-export default function HistoryAddPoint() {
+export default function RequestAddPoint() {
   const dispatch = useAppDispatch();
   const columns = [
     {

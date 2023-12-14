@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 
 public interface PresidentHoneyHistoryResponse extends IsIdentified {
 
+    Integer getStt();
+
     @Value("#{target.student_id}")
     String getStudentId();
 
@@ -19,4 +21,7 @@ public interface PresidentHoneyHistoryResponse extends IsIdentified {
 
     @Value("#{target.status}")
     Integer getStatus();
+
+    @Value("#{target.type}")
+    Integer getType();
 }
