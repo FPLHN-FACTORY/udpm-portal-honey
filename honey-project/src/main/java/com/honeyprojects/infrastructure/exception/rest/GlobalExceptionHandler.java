@@ -60,6 +60,7 @@ public class GlobalExceptionHandler {
 
     @MessageExceptionHandler
     public void handleException(Exception ex, @Header("simpSessionId") String sessionId) {
+        System.out.println("Exception handled for session ID {" + sessionId +"}: {" + ex.getMessage() +"}");
         if (ex instanceof ConstraintViolationException) {
             ConstraintViolationException cve = (ConstraintViolationException) ex;
             Set<ConstraintViolation<?>> violations = cve.getConstraintViolations();
