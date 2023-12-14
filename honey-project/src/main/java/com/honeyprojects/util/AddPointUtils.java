@@ -1,11 +1,11 @@
 package com.honeyprojects.util;
 
+import com.honeyprojects.core.admin.repository.AdArchiveGiftRepository;
 import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
-import com.honeyprojects.repository.ArchiveGiftRepository;
 import com.honeyprojects.repository.ArchiveRepository;
 import com.honeyprojects.repository.HoneyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,7 @@ public class AddPointUtils {
     private HoneyRepository honeyRepository;
 
     @Autowired
-    @Qualifier(ArchiveGiftRepository.NAME)
-    private ArchiveGiftRepository archiveGiftRepository;
+    private AdArchiveGiftRepository archiveGiftRepository;
 
     @Autowired
     @Qualifier(ArchiveRepository.NAME)
