@@ -27,17 +27,6 @@ import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import moment from "moment";
 
-const statusHistory = (status) => {
-  switch (status) {
-    case 1:
-      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
-    case 2:
-      return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
-    default:
-      return <Tag>Không xác định</Tag>;
-  }
-};
-
 export default function RequestApprovedHistory() {
   const dispatch = useAppDispatch();
   const [totalPage, setTotalPage] = useState(1);
@@ -109,7 +98,6 @@ export default function RequestApprovedHistory() {
     return {
       ...data,
       key: data.id,
-      status: statusHistory(data.status),
       createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
@@ -167,22 +155,6 @@ export default function RequestApprovedHistory() {
                     return {
                       value: category.id,
                       label: category.name,
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
-            <Form.Item name={"status"} initialValue={null}>
-              <Select
-                style={{ width: "260px" }}
-                size="large"
-                placeholder="Trạng thái"
-                options={[
-                  { value: null, label: "Tất cả" },
-                  ...[1, 2].map((value) => {
-                    return {
-                      value: value,
-                      label: statusHistory(value),
                     };
                   }),
                 ]}

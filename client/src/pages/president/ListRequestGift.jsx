@@ -12,20 +12,15 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import "./index.css";
-
-import { SearchOutlined } from "@ant-design/icons";
-import moment from "moment";
-import { PresidentRequestAPI } from "../../apis/president/request/request.api";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { AddPointAPI } from "../../apis/teacher/add-point/add-point.api";
 import {
   GetCategory,
   SetCategory,
 } from "../../app/reducers/category/category.reducer";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import {
-  GetHistory,
-  SetHistory,
-} from "../../app/reducers/history/history.reducer";
+import { SearchOutlined } from "@ant-design/icons";
+import moment from "moment";
+import { PresidentRequestAPI } from "../../apis/president/request/request.api";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -36,7 +31,7 @@ const statusHistory = (status) => {
   }
 };
 
-export default function HistoryAddPoint() {
+export default function RequestGift() {
   const dispatch = useAppDispatch();
   const columns = [
     {
@@ -58,9 +53,9 @@ export default function HistoryAddPoint() {
       align: "center",
     },
     {
-      title: "Số mật ong",
-      dataIndex: "honey",
-      key: "honey",
+      title: "Vật phẩm",
+      dataIndex: "gift",
+      key: "gift",
       align: "center",
     },
     {
@@ -103,6 +98,7 @@ export default function HistoryAddPoint() {
 
   const [totalPage, setTotalPage] = useState(1);
   const [filter, setFilter] = useState({ page: 0 });
+  const [history, setHistory] = useState([]);
 
   useEffect(() => {
     fetchData(dispatch, filter);
@@ -119,7 +115,7 @@ export default function HistoryAddPoint() {
       .finally(() => {
         const fetchData = async (filter) => {
           try {
-            const response = await PresidentRequestAPI.getHoneyRequest(filter);
+            const response = await PresidentRequestAPI.getGiftRequest(filter);
             const listHistory = await Promise.all(
               response.data.data.map(async (data) => {
                 try {
@@ -135,7 +131,7 @@ export default function HistoryAddPoint() {
                 }
               })
             );
-            dispatch(SetHistory(listHistory));
+            setHistory(listHistory);
             setTotalPage(response.data.totalPages);
           } catch (error) {
             console.error(error);
@@ -145,7 +141,7 @@ export default function HistoryAddPoint() {
       });
   };
 
-  const data = useAppSelector(GetHistory).map((data) => {
+  const data = history.map((data) => {
     return {
       ...data,
       key: data.id,
@@ -205,22 +201,6 @@ export default function HistoryAddPoint() {
                 size="small"
                 placeholder="Nhập username sinh viên cần tìm"
                 prefix={<SearchOutlined />}
-              />
-            </Form.Item>
-            <Form.Item name={"idCategory"}>
-              <Select
-                style={{ width: "450px" }}
-                size="large"
-                placeholder="Loại điểm"
-                options={[
-                  { value: null, label: "Tất cả" },
-                  ...listCategory.map((category) => {
-                    return {
-                      value: category.id,
-                      label: category.name,
-                    };
-                  }),
-                ]}
               />
             </Form.Item>
             <Button

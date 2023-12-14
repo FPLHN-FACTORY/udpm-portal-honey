@@ -60,8 +60,8 @@ function DashboardPresident({ children }) {
         "/president/add-item"
       ),
       getItem(
-        <Link to={"/president/add-item"}>Danh sách yêu cầu</Link>,
-        "/president/add-item"
+        <Link to={"/president/list-request"}>Danh sách yêu cầu</Link>,
+        "/president/list-request"
       ),
       getItem(
         <Link to={"/president/history-honey"}>Lịch sử</Link>,
