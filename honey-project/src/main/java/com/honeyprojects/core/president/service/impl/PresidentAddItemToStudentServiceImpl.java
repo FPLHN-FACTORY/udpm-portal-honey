@@ -449,6 +449,7 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                     String categoryPoint = category.getName();
                     String categoryId = category.getId();
                     String enumCategoryACCEPT = String.valueOf(CategoryStatus.ACCEPT.ordinal());
+                    String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
 
                     if (honeyMap.containsKey(categoryPoint)) {
                         List<Integer> honeyPoints = honeyMap.get(categoryPoint);
@@ -472,25 +473,41 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                             });
 
                             history.setStatus(category.getStatus().equals(enumCategoryACCEPT) ? HistoryStatus.CHO_PHE_DUYET : HistoryStatus.PRESIDENT_DA_THEM);
-                            history.setStudentId(simpleResponse.getId());
                             historyRepository.save(history);
 
                             HistoryDetail historyDetail = new HistoryDetail();
                             historyDetail.setHistoryId(history.getId());
                             historyDetail.setHoneyPoint(honeyPoint);
                             historyDetail.setStudentId(getPointRequest.getStudentId());
-
-                            if (teacherPointResponse == null) {
-                                Honey honey = new Honey();
-                                honey.setStatus(Status.HOAT_DONG);
-                                honey.setHoneyPoint(0);
-                                honey.setStudentId(simpleResponse.getId());
-                                honey.setHoneyCategoryId(categoryId);
-                                historyDetail.setHoneyId(honeyRepository.save(honey).getId());
-                            } else {
-                                Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
-                                historyDetail.setHoneyId(honey.getId());
+                            if(category.getStatus().equals(enumCategoryACCEPT)){
+                                if (teacherPointResponse == null) {
+                                    Honey honey = new Honey();
+                                    honey.setStatus(Status.KHONG_HOAT_DONG);
+                                    honey.setHoneyPoint(0);
+                                    honey.setStudentId(simpleResponse.getId());
+                                    honey.setHoneyCategoryId(categoryId);
+                                    historyDetail.setHoneyId(honeyRepository.save(honey).getId());
+                                } else {
+                                    Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
+                                    historyDetail.setHoneyId(honey.getId());
+                                }
                             }
+                            else if(category.getStatus().equals(enumCategoryFREE)){
+                                if (teacherPointResponse == null) {
+                                    Honey honey = new Honey();
+                                    honey.setStatus(Status.KHONG_HOAT_DONG);
+                                    honey.setHoneyPoint(honeyPoint);
+                                    honey.setStudentId(simpleResponse.getId());
+                                    honey.setHoneyCategoryId(categoryId);
+                                    historyDetail.setHoneyId(honeyRepository.save(honey).getId());
+                                } else {
+                                    Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
+                                    honey.setHoneyPoint(honeyPoint + honey.getHoneyPoint());
+                                    honeyRepository.save(honey);
+                                    historyDetail.setHoneyId(honey.getId());
+                                }
+                            }
+
                             historyDetailRepository.save(historyDetail);
                         }
                     }

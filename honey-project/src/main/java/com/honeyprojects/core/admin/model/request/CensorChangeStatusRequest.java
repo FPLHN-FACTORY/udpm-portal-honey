@@ -10,7 +10,5 @@ public class CensorChangeStatusRequest {
 
     String idHistory;
 
-    String idHistoryDetail;
-
-    int status;
+    Integer status;
 }
