@@ -1,6 +1,7 @@
 import { Tabs } from "antd";
 import "./index.css";
-import HistoryAddPoint from "./HistoryAddPoint";
+import RequestGift from "./ListRequestGift";
+import HistoryAddPoint from "./ListRequestAddPoint";
 
 export default function TabsRequestPresident() {
   // eslint-disable-next-line no-sparse-arrays
@@ -13,7 +14,7 @@ export default function TabsRequestPresident() {
     {
       key: "2",
       label: "Vật phẩm",
-      // children: <RequestConversionHistory />,
+      children: <RequestGift />,
     },
     ,
   ];

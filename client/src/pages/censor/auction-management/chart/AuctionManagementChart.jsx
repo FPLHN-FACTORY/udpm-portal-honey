@@ -1,4 +1,3 @@
-import { CheckCircleOutlined, FlagOutlined, SendOutlined, StopOutlined } from '@ant-design/icons';
 import { Card, Col, Row, Statistic } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { DemoLine } from './ChartLine';

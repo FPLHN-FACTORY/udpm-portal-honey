@@ -92,7 +92,7 @@ export default function HoneyHistory() {
       ...data,
       key: data.id,
       status: statusHistory(data.status),
-      createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
+      changedDate: moment(data.changedDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
   });
@@ -154,22 +154,6 @@ export default function HoneyHistory() {
                 ]}
               />
             </Form.Item>
-            <Form.Item name={"status"} initialValue={null}>
-              <Select
-                style={{ width: "260px" }}
-                size="large"
-                placeholder="Trạng thái"
-                options={[
-                  { value: null, label: "Tất cả" },
-                  ...[1, 2].map((value) => {
-                    return {
-                      value: value,
-                      label: statusHistory(value),
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
             <Button
               htmlType="submit"
               type="primary"
@@ -195,7 +179,7 @@ export default function HoneyHistory() {
               </p>
               <p>
                 <strong className="text-slate-500 mr-[8px]">Thời gian:</strong>
-                {item.createdDate}
+                {item.changedDate}
               </p>
             </div>
           </div>

@@ -4,24 +4,34 @@ import {
   Form,
   Input,
   Pagination,
-  Select,
   Space,
   Table,
   message,
   Tooltip,
+  Select,
+  Tag,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import { SearchOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faEye, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
+const statusHistory = (status) => {
+  switch (status) {
+    case 1:
+      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
+    case 2:
+      return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
+    default:
+      return <Tag>Không xác định</Tag>;
+  }
+};
+
 export default function RequestConversionHistory() {
   const [getHistory, setGetHistory] = useState([]);
-  const [fillCategory, setFillCategory] = useState([]);
   const [totalPages, setTotalPages] = useState([]);
   const [filter, setFilter] = useState({ page: 0 });
 
@@ -29,6 +39,7 @@ export default function RequestConversionHistory() {
     const fetchData = async (filter) => {
       try {
         const response = await RequestManagerAPI.getHistoryConversion(filter);
+        console.log(response.data.data);
         const listHistory = await Promise.all(
           response.data.data.map(async (data) => {
             try {
@@ -71,13 +82,7 @@ export default function RequestConversionHistory() {
     fetchData(filter);
   };
 
-  const fechCategory = () => {
-    CategoryAPI.fetchAllCategory().then((response) => {
-      setFillCategory(response.data.data);
-    });
-  };
   useEffect(() => {
-    fechCategory();
     fetchData(filter);
   }, [filter]);
 
@@ -256,28 +261,31 @@ export default function RequestConversionHistory() {
     },
   ];
   return (
-    <>
-      <Card className="mb-2">
+    <div className="request-manager">
+      <Card className="mb-2 py-1">
         <Form onFinish={onFinishSearch}>
           <Space size={"large"}>
             <Form.Item name="userName" className="search-input">
               <Input
-                style={{ width: "500px" }}
+                style={{ width: "400px" }}
                 name="userName"
                 size="small"
                 placeholder="Nhập user name sinh viên cần tìm"
                 prefix={<SearchOutlined />}
               />
             </Form.Item>
-            <Form.Item name={"idCategory"}>
+            <Form.Item name={"status"} initialValue={null}>
               <Select
-                style={{ width: "450px" }}
+                style={{ width: "260px" }}
                 size="large"
-                placeholder="Loại điểm"
+                placeholder="Trạng thái"
                 options={[
-                  { value: null, label: "tất cả" },
-                  ...fillCategory.map((item) => {
-                    return { label: item.name, value: item.id };
+                  { value: null, label: "Tất cả" },
+                  ...[1, 2].map((value) => {
+                    return {
+                      value: value,
+                      label: statusHistory(value),
+                    };
                   }),
                 ]}
               />
@@ -286,7 +294,6 @@ export default function RequestConversionHistory() {
               htmlType="submit"
               type="primary"
               className="mr-10 search-button"
-              style={{ marginBottom: "25px", backgroundColor: "#EEB30D" }}
             >
               Lọc
             </Button>
@@ -294,15 +301,13 @@ export default function RequestConversionHistory() {
         </Form>
       </Card>
       <Card title="Danh sách yêu cầu đổi quà">
-        <div className="mt-5">
-          <Table
-            columns={columns}
-            rowKey="id"
-            dataSource={getHistory}
-            pagination={false}
-          />
-        </div>
-        <div className="mt-5 text-center">
+        <Table
+          columns={columns}
+          rowKey="id"
+          dataSource={getHistory}
+          pagination={false}
+        />
+        <div className="mt-10 text-center mb-10">
           <Pagination
             simple
             current={filter.page + 1}
@@ -313,6 +318,6 @@ export default function RequestConversionHistory() {
           />
         </div>
       </Card>
-    </>
+    </div>
   );
 }

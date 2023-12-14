@@ -137,7 +137,6 @@ export default function RequestAddItemHistory() {
       values.studentId,
       values.categoryId
     );
-    console.log(values.categoryId);
     const newFillPoint = response.data.data;
 
     const totalPoint = values.quantity * values.honeyPoint;

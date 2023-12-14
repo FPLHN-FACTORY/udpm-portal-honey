@@ -41,11 +41,15 @@ public class StudentHallOfFameServiceImpl implements StudentHallOfFameService {
 
     @Override
     public Page<StudentHallOfFameBO> getPageHallOfFame(StudentSearchHallOfFameRequest request) {
-
-        SimpleResponse result = requestApiIdentity.handleCallApiGetUserByEmailOrUsername(request.getSearch());
+        SimpleResponse result = new SimpleResponse();
+        if (request.getSearch() != null) {
+            result = requestApiIdentity.handleCallApiGetUserByEmailOrUsername(request.getSearch());
+        }
 
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        if (result == null) {
 
+        }
         Page<StudentPageStudentResponse> pageStudentResponses = studentUserRepository.getPageHallOfFame(pageable, result.getId());
 
         List<String> lstStudentId = pageStudentResponses.getContent().stream()
@@ -100,7 +104,7 @@ public class StudentHallOfFameServiceImpl implements StudentHallOfFameService {
             Top3StudentDTO studentDTO = Top3StudentDTO.builder()
                     .stt(response.getStt())
                     .totalHoney(response.getTotalHoney())
-                    .name(simpleResponse.getName())
+                    .name(simpleResponse.getUserName())
                     .picture(simpleResponse.getPicture())
                     .build();
             lstTop3Student.add(studentDTO);

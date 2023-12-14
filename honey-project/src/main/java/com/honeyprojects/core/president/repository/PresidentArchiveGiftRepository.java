@@ -1,4 +1,4 @@
-package com.honeyprojects.core.admin.repository;
+package com.honeyprojects.core.president.repository;
 
 import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.repository.ArchiveGiftRepository;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AdArchiveGiftRepository extends ArchiveGiftRepository {
+public interface PresidentArchiveGiftRepository extends ArchiveGiftRepository {
 
     List<ArchiveGift> findAllByGiftId(String idGift);
     List<ArchiveGift> findAllByChestId(String chestId);

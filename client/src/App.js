@@ -53,10 +53,9 @@ import AuctionManagementChart from "./pages/censor/auction-management/chart/Auct
 import PresidentHistory from "./pages/president/PresidentHistory";
 import HistoryPortal from "./pages/censor/portal/HistoryPortal";
 import RequestItemDetail from "./pages/censor/requestmanager/RequestItemDetail";
-
 import StudentProfile from "./pages/student/honors/StudentProfile";
 import ListHistoryAddPoint from "./pages/censor/addPoin/ListHistory";
-import TabsRequestPresident from "./pages/teacher/addpoint/TabsRequest";
+import TabsRequestPresident from "./pages/president/TabsRequest";
 function App() {
   const data = useAppSelector(SelectLoading);
   return (
@@ -472,9 +471,9 @@ function App() {
               path="/student/hall-of-fame/:id"
               element={
                 <AuthGuard>
-                  {/* <DashboardAuthUser> */}
-                  <StudentProfile />
-                  {/* </DashboardAuthUser> */}
+                  <DashboardAuthUser>
+                    <StudentProfile />
+                  </DashboardAuthUser>
                 </AuthGuard>
               }
             />

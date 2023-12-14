@@ -1,4 +1,4 @@
-import { Layout, Row, Avatar, Pagination, Tooltip, Col } from "antd";
+import { Layout, Row, Avatar, Pagination, Tooltip } from "antd";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import "./index.css";
@@ -9,8 +9,6 @@ import anh2 from "../../../assets/images/honor/background/background2.jpg";
 import anh3 from "../../../assets/images/honor/background/background3.png";
 import anh4 from "../../../assets/images/honor/background/background4.png";
 import TopStudent from "./TopStudent";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import {
   GetPStudent,
   SetPStudent,

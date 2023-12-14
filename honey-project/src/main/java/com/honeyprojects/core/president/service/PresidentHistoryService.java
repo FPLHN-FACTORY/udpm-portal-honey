@@ -12,7 +12,8 @@ public interface PresidentHistoryService {
 
     PageableObject<PresidentGiftHistoryResponse> getGiftHistory(PresidentFindGiftHistoryRequest request);
 
-    PageableObject<PresidentGiftHistoryResponse> getHoneyRequest(PresidentFindGiftHistoryRequest request);
+    PageableObject<PresidentHoneyHistoryResponse> getHoneyRequest(PresidentFindGiftHistoryRequest request);
 
+    PageableObject<PresidentGiftHistoryResponse> getGiftRequest(PresidentFindGiftHistoryRequest request);
 
 }
