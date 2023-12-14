@@ -3440,6 +3440,9 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
   top: 56px;
   left: 12px;
 }
+#authe {
+  background: #f0f2f5;
+}
 
 @keyframes lds-roller {
   0% {
