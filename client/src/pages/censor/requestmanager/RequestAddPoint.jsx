@@ -1,11 +1,9 @@
 import {
   Button,
   Card,
-  Col,
   Form,
   Input,
   Pagination,
-  Row,
   Select,
   Table,
   message,
@@ -91,51 +89,54 @@ export default function RequestAddPoint() {
       key: "acction",
       align: "center",
       render: (values) => (
-        <Space size="small">
-          {values.status !== 1 && values.status !== 2 && (
-            <Tooltip title="Xác nhận">
-              <Button
-                onClick={() =>
-                  changeStatus(values.idHistory, values.idHistoryDetail, 1)
-                }
-                style={{
-                  backgroundColor: "yellowgreen",
-                  color: "white",
-                }}
-              >
-                <FontAwesomeIcon icon={faCheck} />
-              </Button>
-            </Tooltip>
-          )}
+        console.log(values),
+        (
+          <Space size="small">
+            {values.status !== 1 && values.status !== 2 && (
+              <Tooltip title="Xác nhận">
+                <Button
+                  onClick={() =>
+                    changeStatus(values.idHistory, values.idHistoryDetail, 1)
+                  }
+                  style={{
+                    backgroundColor: "yellowgreen",
+                    color: "white",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faCheck} />
+                </Button>
+              </Tooltip>
+            )}
 
-          {values.status !== 1 && values.status !== 2 && (
-            <Tooltip title="Hủy">
-              <Button
-                onClick={() =>
-                  changeStatus(values.idHistory, values.idHistoryDetail, 2)
-                }
-                style={{
-                  backgroundColor: "red",
-                  color: "white",
-                }}
-              >
-                <FontAwesomeIcon icon={faXmark} />
-              </Button>
+            {values.status !== 1 && values.status !== 2 && (
+              <Tooltip title="Hủy">
+                <Button
+                  onClick={() =>
+                    changeStatus(values.idHistory, values.idHistoryDetail, 2)
+                  }
+                  style={{
+                    backgroundColor: "red",
+                    color: "white",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faXmark} />
+                </Button>
+              </Tooltip>
+            )}
+            <Tooltip title="Xem chi tiết">
+              <Link to={"/censor/request-manager/detail/" + values.idHistory}>
+                <Button
+                  style={{
+                    backgroundColor: "rgb(83, 209, 255)",
+                    color: "white",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faEye} />
+                </Button>
+              </Link>
             </Tooltip>
-          )}
-          <Tooltip title="Xem chi tiết">
-            <Link to={"/censor/request-manager/detail/" + values.idHistory}>
-              <Button
-                style={{
-                  backgroundColor: "rgb(83, 209, 255)",
-                  color: "white",
-                }}
-              >
-                <FontAwesomeIcon icon={faEye} />
-              </Button>
-            </Link>
-          </Tooltip>
-        </Space>
+          </Space>
+        )
       ),
     },
   ];
@@ -212,7 +213,6 @@ export default function RequestAddPoint() {
       createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
       acction: {
         idHistory: data.idHistory,
-        idHistoryDetail: data.id,
         status: data.status,
       },
     };
