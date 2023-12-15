@@ -10,6 +10,9 @@ import {
   Space,
   Tooltip,
   Tag,
+  Row,
+  Col,
+  Modal,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import "./index.css";
@@ -43,6 +46,7 @@ const statusHistory = (status) => {
 
 export default function RequestAddPoint() {
   const dispatch = useAppDispatch();
+
   const columns = [
     {
       title: "STT",
@@ -89,7 +93,6 @@ export default function RequestAddPoint() {
       key: "acction",
       align: "center",
       render: (values) => (
-        console.log(values),
         (
           <Space size="small">
             {values.status !== 1 && values.status !== 2 && (
@@ -109,7 +112,7 @@ export default function RequestAddPoint() {
             )}
 
             {values.status !== 1 && values.status !== 2 && (
-              <Tooltip title="Hủy">
+              <Tooltip title="Từ chối">
                 <Button
                   onClick={() =>
                     changeStatus(values.idHistory, values.idHistoryDetail, 2)
@@ -141,8 +144,73 @@ export default function RequestAddPoint() {
     },
   ];
 
+  
+  const [selectedRowKeys,setSelectedRowKeys] = useState([]);
+  const [selectedRowKeysRecord,setSelectedRowKeysRecord] = useState([]);
+  const start = () => {
+    setSelectedRowKeys([]);
+    setSelectedRowKeysRecord([]);
+  };
+  const onSelectChange = (newSelectedRowKeys, record) => {
+    setSelectedRowKeysRecord(record);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
+  const approveAll = () => {
+    if (selectedRowKeys.length === 0) {
+      message.error("Bạn phải chọn một yêu cầu");
+      return
+    }
+    const result = selectedRowKeysRecord.map((el) => `Yêu cầu từ ${el.userTeacher !== null?"Giảng viên " + el.userTeacher : "Chủ tịch " + el.userPresident}: Cộng ${el.honey} cho sinh viên ${el.userName}`)
+
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xác nhận yêu cầu cộng mật ong",
+      content: (<>
+        <ul>{result.map(el => <li className="flex" key={el.id}> <div>🍯</div><div>{ `${el}` }</div></li>)}</ul>
+      </>),
+      onOk: () => {
+        const data = selectedRowKeysRecord.map((values) => ({
+          idHistory: values.idHistory,
+          status: 1
+        }));
+        changeStatusAll(data, 1);
+        // hoàn thành yêu cầu clear selectedRowKeys
+        start()
+      }
+    })
+
+  }
+
+  const refuseAll = () => {
+    if (selectedRowKeys.length === 0) {
+      message.error("Bạn phải chọn một yêu cầu");
+      return
+    }
+    const result = selectedRowKeysRecord.map((el) => `Yêu cầu từ ${el.userTeacher !== null?"Giảng viên " + el.userTeacher : "Chủ tịch " + el.userPresident}: Cộng ${el.honey} cho sinh viên ${el.userName}`)
+
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn từ chối yêu cầu cộng mật ong",
+      content: (<>
+        <ul>{result.map(el => <li className="flex" key={el.id}> <div>🍯</div><div>{ `${el}` }</div></li>)}</ul>
+      </>),
+      onOk: () => {
+        const data = selectedRowKeysRecord.map((values) => ({
+          idHistory: values.idHistory,
+          status: 2
+        }));
+        changeStatusAll(data, 2);
+        // hoàn thành yêu cầu clear selectedRowKeys
+        start()
+      }
+    })
+  }
+  
   const [totalPage, setTotalPage] = useState(1);
-  const [filter, setFilter] = useState({ page: 0, status: 0 });
+  const [filter, setFilter] = useState({ page: 0, status: 0, size: 10 });
 
   useEffect(() => {
     fetchData(dispatch, filter);
@@ -253,7 +321,27 @@ export default function RequestAddPoint() {
   };
 
   const changeStatus = (idHistory, idHistoryDetail, status) => {
-    RequestManagerAPI.changeStatus(idHistory, idHistoryDetail, status)
+    Modal.confirm({
+      title: `Bạn có chắc chắn muốn ${status === 1 ? "xác nhận" : "hủy"} yêu cầu cộng mật ong`,
+      onOk: () => {
+        RequestManagerAPI.changeStatus(idHistory, idHistoryDetail, status)
+          .then((response) => {
+            if (response.data.success) {
+              fetchData(dispatch, filter);
+              if (status === 1)
+                message.success("Đã xác nhận yêu cầu cộng mật ong!");
+              if (status === 2) message.error("Hủy yêu cầu thành công!");
+            }
+          })
+          .catch((error) => {
+            message.error(error);
+          });
+      }
+    })
+  };
+  
+  const changeStatusAll = (data, status) => {
+    RequestManagerAPI.changeStatusAll(data)
       .then((response) => {
         if (response.data.success) {
           fetchData(dispatch, filter);
@@ -266,7 +354,6 @@ export default function RequestAddPoint() {
         message.error(error);
       });
   };
-
   return (
     <div className="request-manager">
       <Card className="mb-2 py-1">
@@ -323,8 +410,25 @@ export default function RequestAddPoint() {
           </Space>
         </Form>
       </Card>
-      <Card title="Yêu cầu cộng điểm">
+      <Card>
+        <Row className="justify-between items-center mb-2">
+          <Col>
+            <h1 className="lable">Yêu cầu cộng điểm</h1>
+          </Col>
+          <Col>
+            <Button onClick={() => approveAll()} type="primary mr-2">
+              Phê duyệt
+            </Button>
+            <Button onClick={() => refuseAll()} type="primary">
+              Từ chối
+            </Button>
+          </Col>
+        </Row>
         <Table
+          rowSelection={{
+            type: 'checkbox',
+            ...rowSelection,
+          }}
           columns={columns}
           dataSource={data}
           rowKey="key"
@@ -332,12 +436,13 @@ export default function RequestAddPoint() {
         />
         <div className="mt-10 text-center mb-10">
           <Pagination
-            simple
+            showSizeChanger
             current={filter.page + 1}
-            onChange={(page) => {
-              setFilter({ ...filter, page: page - 1 });
+            onChange={(page, size) => {
+              setFilter({ ...filter, page: page - 1, size: size });
             }}
-            total={totalPage * 10}
+            total={totalPage}
+            pageSizeOptions={['10', '20', '30', '40', '50', '60', '70', '80', '90', '100']}
           />
         </div>
       </Card>

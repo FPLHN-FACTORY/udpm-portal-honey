@@ -36,6 +36,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -109,6 +110,15 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
     }
 
     @Override
+    public List<History> changeStatusAll(List<CensorChangeStatusRequest> changeStatusRequest) {
+        List<History> list = new ArrayList<>();
+        for (CensorChangeStatusRequest el: changeStatusRequest) {
+            list.add(changeStatus(el));
+        }
+        return list;
+    }
+
+    @Override
     public History changeStatusConversion(AdminChangeStatusGiftRequest request) {
         Long dateNow = Calendar.getInstance().getTimeInMillis();
         History history = historyRepository.findById(request.getIdHistory()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
@@ -152,6 +162,15 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
             }
         }
         return historyRepository.save(history);
+    }
+
+    @Override
+    public List<History> changeStatusConversionAll(List<AdminChangeStatusGiftRequest> changeStatusRequest) {
+        List<History> list = new ArrayList<>();
+        for (AdminChangeStatusGiftRequest el: changeStatusRequest) {
+            list.add(changeStatusConversion(el));
+        }
+        return list;
     }
 
     @Override

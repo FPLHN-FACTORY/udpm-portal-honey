@@ -18,10 +18,22 @@ import java.util.List;
 public interface AdAuctionChartLineRepository extends AuctionRepository {
 
     @Query(value = """
-        SELECT DATE(FROM_UNIXTIME(a.created_date / 1000)) AS ngay, SUM(a.quantity) AS tongSoLuong, a.gift_id, g.name
-        FROM honey_project.auction a join gift g on a.gift_id = g.id
-        GROUP BY ngay, gift_id
-        ORDER BY ngay, tongSoLuong;
+        WITH all_dates AS (
+          SELECT DISTINCT DATE(FROM_UNIXTIME(created_date / 1000)) AS ngay
+          FROM honey_project.auction
+        ),
+        all_gifts AS (
+          SELECT DISTINCT id AS gift_id
+          FROM gift
+        )
+        
+        SELECT all_dates.ngay, COALESCE(SUM(a.quantity), 0) AS tongSoLuong, all_gifts.gift_id, COALESCE(g.name, 'Unknown') AS name
+        FROM all_dates
+        CROSS JOIN all_gifts
+        LEFT JOIN honey_project.auction a ON all_dates.ngay = DATE(FROM_UNIXTIME(a.created_date / 1000)) AND all_gifts.gift_id = a.gift_id
+        LEFT JOIN gift g ON all_gifts.gift_id = g.id
+        GROUP BY all_dates.ngay, all_gifts.gift_id
+        ORDER BY all_dates.ngay, tongSoLuong;
     """, nativeQuery = true)
     List<AdminAuctionChartLineResponse> auctionChartLine(@Param("req") AdminAuctionChartLineRequest req);
 

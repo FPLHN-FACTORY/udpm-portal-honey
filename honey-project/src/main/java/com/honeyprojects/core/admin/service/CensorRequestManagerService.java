@@ -15,11 +15,17 @@ import com.honeyprojects.entity.Honey;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface CensorRequestManagerService {
 
     History changeStatus(CensorChangeStatusRequest changeStatusRequest);
 
+    List<History> changeStatusAll(List<CensorChangeStatusRequest> changeStatusRequest);
+
     History changeStatusConversion(AdminChangeStatusGiftRequest changeStatusRequest);
+
+    List<History> changeStatusConversionAll(List<AdminChangeStatusGiftRequest> changeStatusRequest);
 
     PageableObject<CensorAddHoneyRequestResponse> getHistoryAddPoint(
             CensorSearchHistoryRequest historyRequest);
