@@ -18,6 +18,8 @@ import com.honeyprojects.core.teacher.repository.TeacherHoneyRepository;
 import com.honeyprojects.core.teacher.repository.TeacherNotificationDetailRepository;
 import com.honeyprojects.core.teacher.repository.TeacherNotificationRepository;
 import com.honeyprojects.core.teacher.service.TeacherAddPointExcelService;
+import com.honeyprojects.core.teacher.service.TeacherNotificationDetailService;
+import com.honeyprojects.core.teacher.service.TeacherNotificationService;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.HistoryDetail;
 import com.honeyprojects.entity.Honey;
@@ -84,6 +86,12 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
 
     @Autowired
     private ExportExcelServiceService exportExcelService;
+
+    @Autowired
+    private TeacherNotificationService teacherNotificationService;
+
+    @Autowired
+    private TeacherNotificationDetailService teacherNotificationDetailService;
 
     private Notification createNotification(String idStudent) {
         String title = Constants.TITLE_NOTIFICATION_SYSTEM;
@@ -266,11 +274,30 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
                         }
                     }
                     List<TeacherCategoryResponse> categories = categoryRepository.getCategoriesByNames(honeyMap.keySet());
+
+//                    Notification notification = null;
+//                    categories.forEach(category -> {
+//                        if (category.getStatus().equals(String.valueOf(CategoryStatus.FREE.ordinal()))) {
+//                            notification = new Notification();
+//                             = teacherNotificationService.sendNotificationToStudent(udpmHoney.getUserName(), simpleResponse.getId());
+//                        }
+//                    });
+
+                    Notification notification = null;
+                    for (TeacherCategoryResponse category : categories) {
+                        if (category.getStatus().equals(String.valueOf(CategoryStatus.FREE.ordinal()))) {
+                            if (notification == null) {
+                                notification = teacherNotificationService.sendNotificationToStudent(udpmHoney.getUserName(), simpleResponse.getId());
+                            }
+                        }
+                    }
+
                     Map<String, History> historyMap = new HashMap<>();
                     for (TeacherCategoryResponse category : categories) {
                         String categoryPoint = category.getName();
                         String categoryId = category.getId();
                         String enumCategoryACCEPT = String.valueOf(CategoryStatus.ACCEPT.ordinal());
+                        String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
 
                         if (honeyMap.containsKey(categoryPoint)) {
                             List<Integer> honeyPoints = honeyMap.get(categoryPoint);
@@ -291,28 +318,47 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
                                     newHistory.setType(TypeHistory.CONG_DIEM);
                                     newHistory.setChangeDate(dateNow);
                                     historyRepository.save(newHistory);
+
                                     return newHistory;
                                 });
 
                                 history.setStatus(category.getStatus().equals(enumCategoryACCEPT) ? HistoryStatus.CHO_PHE_DUYET : HistoryStatus.TEACHER_DA_THEM);
-                                history.setStudentId(simpleResponse.getId());
                                 historyRepository.save(history);
 
                                 HistoryDetail historyDetail = new HistoryDetail();
                                 historyDetail.setHistoryId(history.getId());
                                 historyDetail.setHoneyPoint(honeyPoint);
                                 historyDetail.setStudentId(getPointRequest.getStudentId());
+                                if(category.getStatus().equals(enumCategoryACCEPT)){
 
-                                if (teacherPointResponse == null) {
-                                    Honey honey = new Honey();
-                                    honey.setStatus(Status.HOAT_DONG);
-                                    honey.setHoneyPoint(0);
-                                    honey.setStudentId(simpleResponse.getId());
-                                    honey.setHoneyCategoryId(categoryId);
-                                    historyDetail.setHoneyId(honeyRepository.save(honey).getId());
-                                } else {
-                                    Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
-                                    historyDetail.setHoneyId(honey.getId());
+                                    if (teacherPointResponse == null) {
+                                        Honey honey = new Honey();
+                                        honey.setStatus(Status.KHONG_HOAT_DONG);
+                                        honey.setHoneyPoint(0);
+                                        honey.setStudentId(simpleResponse.getId());
+                                        honey.setHoneyCategoryId(categoryId);
+                                        historyDetail.setHoneyId(honeyRepository.save(honey).getId());
+                                    } else {
+                                        Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
+                                        historyDetail.setHoneyId(honey.getId());
+                                    }
+                                    // gửi yêu cầu phê duyệt tới admin
+                                    teacherNotificationService.sendNotificationToAdmin(history.getId(), udpmHoney.getUserName(), udpmHoney.getIdUser());
+                                }
+                                else if(category.getStatus().equals(enumCategoryFREE)){
+                                    if (teacherPointResponse == null) {
+                                        Honey honey = new Honey();
+                                        honey.setStatus(Status.HOAT_DONG);
+                                        honey.setHoneyPoint(honeyPoint);
+                                        honey.setStudentId(simpleResponse.getId());
+                                        honey.setHoneyCategoryId(categoryId);
+                                        historyDetail.setHoneyId(honeyRepository.save(honey).getId());
+                                    } else {
+                                        Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
+                                        honey.setHoneyPoint(honeyPoint + honey.getHoneyPoint());
+                                        historyDetail.setHoneyId(honey.getId());
+                                    }
+                                    teacherNotificationDetailService.createNotificationDetailHoney(notification.getId(), honeyPoint, category);
                                 }
                                 teacherHistoryDetailRepository.save(historyDetail);
                             }

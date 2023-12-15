@@ -7,6 +7,7 @@ import com.honeyprojects.core.admin.model.request.AdminHistoryApprovedSearchRequ
 import com.honeyprojects.core.admin.model.response.CensorTransactionRequestResponse;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.president.model.response.PresidentAddItemDTO;
+import com.honeyprojects.entity.Notification;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,4 +38,6 @@ public interface AdminAddPointStudentService {
     ByteArrayOutputStream exportExcelPortalEventsClass(HttpServletResponse response);
 
     ByteArrayOutputStream exportExcelLabReportClass(HttpServletResponse response);
+
+    Notification sendNotificationToAdmin(String idHistoryDetail, String name);
 }

@@ -10,6 +10,9 @@ import {
   Tooltip,
   Select,
   Tag,
+  Row,
+  Col,
+  Modal,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
@@ -39,7 +42,7 @@ export default function RequestConversionHistory() {
     const fetchData = async (filter) => {
       try {
         const response = await RequestManagerAPI.getHistoryConversion(filter);
-        console.log(response.data.data);
+        
         const listHistory = await Promise.all(
           response.data.data.map(async (data) => {
             try {
@@ -137,6 +140,80 @@ export default function RequestConversionHistory() {
     });
   };
 
+  const changeStatusConversionAll = (data, status) => {
+    RequestManagerAPI.changeStatusConversionAll(data).then((response) => {
+      if (response.data.success) {
+        if (status === 1) message.success("Đã xác nhận yêu cầu!");
+        if (status === 2) message.error("Hủy yêu cầu thành công!");
+      }
+      fetchData();
+    });
+  };
+
+  const [selectedRowKeys,setSelectedRowKeys] = useState([]);
+  const [selectedRowKeysRecord,setSelectedRowKeysRecord] = useState([]);
+  const start = () => {
+    setSelectedRowKeys([]);
+    setSelectedRowKeysRecord([]);
+  };
+  const onSelectChange = (newSelectedRowKeys, record) => {
+    setSelectedRowKeysRecord(record);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
+  const approveAll = () => {
+    if (selectedRowKeys.length === 0) {
+      message.error("Bạn phải chọn một yêu cầu");
+      return
+    }
+    // const result = selectedRowKeysRecord.map((el) => `Yêu cầu từ ${el.userTeacher !== null?"Giảng viên " + el.userTeacher : "Chủ tịch " + el.userPresident}: Cộng ${el.honey} cho sinh viên ${el.userName}`)
+
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xác nhận yêu cầu cộng vật phẩm",
+      // content: (<>
+      //   <ul>{result.map(el => <li className="flex" key={el.id}> <div>🍯</div><div>{ `${el}` }</div></li>)}</ul>
+      // </>),
+      onOk: () => {
+        const data = selectedRowKeysRecord.map((values) => ({
+          idHistory: values.id,
+          status: 1,
+        }));
+        changeStatusConversionAll(data, 1);
+        // hoàn thành yêu cầu clear selectedRowKeys
+        start()
+      }
+    })
+
+  }
+
+  const refuseAll = () => {
+    if (selectedRowKeys.length === 0) {
+      message.error("Bạn phải chọn một yêu cầu");
+      return
+    }
+    // const result = selectedRowKeysRecord.map((el) => `Yêu cầu từ ${el.userTeacher !== null?"Giảng viên " + el.userTeacher : "Chủ tịch " + el.userPresident}: Cộng ${el.honey} cho sinh viên ${el.userName}`)
+
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xác nhận yêu cầu cộng vật phẩm",
+      // content: (<>
+      //   <ul>{result.map(el => <li className="flex" key={el.id}> <div>🍯</div><div>{ `${el}` }</div></li>)}</ul>
+      // </>),
+      onOk: () => {
+        const data = selectedRowKeysRecord.map((values) => ({
+          idHistory: values.id,
+          status: 1,
+        }));
+        changeStatusConversionAll(data, 1);
+        // hoàn thành yêu cầu clear selectedRowKeys
+        start()
+      }
+    })
+  }
+  
   const handCheckvalide = async (values) => {
     // const response = await RequestManagerAPI.getPoint(
     //   values.studentId,
@@ -224,7 +301,7 @@ export default function RequestConversionHistory() {
           )}
 
           {values.status !== 1 && values.status !== 2 && (
-            <Tooltip title="Hủy">
+            <Tooltip title="Từ chối">
               <Button
                 onClick={() => {
                   changeStatusConversion(
@@ -300,8 +377,22 @@ export default function RequestConversionHistory() {
           </Space>
         </Form>
       </Card>
-      <Card title="Danh sách yêu cầu đổi quà">
+      <Card>
+        <Row className="justify-between items-center mb-2">
+          <Col>
+            <h1 className="lable">Danh sách yêu cầu đổi quà</h1>
+          </Col>
+          <Col>
+            <Button onClick={() => approveAll()} type="primary mr-2">
+              Phê duyệt
+            </Button>
+            <Button onClick={() => refuseAll()} type="primary">
+              Từ chối
+            </Button>
+          </Col>
+        </Row>
         <Table
+          rowSelection={rowSelection}
           columns={columns}
           rowKey="id"
           dataSource={getHistory}
@@ -309,12 +400,13 @@ export default function RequestConversionHistory() {
         />
         <div className="mt-10 text-center mb-10">
           <Pagination
-            simple
+            showSizeChanger
             current={filter.page + 1}
-            onChange={(page) => {
-              setFilter({ ...filter, page: page - 1 });
+            onChange={(page, size) => {
+              setFilter({ ...filter, page: page - 1, size: size });
             }}
-            total={totalPages * 10}
+            total={totalPages}
+            pageSizeOptions={['10', '20', '30', '40', '50', '60', '70', '80', '90', '100']}
           />
         </div>
       </Card>
