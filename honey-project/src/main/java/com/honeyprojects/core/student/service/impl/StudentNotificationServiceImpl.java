@@ -45,7 +45,7 @@ public class StudentNotificationServiceImpl implements StudentNotificationServic
     public Boolean updateStatus(String id) {
         Optional<Notification> optionalNotification = notificationRepository.findById(id);
         if (optionalNotification.get().getStatus() == NotificationStatus.CHUA_DOC) {
-            optionalNotification.get().setStatus(NotificationStatus.DA_DOC_CHUA_NHAN_QUA);
+            optionalNotification.get().setStatus(NotificationStatus.DA_DOC);
             notificationRepository.save(optionalNotification.get());
             return true;
         }

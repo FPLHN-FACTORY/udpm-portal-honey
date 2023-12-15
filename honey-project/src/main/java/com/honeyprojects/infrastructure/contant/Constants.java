@@ -48,6 +48,8 @@ public class Constants {
 
     public static String CONTENT_NOTIFICATION_LAB = "Xưởng thực hành đã tặng bạn: ";
 
+    public static String CONTENT_NOTIFICATION_TEACHER= "Bạn vừa nhận được: ";
+
     public static String CONTENT_NOTIFICATION_PRESIDENT = "Chủ tịch đã tặng bạn: ";
 
     public static String CONTENT_NOTIFICATION_MODULE_LAB_REPORT = "Xưởng dự án đã tặng bạn: ";

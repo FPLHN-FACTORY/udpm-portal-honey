@@ -3,7 +3,6 @@ package com.honeyprojects.core.teacher.service;
 import com.honeyprojects.core.admin.model.request.AdminNotificationRequest;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Notification;
-import com.honeyprojects.infrastructure.contant.NotificationType;
 
 public interface TeacherNotificationService {
 
@@ -16,5 +15,7 @@ public interface TeacherNotificationService {
     Notification updateStatus(String id);
 
     Notification sendNotificationToAdmin(String idHistoryDetail, String name, String idTeacher);
+
+    Notification sendNotificationToStudent(String name, String idTeacher);
 
 }

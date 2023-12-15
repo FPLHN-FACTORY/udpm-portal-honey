@@ -493,7 +493,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
 
     private ArchiveGift createArchiveGift(String archive, String idChest, String idGift, Integer quantity) {
        Optional<ArchiveGift>  existingArchiveGift = adArchiveGiftRepository.findByArchiveIdAndGiftId(archive, idGift);
-        if (!DataUtils.isNullObject(existingArchiveGift)) {
+        if (!existingArchiveGift.isEmpty()) {
             existingArchiveGift.get().setQuantity(existingArchiveGift.get().getQuantity() + quantity);
             return adArchiveGiftRepository.save(existingArchiveGift.get());
         } else {
