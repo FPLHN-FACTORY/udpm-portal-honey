@@ -10,6 +10,8 @@ import java.util.List;
 @Setter
 public class AdminAddPointStudentLabReportBOO extends PageableRequest {
     private String code;
+    private String email;
+    private String username;
     private List<AdminAddPointStudentLabReportRequestt> listStudent;
     private String categoryId;
     private Long total;

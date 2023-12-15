@@ -13,6 +13,7 @@ import com.honeyprojects.core.admin.repository.AdAddPointStudentRepository;
 import com.honeyprojects.core.admin.repository.AdHistoryDetailRepository;
 import com.honeyprojects.core.admin.repository.AdNotificationRespository;
 import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
+import com.honeyprojects.core.admin.service.AdNotificationService;
 import com.honeyprojects.core.admin.service.AdminAddPointStudentService;
 import com.honeyprojects.core.admin.service.ExportExcelServiceService;
 import com.honeyprojects.core.common.base.PageableObject;
@@ -92,6 +93,9 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
 
     @Autowired
     private AdAddPointStudentRepository adAddPointStudentRepository;
+
+    @Autowired
+    private AdNotificationService adNotificationService;
 
     @Override
     public PageableObject<CensorTransactionRequestResponse> getHistoryEvent(AdminHistoryApprovedSearchRequest searchParams) {
@@ -218,7 +222,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
             history.setChangeDate(dateNow);
             history.setStatus(HistoryStatus.DU_AN);
             historyRepository.save(history);
-
+            sendNotificationToAdmin(history.getId(), requestAddPointStudentBO.getUsername());
             HistoryDetail historyDetail = new HistoryDetail();
             historyDetail.setHistoryId(history.getId());
             historyDetail.setHoneyPoint(adminAddPointStudentLabReportRequest.getNumberHoney());
@@ -484,5 +488,16 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
         return exportExcelService.export(response, null, null,
                 "Định dạng cột email: haipxph26772@fpt.edu.vn - Định dạng cột số lượng mật ong: 29"
                 , new String[]{"Email", "Số lượng mật ong"});
+    }
+
+    @Override
+    public Notification sendNotificationToAdmin(String idHistoryDetail, String name) {
+        String title = "Giảng viên " + name + Constants.MODULE.MODULE_LAB_REPORT_APP;
+        Notification notification = new Notification();
+        notification.setTitle(title);
+        notification.setIdHistoryDetail(idHistoryDetail);
+        notification.setStatus(NotificationStatus.CHUA_DOC);
+        notification.setType(NotificationType.ADMIN_CHO_PHE_DUYET);
+        return adNotificationRespository.save(notification);
     }
 }

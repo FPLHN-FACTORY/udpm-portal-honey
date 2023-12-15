@@ -17,9 +17,6 @@ public interface AdNotificationRespository extends NotificationRepository {
     @Query(value = """
             SELECT * FROM notification n 
                 WHERE n.type = 0
-                and n.president_id is null 
-                and n.teacher_id is null 
-                and n.student_id is null 
                 ORDER BY n.created_date DESC
             """, countQuery = """
             SELECT COUNT(n.id)
@@ -33,9 +30,6 @@ public interface AdNotificationRespository extends NotificationRepository {
                     SELECT count(*) FROM notification n
                     WHERE n.type = 0 
                     and status = 0
-                    and n.president_id is null 
-                    and n.teacher_id is null 
-                    and n.student_id is null
             """, nativeQuery = true)
     Integer getNumberNotifications();
 

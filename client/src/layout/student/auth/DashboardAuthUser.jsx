@@ -41,7 +41,7 @@ import { NotificationAPI } from "../../../apis/student/notification/notification
 import {
   GetCountNotification,
   SetCountNotification,
-} from "../../../app/reducers/notification/count-notification.reducer";
+} from "../../../app/reducers/notification/student/count-notification-student.reducer";
 import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { TransactionApi } from "../../../apis/student/transaction/transactionApi.api";

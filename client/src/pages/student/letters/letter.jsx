@@ -9,8 +9,8 @@ import { NotificationAPI } from "../../../apis/student/notification/notification
 import {
   GetNotification,
   SetNotification,
-} from "../../../app/reducers/notification/notification.reducer";
-import { GetCountNotification } from "../../../app/reducers/notification/count-notification.reducer";
+} from "../../../app/reducers/notification/student/notification-student.reducer";
+import { GetCountNotification } from "../../../app/reducers/notification/student/count-notification-student.reducer";
 import imageNotification from "../../../assets/images/bell.png";
 
 const Letter = memo(() => {
@@ -18,7 +18,6 @@ const Letter = memo(() => {
   const [current, setCurrent] = useState(0);
   const [crease, setCrease] = useState(false);
   const dataCountNotification = useAppSelector(GetCountNotification);
-
 
   const readAllNotification = () => {
     NotificationAPI.readAllNotification().then((response) => {
@@ -68,7 +67,7 @@ const Letter = memo(() => {
 
   useEffect(() => {
     fetchNotification();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current, dataCountNotification]);
 
   const dataNotification = useAppSelector(GetNotification);

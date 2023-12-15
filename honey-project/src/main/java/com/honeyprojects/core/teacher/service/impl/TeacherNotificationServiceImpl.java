@@ -6,6 +6,7 @@ import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.teacher.repository.TeacherNotificationRepository;
 import com.honeyprojects.core.teacher.service.TeacherNotificationService;
 import com.honeyprojects.entity.Notification;
+import com.honeyprojects.infrastructure.contant.Constants;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
 import com.honeyprojects.util.DataUtils;
@@ -27,17 +28,6 @@ public class TeacherNotificationServiceImpl implements TeacherNotificationServic
 
     @Autowired
     private TeacherNotificationRepository teacherNotificationRepository;
-
-    @Override
-    public Notification createNotification(String title, String idStudent, NotificationType type) {
-
-        Notification notification = new Notification();
-        notification.setTitle(title);
-        notification.setStudentId(idStudent);
-        notification.setStatus(NotificationStatus.CHUA_DOC);
-        notification.setType(NotificationType.ADMIN_CHO_PHE_DUYET);
-        return teacherNotificationRepository.save(notification);
-    }
 
     @Override
     public PageableObject<Notification> getAllNotification(AdminNotificationRequest request) {
@@ -74,5 +64,17 @@ public class TeacherNotificationServiceImpl implements TeacherNotificationServic
             teacherNotificationRepository.save(optionalNotification);
         }
         return optionalNotification;
+    }
+
+    @Override
+    public Notification sendNotificationToAdmin(String idHistoryDetail, String name, String idTeacher) {
+        String title = "Giảng viên " + name + Constants.TITLE_NOTIFICATION_TEACHER_TO_ADMIN;
+        Notification notification = new Notification();
+        notification.setTitle(title);
+        notification.setIdHistoryDetail(idHistoryDetail);
+        notification.setStatus(NotificationStatus.CHUA_DOC);
+        notification.setType(NotificationType.ADMIN_CHO_PHE_DUYET);
+        notification.setTeacherId(idTeacher);
+        return teacherNotificationRepository.save(notification);
     }
 }

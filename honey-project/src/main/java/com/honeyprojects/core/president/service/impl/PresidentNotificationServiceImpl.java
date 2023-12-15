@@ -6,6 +6,7 @@ import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.president.repository.PresidentNotificationRepository;
 import com.honeyprojects.core.president.service.PresidentNotificationService;
 import com.honeyprojects.entity.Notification;
+import com.honeyprojects.infrastructure.contant.Constants;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
 import com.honeyprojects.util.DataUtils;
@@ -74,5 +75,17 @@ public class PresidentNotificationServiceImpl implements PresidentNotificationSe
             presidentNotificationRepository.save(optionalNotification);
         }
         return optionalNotification;
+    }
+
+    @Override
+    public Notification sendNotificationToAdmin(String idHistoryDetail, String idPresident) {
+        String title = Constants.TITLE_NOTIFICATION_PRESIDENT_TO_ADMIN;
+        Notification notification = new Notification();
+        notification.setTitle(title);
+        notification.setIdHistoryDetail(idHistoryDetail);
+        notification.setStatus(NotificationStatus.CHUA_DOC);
+        notification.setType(NotificationType.ADMIN_CHO_PHE_DUYET);
+        notification.setPresidentId(idPresident);
+        return presidentNotificationRepository.save(notification);
     }
 }

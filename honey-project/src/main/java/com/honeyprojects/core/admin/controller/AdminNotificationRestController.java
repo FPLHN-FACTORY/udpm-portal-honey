@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/censor/notifications")
-public class AdNotificationRestController {
+public class AdminNotificationRestController {
 
     @Autowired
     private AdNotificationService adNotificationService;

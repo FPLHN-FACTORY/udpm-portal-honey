@@ -7,8 +7,6 @@ import com.honeyprojects.infrastructure.contant.NotificationType;
 
 public interface TeacherNotificationService {
 
-    Notification createNotification(String title, String idStudent, NotificationType type);
-
     PageableObject<Notification> getAllNotification(AdminNotificationRequest request);
 
     Integer getNumberNotifications();
@@ -16,4 +14,7 @@ public interface TeacherNotificationService {
     void updateAllStatus();
 
     Notification updateStatus(String id);
+
+    Notification sendNotificationToAdmin(String idHistoryDetail, String name, String idTeacher);
+
 }
