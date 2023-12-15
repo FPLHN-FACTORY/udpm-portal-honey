@@ -31,42 +31,6 @@ import {
 } from "../../app/reducers/notification/censor/count-notification-censor.reducer";
 import React from "react";
 import approved from "../../assets/images/check.png";
-// const data = [
-//   {
-//     id: 1,
-//     title:
-//       "New message from SophieNew message from SophieNew message from SophieNew message from Sophie",
-//     description: (
-//       <>
-//         <ClockCircleFilled /> 2 days ago
-//       </>
-//     ),
-//     avatar: avtar,
-//     smallAvatar: anh1,
-//   },
-//   {
-//     id: 2,
-//     title: "New album by Travis Scott",
-//     description: (
-//       <>
-//         <ClockCircleFilled /> 2 days ago
-//       </>
-//     ),
-//     avatar: avtar,
-//     smallAvatar: anh1,
-//   },
-//   {
-//     id: 3,
-//     title: "Payment completed",
-//     description: (
-//       <>
-//         <ClockCircleFilled /> 2 days ago
-//       </>
-//     ),
-//     avatar: avtar,
-//     smallAvatar: anh2,
-//   },
-// ];
 
 function Header({ onSlidebar, onPress, name, subName }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -84,9 +48,6 @@ function Header({ onSlidebar, onPress, name, subName }) {
       page: current,
       size: 10,
     });
-    console.log("====================================");
-    console.log(response.data.data.data);
-    console.log("====================================");
     dispatch(SetNotification(response.data.data.data));
     setCurrent(response.data.data.currentPage);
     if (response.data.data.totalPages - current <= 1) {
@@ -126,10 +87,6 @@ function Header({ onSlidebar, onPress, name, subName }) {
   const dataNotification = useAppSelector(GetNotification);
 
   const dataCountNotification = useAppSelector(GetCountNotification);
-
-  console.log("====================================");
-  console.log(dataCountNotification);
-  console.log("====================================");
 
   const toggleNotifications = () => {
     setIsOpen(!isOpen);

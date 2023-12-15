@@ -77,4 +77,15 @@ public class TeacherNotificationServiceImpl implements TeacherNotificationServic
         notification.setTeacherId(idTeacher);
         return teacherNotificationRepository.save(notification);
     }
+
+    @Override
+    public Notification sendNotificationToStudent(String name, String idUser) {
+        String title = Constants.TITLE_NOTIFICATION_TEACHER + " - " + name;
+        Notification notification = new Notification();
+        notification.setTitle(title);
+        notification.setStatus(NotificationStatus.CHUA_DOC);
+        notification.setType(NotificationType.HE_THONG);
+        notification.setStudentId(idUser);
+        return teacherNotificationRepository.save(notification);
+    }
 }

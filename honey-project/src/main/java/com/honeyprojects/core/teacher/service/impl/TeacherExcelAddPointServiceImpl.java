@@ -18,6 +18,7 @@ import com.honeyprojects.core.teacher.repository.TeacherHoneyRepository;
 import com.honeyprojects.core.teacher.repository.TeacherNotificationDetailRepository;
 import com.honeyprojects.core.teacher.repository.TeacherNotificationRepository;
 import com.honeyprojects.core.teacher.service.TeacherAddPointExcelService;
+import com.honeyprojects.core.teacher.service.TeacherNotificationDetailService;
 import com.honeyprojects.core.teacher.service.TeacherNotificationService;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.HistoryDetail;
@@ -88,6 +89,9 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
 
     @Autowired
     private TeacherNotificationService teacherNotificationService;
+
+    @Autowired
+    private TeacherNotificationDetailService teacherNotificationDetailService;
 
     private Notification createNotification(String idStudent) {
         String title = Constants.TITLE_NOTIFICATION_SYSTEM;
@@ -270,6 +274,24 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
                         }
                     }
                     List<TeacherCategoryResponse> categories = categoryRepository.getCategoriesByNames(honeyMap.keySet());
+
+//                    Notification notification = null;
+//                    categories.forEach(category -> {
+//                        if (category.getStatus().equals(String.valueOf(CategoryStatus.FREE.ordinal()))) {
+//                            notification = new Notification();
+//                             = teacherNotificationService.sendNotificationToStudent(udpmHoney.getUserName(), simpleResponse.getId());
+//                        }
+//                    });
+
+                    Notification notification = null;
+                    for (TeacherCategoryResponse category : categories) {
+                        if (category.getStatus().equals(String.valueOf(CategoryStatus.FREE.ordinal()))) {
+                            if (notification == null) {
+                                notification = teacherNotificationService.sendNotificationToStudent(udpmHoney.getUserName(), simpleResponse.getId());
+                            }
+                        }
+                    }
+
                     Map<String, History> historyMap = new HashMap<>();
                     for (TeacherCategoryResponse category : categories) {
                         String categoryPoint = category.getName();
@@ -336,6 +358,7 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
                                         honey.setHoneyPoint(honeyPoint + honey.getHoneyPoint());
                                         historyDetail.setHoneyId(honey.getId());
                                     }
+                                    teacherNotificationDetailService.createNotificationDetailHoney(notification.getId(), honeyPoint, category);
                                 }
                                 teacherHistoryDetailRepository.save(historyDetail);
                             }

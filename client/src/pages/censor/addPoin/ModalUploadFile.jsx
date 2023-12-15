@@ -28,7 +28,7 @@ export default function ModalUpLoadFile(props) {
       const link = document.createElement("a");
       link.href = url;
       link.download =
-        "File mẫu import cộng mật ong" +
+        "File mẫu import tặng quà" +
         convertLongToDate(new Date().getTime()) +
         ".xlsx";
       link.click();

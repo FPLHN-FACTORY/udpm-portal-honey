@@ -61,7 +61,7 @@ public interface StudentNotificationRepository extends NotificationRepository {
             SELECT count(*) as 'thong_bao' 
                 FROM notification n
                 WHERE n.student_id = :usersId 
-                AND n.status IN(0,1) 
+                AND n.status IN(0) 
                 and n.type in (5, 7, 8)
             """, nativeQuery = true)
     int countNotification(@Param("usersId") String usersId);

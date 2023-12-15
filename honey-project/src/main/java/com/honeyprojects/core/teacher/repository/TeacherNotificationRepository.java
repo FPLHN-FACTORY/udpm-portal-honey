@@ -15,13 +15,13 @@ public interface TeacherNotificationRepository extends NotificationRepository {
     @Query(value = """
             SELECT * FROM notification n 
                 WHERE n.type in (1, 2, 6)
-                and n.teacher = :userId
+                and n.teacher_id = :userId
                 ORDER BY n.created_date DESC
             """, countQuery = """
             SELECT COUNT(n.id)
                 FROM notification n 
                 WHERE n.type in (1, 2, 6)
-                and n.teacher = :userId
+                and n.teacher_id = :userId
                 ORDER BY n.created_date DESC
                     """, nativeQuery = true)
     Page<Notification> getAllNotification(Pageable pageable, String userId);
@@ -30,7 +30,7 @@ public interface TeacherNotificationRepository extends NotificationRepository {
                     SELECT count(*) FROM notification n
                     WHERE n.type in (1, 2, 6)
                     and status = 0
-                    and n.teacher = :userId
+                    and n.teacher_id = :userId
             """, nativeQuery = true)
     Integer getNumberNotifications(String userId);
 

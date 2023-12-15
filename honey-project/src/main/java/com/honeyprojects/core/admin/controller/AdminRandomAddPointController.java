@@ -32,7 +32,7 @@ public class AdminRandomAddPointController {
     private AdRandomAddPointService adRandomAddPointService;
 
     @GetMapping("/get-all-category")
-    public ResponseObject getAllCatrgory() {
+    public ResponseObject getAllCategory() {
         return new ResponseObject(adRandomAddPointService.getAllCategory());
     }
 

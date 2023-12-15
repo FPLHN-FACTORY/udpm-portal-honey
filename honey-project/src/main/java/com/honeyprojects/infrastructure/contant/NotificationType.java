@@ -10,4 +10,5 @@ public enum NotificationType {
     TEACHER_CHO_PHE_DUYET, // 6 sinh viên gủi yêu cầu lên cho giảng viên
     TU_CHOI_STUDENT, // 7 giảng viên gửi thông báo từ chối cho sinh viên
     DA_PHE_DUYET_STUDENT, // 8 giảng viên gửi thông báo phê duyệt cho sinh viên
+
 }

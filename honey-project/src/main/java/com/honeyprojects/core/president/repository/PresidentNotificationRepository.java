@@ -15,13 +15,13 @@ public interface PresidentNotificationRepository extends NotificationRepository 
     @Query(value = """
             SELECT * FROM notification n 
                 WHERE n.type in (3, 4)
-                and n.president = :userId
+                and n.president_id = :userId
                 ORDER BY n.created_date DESC
             """, countQuery = """
             SELECT COUNT(n.id)
                 FROM notification n 
                 WHERE n.type in (3, 4)
-                and n.president = :userId
+                and n.president_id = :userId
                 ORDER BY n.created_date DESC
                     """, nativeQuery = true)
     Page<Notification> getAllNotification(Pageable pageable, String userId);
@@ -30,7 +30,7 @@ public interface PresidentNotificationRepository extends NotificationRepository 
                     SELECT count(*) FROM notification n
                     WHERE n.type in (3, 4)
                     and status = 0
-                    and n.president = :userId
+                    and n.president_id = :userId
             """, nativeQuery = true)
     Integer getNumberNotifications(String userId);
 
