@@ -23,6 +23,8 @@ export default function StudentHistory() {
     });
   }
 
+  console.log(data);
+
   useEffect(() => {
     setData([]);
     setPage(0);
@@ -45,12 +47,14 @@ export default function StudentHistory() {
         <div className="button-group">
           <button
             className="button button__active"
-            onClick={() => navigate("/student/history")}>
+            onClick={() => navigate("/student/history")}
+          >
             Lịch sử
           </button>
           <button
             className="button button__notactive"
-            onClick={() => navigate("/student/request")}>
+            onClick={() => navigate("/student/request")}
+          >
             Yêu cầu
           </button>
           <Select
@@ -93,11 +97,13 @@ export default function StudentHistory() {
                   <div className={`student__history__point}`}>
                     <div
                       className={`student__history__point 
-                    }`}>
+                    }`}
+                    >
                       {e.point && (
                         <span
                           className={"red__text"}
-                          style={{ marginRight: "10px" }}>
+                          style={{ marginRight: "10px" }}
+                        >
                           {e.point}
                         </span>
                       )}
@@ -105,7 +111,8 @@ export default function StudentHistory() {
                       {e.pointGet && (
                         <span
                           className={"green__text"}
-                          style={{ marginRight: "10px" }}>
+                          style={{ marginRight: "10px" }}
+                        >
                           {e.pointGet}
                         </span>
                       )}
@@ -121,11 +128,13 @@ export default function StudentHistory() {
                   <div className={`student__history__point}`}>
                     <div
                       className={`student__history__point 
-                    }`}>
+                    }`}
+                    >
                       {e.point && (
                         <span
                           className={"red__text"}
-                          style={{ marginRight: "10px" }}>
+                          style={{ marginRight: "10px" }}
+                        >
                           {e.point}
                         </span>
                       )}
@@ -133,7 +142,8 @@ export default function StudentHistory() {
                       {e.pointGet && (
                         <span
                           className={"green__text"}
-                          style={{ marginRight: "10px" }}>
+                          style={{ marginRight: "10px" }}
+                        >
                           {e.pointGet}
                         </span>
                       )}

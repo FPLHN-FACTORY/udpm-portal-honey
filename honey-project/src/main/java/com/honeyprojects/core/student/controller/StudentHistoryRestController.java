@@ -1,9 +1,7 @@
 package com.honeyprojects.core.student.controller;
 
 import com.honeyprojects.core.common.base.ResponseObject;
-import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.student.service.StudentHistoryService;
-import com.honeyprojects.core.student.service.StudentProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

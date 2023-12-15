@@ -29,37 +29,6 @@ export default function ModalImportExcel(props) {
 
   const dispatch = useAppDispatch();
   const handleFileInputChange = (e) => {
-    // setNameFile(e.target.files[0].name);
-    // const formData = new FormData();
-    // formData.append("file", e.target.files[0]);
-    // AddPointExcelAPI.previewImportPoint(formData)
-    //   .then((response) => {
-    //     if (response.data.data.totalError === 0) {
-    //       message.success("Import thành công ");
-    //     } else {
-    //       for (const data of response.data.data.responseList) {
-    //         if (
-    //           data.importMessageStudent !== null &&
-    //           data.importMessageStudent !== "SUCCESS"
-    //         ) {
-    //           message.error(data.importMessageStudent);
-    //         } else if (
-    //           data.importMessageCategory !== null &&
-    //           data.importMessageCategory !== "SUCCESS"
-    //         ) {
-    //           message.error(data.importMessageCategory);
-    //         } else if (
-    //           data.importMessagePoint !== null &&
-    //           data.importMessagePoint !== "SUCCESS"
-    //         ) {
-    //           message.error(data.importMessagePoint);
-    //         }
-    //       }
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     message.error("Lỗi khi import Excel.");
-    //   });
     if (file !== null) {
       const formData = new FormData();
       formData.append("file", file.file.originFileObj);
