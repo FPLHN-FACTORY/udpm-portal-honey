@@ -7,12 +7,11 @@ import {
   Avatar,
   List,
   Button,
+  Menu,
+  Spin,
 } from "antd";
 
-import {
-  BellFilled,
-  ClockCircleFilled,
-} from "@ant-design/icons";
+import { BellFilled, ClockCircleFilled, MoreOutlined } from "@ant-design/icons";
 
 import avtar from "../../assets/images/team-2.jpg";
 
@@ -21,6 +20,17 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { NotificationAPI } from "../../apis/censor/notification/censor-notification.api";
 import moment from "moment";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  GetNotification,
+  SetNotification,
+} from "../../app/reducers/notification/censor/notification-censor.reducer";
+import {
+  GetCountNotification,
+  SetCountNotification,
+} from "../../app/reducers/notification/censor/count-notification-censor.reducer";
+import React from "react";
+import approved from "../../assets/images/check.png";
 // const data = [
 //   {
 //     id: 1,
@@ -59,61 +69,68 @@ import moment from "moment";
 // ];
 
 function Header({ onSlidebar, onPress, name, subName }) {
-  
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
-  const [countNotification, setCountNotification] = useState(0);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
-  const [notification, setNotification] = useState(null);
+  const [notificationHasData, setNotificationHasData] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const dispatch = useAppDispatch();
+  const [hasData, setHasData] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
 
-  const fetchNotifications = () => {
-    NotificationAPI.fetchAllNotification().then((response) => {
-      setNotification(response.data)
-    })
-  }
+  const fetchNotification = async () => {
+    const response = await NotificationAPI.fetchAll({
+      page: current,
+      size: 10,
+    });
+    console.log("====================================");
+    console.log(response.data.data.data);
+    console.log("====================================");
+    dispatch(SetNotification(response.data.data.data));
+    setCurrent(response.data.data.currentPage);
+    if (response.data.data.totalPages - current <= 1) {
+      setNotificationHasData(false);
+    } else {
+      setNotificationHasData(true);
+    }
+    if (response.data.data.totalPages > 1) {
+      setHasData(true);
+    } else {
+      setHasData(false);
+    }
+  };
 
-  const fetchCountNotifications = () => {
-    NotificationAPI.fetchCountNotification().then((response) => {
-      setCountNotification(response.data)
-    })
-  }
+  const fetchCountNotification = () => {
+    return NotificationAPI.fetchCountNotification().then((response) => {
+      dispatch(SetCountNotification(response.data));
+    });
+  };
 
   useEffect(() => {
-    fetchNotifications();
-    fetchCountNotifications();
-  },[]) 
+    fetchNotification();
+    fetchCountNotification();
+  }, []);
+  useEffect(() => {
+    fetchCountNotification();
+  }, [current]);
 
   useEffect(() => {
     const tokenValue = getToken();
 
     if (tokenValue) {
-      setUser(jwtDecode(tokenValue))
+      setUser(jwtDecode(tokenValue));
     }
-  }, [])
+  }, []);
 
-  // useEffect(() => {
-  //   const fetchNotification = async () => {
-  //     try {
-  //       const response = await NotificationAPI.fetchNotification();
-  //       dispatch(SetNotification(response.data.data.data));
-  //     } catch (error) {}
-  //   };
+  const dataNotification = useAppSelector(GetNotification);
 
-  //   fetchNotification();
-  // }, []);
+  const dataCountNotification = useAppSelector(GetCountNotification);
 
-  // useEffect(() => {
-  //   const fetchCountNotification = async () => {
-  //     try {
-  //       const response = await NotificationAPI.fetchCountNotification();
-  //       setCountNotification(response.data);
-  //     } catch (error) {}
-  //   };
+  console.log("====================================");
+  console.log(dataCountNotification);
+  console.log("====================================");
 
-  //   fetchCountNotification();
-  // }, [dispatch]);
-  // const dataNotification = useAppSelector(GetNotification);
   const toggleNotifications = () => {
     setIsOpen(!isOpen);
   };
@@ -121,7 +138,22 @@ function Header({ onSlidebar, onPress, name, subName }) {
   const handleItemHover = (itemId) => {
     setHoveredItem(itemId);
   };
-  
+
+  const markAsRead = () => {
+    NotificationAPI.markAllAsRead().then(() => {
+      fetchCountNotification();
+      fetchNotification();
+    });
+  };
+
+  const loadMoreItems = () => {
+    setLoadingMore(true);
+    setTimeout(() => {
+      setLoadingMore(false);
+    }, 500);
+    setCurrent(current + 1);
+  };
+
   const items = [
     {
       key: "1",
@@ -151,44 +183,30 @@ function Header({ onSlidebar, onPress, name, subName }) {
       ),
     },
   ];
-  // const deleteNotification = async (id) => {
-  //   try {
-  //     const response = await NotificationAPI.delete(id);
-  //     if (response.status === 200) {
-  //       const updatedData = dataNotification.filter((item) => item.id !== id);
-  //       dispatch(SetNotification(updatedData));
-  //       const newResponse = await NotificationAPI.fetchNotification();
-  //       const newData = newResponse.data.data.data;
-  //       dispatch(SetNotification(newData));
-  //       const newCount = countNotification - 1;
-  //       setCountNotification(newCount);
-  //     }
-  //   } catch (error) {}
-  // };
-  // const handleItemClick = (item) => {
-  //   if (item.type === 5) {
-  //     navigate(`/my-article/${item.articlesId}`);
-  //   } else {
-  //     navigate(`/user/article/${item.articlesId}`);
-  //   }
-  // };
 
   const handleItemClick = (item) => {
-      navigate(`/censor/request-manager/detail/${item.studentId}`);
+    navigate(`/censor/request-manager/detail/${item.idHistoryDetail}`);
+    NotificationAPI.readOne(item.id).then(() => {
+      fetchNotification();
+      fetchCountNotification();
       setIsOpen(!isOpen);
+    });
+  };
+
+  const AvatarMap = {
+    "ADMIN_CHO_PHE_DUYET": approved,
   };
 
   return (
     <>
       <Row gutter={[24, 0]}>
-        <Col span={6}>
-        </Col>
-        <Col span={18} className="header-control">
+        <Col span={24} className="header-control">
           {/* chuông */}
-          <Badge size="small" count={countNotification}>
+          <Badge size="small" count={dataCountNotification}>
             <Dropdown
               overlay={
                 <>
+                  {hasData ? (
                     <div
                       style={{
                         backgroundColor: "white",
@@ -199,11 +217,12 @@ function Header({ onSlidebar, onPress, name, subName }) {
                       <Button
                         type="link"
                         style={{ width: "100%", textAlign: "left" }}
-                        // onClick={() => markAsRead()}
+                        onClick={() => markAsRead()}
                       >
                         <u>Đánh dấu tất cả đã đọc</u>
                       </Button>
                     </div>
+                  ) : null}
                   <List
                     style={{
                       width: "300px",
@@ -212,7 +231,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
                     }}
                     className="header-notifications-dropdown"
                     itemLayout="horizontal"
-                    dataSource={notification}
+                    dataSource={dataNotification}
                     renderItem={(item) => (
                       <List.Item
                         className={`notification-item ${
@@ -236,7 +255,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
                                 src={avtar}
                                 style={{ width: "50px", height: "50px" }}
                               />
-                              {/* <Avatar
+                              <Avatar
                                 shape="circle"
                                 src={AvatarMap[item.type]}
                                 style={{
@@ -246,19 +265,19 @@ function Header({ onSlidebar, onPress, name, subName }) {
                                   bottom: "-5px",
                                   right: 0,
                                 }}
-                              /> */}
+                              />
                             </div>
                           }
                           title={
                             <span
                               style={{
-                                fontWeight: !item.status ? "bold" : "400",
+                                fontWeight:
+                                  item.status === "CHUA_DOC" ? "bold" : "400",
                                 overflowWrap: "break-word",
                               }}
                             >
-                              
                               {item.title}
-                              {!item.status ? (
+                              {item.status === "CHUA_DOC" ? (
                                 <div
                                   style={{
                                     width: "10px",
@@ -280,9 +299,77 @@ function Header({ onSlidebar, onPress, name, subName }) {
                             </>
                           }
                         />
+                        {hoveredItem === item.id && (
+                          <Dropdown
+                            // overlay={
+                            //   <Menu>
+                            //     <Menu.Item
+                            //       key="delete"
+                            //       onClick={() => deleteNotification(item.id)}
+                            //     >
+                            //       <a href="# ">Xóa</a>
+                            //     </Menu.Item>
+                            //   </Menu>
+                            // }
+                            trigger={["click"]}
+                          >
+                            <Button
+                              shape="circle"
+                              style={{
+                                border: "none",
+                                boxShadow: "none",
+                                right: "0",
+                              }}
+                              className="notification-options absolute "
+                              icon={<MoreOutlined />}
+                            />
+                          </Dropdown>
+                        )}
                       </List.Item>
                     )}
                   />
+                  {notificationHasData ? (
+                    <div
+                      style={{
+                        textAlign: "center",
+                        backgroundColor: "white",
+                        borderRadius: "5px",
+                        marginTop: "-15px",
+                      }}
+                    >
+                      <Button
+                        type="link"
+                        onClick={loadMoreItems}
+                        style={{
+                          backgroundColor: "white",
+                          width: "300px",
+                        }}
+                        disabled={loadingMore}
+                      >
+                        {loadingMore ? <Spin /> : "Xem thêm"}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        textAlign: "center",
+                        backgroundColor: "white",
+                        borderRadius: "5px",
+                        marginTop: "-35px",
+                      }}
+                    >
+                      <Button
+                        type="link"
+                        style={{
+                          backgroundColor: "white",
+                          width: "300px",
+                        }}
+                        disabled
+                      >
+                        Bạn đã xem hết thông báo
+                      </Button>
+                    </div>
+                  )}
                 </>
               }
               trigger={["click"]}
@@ -301,7 +388,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
             </Dropdown>
           </Badge>
           {/* fake user login */}
-          
+
           <Dropdown menu={{ items }} placement="bottom">
             <span className="mx-1 cursor-pointer">
               {user === null ? "Không có tài khoản" : user.name}

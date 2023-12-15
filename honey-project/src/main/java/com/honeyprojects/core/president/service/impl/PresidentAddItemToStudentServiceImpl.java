@@ -104,9 +104,6 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
     private UdpmHoney udpmHoney;
 
     @Autowired
-    private PresidentNotificationService presidentNotificationService;
-
-    @Autowired
     private PresidentNotificationDetailService presidentNotificationDetailService;
 
     @Autowired
@@ -114,6 +111,9 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
 
     @Autowired
     private PresidentArchiveRepository presidentArchiveRepository;
+
+    @Autowired
+    private PresidentNotificationService presidentNotificationService;
 
     @Override
     public ByteArrayOutputStream exportExcel(HttpServletResponse response) {
@@ -409,9 +409,12 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                             // gửi thông báo cho admin
                             stringBuilder.append("Đã gửi yêu cầu phê duyệt tới admin " + "Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + ": " + quantity + " " + gift.getName() + ", ");
                             history.setStatus(HistoryStatus.CHO_PHE_DUYET);
+
                         }
 
                         historyRepository.save(history);
+                        // tạo thông báo gửi cho admin
+                        presidentNotificationService.sendNotificationToAdmin(history.getId(), udpmHoney.getIdUser());
 
                         HistoryDetail historyDetail = new HistoryDetail();
                         historyDetail.setHistoryId(history.getId());
@@ -420,6 +423,7 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                         historyDetail.setStudentId(simpleResponse.getId());
                         historyDetail.setNameGift(nameItem);
                         historyDetailRepository.save(historyDetail);
+
                     }
                 }
 
@@ -491,6 +495,8 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                                     Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
                                     historyDetail.setHoneyId(honey.getId());
                                 }
+                                // tạo thông báo gửi cho admin
+                                presidentNotificationService.sendNotificationToAdmin(history.getId(), udpmHoney.getIdUser());
                             }
                             else if(category.getStatus().equals(enumCategoryFREE)){
                                 if (teacherPointResponse == null) {
@@ -507,7 +513,6 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                                     historyDetail.setHoneyId(honey.getId());
                                 }
                             }
-
                             historyDetailRepository.save(historyDetail);
                         }
                     }

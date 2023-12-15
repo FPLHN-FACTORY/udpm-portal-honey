@@ -18,6 +18,7 @@ import com.honeyprojects.core.teacher.repository.TeacherHoneyRepository;
 import com.honeyprojects.core.teacher.repository.TeacherNotificationDetailRepository;
 import com.honeyprojects.core.teacher.repository.TeacherNotificationRepository;
 import com.honeyprojects.core.teacher.service.TeacherAddPointExcelService;
+import com.honeyprojects.core.teacher.service.TeacherNotificationService;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.HistoryDetail;
 import com.honeyprojects.entity.Honey;
@@ -84,6 +85,9 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
 
     @Autowired
     private ExportExcelServiceService exportExcelService;
+
+    @Autowired
+    private TeacherNotificationService teacherNotificationService;
 
     private Notification createNotification(String idStudent) {
         String title = Constants.TITLE_NOTIFICATION_SYSTEM;
@@ -292,6 +296,7 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
                                     newHistory.setType(TypeHistory.CONG_DIEM);
                                     newHistory.setChangeDate(dateNow);
                                     historyRepository.save(newHistory);
+
                                     return newHistory;
                                 });
 
@@ -303,6 +308,7 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
                                 historyDetail.setHoneyPoint(honeyPoint);
                                 historyDetail.setStudentId(getPointRequest.getStudentId());
                                 if(category.getStatus().equals(enumCategoryACCEPT)){
+
                                     if (teacherPointResponse == null) {
                                         Honey honey = new Honey();
                                         honey.setStatus(Status.KHONG_HOAT_DONG);
@@ -314,6 +320,8 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
                                         Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
                                         historyDetail.setHoneyId(honey.getId());
                                     }
+                                    // gửi yêu cầu phê duyệt tới admin
+                                    teacherNotificationService.sendNotificationToAdmin(history.getId(), udpmHoney.getUserName(), udpmHoney.getIdUser());
                                 }
                                 else if(category.getStatus().equals(enumCategoryFREE)){
                                     if (teacherPointResponse == null) {

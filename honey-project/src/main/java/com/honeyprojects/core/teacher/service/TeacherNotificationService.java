@@ -1,10 +1,12 @@
-package com.honeyprojects.core.admin.service;
+package com.honeyprojects.core.teacher.service;
 
 import com.honeyprojects.core.admin.model.request.AdminNotificationRequest;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Notification;
+import com.honeyprojects.infrastructure.contant.NotificationType;
 
-public interface AdNotificationService {
+public interface TeacherNotificationService {
+
     PageableObject<Notification> getAllNotification(AdminNotificationRequest request);
 
     Integer getNumberNotifications();
@@ -12,4 +14,7 @@ public interface AdNotificationService {
     void updateAllStatus();
 
     Notification updateStatus(String id);
+
+    Notification sendNotificationToAdmin(String idHistoryDetail, String name, String idTeacher);
+
 }

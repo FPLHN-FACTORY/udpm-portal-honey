@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = [];
 
-export const NotificationSlice = createSlice({
-    name: "notification",
+export const NotificationStudentSlice = createSlice({
+    name: "notificationStudent",
     initialState,
     reducers: {
         AddNotification: (state, action) => {
@@ -48,6 +48,13 @@ export const NotificationSlice = createSlice({
 })
 // export const countNotification = (state) => state.notification.length;
 
-export const GetNotification = (state) => state.notification;
-export const { AddNotification, UpdateNotification, DeleteNotification, SetNotification, PutNotification, FindByIdNotification } = NotificationSlice.actions;
-export default NotificationSlice.reducer;
+export const GetNotification = (state) => state.notificationStudent;
+export const {
+  AddNotification,
+  UpdateNotification,
+  DeleteNotification,
+  SetNotification,
+  PutNotification,
+  FindByIdNotification,
+} = NotificationStudentSlice.actions;
+export default NotificationStudentSlice.reducer;

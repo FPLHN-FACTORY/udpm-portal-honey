@@ -16,6 +16,7 @@ import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHoneyRepository;
 import com.honeyprojects.core.teacher.repository.TeacherNotificationRepository;
 import com.honeyprojects.core.teacher.service.TeacherAddPointService;
+import com.honeyprojects.core.teacher.service.TeacherNotificationService;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.HistoryDetail;
@@ -52,7 +53,7 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     private TeacherHistoryRepository historyRepository;
 
     @Autowired
-    private TeacherNotificationRepository teacherNotificationRepository;
+    private TeacherNotificationService teacherNotificationService;
 
     @Autowired
     private UdpmHoney udpmHoney;
@@ -136,17 +137,18 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
             }
             historyDetail.setHoneyId(honey.getId());
             history.setStatus(HistoryStatus.CHO_PHE_DUYET);
-            Optional<Category> ca = categoryRepository.findById(addPointRequest.getCategoryId());
-            Notification notification = new Notification();
-            notification.setTitle("Yêu cầu cộng " + addPointRequest.getHoneyPoint() + " mật ong loại " + ca.get().getName() + " cho sinh viên");
-            notification.setStatus(NotificationStatus.CHUA_DOC);
-            notification.setType(NotificationType.CHO_PHE_DUYET);
-            notification.setStudentId(history.getId());
+//            Optional<Category> ca = categoryRepository.findById(addPointRequest.getCategoryId());
+//            Notification notification = new Notification();
+//            notification.setTitle("Yêu cầu cộng " + addPointRequest.getHoneyPoint() + " mật ong loại " + ca.get().getName() + " cho sinh viên");
+//            notification.setStatus(NotificationStatus.CHUA_DOC);
+//            notification.setType(NotificationType.ADMIN_CHO_PHE_DUYET);
+//            notification.setStudentId(history.getId());
 
-            teacherNotificationRepository.save(notification);
+//            teacherNotificationRepository.save(notification);
         }
         historyRepository.save(history);
-
+        // gửi thông báo đến admin
+        teacherNotificationService.sendNotificationToAdmin(history.getId(), udpmHoney.getUserName(), udpmHoney.getIdUser());
         historyDetail.setHistoryId(history.getId());
         historyDetail.setHoneyPoint(addPointRequest.getHoneyPoint());
         historyDetail.setStudentId(addPointRequest.getStudentId());
