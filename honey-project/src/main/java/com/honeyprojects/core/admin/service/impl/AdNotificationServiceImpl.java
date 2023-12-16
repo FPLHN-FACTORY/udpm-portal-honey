@@ -5,6 +5,7 @@ import com.honeyprojects.core.admin.repository.AdNotificationRespository;
 import com.honeyprojects.core.admin.service.AdNotificationService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Notification;
+import com.honeyprojects.infrastructure.contant.Constants;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
 import com.honeyprojects.util.DataUtils;
@@ -57,5 +58,62 @@ public class AdNotificationServiceImpl implements AdNotificationService {
             adNotificationRespository.save(optionalNotification);
         }
         return optionalNotification;
+    }
+
+    @Override
+    public Notification sendNotificationApprovalToStudent(String studentId, String userName) {
+        String title = Constants.TITLE_NOTIFICATION_SYSTEM;
+        Notification notification = new Notification();
+        notification.setTitle(title);
+        notification.setType(NotificationType.HE_THONG);
+        notification.setStatus(NotificationStatus.CHUA_DOC);
+        notification.setStudentId(studentId);
+        return adNotificationRespository.save(notification);
+    }
+
+    @Override
+    public Notification sendNotificationApprovalToTeacher(String teacherId, String userNameStudent, String historyId) {
+        String title = "Yêu cầu phê duyệt cho sinh viên " + userNameStudent + " đã được phê duyệt";
+        Notification notification = new Notification();
+        notification.setTitle(title);
+        notification.setType(NotificationType.DA_PHE_DUYET_TEACHER);
+        notification.setStatus(NotificationStatus.CHUA_DOC);
+        notification.setTeacherId(teacherId);
+        notification.setIdHistoryDetail(historyId);
+        return adNotificationRespository.save(notification);
+    }
+
+    @Override
+    public Notification sendNotificationApprovalToPresident(String presidentId, String userNameStudent, String historyId) {
+        String title = "Yêu cầu phê duyệt cho sinh viên " + userNameStudent + " đã được phê duyệt";
+        Notification notification = new Notification();
+        notification.setTitle(title);
+        notification.setType(NotificationType.DA_PHE_DUYET_PRESIDENT);
+        notification.setStatus(NotificationStatus.CHUA_DOC);
+        notification.setPresidentId(presidentId);
+        notification.setIdHistoryDetail(historyId);
+        return adNotificationRespository.save(notification);
+    }
+
+    @Override
+    public Notification teacherSendNotificationToStudent(String studentId, String teacherName) {
+        String title = "THÔNG BÁO TỪ GIẢNG VIÊN - " + teacherName;
+        Notification notification = new Notification();
+        notification.setTitle(title);
+        notification.setType(NotificationType.HE_THONG);
+        notification.setStatus(NotificationStatus.CHUA_DOC);
+        notification.setStudentId(studentId);
+        return adNotificationRespository.save(notification);
+    }
+
+    @Override
+    public Notification presidentSendNotificationToStudent(String studentId, String presidentName) {
+        String title = "THÔNG BÁO TỪ CHỦ TỊCH XƯỞNG - " + presidentName;
+        Notification notification = new Notification();
+        notification.setTitle(title);
+        notification.setType(NotificationType.HE_THONG);
+        notification.setStatus(NotificationStatus.CHUA_DOC);
+        notification.setStudentId(studentId);
+        return adNotificationRespository.save(notification);
     }
 }

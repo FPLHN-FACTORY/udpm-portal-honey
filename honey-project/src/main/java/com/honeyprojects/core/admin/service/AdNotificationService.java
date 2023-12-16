@@ -12,4 +12,15 @@ public interface AdNotificationService {
     void updateAllStatus();
 
     Notification updateStatus(String id);
+
+    Notification sendNotificationApprovalToStudent(String studentId, String userName);
+
+    Notification sendNotificationApprovalToTeacher(String teacherId, String userNameStudent, String historyId);
+
+    Notification sendNotificationApprovalToPresident(String presidentId, String userNameStudent, String historyId);
+
+    Notification teacherSendNotificationToStudent(String studentId, String teacherName);
+
+    Notification presidentSendNotificationToStudent(String studentId, String teacherName);
+
 }
