@@ -1,4 +1,5 @@
-import { Col } from "antd";
+/* eslint-disable jsx-a11y/alt-text */
+import { Badge, Col } from "antd";
 import React, { memo, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useState } from "react";
@@ -26,12 +27,13 @@ const Chest = memo(() => {
 
     return (
       <div style={{ position: "relative" }}>
-        <img
-          src={imageUrl}
-          style={{ width: "100%", height: "100%" }}
-          alt="Hình ảnh"
-        />
-        <div className="quantity-item">{quantity}</div>
+        <Badge.Ribbon text={quantity} color="red">
+          <img
+            src={imageUrl}
+            style={{ width: "100%", height: "100%" }}
+            alt="Hình ảnh"
+          />
+        </Badge.Ribbon>
       </div>
     );
   }

@@ -69,10 +69,6 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
     @Autowired
     private UdpmHoney udpmHoney;
 
-    @Autowired
-    private UdpmHoney udpmHoney;
-
-
     @Override
     public History addBuyItem(StudentBuyItemRequest createRequest) {
 //        Category category = categoryRepository.findById(createRequest.getCategoryId()).orElse(null);

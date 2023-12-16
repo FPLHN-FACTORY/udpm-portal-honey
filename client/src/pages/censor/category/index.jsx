@@ -16,7 +16,6 @@ import {
 } from "antd";
 import {
   PlusOutlined,
-  FormOutlined,
   CheckOutlined,
   CloseOutlined,
 } from "@ant-design/icons";
@@ -248,7 +247,7 @@ export default function Index() {
           }}
         />
       )}
-      <Modal
+      {confirmDelete && <Modal
         title="Xác nhận xóa"
         visible={confirmDelete}
         onOk={() => {
@@ -261,7 +260,7 @@ export default function Index() {
         cancelText="Hủy"
       >
         Bạn có chắc chắn muốn xóa quà này?
-      </Modal>
+      </Modal>}
 
       <Card style={{ borderTop: "5px solid #FFCC00" }}>
         <div className="filter__auction">

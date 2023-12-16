@@ -76,24 +76,29 @@ const ModalCreateUpgradeRate = ({
           return;
         }
       }
-      UpgradeApi.create(obj).then((response) => {
-        if (response.data.data) {
-          if (id) {
-            message.success("Cập nhật thành công!");
-          } else {
-            message.success("Thêm mới thành công!");
-          }
-        } else {
-          if (id) {
-            message.success("Cập nhật Thất bại!");
-          } else {
-            message.success("Thêm mới Thất bại!");
-          }
+      Modal.confirm({
+        title: `Bạn có chắc chắn muốn ${id ? "cập nhật" : "thên mới"} dữ liệu không?`,
+        onOk: () => {
+          UpgradeApi.create(obj).then((response) => {
+            if (response.data.data) {
+              if (id) {
+                message.success("Cập nhật thành công!");
+              } else {
+                message.success("Thêm mới thành công!");
+              }
+            } else {
+              if (id) {
+                message.success("Cập nhật Thất bại!");
+              } else {
+                message.success("Thêm mới Thất bại!");
+              }
+            }
+            fetchAllData();
+            form.resetFields();
+            onCancel();
+          });
         }
-        fetchAllData();
-        form.resetFields();
-        onCancel();
-      });
+      })
     });
   };
 

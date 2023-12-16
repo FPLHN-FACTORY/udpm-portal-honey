@@ -15,6 +15,7 @@ import {
   Tooltip,
   Table,
   Space,
+  Modal,
 } from "antd";
 import { SearchOutlined, SendOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -66,12 +67,17 @@ export default function AddPoint() {
   };
 
   const onFinishAdd = (values) => {
-    addPoint({
-      ...values,
-      honeyId: honeyStudent.id,
-      studentId: student.id,
-      categoryId: categorySelected,
-    });
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn gửi yêu cầu không?",
+      onOk: () => {
+        addPoint({
+          ...values,
+          honeyId: honeyStudent.id,
+          studentId: student.id,
+          categoryId: categorySelected,
+        });
+      }
+    })
   };
 
   const addPoint = (data) => {
@@ -303,8 +309,7 @@ export default function AddPoint() {
                         rules={[
                           {
                             required: true,
-                            pattern: /^\s*(\S\s*){5,}$/,
-                            message: "Lý do cộng phải trên 5 ký tự",
+                            message: "Lý do không được để trống",
                           },
                           {
                             max: 100,
