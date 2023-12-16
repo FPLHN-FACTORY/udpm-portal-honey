@@ -92,20 +92,31 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
         // gửi thông báo
         if (!DataUtils.isNullObject(history.getStudentId())
                 && !DataUtils.isNullObject(history.getTeacherId())) {
-            adNotificationService.sendNotificationApprovalToTeacher(history.getTeacherId(), history.getStudentName(), history.getId());
-            notification = adNotificationService.teacherSendNotificationToStudent(history.getStudentId(), history.getTeacherIdName());
+            if (history.getStatus().equals(HistoryStatus.DA_PHE_DUYET)) {
+                adNotificationService.sendNotificationApprovalToTeacher(history.getTeacherId(), history.getStudentName(), history.getId());
+                notification = adNotificationService.teacherSendNotificationToStudent(history.getStudentId(), history.getTeacherIdName());
+            } else {
+                adNotificationService.sendNotificationRefuseToTeacher(history.getTeacherId(), history.getStudentName(), history.getId());
+            }
         }
         if (!DataUtils.isNullObject(history.getStudentId())
                 && !DataUtils.isNullObject(history.getPresidentId())) {
-            adNotificationService.sendNotificationApprovalToPresident(history.getPresidentId(), history.getStudentName(), history.getId());
-            notification = adNotificationService.presidentSendNotificationToStudent(history.getStudentId(), history.getPresidentName());
-
+            if (history.getStatus().equals(HistoryStatus.DA_PHE_DUYET)) {
+                adNotificationService.sendNotificationApprovalToPresident(history.getPresidentId(), history.getStudentName(), history.getId());
+                notification = adNotificationService.presidentSendNotificationToStudent(history.getStudentId(), history.getPresidentName());
+            } else {
+                adNotificationService.sendNotificationRefuseToPresident(history.getPresidentId(), history.getStudentName(), history.getId());
+            }
         }
-        if (!DataUtils.isNullObject(history.getStudentId())
-                && DataUtils.isNullObject(history.getPresidentId())
-                && DataUtils.isNullObject(history.getTeacherId())) {
-            notification = adNotificationService.sendNotificationApprovalToStudent(history.getStudentId(), history.getStudentName());
-        }
+//        if (!DataUtils.isNullObject(history.getStudentId())
+//                && DataUtils.isNullObject(history.getPresidentId())
+//                && DataUtils.isNullObject(history.getTeacherId())) {
+//            if (history.getStatus().equals(HistoryStatus.DA_PHE_DUYET)) {
+//                notification = adNotificationService.sendNotificationApprovalToStudent(history.getStudentId());
+//            } else {
+//                notification = adNotificationService.sendNotificationRefuseToStudent(history.getStudentId());
+//            }
+//        }
 
         history.setStatus(HistoryStatus.values()[changeReq.getStatus()]);
         List<HistoryDetail> listHistoryDetail = historyDetailRepository.findHistoryDetailByHistoryId(changeReq.getIdHistory());
@@ -143,20 +154,32 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
         // gửi thông báo
         if (!DataUtils.isNullObject(history.getStudentId())
                 && !DataUtils.isNullObject(history.getTeacherId())) {
-            adNotificationService.sendNotificationApprovalToTeacher(history.getTeacherId(), history.getStudentName(), history.getId());
-            notification = adNotificationService.teacherSendNotificationToStudent(history.getStudentId(), history.getTeacherIdName());
+            if (history.getStatus().equals(HistoryStatus.DA_PHE_DUYET)) {
+                adNotificationService.sendNotificationApprovalToTeacher(history.getTeacherId(), history.getStudentName(), history.getId());
+                notification = adNotificationService.teacherSendNotificationToStudent(history.getStudentId(), history.getTeacherIdName());
+            } else {
+                adNotificationService.sendNotificationRefuseToTeacher(history.getTeacherId(), history.getStudentName(), history.getId());
+            }
         }
         if (!DataUtils.isNullObject(history.getStudentId())
                 && !DataUtils.isNullObject(history.getPresidentId())) {
-            adNotificationService.sendNotificationApprovalToPresident(history.getPresidentId(), history.getStudentName(), history.getId());
-            notification = adNotificationService.presidentSendNotificationToStudent(history.getStudentId(), history.getPresidentName());
-
+            if (history.getStatus().equals(HistoryStatus.DA_PHE_DUYET)) {
+                adNotificationService.sendNotificationApprovalToPresident(history.getPresidentId(), history.getStudentName(), history.getId());
+                notification = adNotificationService.presidentSendNotificationToStudent(history.getStudentId(), history.getPresidentName());
+            } else {
+                adNotificationService.sendNotificationRefuseToPresident(history.getPresidentId(), history.getStudentName(), history.getId());
+            }
         }
         if (!DataUtils.isNullObject(history.getStudentId())
                 && DataUtils.isNullObject(history.getPresidentId())
                 && DataUtils.isNullObject(history.getTeacherId())) {
-            notification = adNotificationService.sendNotificationApprovalToStudent(history.getStudentId(), history.getStudentName());
+            if (history.getStatus().equals(HistoryStatus.DA_PHE_DUYET)) {
+                notification = adNotificationService.sendNotificationApprovalToStudent(history.getStudentId());
+            } else {
+                notification = adNotificationService.sendNotificationRefuseToStudent(history.getStudentId());
+            }
         }
+
 
         for (CensorDetailItemRequestResponse item : listHistoryItem) {
             HistoryDetail historyDetail = historyDetailRepository.findById(item.getHistoryDetailId()).orElse(null);
@@ -197,6 +220,14 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
                 }
                 adNotificationDetailService.createNotificationDetailGift(notification.getId(), item.getQuantityGift(), item.getNameGift(), item.getGiftId());
             }
+            if (!DataUtils.isNullObject(history.getStudentId())
+                    && DataUtils.isNullObject(history.getPresidentId())
+                    && DataUtils.isNullObject(history.getTeacherId())
+                    && history.getStatus().equals(HistoryStatus.DA_HUY)
+            ) {
+                adNotificationDetailService.createNotificationDetailGift(notification.getId(), item.getQuantityGift(), item.getNameGift(), item.getGiftId());
+            }
+
         }
 
         return historyRepository.save(history);

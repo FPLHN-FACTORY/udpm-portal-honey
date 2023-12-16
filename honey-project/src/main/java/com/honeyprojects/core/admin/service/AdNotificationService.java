@@ -13,7 +13,7 @@ public interface AdNotificationService {
 
     Notification updateStatus(String id);
 
-    Notification sendNotificationApprovalToStudent(String studentId, String userName);
+    Notification sendNotificationApprovalToStudent(String studentId);
 
     Notification sendNotificationApprovalToTeacher(String teacherId, String userNameStudent, String historyId);
 
@@ -22,5 +22,11 @@ public interface AdNotificationService {
     Notification teacherSendNotificationToStudent(String studentId, String teacherName);
 
     Notification presidentSendNotificationToStudent(String studentId, String teacherName);
+
+    Notification sendNotificationRefuseToStudent(String studentId);
+
+    Notification sendNotificationRefuseToTeacher(String teacherId, String userNameStudent, String historyId);
+
+    Notification sendNotificationRefuseToPresident(String presidentId, String userNameStudent, String historyId);
 
 }

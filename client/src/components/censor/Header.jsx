@@ -31,6 +31,7 @@ import {
 } from "../../app/reducers/notification/censor/count-notification-censor.reducer";
 import React from "react";
 import approved from "../../assets/images/check.png";
+import { formatDateTime } from "../../pages/util/DateUtil";
 
 function Header({ onSlidebar, onPress, name, subName }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -151,7 +152,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
   };
 
   const AvatarMap = {
-    "ADMIN_CHO_PHE_DUYET": approved,
+    ADMIN_CHO_PHE_DUYET: approved,
   };
 
   return (
@@ -252,7 +253,8 @@ function Header({ onSlidebar, onPress, name, subName }) {
                           description={
                             <>
                               <ClockCircleFilled />{" "}
-                              {moment(item.createdDate).format("DD/MM/YYYY")}
+                              {/* {moment(item.createdDate).format("DD/MM/YYYY")} */}
+                              {formatDateTime(item.createdDate)}
                             </>
                           }
                         />
