@@ -19,6 +19,7 @@ import {
   SetCountNotification,
 } from "../../app/reducers/notification/president/count-notification-president.reducer";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { formatDateTime } from "../../pages/util/DateUtil";
 
 function Header({ onSlidebar, onPress, name, subName }) {
   useEffect(() => window.scrollTo(0, 0));
@@ -98,7 +99,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
   };
 
   const handleItemClick = (item) => {
-    navigate(`/censor/request-manager/detail/${item.idHistoryDetail}`);
+    navigate(`/president/history-honey`);
     NotificationAPI.readOne(item.id).then(() => {
       fetchNotification();
       fetchCountNotification();
@@ -242,7 +243,8 @@ function Header({ onSlidebar, onPress, name, subName }) {
                           description={
                             <>
                               <ClockCircleFilled />{" "}
-                              {moment(item.createdDate).format("DD/MM/YYYY")}
+                              {/* {moment(item.createdDate).format("DD/MM/YYYY")} */}
+                              {formatDateTime(item.createdDate)}
                             </>
                           }
                         />

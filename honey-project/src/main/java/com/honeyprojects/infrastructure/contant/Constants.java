@@ -40,7 +40,7 @@ public class Constants {
 
     public static String TITLE_NOTIFICATION_PRESIDENT = "THÔNG BÁO TỪ CHỦ TỊCH XƯỞNG";
 
-    public static String TITLE_NOTIFICATION_PRESIDENT_TO_ADMIN = "Chủ tích xưởng đã gửi một danh sách phê duyệt";
+    public static String TITLE_NOTIFICATION_PRESIDENT_TO_ADMIN = "Chủ tịch xưởng đã gửi một danh sách phê duyệt";
 
     public static String TITLE_NOTIFICATION_TEACHER_TO_ADMIN = " đã gửi một danh sách phê duyệt";
 
