@@ -3556,12 +3556,12 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
   border-radius: 50px;
 }
 
-.shop__menu__category {
+#shop__menu__category {
   height: 100%;
   border-radius: 10px 0 10px 0;
 }
 
-.shop__menu__category .ant-tabs-nav .ant-tabs-tab {
+#shop__menu__category .ant-tabs-nav .ant-tabs-tab {
   color: #ffffff;
   font-size: 16px;
   font-weight: bold;
@@ -3574,15 +3574,15 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
   border: 1px solid #ffffff66;
 }
 
-.shop__menu__category .ant-tabs-nav .ant-tabs-tab:hover {
+#shop__menu__category .ant-tabs-nav .ant-tabs-tab:hover {
   box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.4);
   background: linear-gradient(to top, #b01717cc, rgba(60, 60, 60, 0.7));
 }
 
-.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-btn:focus:not(:focus-visible),
-.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-remove:focus:not(:focus-visible),
-.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-btn:active,
-.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-remove:active {
+#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-btn:focus:not(:focus-visible),
+#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-remove:focus:not(:focus-visible),
+#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-btn:active,
+#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-remove:active {
   color: #ffffff;
   text-shadow: #ffffff;
   font-family: "FantasyFont";
@@ -3591,7 +3591,7 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
   font-weight: bold;
 }
 
-.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
   color: #ffffff;
   text-shadow: 0 0 0.25px #ffffff;
   font-family: "FantasyFont";
@@ -3600,18 +3600,18 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
   font-weight: bold;
 }
 
-.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs>.ant-tabs-nav .ant-tabs-nav-more,
-.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs>div>.ant-tabs-nav .ant-tabs-nav-more {
+#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs>.ant-tabs-nav .ant-tabs-nav-more,
+#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs>div>.ant-tabs-nav .ant-tabs-nav-more {
   color: #ffffff;
   font-weight: bold;
   font-size: 16px;
 }
 
-.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab {
+#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab {
   padding: 12px 15px;
   border-radius: 5px;
 }
 
-.shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab+.ant-tabs-tab {
+#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab+.ant-tabs-tab {
   margin: 0 0 0 3px;
 }

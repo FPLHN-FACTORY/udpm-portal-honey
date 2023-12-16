@@ -134,7 +134,7 @@ const Shop = memo(() => {
           <AppstoreAddOutlined className="icon__store" />
           Cửa hàng
         </div>
-        <div className="shop__menu__category">
+        <div id="shop__menu__category">
           <Tabs
             tabPosition={"top"}
             style={{
