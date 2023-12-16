@@ -1,31 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./index.css";
 import {
   Button,
   Card,
-  Col,
-  Empty,
   Form,
-  Input,
-  InputNumber,
   Row,
-  Segmented,
   Space,
   Table,
-  Tag,
   Tooltip,
   message,
 } from "antd";
 import {
   DownloadOutlined,
-  SearchOutlined,
-  SendOutlined,
 } from "@ant-design/icons";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import {
-  GetCategory,
-  SetCategory,
-} from "../../app/reducers/category/category.reducer";
+import { useAppSelector } from "../../app/hooks";
 import { AddItemAPI } from "../../apis/president/add-item/add-item.api";
 import ModalUpLoadFile from "./ModalUploadFile";
 import { GetImport } from "../../app/reducers/import/import.president.reducer";
@@ -34,8 +22,6 @@ import { AddItemExcelAPI } from "../../apis/president/add-item/add-item-excel.ap
 import { convertLongToDate } from "../util/DateUtil";
 
 export default function AddItem() {
-  const dispatch = useAppDispatch();
-  const listCategory = useAppSelector(GetCategory);
   const [student, setStudent] = useState({});
   const [honeyStudent, setHoneyStudent] = useState({ honey: 0 });
   const [categorySelected, setCategorySelected] = useState();

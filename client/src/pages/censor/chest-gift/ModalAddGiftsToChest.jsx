@@ -47,19 +47,24 @@ const ModalAddGiftToChest = (props) => {
   };
 
   const handleOk = () => {
-    if(selectedRowKeys.length > 0){
-      ChestGiftAPI.addGiftToChest({
-        chestId: chest.id,
-        listGift: selectedRowKeys,
+    if (selectedRowKeys.length > 0) {
+      Modal.confirm({
+        title: "Bạn có chắc chắn muốn thêm vật phẩm vào rương không?",
+        onOk: () => {
+          ChestGiftAPI.addGiftToChest({
+            chestId: chest.id,
+            listGift: selectedRowKeys,
+          })
+            .then((response) => {
+              dispatch(AddChestGift(response.config.data));
+              fetchData();
+              message.success("Thêm thành công.");
+            })
+            .catch((error) => {
+              message.error("Thêm không thành công.");
+            });
+        }
       })
-        .then((response) => {
-          dispatch(AddChestGift(response.config.data));
-          fetchData();
-          message.success("Thêm thành công.");
-        })
-        .catch((error) => {
-          message.error("Thêm không thành công.");
-        });
     }else{
       message.error("Vui lòng chọn vật phẩm !!!")
     }

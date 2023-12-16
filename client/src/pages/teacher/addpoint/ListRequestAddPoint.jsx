@@ -3,6 +3,7 @@ import {
   Card,
   Form,
   Input,
+  Modal,
   Pagination,
   Select,
   Space,
@@ -82,7 +83,12 @@ export default function RequestAddPoint() {
         <div style={{ textAlign: "center" }}>
           <Button
             onClick={() =>
-              changeStatus(values.idHistory, values.status === 2 ? 3 : 2)
+              Modal.confirm({
+                title: "Bạn có chắc chắn muốn hủy yêu cầu không?",
+                onOk: () => {
+                  changeStatus(values.idHistory, values.status === 2 ? 3 : 2)
+                }
+              })
             }
             disabled={values.status === 1}
             type="primary"
