@@ -67,7 +67,7 @@ public class AdminAddPointStudentRestController {
 
     @GetMapping("/list-category")
     public ResponseObject getAllListCategory() {
-        return new ResponseObject(adminCategoryService.getAllListCategory());
+        return new ResponseObject(adminCategoryService.getAllCategoryFreeByTwoModule());
     }
 
     // test

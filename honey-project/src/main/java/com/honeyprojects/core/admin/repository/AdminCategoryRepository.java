@@ -76,6 +76,14 @@ public interface AdminCategoryRepository extends CategoryRepository {
     List<AdminCategoryResponse> getAllCategory();
 
     @Query(value = """
+            SELECT c.id, c.name, c.code, c.last_modified_date ,c.category_status ,c.image, c.transaction_rights  
+            FROM category c 
+            WHERE c.category_status <> 0 and c.transaction_rights = '0'
+            ORDER BY c.last_modified_date DESC
+            """, nativeQuery = true)
+    List<AdminCategoryResponse> getAllCategoryFreeByTwoModule();
+
+    @Query(value = """
             SELECT c.id, c.name
             FROM category c 
             WHERE c.category_status <> 0 AND c.id = :id

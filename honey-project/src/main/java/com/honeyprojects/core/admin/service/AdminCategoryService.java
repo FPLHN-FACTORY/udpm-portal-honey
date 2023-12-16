@@ -16,6 +16,8 @@ public interface AdminCategoryService {
 
     List<AdminCategoryResponse> getAllCategory();
 
+    List<AdminCategoryResponse> getAllCategoryFreeByTwoModule();
+
     List<AdminCategoryResponse> getAllListCategory();
 
     Category addCategory(AdminCreateCategoryRequest request) throws IOException;
