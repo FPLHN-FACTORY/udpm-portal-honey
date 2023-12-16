@@ -45,11 +45,11 @@ body {
 .ant-upload-list-item-actions {
   display: none
 }
-:where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper
+.ant-table-wrapper
   .ant-table-thead
   > tr
   > th,
-:where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper
+.ant-table-wrapper
   .ant-table-thead
   > tr
   > td {
@@ -930,11 +930,11 @@ button.ant-btn.bell strong {
   width: 336px;
 }
 
-:where(.css-dev-only-do-not-override-14wwjjs).ant-menu
+.ant-menu
   .ant-menu-item
   .ant-menu-item-icon
   svg,
-:where(.css-dev-only-do-not-override-14wwjjs).ant-menu
+.ant-menu
   .ant-menu-submenu-title
   .ant-menu-item-icon
   svg {
@@ -3292,9 +3292,9 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
   fill: #8c8c8c;
 }
 
-:where(.css-dev-only-do-not-override-14wwjjs).ant-menu-light
+.ant-menu-light
   .ant-menu-item-selected,
-:where(.css-dev-only-do-not-override-14wwjjs).ant-menu-light
+.ant-menu-light
   > .ant-menu
   .ant-menu-item-selected {
   color: #eeb30d;
@@ -3302,20 +3302,20 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
   border-radius: 0px;
 }
 
-:where(.css-dev-only-do-not-override-14wwjjs).ant-menu-light
+.ant-menu-light
   .ant-menu-submenu-selected
   > .ant-menu-submenu-title,
-:where(.css-dev-only-do-not-override-14wwjjs).ant-menu-light
+.ant-menu-light
   > .ant-menu
   .ant-menu-submenu-selected
   > .ant-menu-submenu-title {
   color: #eeb30d;
 }
 
-:where(.css-dev-only-do-not-override-14wwjjs).ant-menu
+.ant-menu
   .ant-menu-item
   .ant-menu-item-icon:focus,
-:where(.css-dev-only-do-not-override-14wwjjs).ant-menu
+.ant-menu
   .ant-menu-submenu-title
   .ant-menu-item-icon:focus {
   fill: rgb(255, 0, 0);
@@ -3330,7 +3330,7 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
   cursor: pointer;
 }
 
-:where(.css-dev-only-do-not-override-14wwjjs).ant-picker-range {
+.ant-picker-range {
   width: 340px;
 }
 
@@ -3579,10 +3579,10 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
   background: linear-gradient(to top, #b01717cc, rgba(60, 60, 60, 0.7));
 }
 
-#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-btn:focus:not(:focus-visible),
-#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-remove:focus:not(:focus-visible),
-#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-btn:active,
-#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab-remove:active {
+#shop__menu__category .ant-tabs .ant-tabs-tab-btn:focus:not(:focus-visible),
+#shop__menu__category .ant-tabs .ant-tabs-tab-remove:focus:not(:focus-visible),
+#shop__menu__category .ant-tabs .ant-tabs-tab-btn:active,
+#shop__menu__category .ant-tabs .ant-tabs-tab-remove:active {
   color: #ffffff;
   text-shadow: #ffffff;
   font-family: "FantasyFont";
@@ -3591,7 +3591,7 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
   font-weight: bold;
 }
 
-#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+#shop__menu__category .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
   color: #ffffff;
   text-shadow: 0 0 0.25px #ffffff;
   font-family: "FantasyFont";
@@ -3600,18 +3600,18 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
   font-weight: bold;
 }
 
-#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs>.ant-tabs-nav .ant-tabs-nav-more,
-#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs>div>.ant-tabs-nav .ant-tabs-nav-more {
+#shop__menu__category .ant-tabs>.ant-tabs-nav .ant-tabs-nav-more,
+#shop__menu__category .ant-tabs>div>.ant-tabs-nav .ant-tabs-nav-more {
   color: #ffffff;
   font-weight: bold;
   font-size: 16px;
 }
 
-#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab {
+#shop__menu__category .ant-tabs .ant-tabs-tab {
   padding: 12px 15px;
   border-radius: 5px;
 }
 
-#shop__menu__category :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs .ant-tabs-tab+.ant-tabs-tab {
+#shop__menu__category .ant-tabs .ant-tabs-tab+.ant-tabs-tab {
   margin: 0 0 0 3px;
 }
