@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import {
+  Badge,
   Button,
   Card,
   Col,
@@ -10,6 +11,7 @@ import {
   Row,
   Select,
   Space,
+  Tooltip,
   message,
 } from "antd";
 import { useEffect, useState } from "react";
@@ -418,24 +420,13 @@ export default function ModalAddAuction({
                             onClick={() => handleArchiveGift(square)}
                           >
                             <div className="item">
-                              {square.image == null ? (
-                                <img
+                                <Tooltip title={square.nameGift} color="red"><img
+                                  src={square.image != null ?square.image : "https://png.pngtree.com/png-clipart/20230328/ourlarge/pngtree-game-item-box-png-image_6671647.png"}
                                   style={{
                                     width: "100%",
                                     height: "100%",
                                   }}
-                                  src="https://png.pngtree.com/png-clipart/20230328/ourlarge/pngtree-game-item-box-png-image_6671647.png"
-                                  alt="Ảnh mặc định"
-                                />
-                              ) : (
-                                <img
-                                  src={square.image}
-                                  style={{
-                                    width: "100%",
-                                    height: "100%",
-                                  }}
-                                />
-                              )}
+                                /></Tooltip>
                             </div>
                           </div>
                         </Col>

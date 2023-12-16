@@ -37,7 +37,7 @@ public interface StudentArchiveRepository extends ArchiveRepository {
                 ca.id, ca.name, ca.image
             FROM category ca
              JOIN gift_detail gd ON ca.id = gd.category_id
-            WHERE gd.gift_id = :idGift and ca.category_status <> 0
+            WHERE gd.gift_id = :idGift AND ca.category_status <> 0
             GROUP BY ca.id
              """, nativeQuery = true)
     List<StudentCategoryResponse> findCategoryByIdGift(@Param("idGift") String idGift);

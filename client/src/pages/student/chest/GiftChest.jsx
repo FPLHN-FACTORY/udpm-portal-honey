@@ -1,4 +1,4 @@
-import { Col } from "antd";
+import { Badge, Col } from "antd";
 import React, { memo, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useState } from "react";
@@ -66,9 +66,10 @@ const GiftChest = memo(() => {
               }}
             >
               <div className="chest__card__image">
-                <img src={data.image} alt="" />
+                <Badge.Ribbon text={data.quantity} color="red">
+                  <img src={data.image} alt="" />
+                </Badge.Ribbon>
               </div>
-              <div className="chest__card__quantity">{data.quantity}</div>
               <div className="chest__card__body">
                 <h3>{data.name}</h3>
               </div>

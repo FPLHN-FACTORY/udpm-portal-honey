@@ -7,5 +7,6 @@ public enum TypeHistory {
     PHE_DUYET_QUA,
     CONG_VAT_PHAM,
     CONG_RUONG,
-    MAT_ONG_VA_VAT_PHAM
+    MAT_ONG_VA_VAT_PHAM,
+    MUA_VAT_PHAM
 }

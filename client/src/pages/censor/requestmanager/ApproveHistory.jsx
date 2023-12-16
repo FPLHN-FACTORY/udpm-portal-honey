@@ -170,7 +170,7 @@ export default function RequestApprovedHistory() {
           </Space>
         </Form>
       </Card>
-      <Card title="Lịch sử cộng điểm">
+      <Card title="Lịch sử">
         {data.map((item) => (
           <div className="list__point ">
             <Row>
