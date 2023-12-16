@@ -174,10 +174,10 @@ function Header({ onSlidebar, onPress, name, subName }) {
                   <List
                     style={{
                       width: "300px",
-                      height: "600px",
+                      height: "400px",
                       overflow: "scroll",
                     }}
-                    className="header-notifications-dropdown"
+                    className="header-notifications-dropdown shadow-lg"
                     itemLayout="horizontal"
                     dataSource={dataNotification}
                     renderItem={(item) => (

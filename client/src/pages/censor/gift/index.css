@@ -57,7 +57,7 @@
   line-height: 1;
 }
 
-#detailGift :where(.css-dev-only-do-not-override-14wwjjs).ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+#detailGift .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
   width: 100%;
   height: 40px;
   /* padding: 0 11px; */
@@ -71,7 +71,7 @@
 #detailGift .select-section .select-label{
   margin-left: 15px;
 }
-#detailGift .ant-select-show-search:where(.css-dev-only-do-not-override-14wwjjs).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+#detailGift .ant-select-show-search.ant-select:not(.ant-select-customize-input) .ant-select-selector {
   height: 40px;
 }
 

@@ -1,5 +1,5 @@
-#auction_chart :where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper .ant-table-thead>tr>th,
-#auction_chart :where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper .ant-table-thead>tr>td {
+#auction_chart .ant-table-wrapper .ant-table-thead>tr>th,
+#auction_chart .ant-table-wrapper .ant-table-thead>tr>td {
     position: none;
     color: #000;
     font-weight: bold;

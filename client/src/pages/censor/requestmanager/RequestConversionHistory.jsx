@@ -279,7 +279,7 @@ export default function RequestConversionHistory() {
       dataIndex: "createdDate",
       key: "createdDate",
       align: "center",
-      render: (text) => <span>{moment(text).format("DD/MM/YYYY")}</span>,
+      render: (text) => <span>{moment(text).format("DD-MM-YYYY HH:mm:ss")}</span>,
     },
     {
       title: () => <div>Hành động</div>,
