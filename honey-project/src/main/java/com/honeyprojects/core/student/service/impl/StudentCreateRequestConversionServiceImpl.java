@@ -1,6 +1,7 @@
 package com.honeyprojects.core.student.service.impl;
 
 import com.honeyprojects.core.common.base.PageableObject;
+import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.student.model.request.StudentCreateRequestConversionRequest;
 import com.honeyprojects.core.student.model.request.StudentFilterHistoryRequest;
@@ -45,9 +46,6 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
     private ConvertRequestApiidentity convertRequestApiidentity;
 
     @Autowired
-    private StudentCategoryRepository categoryRepository;
-
-    @Autowired
     private StudentGiftRepository giftRepository;
 
     @Autowired
@@ -58,6 +56,9 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
 
     @Autowired
     private HistoryDetailRepository historyDetailRepository;
+
+    @Autowired
+    private UdpmHoney udpmHoney;
 
 
     @Override
@@ -98,9 +99,6 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
 
             }
         }
-
-
-
         if (history.getStatus().equals(HistoryStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
 
             Archive getArchive = archiveRepository.findByStudentId(createRequest.getStudentId()).orElse(archive);
@@ -119,12 +117,12 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
                 giftArchiveRepository.save(archiveGift);
             }
         }
-
         // Tiếp tục với việc thêm yêu cầu vào bảng History
         Long dateNow = Calendar.getInstance().getTimeInMillis();
-        history.setCreatedAt(dateNow);
+        history.setChangeDate(dateNow);
         history.setNote(createRequest.getNote());
         history.setStudentId(createRequest.getStudentId());
+        history.setStudentName(udpmHoney.getUserName());
         studentCreateRequestConversionRepository.save(history);
 
         historyDetail.setHoneyPoint(createRequest.getHoneyPoint());
@@ -133,7 +131,7 @@ public class StudentCreateRequestConversionServiceImpl implements StudentCreateR
         historyDetail.setNameGift(createRequest.getNameGift());
         historyDetail.setQuantityGift(createRequest.getQuantity());
         historyDetail.setHistoryId(history.getId());
-
+        historyDetail.setStudentId(createRequest.getStudentId());
         historyDetailRepository.save(historyDetail);
 
         return history;

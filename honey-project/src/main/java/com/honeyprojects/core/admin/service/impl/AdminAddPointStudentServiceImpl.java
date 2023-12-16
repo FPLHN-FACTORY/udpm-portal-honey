@@ -127,7 +127,6 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
                     }
                 }
             }
-            if (category.getCategoryStatus().equals(CategoryStatus.ACCEPT)) {
 //                TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
 //                getPointRequest.setStudentId(adminAddPointStudentLabReportRequest.getId());
 //                getPointRequest.setCategoryId(requestAddPointStudentBO.getCategoryId());
@@ -150,24 +149,8 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
                 Honey honey = addPointUtils.addHoneyUtils(adminAddPointStudentLabReportRequest.getId(),
                         requestAddPointStudentBO.getCategoryId(), adminAddPointStudentLabReportRequest.getNumberHoney());
                 historyDetail.setHoneyId(honey.getId());
-
-//                if (teacherPointResponse == null) {
-//                    Honey honey = new Honey();
-//                    honey.setStatus(Status.HOAT_DONG);
-//                    honey.setHoneyPoint(adminAddPointStudentLabReportRequest.getNumberHoney());
-//                    honey.setStudentId(adminAddPointStudentLabReportRequest.getId());
-//                    honey.setHoneyCategoryId(requestAddPointStudentBO.getCategoryId());
-//                    honeyRepository.save(honey);
-//                    historyDetail.setHoneyId(honey.getId());
-//                } else {
-//                    Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(getPointRequest.getStudentId(), category.getId());
-//                    honey.setHoneyPoint(adminAddPointStudentLabReportRequest.getNumberHoney() + honey.getHoneyPoint());
-//                    honeyRepository.save(honey);
-//                    historyDetail.setHoneyId(honey.getId());
-//                }
                 historyDetailRepository.save(historyDetail);
             }
-        }
         return true;
     }
 

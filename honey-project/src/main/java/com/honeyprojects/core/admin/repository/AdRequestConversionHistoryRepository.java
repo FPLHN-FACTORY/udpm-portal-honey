@@ -17,7 +17,7 @@ import java.util.List;
 public interface AdRequestConversionHistoryRepository extends HistoryRepository {
     @Query(value = """
             SELECT hd.gift_id, h.change_date, h.id, 
-            h.created_date, h.status, h.student_id, 
+            h.created_date, h.status, hd.student_id, 
             h.note, h.teacher_id, h.president_id, h.teacher_id_name, h.president_name,
             GROUP_CONCAT(CONCAT(hd.quantity_gift, ' ', hd.name_gift) SEPARATOR ', ') AS gift
             FROM history h 
