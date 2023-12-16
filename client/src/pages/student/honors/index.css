@@ -64,33 +64,33 @@
     text-align: center;
 }
 
-.horor__table :where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper .ant-table-tbody>tr>td {
+.horor__table .ant-table-wrapper .ant-table-tbody>tr>td {
     border-bottom: 1px solid #ffffff3d;
 }
 
-.horor__table :where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper .ant-table {
+.horor__table .ant-table-wrapper .ant-table {
     background-color: #0000004b;
     color: #ffffff;
     font-size: 16px;
 }
 
-.horor__table :where(.css-dev-only-do-not-override-14wwjjs).ant-table-wrapper .ant-table-tbody>tr.ant-table-row:hover>td {
+.horor__table .ant-table-wrapper .ant-table-tbody>tr.ant-table-row:hover>td {
     background-color: #ffffff3d;
 }
 
-.horor__table :where(.css-dev-only-do-not-override-14wwjjs).ant-pagination .ant-pagination-item-active {
+.horor__table .ant-pagination .ant-pagination-item-active {
     background-color: #0000004b;
     border-color: #ffffff3d;
 }
 
-.horor__table :where(.css-dev-only-do-not-override-14wwjjs).ant-pagination .ant-pagination-item-active a {
+.horor__table .ant-pagination .ant-pagination-item-active a {
     color: #ffffff;
     text-shadow: 6px 3px 6px #222;
     cursor: pointer;
     font-size: 16px;
 }
 
-.horor__table :where(.css-dev-only-do-not-override-14wwjjs).ant-pagination .ant-pagination-disabled .ant-pagination-item-link {
+.horor__table .ant-pagination .ant-pagination-disabled .ant-pagination-item-link {
     color: #ffffff;
     font-weight: bolder;
     text-shadow: 6px 3px 6px #222;
