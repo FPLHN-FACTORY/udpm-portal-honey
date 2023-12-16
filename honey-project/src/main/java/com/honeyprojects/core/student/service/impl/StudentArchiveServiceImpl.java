@@ -19,6 +19,7 @@ import com.honeyprojects.core.student.repository.StudentGiftRepository;
 import com.honeyprojects.core.student.repository.StudentHistoryDetailRepository;
 import com.honeyprojects.core.student.repository.StudentHistoryRepository;
 import com.honeyprojects.core.student.service.StudentArchiveService;
+import com.honeyprojects.core.student.service.StudentNotificationService;
 import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Gift;
@@ -78,11 +79,11 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     @Autowired
     private AddPointUtils addPointUtils;
 
+    @Autowired
+    private StudentNotificationService studentNotificationService;
+
     @Override
     public PageableObject<StudentArchiveResponse> getAllGiftArchive(StudentArchiveFilterRequest filterRequest) {
-        System.err.println("--------------------------");
-        System.err.println(udpmHoney.getIdUser());
-        System.err.println("--------------------------");
         Pageable pageable = PageRequest.of(filterRequest.getPage(), filterRequest.getSize());
         filterRequest.setIdStudent(udpmHoney.getIdUser());
         return new PageableObject<>(studentGiftArchiveRepository.getAllGiftArchive(filterRequest, pageable));
@@ -129,17 +130,17 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
             filterScoreTemplate.setStudentName("PH26782");
             ScoreTemplateVM scoreTemplateVM = callApiCommonService.callApiScoreTemplateVM(filterScoreTemplate).get(0);
 
-            if (gift.getScoreRatioMin() != null) {
-                if (scoreTemplateVM.getScoreRatio() <= gift.getScoreRatioMin()) {
-                    throw new RestApiException("Đầu điểm " + scoreTemplateVM.getName() + " không đủ điều kiện.");
-                }
-            }
-
-            if (gift.getScoreRatioMax() != null) {
-                if (scoreTemplateVM.getScoreRatio() >= gift.getScoreRatioMax()) {
-                    throw new RestApiException("Đầu điểm " + scoreTemplateVM.getName() + " không đủ điều kiện.");
-                }
-            }
+//            if (gift.getScoreRatioMin() != null) {
+//                if (scoreTemplateVM.getScoreRatio() <= gift.getScoreRatioMin()) {
+//                    throw new RestApiException("Đầu điểm " + scoreTemplateVM.getName() + " không đủ điều kiện.");
+//                }
+//            }
+//
+//            if (gift.getScoreRatioMax() != null) {
+//                if (scoreTemplateVM.getScoreRatio() >= gift.getScoreRatioMax()) {
+//                    throw new RestApiException("Đầu điểm " + scoreTemplateVM.getName() + " không đủ điều kiện.");
+//                }
+//            }
 
             Double scoreGift = 0.0;
             if (scoreTemplateVM.getScoreRatio() == 0) {
@@ -159,6 +160,7 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
                     .append(scoreTemplateVM.getName())
                     .append("'")
             ;
+//            studentNotificationService.sendNotificationToTeacher(teacher.getId(), udpmHoney.getUserName());
             History history = new History();
             history.setStudentId(udpmHoney.getIdUser());
             history.setTeacherId(teacher.getId());

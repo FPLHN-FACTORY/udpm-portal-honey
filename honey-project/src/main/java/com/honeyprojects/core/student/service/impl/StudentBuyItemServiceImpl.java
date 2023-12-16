@@ -1,6 +1,7 @@
 package com.honeyprojects.core.student.service.impl;
 
 import com.honeyprojects.core.common.base.PageableObject;
+import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.student.model.request.StudentBuyItemRequest;
 import com.honeyprojects.core.student.model.request.StudentFilterHistoryRequest;
@@ -13,6 +14,7 @@ import com.honeyprojects.core.student.repository.StudentCreateRequestConversionR
 import com.honeyprojects.core.student.repository.StudentGiftRepository;
 import com.honeyprojects.core.student.repository.StudentHoneyRepository;
 import com.honeyprojects.core.student.service.StudentBuyItemService;
+import com.honeyprojects.core.student.service.StudentNotificationService;
 import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.entity.Category;
@@ -61,12 +63,17 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
     @Autowired
     private HistoryDetailRepository historyDetailRepository;
 
+    @Autowired
+    private StudentNotificationService studentNotificationService;
+
+    @Autowired
+    private UdpmHoney udpmHoney;
+
 
     @Override
     public History addBuyItem(StudentBuyItemRequest createRequest) {
-        Category category = categoryRepository.findById(createRequest.getCategoryId()).orElse(null);
+//        Category category = categoryRepository.findById(createRequest.getCategoryId()).orElse(null);
         Gift gift = giftRepository.findById(createRequest.getGiftId()).orElse(null);
-
 
         Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(createRequest.getStudentId(), createRequest.getCategoryId());
         History history = new History();
@@ -86,6 +93,8 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
             if (gift.getStatus().equals(StatusGift.ACCEPT)) {
                 history.setStatus(HistoryStatus.CHO_PHE_DUYET);
                 history.setType(TypeHistory.DOI_QUA);
+                // gửi thông báo cho admin
+                studentNotificationService.sendNotificationToAdmin(udpmHoney.getUserName());
             } else {
                 history.setStatus(HistoryStatus.DA_PHE_DUYET);
                 history.setType(TypeHistory.DOI_QUA);
@@ -102,9 +111,7 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
                     gift.setQuantity(gift.getQuantity() - createRequest.getQuantity());
                     giftRepository.save(gift);
                 }
-
             }
-
         }
 
         if (history.getStatus().equals(HistoryStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
