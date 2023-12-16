@@ -42,6 +42,6 @@ request.interceptors.response.use(
     // if (error.response && error.response.status === 400) {
     //   message.error(error.response.data.message);
     // }
-    throw error;  
+    throw error;
   }
 );
