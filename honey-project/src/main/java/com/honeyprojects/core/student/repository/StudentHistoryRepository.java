@@ -11,11 +11,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StudentHistoryRepository extends HistoryRepository {
 
-    @Query("""
-            select h from History h where h.studentId = :studentId and h.type <> 6
-            and ((h.status = 1 and (:type is null or h.type = :type)) or (h.status = 2 and h.type = 3 and (:type is null or :type = 3) ))
-            """)
-    Page<History> getListHistory(String studentId, TypeHistory type, Pageable pageable);
+    @Query(value = """
+            SELECT * FROM history h 
+            WHERE h.student_id = :studentId
+            AND ((h.status IN (1,3,4,5,6,7) AND (:type IS NULL OR h.type = :type)) 
+            OR (h.status = 2 AND (:type IS NULL OR :type = 3) ))
+            ORDER BY h.last_modified_date DESC
+            """, nativeQuery = true)
+    Page<History> getListHistory(String studentId, Integer type, Pageable pageable);
 
     @Query("""
             select h from History h where h.studentId = :studentId and

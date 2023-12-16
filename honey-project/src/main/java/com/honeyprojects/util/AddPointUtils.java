@@ -1,6 +1,7 @@
 package com.honeyprojects.util;
 
 import com.honeyprojects.core.admin.repository.AdArchiveGiftRepository;
+import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
 import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.entity.Honey;
@@ -33,17 +34,16 @@ public class AddPointUtils {
         try {
             Honey honey = null;
             List<Honey> honeyList = honeyRepository.findAllByStudentIdAndHoneyCategoryId(studentId, categoryId);
-            if (honeyList.size() == 0) {
-                honey = new Honey();
-                honey.setStatus(Status.HOAT_DONG);
-                honey.setStudentId(studentId);
-                honey.setHoneyCategoryId(categoryId);
-                honey.setHoneyPoint(honeyPoint);
-            } else {
-                honey = honeyList.get(0);
-                honey.setHoneyPoint(honeyPoint + honey.getHoneyPoint());
-            }
-
+                if (honeyList.size() == 0) {
+                    honey = new Honey();
+                    honey.setStatus(Status.HOAT_DONG);
+                    honey.setStudentId(studentId);
+                    honey.setHoneyCategoryId(categoryId);
+                    honey.setHoneyPoint(honeyPoint);
+                } else {
+                    honey = honeyList.get(0);
+                    honey.setHoneyPoint(honeyPoint + honey.getHoneyPoint());
+                }
             return honeyRepository.save(honey);
         } catch (Exception ex) {
             ex.printStackTrace();

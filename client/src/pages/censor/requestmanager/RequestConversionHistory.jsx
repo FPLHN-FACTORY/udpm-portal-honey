@@ -42,7 +42,6 @@ export default function RequestConversionHistory() {
     const fetchData = async (filter) => {
       try {
         const response = await RequestManagerAPI.getHistoryConversion(filter);
-        
         const listHistory = await Promise.all(
           response.data.data.map(async (data) => {
             try {
@@ -150,8 +149,8 @@ export default function RequestConversionHistory() {
     });
   };
 
-  const [selectedRowKeys,setSelectedRowKeys] = useState([]);
-  const [selectedRowKeysRecord,setSelectedRowKeysRecord] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRowKeysRecord, setSelectedRowKeysRecord] = useState([]);
   const start = () => {
     setSelectedRowKeys([]);
     setSelectedRowKeysRecord([]);
@@ -168,7 +167,7 @@ export default function RequestConversionHistory() {
   const approveAll = () => {
     if (selectedRowKeys.length === 0) {
       message.error("Bạn phải chọn một yêu cầu");
-      return
+      return;
     }
     // const result = selectedRowKeysRecord.map((el) => `Yêu cầu từ ${el.userTeacher !== null?"Giảng viên " + el.userTeacher : "Chủ tịch " + el.userPresident}: Cộng ${el.honey} cho sinh viên ${el.userName}`)
 
@@ -184,16 +183,15 @@ export default function RequestConversionHistory() {
         }));
         changeStatusConversionAll(data, 1);
         // hoàn thành yêu cầu clear selectedRowKeys
-        start()
-      }
-    })
-
-  }
+        start();
+      },
+    });
+  };
 
   const refuseAll = () => {
     if (selectedRowKeys.length === 0) {
       message.error("Bạn phải chọn một yêu cầu");
-      return
+      return;
     }
     // const result = selectedRowKeysRecord.map((el) => `Yêu cầu từ ${el.userTeacher !== null?"Giảng viên " + el.userTeacher : "Chủ tịch " + el.userPresident}: Cộng ${el.honey} cho sinh viên ${el.userName}`)
 
@@ -209,11 +207,11 @@ export default function RequestConversionHistory() {
         }));
         changeStatusConversionAll(data, 1);
         // hoàn thành yêu cầu clear selectedRowKeys
-        start()
-      }
-    })
-  }
-  
+        start();
+      },
+    });
+  };
+
   const handCheckvalide = async (values) => {
     // const response = await RequestManagerAPI.getPoint(
     //   values.studentId,
@@ -255,7 +253,7 @@ export default function RequestConversionHistory() {
         } else if (record.presidentId !== null) {
           return record.userPresident;
         } else {
-          return null;
+          return record.userName;
         }
       },
     },
@@ -380,7 +378,7 @@ export default function RequestConversionHistory() {
       <Card>
         <Row className="justify-between items-center mb-2">
           <Col>
-            <h1 className="lable">Danh sách yêu cầu đổi quà</h1>
+            <h1 className="lable">Danh sách yêu cầu</h1>
           </Col>
           <Col>
             <Button onClick={() => approveAll()} type="primary mr-2">
@@ -406,7 +404,18 @@ export default function RequestConversionHistory() {
               setFilter({ ...filter, page: page - 1, size: size });
             }}
             total={totalPages}
-            pageSizeOptions={['10', '20', '30', '40', '50', '60', '70', '80', '90', '100']}
+            pageSizeOptions={[
+              "10",
+              "20",
+              "30",
+              "40",
+              "50",
+              "60",
+              "70",
+              "80",
+              "90",
+              "100",
+            ]}
           />
         </div>
       </Card>

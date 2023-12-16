@@ -103,6 +103,8 @@ export default function HistoryGift() {
     }
   };
 
+  console.log(data);
+
   return (
     <div className="add-point">
       <Card className="mb-2 py-1">
@@ -154,7 +156,7 @@ export default function HistoryGift() {
                 <strong className="text-slate-500 mr-[8px]">
                   Đã nhận được:
                 </strong>
-                {item.type === 5 ? item.chest : item.gift}
+                {item.chest || item.gift}
               </p>
               <p>
                 <strong className="text-slate-500 mr-[8px]">Thời gian:</strong>

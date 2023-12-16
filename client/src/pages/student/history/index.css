@@ -25,7 +25,6 @@
   color: white;
   border: 1px solid #ddd;
   border-radius: 10px;
-  display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20px;
@@ -34,23 +33,29 @@
   margin-bottom: 15px;
   height: 130px;
   width: 100%;
-  background: linear-gradient(150deg,
-      rgba(53, 53, 53, 0.6) 24%,
-      rgba(0, 0, 0, 0.5) 91%);
+  background: linear-gradient(
+    150deg,
+    rgba(53, 53, 53, 0.6) 24%,
+    rgba(0, 0, 0, 0.5) 91%
+  );
   cursor: pointer;
 }
 
 .student__history .red:hover {
   height: 150px;
-  background: linear-gradient(150deg,
-      rgba(254, 215, 85, 0.6) 24%,
-      rgba(99, 72, 13, 0.5) 91%);
+  background: linear-gradient(
+    150deg,
+    rgba(254, 215, 85, 0.6) 24%,
+    rgba(99, 72, 13, 0.5) 91%
+  );
 }
 
 .student__history .green:hover {
-  background: linear-gradient(150deg,
-      rgba(29, 146, 29, 0.6) 24%,
-      rgba(10, 83, 4, 0.5) 91%);
+  background: linear-gradient(
+    150deg,
+    rgba(29, 146, 29, 0.6) 24%,
+    rgba(10, 83, 4, 0.5) 91%
+  );
 }
 
 .student__history .separator {
@@ -93,9 +98,11 @@
   border-radius: 10px;
   padding: 0px 20px;
   cursor: pointer;
-  background: linear-gradient(150deg,
-      rgba(53, 53, 53, 0.6) 24%,
-      rgba(0, 0, 0, 0.5) 91%);
+  background: linear-gradient(
+    150deg,
+    rgba(53, 53, 53, 0.6) 24%,
+    rgba(0, 0, 0, 0.5) 91%
+  );
 }
 
 .student__history .ant-tabs-nav::before {
@@ -103,9 +110,11 @@
 }
 
 .student__history .ant-tabs-tab:hover {
-  background: linear-gradient(150deg,
-      rgba(255, 247, 94, 0.6) 24%,
-      rgba(153, 153, 0, 0.5) 91%);
+  background: linear-gradient(
+    150deg,
+    rgba(255, 247, 94, 0.6) 24%,
+    rgba(153, 153, 0, 0.5) 91%
+  );
 }
 
 .student__history .ant-tabs-ink-bar {
@@ -131,9 +140,11 @@
   border-radius: 10px;
   padding: 0px 20px;
   cursor: pointer;
-  background: linear-gradient(150deg,
-      rgba(53, 53, 53, 0.6) 24%,
-      rgba(0, 0, 0, 0.5) 91%);
+  background: linear-gradient(
+    150deg,
+    rgba(53, 53, 53, 0.6) 24%,
+    rgba(0, 0, 0, 0.5) 91%
+  );
   margin-right: 10px;
 }
 
@@ -145,9 +156,11 @@
   border-radius: 10px;
   padding: 0px 20px;
   cursor: pointer;
-  background: linear-gradient(150deg,
-      rgba(53, 53, 53, 0.6) 24%,
-      rgba(0, 0, 0, 0.5) 91%);
+  background: linear-gradient(
+    150deg,
+    rgba(53, 53, 53, 0.6) 24%,
+    rgba(0, 0, 0, 0.5) 91%
+  );
   margin-right: 10px;
   background-color: rgba(255, 0, 0, 0) !important;
 }
@@ -160,7 +173,7 @@
   color: rgba(255, 249, 133, 0.849);
 }
 
-.student__history .select__history>div {
+.student__history .select__history > div {
   height: 100% !important;
 }
 
@@ -170,9 +183,11 @@
 }
 
 .student__history .button__active {
-  background: linear-gradient(150deg,
-      rgba(255, 180, 94, 0.8) 24%,
-      rgba(153, 105, 0, 0.8) 91%);
+  background: linear-gradient(
+    150deg,
+    rgba(255, 180, 94, 0.8) 24%,
+    rgba(153, 105, 0, 0.8) 91%
+  );
 }
 
 .student__history .ant-select-arrow {
@@ -184,5 +199,5 @@
 }
 
 .size_img {
-  max-width: 8%;
+  max-width: 50%;
 }

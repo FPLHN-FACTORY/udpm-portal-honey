@@ -101,8 +101,6 @@ export default function StudentBuyItem(props) {
     BuyItem.getUserAPiByid().then((response) => {
       setFillUserApi({
         ...response.data.data,
-        khoa: "17.3",
-        phone: "0763104018",
       });
     });
   };
@@ -171,10 +169,10 @@ export default function StudentBuyItem(props) {
     BuyItem.createRequest(addRequest)
       .then((response) => {
         if (response.data.success) {
-          message.success("Đổi quà thành công");
+          message.success("Mua thành công");
           navigate("/student/create-conversion/history");
         } else {
-          message.error("Đổi quà thất bại!");
+          message.error("Mua thất bại!");
         }
       })
       .catch((error) => {

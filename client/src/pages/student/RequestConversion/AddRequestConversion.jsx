@@ -110,8 +110,6 @@ export default function AddRequestConversion(props) {
     ResquestConversion.getUserAPiByid().then((response) => {
       setFillUserApi({
         ...response.data.data,
-        khoa: "17.3",
-        phone: "0763104018",
       });
     });
   };
@@ -181,10 +179,10 @@ export default function AddRequestConversion(props) {
     ResquestConversion.createRequest(addRequest)
       .then((response) => {
         if (response.data.success) {
-          message.success("Đổi quà thành công");
+          message.success("Mua thành công");
           navigate("/student/create-conversion/history");
         } else {
-          message.error("Đổi quà thất bại!");
+          message.error("Mua thất bại!");
         }
       })
       .catch((error) => {

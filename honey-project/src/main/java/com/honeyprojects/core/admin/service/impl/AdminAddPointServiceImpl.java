@@ -137,8 +137,7 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
         historyDetail.setHoneyPoint(addPointRequest.getHoneyPoint());
         historyDetail.setStudentId(addPointRequest.getStudentId());
         historyDetail.setStatus(Status.HOAT_DONG);
-        Honey honey = addPointUtils.
-                addHoneyUtils(addPointRequest.getStudentId(),
+        Honey honey = addPointUtils.addHoneyUtils(addPointRequest.getStudentId(),
                         addPointRequest.getCategoryId(),
                         addPointRequest.getHoneyPoint());
         Category category = categoryRepository.findById(addPointRequest.getCategoryId()).orElse(null);
