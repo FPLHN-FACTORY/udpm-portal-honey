@@ -101,6 +101,11 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     }
 
     @Override
+    public List<AdminCategoryResponse> getAllCategoryFreeByTwoModule() {
+        return adminCategoryRepository.getAllCategoryFreeByTwoModule();
+    }
+
+    @Override
     public List<AdminCategoryResponse> getAllListCategory() {
         return adminCategoryRepository.getAllCategory();
     }

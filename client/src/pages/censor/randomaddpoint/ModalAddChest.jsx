@@ -36,9 +36,10 @@ export default function ModalAddChest(props) {
       errors.nameChest = "Không được để trống tên";
     } else if (listNameChest.includes(itemName)) {
       errors.nameChest = "Tên rương đã tồn tại";
-    } else if (/[^a-zA-Z0-9_\s]+/.test(itemName)) {
-      errors.nameChest = "Tên rương không được chứa ký tự đặc biệt";
-    }
+    } 
+    // else if (/[^a-zA-Z0-9_\s]+/.test(itemName)) {
+    //   errors.nameChest = "Tên rương không được chứa ký tự đặc biệt";
+    // }
 
     for (const key in errors) {
       if (errors[key]) {

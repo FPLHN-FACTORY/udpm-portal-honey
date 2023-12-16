@@ -1,6 +1,5 @@
 package com.honeyprojects.core.admin.model.request;
 
-import com.honeyprojects.core.common.base.PageableRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +17,8 @@ public class AdminAddPointStudentPortalEventsBOO {
     private List<User> listUser;
 
     private String moduleCode;
+
+    private String nameEvent;
 
     @Setter
     @Getter
