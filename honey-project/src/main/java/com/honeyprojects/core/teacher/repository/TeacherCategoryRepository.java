@@ -30,4 +30,10 @@ public interface TeacherCategoryRepository extends CategoryRepository {
             WHERE c.category_status <> 0
             """, nativeQuery = true)
     List<AdminExportCategoryResponse> getCategoryToExport();
+
+    @Query(value = """
+            SELECT c.id, c.name, c.category_status FROM category c
+            WHERE c.category_status <> 0 and c.id = :id
+            """, nativeQuery = true)
+    TeacherCategoryResponse getCategoryById(String id);
 }
