@@ -1,7 +1,6 @@
 import { Tabs } from "antd";
 import { AppstoreAddOutlined } from "@ant-design/icons";
 import React, { memo, useEffect } from "react";
-import "./shop.css";
 import { useState } from "react";
 import Items from "./Items";
 import Gift from "./Gift";
