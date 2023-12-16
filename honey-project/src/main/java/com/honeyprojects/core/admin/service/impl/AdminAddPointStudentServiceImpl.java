@@ -113,11 +113,11 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
     public Boolean addPointToStudentLabReport(AdminAddPointStudentLabReportBOO requestAddPointStudentBO) {
 
         Category category = adminCategoryRepository.findById(requestAddPointStudentBO.getCategoryId()).orElse(null);
-
+        String title = "Thông báo từ giảng viên " + requestAddPointStudentBO.getUsername() + " - Xưởng thực hành";
         for (AdminAddPointStudentLabReportRequestt adminAddPointStudentLabReportRequest :
                 requestAddPointStudentBO.getListStudent()) {
             if (category.getCategoryStatus().equals(CategoryStatus.FREE)) {
-                Notification notification = createNotification(adminAddPointStudentLabReportRequest.getId());
+                Notification notification = createNotification(title, adminAddPointStudentLabReportRequest.getId());
                 if (!DataUtils.isNullObject(requestAddPointStudentBO.getListStudent())) {
                     try {
                         Integer honeyPoint = adminAddPointStudentLabReportRequest.getNumberHoney();
@@ -206,7 +206,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
     @Override
     public void importDataLabReport(AdminAddPointStudentLabReportBOO requestAddPointStudentBO) throws IOException {
         Category category = adminCategoryRepository.findById(requestAddPointStudentBO.getCategoryId()).orElse(null);
-
+        String title = "Thông báo từ giảng viên " + requestAddPointStudentBO.getUsername() + " - Xưởng thực hành";
         for (AdminAddPointStudentLabReportRequestt adminAddPointStudentLabReportRequest :
                 requestAddPointStudentBO.getListStudent()) {
             TeacherGetPointRequest getPointRequest = new TeacherGetPointRequest();
@@ -242,6 +242,8 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
                 honeyRepository.save(honey);
                 historyDetail.setHoneyId(honey.getId());
             }
+            Notification notification = createNotification(adminAddPointStudentLabReportRequest.getId(), title);
+            createNotificationDetailHoney(category, notification.getId(), adminAddPointStudentLabReportRequest.getNumberHoney());
             historyDetailRepository.save(historyDetail);
         }
     }
@@ -328,7 +330,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
     public void importDataPortalEvents(AdminAddPointStudentPortalEventsBO requestAddPointStudentBO) {
         Category category = adminCategoryRepository.findById(requestAddPointStudentBO.getCategoryId()).orElse(null);
         Integer honeyPoint = requestAddPointStudentBO.getNumberHoney();
-
+        String title = "Thông báo từ module sự kiện";
         for (AdminAddPointStudentPortalEventsRequest studentId :
                 requestAddPointStudentBO.getLstStudentId()) {
             SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(studentId.getId());
@@ -365,6 +367,8 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
                 honeyRepository.save(honey);
                 historyDetail.setHoneyId(honey.getId());
             }
+            Notification notification = createNotification(studentId.getId(), title);
+            createNotificationDetailHoney(category, notification.getId(), honeyPoint);
             historyDetailRepository.save(historyDetail);
         }
     }
@@ -407,6 +411,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
     public Boolean createPointToStudentPortalEvents(AdminAddPointStudentPortalEventsBOO requestAddPointStudentBO) {
         Category category = adminCategoryRepository.findById(requestAddPointStudentBO.getCategoryId()).orElse(null);
         Integer honeyPoint = requestAddPointStudentBO.getNumberHoney();
+        String title = "Thông báo từ sự kiện: " + requestAddPointStudentBO.getNameEvent();
 
         for (AdminAddPointStudentPortalEventsBOO.User studentId :
                 requestAddPointStudentBO.getListUser()) {
@@ -419,7 +424,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
             History history = new History();
             if (category.getCategoryStatus().equals(CategoryStatus.FREE)) {
                 history.setStatus(HistoryStatus.SƯ_KIEN);
-                Notification notification = createNotification(studentId.getId());
+                Notification notification = createNotification(studentId.getId(), title);
                 if (!DataUtils.isNullObject(requestAddPointStudentBO.getListUser())) {
                     try {
                         createNotificationDetailHoney(category, notification.getId(), honeyPoint);
@@ -461,8 +466,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
         return true;
     }
 
-    private Notification createNotification(String idStudent) {
-        String title = Constants.TITLE_NOTIFICATION_SYSTEM;
+    private Notification createNotification(String idStudent, String title) {
         AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, idStudent, NotificationType.HE_THONG, NotificationStatus.CHUA_DOC);
         Notification notification = request.createNotification(new Notification());
         return adNotificationRespository.save(notification);
@@ -470,7 +474,7 @@ public class AdminAddPointStudentServiceImpl implements AdminAddPointStudentServ
 
     private NotificationDetail createNotificationDetailHoney(Category category, String idNotification, Integer quantity) {
         Integer roundedQuantity = (int) Math.round(quantity);
-        String content = Constants.CONTENT_NOTIFICATION_MODULE_LAB_REPORT + " Mật ong - " + category.getName() + " - Số lượng: " + roundedQuantity;
+        String content = "Bạn đã nhận được:  Mật ong - " + category.getName() + " - Số lượng: " + roundedQuantity;
         AdminCreateNotificationDetailRandomRequest detailRandomRequest = new AdminCreateNotificationDetailRandomRequest(content, category.getId(), idNotification,
                 NotificationDetailType.NOTIFICATION_DETAIL_HONEY, Integer.parseInt(String.valueOf(roundedQuantity)));
         NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());

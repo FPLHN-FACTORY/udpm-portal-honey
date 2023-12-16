@@ -233,7 +233,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     }
 
     @Override
-    public Boolean createRandomItem(AdminRandomPointRequest req) {
+    public Boolean createRandomChest(AdminRandomPointRequest req) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
             if (req.getListStudentPoint().isEmpty()) {
