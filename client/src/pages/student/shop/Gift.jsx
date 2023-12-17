@@ -29,9 +29,9 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
   };
   useEffect(() => {
     fechUserApiById();
-    return (() => {
-      setSelectedConversion(null)
-    })
+    return () => {
+      setSelectedConversion(null);
+    };
   }, []);
 
   useEffect(() => {
@@ -41,15 +41,13 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
   }, [selectedConversion]);
 
   useEffect(() => {
-    setSelectedConversion(null)
+    setSelectedConversion(null);
   }, [filteredConversions]);
 
   const fechUserApiById = () => {
     ResquestConversion.getUserAPiByid().then((response) => {
       setFillUserApi({
         ...response.data.data,
-        khoa: "17.3",
-        phone: "0763104018",
       });
     });
   };
@@ -104,7 +102,11 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
     ResquestConversion.createRequest(addRequest)
       .then((response) => {
         if (response.data.success) {
-          message.success("Đổi quà thành công");
+          if (selectedConversion && selectedConversion.status === 1) {
+            message.success("Gửi yêu cầu mua quà thành công");
+          } else {
+            message.success("Mua quà thành công");
+          }
           setQuantity(1);
           if (
             selectedConversion &&
@@ -161,13 +163,18 @@ const Gift = memo(({ filteredConversions, fillPoint, updatePoints }) => {
         >
           <Button
             type="primary"
+            className="btn-huy mr-2"
+            onClick={handleCancel}
+          >
+            Hủy
+          </Button>
+          <Button
+            type="primary"
             className="btn-xac-nhan"
             onClick={onSubmitCreate}
+            style={{ marginRight: -10 }}
           >
             Xác nhận
-          </Button>
-          <Button type="primary" className="btn-huy" onClick={handleCancel}>
-            Hủy
           </Button>
         </div>
       </Modal>

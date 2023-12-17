@@ -381,10 +381,14 @@ export default function RequestConversionHistory() {
             <h1 className="lable">Danh sách yêu cầu</h1>
           </Col>
           <Col>
-            <Button onClick={() => approveAll()} type="primary mr-2">
+            <Button
+              onClick={() => approveAll()}
+              type="primary mr-2"
+              style={{ backgroundColor: "#EEB30D" }}
+            >
               Phê duyệt
             </Button>
-            <Button onClick={() => refuseAll()} type="primary">
+            <Button onClick={() => refuseAll()} type="primary" danger>
               Từ chối
             </Button>
           </Col>

@@ -17,7 +17,6 @@ import com.honeyprojects.core.student.service.StudentBuyItemService;
 import com.honeyprojects.core.student.service.StudentNotificationService;
 import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
-import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.HistoryDetail;
@@ -68,10 +67,6 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
 
     @Autowired
     private UdpmHoney udpmHoney;
-
-    @Autowired
-    private UdpmHoney udpmHoney;
-
 
     @Override
     public History addBuyItem(StudentBuyItemRequest createRequest) {

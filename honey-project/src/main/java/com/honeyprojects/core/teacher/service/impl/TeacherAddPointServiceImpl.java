@@ -120,6 +120,7 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
         history.setTeacherIdName(udpmHoney.getUserName());
         history.setTeacherId(idTeacher);
         history.setStudentName(simpleResponse.getUserName());
+        history.setStudentId(simpleResponse.getId());
         history.setNote(addPointRequest.getNote());
         history.setType(TypeHistory.CONG_DIEM);
         history.setChangeDate(dateNow);
