@@ -13,6 +13,7 @@ import {
 import React, { useEffect, useState } from "react";
 import "./index.css";
 
+import { faRectangleList } from "@fortawesome/free-solid-svg-icons";
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { PresidentRequestAPI } from "../../apis/president/request/request.api";
@@ -26,6 +27,7 @@ import {
   GetHistory,
   SetHistory,
 } from "../../app/reducers/history/history.reducer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -233,7 +235,7 @@ export default function HistoryAddPoint() {
           </Space>
         </Form>
       </Card>
-      <Card title="Danh sách yêu cầu">
+      <Card title={<><FontAwesomeIcon className="mr-2" icon={faRectangleList} size="xl" />Danh sách yêu cầu </>}>
         <Table
           columns={columns}
           dataSource={data}

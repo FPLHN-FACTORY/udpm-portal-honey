@@ -1,9 +1,11 @@
 import {
   Button,
   Card,
+  Col,
   Form,
   Input,
   Pagination,
+  Row,
   Select,
   Space,
   Table,
@@ -24,7 +26,9 @@ import {
 } from "../../../app/reducers/category/category.reducer";
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import { faRectangleList } from "@fortawesome/free-solid-svg-icons";
 const statusHistory = (status) => {
   switch (status) {
     case 0:
@@ -196,42 +200,64 @@ export default function RequestAddPoint() {
     <div className="add-point">
       <Card className="mb-2 py-1">
         <Form onFinish={onFinishSearch}>
-          <Space size={"large"}>
-            <Form.Item name="userName" className="search-input">
-              <Input
-                style={{ width: "500px" }}
-                size="small"
-                placeholder="Nhập username sinh viên cần tìm"
-                prefix={<SearchOutlined />}
-              />
-            </Form.Item>
-            <Form.Item name={"idCategory"}>
-              <Select
-                style={{ width: "450px" }}
-                size="large"
-                placeholder="Loại điểm"
-                options={[
-                  { value: null, label: "Tất cả" },
-                  ...listCategory.map((category) => {
-                    return {
-                      value: category.id,
-                      label: category.name,
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
-            <Button
-              htmlType="submit"
-              type="primary"
-              className="mr-10 search-button"
-            >
-              Lọc
-            </Button>
-          </Space>
+          <Row className="justify-between">
+            <Col lg={11} sm={24}>
+              <Form.Item name="userName" className="search-input">
+                <Input
+                  // style={{ width: "500px" }}
+                  size="small"
+                  placeholder="Nhập username sinh viên cần tìm"
+                  prefix={<SearchOutlined />}
+                />
+              </Form.Item>
+            </Col>
+            <Col lg={12} sm={24}>
+              <Row>
+                <Col sm={18}>
+                  <Form.Item name={"idCategory"}>
+                    <Select
+                      style={{ width: "400px" }}
+                      size="large"
+                      placeholder="Loại điểm"
+                      options={[
+                        { value: null, label: "Tất cả" },
+                        ...listCategory.map((category) => {
+                          return {
+                            value: category.id,
+                            label: category.name,
+                          };
+                        }),
+                      ]}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col sm={4}>
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    className="ml-3 search-button"
+                    icon={<SearchOutlined />}
+                  >
+                    Tìm kiếm
+                  </Button>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
         </Form>
       </Card>
-      <Card title="Danh sách yêu cầu">
+      <Card
+        title={
+          <>
+            <FontAwesomeIcon
+              className="mr-2"
+              icon={faRectangleList}
+              size="xl"
+            />
+            Danh sách yêu cầu{" "}
+          </>
+        }
+      >
         <Table
           columns={columns}
           dataSource={data}

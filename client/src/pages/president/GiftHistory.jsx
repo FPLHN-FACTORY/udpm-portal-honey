@@ -1,20 +1,24 @@
 import {
   Button,
   Card,
+  Col,
   Form,
   Input,
   Pagination,
-  Select,
+  Row,
   Space,
   Tag,
   message,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { SearchOutlined } from "@ant-design/icons";
+import { ClearOutlined, SearchOutlined } from "@ant-design/icons";
 import { RequestManagerAPI } from "../../apis/censor/request-manager/requestmanager.api";
 import { CategoryAPI } from "../../apis/censor/category/category.api";
 import { PresidentHistoryAPI } from "../../apis/president/history/history.api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import { faRectangleList } from "@fortawesome/free-solid-svg-icons";
 const statusHistory = (status) => {
   switch (status) {
     case 1:
@@ -100,30 +104,52 @@ export default function GiftHistory() {
   };
   return (
     <>
+    <div id="gift_history">
       <Card className="mb-2">
         <Form onFinish={onFinishSearch}>
-          <Space size={"large"}>
-            <Form.Item name="userName" className="search-input">
-              <Input
-                style={{ width: "400px" }}
-                name="userName"
-                size="small"
-                placeholder="Nhập user name sinh viên cần tìm"
-                prefix={<SearchOutlined />}
-              />
-            </Form.Item>
-            <Button
+          {/* <Space size={"large"}> */}
+            <Row className="flex justify-between">
+              <Col xs={21}>
+                <div className="relative w-full">
+                  <Form.Item name="userName" >
+                    <Input
+                      style={{ height : 40}}className="search-input"
+                      name="userName"
+                      // size="small"
+                      placeholder="Nhập username sinh viên cần tìm"
+                      prefix={<SearchOutlined />}
+                    />
+                  </Form.Item>{" "}
+                </div>
+              </Col>
+
+              <Button
               htmlType="submit"
               type="primary"
-              className="mr-10 search-button"
+              className="ml-2 search-button "
+              icon={<SearchOutlined/>}
               style={{ marginBottom: "25px" }}
             >
-              Lọc
+               Tìm kiếm
             </Button>
-          </Space>
+           
+            </Row>
+            
+          {/* </Space> */}
         </Form>
       </Card>
-      <Card title="Lịch sử">
+      <Card
+        title={
+          <>
+            <FontAwesomeIcon
+              className="mr-2"
+              icon={faRectangleList}
+              size="xl"
+            />
+            Lịch sử
+          </>
+        }
+      >
         <div className="mt-5">
           {getHistory.map((item) => (
             <div className="list__point ">
@@ -157,7 +183,7 @@ export default function GiftHistory() {
             total={totalPages * 10}
           />
         </div>
-      </Card>
+      </Card></div>
     </>
   );
 }

@@ -32,6 +32,7 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faEye, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faRectangleList } from "@fortawesome/free-solid-svg-icons";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -93,60 +94,57 @@ export default function RequestAddPoint() {
       key: "acction",
       align: "center",
       render: (values) => (
-        (
-          <Space size="small">
-            {values.status !== 1 && values.status !== 2 && (
-              <Tooltip title="Xác nhận">
-                <Button
-                  onClick={() =>
-                    changeStatus(values.idHistory, values.idHistoryDetail, 1)
-                  }
-                  style={{
-                    backgroundColor: "yellowgreen",
-                    color: "white",
-                  }}
-                >
-                  <FontAwesomeIcon icon={faCheck} />
-                </Button>
-              </Tooltip>
-            )}
-
-            {values.status !== 1 && values.status !== 2 && (
-              <Tooltip title="Từ chối">
-                <Button
-                  onClick={() =>
-                    changeStatus(values.idHistory, values.idHistoryDetail, 2)
-                  }
-                  style={{
-                    backgroundColor: "red",
-                    color: "white",
-                  }}
-                >
-                  <FontAwesomeIcon icon={faXmark} />
-                </Button>
-              </Tooltip>
-            )}
-            <Tooltip title="Xem chi tiết">
-              <Link to={"/censor/request-manager/detail/" + values.idHistory}>
-                <Button
-                  style={{
-                    backgroundColor: "rgb(83, 209, 255)",
-                    color: "white",
-                  }}
-                >
-                  <FontAwesomeIcon icon={faEye} />
-                </Button>
-              </Link>
+        <Space size="small">
+          {values.status !== 1 && values.status !== 2 && (
+            <Tooltip title="Xác nhận">
+              <Button
+                onClick={() =>
+                  changeStatus(values.idHistory, values.idHistoryDetail, 1)
+                }
+                style={{
+                  backgroundColor: "yellowgreen",
+                  color: "white",
+                }}
+              >
+                <FontAwesomeIcon icon={faCheck} />
+              </Button>
             </Tooltip>
-          </Space>
-        )
+          )}
+
+          {values.status !== 1 && values.status !== 2 && (
+            <Tooltip title="Từ chối">
+              <Button
+                onClick={() =>
+                  changeStatus(values.idHistory, values.idHistoryDetail, 2)
+                }
+                style={{
+                  backgroundColor: "red",
+                  color: "white",
+                }}
+              >
+                <FontAwesomeIcon icon={faXmark} />
+              </Button>
+            </Tooltip>
+          )}
+          <Tooltip title="Xem chi tiết">
+            <Link to={"/censor/request-manager/detail/" + values.idHistory}>
+              <Button
+                style={{
+                  backgroundColor: "rgb(83, 209, 255)",
+                  color: "white",
+                }}
+              >
+                <FontAwesomeIcon icon={faEye} />
+              </Button>
+            </Link>
+          </Tooltip>
+        </Space>
       ),
     },
   ];
 
-  
-  const [selectedRowKeys,setSelectedRowKeys] = useState([]);
-  const [selectedRowKeysRecord,setSelectedRowKeysRecord] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRowKeysRecord, setSelectedRowKeysRecord] = useState([]);
   const start = () => {
     setSelectedRowKeys([]);
     setSelectedRowKeysRecord([]);
@@ -163,52 +161,85 @@ export default function RequestAddPoint() {
   const approveAll = () => {
     if (selectedRowKeys.length === 0) {
       message.error("Bạn phải chọn một yêu cầu");
-      return
+      return;
     }
-    const result = selectedRowKeysRecord.map((el) => `Yêu cầu từ ${el.userTeacher !== null?"Giảng viên " + el.userTeacher : "Chủ tịch " + el.userPresident}: Cộng ${el.honey} cho sinh viên ${el.userName}`)
+    const result = selectedRowKeysRecord.map(
+      (el) =>
+        `Yêu cầu từ ${
+          el.userTeacher !== null
+            ? "Giảng viên " + el.userTeacher
+            : "Chủ tịch " + el.userPresident
+        }: Cộng ${el.honey} cho sinh viên ${el.userName}`
+    );
 
     Modal.confirm({
       title: "Bạn có chắc chắn muốn xác nhận yêu cầu cộng mật ong",
-      content: (<>
-        <ul>{result.map(el => <li className="flex" key={el.id}> <div>🍯</div><div>{ `${el}` }</div></li>)}</ul>
-      </>),
+      content: (
+        <>
+          <ul>
+            {result.map((el) => (
+              <li className="flex" key={el.id}>
+                {" "}
+                <div>🍯</div>
+                <div>{`${el}`}</div>
+              </li>
+            ))}
+          </ul>
+        </>
+      ),
       onOk: () => {
         const data = selectedRowKeysRecord.map((values) => ({
           idHistory: values.idHistory,
-          status: 1
+          status: 1,
         }));
         changeStatusAll(data, 1);
         // hoàn thành yêu cầu clear selectedRowKeys
-        start()
-      }
-    })
-
-  }
+        start();
+      },
+    });
+  };
 
   const refuseAll = () => {
     if (selectedRowKeys.length === 0) {
       message.error("Bạn phải chọn một yêu cầu");
-      return
+      return;
     }
-    const result = selectedRowKeysRecord.map((el) => `Yêu cầu từ ${el.userTeacher !== null?"Giảng viên " + el.userTeacher : "Chủ tịch " + el.userPresident}: Cộng ${el.honey} cho sinh viên ${el.userName}`)
+    const result = selectedRowKeysRecord.map(
+      (el) =>
+        `Yêu cầu từ ${
+          el.userTeacher !== null
+            ? "Giảng viên " + el.userTeacher
+            : "Chủ tịch " + el.userPresident
+        }: Cộng ${el.honey} cho sinh viên ${el.userName}`
+    );
 
     Modal.confirm({
       title: "Bạn có chắc chắn muốn từ chối yêu cầu cộng mật ong",
-      content: (<>
-        <ul>{result.map(el => <li className="flex" key={el.id}> <div>🍯</div><div>{ `${el}` }</div></li>)}</ul>
-      </>),
+      content: (
+        <>
+          <ul>
+            {result.map((el) => (
+              <li className="flex" key={el.id}>
+                {" "}
+                <div>🍯</div>
+                <div>{`${el}`}</div>
+              </li>
+            ))}
+          </ul>
+        </>
+      ),
       onOk: () => {
         const data = selectedRowKeysRecord.map((values) => ({
           idHistory: values.idHistory,
-          status: 2
+          status: 2,
         }));
         changeStatusAll(data, 2);
         // hoàn thành yêu cầu clear selectedRowKeys
-        start()
-      }
-    })
-  }
-  
+        start();
+      },
+    });
+  };
+
   const [totalPage, setTotalPage] = useState(1);
   const [filter, setFilter] = useState({ page: 0, status: 0, size: 10 });
 
@@ -322,7 +353,9 @@ export default function RequestAddPoint() {
 
   const changeStatus = (idHistory, idHistoryDetail, status) => {
     Modal.confirm({
-      title: `Bạn có chắc chắn muốn ${status === 1 ? "xác nhận" : "hủy"} yêu cầu cộng mật ong`,
+      title: `Bạn có chắc chắn muốn ${
+        status === 1 ? "xác nhận" : "hủy"
+      } yêu cầu cộng mật ong`,
       onOk: () => {
         RequestManagerAPI.changeStatus(idHistory, idHistoryDetail, status)
           .then((response) => {
@@ -336,10 +369,10 @@ export default function RequestAddPoint() {
           .catch((error) => {
             message.error(error);
           });
-      }
-    })
+      },
+    });
   };
-  
+
   const changeStatusAll = (data, status) => {
     RequestManagerAPI.changeStatusAll(data)
       .then((response) => {
@@ -412,9 +445,15 @@ export default function RequestAddPoint() {
       </Card>
       <Card>
         <Row className="justify-between items-center mb-2">
-          <Col>
-            <h1 className="lable">Yêu cầu cộng điểm</h1>
-          </Col>
+          <div>
+            <span style={{ fontSize: "18px" }}>
+              <FontAwesomeIcon icon={faRectangleList} size="xl" />
+              <b style={{ marginLeft: "5px", fontWeight: "500" }}>
+                Yêu cầu cộng điểm
+              </b>
+            </span>
+          </div>
+          <Col>{/* <h1 className="lable"></h1> */}</Col>
           <Col>
             <Button onClick={() => approveAll()} type="primary mr-2">
               Phê duyệt
@@ -426,7 +465,7 @@ export default function RequestAddPoint() {
         </Row>
         <Table
           rowSelection={{
-            type: 'checkbox',
+            type: "checkbox",
             ...rowSelection,
           }}
           columns={columns}
@@ -442,7 +481,18 @@ export default function RequestAddPoint() {
               setFilter({ ...filter, page: page - 1, size: size });
             }}
             total={totalPage}
-            pageSizeOptions={['10', '20', '30', '40', '50', '60', '70', '80', '90', '100']}
+            pageSizeOptions={[
+              "10",
+              "20",
+              "30",
+              "40",
+              "50",
+              "60",
+              "70",
+              "80",
+              "90",
+              "100",
+            ]}
           />
         </div>
       </Card>

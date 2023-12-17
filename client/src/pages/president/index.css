@@ -89,3 +89,21 @@
 .add-point .ant-btn svg {
     margin: 0;
 } */
+
+#honey_history :where(.css-dev-only-do-not-override-14wwjjs).ant-input-affix-wrapper >input.ant-input {
+    padding: 0;
+    font-size: inherit;
+    border: none;
+    border-radius: 0;
+    outline: none;
+    height: 30px;
+}
+
+#gift_history :where(.css-dev-only-do-not-override-14wwjjs).ant-input-affix-wrapper >input.ant-input {
+    padding: 0;
+    font-size: inherit;
+    border: none;
+    border-radius: 0;
+    outline: none;
+    height: 30px;
+}

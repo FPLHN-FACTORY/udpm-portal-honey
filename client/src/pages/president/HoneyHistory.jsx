@@ -1,9 +1,11 @@
 import {
   Button,
   Card,
+  Col,
   Form,
   Input,
   Pagination,
+  Row,
   Select,
   Space,
   Tag,
@@ -12,7 +14,7 @@ import {
 import React, { useEffect, useState } from "react";
 import "./index.css";
 import { SearchOutlined } from "@ant-design/icons";
-
+import { faRectangleList } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { CategoryAPI } from "../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../apis/censor/request-manager/requestmanager.api";
@@ -26,6 +28,7 @@ import {
 } from "../../app/reducers/category/category.reducer";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { PresidentHistoryAPI } from "../../apis/president/history/history.api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -125,46 +128,70 @@ export default function HoneyHistory() {
     }
   };
   return (
-    <div className="request-manager">
-      <Card className="mb-2 py-1">
+    <div className="request-manager" id="honey_history">
+      <Card className="mb-2">
         <Form onFinish={onFinishSearch}>
-          <Space size={"large"}>
-            <Form.Item name="userName" className="search-input">
-              <Input
-                style={{ width: "400px" }}
-                name="userName"
-                size="small"
-                placeholder="Nhập user name sinh viên cần tìm"
-                prefix={<SearchOutlined />}
-              />
-            </Form.Item>
-            <Form.Item name={"idCategory"}>
-              <Select
-                style={{ width: "250px" }}
-                size="large"
-                placeholder="Loại điểm"
-                options={[
-                  { value: null, label: "Tất cả" },
-                  ...listCategory.map((category) => {
-                    return {
-                      value: category.id,
-                      label: category.name,
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
-            <Button
-              htmlType="submit"
-              type="primary"
-              className="mr-10 search-button"
-            >
-              Lọc
-            </Button>
-          </Space>
+          <Row className="justify-between">
+            {/* <Spa  ce size={"large"}> */}
+
+            <Col lg={11} sm={24} className="w-full">
+              <div className="relative w-full">
+                <Form.Item name="userName" className="search-input">
+                  <Input
+                    style={{ height: "40px" }}
+                    name="userName"
+                    // size="small"
+                    placeholder="Nhập user name sinh viên cần tìm"
+                    prefix={<SearchOutlined />}
+                  />
+                </Form.Item>
+              </div>
+            </Col>
+            <Col lg={12} sm={24} className="w-full ml-2">
+              <Row >
+                <Col lg={18}>
+                <Form.Item name={"idCategory"}>
+                  <Select
+                    // style={{ width: "450px" }}className="justify-between"
+                    size="large"
+                    placeholder="Loại điểm"
+                    options={[
+                      { value: null, label: "Tất cả" },
+                      ...listCategory.map((category) => {
+                        return {
+                          value: category.id,
+                          label: category.name,
+                        };
+                      }),
+                    ]}
+                  />
+                </Form.Item></Col>
+                <Col lg={4}>
+                <Button
+                  htmlType="submit"
+                  type="primary"
+                  className="ml-3 search-button"
+                  icon={<SearchOutlined />}
+                >
+                  Tìm kiếm
+                </Button>{" "}</Col>
+              </Row>
+            </Col>
+          </Row>
         </Form>
       </Card>
-      <Card title="Lịch sử cộng điểm">
+      <Card
+        title={
+          <>
+            <FontAwesomeIcon
+              className="mr-2"
+              icon={faRectangleList}
+              size="xl"
+            />
+            Lịch sử cộng điểm{" "}
+          </>
+        }
+      >
         {data.map((item) => (
           <div className="list__point ">
             <h3 className="text-slate-600"> Sinh viên {item.nameStudent}</h3>

@@ -21,6 +21,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faEye, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { faRectangleList } from "@fortawesome/free-solid-svg-icons";
 
 const statusHistory = (status) => {
   switch (status) {
@@ -380,7 +381,15 @@ export default function RequestConversionHistory() {
       <Card>
         <Row className="justify-between items-center mb-2">
           <Col>
-            <h1 className="lable">Danh sách yêu cầu đổi quà</h1>
+          <div>
+              <span style={{ fontSize: "18px" }}>
+                <FontAwesomeIcon icon={faRectangleList} size="xl" />
+                <b style={{ marginLeft: "5px", fontWeight: "500" }}>
+                Danh sách yêu cầu đổi quà
+                </b>
+              </span>
+            </div>
+            {/* <h1 className="lable">Danh sách yêu cầu đổi quà</h1> */}
           </Col>
           <Col>
             <Button onClick={() => approveAll()} type="primary mr-2">

@@ -25,7 +25,8 @@ import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import moment from "moment";
 import { AddPointStudentAPI } from "../../../apis/censor/add-point/add-point-student.api";
-
+import { faRectangleList } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const statusHistory = (status) => {
   switch (status) {
     case 1:
@@ -163,7 +164,7 @@ export default function EventHistory() {
           </Space>
         </Form>
       </Card>
-      <Card title="Lịch sử">
+      <Card title={<><FontAwesomeIcon icon={faRectangleList} size="xl" /> Lịch sử</>}>
         {data.map((item) => (
           <div className="list__point ">
             <h3 className="text-slate-600"> Sinh viên {item.nameStudent}</h3>

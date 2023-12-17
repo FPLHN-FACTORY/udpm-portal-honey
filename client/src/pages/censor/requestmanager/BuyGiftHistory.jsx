@@ -6,7 +6,6 @@ import {
   Pagination,
   Select,
   Space,
-  Tag,
   message,
   Row,
   Col,
@@ -16,6 +15,8 @@ import moment from "moment";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import { SearchOutlined } from "@ant-design/icons";
+import { faRectangleList } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function BuyGiftHistory() {
   const [getHistory, setGetHistory] = useState([]);
@@ -144,7 +145,7 @@ export default function BuyGiftHistory() {
           </Space>
         </Form>
       </Card>
-      <Card title="Lịch sử đổi quà">
+      <Card title={<><FontAwesomeIcon icon={faRectangleList} size="xl" /> Lịch sử đổi quà</>}>
         <div className="mt-5">
           {getHistory.map((item) => (
             <div className="list__point ">

@@ -23,7 +23,9 @@ import {
 } from "../../../app/reducers/category/category.reducer";
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import { faRectangleList } from "@fortawesome/free-solid-svg-icons";
 const statusHistory = (status) => {
   switch (status) {
     case 1:
@@ -166,7 +168,7 @@ export default function HistoryAddPoint() {
           </Space>
         </Form>
       </Card>
-      <Card title="Lịch sử cộng điểm">
+      <Card title={<><FontAwesomeIcon className="mr-2" icon={faRectangleList} size="xl" />Lịch sử cộng điểm </>}>
         {data.map((item) => (
           <div className="list__point ">
             <h3 className="text-slate-600">

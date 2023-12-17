@@ -14,7 +14,7 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
-import { PlusOutlined } from "@ant-design/icons";
+import { ClearOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import ModalDetailGift from "./ModalDetailGift";
 import ModalAma from "./ModalAddGift";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -27,6 +27,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Option } from "antd/es/mentions";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
+import { faRectangleList } from "@fortawesome/free-solid-svg-icons";
 
 export default function IndexGift() {
   const [showModal, setShowModal] = useState(false);
@@ -312,7 +313,21 @@ export default function IndexGift() {
             marginBottom: "16px",
           }}
         >
-          <Row>
+          <Row><Col span={12}>
+              <Button
+                onClick={buttonClear}
+                style={{
+                  marginRight: "8px",
+                  backgroundColor: "#FF9900",
+                  color: "white",
+                  outline: "none",
+                  border: "none",
+                }}
+              >
+                <ClearOutlined />
+                Làm mới
+              </Button>
+            </Col>
             <Col span={12}>
               <Button
                 onClick={() => {
@@ -320,35 +335,31 @@ export default function IndexGift() {
                   fetchData();
                 }}
                 style={{
-                  marginRight: "8px",
+                  marginLeft: "8px",
                   backgroundColor: "rgb(55, 137, 220)",
                   color: "white",
                 }}
               >
+                 <SearchOutlined />
                 Tìm kiếm
               </Button>
             </Col>
-            <Col span={12}>
-              <Button
-                onClick={buttonClear}
-                style={{
-                  marginLeft: "8px",
-                  backgroundColor: "#FF9900",
-                  color: "white",
-                  outline: "none",
-                  border: "none",
-                }}
-              >
-                Làm mới
-              </Button>
-            </Col>
+            
           </Row>
         </Space>
       </Card>
 
       <Card>
         <div>
-          <div className="flex flex-row-reverse">
+          <div className="flex justify-between">
+          <div>
+              <span style={{ fontSize: "18px" }}>
+                <FontAwesomeIcon icon={faRectangleList} size="xl" />
+                <b style={{ marginLeft: "5px", fontWeight: "500" }}>
+                  Danh sách vật phẩm
+                </b>
+              </span>
+            </div>
             <div>
               <span>
                 <Tooltip title="Thêm vật phẩm">
@@ -365,7 +376,8 @@ export default function IndexGift() {
                   </button>
                 </Tooltip>
               </span>
-            </div>
+            </div>{" "}
+            
           </div>
         </div>
 

@@ -19,6 +19,8 @@ import {
   FormOutlined,
   CheckOutlined,
   CloseOutlined,
+  SearchOutlined,
+  ClearOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
@@ -368,6 +370,21 @@ export default function Index() {
           }}
         >
           <Row>
+          <Col span={12}>
+              <Button
+                onClick={buttonClear}
+                style={{
+                  marginRight: "8px",
+                  backgroundColor: "#FF9900",
+                  color: "white",
+                  outline: "none",
+                  border: "none",
+                }}
+              >
+                <ClearOutlined />
+                Làm mới
+              </Button>
+            </Col>
             <Col span={12}>
               <Button
                 onClick={() => {
@@ -375,28 +392,16 @@ export default function Index() {
                   fetchData();
                 }}
                 style={{
-                  marginRight: "8px",
+                  marginLeft: "8px",
                   backgroundColor: "rgb(55, 137, 220)",
                   color: "white",
                 }}
               >
+                <SearchOutlined />
                 Tìm kiếm
               </Button>
             </Col>
-            <Col span={12}>
-              <Button
-                onClick={buttonClear}
-                style={{
-                  marginLeft: "8px",
-                  backgroundColor: "#FF9900",
-                  color: "white",
-                  outline: "none",
-                  border: "none",
-                }}
-              >
-                Làm mới
-              </Button>
-            </Col>
+            
           </Row>
         </Space>
       </Card>

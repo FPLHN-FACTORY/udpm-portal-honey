@@ -17,6 +17,8 @@ import {
   EyeOutlined,
   PlusCircleOutlined,
   DeleteOutlined,
+  ClearOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { GetChest, SetChest } from "../../../app/reducers/chest/chest.reducer";
@@ -204,10 +206,22 @@ export default function ChestGift() {
             marginTop: "20px",
           }}
         >
+         
           <Button
             type="button"
             style={{
               marginLeft: "8px",
+              backgroundColor: "rgb(55, 137, 220)",
+              color: "white",
+            }}
+            onClick={() => handleSearch()}
+          >
+            <SearchOutlined />
+            Tìm kiếm
+          </Button> <Button
+            type="button"
+            style={{
+              marginRight: "8px",
               backgroundColor: "#FF9900",
               color: "white",
               outline: "none",
@@ -217,18 +231,8 @@ export default function ChestGift() {
               buttonClear();
             }}
           >
+            <ClearOutlined />
             Làm mới
-          </Button>
-          <Button
-            type="button"
-            style={{
-              marginRight: "8px",
-              backgroundColor: "rgb(55, 137, 220)",
-              color: "white",
-            }}
-            onClick={() => handleSearch()}
-          >
-            Tìm kiếm
           </Button>
         </Space>
       </Card>

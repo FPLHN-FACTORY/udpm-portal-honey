@@ -6,7 +6,6 @@ import {
   Pagination,
   Select,
   Space,
-  Tag,
   message,
   Row,
   Col,
@@ -26,6 +25,8 @@ import { SearchOutlined } from "@ant-design/icons";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import moment from "moment";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRectangleList } from "@fortawesome/free-solid-svg-icons";
 
 export default function RequestApprovedHistory() {
   const dispatch = useAppDispatch();
@@ -170,7 +171,7 @@ export default function RequestApprovedHistory() {
           </Space>
         </Form>
       </Card>
-      <Card title="Lịch sử cộng điểm">
+      <Card title={<><FontAwesomeIcon icon={faRectangleList} size="xl" /> Lịch sử cộng điểm</>}>
         {data.map((item) => (
           <div className="list__point ">
             <Row>

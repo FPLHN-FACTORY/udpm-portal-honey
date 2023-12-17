@@ -3,28 +3,19 @@ import "./index.css";
 import {
   Button,
   Card,
-  Col,
-  Empty,
   Form,
-  Input,
-  InputNumber,
   Row,
-  Segmented,
   Space,
   Table,
-  Tag,
   Tooltip,
   message,
 } from "antd";
 import {
   DownloadOutlined,
-  SearchOutlined,
-  SendOutlined,
 } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   GetCategory,
-  SetCategory,
 } from "../../app/reducers/category/category.reducer";
 import { AddItemAPI } from "../../apis/president/add-item/add-item.api";
 import ModalUpLoadFile from "./ModalUploadFile";
@@ -162,7 +153,7 @@ export default function AddItem() {
     <div>
       <div className="add-point">
         <Card className="mb-2 py-1">
-          <Row justify="center">
+          <Row className="flex  justify-end mb-2">
             <Button
               className="import-button"
               type="primary"
