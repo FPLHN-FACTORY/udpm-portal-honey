@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import "./index.css";
-import { Col, Image, Row, Select } from "antd";
+import { Col, Row, Select } from "antd";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 import { HistoryApi } from "../../../apis/student/history/historyApi.api";
 
 export default function StudentHistory() {
@@ -17,6 +18,7 @@ export default function StudentHistory() {
   function fetchData(type, page) {
     setIsFetching(true);
     HistoryApi.getAllHistory({ type: type, page: page }).then((result) => {
+      console.log(result.data.data.data);
       setData((prevData) => [...prevData, ...result.data.data.data]);
       setTotal(result.data.data.totalPages);
       setIsFetching(false);
@@ -91,7 +93,9 @@ export default function StudentHistory() {
                 <div className={`content red`} ref={lastElementRef} key={index}>
                   <Row>
                     <Col span={4}>
-                      <img className="size_img" src={e.image} alt="" />
+                      <div className="student__history__text">
+                        {moment(e.changeDate).format("DD-MM-YYYY HH:mm:ss")}
+                      </div>
                     </Col>
                     <Col span={10}>
                       <div className="student__history__text">{e.content}</div>
@@ -130,7 +134,9 @@ export default function StudentHistory() {
                 <div className={`content red`} key={index}>
                   <Row>
                     <Col span={4}>
-                      <img className="size_img" src={e.image} alt="" />
+                      <div className="student__history__text">
+                        {moment(e.changeDate).format("DD-MM-YYYY HH:mm:ss")}
+                      </div>
                     </Col>
                     <Col span={10}>
                       <div className="student__history__text">{e.content}</div>

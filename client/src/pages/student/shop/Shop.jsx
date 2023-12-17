@@ -41,8 +41,6 @@ const Shop = memo(() => {
     ResquestConversion.getUserAPiByid().then((response) => {
       setFillUserApi({
         ...response.data.data,
-        khoa: "17.3",
-        phone: "0763104018",
       });
     });
   };
