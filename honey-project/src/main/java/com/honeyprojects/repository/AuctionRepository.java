@@ -13,7 +13,7 @@ public interface AuctionRepository extends JpaRepository<Auction, String> {
 
     @Query(value = """
         SELECT a.* FROM honey_project.auction a
-        WHERE a.to_date < UNIX_TIMESTAMP(NOW()) AND a.status = 1;
+        WHERE a.to_date < UNIX_TIMESTAMP(NOW()) AND a.status = 0;
     """, nativeQuery = true)
     List<Auction> findAllAuctionNotActive();
 }
