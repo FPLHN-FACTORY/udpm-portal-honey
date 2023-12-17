@@ -53,8 +53,11 @@ public class Auction extends PrimaryEntity {
     private Integer quantity;
 
     @Column(name = "auctioneer_user_name")
-    private String auctioneerUserName;
+    private String auctioneerUserName; // mail người đầu giá
+
+    @Column(name = "auctioneer_id")
+    private String auctioneerId; // id người đấu giá
 
     @Column(name = "auctioneer_create_user_name")
-    private String auctioneerCreateUserName;
+    private String auctioneerCreateUserName; // mail người tạo
 }

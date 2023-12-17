@@ -36,7 +36,6 @@ export default function ModalAddAuction({
   const [listCategory, setListCategory] = useState([]);
   const loadListArchive = () => {
     ArchiveAPI.findAllUser(user.idUser).then((res) => {
-      console.log(res.data.data);
       setListArchiveUser(res.data.data);
     });
   };

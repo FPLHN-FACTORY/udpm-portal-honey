@@ -80,8 +80,12 @@ public class StudentAuctionServiceImpl implements StudentAuctionService {
                     throw new MessageHandlingException("Số lượng \"" + giftFind.get().getName() + "\" đấu giá phải nhỏ hơn hoặc bằng "
                             + archiveGiftFind.getQuantity());
                 } else {
-                    archiveGiftFind.setQuantity(archiveGiftFind.getQuantity() - request.getQuantity());
-                    studentArchiveGiftRepository.save(archiveGiftFind);
+                    if (archiveGiftFind.getQuantity() - request.getQuantity() == 0) {
+                        studentArchiveGiftRepository.delete(archiveGiftFind);
+                    } else {
+                        archiveGiftFind.setQuantity(archiveGiftFind.getQuantity() - request.getQuantity());
+                        studentArchiveGiftRepository.save(archiveGiftFind);
+                    }
                 }
             }
             long fromdate = System.currentTimeMillis();
@@ -96,6 +100,7 @@ public class StudentAuctionServiceImpl implements StudentAuctionService {
             auction.setStatus(Status.HOAT_DONG);
             auction.setQuantity(request.getQuantity());
             auction.setAuctioneerCreateUserName(request.getMail());
+            auction.setAuctioneerId(request.getIdUser());
             return studentAuctionRepository.save(auction);
         }
     }
@@ -118,8 +123,29 @@ public class StudentAuctionServiceImpl implements StudentAuctionService {
             throw new MessageHandlingException("Không đủ mật ong.");
         }
 
+        if (auction.get().getAuctioneerId() != null) {
+            Honey honeyUserLast = studentHoneyRepository.findByStudentIdAndHoneyCategoryId(auction.get().getAuctioneerId(), auction.get().getHoneyCategoryId());
+            if (honeyUserLast == null) {
+                honeyUserLast = new Honey();
+                honeyUserLast.setHoneyPoint(auction.get().getLastPrice().intValue());
+                honeyUserLast.setStudentId(auction.get().getAuctioneerId());
+                honeyUserLast.setHoneyCategoryId(auction.get().getHoneyCategoryId());
+                honeyUserLast.setStatus(Status.KHONG_HOAT_DONG);
+            }
+            honeyUserLast.setHoneyPoint(honeyUserLast.getHoneyPoint() + auction.get().getLastPrice().intValue());
+            studentHoneyRepository.save(honeyUserLast);
+        }
+
+        if (honey.getHoneyPoint() - messageAuction.getLastPrice().intValue() == 0) {
+            studentHoneyRepository.deleteById(honey.getId());
+        } else {
+            honey.setHoneyPoint(honey.getHoneyPoint() - messageAuction.getLastPrice().intValue());
+            studentHoneyRepository.save(honey);
+        }
+
         auction.get().setLastPrice(new BigDecimal(messageAuction.getLastPrice()));
         auction.get().setAuctioneerUserName(messageAuction.getMail());
+        auction.get().setAuctioneerId(messageAuction.getIdUser());
         studentAuctionRepository.save(auction.get());
         return auction.get();
     }
