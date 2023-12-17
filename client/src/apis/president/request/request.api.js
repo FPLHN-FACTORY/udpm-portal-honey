@@ -18,4 +18,12 @@ export class PresidentRequestAPI {
       params: filter,
     });
   };
+
+  static changeStatus = (idHistory) => {
+    return request({
+      method: "PUT",
+      url: `/${this.COMPONENT_NAME}/change-status`,
+      data: { idHistory },
+    });
+  };
 }

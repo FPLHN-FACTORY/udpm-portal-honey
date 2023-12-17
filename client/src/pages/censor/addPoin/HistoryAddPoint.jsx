@@ -73,7 +73,6 @@ export default function HistoryAddPoint() {
     return {
       ...data,
       key: data.id,
-      createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
       changeDate: moment(data.changeDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
