@@ -32,7 +32,7 @@ public class AdminRandomAddPointController {
     private AdRandomAddPointService adRandomAddPointService;
 
     @GetMapping("/get-all-category")
-    public ResponseObject getAllCatrgory() {
+    public ResponseObject getAllCategory() {
         return new ResponseObject(adRandomAddPointService.getAllCategory());
     }
 
@@ -47,8 +47,8 @@ public class AdminRandomAddPointController {
     }
 
     @PostMapping("/create/random/item")
-    public ResponseObject createRandomItem(@RequestBody AdminRandomPointRequest adminRandomPointRequest) {
-        return new ResponseObject(adRandomAddPointService.createRandomItem(adminRandomPointRequest));
+    public ResponseObject createRandomChest(@RequestBody AdminRandomPointRequest adminRandomPointRequest) {
+        return new ResponseObject(adRandomAddPointService.createRandomChest(adminRandomPointRequest));
     }
 
 //    @PostMapping("/create/export")

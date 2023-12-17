@@ -2,8 +2,11 @@ package com.honeyprojects.core.admin.controller;
 
 import com.honeyprojects.core.admin.model.request.AdminAddPointStudentLabReportBOO;
 import com.honeyprojects.core.admin.model.request.AdminAddPointStudentPortalEventsBO;
+import com.honeyprojects.core.admin.model.request.AdminHistoryApprovedSearchRequest;
+import com.honeyprojects.core.admin.model.response.CensorTransactionRequestResponse;
 import com.honeyprojects.core.admin.service.AdminAddPointStudentService;
 import com.honeyprojects.core.admin.service.AdminCategoryService;
+import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.ResponseObject;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,16 @@ public class AdminAddPointStudentRestController {
     @Autowired
     private AdminCategoryService adminCategoryService;
 
+    @GetMapping("/history-event")
+    public PageableObject<CensorTransactionRequestResponse> historyEvent(AdminHistoryApprovedSearchRequest dataSearch) {
+            return addPointService.getHistoryEvent(dataSearch);
+    }
+
+    @GetMapping("/history-project")
+    public PageableObject<CensorTransactionRequestResponse> historyProject(AdminHistoryApprovedSearchRequest dataSearch) {
+        return addPointService.getHistoryProject(dataSearch);
+    }
+
     @PostMapping("/lab-report/preview-data")
     public ResponseObject previewDataLabReport(@RequestParam("file") MultipartFile file) throws IOException {
         return new ResponseObject(addPointService.previewDataLabReportImportExcel(file));
@@ -54,7 +67,7 @@ public class AdminAddPointStudentRestController {
 
     @GetMapping("/list-category")
     public ResponseObject getAllListCategory() {
-        return new ResponseObject(adminCategoryService.getAllListCategory());
+        return new ResponseObject(adminCategoryService.getAllCategoryFreeByTwoModule());
     }
 
     // test

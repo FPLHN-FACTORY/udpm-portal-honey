@@ -1,16 +1,18 @@
 import {
   Button,
   Card,
-  Col,
   Form,
   Input,
   Pagination,
-  Row,
   Select,
   Table,
   message,
   Space,
   Tooltip,
+  Tag,
+  Row,
+  Col,
+  Modal,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import "./index.css";
@@ -31,9 +33,20 @@ import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faEye, faXmark } from "@fortawesome/free-solid-svg-icons";
 
+const statusHistory = (status) => {
+  switch (status) {
+    case 1:
+      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
+    case 2:
+      return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
+    default:
+      return <Tag>Không xác định</Tag>;
+  }
+};
+
 export default function RequestAddPoint() {
   const dispatch = useAppDispatch();
-  const [hasData, setHasData] = useState(false);
+
   const columns = [
     {
       title: "STT",
@@ -98,7 +111,7 @@ export default function RequestAddPoint() {
           )}
 
           {values.status !== 1 && values.status !== 2 && (
-            <Tooltip title="Hủy">
+            <Tooltip title="Từ chối">
               <Button
                 onClick={() =>
                   changeStatus(values.idHistory, values.idHistoryDetail, 2)
@@ -129,8 +142,105 @@ export default function RequestAddPoint() {
     },
   ];
 
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRowKeysRecord, setSelectedRowKeysRecord] = useState([]);
+  const start = () => {
+    setSelectedRowKeys([]);
+    setSelectedRowKeysRecord([]);
+  };
+  const onSelectChange = (newSelectedRowKeys, record) => {
+    setSelectedRowKeysRecord(record);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
+  const approveAll = () => {
+    if (selectedRowKeys.length === 0) {
+      message.error("Bạn phải chọn một yêu cầu");
+      return;
+    }
+    const result = selectedRowKeysRecord.map(
+      (el) =>
+        `Yêu cầu từ ${
+          el.userTeacher !== null
+            ? "Giảng viên " + el.userTeacher
+            : "Chủ tịch " + el.userPresident
+        }: Cộng ${el.honey} cho sinh viên ${el.userName}`
+    );
+
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xác nhận yêu cầu cộng mật ong",
+      content: (
+        <>
+          <ul>
+            {result.map((el) => (
+              <li className="flex" key={el.id}>
+                {" "}
+                <div>🍯</div>
+                <div>{`${el}`}</div>
+              </li>
+            ))}
+          </ul>
+        </>
+      ),
+      onOk: () => {
+        const data = selectedRowKeysRecord.map((values) => ({
+          idHistory: values.idHistory,
+          status: 1,
+        }));
+        changeStatusAll(data, 1);
+        // hoàn thành yêu cầu clear selectedRowKeys
+        start();
+      },
+    });
+  };
+
+  const refuseAll = () => {
+    if (selectedRowKeys.length === 0) {
+      message.error("Bạn phải chọn một yêu cầu");
+      return;
+    }
+    const result = selectedRowKeysRecord.map(
+      (el) =>
+        `Yêu cầu từ ${
+          el.userTeacher !== null
+            ? "Giảng viên " + el.userTeacher
+            : "Chủ tịch " + el.userPresident
+        }: Cộng ${el.honey} cho sinh viên ${el.userName}`
+    );
+
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn từ chối yêu cầu cộng mật ong",
+      content: (
+        <>
+          <ul>
+            {result.map((el) => (
+              <li className="flex" key={el.id}>
+                {" "}
+                <div>🍯</div>
+                <div>{`${el}`}</div>
+              </li>
+            ))}
+          </ul>
+        </>
+      ),
+      onOk: () => {
+        const data = selectedRowKeysRecord.map((values) => ({
+          idHistory: values.idHistory,
+          status: 2,
+        }));
+        changeStatusAll(data, 2);
+        // hoàn thành yêu cầu clear selectedRowKeys
+        start();
+      },
+    });
+  };
+
   const [totalPage, setTotalPage] = useState(1);
-  const [filter, setFilter] = useState({ page: 0, status: 0 });
+  const [filter, setFilter] = useState({ page: 0, status: 0, size: 10 });
 
   useEffect(() => {
     fetchData(dispatch, filter);
@@ -186,11 +296,6 @@ export default function RequestAddPoint() {
             );
             dispatch(SetHistory(listHistory));
             setTotalPage(response.data.totalPages);
-            if (response.data.data.length > 0) {
-              setHasData(true);
-            } else {
-              setHasData(false);
-            }
           } catch (error) {
             console.error(error);
           }
@@ -203,10 +308,9 @@ export default function RequestAddPoint() {
     return {
       ...data,
       key: data.id,
-      createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
+      createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: {
         idHistory: data.idHistory,
-        idHistoryDetail: data.id,
         status: data.status,
       },
     };
@@ -217,8 +321,7 @@ export default function RequestAddPoint() {
   const onFinishSearch = (value) => {
     if (value.userName === undefined || value.userName.trim().length === 0) {
       setFilter({
-        page: 0,
-        status: 0,
+        ...filter,
         idStudent: null,
         idCategory: value.idCategory,
         status: value.status,
@@ -228,8 +331,7 @@ export default function RequestAddPoint() {
         .then((result) => {
           if (result.data.success) {
             setFilter({
-              page: 0,
-              status: 0,
+              ...filter,
               idStudent: result.data.data.id,
               idCategory: value.idCategory,
               status: value.status,
@@ -249,7 +351,29 @@ export default function RequestAddPoint() {
   };
 
   const changeStatus = (idHistory, idHistoryDetail, status) => {
-    RequestManagerAPI.changeStatus(idHistory, idHistoryDetail, status)
+    Modal.confirm({
+      title: `Bạn có chắc chắn muốn ${
+        status === 1 ? "xác nhận" : "hủy"
+      } yêu cầu cộng mật ong`,
+      onOk: () => {
+        RequestManagerAPI.changeStatus(idHistory, idHistoryDetail, status)
+          .then((response) => {
+            if (response.data.success) {
+              fetchData(dispatch, filter);
+              if (status === 1)
+                message.success("Đã xác nhận yêu cầu cộng mật ong!");
+              if (status === 2) message.error("Hủy yêu cầu thành công!");
+            }
+          })
+          .catch((error) => {
+            message.error(error);
+          });
+      },
+    });
+  };
+
+  const changeStatusAll = (data, status) => {
+    RequestManagerAPI.changeStatusAll(data)
       .then((response) => {
         if (response.data.success) {
           fetchData(dispatch, filter);
@@ -262,69 +386,107 @@ export default function RequestAddPoint() {
         message.error(error);
       });
   };
-
   return (
     <div className="request-manager">
       <Card className="mb-2 py-1">
         <Form onFinish={onFinishSearch}>
-          <Row>
-            <Col xl={12}>
-              <Form.Item name="userName" className="search-input">
-                <Input
-                  style={{ width: "500px" }}
-                  name="userName"
-                  size="small"
-                  placeholder="Nhập username sinh viên cần tìm"
-                  prefix={<SearchOutlined />}
-                />
-              </Form.Item>
-            </Col>
-            <Col xl={12} className="flex">
-              <Form.Item name={"idCategory"}>
-                <Select
-                  style={{ width: "450px" }}
-                  size="large"
-                  placeholder="Loại điểm"
-                  options={[
-                    { value: null, label: "Tất cả" },
-                    ...listCategory.map((category) => {
-                      return {
-                        value: category.id,
-                        label: category.name,
-                      };
-                    }),
-                  ]}
-                />
-              </Form.Item>
-              <Button
-                htmlType="submit"
-                type="primary"
-                className="ml-3 search-button"
-              >
-                Lọc
-              </Button>
-            </Col>
-          </Row>
+          <Space size={"large"}>
+            <Form.Item name="userName" className="search-input">
+              <Input
+                style={{ width: "400px" }}
+                name="userName"
+                size="small"
+                placeholder="Nhập user name sinh viên cần tìm"
+                prefix={<SearchOutlined />}
+              />
+            </Form.Item>
+            <Form.Item name={"idCategory"}>
+              <Select
+                style={{ width: "250px" }}
+                size="large"
+                placeholder="Loại điểm"
+                options={[
+                  { value: null, label: "Tất cả" },
+                  ...listCategory.map((category) => {
+                    return {
+                      value: category.id,
+                      label: category.name,
+                    };
+                  }),
+                ]}
+              />
+            </Form.Item>
+            <Form.Item name={"status"} initialValue={null}>
+              <Select
+                style={{ width: "260px" }}
+                size="large"
+                placeholder="Trạng thái"
+                options={[
+                  { value: null, label: "Tất cả" },
+                  ...[1, 2].map((value) => {
+                    return {
+                      value: value,
+                      label: statusHistory(value),
+                    };
+                  }),
+                ]}
+              />
+            </Form.Item>
+            <Button
+              htmlType="submit"
+              type="primary"
+              className="mr-10 search-button"
+            >
+              Lọc
+            </Button>
+          </Space>
         </Form>
       </Card>
-      <Card title="Yêu cầu cộng điểm">
+      <Card>
+        <Row className="justify-between items-center mb-2">
+          <Col>
+            <h1 className="lable">Danh sách yêu cầu</h1>
+          </Col>
+          <Col>
+            <Button onClick={() => approveAll()} type="primary mr-2">
+              Phê duyệt
+            </Button>
+            <Button onClick={() => refuseAll()} type="primary">
+              Từ chối
+            </Button>
+          </Col>
+        </Row>
         <Table
+          rowSelection={{
+            type: "checkbox",
+            ...rowSelection,
+          }}
           columns={columns}
           dataSource={data}
           rowKey="key"
           pagination={false}
         />
         <div className="mt-10 text-center mb-10">
-          {hasData && (
-            <Pagination
-              simple
-              current={filter.page + 1}
-              onChange={(page) => {
-                setFilter({ ...filter, page: page - 1 });
-              }}
-              total={totalPage * 10}
-            />
-          )}
+          <Pagination
+            showSizeChanger
+            current={filter.page + 1}
+            onChange={(page, size) => {
+              setFilter({ ...filter, page: page - 1, size: size });
+            }}
+            total={totalPage}
+            pageSizeOptions={[
+              "10",
+              "20",
+              "30",
+              "40",
+              "50",
+              "60",
+              "70",
+              "80",
+              "90",
+              "100",
+            ]}
+          />
         </div>
       </Card>
     </div>

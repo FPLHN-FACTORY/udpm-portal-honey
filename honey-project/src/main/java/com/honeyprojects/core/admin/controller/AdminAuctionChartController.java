@@ -25,4 +25,9 @@ public class AdminAuctionChartController {
     public ResponseObject chartTable(AdminAuctionChartTableRequest adminAuctionChartTableRequest) {
         return new ResponseObject(adminAuctionChartLineService.getAuctionChartTable(adminAuctionChartTableRequest));
     }
+
+    @GetMapping("/statistic")
+    public ResponseObject statistic() {
+        return new ResponseObject(adminAuctionChartLineService.getAuctionStatistic());
+    }
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import "./index.css";
-import { Image, Select } from "antd";
+import { Col, Image, Row, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import { HistoryApi } from "../../../apis/student/history/historyApi.api";
 
@@ -37,7 +37,6 @@ export default function StudentHistory() {
       setPage((prevPage) => prevPage + 1);
     }
   }, [inView, isFetching]);
-  const imageUrl = `https://github-production-user-asset-6210df.s3.amazonaws.com/92096173/279314951-92d1478c-d8a7-4d67-b5e5-0224c241f83d.png`;
 
   return (
     <div className="student__history">
@@ -45,12 +44,14 @@ export default function StudentHistory() {
         <div className="button-group">
           <button
             className="button button__active"
-            onClick={() => navigate("/student/history")}>
+            onClick={() => navigate("/student/history")}
+          >
             Lịch sử
           </button>
           <button
             className="button button__notactive"
-            onClick={() => navigate("/student/request")}>
+            onClick={() => navigate("/student/request")}
+          >
             Yêu cầu
           </button>
           <Select
@@ -88,57 +89,79 @@ export default function StudentHistory() {
             if (data.length === index + 1) {
               return (
                 <div className={`content red`} ref={lastElementRef} key={index}>
-                  <img className="size_img" src={e.image || imageUrl} alt="" />
-                  <div className="student__history__text">{e.content}</div>
-                  <div className={`student__history__point}`}>
-                    <div
-                      className={`student__history__point 
-                    }`}>
-                      {e.point && (
-                        <span
-                          className={"red__text"}
-                          style={{ marginRight: "10px" }}>
-                          {e.point}
-                        </span>
-                      )}
-                      {e.point && e.pointGet && "| "}
-                      {e.pointGet && (
-                        <span
-                          className={"green__text"}
-                          style={{ marginRight: "10px" }}>
-                          {e.pointGet}
-                        </span>
-                      )}
-                    </div>
-                  </div>
+                  <Row>
+                    <Col span={4}>
+                      <img className="size_img" src={e.image} alt="" />
+                    </Col>
+                    <Col span={10}>
+                      <div className="student__history__text">{e.content}</div>
+                    </Col>
+                    <Col span={10}>
+                      <div className={`student__history__point}`}>
+                        <div
+                          className={`student__history__point 
+                    }`}
+                        >
+                          {e.point && (
+                            <span
+                              className={"red__text"}
+                              style={{ marginRight: "10px" }}
+                            >
+                              {e.point}
+                            </span>
+                          )}
+                          {e.point && e.pointGet && "| "}
+                          {e.pointGet && (
+                            <span
+                              className={"green__text"}
+                              style={{ marginRight: "10px" }}
+                            >
+                              {e.pointGet}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
                 </div>
               );
             } else {
               return (
                 <div className={`content red`} key={index}>
-                  <img className="size_img" src={e.image || imageUrl} alt="" />
-                  <div className="student__history__text">{e.content}</div>
-                  <div className={`student__history__point}`}>
-                    <div
-                      className={`student__history__point 
-                    }`}>
-                      {e.point && (
-                        <span
-                          className={"red__text"}
-                          style={{ marginRight: "10px" }}>
-                          {e.point}
-                        </span>
-                      )}
-                      {e.point && e.pointGet && "| "}
-                      {e.pointGet && (
-                        <span
-                          className={"green__text"}
-                          style={{ marginRight: "10px" }}>
-                          {e.pointGet}
-                        </span>
-                      )}
-                    </div>
-                  </div>
+                  <Row>
+                    <Col span={4}>
+                      <img className="size_img" src={e.image} alt="" />
+                    </Col>
+                    <Col span={10}>
+                      <div className="student__history__text">{e.content}</div>
+                    </Col>
+                    <Col span={10}>
+                      <div className={`student__history__point}`}>
+                        <div
+                          className={`student__history__point 
+                    }`}
+                        >
+                          {e.point && (
+                            <span
+                              className={"red__text"}
+                              style={{ marginRight: "10px" }}
+                            >
+                              {e.point}
+                            </span>
+                          )}
+                          {e.point && e.pointGet && "| "}
+                          {e.pointGet && (
+                            <span
+                              className={"green__text"}
+                              style={{ marginRight: "10px" }}
+                            >
+                              {e.pointGet}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
                 </div>
               );
             }

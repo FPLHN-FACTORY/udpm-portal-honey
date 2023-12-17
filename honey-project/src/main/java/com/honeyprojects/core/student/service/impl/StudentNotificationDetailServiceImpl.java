@@ -52,16 +52,10 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
     private StudentNotificationDetailRepository studentNotificationDetailRepository;
 
     @Autowired
-    private AdminHoneyRepository adminHoneyRepository;
-
-    @Autowired
     private AdArchiveRepository adArchiveRepository;
 
     @Autowired
     private AdArchiveGiftRepository adArchiveGiftRepository;
-
-    @Autowired
-    private AdRandomAddPointRepository adRandomAddPointRepository;
 
     @Autowired
     private StudentNotificationRepository adNotificationRespository;
@@ -104,7 +98,8 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
         if (lstIdNotificationDetail.isEmpty()) {
             return false;
         } else {
-            History history = createHistory(idStudent, TypeHistory.MAT_ONG_VA_VAT_PHAM, HistoryStatus.DA_PHE_DUYET);
+            SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(idStudent);
+            History history = createHistory(idStudent, TypeHistory.MAT_ONG_VA_VAT_PHAM, HistoryStatus.DA_PHE_DUYET, simpleResponse.getUserName());
             List<NotificationDetail> lstHoney = new ArrayList<>();
             List<NotificationDetail> lstGift = new ArrayList<>();
             List<NotificationDetail> lstChest = new ArrayList<>();
@@ -127,7 +122,7 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
             for (NotificationDetail detail : lstGift) {
                 Gift gift = studentGiftRepository.findById(detail.getIdObject()).orElse(null);
 //                String archiveId = adArchiveRepository.getIdArchiveByIdStudent(idStudent);
-                SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(idStudent);
+//                SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(idStudent);
 
                 if (gift != null) {
                     ArchiveGift archiveGift = addPointUtils.addGiftUtils(idStudent, detail.getIdObject(), detail.getQuantity());
@@ -147,7 +142,7 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
 
             for (NotificationDetail detail : lstHoney) {
                 Honey honey = addPointUtils.addHoneyUtils(idStudent, detail.getIdObject(), detail.getQuantity());
-                SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(idStudent);
+//                SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(idStudent);
 
                 if (honey != null) {
                     Category category = studentCategoryRepository.findById(honey.getHoneyCategoryId()).orElse(null);
@@ -159,7 +154,7 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
 
             for (NotificationDetail detail : lstChest) {
                 Optional<Chest> optionalChest = chestRepository.findById(detail.getIdObject());
-                SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(idStudent);
+//                SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(idStudent);
                 if (optionalChest.isPresent()) {
                     ArchiveGift archiveGift = addPointUtils.addChestUtils(idStudent, detail.getIdObject(), detail.getQuantity());
                     Chest chest = optionalChest.get();
@@ -215,8 +210,8 @@ public class StudentNotificationDetailServiceImpl implements StudentNotification
         return adArchiveGiftRepository.save(archiveGift);
     }
 
-    private History createHistory(String idStudent, TypeHistory typeHistory, HistoryStatus status) {
-        AdminHistoryRandomRequest request = new AdminHistoryRandomRequest(idStudent, typeHistory, status);
+    private History createHistory(String idStudent, TypeHistory typeHistory, HistoryStatus status, String studentName) {
+        AdminHistoryRandomRequest request = new AdminHistoryRandomRequest(idStudent, typeHistory, status, studentName);
         History history = request.createHistory(new History());
         return studentHistoryRepository.save(history);
     }

@@ -102,11 +102,11 @@ public class StudentAuctionServiceImpl implements StudentAuctionService {
 
     @Override
     public Auction updateLastPrice(MessageAuction messageAuction) {
-        var auction = studentAuctionRepository.findById(messageAuction.getIdAuction());
-        if (!auction.isPresent()) {
+        Optional<Auction> auction = studentAuctionRepository.findById(messageAuction.getIdAuction());
+        if (auction.isEmpty()) {
             throw new MessageHandlingException("Không tìm thấy phiên dấu giá.");
         }
-        if (auction.get().getAuctioneerCreateUserName().equals(messageAuction.getMail())) {
+        if (auction.get().getAuctioneerCreateUserName() != null && auction.get().getAuctioneerCreateUserName().equals(messageAuction.getMail())) {
             throw new MessageHandlingException("Bạn không thể đấu giá phiên của chính mình");
         }
         Date date = new Date();

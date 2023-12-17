@@ -4,6 +4,7 @@ import { Avatar, Col, Layout, Row } from "antd";
 import huonChuongVang from "../../../assets/images/honor/background/huong-chuong-vang.png";
 import huonChuongBac from "../../../assets/images/honor/background/huong-chuong-bac.png";
 import huonChuongDong from "../../../assets/images/honor/background/huong-chuong-dong.png";
+import logo from "../../../assets/images/logo/logo-udpm-2.png";
 import Fireworks from "@fireworks-js/react";
 import { StudenHallOfFameAPI } from "../../../apis/student/honor/honor.api";
 import { GetHonor, SetHonor } from "../../../app/reducers/honor/honor.reducer";
@@ -64,22 +65,22 @@ const TopStudent = ({ isClose, isShow }) => {
   const [time, setTime] = useState(10);
 
   // Sử dụng hook useEffect để cập nhật thời gian mỗi giây
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (time > 0) {
-        setTime(time - 1);
-      } else {
-        clearInterval(timer);
-        closeTop3();
-      }
-    }, 1000);
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     if (time > 0) {
+  //       setTime(time - 1);
+  //     } else {
+  //       clearInterval(timer);
+  //       closeTop3();
+  //     }
+  //   }, 1000);
 
-    // Hủy bỏ interval khi component bị unmounted
-    return () => {
-      clearInterval(timer);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [time]);
+  //   // Hủy bỏ interval khi component bị unmounted
+  //   return () => {
+  //     clearInterval(timer);
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [time]);
 
   const fireworksOptions = {
     autoresize: true,
@@ -143,9 +144,9 @@ const TopStudent = ({ isClose, isShow }) => {
         />
 
         <div className="honor z-50">
-          <div className="honor__title d-flex justify-content-between mb-4 mx-5">
+          <div className="honor__title flex justify-between mb-4 px-10">
             <span>
-              <img src="../../assets/img/logo.png" alt="" />
+              <img src={logo} alt="" />
             </span>
             <div>
               <button className="close__honor" onClick={closeTop3}>
@@ -179,7 +180,7 @@ const TopStudent = ({ isClose, isShow }) => {
                     </div>
                     <div className="front-content__infor d-flex flex-column">
                       <span>{top3[1]?.name}</span>
-                      <span>{top3[1]?.totalHoney}Mật ong</span>
+                      <span>{top3[1]?.totalHoney} Mật ong</span>
                     </div>
                   </div>
                 </div>

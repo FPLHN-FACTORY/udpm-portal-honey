@@ -4,24 +4,37 @@ import {
   Form,
   Input,
   Pagination,
-  Select,
   Space,
   Table,
   message,
   Tooltip,
+  Select,
+  Tag,
+  Row,
+  Col,
+  Modal,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import { SearchOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faEye, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
+const statusHistory = (status) => {
+  switch (status) {
+    case 1:
+      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
+    case 2:
+      return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
+    default:
+      return <Tag>Không xác định</Tag>;
+  }
+};
+
 export default function RequestConversionHistory() {
   const [getHistory, setGetHistory] = useState([]);
-  const [fillCategory, setFillCategory] = useState([]);
   const [totalPages, setTotalPages] = useState([]);
   const [filter, setFilter] = useState({ page: 0 });
 
@@ -71,13 +84,7 @@ export default function RequestConversionHistory() {
     fetchData(filter);
   };
 
-  const fechCategory = () => {
-    CategoryAPI.fetchAllCategory().then((response) => {
-      setFillCategory(response.data.data);
-    });
-  };
   useEffect(() => {
-    fechCategory();
     fetchData(filter);
   }, [filter]);
 
@@ -116,14 +123,29 @@ export default function RequestConversionHistory() {
     status,
     quantityGift
   ) => {
-    RequestManagerAPI.changeStatusConversion(
-      idStudent,
-      idGift,
-      idHistory,
-      idHistoryDetail,
-      status,
-      quantityGift
-    ).then((response) => {
+    Modal.confirm({
+      title: `Bạn có chắc chắn muốn ${status === 1? "phê duyệt" : "Từ chối"} yêu cầu không?`,
+      onOk: () => {
+        RequestManagerAPI.changeStatusConversion(
+          idStudent,
+          idGift,
+          idHistory,
+          idHistoryDetail,
+          status,
+          quantityGift
+        ).then((response) => {
+          if (response.data.success) {
+            if (status === 1) message.success("Đã xác nhận yêu cầu!");
+            if (status === 2) message.error("Hủy yêu cầu thành công!");
+          }
+          fetchData();
+        });
+      }
+    })
+  };
+
+  const changeStatusConversionAll = (data, status) => {
+    RequestManagerAPI.changeStatusConversionAll(data).then((response) => {
       if (response.data.success) {
         if (status === 1) message.success("Đã xác nhận yêu cầu!");
         if (status === 2) message.error("Hủy yêu cầu thành công!");
@@ -132,27 +154,90 @@ export default function RequestConversionHistory() {
     });
   };
 
-  const handCheckvalide = async (values) => {
-    // const response = await RequestManagerAPI.getPoint(
-    //   values.studentId,
-    //   values.categoryId
-    // );
-    // const newFillPoint = response.data.data;
-
-    // const totalPoint = values.quantityGift * values.honeyPoint;
-    // if (totalPoint > newFillPoint) {
-    // message.error("Sinh viên Không còn đủ điểm để mua quà!");
-    // } else {
-    changeStatusConversion(
-      values.studentId,
-      values.giftId,
-      values.id,
-      values.historyDetailId,
-      1,
-      values.quantityGift
-    );
-    // }
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRowKeysRecord, setSelectedRowKeysRecord] = useState([]);
+  const start = () => {
+    setSelectedRowKeys([]);
+    setSelectedRowKeysRecord([]);
   };
+  const onSelectChange = (newSelectedRowKeys, record) => {
+    setSelectedRowKeysRecord(record);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
+  const approveAll = () => {
+    if (selectedRowKeys.length === 0) {
+      message.error("Bạn phải chọn một yêu cầu");
+      return;
+    }
+    // const result = selectedRowKeysRecord.map((el) => `Yêu cầu từ ${el.userTeacher !== null?"Giảng viên " + el.userTeacher : "Chủ tịch " + el.userPresident}: Cộng ${el.honey} cho sinh viên ${el.userName}`)
+
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xác nhận yêu cầu cộng vật phẩm",
+      // content: (<>
+      //   <ul>{result.map(el => <li className="flex" key={el.id}> <div>🍯</div><div>{ `${el}` }</div></li>)}</ul>
+      // </>),
+      onOk: () => {
+        const data = selectedRowKeysRecord.map((values) => ({
+          idHistory: values.id,
+          status: 1,
+        }));
+        changeStatusConversionAll(data, 1);
+        // hoàn thành yêu cầu clear selectedRowKeys
+        start();
+      },
+    });
+  };
+
+  const refuseAll = () => {
+    if (selectedRowKeys.length === 0) {
+      message.error("Bạn phải chọn một yêu cầu");
+      return;
+    }
+    // const result = selectedRowKeysRecord.map((el) => `Yêu cầu từ ${el.userTeacher !== null?"Giảng viên " + el.userTeacher : "Chủ tịch " + el.userPresident}: Cộng ${el.honey} cho sinh viên ${el.userName}`)
+
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xác nhận yêu cầu cộng vật phẩm",
+      // content: (<>
+      //   <ul>{result.map(el => <li className="flex" key={el.id}> <div>🍯</div><div>{ `${el}` }</div></li>)}</ul>
+      // </>),
+      onOk: () => {
+        const data = selectedRowKeysRecord.map((values) => ({
+          idHistory: values.id,
+          status: 1,
+        }));
+        changeStatusConversionAll(data, 1);
+        // hoàn thành yêu cầu clear selectedRowKeys
+        start();
+      },
+    });
+  };
+
+  // const handCheckvalide = async (values) => {
+  //   // const response = await RequestManagerAPI.getPoint(
+  //   //   values.studentId,
+  //   //   values.categoryId
+  //   // );
+  //   // const newFillPoint = response.data.data;
+
+  //   // const totalPoint = values.quantityGift * values.honeyPoint;
+  //   // if (totalPoint > newFillPoint) {
+  //   // message.error("Sinh viên Không còn đủ điểm để mua quà!");
+  //   // } else {
+  //   changeStatusConversion(
+  //     values.studentId,
+  //     values.giftId,
+  //     values.id,
+  //     values.historyDetailId,
+  //     1,
+  //     values.quantityGift
+  //   );
+  //   // }
+  // };
 
   const columns = [
     {
@@ -173,7 +258,7 @@ export default function RequestConversionHistory() {
         } else if (record.presidentId !== null) {
           return record.userPresident;
         } else {
-          return null;
+          return record.userName;
         }
       },
     },
@@ -194,7 +279,7 @@ export default function RequestConversionHistory() {
       dataIndex: "createdDate",
       key: "createdDate",
       align: "center",
-      render: (text) => <span>{moment(text).format("DD/MM/YYYY")}</span>,
+      render: (text) => <span>{moment(text).format("DD-MM-YYYY HH:mm:ss")}</span>,
     },
     {
       title: () => <div>Hành động</div>,
@@ -206,7 +291,13 @@ export default function RequestConversionHistory() {
             <Tooltip title="Xác nhận">
               <Button
                 onClick={() => {
-                  handCheckvalide(values);
+                  changeStatusConversion(
+                    values.studentId,
+                    values.giftId,
+                    values.id,
+                    values.historyDetailId,
+                    1
+                  );
                 }}
                 style={{
                   backgroundColor: "yellowgreen",
@@ -219,7 +310,7 @@ export default function RequestConversionHistory() {
           )}
 
           {values.status !== 1 && values.status !== 2 && (
-            <Tooltip title="Hủy">
+            <Tooltip title="Từ chối">
               <Button
                 onClick={() => {
                   changeStatusConversion(
@@ -256,28 +347,31 @@ export default function RequestConversionHistory() {
     },
   ];
   return (
-    <>
-      <Card className="mb-2">
+    <div className="request-manager">
+      <Card className="mb-2 py-1">
         <Form onFinish={onFinishSearch}>
           <Space size={"large"}>
             <Form.Item name="userName" className="search-input">
               <Input
-                style={{ width: "500px" }}
+                style={{ width: "400px" }}
                 name="userName"
                 size="small"
                 placeholder="Nhập user name sinh viên cần tìm"
                 prefix={<SearchOutlined />}
               />
             </Form.Item>
-            <Form.Item name={"idCategory"}>
+            <Form.Item name={"status"} initialValue={null}>
               <Select
-                style={{ width: "450px" }}
+                style={{ width: "260px" }}
                 size="large"
-                placeholder="Loại điểm"
+                placeholder="Trạng thái"
                 options={[
-                  { value: null, label: "tất cả" },
-                  ...fillCategory.map((item) => {
-                    return { label: item.name, value: item.id };
+                  { value: null, label: "Tất cả" },
+                  ...[1, 2].map((value) => {
+                    return {
+                      value: value,
+                      label: statusHistory(value),
+                    };
                   }),
                 ]}
               />
@@ -286,33 +380,56 @@ export default function RequestConversionHistory() {
               htmlType="submit"
               type="primary"
               className="mr-10 search-button"
-              style={{ marginBottom: "25px", backgroundColor: "#EEB30D" }}
             >
               Lọc
             </Button>
           </Space>
         </Form>
       </Card>
-      <Card title="Danh sách yêu cầu đổi quà">
-        <div className="mt-5">
-          <Table
-            columns={columns}
-            rowKey="id"
-            dataSource={getHistory}
-            pagination={false}
-          />
-        </div>
-        <div className="mt-5 text-center">
+      <Card>
+        <Row className="justify-between items-center mb-2">
+          <Col>
+            <h1 className="lable">Danh sách yêu cầu</h1>
+          </Col>
+          <Col>
+            <Button onClick={() => approveAll()} type="primary mr-2">
+              Phê duyệt
+            </Button>
+            <Button onClick={() => refuseAll()} type="primary">
+              Từ chối
+            </Button>
+          </Col>
+        </Row>
+        <Table
+          rowSelection={rowSelection}
+          columns={columns}
+          rowKey="id"
+          dataSource={getHistory}
+          pagination={false}
+        />
+        <div className="mt-10 text-center mb-10">
           <Pagination
-            simple
+            showSizeChanger
             current={filter.page + 1}
-            onChange={(page) => {
-              setFilter({ ...filter, page: page - 1 });
+            onChange={(page, size) => {
+              setFilter({ ...filter, page: page - 1, size: size });
             }}
-            total={totalPages * 10}
+            total={totalPages}
+            pageSizeOptions={[
+              "10",
+              "20",
+              "30",
+              "40",
+              "50",
+              "60",
+              "70",
+              "80",
+              "90",
+              "100",
+            ]}
           />
         </div>
       </Card>
-    </>
+    </div>
   );
 }

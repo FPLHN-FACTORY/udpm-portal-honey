@@ -1,11 +1,19 @@
-import { CheckCircleOutlined, FlagOutlined, SendOutlined, StopOutlined } from '@ant-design/icons';
 import { Card, Col, Row, Statistic } from 'antd';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DemoLine } from './ChartLine';
 import './index.css';
 import AuctionTableGift from './AuctionTableGift';
+import { AuctionChartAPI } from '../../../../apis/censor/auction/auctionLine.api';
 
 const AuctionManagementChart = () => {
+    const [statistic, setStatistic] = useState({});
+    useEffect(() => {
+        AuctionChartAPI.fetchStatistic().then((response) => {
+            console.log(response.data.data);
+            setStatistic(response.data.data)
+        })
+    }, [])
+
     return (
         <div id='auction_chart'>
             <Row gutter={12}>
@@ -13,11 +21,11 @@ const AuctionManagementChart = () => {
                 <Card bordered={false}>
                     <Statistic
                     title={<span>Tổng số phiên</span>}
-                    value={233}
+                    value={statistic.sumAuction}
                     valueStyle={{
                         color: "#3f8600",
                     }}
-                    prefix={<CheckCircleOutlined />}
+                    prefix="⏳"
                     suffix="Phiên"
                     />
                 </Card>
@@ -26,11 +34,11 @@ const AuctionManagementChart = () => {
                 <Card bordered={false}>
                     <Statistic
                     title={<span>Tổng số lượng vật phẩm</span>}
-                    value={33}
+                    value={statistic.sumNumberGift}
                     valueStyle={{
                         color: "#003eff",
                     }}
-                    prefix={<SendOutlined />}
+                    prefix="🎁"
                     suffix="Vật phẩm"
                     />
                 </Card>
@@ -39,13 +47,13 @@ const AuctionManagementChart = () => {
                 <Col xl={6} lg={12} sm={24} md={24} className="mb-6">
                 <Card bordered={false}>
                     <Statistic
-                    title={<span>Tổng sinh viên tạo phiên</span>}
-                    value={32}
+                    title={<span>Tổng số mất khởi điểm</span>}
+                    value={statistic.sumStartPrice}
                     valueStyle={{
                         color: "#ff5c00;",
                     }}
-                    prefix={<FlagOutlined />}
-                    suffix="Người"
+                    prefix="🍯"
+                    suffix="Mật"
                     />
                 </Card>
                 </Col>
@@ -53,13 +61,13 @@ const AuctionManagementChart = () => {
                 <Col xl={6} lg={12} sm={24} md={24} className="mb-6">
                 <Card bordered={false}>
                     <Statistic
-                    title={<span>Tổng số phiên thành công </span>}
-                    value={43}
+                    title={<span>Tổng số mật đấu giá </span>}
+                    value={statistic.sumLastPrice}
                     valueStyle={{
                         color: "#cf1322",
                     }}
-                    prefix={<StopOutlined />}
-                    suffix="Bài"
+                            prefix="🍯"
+                            suffix="Mật"
                     />
                 </Card>
                 </Col>

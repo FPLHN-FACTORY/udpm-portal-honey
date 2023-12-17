@@ -97,6 +97,20 @@ export class RequestManagerAPI {
     });
   };
 
+  static changeStatusAll = (data) => {
+    return request({
+      method: "PUT",
+      url: `/${this.COMPONENT_NAME}/change-status-all`,
+      data: data,
+    });
+  };
+  static changeStatusConversionAll = (data) => {
+    return request({
+      method: "PUT",
+      url: `/${this.COMPONENT_NAME}/change-status-conversion-all`,
+      data: data,
+    });
+  };
   static changeStatusConversion = (
     idStudent,
     idGift,

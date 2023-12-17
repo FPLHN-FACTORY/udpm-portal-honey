@@ -24,7 +24,7 @@ public interface AdRandomAddPointService {
 
     Boolean createRandomPoint(AdminRandomPointRequest adminRandomPointRequest);
 
-    Boolean createRandomItem(AdminRandomPointRequest adminRandomPointRequest);
+    Boolean createRandomChest(AdminRandomPointRequest adminRandomPointRequest);
 
     ByteArrayOutputStream exportExcel(HttpServletResponse response);
 

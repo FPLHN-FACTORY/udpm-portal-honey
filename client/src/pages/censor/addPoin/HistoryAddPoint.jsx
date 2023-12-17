@@ -70,11 +70,11 @@ export default function HistoryAddPoint() {
   };
 
   const data = useAppSelector(GetHistory).map((data) => {
-
     return {
       ...data,
       key: data.id,
       createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
+      changeDate: moment(data.changeDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
   });
@@ -145,27 +145,23 @@ export default function HistoryAddPoint() {
           </Space>
         </Form>
       </Card>
-      <Card title="Lịch sử cộng điểm">
+      <Card title="Lịch sử">
         {data.map((item) => (
           <div className="list__point ">
-            <h3 className="text-slate-600"> Sinh viên {item.nameStudent}</h3>
+            <h3 className="text-slate-600">
+              {" "}
+              Sinh viên {item.nameStudent} ({item.userName}){" "}
+            </h3>
             <div className="list__point__title">
               <p>
                 <strong className="text-slate-500 mr-[8px]">
-                  Số điểm được cộng:
+                  Đã nhận được:
                 </strong>
-                {item.honeyPoint} mật ong {item.nameCategory}
+                {item.honey}
               </p>
               <p>
                 <strong className="text-slate-500 mr-[8px]">Thời gian:</strong>
-                {item.createdDate}
-              </p>
-              <p
-                title={item.note}
-                className="w-[300px] overflow-hidden whitespace-nowrap text-ellipsis"
-              >
-                <strong className="text-slate-500 mr-[8px]">Lý do:</strong>
-                {item.note}
+                {item.changeDate}
               </p>
             </div>
           </div>

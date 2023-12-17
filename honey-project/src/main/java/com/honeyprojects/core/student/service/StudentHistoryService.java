@@ -1,8 +1,5 @@
 package com.honeyprojects.core.student.service;
 
-import com.honeyprojects.core.student.model.response.StudentHistoryResponse;
-
-import java.util.List;
 import java.util.Map;
 
 public interface StudentHistoryService {

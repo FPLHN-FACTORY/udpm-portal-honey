@@ -23,8 +23,6 @@ import java.util.Optional;
 @Primary
 public interface StudentGiftArchiveRepository extends ArchiveGiftRepository {
 
-    Optional<ArchiveGift> findByGiftId(String giftId);
-
     @Query(value = """
                     SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, ag.quantity, ag.id, g.id AS idGift, g.code, g.name, g.status, g.type, g.to_date, g.from_date, g.image 
                     FROM gift g

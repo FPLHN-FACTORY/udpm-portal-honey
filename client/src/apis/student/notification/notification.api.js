@@ -1,7 +1,7 @@
 import { request } from "../../../helper/request.helper";
 
 export class NotificationAPI {
-  static COMPONENT_NAME = "student/notification";
+  static COMPONENT_NAME = "student/notifications";
 
   static fetchNotification = (filter) => {
     return request({

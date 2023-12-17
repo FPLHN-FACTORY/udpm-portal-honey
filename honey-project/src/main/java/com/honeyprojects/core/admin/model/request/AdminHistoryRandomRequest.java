@@ -18,6 +18,7 @@ public class AdminHistoryRandomRequest {
     private String studentId;
     private TypeHistory typeHistory;
     private HistoryStatus status;
+    private String studentName;
 
     public History createHistory(History history) {
         history.setChangeDate(new Date().getTime());
@@ -26,6 +27,7 @@ public class AdminHistoryRandomRequest {
         history.setStatus(this.status);
         history.setSubject(null);
         history.setType(this.typeHistory);
+        history.setStudentName(this.studentName);
         history.setClassName(null);
         history.setTeacherId(null);
         history.setPresidentId(null);

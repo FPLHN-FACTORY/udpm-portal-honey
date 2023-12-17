@@ -2,12 +2,17 @@ package com.honeyprojects.core.admin.service.impl;
 
 import com.honeyprojects.core.admin.model.request.AdminAddPointRequest;
 import com.honeyprojects.core.admin.model.request.AdminChangeStatusRequest;
+import com.honeyprojects.core.admin.model.request.AdminCreateNotificationDetailRandomRequest;
 import com.honeyprojects.core.admin.model.request.AdminGetPointRequest;
+import com.honeyprojects.core.admin.model.request.AdminNotificationRandomRequest;
 import com.honeyprojects.core.admin.model.request.AdminSearchHistoryRequest;
 import com.honeyprojects.core.admin.model.response.AdminAddHoneyHistoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminCategoryResponse;
+import com.honeyprojects.core.admin.model.response.AdminImportCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminPoinResponse;
 import com.honeyprojects.core.admin.repository.AdHistoryDetailRepository;
+import com.honeyprojects.core.admin.repository.AdNotificationDetailRepository;
+import com.honeyprojects.core.admin.repository.AdNotificationRespository;
 import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
 import com.honeyprojects.core.admin.repository.AdminHistoryRepository;
 import com.honeyprojects.core.admin.repository.AdminHoneyRepository;
@@ -15,10 +20,19 @@ import com.honeyprojects.core.admin.service.AdminAddPointService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
+import com.honeyprojects.core.president.model.response.PresidentGiftHistoryResponse;
+import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.HistoryDetail;
 import com.honeyprojects.entity.Honey;
+import com.honeyprojects.entity.Notification;
+import com.honeyprojects.entity.NotificationDetail;
+import com.honeyprojects.infrastructure.contant.Constants;
 import com.honeyprojects.infrastructure.contant.HistoryStatus;
+import com.honeyprojects.infrastructure.contant.NotificationDetailType;
+import com.honeyprojects.infrastructure.contant.NotificationStatus;
+import com.honeyprojects.infrastructure.contant.NotificationType;
+import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.util.AddPointUtils;
@@ -55,6 +69,15 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
     @Autowired
     private AddPointUtils addPointUtils;
 
+    @Autowired
+    private AdNotificationRespository adNotificationRespository;
+
+    @Autowired
+    private AdNotificationDetailRepository adNotificationDetailRepository;
+
+    @Autowired
+    private ConvertRequestApiidentity convertRequestApiidentity;
+
     @Override
     public List<AdminCategoryResponse> getCategory() {
         return categoryRepository.getAllCategory();
@@ -71,6 +94,14 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
         String idAdmin = udpmHoney.getIdUser();
         historyRequest.setIdAdmin(idAdmin);
         return new PageableObject<>(historyRepository.getHistory(historyRequest, pageable));
+    }
+
+    @Override
+    public PageableObject<PresidentGiftHistoryResponse> getHistoryGift(AdminSearchHistoryRequest historyRequest) {
+        Pageable pageable = PageRequest.of(historyRequest.getPage(), historyRequest.getSize());
+        String idAdmin = udpmHoney.getIdUser();
+        historyRequest.setIdAdmin(idAdmin);
+        return new PageableObject<>(historyRepository.getGiftHistory(historyRequest, pageable));
     }
 
     @Override
@@ -91,21 +122,27 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
     @Override
     public History addPoint(AdminAddPointRequest addPointRequest) {
         Long dateNow = Calendar.getInstance().getTimeInMillis();
+        SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(addPointRequest.getStudentId());
         History history = new History();
         history.setNote(addPointRequest.getNote());
         history.setType(TypeHistory.CONG_DIEM);
         history.setChangeDate(dateNow);
         history.setStatus(HistoryStatus.ADMIN_DA_THEM);
+        history.setStudentName(simpleResponse.getUserName());
+        history.setStudentId(addPointRequest.getStudentId());
         historyRepository.save(history);
 
         HistoryDetail historyDetail = new HistoryDetail();
         historyDetail.setHistoryId(history.getId());
         historyDetail.setHoneyPoint(addPointRequest.getHoneyPoint());
         historyDetail.setStudentId(addPointRequest.getStudentId());
-        Honey honey = addPointUtils.
-                addHoneyUtils(addPointRequest.getStudentId(),
+        historyDetail.setStatus(Status.HOAT_DONG);
+        Honey honey = addPointUtils.addHoneyUtils(addPointRequest.getStudentId(),
                         addPointRequest.getCategoryId(),
                         addPointRequest.getHoneyPoint());
+        Category category = categoryRepository.findById(addPointRequest.getCategoryId()).orElse(null);
+        Notification notification = createNotification(simpleResponse.getId());
+        createNotificationDetailHoney(category, notification.getId(), addPointRequest.getHoneyPoint());
         if (honey == null) {
             throw new RestApiException("Cộng mật ong thất bại");
         } else {
@@ -125,5 +162,18 @@ public class AdminAddPointServiceImpl implements AdminAddPointService {
         return requestApiidentity.handleCallApiGetUserById(id);
     }
 
+    private Notification createNotification(String idStudent) {
+        String title = Constants.TITLE_NOTIFICATION_SYSTEM;
+        AdminNotificationRandomRequest request = new AdminNotificationRandomRequest(title, idStudent, NotificationType.HE_THONG, NotificationStatus.CHUA_DOC);
+        Notification notification = request.createNotification(new Notification());
+        return adNotificationRespository.save(notification);
+    }
+
+    private NotificationDetail createNotificationDetailHoney(Category category, String idNotification, Integer quantity) {
+        String content = Constants.CONTENT_NOTIFICATION_SYSTEM + " Mật ong - " + category.getName() + " - Số lượng: " + quantity;
+        AdminCreateNotificationDetailRandomRequest detailRandomRequest = new AdminCreateNotificationDetailRandomRequest(content, category.getId(), idNotification, NotificationDetailType.NOTIFICATION_DETAIL_HONEY, quantity);
+        NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
+        return adNotificationDetailRepository.save(notificationDetail);
+    }
 
 }

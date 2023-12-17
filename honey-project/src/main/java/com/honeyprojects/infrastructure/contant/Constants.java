@@ -40,11 +40,17 @@ public class Constants {
 
     public static String TITLE_NOTIFICATION_PRESIDENT = "THÔNG BÁO TỪ CHỦ TỊCH XƯỞNG";
 
-    public static String TITLE_NOTIFICATION_PRESIDENT_TO_ADMIN = "CHỦ TỊCH XƯỞNG ĐÃ GỬI MỘT DANH SÁCH YÊU CẦU";
+    public static String TITLE_NOTIFICATION_PRESIDENT_TO_ADMIN = "Chủ tịch xưởng đã gửi một danh sách phê duyệt";
+
+    public static String TITLE_NOTIFICATION_TEACHER_TO_ADMIN = " đã gửi một danh sách phê duyệt";
 
     public static String CONTENT_NOTIFICATION_SYSTEM = "Hệ thống đã tặng cho bạn: ";
 
-    public static String CONTENT_NOTIFICATION_LAB = "Chủ tịch xưởng thực hành đã tặng bạn: ";
+    public static String CONTENT_NOTIFICATION_LAB = "Xưởng thực hành đã tặng bạn: ";
+
+    public static String CONTENT_NOTIFICATION_TEACHER= "Bạn vừa nhận được: ";
+
+    public static String CONTENT_NOTIFICATION_PRESIDENT = "Chủ tịch đã tặng bạn: ";
 
     public static String CONTENT_NOTIFICATION_MODULE_LAB_REPORT = "Xưởng dự án đã tặng bạn: ";
 
@@ -52,7 +58,9 @@ public class Constants {
     public static final int COLUMN_WIDTH = 25 * 256;
 
     public static final class MODULE {
-        public static final String MODULE_LAB_REPORT_APP = "MODULE_LAB_REPORT_APP";
+        public static final String MODULE_LAB_REPORT_APP = "bên xưởng dự án đã gửi 1 danh sách phê duyệt";
+        public static final String MODULE_EVENT = "Sự kiện đã gửi 1 danh sách phê duyệt";
+
     }
 
 }

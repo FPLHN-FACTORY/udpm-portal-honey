@@ -6,7 +6,6 @@ import {
   Pagination,
   Select,
   Space,
-  Table,
   Tag,
   message,
 } from "antd";
@@ -46,43 +45,6 @@ const statusHistory = (status) => {
 
 export default function HistoryAddPoint() {
   const dispatch = useAppDispatch();
-  const columns = [
-    {
-      title: "STT",
-      dataIndex: "stt",
-      key: "stt",
-    },
-    {
-      title: "Tên sinh viên",
-      dataIndex: "nameStudent",
-      key: "nameStudent",
-    },
-    {
-      title: "Loại điểm",
-      dataIndex: "nameCategory",
-      key: "nameCategory",
-    },
-    {
-      title: "Số điểm",
-      dataIndex: "honeyPoint",
-      key: "honeyPoint",
-    },
-    {
-      title: "Ngày tạo",
-      dataIndex: "createdDate",
-      key: "createdDate",
-    },
-    {
-      title: "Lý do",
-      dataIndex: "note",
-      key: "note",
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-    },
-  ];
 
   const [totalPage, setTotalPage] = useState(1);
   const [filter, setFilter] = useState({ page: 0 });
@@ -133,7 +95,7 @@ export default function HistoryAddPoint() {
       ...data,
       key: data.id,
       status: statusHistory(data.status),
-      createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
+      createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
   });
@@ -207,13 +169,18 @@ export default function HistoryAddPoint() {
       <Card title="Lịch sử cộng điểm">
         {data.map((item) => (
           <div className="list__point ">
-            <h3 className="text-slate-600"> Sinh viên {item.nameStudent}</h3>
+            <h3 className="text-slate-600">
+              {" "}
+              Sinh viên {item.nameStudent} ({item.userName})
+            </h3>
             <div className="list__point__title">
               <p>
                 <strong className="text-slate-500 mr-[8px]">
-                  Số điểm được cộng:
+                  {item.acction.status == 2
+                    ? "Đã bị hủy yêu cầu cộng: "
+                    : "Đã được cộng: "}
                 </strong>
-                {item.honeyPoint} mật ong {item.nameCategory}
+                {item.honey}
               </p>
               <p>
                 <strong className="text-slate-500 mr-[8px]">Thời gian:</strong>

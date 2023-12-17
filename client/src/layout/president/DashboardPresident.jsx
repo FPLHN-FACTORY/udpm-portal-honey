@@ -60,6 +60,10 @@ function DashboardPresident({ children }) {
         "/president/add-item"
       ),
       getItem(
+        <Link to={"/president/list-request"}>Danh sách yêu cầu</Link>,
+        "/president/list-request"
+      ),
+      getItem(
         <Link to={"/president/history-honey"}>Lịch sử</Link>,
         "/president/history-honey"
       ),
@@ -137,12 +141,11 @@ function DashboardPresident({ children }) {
           <Menu mode="inline" items={items} selectedKeys={selectedKey} />
         </Sider>
       </div>
-      <Layout className="pb-14">
+      <Layout>
         <AntHeader style={{ zIndex: 1000, position: "fixed", width: "100%" }}>
           <Row>
             <Col span={8}>
               <Row>
-                {!collapsed ? (
                   <Col span={12}>
                     <div className="brand text-center">
                       <Link to="/" className="active">
@@ -156,9 +159,6 @@ function DashboardPresident({ children }) {
                       </Link>
                     </div>
                   </Col>
-                ) : (
-                  <Col span={4}></Col>
-                )}
                 <Col span={12} className="flex items-center">
                   <button
                     className="buttonSlider desktop"
@@ -183,8 +183,8 @@ function DashboardPresident({ children }) {
                 </Col>
               </Row>
             </Col>
-            <Col span={16}>
-              <Row>
+            <Col span={16} className="flex items-center justify-end">
+              <Row className="w-full">
                 <Col span={15}></Col>
                 <Col span={9}>
                   <Header
@@ -201,14 +201,14 @@ function DashboardPresident({ children }) {
         {collapsed ? (
           <Content
             className="content-ant"
-            style={{ paddingLeft: "6%", marginTop: "7%" }}
+            style={{ paddingLeft: "80px", marginTop: "125px" }}
           >
             {children}
           </Content>
         ) : (
           <Content
             className="content-ant"
-            style={{ paddingLeft: "19%", marginTop: "9%" }}
+            style={{ paddingLeft: "250px", marginTop: "125px" }}
           >
             {children}
           </Content>

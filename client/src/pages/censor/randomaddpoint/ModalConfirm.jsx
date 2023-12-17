@@ -5,7 +5,6 @@ import {
   getStompClient,
 } from "../../../helper/stomp-client/config";
 import React, { useEffect, useState } from "react";
-import { useAppDispatch } from "../../../app/hooks";
 import { getToken } from "../../../helper/userToken";
 
 export default function ModalConfirm(props) {
@@ -16,46 +15,45 @@ export default function ModalConfirm(props) {
     setDataPreview,
     setNameFileUpload,
   } = props;
-  const [isLoad, setIsLoad] = useState(false);
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    connectStompClient();
-  }, []);
+  // const [isLoad, setIsLoad] = useState(false);
+  // useEffect(() => {
+  //   connectStompClient();
+  // }, []);
 
-  let stompClient = getStompClient();
+  // let stompClient = getStompClient();
 
-  const connect = () => {
-    stompClient.connect(
-      {},
-      (frame) => {
-        console.log("Kết nối STOMP đã được thiết lập.");
-      },
-      (error) => {
-        console.error("Lỗi trong quá trình kết nối STOMP:", error);
-      }
-    );
-  };
+  // const connect = () => {
+  //   stompClient.connect(
+  //     {},
+  //     (frame) => {
+  //       console.log("Kết nối STOMP đã được thiết lập.");
+  //     },
+  //     (error) => {
+  //       console.error("Lỗi trong quá trình kết nối STOMP:", error);
+  //     }
+  //   );
+  // };
 
-  useEffect(() => {
-    setIsLoad(true);
-    if (stompClient != null) {
-      connect();
-    }
+  // useEffect(() => {
+  //   setIsLoad(true);
+  //   if (stompClient != null) {
+  //     connect();
+  //   }
     // return () => {
     //   if (stompClient != null) {
     //     getStompClient().disconnect();
     //   }
     // };
-  }, [stompClient, isLoad]);
+  // }, [stompClient, isLoad]);
 
   const handleConfirm = (dataPreview) => {
-    const bearerToken = getToken();
-    const headers = {
-      Authorization: "Bearer " + bearerToken,
-    };
+    // const bearerToken = getToken();
+    // const headers = {
+    //   Authorization: "Bearer " + bearerToken,
+    // };
     RandomAddPointAPI.createImportData(dataPreview)
       .then(() => {
-        stompClient.send("/action/create-notification-user", headers, {});
+        // stompClient.send("/action/create-notification-user", headers, {});
 
         message.success("Import thành công");
       })

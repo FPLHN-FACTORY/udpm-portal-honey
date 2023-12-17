@@ -70,13 +70,12 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
     @Override
     public History acceptRequest(String id) {
         History history = historyRepository.findById(id).get();
-//        Gift gift = giftRepository.findById(history.getGiftId()).get();
         history.setStatus(HistoryStatus.DA_PHE_DUYET);
         historyRepository.save(history);
         Notification notification = new Notification();
         notification.setStudentId(history.getStudentId());
         notification.setTitle("Yêu cầu cộng điểm");
-        notification.setType(NotificationType.TEACHER);
+//        notification.setType(NotificationType.TEACHER);
         notification.setStatus(NotificationStatus.CHUA_DOC);
         notificationRepository.save(notification);
 
@@ -107,7 +106,7 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
             Notification notification = new Notification();
             notification.setStudentId(history.getStudentId());
             notification.setTitle("Yêu cầu cộng điểm");
-            notification.setType(NotificationType.TEACHER);
+//            notification.setType(NotificationType.TEACHER);
             notification.setStatus(NotificationStatus.CHUA_DOC);
             notificationRepository.save(notification);
 
@@ -155,7 +154,7 @@ public class TeacherUseGiftRequestImpl implements TeacherUseGiftRequest {
         Notification notification = new Notification();
         notification.setStudentId(history.getStudentId());
         notification.setTitle("Yêu cầu cộng điểm");
-        notification.setType(NotificationType.TEACHER);
+//        notification.setType(NotificationType.TEACHER);
         notification.setStatus(NotificationStatus.CHUA_DOC);
         notificationRepository.save(notification);
 

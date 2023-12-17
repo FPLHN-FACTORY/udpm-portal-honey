@@ -8,6 +8,8 @@ import {
   Space,
   Tag,
   message,
+  Row,
+  Col,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import "./index.css";
@@ -24,17 +26,6 @@ import { SearchOutlined } from "@ant-design/icons";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import moment from "moment";
-
-const statusHistory = (status) => {
-  switch (status) {
-    case 1:
-      return <Tag color="green">Đã phê duyệt</Tag>; // Màu xanh lá cây
-    case 2:
-      return <Tag color="volcano">Đã hủy</Tag>; // Màu đỏ
-    default:
-      return <Tag>Không xác định</Tag>;
-  }
-};
 
 export default function RequestApprovedHistory() {
   const dispatch = useAppDispatch();
@@ -64,10 +55,28 @@ export default function RequestApprovedHistory() {
                   const user = await RequestManagerAPI.getUserAPiById(
                     data.studentId
                   );
+                  let teacher = null;
+                  if (data.teacherId !== null) {
+                    teacher = await RequestManagerAPI.getUserAPiById(
+                      data.teacherId
+                    );
+                  }
+                  let president = null;
+                  if (data.presidentId !== null) {
+                    president = await RequestManagerAPI.getUserAPiById(
+                      data.presidentId
+                    );
+                  }
                   return {
                     ...data,
                     nameStudent: user.data.data.name,
                     userName: user.data.data.userName,
+                    nameTeacher: teacher ? teacher.data.data.name : null,
+                    userTeacher: teacher ? teacher.data.data.userName : null,
+                    namePresident: president ? president.data.data.name : null,
+                    userPresident: president
+                      ? president.data.data.userName
+                      : null,
                   };
                 } catch (error) {
                   console.error(error);
@@ -89,13 +98,10 @@ export default function RequestApprovedHistory() {
     return {
       ...data,
       key: data.id,
-      status: statusHistory(data.status),
       createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
   });
-
-  console.log(data);
 
   const listCategory = useAppSelector(GetCategory);
 
@@ -154,22 +160,6 @@ export default function RequestApprovedHistory() {
                 ]}
               />
             </Form.Item>
-            <Form.Item name={"status"} initialValue={null}>
-              <Select
-                style={{ width: "260px" }}
-                size="large"
-                placeholder="Trạng thái"
-                options={[
-                  { value: null, label: "Tất cả" },
-                  ...[1, 2].map((value) => {
-                    return {
-                      value: value,
-                      label: statusHistory(value),
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
             <Button
               htmlType="submit"
               type="primary"
@@ -180,10 +170,22 @@ export default function RequestApprovedHistory() {
           </Space>
         </Form>
       </Card>
-      <Card title="Lịch sử cộng điểm">
+      <Card title="Lịch sử">
         {data.map((item) => (
           <div className="list__point ">
-            <h3 className="text-slate-600"> Sinh viên {item.nameStudent}</h3>
+            <Row>
+              <Col span={12}>
+                <h4 className="text-slate-600">
+                  Người nhận: {item.nameStudent} ({item.userName})
+                </h4>
+              </Col>
+              <Col span={12}>
+                <h4 className="text-slate-600">
+                  Người gửi: {item.nameTeacher || item.namePresident} (
+                  {item.userTeacher || item.userPresident})
+                </h4>
+              </Col>
+            </Row>
             <div className="list__point__title">
               <p>
                 <strong className="text-slate-500 mr-[8px]">

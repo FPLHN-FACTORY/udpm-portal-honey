@@ -75,6 +75,7 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
 
   useEffect(() => {
     featAllCategory();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDateChange = (dates) => {
@@ -175,22 +176,27 @@ const ModalCreateAuction = ({ visible, onCancel, fetchAllData }) => {
       const categoryNameItem = listCategory.find(
         (item) => item.id === honeyCategoryId
       );
-      AuctionAPI.create(obj).then(
-        (response) => {
-          message.success("Thêm thành công!");
-          let objCreate = {
-            ...response.data.data,
-            categoryName: categoryNameItem.name,
-            categoryId: categoryNameItem.id,
-          };
-          fetchAllData();
-          dispatch(AddAuction(objCreate));
-          onCancel();
-        },
-        (error) => {
-          message.error(error.response.data.message);
+      Modal.confirm({
+        title: "Bạn chắc chắn muốn thêm mới phòng đấu giá không?", 
+        onOk: () => {
+          AuctionAPI.create(obj).then(
+            (response) => {
+              message.success("Thêm thành công!");
+              let objCreate = {
+                ...response.data.data,
+                categoryName: categoryNameItem.name,
+                categoryId: categoryNameItem.id,
+              };
+              fetchAllData();
+              dispatch(AddAuction(objCreate));
+              onCancel();
+            },
+            (error) => {
+              message.error(error.response.data.message);
+            }
+          );
         }
-      );
+      })
     }
   };
 

@@ -35,4 +35,18 @@ public class PresidentHistoryServiceImpl implements PresidentHistoryService {
         String id = udpmHoney.getIdUser();
         return new PageableObject<>(presidentHistoryRepository.getGiftHistory(request, pageable, id));
     }
+
+    @Override
+    public PageableObject<PresidentHoneyHistoryResponse> getHoneyRequest(PresidentFindGiftHistoryRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        String id = udpmHoney.getIdUser();
+        return new PageableObject<>(presidentHistoryRepository.getHoneyRequest(request, pageable, id));
+    }
+
+    @Override
+    public PageableObject<PresidentGiftHistoryResponse> getGiftRequest(PresidentFindGiftHistoryRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        String id = udpmHoney.getIdUser();
+        return new PageableObject<>(presidentHistoryRepository.getGiftRequest(request, pageable, id));
+    }
 }

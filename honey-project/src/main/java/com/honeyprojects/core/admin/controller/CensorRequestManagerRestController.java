@@ -91,11 +91,20 @@ public class CensorRequestManagerRestController {
         return new ResponseObject(requestManagerService.changeStatus(changeStatusRequest));
     }
 
+    @PutMapping("/change-status-all")
+    public ResponseObject changeStatusAll(@RequestBody List<CensorChangeStatusRequest> changeStatusRequest) {
+        return new ResponseObject(requestManagerService.changeStatusAll(changeStatusRequest));
+    }
+
     @PutMapping("/change-status-conversion")
     public ResponseObject changeStatusConversion(@RequestBody AdminChangeStatusGiftRequest request) {
         return new ResponseObject(requestManagerService.changeStatusConversion(request));
     }
 
+    @PutMapping("/change-status-conversion-all")
+    public ResponseObject changeStatusConversionAll(@RequestBody List<AdminChangeStatusGiftRequest> request) {
+        return new ResponseObject(requestManagerService.changeStatusConversionAll(request));
+    }
 
     //UserAPi
     @GetMapping("/user-api")

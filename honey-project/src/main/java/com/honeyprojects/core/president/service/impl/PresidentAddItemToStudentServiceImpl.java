@@ -1,6 +1,8 @@
 package com.honeyprojects.core.president.service.impl;
 
+import com.honeyprojects.core.admin.model.request.AdminCreateArchiveGiftRequest;
 import com.honeyprojects.core.admin.model.response.AdminExportCategoryResponse;
+import com.honeyprojects.core.admin.repository.AdArchiveGiftRepository;
 import com.honeyprojects.core.admin.service.ExportExcelServiceService;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
@@ -12,19 +14,21 @@ import com.honeyprojects.core.president.model.response.PresidentCategoryResponse
 import com.honeyprojects.core.president.model.response.PresidentExportGiftResponse;
 import com.honeyprojects.core.president.model.response.PresidentGiftResponse;
 import com.honeyprojects.core.president.repository.PresidentAddItemRepository;
+import com.honeyprojects.core.president.repository.PresidentArchiveGiftRepository;
+import com.honeyprojects.core.president.repository.PresidentArchiveRepository;
 import com.honeyprojects.core.president.repository.PresidentGiftRepository;
 import com.honeyprojects.core.president.repository.PresidentHistoryDetailRepository;
-import com.honeyprojects.core.president.repository.PresidentNotificationRepository;
-import com.honeyprojects.core.president.service.PresidentAddItemToStudentService;
 import com.honeyprojects.core.president.repository.PresidentHistoryRepository;
 import com.honeyprojects.core.president.repository.PresidentHoneyRepository;
-import com.honeyprojects.core.president.service.PresidentNotificationDetailService;
+import com.honeyprojects.core.president.repository.PresidentNotificationRepository;
+import com.honeyprojects.core.president.service.PresidentAddItemToStudentService;
 import com.honeyprojects.core.president.service.PresidentNotificationService;
 import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
 import com.honeyprojects.core.teacher.model.request.TeacherGetPointRequest;
 import com.honeyprojects.core.teacher.model.response.TeacherPointResponse;
 import com.honeyprojects.core.teacher.repository.TeacherCategoryRepository;
-import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
+import com.honeyprojects.entity.Archive;
+import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.HistoryDetail;
 import com.honeyprojects.entity.Honey;
@@ -59,6 +63,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -99,10 +104,16 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
     private UdpmHoney udpmHoney;
 
     @Autowired
-    private PresidentNotificationService presidentNotificationService;
+    private PresidentArchiveGiftRepository presidentArchiveGiftRepository;
 
     @Autowired
-    private PresidentNotificationDetailService presidentNotificationDetailService;
+    private PresidentArchiveRepository presidentArchiveRepository;
+
+    @Autowired
+    private AdArchiveGiftRepository archiveGiftRepository;
+
+    @Autowired
+    private PresidentNotificationService presidentNotificationService;
 
     @Override
     public ByteArrayOutputStream exportExcel(HttpServletResponse response) {
@@ -332,6 +343,16 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
             String emailSimple = userDTO.getUserName();
             SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserByEmailOrUsername(emailSimple);
 
+            // tạo rương cho sinh viên
+            String idArchive = null;
+            String archiveId = presidentArchiveRepository.getIdArchiveByIdStudent(simpleResponse.getId());
+            if (archiveId == null) {
+                Archive archive = createArchive(simpleResponse.getId());
+                idArchive = archive.getId();
+            } else {
+                idArchive = archiveId;
+            }
+
             // Xử lý vật phẩm (gift)
             if (!DataUtils.isNullObject(userDTO.getLstGift())) {
                 String[] partsGift = userDTO.getLstGift().split(", ");
@@ -367,8 +388,9 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                             newHistory.setChangeDate(dateNow);
                             newHistory.setPresidentName(udpmHoney.getUserName());
                             newHistory.setPresidentId(udpmHoney.getIdUser());
+                            newHistory.setStudentName(simpleResponse.getUserName());
                             newHistory.setStudentId(simpleResponse.getId());
-                            newHistory.setType(TypeHistory.MAT_ONG_VA_VAT_PHAM);
+                            newHistory.setType(TypeHistory.CONG_VAT_PHAM);
                             return newHistory;
                         });
 
@@ -379,14 +401,19 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                             Notification notification = createNotification(simpleResponse.getId());
                             createNotificationDetailItem(gift, notification.getId(), quantity);
                             history.setStatus(HistoryStatus.PRESIDENT_DA_THEM);
+                            // thêm vào rương cho sinh viên
+                            createArchiveGift(idArchive, null, gift.getId(), quantity);
                         } else {
                             // gửi yêu cầu phê duyệt cho admin
                             // gửi thông báo cho admin
                             stringBuilder.append("Đã gửi yêu cầu phê duyệt tới admin " + "Sinh viên " + simpleResponse.getName() + " - " + simpleResponse.getUserName() + ": " + quantity + " " + gift.getName() + ", ");
                             history.setStatus(HistoryStatus.CHO_PHE_DUYET);
+
                         }
 
                         historyRepository.save(history);
+                        // tạo thông báo gửi cho admin
+                        presidentNotificationService.sendNotificationToAdmin(history.getId(), udpmHoney.getIdUser());
 
                         HistoryDetail historyDetail = new HistoryDetail();
                         historyDetail.setHistoryId(history.getId());
@@ -395,6 +422,7 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                         historyDetail.setStudentId(simpleResponse.getId());
                         historyDetail.setNameGift(nameItem);
                         historyDetailRepository.save(historyDetail);
+
                     }
                 }
 
@@ -424,6 +452,7 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                     String categoryPoint = category.getName();
                     String categoryId = category.getId();
                     String enumCategoryACCEPT = String.valueOf(CategoryStatus.ACCEPT.ordinal());
+                    String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
 
                     if (honeyMap.containsKey(categoryPoint)) {
                         List<Integer> honeyPoints = honeyMap.get(categoryPoint);
@@ -439,6 +468,8 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                                 History newHistory = new History();
                                 newHistory.setPresidentName(udpmHoney.getUserName());
                                 newHistory.setPresidentId(udpmHoney.getIdUser());
+                                newHistory.setStudentName(simpleResponse.getUserName());
+                                newHistory.setStudentId(simpleResponse.getId());
                                 newHistory.setType(TypeHistory.CONG_DIEM);
                                 newHistory.setChangeDate(dateNow);
                                 historyRepository.save(newHistory);
@@ -446,26 +477,42 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                             });
 
                             history.setStatus(category.getStatus().equals(enumCategoryACCEPT) ? HistoryStatus.CHO_PHE_DUYET : HistoryStatus.PRESIDENT_DA_THEM);
-                            history.setStudentId(simpleResponse.getId());
                             historyRepository.save(history);
 
                             HistoryDetail historyDetail = new HistoryDetail();
                             historyDetail.setHistoryId(history.getId());
                             historyDetail.setHoneyPoint(honeyPoint);
                             historyDetail.setStudentId(getPointRequest.getStudentId());
-
-                            if (teacherPointResponse == null) {
-                                Honey honey = new Honey();
-                                honey.setStatus(Status.HOAT_DONG);
-                                honey.setHoneyPoint(0);
-                                honey.setStudentId(simpleResponse.getId());
-                                honey.setHoneyCategoryId(categoryId);
-                                historyDetail.setHoneyId(honeyRepository.save(honey).getId());
-                            } else {
-                                Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
-                                historyDetail.setHoneyId(honey.getId());
+                            if(category.getStatus().equals(enumCategoryACCEPT)){
+                                if (teacherPointResponse == null) {
+                                    Honey honey = new Honey();
+                                    honey.setStatus(Status.KHONG_HOAT_DONG);
+                                    honey.setHoneyPoint(0);
+                                    honey.setStudentId(simpleResponse.getId());
+                                    honey.setHoneyCategoryId(categoryId);
+                                    historyDetail.setHoneyId(honeyRepository.save(honey).getId());
+                                } else {
+                                    Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
+                                    historyDetail.setHoneyId(honey.getId());
+                                }
+                                // tạo thông báo gửi cho admin
+                                presidentNotificationService.sendNotificationToAdmin(history.getId(), udpmHoney.getIdUser());
                             }
-
+                            else if(category.getStatus().equals(enumCategoryFREE)){
+                                if (teacherPointResponse == null) {
+                                    Honey honey = new Honey();
+                                    honey.setStatus(Status.KHONG_HOAT_DONG);
+                                    honey.setHoneyPoint(honeyPoint);
+                                    honey.setStudentId(simpleResponse.getId());
+                                    honey.setHoneyCategoryId(categoryId);
+                                    historyDetail.setHoneyId(honeyRepository.save(honey).getId());
+                                } else {
+                                    Honey honey = honeyRepository.findById(teacherPointResponse.getId()).orElseThrow();
+                                    honey.setHoneyPoint(honeyPoint + honey.getHoneyPoint());
+                                    honeyRepository.save(honey);
+                                    historyDetail.setHoneyId(honey.getId());
+                                }
+                            }
                             historyDetailRepository.save(historyDetail);
                         }
                     }
@@ -476,14 +523,14 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
 
 
     private Notification createNotification(String idStudent) {
-        String title = Constants.TITLE_NOTIFICATION_SYSTEM;
+        String title = Constants.TITLE_NOTIFICATION_PRESIDENT;
         PresidentNotificationAddItemRequest request = new PresidentNotificationAddItemRequest(title, idStudent, NotificationType.HE_THONG, NotificationStatus.CHUA_DOC);
         Notification notification = request.createNotification(new Notification());
         return presidentNotificationRepository.save(notification);
     }
 
     private NotificationDetail createNotificationDetailHoney(PresidentCategoryResponse categoryResponse, String idNotification, Integer quantity) {
-        String content = Constants.CONTENT_NOTIFICATION_SYSTEM + " Mật ong - " + categoryResponse.getName() + " - Số lượng: " + quantity;
+        String content = Constants.CONTENT_NOTIFICATION_PRESIDENT + " Mật ong - " + categoryResponse.getName() + " - Số lượng: " + quantity;
         PresidentCreateNotificationDetailAddItemRequest detailRandomRequest = new PresidentCreateNotificationDetailAddItemRequest(content, categoryResponse.getId(), idNotification, NotificationDetailType.NOTIFICATION_DETAIL_HONEY, quantity);
         NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
         return studentNotificationDetailRepository.save(notificationDetail);
@@ -494,5 +541,24 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
         PresidentCreateNotificationDetailAddItemRequest detailRandomRequest = new PresidentCreateNotificationDetailAddItemRequest(content, gift.getId(), idNotification, NotificationDetailType.NOTIFICATION_DETAIL_GIFT, quantity);
         NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
         return studentNotificationDetailRepository.save(notificationDetail);
+    }
+
+    private Archive createArchive(String idStudent) {
+        Archive archive = new Archive();
+        archive.setStudentId(idStudent);
+        archive.setStatus(Status.HOAT_DONG);
+        return presidentArchiveRepository.save(archive);
+    }
+
+    private ArchiveGift createArchiveGift(String archive, String idChest, String idGift, Integer quantity) {
+        Optional<ArchiveGift> existingArchiveGift = presidentArchiveGiftRepository.findByArchiveIdAndGiftId(archive, idGift);
+        if (!existingArchiveGift.isEmpty()) {
+            existingArchiveGift.get().setQuantity(existingArchiveGift.get().getQuantity() + quantity);
+            return presidentArchiveGiftRepository.save(existingArchiveGift.get());
+        } else {
+            AdminCreateArchiveGiftRequest adminCreateArchiveGiftRequest = new AdminCreateArchiveGiftRequest(archive, idChest, idGift, quantity);
+            ArchiveGift newArchiveGift = adminCreateArchiveGiftRequest.createArchivegift(new ArchiveGift());
+            return presidentArchiveGiftRepository.save(newArchiveGift);
+        }
     }
 }

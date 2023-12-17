@@ -20,7 +20,7 @@ public interface CensorHistoryRepository extends HistoryRepository {
             SELECT ROW_NUMBER() over (ORDER BY hd.created_date DESC ) AS stt, hd.id, h.id AS idHistory, h.note,
             h.change_date, hd.student_id, hd.honey_id, h.status,
             h.teacher_id, h.president_id,
-            GROUP_CONCAT(CONCAT(hd.honey_point, ' ', c.name) SEPARATOR ', ') AS honey
+            GROUP_CONCAT(CONCAT(hd.honey_point, ' mật ong ', c.name) SEPARATOR ', ') AS honey
             FROM history_detail hd
             RIGHT JOIN history h ON hd.history_id = h.id
             LEFT JOIN honey ho ON hd.honey_id = ho.id
@@ -29,6 +29,7 @@ public interface CensorHistoryRepository extends HistoryRepository {
             AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent})
             AND h.type = 0 AND h.status = 0
             GROUP BY hd.history_id
+            ORDER BY h.last_modified_date DESC;
             """, nativeQuery = true)
     Page<CensorAddHoneyRequestResponse> getHistoryAddPoint(@Param("searchParams") CensorSearchHistoryRequest searchParams,
                                                            Pageable pageable);
@@ -36,7 +37,7 @@ public interface CensorHistoryRepository extends HistoryRepository {
     @Query(value = """
             SELECT h.id, hd.id AS history_detail_id, h.note,
             h.created_date, hd.student_id, h.status, h.type, 
-            GROUP_CONCAT(CONCAT(hd.honey_point, ' ', c.name) SEPARATOR ', ') AS honey,
+            GROUP_CONCAT(CONCAT(hd.honey_point, ' mật ong ', c.name) SEPARATOR ', ') AS honey,
             GROUP_CONCAT(CONCAT(hd.quantity_gift, ' ', hd.name_gift) SEPARATOR ', ') AS gift,
             h.teacher_id, h.president_id, h.change_date
             FROM history_detail hd
@@ -81,7 +82,8 @@ public interface CensorHistoryRepository extends HistoryRepository {
     @Query(value = """
             SELECT ROW_NUMBER() over (ORDER BY hd.created_date desc ) as stt, h.id, h.note,
             h.change_date, h.created_date, hd.student_id, hd.honey_id, h.status,
-            GROUP_CONCAT(CONCAT(hd.honey_point, ' ', c.name) SEPARATOR ', ') AS honey
+            h.teacher_id, h.president_id,
+            GROUP_CONCAT(CONCAT(hd.honey_point, ' mật ong ', c.name) SEPARATOR ', ') AS honey
             FROM history_detail hd
             LEFT JOIN history h ON hd.history_id = h.id
             LEFT JOIN honey ho ON hd.honey_id = ho.id
@@ -90,6 +92,8 @@ public interface CensorHistoryRepository extends HistoryRepository {
             AND (:#{#searchParams.idCategory} IS NULL OR c.id = :#{#searchParams.idCategory}) 
             AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent}) 
             AND h.type = 0 
+            GROUP BY hd.history_id
+            ORDER BY h.last_modified_date DESC;
             """, nativeQuery = true)
     Page<CensorTransactionRequestResponse> getHistoryApprovedByStatus(@Param("searchParams") AdminHistoryApprovedSearchRequest searchParams,
                                                                       Pageable pageable);
@@ -97,8 +101,8 @@ public interface CensorHistoryRepository extends HistoryRepository {
     @Query(value = """
             SELECT ROW_NUMBER() over (ORDER BY hd.created_date desc ) as stt, h.id, h.note,
             h.change_date, h.created_date, hd.student_id, 
-            hd.honey_id, h.status,
-            GROUP_CONCAT(CONCAT(hd.honey_point, ' ', c.name) SEPARATOR ', ') AS honey
+            hd.honey_id, h.status, h.teacher_id, h.president_id,
+            GROUP_CONCAT(CONCAT(hd.honey_point, ' mật ong ', c.name) SEPARATOR ', ') AS honey
             FROM history_detail hd
             LEFT JOIN history h ON hd.history_id = h.id
             LEFT JOIN honey ho ON hd.honey_id = ho.id
@@ -108,6 +112,7 @@ public interface CensorHistoryRepository extends HistoryRepository {
             AND (:#{#searchParams.idStudent} IS NULL OR h.student_id = :#{#searchParams.idStudent}) 
             AND h.type = 0
             GROUP BY hd.history_id
+            ORDER BY h.last_modified_date DESC;
             """, nativeQuery = true)
     Page<CensorTransactionRequestResponse> getHistoryApprovedAllStatus(@Param("searchParams") AdminHistoryApprovedSearchRequest searchParams,
                                                                        Pageable pageable);

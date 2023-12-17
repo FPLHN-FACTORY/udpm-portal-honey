@@ -45,18 +45,25 @@ export default function IndexGift() {
   }, []);
 
   useEffect(() => {
-    document.title = "Quản lý vật phẩm";
+    GiftAPI.fetchAll().then((response) => {
+      dispatch(SetGift(response.data.data.data));
+      setTotal(response.data.data.totalPages);
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
     fetchAllCate();
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
 
   const fetchData = () => {
-    GiftAPI.fetchAll({
+    const data = {
       search: search,
       categoryId: honeyCategoryId,
       page: current - 1,
-    }).then((response) => {
+    };
+    GiftAPI.fetchAll(data).then((response) => {
       dispatch(SetGift(response.data.data.data));
       setTotal(response.data.data.totalPages);
     });
@@ -245,20 +252,23 @@ export default function IndexGift() {
           }}
         />
       )}
-      <Modal
-        title="Xác nhận xóa"
-        visible={confirmDelete}
-        onOk={() => {
-          if (detailGift) {
-            DeleteGift(detailGift.id);
-          }
-        }}
-        onCancel={() => setConfirmDelete(false)}
-        okText="Xóa"
-        cancelText="Hủy"
-      >
-        Bạn có chắc chắn muốn xóa vật phẩm này?
-      </Modal>
+      {
+        confirmDelete && 
+        <Modal
+          title="Xác nhận xóa"
+          visible={confirmDelete}
+          onOk={() => {
+            if (detailGift) {
+              DeleteGift(detailGift.id);
+            }
+          }}
+          onCancel={() => setConfirmDelete(false)}
+          okText="Xóa"
+          cancelText="Hủy"
+        >
+          Bạn có chắc chắn muốn xóa vật phẩm này?
+        </Modal>
+      }
       <Card style={{ borderTop: "5px solid #FFCC00", marginBottom: 30 }}>
         <div className="filter__auction">
           <FontAwesomeIcon

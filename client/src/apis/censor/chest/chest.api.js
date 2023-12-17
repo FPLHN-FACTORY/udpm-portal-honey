@@ -27,12 +27,10 @@ export class ChestAPI {
     });
   };
 
-  
-
   static delete = (id) => {
     return request({
-      method: "DELETE",
-      url: `/${this.COMPONENT_NAME}/${id}`,
+      method: "PUT",
+      url: `/${this.COMPONENT_NAME}/delete/${id}`,
     });
   };
 }

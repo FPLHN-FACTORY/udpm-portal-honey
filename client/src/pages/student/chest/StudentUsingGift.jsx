@@ -80,7 +80,8 @@ const UsingGift = (props) => {
     const data = {
       classId: classStudent.classId,
       subjectId: classStudent.subjectId,
-
+      scoreRatioMin: archivegift.scoreRatioMin,
+      scoreRatioMax: archivegift.scoreRatioMax
     }
 
     ArchiveAPI.getScoreClass(data).then((response) => {

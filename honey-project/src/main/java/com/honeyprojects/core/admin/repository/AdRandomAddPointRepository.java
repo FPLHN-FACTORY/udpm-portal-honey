@@ -5,7 +5,6 @@ import com.honeyprojects.core.admin.model.response.AdminChestGiftResponse;
 import com.honeyprojects.core.admin.model.response.AdminChestReponse;
 import com.honeyprojects.core.admin.model.response.AdminImportCategoryResponse;
 import com.honeyprojects.core.admin.model.response.AdminImportGiftResponse;
-import com.honeyprojects.core.president.model.response.PresidentCategoryResponse;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.repository.HoneyRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -39,7 +38,7 @@ public interface AdRandomAddPointRepository extends HoneyRepository {
 
     @Query(value = """
             select row_number() OVER(ORDER BY created_date DESC) as stt, id, name
-            from chest
+            from chest where status = '0'
             """, nativeQuery = true)
     List<AdminChestReponse> getAllChest();
 
@@ -48,14 +47,14 @@ public interface AdRandomAddPointRepository extends HoneyRepository {
             from chest c
             join chest_gift cg on c.id = cg.chest_id
             join gift g on g.id = cg.gift_id
-            where c.id = :#{#idchest}
+            where c.id = :#{#idchest} and c.status = '0'
             """, nativeQuery = true)
     List<AdminChestGiftResponse> getAllGiftByChest(String idchest);
 
     @Query(value = """
             select row_number()  OVER(ORDER BY created_date DESC) as stt, id, name
             from chest
-            where id = :#{#idChest}
+            where id = :#{#idChest} and status = '0'
             """, nativeQuery = true)
     AdminChestReponse getChestById(String idChest);
 

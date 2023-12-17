@@ -1,10 +1,7 @@
 package com.honeyprojects.infrastructure.security;
 
-import com.honeyprojects.infrastructure.apiconstants.ApiConstants;
-import com.honeyprojects.infrastructure.apiconstants.HonneyConstants;
+import com.honeyprojects.infrastructure.contant.Constants;
 import com.honeyprojects.infrastructure.contant.SessionConstant;
-import com.honeyprojects.infrastructure.session.HoneySession;
-import com.honeyprojects.util.callApiPoint.model.response.RoleIdentityResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -13,21 +10,13 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.security.Key;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -39,12 +28,6 @@ public class JwtTokenProvider {
 
     @Autowired
     private HttpSession httpSession;
-
-    @Autowired
-    private HoneySession honeySession;
-
-    @Autowired
-    private HttpSession session;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -85,6 +68,16 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(null, token, authorities);
     }
 
+    public void logout() {
+        httpSession.setAttribute(SessionConstant.ID_USER, null);
+        httpSession.setAttribute(SessionConstant.NAME, null);
+        httpSession.setAttribute(SessionConstant.USER_NAME, null);
+        httpSession.setAttribute(SessionConstant.PICTURE, null);
+        httpSession.setAttribute(SessionConstant.EMAIL, null);
+        httpSession.setAttribute(SessionConstant.ROLES, null);
+        httpSession.setAttribute(Constants.TOKEN, null);
+    }
+
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parserBuilder()
@@ -94,6 +87,7 @@ public class JwtTokenProvider {
 
             Date expirationDate = claims.getBody().getExpiration();
             if (expirationDate.before(new Date())) {
+                logout();
                 return false;
             }
             // check roles in identity
@@ -101,6 +95,7 @@ public class JwtTokenProvider {
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             e.printStackTrace();
+            logout();
             return false;
         }
     }

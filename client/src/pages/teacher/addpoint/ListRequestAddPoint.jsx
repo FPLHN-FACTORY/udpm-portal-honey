@@ -3,6 +3,7 @@ import {
   Card,
   Form,
   Input,
+  Modal,
   Pagination,
   Select,
   Space,
@@ -34,53 +35,60 @@ const statusHistory = (status) => {
   }
 };
 
-export default function HistoryAddPoint() {
+export default function RequestAddPoint() {
   const dispatch = useAppDispatch();
   const columns = [
     {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
+      align: "center",
     },
     {
       title: "User name",
       dataIndex: "userName",
       key: "userName",
+      align: "center",
     },
     {
       title: "Tên sinh viên",
       dataIndex: "nameStudent",
       key: "nameStudent",
+      align: "center",
     },
     {
-      title: "Loại điểm",
-      dataIndex: "nameCategory",
-      key: "nameCategory",
-    },
-    {
-      title: "Số điểm",
-      dataIndex: "honeyPoint",
-      key: "honeyPoint",
+      title: "Số mật ong",
+      dataIndex: "honey",
+      key: "honey",
+      align: "center",
     },
     {
       title: "Ngày tạo",
       dataIndex: "createdDate",
       key: "createdDate",
+      align: "center",
     },
     {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
+      align: "center",
     },
     {
       title: "Hành động",
       dataIndex: "acction",
       key: "acction",
+      align: "center",
       render: (values) => (
         <div style={{ textAlign: "center" }}>
           <Button
             onClick={() =>
-              changeStatus(values.idHistory, values.status === 2 ? 3 : 2)
+              Modal.confirm({
+                title: "Bạn có chắc chắn muốn hủy yêu cầu không?",
+                onOk: () => {
+                  changeStatus(values.idHistory, values.status === 2 ? 3 : 2)
+                }
+              })
             }
             disabled={values.status === 1}
             type="primary"
@@ -146,10 +154,11 @@ export default function HistoryAddPoint() {
       ...data,
       key: data.id,
       status: statusHistory(data.status),
-      createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
+      createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
   });
+
   const listCategory = useAppSelector(GetCategory);
 
   const onFinishSearch = (value) => {
@@ -234,14 +243,6 @@ export default function HistoryAddPoint() {
           dataSource={data}
           rowKey="key"
           pagination={false}
-          expandable={{
-            expandedRowRender: (record) => (
-              <p>
-                <b style={{ color: "#EEB30D" }}>Lý do cộng: </b>
-                {record.note}
-              </p>
-            ),
-          }}
         />
         <div className="mt-10 text-center mb-10">
           <Pagination

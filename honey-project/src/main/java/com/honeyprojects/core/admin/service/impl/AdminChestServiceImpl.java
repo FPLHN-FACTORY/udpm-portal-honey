@@ -10,9 +10,12 @@ import com.honeyprojects.core.admin.repository.AdHistoryDetailRepository;
 import com.honeyprojects.core.admin.service.AdminChestService;
 import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.entity.Chest;
+import com.honeyprojects.infrastructure.contant.Message;
+import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.infrastructure.logger.entity.LoggerFunction;
 import com.honeyprojects.infrastructure.rabbit.RabbitProducer;
+import com.honeyprojects.util.DataUtils;
 import com.honeyprojects.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -54,8 +58,10 @@ public class AdminChestServiceImpl implements AdminChestService {
     @Override
     @Transactional
     public Chest addChest(AdminCreateChestRequest request) {
+        checkNameExist(request.getName(), "");
         Chest chest = new Chest();
         chest.setName(request.getName());
+        chest.setStatus(Status.HOAT_DONG);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Admin tạo thêm rương: " + request.getName());
         LoggerFunction loggerObject = new LoggerFunction();
@@ -69,6 +75,13 @@ public class AdminChestServiceImpl implements AdminChestService {
         return chestRepository.save(chest);
     }
 
+    private void checkNameExist(String name, String id){
+        List<Chest> lstChest = chestRepository.checkNameExist(name, id);
+        if(!DataUtils.isNullObject(lstChest)){
+            throw new RestApiException(Message.CHEST_EXIST);
+        }
+    }
+
     @Override
     @Transactional
     public void deleteChest(String id) {
@@ -78,14 +91,14 @@ public class AdminChestServiceImpl implements AdminChestService {
         ) {
             throw new RestApiException("Rương đã được sử dụng. Không thể xóa");
         }
-
-        adChestGiftRepository.deleteAllByChestId(id);
-        chestRepository.delete(chestOptional.get());
+        chestOptional.get().setStatus(Status.KHONG_HOAT_DONG);
+        chestRepository.save(chestOptional.get());
     }
 
     @Override
     @Transactional
     public Chest updateChest(AdminCreateChestRequest request, String id) {
+        checkNameExist(request.getName(), id);
         Chest chest = chestRepository.findById(id).get();
         if (chest != null) {
             chest.setName(request.getName());

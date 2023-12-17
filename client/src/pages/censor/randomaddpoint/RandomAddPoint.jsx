@@ -4,6 +4,7 @@ import {
   Card,
   Col,
   Input,
+  Modal,
   Popconfirm,
   Row,
   Select,
@@ -186,29 +187,29 @@ export default function RandomAddPoint() {
       setDataRandomPoint({ ...dataRandomPoint, minPoint: 0 });
     }
     if (dataRandomPoint.minPoint < 1) {
-      errors.minPoint = "Số mật tối thiếu phải > 0";
+      errors.minPoint = "Số mật ong tối thiếu phải > 0";
     } else if (dataRandomPoint.minPoint > 10000) {
-      errors.minPoint = "Số mật tối thiếu phải < 10000";
+      errors.minPoint = "Số mật ong tối thiếu phải < 10000";
     } else if (
       dataRandomPoint.minPoint > dataRandomPoint.maxPoint ||
       dataRandomPoint.minPoint === dataRandomPoint.maxPoint
     ) {
-      errors.minPoint = "Số mật tối thiếu phải nhỏ hơn số mật tối đa";
+      errors.minPoint = "Số mật ong tối thiếu phải nhỏ hơn số mật tối đa";
     } else if (!Number.isInteger(dataRandomPoint.minPoint)) {
-      errors.minPoint = "Số mật tối thiếu phải là số nguyên";
+      errors.minPoint = "Số mật ong tối thiếu phải là số nguyên";
     }
 
     if (dataRandomPoint.maxPoint === null) {
       setDataRandomPoint({ ...dataRandomPoint, maxPoint: 0 });
     }
     if (dataRandomPoint.maxPoint < 1) {
-      errors.maxPoint = "Số mật tối đa phải > 0";
+      errors.maxPoint = "Số mật ong tối đa phải > 0";
     } else if (dataRandomPoint.maxPoint < dataRandomPoint.minPoint) {
-      errors.maxPoint = "Số mật tối đa phải lớn hơn số mật tối thiểu";
+      errors.maxPoint = "Số mật ong tối đa phải lớn hơn số mật tối thiểu";
     } else if (dataRandomPoint.maxPoint > 10000) {
-      errors.maxPoint = "Số mật tối đa phải < 10000";
+      errors.maxPoint = "Số mật ong tối đa phải < 10000";
     } else if (!Number.isInteger(dataRandomPoint.maxPoint)) {
-      errors.minPoint = "Số mật tối thiếu phải là số nguyên";
+      errors.minPoint = "Số mật ong tối thiếu phải là số nguyên";
     }
 
     if (dataRandomPoint.listCategoryPoint.length < 1) {
@@ -232,18 +233,23 @@ export default function RandomAddPoint() {
     const check = handleValidationRandomPoint();
 
     if (check < 1) {
-      RandomAddPointAPI.createRandomPoint(dataRandomPoint)
-        .then(() => {
-          message.success("Tạo ngẫu nhiên mật ong thành công");
-          setDataRandomPoint(initialDataRandomPoint);
-          setDataRandomItem(initialDataRandomItem);
-          setDataPreview([]);
-          setNameFile("");
-          setSelectedCategories([]);
-        })
-        .catch(() => {
-          message.error("Tạo ngẫu nhiên mật ong thất bại");
-        });
+      Modal.confirm({
+        title: "Bạn có chắc chắn muốn tạo ngẫu nhiên mật ong không?",
+        onOk: () => {
+          RandomAddPointAPI.createRandomPoint(dataRandomPoint)
+            .then(() => {
+              message.success("Tạo ngẫu nhiên mật ong thành công");
+              setDataRandomPoint(initialDataRandomPoint);
+              setDataRandomItem(initialDataRandomItem);
+              setDataPreview([]);
+              setNameFile("");
+              setSelectedCategories([]);
+            })
+            .catch(() => {
+              message.error("Tạo ngẫu nhiên mật ong thất bại");
+            });
+        }
+      })
     } else {
       message.error(
         "Tạo ngẫu nhiên mật ong thất bại, bạn cần nhập đủ các dữ liệu"
@@ -255,18 +261,23 @@ export default function RandomAddPoint() {
     const check = handleValidationRandomItem();
 
     if (check < 1) {
-      RandomAddPointAPI.createRandomItem(dataRandomItem)
-        .then(() => {
-          message.success("Phát rương thành công");
-          setDataRandomPoint(initialDataRandomPoint);
-          setDataRandomItem(initialDataRandomItem);
-          setDataPreview([]);
-          setNameFile("");
-          setSelectedChest("");
-        })
-        .catch(() => {
-          message.error("Phát rương thất bại");
-        });
+      Modal.confirm({
+        title: "Bạn có chắc chắn muốn phát rương không?",
+        onOk: () => {
+          RandomAddPointAPI.createRandomItem(dataRandomItem)
+          .then(() => {
+            message.success("Phát rương thành công");
+            setDataRandomPoint(initialDataRandomPoint);
+            setDataRandomItem(initialDataRandomItem);
+            setDataPreview([]);
+            setNameFile("");
+            setSelectedChest("");
+          })
+          .catch(() => {
+            message.error("Phát rương thất bại");
+          });
+        }
+      })
     } else {
       message.error("Phát rương thất bại, bạn cần nhập đủ các dữ liệu");
     }

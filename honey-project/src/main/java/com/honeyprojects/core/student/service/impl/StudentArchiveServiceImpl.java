@@ -16,14 +16,18 @@ import com.honeyprojects.core.student.model.response.archive.StudentArchiveByUse
 import com.honeyprojects.core.student.repository.StudentArchiveRepository;
 import com.honeyprojects.core.student.repository.StudentGiftArchiveRepository;
 import com.honeyprojects.core.student.repository.StudentGiftRepository;
+import com.honeyprojects.core.student.repository.StudentHistoryDetailRepository;
 import com.honeyprojects.core.student.repository.StudentHistoryRepository;
 import com.honeyprojects.core.student.service.StudentArchiveService;
+import com.honeyprojects.core.student.service.StudentNotificationService;
 import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.History;
+import com.honeyprojects.entity.HistoryDetail;
 import com.honeyprojects.infrastructure.contant.ExpiryGift;
 import com.honeyprojects.infrastructure.contant.HistoryStatus;
+import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.infrastructure.exception.rest.RestApiException;
 import com.honeyprojects.repository.ArchiveGiftRepository;
@@ -61,6 +65,9 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     private StudentHistoryRepository historyRepository;
 
     @Autowired
+    private StudentHistoryDetailRepository historyDetailRepository;
+
+    @Autowired
     private StudentGiftRepository giftRepository;
 
     @Autowired
@@ -72,11 +79,11 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
     @Autowired
     private AddPointUtils addPointUtils;
 
+    @Autowired
+    private StudentNotificationService studentNotificationService;
+
     @Override
     public PageableObject<StudentArchiveResponse> getAllGiftArchive(StudentArchiveFilterRequest filterRequest) {
-        System.err.println("--------------------------");
-        System.err.println(udpmHoney.getIdUser());
-        System.err.println("--------------------------");
         Pageable pageable = PageRequest.of(filterRequest.getPage(), filterRequest.getSize());
         filterRequest.setIdStudent(udpmHoney.getIdUser());
         return new PageableObject<>(studentGiftArchiveRepository.getAllGiftArchive(filterRequest, pageable));
@@ -99,25 +106,41 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
         ArchiveGift archiveGift = archiveGiftRepository.findById(request.getArchiveGiftId()).orElse(null);
         Gift gift = giftRepository.findById(archiveGift.getGiftId()).get();
         if (gift.getExpiry().equals(ExpiryGift.HET_HAN) || gift.getExpiry().equals(ExpiryGift.CHUA_HOAT_DONG)) {
-            return null;
+            throw new RestApiException("Vật phẩm " + gift.getName() + " đã hết hạn hoặc chưa được hoạt động");
         }
+
+        if (gift.getLimitQuantity() != null) {
+            if (request.getQuantity() > gift.getLimitQuantity()) {
+                throw new RestApiException("Vật phẩm " +
+                        gift.getName() + " chỉ cho phép sử dụng "
+                        + gift.getLimitQuantity() + " vật phẩm vào đầu điểm đang chọn");
+            }
+            if (historyDetailRepository
+                    .sumQuantityStudentUseGift(udpmHoney.getIdUser(), gift.getId()) + request.getQuantity()
+                    > gift.getLimitQuantity()) {
+                throw new RestApiException("Vật phẩm " +
+                        gift.getName() + " chỉ cho phép sử dụng "
+                        + gift.getLimitQuantity() + " vật phẩm vào đầu điểm đang chọn");
+            }
+        }
+
         if (archiveGift != null) {
             FilterScoreTemplateVM filterScoreTemplate = new FilterScoreTemplateVM();
             filterScoreTemplate.setScoreTemplateId(request.getScoreId());
             filterScoreTemplate.setStudentName(udpmHoney.getUserName());
             ScoreTemplateVM scoreTemplateVM = callApiCommonService.callApiScoreTemplateVM(filterScoreTemplate).get(0);
 
-            if (gift.getScoreRatioMin() != null) {
-                if (scoreTemplateVM.getScoreRatio() < gift.getScoreRatioMin()) {
-                    throw new RestApiException("Đầu điểm " + scoreTemplateVM.getName() + " không đủ điều kiện.");
-                }
-            }
-
-            if (gift.getScoreRatioMax() != null) {
-                if (scoreTemplateVM.getScoreRatio() > gift.getScoreRatioMax()) {
-                    throw new RestApiException("Đầu điểm " + scoreTemplateVM.getName() + " không đủ điều kiện.");
-                }
-            }
+//            if (gift.getScoreRatioMin() != null) {
+//                if (scoreTemplateVM.getScoreRatio() <= gift.getScoreRatioMin()) {
+//                    throw new RestApiException("Đầu điểm " + scoreTemplateVM.getName() + " không đủ điều kiện.");
+//                }
+//            }
+//
+//            if (gift.getScoreRatioMax() != null) {
+//                if (scoreTemplateVM.getScoreRatio() >= gift.getScoreRatioMax()) {
+//                    throw new RestApiException("Đầu điểm " + scoreTemplateVM.getName() + " không đủ điều kiện.");
+//                }
+//            }
 
             Double scoreGift = 0.0;
             if (scoreTemplateVM.getScoreRatio() == 0) {
@@ -126,7 +149,7 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
 
             scoreGift = request.getQuantity() * ((gift.getScore() * gift.getScoreRatio())/scoreTemplateVM.getScoreRatio());
             if (scoreTemplateVM.getScore() + scoreGift > 10) {
-                throw new RestApiException("Đầu điểm " + scoreTemplateVM.getName() + " đã đủ không thể đổi.");
+                throw new RestApiException("Đầu điểm " + scoreTemplateVM.getName() + " của bạn đã đủ. Không thể đổi thêm");
             }
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("Sinh viên '")
@@ -137,6 +160,7 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
                     .append(scoreTemplateVM.getName())
                     .append("'")
             ;
+//            studentNotificationService.sendNotificationToTeacher(teacher.getId(), udpmHoney.getUserName());
             History history = new History();
             history.setStudentId(udpmHoney.getIdUser());
             history.setTeacherId(teacher.getId());
@@ -145,7 +169,16 @@ public class StudentArchiveServiceImpl implements StudentArchiveService {
             history.setType(TypeHistory.PHE_DUYET_QUA);
             history.setStatus(HistoryStatus.CHO_PHE_DUYET);
             history.setNote(stringBuilder.toString());
-            historyRepository.save(history);
+            history.setId(historyRepository.save(history).getId());
+
+            HistoryDetail historyDetail = new HistoryDetail();
+            historyDetail.setHistoryId(history.getId());
+            historyDetail.setGiftId(gift.getId());
+            historyDetail.setQuantityGift(request.getQuantity());
+            historyDetail.setStudentId(history.getStudentId());
+            historyDetail.setStatus(Status.HOAT_DONG);
+            historyDetailRepository.save(historyDetail);
+
             archiveGift.setQuantity(archiveGift.getQuantity() - request.getQuantity());
             if (archiveGift.getQuantity() <= 0) {
                 archiveGiftRepository.delete(archiveGift);
