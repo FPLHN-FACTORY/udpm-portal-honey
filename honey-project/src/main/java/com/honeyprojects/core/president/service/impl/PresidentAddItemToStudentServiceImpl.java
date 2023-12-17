@@ -2,6 +2,7 @@ package com.honeyprojects.core.president.service.impl;
 
 import com.honeyprojects.core.admin.model.request.AdminCreateArchiveGiftRequest;
 import com.honeyprojects.core.admin.model.response.AdminExportCategoryResponse;
+import com.honeyprojects.core.admin.repository.AdArchiveGiftRepository;
 import com.honeyprojects.core.admin.service.ExportExcelServiceService;
 import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
@@ -21,7 +22,6 @@ import com.honeyprojects.core.president.repository.PresidentHistoryRepository;
 import com.honeyprojects.core.president.repository.PresidentHoneyRepository;
 import com.honeyprojects.core.president.repository.PresidentNotificationRepository;
 import com.honeyprojects.core.president.service.PresidentAddItemToStudentService;
-import com.honeyprojects.core.president.service.PresidentNotificationDetailService;
 import com.honeyprojects.core.president.service.PresidentNotificationService;
 import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
 import com.honeyprojects.core.teacher.model.request.TeacherGetPointRequest;
@@ -104,13 +104,13 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
     private UdpmHoney udpmHoney;
 
     @Autowired
-    private PresidentNotificationDetailService presidentNotificationDetailService;
-
-    @Autowired
     private PresidentArchiveGiftRepository presidentArchiveGiftRepository;
 
     @Autowired
     private PresidentArchiveRepository presidentArchiveRepository;
+
+    @Autowired
+    private AdArchiveGiftRepository archiveGiftRepository;
 
     @Autowired
     private PresidentNotificationService presidentNotificationService;
@@ -389,6 +389,7 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                             newHistory.setPresidentName(udpmHoney.getUserName());
                             newHistory.setPresidentId(udpmHoney.getIdUser());
                             newHistory.setStudentName(simpleResponse.getUserName());
+                            newHistory.setStudentId(simpleResponse.getId());
                             newHistory.setType(TypeHistory.CONG_VAT_PHAM);
                             return newHistory;
                         });
@@ -400,10 +401,8 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                             Notification notification = createNotification(simpleResponse.getId());
                             createNotificationDetailItem(gift, notification.getId(), quantity);
                             history.setStatus(HistoryStatus.PRESIDENT_DA_THEM);
-
                             // thêm vào rương cho sinh viên
                             createArchiveGift(idArchive, null, gift.getId(), quantity);
-
                         } else {
                             // gửi yêu cầu phê duyệt cho admin
                             // gửi thông báo cho admin
@@ -470,6 +469,7 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                                 newHistory.setPresidentName(udpmHoney.getUserName());
                                 newHistory.setPresidentId(udpmHoney.getIdUser());
                                 newHistory.setStudentName(simpleResponse.getUserName());
+                                newHistory.setStudentId(simpleResponse.getId());
                                 newHistory.setType(TypeHistory.CONG_DIEM);
                                 newHistory.setChangeDate(dateNow);
                                 historyRepository.save(newHistory);

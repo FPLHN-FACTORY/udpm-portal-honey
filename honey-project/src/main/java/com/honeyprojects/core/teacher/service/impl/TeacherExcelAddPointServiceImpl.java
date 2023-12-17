@@ -314,11 +314,11 @@ public class TeacherExcelAddPointServiceImpl implements TeacherAddPointExcelServ
                                     newHistory.setTeacherId(udpmHoney.getIdUser());
                                     newHistory.setTeacherIdName(udpmHoney.getUserName());
                                     newHistory.setStudentName(simpleResponse.getUserName());
+                                    newHistory.setStudentId(simpleResponse.getId());
                                     newHistory.setNote(userDTO.getNote());
                                     newHistory.setType(TypeHistory.CONG_DIEM);
                                     newHistory.setChangeDate(dateNow);
                                     historyRepository.save(newHistory);
-
                                     return newHistory;
                                 });
 

@@ -309,7 +309,7 @@ export default function RequestAddPoint() {
     return {
       ...data,
       key: data.id,
-      createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
+      createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: {
         idHistory: data.idHistory,
         status: data.status,
@@ -455,10 +455,14 @@ export default function RequestAddPoint() {
           </div>
           <Col>{/* <h1 className="lable"></h1> */}</Col>
           <Col>
-            <Button onClick={() => approveAll()} type="primary mr-2">
+            <Button
+              onClick={() => approveAll()}
+              type="primary mr-2"
+              style={{ backgroundColor: "#EEB30D" }}
+            >
               Phê duyệt
             </Button>
-            <Button onClick={() => refuseAll()} type="primary">
+            <Button onClick={() => refuseAll()} type="primary" danger>
               Từ chối
             </Button>
           </Col>

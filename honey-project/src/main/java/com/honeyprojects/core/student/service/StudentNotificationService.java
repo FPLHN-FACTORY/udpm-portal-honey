@@ -23,4 +23,8 @@ public interface StudentNotificationService {
     void deleteNotification(String id);
 
     Boolean updateNotification(String id);
+
+    Notification sendNotificationToTeacher(String idTeacher, String userName);
+
+    Notification sendNotificationToAdmin(String userName);
 }

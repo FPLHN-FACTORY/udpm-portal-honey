@@ -108,8 +108,6 @@ export default function HistoryAddPoint() {
     }
   };
 
-  console.log(data);
-
   return (
     <div className="add-point">
       <Card className="mb-2 py-1">

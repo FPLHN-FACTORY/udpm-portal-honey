@@ -1,4 +1,4 @@
-import { Layout, Row, Avatar, Pagination, Tooltip } from "antd";
+import { Layout, Row, Avatar, Tooltip, Col, Button } from "antd";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import "./index.css";
@@ -15,6 +15,9 @@ import {
 } from "../../../app/reducers/honor/pStudent.reducer";
 import { StudenHallOfFameAPI } from "../../../apis/student/honor/honor.api";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { ArrowLeftOutlined, LeftSquareTwoTone } from "@ant-design/icons";
 
 const HonorsStudent = () => {
   const dispatch = useAppDispatch();
@@ -132,6 +135,7 @@ const HonorsStudent = () => {
             </div>
           </div> */}
           </h2>
+          <Row className="justify-center" style={{marginTop: "10px"}}><Tooltip title={"Quay lại"}><Button type="primary" style={{backgroundColor: "#eeb30d", borderRadius: "50%"}} onClick={() => window.history.back()}><ArrowLeftOutlined/></Button></Tooltip></Row>
         </Header>
         <Content className="horor__table pl-[100px] pr-[100px] min-h-screen">
           <Row className="w-full">
@@ -150,38 +154,33 @@ const HonorsStudent = () => {
               </div>
             </div>
           </Row>
-          <div className="pagination__ui">
-            {/* <Row>
-              <Col span={10}>
-                <button className="button button--left">
-                  <FontAwesomeIcon icon={faArrowLeft} />
-                  Previous page
-                </button>
-              </Col>
-              <Col
-                span={4}
-                className="d-flex align-items-center justify-content-center"
-              >
-                <h3 className="text-center rank__tilte text-white">1/100</h3>
-              </Col>
-              <Col span={10}>
-                <button className="button button--right">
-                  Next page
-                  <FontAwesomeIcon icon={faArrowRight} />
-                </button>
-              </Col>
-            </Row> */}
-            <div className="mt-5 text-center">
-              <Pagination
-                simple
-                current={current}
-                onChange={(value) => {
-                  setCurrent(value);
-                }}
-                total={total * 10}
-              />
+            <div className="pagination__ui">
+              <Row>
+                <Col span={10} >
+                  <button disabled={current <= 0}
+                    onClick={() => {setCurrent(current - 1)}}
+                    className="button button--left"
+                  >
+                    <FontAwesomeIcon icon={faArrowLeft} />
+                    Previous
+                  </button> 
+                </Col>
+                <Col span={4} className="d-flex align-items-center justify-content-center">
+                  <h3 className="text-center rank__tilte text-white">
+                    {`${current + 1}/${total}`}
+                  </h3>
+                </Col>
+                <Col span={10} >
+                <button disabled={current + 1 >= total}
+                  onClick={() => {setCurrent(current + 1)}}
+                    className="button button--right"
+                  >
+                    Next
+                    <FontAwesomeIcon icon={faArrowRight} />
+                  </button>
+                </Col>
+              </Row>
             </div>
-          </div>
         </Content>
       </Layout>
     </>

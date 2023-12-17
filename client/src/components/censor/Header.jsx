@@ -22,6 +22,7 @@ import { NotificationAPI } from "../../apis/censor/notification/censor-notificat
 import moment from "moment";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
+  AddNotification,
   GetNotification,
   SetNotification,
 } from "../../app/reducers/notification/censor/notification-censor.reducer";
@@ -31,6 +32,7 @@ import {
 } from "../../app/reducers/notification/censor/count-notification-censor.reducer";
 import React from "react";
 import approved from "../../assets/images/check.png";
+import { formatDateTime } from "../../pages/util/DateUtil";
 
 function Header({ onSlidebar, onPress, name, subName }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,14 +50,18 @@ function Header({ onSlidebar, onPress, name, subName }) {
       page: current,
       size: 10,
     });
-    dispatch(SetNotification(response.data.data.data));
+    if (response.data.data.data !== 0) {
+      response.data.data.data.forEach(element => {
+        dispatch(AddNotification(element));
+      });
+    } 
     setCurrent(response.data.data.currentPage);
     if (response.data.data.totalPages - current <= 1) {
       setNotificationHasData(false);
     } else {
       setNotificationHasData(true);
     }
-    if (response.data.data.totalPages > 1) {
+    if (response.data.data.data.length > 0) {
       setHasData(true);
     } else {
       setHasData(false);
@@ -71,7 +77,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
   useEffect(() => {
     fetchNotification();
     fetchCountNotification();
-  }, []);
+  }, [current]);
   useEffect(() => {
     fetchCountNotification();
   }, [current]);
@@ -98,8 +104,14 @@ function Header({ onSlidebar, onPress, name, subName }) {
 
   const markAsRead = () => {
     NotificationAPI.markAllAsRead().then(() => {
+      setIsOpen(!isOpen);
       fetchCountNotification();
-      fetchNotification();
+      NotificationAPI.fetchAll({
+        page: 0,
+        size: 10,
+      }).then((response) => {
+        dispatch(SetNotification(response.data.data.data));
+      }) 
     });
   };
 
@@ -151,7 +163,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
   };
 
   const AvatarMap = {
-    "ADMIN_CHO_PHE_DUYET": approved,
+    ADMIN_CHO_PHE_DUYET: approved,
   };
 
   return (
@@ -183,10 +195,10 @@ function Header({ onSlidebar, onPress, name, subName }) {
                   <List
                     style={{
                       width: "300px",
-                      height: "600px",
+                      height: "450px",
                       overflow: "scroll",
                     }}
-                    className="header-notifications-dropdown"
+                    className="header-notifications-dropdown shadow-lg"
                     itemLayout="horizontal"
                     dataSource={dataNotification}
                     renderItem={(item) => (
@@ -252,7 +264,8 @@ function Header({ onSlidebar, onPress, name, subName }) {
                           description={
                             <>
                               <ClockCircleFilled />{" "}
-                              {moment(item.createdDate).format("DD/MM/YYYY")}
+                              {/* {moment(item.createdDate).format("DD/MM/YYYY")} */}
+                              {formatDateTime(item.createdDate)}
                             </>
                           }
                         />

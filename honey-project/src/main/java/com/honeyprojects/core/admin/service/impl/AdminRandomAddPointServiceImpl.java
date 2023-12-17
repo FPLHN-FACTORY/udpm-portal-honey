@@ -24,6 +24,7 @@ import com.honeyprojects.core.admin.repository.AdChestRepository;
 import com.honeyprojects.core.admin.repository.AdGiftRepository;
 import com.honeyprojects.core.admin.repository.AdHistoryDetailRandomRepository;
 import com.honeyprojects.core.admin.repository.AdHoneyRepository;
+import com.honeyprojects.core.admin.repository.AdNotificationDetailRepository;
 import com.honeyprojects.core.admin.repository.AdNotificationRespository;
 import com.honeyprojects.core.admin.repository.AdRandomAddPointRepository;
 import com.honeyprojects.core.admin.repository.AdminCategoryRepository;
@@ -32,7 +33,6 @@ import com.honeyprojects.core.admin.service.AdRandomAddPointService;
 import com.honeyprojects.core.admin.service.ExportExcelServiceService;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.president.model.response.PresidentExportGiftResponse;
-import com.honeyprojects.core.student.repository.StudentNotificationDetailRepository;
 import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
 import com.honeyprojects.entity.Chest;
@@ -104,7 +104,7 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
     private AdNotificationRespository adNotificationRespository;
 
     @Autowired
-    private StudentNotificationDetailRepository studentNotificationDetailRepository;
+    private AdNotificationDetailRepository adNotificationDetailRepo;
 
     @Autowired
     private AdChestRepository chestRepository;
@@ -542,21 +542,21 @@ public class AdminRandomAddPointServiceImpl implements AdRandomAddPointService {
         String content = Constants.CONTENT_NOTIFICATION_SYSTEM + " Mật ong - " + category.getName() + " - Số lượng: " + quantity;
         AdminCreateNotificationDetailRandomRequest detailRandomRequest = new AdminCreateNotificationDetailRandomRequest(content, category.getId(), idNotification, NotificationDetailType.NOTIFICATION_DETAIL_HONEY, quantity);
         NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
-        return studentNotificationDetailRepository.save(notificationDetail);
+        return adNotificationDetailRepo.save(notificationDetail);
     }
 
     private NotificationDetail createNotificationDetailItem(AdminImportGiftResponse gift, String idNotification, Integer quantity) {
         String content = Constants.CONTENT_NOTIFICATION_SYSTEM + "Vật phẩm - " + gift.getName() + " - số lượng: " + quantity;
         AdminCreateNotificationDetailRandomRequest detailRandomRequest = new AdminCreateNotificationDetailRandomRequest(content, gift.getId(), idNotification, NotificationDetailType.NOTIFICATION_DETAIL_GIFT, quantity);
         NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
-        return studentNotificationDetailRepository.save(notificationDetail);
+        return adNotificationDetailRepo.save(notificationDetail);
     }
 
     private NotificationDetail createNotificationDetailChest(Chest chest, String idNotification, Integer quantity) {
         String content = Constants.CONTENT_NOTIFICATION_SYSTEM + "Rương đồ: " + chest.getName() + " - số lượng: " + quantity;
         AdminCreateNotificationDetailRandomRequest detailRandomRequest = new AdminCreateNotificationDetailRandomRequest(content, chest.getId(), idNotification, NotificationDetailType.NOTIFICATION_DETAIL_CHEST, quantity);
         NotificationDetail notificationDetail = detailRandomRequest.createNotificationDetail(new NotificationDetail());
-        return studentNotificationDetailRepository.save(notificationDetail);
+        return adNotificationDetailRepo.save(notificationDetail);
     }
 
     private LoggerFunction createLogBug(StringBuilder stringBuilder) {

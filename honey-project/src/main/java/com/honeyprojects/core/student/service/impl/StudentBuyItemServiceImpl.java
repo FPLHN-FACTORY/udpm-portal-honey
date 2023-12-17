@@ -1,6 +1,7 @@
 package com.honeyprojects.core.student.service.impl;
 
 import com.honeyprojects.core.common.base.PageableObject;
+import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.student.model.request.StudentBuyItemRequest;
 import com.honeyprojects.core.student.model.request.StudentFilterHistoryRequest;
@@ -13,9 +14,9 @@ import com.honeyprojects.core.student.repository.StudentCreateRequestConversionR
 import com.honeyprojects.core.student.repository.StudentGiftRepository;
 import com.honeyprojects.core.student.repository.StudentHoneyRepository;
 import com.honeyprojects.core.student.service.StudentBuyItemService;
+import com.honeyprojects.core.student.service.StudentNotificationService;
 import com.honeyprojects.entity.Archive;
 import com.honeyprojects.entity.ArchiveGift;
-import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.Gift;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.HistoryDetail;
@@ -61,12 +62,16 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
     @Autowired
     private HistoryDetailRepository historyDetailRepository;
 
+    @Autowired
+    private StudentNotificationService studentNotificationService;
+
+    @Autowired
+    private UdpmHoney udpmHoney;
 
     @Override
     public History addBuyItem(StudentBuyItemRequest createRequest) {
-        Category category = categoryRepository.findById(createRequest.getCategoryId()).orElse(null);
+//        Category category = categoryRepository.findById(createRequest.getCategoryId()).orElse(null);
         Gift gift = giftRepository.findById(createRequest.getGiftId()).orElse(null);
-
 
         Honey honey = honeyRepository.findByStudentIdAndHoneyCategoryId(createRequest.getStudentId(), createRequest.getCategoryId());
         History history = new History();
@@ -85,10 +90,12 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
         } else {
             if (gift.getStatus().equals(StatusGift.ACCEPT)) {
                 history.setStatus(HistoryStatus.CHO_PHE_DUYET);
-                history.setType(TypeHistory.DOI_QUA);
+                history.setType(TypeHistory.MUA_VAT_PHAM);
+                // gửi thông báo cho admin
+                studentNotificationService.sendNotificationToAdmin(udpmHoney.getUserName());
             } else {
                 history.setStatus(HistoryStatus.DA_PHE_DUYET);
-                history.setType(TypeHistory.DOI_QUA);
+                history.setType(TypeHistory.MUA_VAT_PHAM);
 
                 int deductedPoints = createRequest.getHoneyPoint();
                 int quantity = createRequest.getQuantity();
@@ -102,9 +109,7 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
                     gift.setQuantity(gift.getQuantity() - createRequest.getQuantity());
                     giftRepository.save(gift);
                 }
-
             }
-
         }
 
         if (history.getStatus().equals(HistoryStatus.DA_PHE_DUYET) && createRequest.getGiftId() != null) {
@@ -131,6 +136,7 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
         history.setChangeDate(dateNow);
         history.setNote(createRequest.getNote());
         history.setStudentId(createRequest.getStudentId());
+        history.setStudentName(udpmHoney.getUserName());
         studentCreateRequestConversionRepository.save(history);
 
         historyDetail.setGiftId(createRequest.getGiftId());
@@ -139,11 +145,10 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
         historyDetail.setHoneyPoint(createRequest.getHoneyPoint());
         historyDetail.setQuantityGift(createRequest.getQuantity());
         historyDetail.setHistoryId(history.getId());
+        historyDetail.setStudentId(createRequest.getStudentId());
         historyDetailRepository.save(historyDetail);
 
         return history;
-
-
     }
 
     @Override

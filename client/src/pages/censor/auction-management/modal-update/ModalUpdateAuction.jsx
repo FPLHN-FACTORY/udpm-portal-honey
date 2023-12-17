@@ -82,22 +82,27 @@ const ModalUpdateAuction = ({ visible, onCancel, auction, fetchAllData }) => {
       const categoryNameItem = listCategory.find(
         (item) => item.id === honeyCategoryId
       );
-      AuctionAPI.update(obj, auction.id).then(
-        (response) => {
-          message.success("Sửa thành công!");
-          let objCreate = {
-            ...response.data.data,
-            categoryName: categoryNameItem.name,
-            categoryId: categoryNameItem.id,
-          };
-          dispatch(UpdateAuction(objCreate));
-          fetchAllData();
-          onCancel();
-        },
-        (error) => {
-          message.error(error.response.data.message);
+      Modal.confirm({
+        title: "Bạn có chắc chắn muốn cật nhật phòng đấu giá không?",
+        onOk: () => {
+          AuctionAPI.update(obj, auction.id).then(
+            (response) => {
+              message.success("Sửa thành công!");
+              let objCreate = {
+                ...response.data.data,
+                categoryName: categoryNameItem.name,
+                categoryId: categoryNameItem.id,
+              };
+              dispatch(UpdateAuction(objCreate));
+              fetchAllData();
+              onCancel();
+            },
+            (error) => {
+              message.error(error.response.data.message);
+            }
+          );
         }
-      );
+      })
     }
   };
 

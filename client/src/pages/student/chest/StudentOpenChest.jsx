@@ -22,7 +22,7 @@ const OpenChest = (props) => {
       const nameGift = response.data.data.name;
       notification.success({
         message: "Thông báo.",
-        description: `Gift đã được mở: ${nameGift}`,
+        description: `Rương đã được mở: ${nameGift}`,
       });
       closeAdditionalInfo();
     });

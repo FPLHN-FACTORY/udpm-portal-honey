@@ -12,9 +12,11 @@ const type = (status) => {
     case 1:
       return <Tag color="lime-inverse">Giao dịch</Tag>; // Màu xanh lá cây
     case 2:
-      return <Tag color="magenta-inverse">Đổi quà</Tag>; // Màu xanh dương nhạt
+      return <Tag color="magenta-inverse">Mua quà</Tag>; // Màu xanh dương nhạt
     case 6:
-      return <Tag color="magenta-inverse">Đổi quà</Tag>; // Màu xanh dương nhạt
+      return <Tag color="magenta-inverse">Mua quà</Tag>; // Màu xanh dương nhạt
+    case 7:
+      return <Tag color="magenta-inverse">Mua vật phẩm</Tag>; // Màu xanh dương nhạt
     default:
       return <Tag>Không xác định</Tag>;
   }
@@ -38,7 +40,7 @@ const statusHistory = (status) => {
   }
 };
 const fomatDate = (date) => {
-  return moment(date).format("DD-MM-YYYY");
+  return moment(date).format("DD-MM-YYYY HH:mm:ss");
 };
 
 export default function RequestItemDetail() {
@@ -63,7 +65,9 @@ export default function RequestItemDetail() {
         if (response.data.success) {
           idStudent = response.data.data.studentId;
           idNguoiGui =
-            response.data.data.teacherId || response.data.data.presidentId;
+            response.data.data.teacherId ||
+            response.data.data.presidentId ||
+            response.data.data.studentId;
           setRequest(response.data.data);
         } else {
           navigate("/not-found");

@@ -4,6 +4,7 @@ import {
   Col,
   Form,
   Input,
+  Modal,
   Pagination,
   Row,
   Space,
@@ -13,10 +14,9 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import "./index.css";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch } from "../../app/hooks";
 import { AddPointAPI } from "../../apis/teacher/add-point/add-point.api";
 import {
-  GetCategory,
   SetCategory,
 } from "../../app/reducers/category/category.reducer";
 import { SearchOutlined } from "@ant-design/icons";
@@ -153,8 +153,6 @@ export default function RequestGift() {
     };
   });
 
-  const listCategory = useAppSelector(GetCategory);
-
   const onFinishSearch = (value) => {
     if (value.userName === undefined || value.userName.trim().length === 0) {
       setFilter({
@@ -182,14 +180,19 @@ export default function RequestGift() {
   };
 
   const changeStatus = (idHistory, status) => {
-    AddPointAPI.changeStatus(idHistory, status)
-      .then((response) => {
-        if (response.data.success) {
-          fetchData(dispatch, filter);
-          if (status === 2) message.error("Hủy yêu cầu thành công!");
-        }
-      })
-      .catch((error) => console.error(error));
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn hủy yêu cầu không?",
+      onOk: () => {
+        AddPointAPI.changeStatus(idHistory, status)
+        .then((response) => {
+          if (response.data.success) {
+            fetchData(dispatch, filter);
+            if (status === 2) message.error("Hủy yêu cầu thành công!");
+          }
+        })
+        .catch((error) => console.error(error));
+      }
+    })
   };
 
   return (

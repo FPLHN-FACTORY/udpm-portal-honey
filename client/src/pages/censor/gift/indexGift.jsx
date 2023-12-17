@@ -53,7 +53,6 @@ export default function IndexGift() {
   }, [dispatch]);
 
   useEffect(() => {
-    document.title = "Quản lý vật phẩm";
     fetchAllCate();
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -254,20 +253,23 @@ export default function IndexGift() {
           }}
         />
       )}
-      <Modal
-        title="Xác nhận xóa"
-        visible={confirmDelete}
-        onOk={() => {
-          if (detailGift) {
-            DeleteGift(detailGift.id);
-          }
-        }}
-        onCancel={() => setConfirmDelete(false)}
-        okText="Xóa"
-        cancelText="Hủy"
-      >
-        Bạn có chắc chắn muốn xóa vật phẩm này?
-      </Modal>
+      {
+        confirmDelete && 
+        <Modal
+          title="Xác nhận xóa"
+          visible={confirmDelete}
+          onOk={() => {
+            if (detailGift) {
+              DeleteGift(detailGift.id);
+            }
+          }}
+          onCancel={() => setConfirmDelete(false)}
+          okText="Xóa"
+          cancelText="Hủy"
+        >
+          Bạn có chắc chắn muốn xóa vật phẩm này?
+        </Modal>
+      }
       <Card style={{ borderTop: "5px solid #FFCC00", marginBottom: 30 }}>
         <div className="filter__auction">
           <FontAwesomeIcon

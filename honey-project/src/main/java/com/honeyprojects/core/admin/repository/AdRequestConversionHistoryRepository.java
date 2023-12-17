@@ -17,14 +17,14 @@ import java.util.List;
 public interface AdRequestConversionHistoryRepository extends HistoryRepository {
     @Query(value = """
             SELECT hd.gift_id, h.change_date, h.id, 
-            h.created_date, h.status, h.student_id, 
+            h.created_date, h.status, hd.student_id, 
             h.note, h.teacher_id, h.president_id, h.teacher_id_name, h.president_name,
             GROUP_CONCAT(CONCAT(hd.quantity_gift, ' ', hd.name_gift) SEPARATOR ', ') AS gift
             FROM history h 
             JOIN history_detail hd on hd.history_id = h.id  
             WHERE (:#{#filter.status} IS NULL OR h.status = :#{#filter.status})
             AND (:#{#filter.idStudent} IS NULL OR h.student_id = :#{#filter.idStudent})
-            AND h.type IN (2,4,6) AND h.status = 0 
+            AND h.type IN (2,4,6,7) AND h.status = 0 
             GROUP BY hd.history_id
             ORDER BY h.last_modified_date DESC
             """, nativeQuery = true)
@@ -53,7 +53,7 @@ public interface AdRequestConversionHistoryRepository extends HistoryRepository 
             LEFT JOIN honey hn ON hn.id = hd.honey_id    
             WHERE (:#{#filter.status} IS NULL OR h.status = :#{#filter.status})
             AND (:#{#filter.idStudent} IS NULL OR h.student_id = :#{#filter.idStudent})
-            AND h.type IN (2,4,6) AND h.status IN (1,2) 
+            AND h.type IN (2,4,6,7) AND h.status IN (1,2) 
             GROUP BY hd.history_id
             ORDER BY h.last_modified_date DESC;
                 """, nativeQuery = true)

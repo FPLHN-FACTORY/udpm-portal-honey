@@ -3,6 +3,7 @@ import {
   Card,
   Form,
   Input,
+  Modal,
   Pagination,
   Select,
   Space,
@@ -186,14 +187,19 @@ export default function HistoryAddPoint() {
   };
 
   const changeStatus = (idHistory, status) => {
-    AddPointAPI.changeStatus(idHistory, status)
-      .then((response) => {
-        if (response.data.success) {
-          fetchData(dispatch, filter);
-          if (status === 2) message.error("Hủy yêu cầu thành công!");
-        }
-      })
-      .catch((error) => console.error(error));
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn hủy yêu cầu không?",
+      onOk: () => {
+        AddPointAPI.changeStatus(idHistory, status)
+        .then((response) => {
+          if (response.data.success) {
+            fetchData(dispatch, filter);
+            if (status === 2) message.error("Hủy yêu cầu thành công!");
+          }
+        })
+        .catch((error) => console.error(error));
+      }
+    })
   };
 
   return (

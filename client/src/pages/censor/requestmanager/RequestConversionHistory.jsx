@@ -43,7 +43,6 @@ export default function RequestConversionHistory() {
     const fetchData = async (filter) => {
       try {
         const response = await RequestManagerAPI.getHistoryConversion(filter);
-        
         const listHistory = await Promise.all(
           response.data.data.map(async (data) => {
             try {
@@ -125,20 +124,25 @@ export default function RequestConversionHistory() {
     status,
     quantityGift
   ) => {
-    RequestManagerAPI.changeStatusConversion(
-      idStudent,
-      idGift,
-      idHistory,
-      idHistoryDetail,
-      status,
-      quantityGift
-    ).then((response) => {
-      if (response.data.success) {
-        if (status === 1) message.success("Đã xác nhận yêu cầu!");
-        if (status === 2) message.error("Hủy yêu cầu thành công!");
+    Modal.confirm({
+      title: `Bạn có chắc chắn muốn ${status === 1? "phê duyệt" : "Từ chối"} yêu cầu không?`,
+      onOk: () => {
+        RequestManagerAPI.changeStatusConversion(
+          idStudent,
+          idGift,
+          idHistory,
+          idHistoryDetail,
+          status,
+          quantityGift
+        ).then((response) => {
+          if (response.data.success) {
+            if (status === 1) message.success("Đã xác nhận yêu cầu!");
+            if (status === 2) message.error("Hủy yêu cầu thành công!");
+          }
+          fetchData();
+        });
       }
-      fetchData();
-    });
+    })
   };
 
   const changeStatusConversionAll = (data, status) => {
@@ -151,8 +155,8 @@ export default function RequestConversionHistory() {
     });
   };
 
-  const [selectedRowKeys,setSelectedRowKeys] = useState([]);
-  const [selectedRowKeysRecord,setSelectedRowKeysRecord] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRowKeysRecord, setSelectedRowKeysRecord] = useState([]);
   const start = () => {
     setSelectedRowKeys([]);
     setSelectedRowKeysRecord([]);
@@ -169,7 +173,7 @@ export default function RequestConversionHistory() {
   const approveAll = () => {
     if (selectedRowKeys.length === 0) {
       message.error("Bạn phải chọn một yêu cầu");
-      return
+      return;
     }
     // const result = selectedRowKeysRecord.map((el) => `Yêu cầu từ ${el.userTeacher !== null?"Giảng viên " + el.userTeacher : "Chủ tịch " + el.userPresident}: Cộng ${el.honey} cho sinh viên ${el.userName}`)
 
@@ -185,16 +189,15 @@ export default function RequestConversionHistory() {
         }));
         changeStatusConversionAll(data, 1);
         // hoàn thành yêu cầu clear selectedRowKeys
-        start()
-      }
-    })
-
-  }
+        start();
+      },
+    });
+  };
 
   const refuseAll = () => {
     if (selectedRowKeys.length === 0) {
       message.error("Bạn phải chọn một yêu cầu");
-      return
+      return;
     }
     // const result = selectedRowKeysRecord.map((el) => `Yêu cầu từ ${el.userTeacher !== null?"Giảng viên " + el.userTeacher : "Chủ tịch " + el.userPresident}: Cộng ${el.honey} cho sinh viên ${el.userName}`)
 
@@ -210,32 +213,32 @@ export default function RequestConversionHistory() {
         }));
         changeStatusConversionAll(data, 1);
         // hoàn thành yêu cầu clear selectedRowKeys
-        start()
-      }
-    })
-  }
-  
-  const handCheckvalide = async (values) => {
-    // const response = await RequestManagerAPI.getPoint(
-    //   values.studentId,
-    //   values.categoryId
-    // );
-    // const newFillPoint = response.data.data;
-
-    // const totalPoint = values.quantityGift * values.honeyPoint;
-    // if (totalPoint > newFillPoint) {
-    // message.error("Sinh viên Không còn đủ điểm để mua quà!");
-    // } else {
-    changeStatusConversion(
-      values.studentId,
-      values.giftId,
-      values.id,
-      values.historyDetailId,
-      1,
-      values.quantityGift
-    );
-    // }
+        start();
+      },
+    });
   };
+
+  // const handCheckvalide = async (values) => {
+  //   // const response = await RequestManagerAPI.getPoint(
+  //   //   values.studentId,
+  //   //   values.categoryId
+  //   // );
+  //   // const newFillPoint = response.data.data;
+
+  //   // const totalPoint = values.quantityGift * values.honeyPoint;
+  //   // if (totalPoint > newFillPoint) {
+  //   // message.error("Sinh viên Không còn đủ điểm để mua quà!");
+  //   // } else {
+  //   changeStatusConversion(
+  //     values.studentId,
+  //     values.giftId,
+  //     values.id,
+  //     values.historyDetailId,
+  //     1,
+  //     values.quantityGift
+  //   );
+  //   // }
+  // };
 
   const columns = [
     {
@@ -256,7 +259,7 @@ export default function RequestConversionHistory() {
         } else if (record.presidentId !== null) {
           return record.userPresident;
         } else {
-          return null;
+          return record.userName;
         }
       },
     },
@@ -277,7 +280,7 @@ export default function RequestConversionHistory() {
       dataIndex: "createdDate",
       key: "createdDate",
       align: "center",
-      render: (text) => <span>{moment(text).format("DD/MM/YYYY")}</span>,
+      render: (text) => <span>{moment(text).format("DD-MM-YYYY HH:mm:ss")}</span>,
     },
     {
       title: () => <div>Hành động</div>,
@@ -289,7 +292,13 @@ export default function RequestConversionHistory() {
             <Tooltip title="Xác nhận">
               <Button
                 onClick={() => {
-                  handCheckvalide(values);
+                  changeStatusConversion(
+                    values.studentId,
+                    values.giftId,
+                    values.id,
+                    values.historyDetailId,
+                    1
+                  );
                 }}
                 style={{
                   backgroundColor: "yellowgreen",
@@ -392,10 +401,14 @@ export default function RequestConversionHistory() {
             {/* <h1 className="lable">Danh sách yêu cầu đổi quà</h1> */}
           </Col>
           <Col>
-            <Button onClick={() => approveAll()} type="primary mr-2">
+            <Button
+              onClick={() => approveAll()}
+              type="primary mr-2"
+              style={{ backgroundColor: "#EEB30D" }}
+            >
               Phê duyệt
             </Button>
-            <Button onClick={() => refuseAll()} type="primary">
+            <Button onClick={() => refuseAll()} type="primary" danger>
               Từ chối
             </Button>
           </Col>
@@ -415,7 +428,18 @@ export default function RequestConversionHistory() {
               setFilter({ ...filter, page: page - 1, size: size });
             }}
             total={totalPages}
-            pageSizeOptions={['10', '20', '30', '40', '50', '60', '70', '80', '90', '100']}
+            pageSizeOptions={[
+              "10",
+              "20",
+              "30",
+              "40",
+              "50",
+              "60",
+              "70",
+              "80",
+              "90",
+              "100",
+            ]}
           />
         </div>
       </Card>

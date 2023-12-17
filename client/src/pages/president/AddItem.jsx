@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./index.css";
 import {
   Button,
@@ -25,8 +25,6 @@ import { AddItemExcelAPI } from "../../apis/president/add-item/add-item-excel.ap
 import { convertLongToDate } from "../util/DateUtil";
 
 export default function AddItem() {
-  const dispatch = useAppDispatch();
-  const listCategory = useAppSelector(GetCategory);
   const [student, setStudent] = useState({});
   const [honeyStudent, setHoneyStudent] = useState({ honey: 0 });
   const [categorySelected, setCategorySelected] = useState();

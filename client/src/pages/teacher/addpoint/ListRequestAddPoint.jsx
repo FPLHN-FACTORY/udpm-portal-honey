@@ -4,6 +4,7 @@ import {
   Col,
   Form,
   Input,
+  Modal,
   Pagination,
   Row,
   Select,
@@ -86,7 +87,12 @@ export default function RequestAddPoint() {
         <div style={{ textAlign: "center" }}>
           <Button
             onClick={() =>
-              changeStatus(values.idHistory, values.status === 2 ? 3 : 2)
+              Modal.confirm({
+                title: "Bạn có chắc chắn muốn hủy yêu cầu không?",
+                onOk: () => {
+                  changeStatus(values.idHistory, values.status === 2 ? 3 : 2)
+                }
+              })
             }
             disabled={values.status === 1}
             type="primary"
@@ -152,7 +158,7 @@ export default function RequestAddPoint() {
       ...data,
       key: data.id,
       status: statusHistory(data.status),
-      createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
+      createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
   });

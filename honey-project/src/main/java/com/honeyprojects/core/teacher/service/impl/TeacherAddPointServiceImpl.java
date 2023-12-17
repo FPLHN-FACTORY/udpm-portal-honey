@@ -16,6 +16,7 @@ import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHoneyRepository;
 import com.honeyprojects.core.teacher.repository.TeacherNotificationRepository;
 import com.honeyprojects.core.teacher.service.TeacherAddPointService;
+import com.honeyprojects.core.teacher.service.TeacherNotificationDetailService;
 import com.honeyprojects.core.teacher.service.TeacherNotificationService;
 import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.History;
@@ -54,6 +55,9 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
 
     @Autowired
     private TeacherNotificationService teacherNotificationService;
+
+    @Autowired
+    private TeacherNotificationDetailService teacherNotificationDetailService;
 
     @Autowired
     private UdpmHoney udpmHoney;
@@ -108,20 +112,25 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
     public History addPoint(TeacherAddPointRequest addPointRequest) {
         String idTeacher = udpmHoney.getIdUser();
         Long dateNow = Calendar.getInstance().getTimeInMillis();
-        Optional<Category>category = categoryRepository.findById(addPointRequest.getCategoryId());
+//        Optional<Category>category = categoryRepository.findById(addPointRequest.getCategoryId());
+        TeacherCategoryResponse category = categoryRepository.getCategoryById(addPointRequest.getCategoryId());
         SimpleResponse simpleResponse = convertRequestApiidentity.handleCallApiGetUserById(addPointRequest.getStudentId());
         HistoryDetail historyDetail = new HistoryDetail();
         History history = new History();
         history.setTeacherIdName(udpmHoney.getUserName());
         history.setTeacherId(idTeacher);
         history.setStudentName(simpleResponse.getUserName());
+        history.setStudentId(simpleResponse.getId());
         history.setNote(addPointRequest.getNote());
         history.setType(TypeHistory.CONG_DIEM);
         history.setChangeDate(dateNow);
-        if(category.get().getCategoryStatus().equals(CategoryStatus.FREE)){
+        String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
+        if(category.getStatus().equals(enumCategoryFREE)){
             history.setStatus(HistoryStatus.TEACHER_DA_THEM);
             Honey honey = addPointUtils.addHoneyUtils(addPointRequest.getStudentId(), addPointRequest.getCategoryId(), addPointRequest.getHoneyPoint());
             historyDetail.setHoneyId(honey.getId());
+            Notification notification = teacherNotificationService.sendNotificationToStudent(udpmHoney.getUserName(), addPointRequest.getStudentId());
+            teacherNotificationDetailService.createNotificationDetailHoney(notification.getId(), addPointRequest.getHoneyPoint(), category);
         }
         else{
             Honey honey;

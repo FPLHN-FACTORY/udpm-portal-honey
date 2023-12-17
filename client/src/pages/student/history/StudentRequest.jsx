@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import "./index.css";
-import { Image, Select } from "antd";
+import { Col, Image, Row, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import { HistoryApi } from "../../../apis/student/history/historyApi.api";
 
@@ -43,12 +43,14 @@ export default function StudentRequest() {
         <div className="button-group">
           <button
             className="button button__notactivebutton__notactive"
-            onClick={() => navigate("/student/history")}>
+            onClick={() => navigate("/student/history")}
+          >
             Lịch sử
           </button>
           <button
             className="button button__active"
-            onClick={() => navigate("/student/request")}>
+            onClick={() => navigate("/student/request")}
+          >
             Yêu cầu
           </button>
           <Select
@@ -83,11 +85,13 @@ export default function StudentRequest() {
                   <div className={`student__history__point}`}>
                     <div
                       className={`student__history__point 
-                    }`}>
+                    }`}
+                    >
                       {e.point && (
                         <span
                           className={"red__text"}
-                          style={{ marginRight: "10px" }}>
+                          style={{ marginRight: "10px" }}
+                        >
                           {e.point}
                         </span>
                       )}
@@ -95,7 +99,8 @@ export default function StudentRequest() {
                       {e.pointGet && (
                         <span
                           className={"green__text"}
-                          style={{ marginRight: "10px" }}>
+                          style={{ marginRight: "10px" }}
+                        >
                           {e.pointGet}
                         </span>
                       )}
@@ -106,29 +111,40 @@ export default function StudentRequest() {
             } else {
               return (
                 <div className={`content red`} key={index}>
-                  <img className="size_img" src={e.image} alt="" />
-                  <div className="student__history__text">{e.content}</div>
-                  <div className={`student__history__point}`}>
-                    <div
-                      className={`student__history__point 
-                    }`}>
-                      {e.point && (
-                        <span
-                          className={"red__text"}
-                          style={{ marginRight: "10px" }}>
-                          {e.point}
-                        </span>
-                      )}
-                      {e.point && e.pointGet && "| "}
-                      {e.pointGet && (
-                        <span
-                          className={"green__text"}
-                          style={{ marginRight: "10px" }}>
-                          {e.pointGet}
-                        </span>
-                      )}
-                    </div>
-                  </div>
+                  <Row>
+                    <Col span={10}>
+                      <img className="size_img" src={e.image} alt="" />
+                    </Col>
+                    <Col span={10}>
+                      <div className="student__history__text">{e.content}</div>
+                    </Col>
+                    <Col span={10}>
+                      <div className={`student__history__point}`}>
+                        <div
+                          className={`student__history__point 
+                    }`}
+                        >
+                          {e.point && (
+                            <span
+                              className={"red__text"}
+                              style={{ marginRight: "10px" }}
+                            >
+                              {e.point}
+                            </span>
+                          )}
+                          {e.point && e.pointGet && "| "}
+                          {e.pointGet && (
+                            <span
+                              className={"green__text"}
+                              style={{ marginRight: "10px" }}
+                            >
+                              {e.pointGet}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
                 </div>
               );
             }

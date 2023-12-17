@@ -19,6 +19,7 @@ import {
   SetCountNotification,
 } from "../../app/reducers/notification/president/count-notification-president.reducer";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { formatDateTime } from "../../pages/util/DateUtil";
 
 function Header({ onSlidebar, onPress, name, subName }) {
   useEffect(() => window.scrollTo(0, 0));
@@ -84,8 +85,14 @@ function Header({ onSlidebar, onPress, name, subName }) {
 
   const markAsRead = () => {
     NotificationAPI.markAllAsRead().then(() => {
+      setIsOpen(!isOpen);
       fetchCountNotification();
-      fetchNotification();
+      NotificationAPI.fetchAll({
+        page: 0,
+        size: 10,
+      }).then((response) => {
+        dispatch(SetNotification(response.data.data.data));
+      }) 
     });
   };
 
@@ -98,7 +105,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
   };
 
   const handleItemClick = (item) => {
-    navigate(`/censor/request-manager/detail/${item.idHistoryDetail}`);
+    navigate(`/president/history-honey`);
     NotificationAPI.readOne(item.id).then(() => {
       fetchNotification();
       fetchCountNotification();
@@ -173,10 +180,10 @@ function Header({ onSlidebar, onPress, name, subName }) {
                   <List
                     style={{
                       width: "300px",
-                      height: "600px",
+                      height: "450px",
                       overflow: "scroll",
                     }}
-                    className="header-notifications-dropdown"
+                    className="header-notifications-dropdown shadow-lg"
                     itemLayout="horizontal"
                     dataSource={dataNotification}
                     renderItem={(item) => (
@@ -242,7 +249,8 @@ function Header({ onSlidebar, onPress, name, subName }) {
                           description={
                             <>
                               <ClockCircleFilled />{" "}
-                              {moment(item.createdDate).format("DD/MM/YYYY")}
+                              {/* {moment(item.createdDate).format("DD/MM/YYYY")} */}
+                              {formatDateTime(item.createdDate)}
                             </>
                           }
                         />

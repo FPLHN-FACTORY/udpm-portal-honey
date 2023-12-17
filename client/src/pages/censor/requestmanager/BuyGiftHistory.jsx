@@ -12,7 +12,6 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import { RequestManagerAPI } from "../../../apis/censor/request-manager/requestmanager.api";
 import { SearchOutlined } from "@ant-design/icons";
 import { faRectangleList } from "@fortawesome/free-solid-svg-icons";
@@ -20,7 +19,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function BuyGiftHistory() {
   const [getHistory, setGetHistory] = useState([]);
-  const [fillCategory, setFillCategory] = useState([]);
   const [totalPages, setTotalPages] = useState([]);
   const [filter, setFilter] = useState({ page: 0 });
 
@@ -70,13 +68,7 @@ export default function BuyGiftHistory() {
     fetchData(filter);
   };
 
-  const fechCategory = () => {
-    CategoryAPI.fetchAllCategory().then((response) => {
-      setFillCategory(response.data.data);
-    });
-  };
   useEffect(() => {
-    fechCategory();
     fetchData(filter);
   }, [filter]);
 
@@ -85,7 +77,6 @@ export default function BuyGiftHistory() {
       setFilter({
         ...filter,
         idStudent: null,
-        idCategory: value.idCategory,
         status: value.status,
       });
     } else {
@@ -95,7 +86,6 @@ export default function BuyGiftHistory() {
             setFilter({
               ...filter,
               idStudent: result.data.data.id,
-              idCategory: value.idCategory,
               status: value.status,
             });
           } else {
@@ -119,19 +109,6 @@ export default function BuyGiftHistory() {
                 size="small"
                 placeholder="Nhập user name sinh viên cần tìm"
                 prefix={<SearchOutlined />}
-              />
-            </Form.Item>
-            <Form.Item name={"idCategory"}>
-              <Select
-                style={{ width: "250px" }}
-                size="large"
-                placeholder="Loại điểm"
-                options={[
-                  { value: null, label: "tất cả" },
-                  ...fillCategory.map((item) => {
-                    return { label: item.name, value: item.id };
-                  }),
-                ]}
               />
             </Form.Item>
             <Button
