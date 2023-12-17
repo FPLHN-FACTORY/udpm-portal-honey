@@ -64,23 +64,21 @@ const TopStudent = ({ isClose, isShow }) => {
   }, []);
   const [time, setTime] = useState(10);
 
-  // Sử dụng hook useEffect để cập nhật thời gian mỗi giây
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     if (time > 0) {
-  //       setTime(time - 1);
-  //     } else {
-  //       clearInterval(timer);
-  //       closeTop3();
-  //     }
-  //   }, 1000);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (time > 0) {
+        setTime(time - 1);
+      } else {
+        clearInterval(timer);
+        closeTop3();
+      }
+    }, 1000);
 
-  //   // Hủy bỏ interval khi component bị unmounted
-  //   return () => {
-  //     clearInterval(timer);
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [time]);
+    return () => {
+      clearInterval(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [time]);
 
   const fireworksOptions = {
     autoresize: true,

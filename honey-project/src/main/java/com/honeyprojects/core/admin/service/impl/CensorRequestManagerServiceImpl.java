@@ -87,6 +87,7 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
     public History changeStatus(CensorChangeStatusRequest changeReq) {
         Long dateNow = Calendar.getInstance().getTimeInMillis();
         History history = historyRepository.findById(changeReq.getIdHistory()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
+        history.setStatus(HistoryStatus.values()[changeReq.getStatus()]);
 
         Notification notification = null;
         // gửi thông báo
@@ -117,8 +118,6 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
 //                notification = adNotificationService.sendNotificationRefuseToStudent(history.getStudentId());
 //            }
 //        }
-
-        history.setStatus(HistoryStatus.values()[changeReq.getStatus()]);
         List<HistoryDetail> listHistoryDetail = historyDetailRepository.findHistoryDetailByHistoryId(changeReq.getIdHistory());
         for (HistoryDetail historyDetail : listHistoryDetail) {
             if (changeReq.getStatus() == 1 && history.getType().equals(TypeHistory.CONG_DIEM)) {
@@ -179,8 +178,6 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
                 notification = adNotificationService.sendNotificationRefuseToStudent(history.getStudentId());
             }
         }
-
-
         for (CensorDetailItemRequestResponse item : listHistoryItem) {
             HistoryDetail historyDetail = historyDetailRepository.findById(item.getHistoryDetailId()).orElse(null);
             ArchiveGift archiveGift = new ArchiveGift();
@@ -191,13 +188,14 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
             if (history.getStatus().equals(HistoryStatus.DA_PHE_DUYET) &&
                     history.getType().equals(TypeHistory.DOI_QUA) ||
                     history.getType().equals(TypeHistory.MAT_ONG_VA_VAT_PHAM) ||
-                    history.getType().equals(TypeHistory.CONG_VAT_PHAM)
+                    history.getType().equals(TypeHistory.CONG_VAT_PHAM) ||
+                    history.getType().equals(TypeHistory.MUA_VAT_PHAM)
             ) {
-                if (historyDetail.getHoneyId() != null) {
-                    Honey honey = honeyRepository.findById(historyDetail.getHoneyId()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
-                    honey.setHoneyPoint(honey.getHoneyPoint() - (historyDetail.getHoneyPoint() * item.getQuantityGift()));
-                    honeyRepository.save(honey);
-                }
+//                if (historyDetail.getHoneyId() != null) {
+//                    Honey honey = honeyRepository.findById(historyDetail.getHoneyId()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
+//                    honey.setHoneyPoint(honey.getHoneyPoint() - (historyDetail.getHoneyPoint() * item.getQuantityGift()));
+//                    honeyRepository.save(honey);
+//                }
                 if (gift.getQuantity() != null) {
                     gift.setQuantity(gift.getQuantity() - item.getQuantityGift());
                     giftRepository.save(gift);
@@ -225,11 +223,17 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
                     && DataUtils.isNullObject(history.getTeacherId())
                     && history.getStatus().equals(HistoryStatus.DA_HUY)
             ) {
+                if (historyDetail.getHoneyId() != null) {
+                    Honey honey = honeyRepository.findById(historyDetail.getHoneyId())
+                            .orElseGet(Honey::new);
+
+                    honey.setHoneyPoint(honey.getHoneyPoint() + (historyDetail.getHoneyPoint() * item.getQuantityGift()));
+                    honeyRepository.save(honey);
+                }
                 adNotificationDetailService.createNotificationDetailGift(notification.getId(), item.getQuantityGift(), item.getNameGift(), item.getGiftId());
             }
 
         }
-
         return historyRepository.save(history);
     }
 

@@ -66,7 +66,7 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
                     if (history.getType() == TypeHistory.CONG_DIEM) {
                         StudentHistoryDetailResponse historyDetail = historyDetailRepository
                                 .getHistoryDetail(history.getStudentId(), history.getId());
-                        response.setImage(udpmHoney.getPicture());
+                        response.setChangeDate(historyDetail.getChangeDate());
                        String preId = null;
                         if (history.getTeacherId() == null && history.getPresidentId() == null) {
                             response.setContent("Bạn được cộng mật ong từ hệ thống");
@@ -82,30 +82,31 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
                     else if(history.getType() == TypeHistory.CONG_VAT_PHAM ){
                         StudentHistoryGiftResponse historyGift = historyDetailRepository
                                 .getHistoryGift(history.getStudentId(), history.getId());
-                        response.setImage(udpmHoney.getPicture());
+                        response.setChangeDate(historyGift.getChangeDate());
                         String preId = null;
                         if (history.getTeacherId() == null && history.getPresidentId() == null) {
                             response.setContent("Bạn nhận được vật phẩm từ hệ thống");
                         } else if (history.getTeacherId() == null) {
                             preId = history.getPresidentId();
+                            response.setContent("Bạn nhận được vật phẩm từ  " + apiidentity.handleCallApiGetUserById(preId).getUserName());
                         } else {
                             preId = history.getTeacherId();
-                        }
-                        if (preId != null) {
-                            response.setContent("Bạn nhận được vật phẩm từ " + apiidentity.handleCallApiGetUserById(preId).getUserName());
+                            response.setContent("Bạn nhận được vật phẩm từ giảng viên " + apiidentity.handleCallApiGetUserById(preId).getUserName());
+
                         }
                         response.setPointGet("+" + historyGift.getGift());
                     }
                     else if (history.getType() == TypeHistory.DOI_QUA && history.getStatus() == HistoryStatus.DA_PHE_DUYET) {
                         HistoryDetail historyDetail = historyDetailRepository
                                 .findByHistoryId(history.getId());
+                        History historyStudent = historyRepository.findById(historyDetail.getHistoryId()).orElse(null);
                         Gift gift = giftRepository.findById(historyDetail.getGiftId()).orElse(null);
                         if (gift != null) {
-                            response.setImage(udpmHoney.getPicture());
+                            response.setChangeDate(historyStudent.getChangeDate());
                             response.setContent("Bạn đã mua x" + historyDetail.getQuantityGift() + " phần quà " + " " + gift.getName());
                             Honey honey = honeyRepository.findById(historyDetail.getHoneyId()).orElse(null);
                             if (honey != null) {
-                                response.setPointGet("+" + historyDetail.getQuantityGift() + " " + gift.getName());
+//                                response.setPointGet("+" + historyDetail.getQuantityGift() + " " + gift.getName());
                                 categoryRepository.findById(honey.getHoneyCategoryId()).ifPresent(category ->
                                         response.setPoint("-" + historyDetail.getHoneyPoint() * historyDetail.getQuantityGift() + " mật ong " + category.getName()));
                             }
@@ -114,13 +115,14 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
                     else if(history.getType() == TypeHistory.MUA_VAT_PHAM && history.getStatus() == HistoryStatus.DA_PHE_DUYET){
                         HistoryDetail historyDetail = historyDetailRepository
                                 .findByHistoryId(history.getId());
+                        History historyStudent = historyRepository.findById(historyDetail.getHistoryId()).orElse(null);
                         Gift gift = giftRepository.findById(historyDetail.getGiftId()).orElse(null);
                         if (gift != null) {
-                            response.setImage(udpmHoney.getPicture());
+                            response.setChangeDate(historyStudent.getChangeDate());
                             response.setContent("Bạn đã mua x" + historyDetail.getQuantityGift() + " vật phẩm " + " " + gift.getName());
                             Honey honey = honeyRepository.findById(historyDetail.getHoneyId()).orElse(null);
                             if (honey != null) {
-                                response.setPointGet("+" + historyDetail.getQuantityGift() + " " + gift.getName());
+//                                response.setPointGet("+" + historyDetail.getQuantityGift() + " " + gift.getName());
                                 categoryRepository.findById(honey.getHoneyCategoryId()).ifPresent(category ->
                                         response.setPoint("-" + historyDetail.getHoneyPoint() * historyDetail.getQuantityGift() + " mật ong " + category.getName()));
                             }
@@ -129,17 +131,18 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
                     else if (history.getType() == TypeHistory.PHE_DUYET_QUA) {
                         HistoryDetail historyDetail = historyDetailRepository
                                 .findByStudentIdAndHistoryId(history.getStudentId(), history.getId());
+                        History historyStudent = historyRepository.findById(historyDetail.getHistoryId()).orElse(null);
                         Gift gift = giftRepository.findById(historyDetail.getGiftId()).orElse(null);
                         if (history.getStatus() == HistoryStatus.DA_HUY) {
                             if (gift != null) {
-                                response.setImage(udpmHoney.getPicture());
+                                response.setChangeDate(historyStudent.getChangeDate());
                                 response.setContent("Mở x" + historyDetail.getQuantityGift() + " gói quà " + " " + gift.getName() + " "
                                         + "bị giảng viên từ chối");
                                 response.setPointGet("+" + historyDetail.getQuantityGift() + " " + gift.getName() + "[Quà]");
                             }
                         } else {
                             if (gift != null) {
-                                response.setImage(udpmHoney.getPicture());
+                                response.setChangeDate(historyStudent.getChangeDate());
                                 response.setContent("Mở x" + historyDetail.getQuantityGift() + " gói quà " + " " + gift.getName());
                                 response.setPoint("-" + historyDetail.getQuantityGift() + " " + gift.getName() + "[Quà]");
                             }
@@ -147,23 +150,44 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
                     } else if (history.getType() == TypeHistory.CONG_RUONG) {
                         HistoryDetail historyDetail = historyDetailRepository
                                 .findByStudentIdAndHistoryId(history.getStudentId(), history.getId());
+                        History historyStudent = historyRepository.findById(historyDetail.getHistoryId()).orElse(null);
                         Chest chest = chestRepository.findById(historyDetail.getChestId()).orElse(null);
                         if (history.getStatus() == HistoryStatus.ADMIN_DA_THEM) {
                             if (chest != null) {
-                                response.setImage(udpmHoney.getPicture());
+                                response.setChangeDate(historyStudent.getChangeDate());
                                 response.setContent("Bạn nhận được " + 1 + " rương " + " " + chest.getName() + " "
                                         + "từ hệ thống");
                                 response.setPointGet("+" + 1 + " Rương " + chest.getName());
                             }
                         }
                     }
+                    else if(history.getType() == TypeHistory.MUA_VAT_PHAM && history.getStatus() == HistoryStatus.DA_HUY){
+                        HistoryDetail historyDetail = historyDetailRepository
+                                .findByHistoryId(history.getId());
+                        History historyStudent = historyRepository.findById(historyDetail.getHistoryId()).orElse(null);
+                        Gift gift = giftRepository.findById(historyDetail.getGiftId()).orElse(null);
+                        if (gift != null) {
+                            response.setChangeDate(historyStudent.getChangeDate());
+                            response.setContent("Bạn bị từ chối mua x" + historyDetail.getQuantityGift() + " vật phẩm " + " " + gift.getName());
+                        }
+                    }
+                    else if(history.getType() == TypeHistory.DOI_QUA && history.getStatus() == HistoryStatus.DA_HUY){
+                        HistoryDetail historyDetail = historyDetailRepository
+                                .findByHistoryId(history.getId());
+                        History historyStudent = historyRepository.findById(historyDetail.getHistoryId()).orElse(null);
+                        Gift gift = giftRepository.findById(historyDetail.getGiftId()).orElse(null);
+                        if (gift != null) {
+                            response.setChangeDate(historyStudent.getChangeDate());
+                            response.setContent("Bạn bị từ chối mua x" + historyDetail.getQuantityGift() + " phần quà " + " " + gift.getName());
+                        }
+                    }
                     return response;
                 }
         ).toList();
         Map<String, Object> result = new HashMap<>();
-        result.put("data", listResponse);
-        result.put("totalPages", list.getTotalPages());
-        result.put("currentPage", list.getNumber());
+            result.put("data", listResponse);
+            result.put("totalPages", list.getTotalPages());
+            result.put("currentPage", list.getNumber());
         return result;
     }
 
@@ -185,7 +209,6 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
                                 .findByHistoryId(history.getId());
                         Gift gift = giftRepository.findById(historyDetail.getGiftId()).orElse(null);
                         if (gift != null) {
-                            response.setImage(gift.getImage());
                             Honey honey = honeyRepository.findById(historyDetail.getHoneyId()).orElse(null);
                             if (honey != null) {
                                 categoryRepository.findById(honey.getHoneyCategoryId()).ifPresent(category ->
@@ -204,7 +227,6 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
                         Gift gift = giftRepository.findById(historyDetail.getGiftId()).orElse(null);
 
                         if (gift != null) {
-                            response.setImage(gift.getImage());
                             response.setContent("Mở x" + historyDetail.getQuantityGift() + " gói quà " + " " + gift.getName() +
                                     "[ " + history.getSubject() + " - " + history.getClassName() + " - " +
                                     apiidentity.handleCallApiGetUserById(history.getTeacherId()).getUserName() + " ]");

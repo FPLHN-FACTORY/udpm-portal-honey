@@ -35,7 +35,7 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
   }, [selectedConversion]);
 
   useEffect(() => {
-    setSelectedConversion(null)
+    setSelectedConversion(null);
   }, [filteredItem]);
 
   useEffect(() => {
@@ -46,8 +46,6 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
     BuyItem.getUserAPiByid().then((response) => {
       setFillUserApi({
         ...response.data.data,
-        khoa: "17.3",
-        phone: "0763104018",
       });
     });
   };
@@ -78,7 +76,7 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
     }
     if (selectedConversion.quantity != null) {
       if (quantity > selectedConversion.quantity) {
-        message.error("Quà không còn đủ số lượng bạn cần");
+        message.error("Vật phẩm không còn đủ số lượng bạn cần");
         return;
       }
     }
@@ -101,15 +99,14 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
       .then((response) => {
         if (response.data.success) {
           if (selectedConversion && selectedConversion.status === 1) {
-            message.success("Gửi yêu cầu đổi vật phẩm thành công");
+            message.success("Gửi yêu cầu mua vật phẩm thành công");
           } else {
-            message.success("Đổi vật phẩm thành công");
+            message.success("Mua vật phẩm thành công");
           }
 
           setQuantity(1);
           if (
             selectedConversion &&
-            selectedConversion.status === 0 &&
             selectedConversion.quantity !== null
           ) {
             setSelectedConversion({
@@ -117,9 +114,7 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
               quantity: initialQuantity - quantity,
             });
           }
-          if (selectedConversion.status === 0) {
-            updatePoints(fillPoint.point - selectedConversion.honey * quantity);
-          }
+          updatePoints(fillPoint.point - selectedConversion.honey * quantity);
         } else {
           message.error("Số lượng mật ong không đủ!");
         }
@@ -151,7 +146,7 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
       >
         <div style={{ display: "flex", justifyContent: "center" }}>
           <span style={{ fontSize: "16px", color: "white", fontWeight: 700 }}>
-            Bạn có xác nhận mua quà không ?
+            Bạn có xác nhận mua vật phẩm không ?
           </span>
         </div>
         <div
@@ -163,13 +158,18 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
         >
           <Button
             type="primary"
+            className="btn-huy mr-2"
+            onClick={handleCancel}
+          >
+            Hủy
+          </Button>
+          <Button
+            type="primary"
             className="btn-xac-nhan"
             onClick={onSubmitCreate}
+            style={{ marginRight: -10 }}
           >
             Xác nhận
-          </Button>
-          <Button type="primary" className="btn-huy" onClick={handleCancel}>
-            Hủy
           </Button>
         </div>
       </Modal>

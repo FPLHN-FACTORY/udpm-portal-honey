@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import approved from "../../assets/images/check.png";
 import refuse from "../../assets/images/cancel.png";
 import {
+  AddNotification,
   GetNotification,
   SetNotification,
 } from "../../app/reducers/notification/teacher/notification-teacher.reducer";
@@ -46,7 +47,11 @@ function Header({ onSlidebar, onPress, name, subName }) {
       page: current,
       size: 10,
     });
-    dispatch(SetNotification(response.data.data.data));
+    if (response.data.data.data !== 0) {
+      response.data.data.data.forEach(element => {
+        dispatch(AddNotification(element));
+      });
+    } 
     setCurrent(response.data.data.currentPage);
     if (response.data.data.totalPages - current <= 1) {
       setNotificationHasData(false);
@@ -175,7 +180,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
                   <List
                     style={{
                       width: "300px",
-                      height: "400px",
+                      height: "450px",
                       overflow: "scroll",
                     }}
                     className="header-notifications-dropdown shadow-lg"

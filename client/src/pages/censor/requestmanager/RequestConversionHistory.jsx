@@ -124,7 +124,9 @@ export default function RequestConversionHistory() {
     quantityGift
   ) => {
     Modal.confirm({
-      title: `Bạn có chắc chắn muốn ${status === 1? "phê duyệt" : "Từ chối"} yêu cầu không?`,
+      title: `Bạn có chắc chắn muốn ${
+        status === 1 ? "phê duyệt" : "Từ chối"
+      } yêu cầu không?`,
       onOk: () => {
         RequestManagerAPI.changeStatusConversion(
           idStudent,
@@ -140,8 +142,8 @@ export default function RequestConversionHistory() {
           }
           fetchData();
         });
-      }
-    })
+      },
+    });
   };
 
   const changeStatusConversionAll = (data, status) => {
@@ -276,10 +278,12 @@ export default function RequestConversionHistory() {
     },
     {
       title: "Ngày gửi",
-      dataIndex: "createdDate",
-      key: "createdDate",
+      dataIndex: "changeDate",
+      key: "changeDate",
       align: "center",
-      render: (text) => <span>{moment(text).format("DD-MM-YYYY HH:mm:ss")}</span>,
+      render: (text) => (
+        <span>{moment(text).format("DD-MM-YYYY HH:mm:ss")}</span>
+      ),
     },
     {
       title: () => <div>Hành động</div>,
@@ -360,22 +364,6 @@ export default function RequestConversionHistory() {
                 prefix={<SearchOutlined />}
               />
             </Form.Item>
-            <Form.Item name={"status"} initialValue={null}>
-              <Select
-                style={{ width: "260px" }}
-                size="large"
-                placeholder="Trạng thái"
-                options={[
-                  { value: null, label: "Tất cả" },
-                  ...[1, 2].map((value) => {
-                    return {
-                      value: value,
-                      label: statusHistory(value),
-                    };
-                  }),
-                ]}
-              />
-            </Form.Item>
             <Button
               htmlType="submit"
               type="primary"
@@ -392,10 +380,14 @@ export default function RequestConversionHistory() {
             <h1 className="lable">Danh sách yêu cầu</h1>
           </Col>
           <Col>
-            <Button onClick={() => approveAll()} type="primary mr-2">
+            <Button
+              onClick={() => approveAll()}
+              type="primary mr-2"
+              style={{ backgroundColor: "#EEB30D" }}
+            >
               Phê duyệt
             </Button>
-            <Button onClick={() => refuseAll()} type="primary">
+            <Button onClick={() => refuseAll()} type="primary" danger>
               Từ chối
             </Button>
           </Col>

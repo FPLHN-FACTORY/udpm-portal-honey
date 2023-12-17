@@ -68,7 +68,6 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
     @Autowired
     private UdpmHoney udpmHoney;
 
-
     @Override
     public History addBuyItem(StudentBuyItemRequest createRequest) {
 //        Category category = categoryRepository.findById(createRequest.getCategoryId()).orElse(null);
@@ -82,34 +81,32 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
         archive.setStudentId(createRequest.getStudentId());
         archive.setStatus(Status.HOAT_DONG);
         if (honey == null) {
+            throw new RestApiException("Bạn không có mật ong cần thiết");
             // Nếu Honey chưa tồn tại, tạo mới
-            honey = new Honey();
-            honey.setStudentId(createRequest.getStudentId());
-            honey.setHoneyCategoryId(createRequest.getCategoryId());
-            honey.setHoneyPoint(createRequest.getHoneyPoint());
-            honey = honeyRepository.save(honey);
+//            honey = new Honey();
+//            honey.setStudentId(createRequest.getStudentId());
+//            honey.setHoneyCategoryId(createRequest.getCategoryId());
+//            honey.setHoneyPoint(createRequest.getHoneyPoint());
+//            honey = honeyRepository.save(honey);
         } else {
             if (gift.getStatus().equals(StatusGift.ACCEPT)) {
                 history.setStatus(HistoryStatus.CHO_PHE_DUYET);
                 history.setType(TypeHistory.MUA_VAT_PHAM);
-                // gửi thông báo cho admin
-                studentNotificationService.sendNotificationToAdmin(udpmHoney.getUserName());
             } else {
                 history.setStatus(HistoryStatus.DA_PHE_DUYET);
                 history.setType(TypeHistory.MUA_VAT_PHAM);
-
-                int deductedPoints = createRequest.getHoneyPoint();
-                int quantity = createRequest.getQuantity();
-                int moneyPoint = (deductedPoints * quantity);
-                if (honey.getHoneyPoint() < moneyPoint) {
-                    throw new RestApiException("Số lượng mật ong không đủ!");
-                }
-                honey.setHoneyPoint(honey.getHoneyPoint() - (deductedPoints * quantity));
-                honey = honeyRepository.save(honey);
-                if (gift.getQuantity() != null) {
-                    gift.setQuantity(gift.getQuantity() - createRequest.getQuantity());
-                    giftRepository.save(gift);
-                }
+            }
+            int deductedPoints = createRequest.getHoneyPoint();
+            int quantity = createRequest.getQuantity();
+            int moneyPoint = (deductedPoints * quantity);
+            if (honey.getHoneyPoint() < moneyPoint) {
+                throw new RestApiException("Số lượng mật ong không đủ!");
+            }
+            honey.setHoneyPoint(honey.getHoneyPoint() - (deductedPoints * quantity));
+            honey = honeyRepository.save(honey);
+            if (gift.getQuantity() != null) {
+                gift.setQuantity(gift.getQuantity() - createRequest.getQuantity());
+                giftRepository.save(gift);
             }
         }
 
@@ -139,7 +136,8 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
         history.setStudentId(createRequest.getStudentId());
         history.setStudentName(udpmHoney.getUserName());
         studentCreateRequestConversionRepository.save(history);
-
+        // gửi thông báo cho admin
+        studentNotificationService.sendNotificationToAdmin(udpmHoney.getUserName(), history.getId());
         historyDetail.setGiftId(createRequest.getGiftId());
         historyDetail.setHoneyId(honey.getId());
         historyDetail.setNameGift(createRequest.getNameGift());

@@ -175,25 +175,25 @@ function DashboardAuthUser({ children }) {
       "/censor/upgrade-rate",
       <FontAwesomeIcon icon={faStar} />
     ),
-    getItem(
-      "Cổng thông tin",
-      "Cổng thông tin",
-      <FontAwesomeIcon icon={faCodePullRequest} />,
-      [
-        getItem(
-          <Link to={"/censor/event"}>Module sự kiện</Link>,
-          "/censor/event"
-        ),
-        getItem(
-          <Link to={"/censor/project"}>Module dự án</Link>,
-          "/censor/project"
-        ),
-        getItem(
-          <Link to={"/censor/history-portal"}>Lịch sử</Link>,
-          "/censor/history-portal"
-        ),
-      ]
-    ),
+    // getItem(
+    //   "Cổng thông tin",
+    //   "Cổng thông tin",
+    //   <FontAwesomeIcon icon={faCodePullRequest} />,
+    //   [
+    //     getItem(
+    //       <Link to={"/censor/event"}>Module sự kiện</Link>,
+    //       "/censor/event"
+    //     ),
+    //     getItem(
+    //       <Link to={"/censor/project"}>Module dự án</Link>,
+    //       "/censor/project"
+    //     ),
+    //     getItem(
+    //       <Link to={"/censor/history-portal"}>Lịch sử</Link>,
+    //       "/censor/history-portal"
+    //     ),
+    //   ]
+    // ),
   ];
   const toggleCollapse = () => {
     setCollapsed(!collapsed);

@@ -26,5 +26,5 @@ public interface StudentNotificationService {
 
     Notification sendNotificationToTeacher(String idTeacher, String userName);
 
-    Notification sendNotificationToAdmin(String userName);
+    Notification sendNotificationToAdmin(String userName, String historyId);
 }

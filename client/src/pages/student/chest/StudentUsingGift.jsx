@@ -48,7 +48,7 @@ const UsingGift = (props) => {
         ArchiveAPI.openGift(data)
           .then((result) => {
             if (result.data.success) {
-              message.success("Đã gửi yêu cầu lên giảng viên");
+              message.success("Đã gửi yêu cầu cho giảng viên");
               handleCancel();
             }
           })

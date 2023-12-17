@@ -6,7 +6,6 @@ import com.honeyprojects.core.student.model.response.StudentNotificationResponse
 import com.honeyprojects.core.student.repository.StudentNotificationRepository;
 import com.honeyprojects.core.student.service.StudentNotificationService;
 import com.honeyprojects.entity.Notification;
-import com.honeyprojects.infrastructure.contant.Constants;
 import com.honeyprojects.infrastructure.contant.NotificationStatus;
 import com.honeyprojects.infrastructure.contant.NotificationType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,12 +98,13 @@ public class StudentNotificationServiceImpl implements StudentNotificationServic
     }
 
     @Override
-    public Notification sendNotificationToAdmin(String userName) {
+    public Notification sendNotificationToAdmin(String userName, String historyId) {
         String title = "Sinh viên " + userName + " đã gửi một yêu cầu phê duyệt mua vật phẩm";
         Notification notification = new Notification();
         notification.setTitle(title);
         notification.setType(NotificationType.ADMIN_CHO_PHE_DUYET);
         notification.setStatus(NotificationStatus.CHUA_DOC);
+        notification.setIdHistoryDetail(historyId);
         return notificationRepository.save(notification);
     }
 }
