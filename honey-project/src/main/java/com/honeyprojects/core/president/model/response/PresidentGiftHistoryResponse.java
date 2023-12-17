@@ -16,9 +16,6 @@ public interface PresidentGiftHistoryResponse extends IsIdentified {
     @Value("#{target.gift}")
     String getGift();
 
-    @Value("#{target.chest}")
-    String getChest();
-
     @Value("#{target.change_date}")
     Long getChangeDate();
 
