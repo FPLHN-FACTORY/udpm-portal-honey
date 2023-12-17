@@ -308,7 +308,7 @@ export default function RequestAddPoint() {
     return {
       ...data,
       key: data.id,
-      createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
+      createdDate: moment(data.createdDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: {
         idHistory: data.idHistory,
         status: data.status,

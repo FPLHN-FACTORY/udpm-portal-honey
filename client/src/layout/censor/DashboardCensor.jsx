@@ -58,6 +58,9 @@ function DashboardAuthUser({ children }) {
   if (pathname.includes("censor/request-manager")) {
     title = "Quản lý yêu cầu";
   }
+  if (pathname.includes("censor/request-item")) {
+    title = "Quản lý yêu cầu";
+  }
   if (pathname.includes("censor/request-manager/random-add-point")) {
     title = "Tặng vật phẩm";
   }

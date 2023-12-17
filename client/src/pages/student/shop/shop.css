@@ -124,16 +124,16 @@
 }
 
 .shop__menu__category
-  :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs
+    .ant-tabs
   .ant-tabs-tab-btn:focus:not(:focus-visible),
 .shop__menu__category
-  :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs
+    .ant-tabs
   .ant-tabs-tab-remove:focus:not(:focus-visible),
 .shop__menu__category
-  :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs
+    .ant-tabs
   .ant-tabs-tab-btn:active,
 .shop__menu__category
-  :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs
+    .ant-tabs
   .ant-tabs-tab-remove:active {
   color: #ffffff;
   text-shadow: #ffffff;
@@ -144,7 +144,7 @@
 }
 
 .shop__menu__category
-  :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs
+    .ant-tabs
   .ant-tabs-tab.ant-tabs-tab-active
   .ant-tabs-tab-btn {
   color: #ffffff;
@@ -156,11 +156,11 @@
 }
 
 .shop__menu__category
-  :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs
+    .ant-tabs
   > .ant-tabs-nav
   .ant-tabs-nav-more,
 .shop__menu__category
-  :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs
+    .ant-tabs
   > div
   > .ant-tabs-nav
   .ant-tabs-nav-more {
@@ -170,14 +170,14 @@
 }
 
 .shop__menu__category
-  :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs
+    .ant-tabs
   .ant-tabs-tab {
   padding: 12px 15px;
   border-radius: 5px;
 }
 
 .shop__menu__category
-  :where(.css-dev-only-do-not-override-14wwjjs).ant-tabs
+    .ant-tabs
   .ant-tabs-tab
   + .ant-tabs-tab {
   margin: 0 0 0 3px;

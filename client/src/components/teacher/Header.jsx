@@ -19,6 +19,7 @@ import {
   SetCountNotification,
 } from "../../app/reducers/notification/teacher/count-notification-teacher.reducer";
 import React from "react";
+import { formatDateTime } from "../../pages/util/DateUtil";
 
 function Header({ onSlidebar, onPress, name, subName }) {
   useEffect(() => window.scrollTo(0, 0));
@@ -98,7 +99,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
   };
 
   const handleItemClick = (item) => {
-    navigate(`/censor/request-manager/detail/${item.idHistoryDetail}`);
+    navigate(`/teacher/add-point/history`);
     NotificationAPI.readOne(item.id).then(() => {
       fetchNotification();
       fetchCountNotification();
@@ -174,10 +175,10 @@ function Header({ onSlidebar, onPress, name, subName }) {
                   <List
                     style={{
                       width: "300px",
-                      height: "600px",
+                      height: "400px",
                       overflow: "scroll",
                     }}
-                    className="header-notifications-dropdown"
+                    className="header-notifications-dropdown shadow-lg"
                     itemLayout="horizontal"
                     dataSource={dataNotification}
                     renderItem={(item) => (
@@ -243,7 +244,8 @@ function Header({ onSlidebar, onPress, name, subName }) {
                           description={
                             <>
                               <ClockCircleFilled />{" "}
-                              {moment(item.createdDate).format("DD/MM/YYYY")}
+                              {/* {moment(item.createdDate).format("DD/MM/YYYY")} */}
+                              {formatDateTime(item.createdDate)}
                             </>
                           }
                         />

@@ -40,7 +40,7 @@ const statusHistory = (status) => {
   }
 };
 const fomatDate = (date) => {
-  return moment(date).format("DD-MM-YYYY");
+  return moment(date).format("DD-MM-YYYY HH:mm:ss");
 };
 
 export default function RequestItemDetail() {

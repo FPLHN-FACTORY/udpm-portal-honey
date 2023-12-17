@@ -12,6 +12,7 @@ import {
   Input,
   Select,
   Form,
+  Modal,
 } from "antd";
 import "./auction-management.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -242,16 +243,21 @@ export default function AuctionMangement() {
   };
 
   const buttonDelete = (id) => {
-    AuctionAPI.changeStatus(id).then(
-      (response) => {
-        message.success("Đóng thành công!");
-        dispatch(ChangeAuctionStatus(response.data.data));
-        fetchData();
-      },
-      (error) => {
-        message.error("Đóng thất bại!");
+    Modal.confirm({
+      title: "Bạn chắc chắn muốn đóng phiên đâu giá không?",
+      onOk: () => {
+        AuctionAPI.changeStatus(id).then(
+          (response) => {
+            message.success("Đóng thành công!");
+            dispatch(ChangeAuctionStatus(response.data.data));
+            fetchData();
+          },
+          (error) => {
+            message.error("Đóng thất bại!");
+          }
+        );
       }
-    );
+    })
   };
 
   return (

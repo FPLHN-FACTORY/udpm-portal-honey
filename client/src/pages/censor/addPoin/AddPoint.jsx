@@ -15,6 +15,7 @@ import {
   Tooltip,
   message,
   Select,
+  Modal,
 } from "antd";
 import { SearchOutlined, SendOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -72,12 +73,17 @@ export default function AddPoint() {
   };
 
   const onFinishAdd = (values) => {
-    addPoint({
-      ...values,
-      honeyId: honeyStudent.id,
-      studentId: student.id,
-      categoryId: categorySelected,
-    });
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn tặng mật ong và tặng điểm cho sinh viên không?",
+      onOk: () => {
+        addPoint({
+          ...values,
+          honeyId: honeyStudent.id,
+          studentId: student.id,
+          categoryId: categorySelected,
+        });
+      }
+    })
   };
 
   const addPoint = (data) => {
@@ -311,11 +317,6 @@ export default function AddPoint() {
                       <Form.Item
                         name="note"
                         rules={[
-                          {
-                            required: true,
-                            pattern: /^\s*(\S\s*){5,}$/,
-                            message: "Lý do cộng phải trên 5 ký tự",
-                          },
                           {
                             max: 100,
                             message: "Lý do không được vượt quá 100 ký tự",

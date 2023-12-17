@@ -123,20 +123,25 @@ export default function RequestConversionHistory() {
     status,
     quantityGift
   ) => {
-    RequestManagerAPI.changeStatusConversion(
-      idStudent,
-      idGift,
-      idHistory,
-      idHistoryDetail,
-      status,
-      quantityGift
-    ).then((response) => {
-      if (response.data.success) {
-        if (status === 1) message.success("Đã xác nhận yêu cầu!");
-        if (status === 2) message.error("Hủy yêu cầu thành công!");
+    Modal.confirm({
+      title: `Bạn có chắc chắn muốn ${status === 1? "phê duyệt" : "Từ chối"} yêu cầu không?`,
+      onOk: () => {
+        RequestManagerAPI.changeStatusConversion(
+          idStudent,
+          idGift,
+          idHistory,
+          idHistoryDetail,
+          status,
+          quantityGift
+        ).then((response) => {
+          if (response.data.success) {
+            if (status === 1) message.success("Đã xác nhận yêu cầu!");
+            if (status === 2) message.error("Hủy yêu cầu thành công!");
+          }
+          fetchData();
+        });
       }
-      fetchData();
-    });
+    })
   };
 
   const changeStatusConversionAll = (data, status) => {
@@ -212,27 +217,27 @@ export default function RequestConversionHistory() {
     });
   };
 
-  const handCheckvalide = async (values) => {
-    // const response = await RequestManagerAPI.getPoint(
-    //   values.studentId,
-    //   values.categoryId
-    // );
-    // const newFillPoint = response.data.data;
+  // const handCheckvalide = async (values) => {
+  //   // const response = await RequestManagerAPI.getPoint(
+  //   //   values.studentId,
+  //   //   values.categoryId
+  //   // );
+  //   // const newFillPoint = response.data.data;
 
-    // const totalPoint = values.quantityGift * values.honeyPoint;
-    // if (totalPoint > newFillPoint) {
-    // message.error("Sinh viên Không còn đủ điểm để mua quà!");
-    // } else {
-    changeStatusConversion(
-      values.studentId,
-      values.giftId,
-      values.id,
-      values.historyDetailId,
-      1,
-      values.quantityGift
-    );
-    // }
-  };
+  //   // const totalPoint = values.quantityGift * values.honeyPoint;
+  //   // if (totalPoint > newFillPoint) {
+  //   // message.error("Sinh viên Không còn đủ điểm để mua quà!");
+  //   // } else {
+  //   changeStatusConversion(
+  //     values.studentId,
+  //     values.giftId,
+  //     values.id,
+  //     values.historyDetailId,
+  //     1,
+  //     values.quantityGift
+  //   );
+  //   // }
+  // };
 
   const columns = [
     {
@@ -274,7 +279,7 @@ export default function RequestConversionHistory() {
       dataIndex: "createdDate",
       key: "createdDate",
       align: "center",
-      render: (text) => <span>{moment(text).format("DD/MM/YYYY")}</span>,
+      render: (text) => <span>{moment(text).format("DD-MM-YYYY HH:mm:ss")}</span>,
     },
     {
       title: () => <div>Hành động</div>,
@@ -286,7 +291,13 @@ export default function RequestConversionHistory() {
             <Tooltip title="Xác nhận">
               <Button
                 onClick={() => {
-                  handCheckvalide(values);
+                  changeStatusConversion(
+                    values.studentId,
+                    values.giftId,
+                    values.id,
+                    values.historyDetailId,
+                    1
+                  );
                 }}
                 style={{
                   backgroundColor: "yellowgreen",

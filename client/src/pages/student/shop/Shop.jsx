@@ -1,7 +1,6 @@
 import { Tabs } from "antd";
 import { AppstoreAddOutlined } from "@ant-design/icons";
 import React, { memo, useEffect } from "react";
-import "./shop.css";
 import { useState } from "react";
 import Items from "./Items";
 import Gift from "./Gift";
@@ -133,7 +132,7 @@ const Shop = memo(() => {
           <AppstoreAddOutlined className="icon__store" />
           Cửa hàng
         </div>
-        <div className="shop__menu__category">
+        <div id="shop__menu__category">
           <Tabs
             tabPosition={"top"}
             style={{

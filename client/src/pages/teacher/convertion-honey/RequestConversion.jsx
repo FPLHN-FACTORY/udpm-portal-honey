@@ -57,12 +57,6 @@ export default function RequestConversion() {
       align: "center",
     },
     {
-      title: "Số lượng",
-      dataIndex: "quantity",
-      key: "quantity",
-      align: "center",
-    },
-    {
       title: "Ngày tạo",
       dataIndex: "createdDate",
       key: "createdDate",
@@ -232,12 +226,19 @@ export default function RequestConversion() {
       message.error("Vui lòng chọn ít nhất 1 yêu cầu phê duyệt!");
       return;
     }
-    TeacherUseGiftApi.accpectAll({
-      listId: selectedRowKeys,
-    }).finally(() => {
-      fetchData();
-      message.success("Phê duyệt thành công");
-    });
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn phê duyệt danh sách yêu cầu không?",
+      onOk: () => {
+        TeacherUseGiftApi.accpectAll({
+          listId: selectedRowKeys,
+        }).then(() => {
+          fetchData();
+          message.success("Phê duyệt yêu cầu thành công");
+        }).catch(() => {
+          message.error("Phê duyệt yêu cầu thất bại")
+        });
+      }
+    })
   };
 
   return (

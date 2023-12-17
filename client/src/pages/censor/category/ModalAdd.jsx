@@ -6,14 +6,11 @@ import {
   AddCategory,
 } from "../../../app/reducers/category/category.reducer";
 import "./index.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 const ModalThem = (props) => {
-  const [listCategory, setListCategory] = useState([]);
   const [image, setImage] = useState([]);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
   const [errorImage, setErrorImage] = useState("");
-  const [categoryName, setCategoryName] = useState("");
-  const [errorCategoryName, setErrorCategoryName] = useState("");
 
   // const { fetchData } = props;
 
@@ -170,7 +167,7 @@ const ModalThem = (props) => {
           fetchData();
         })
         .catch((err) => {
-          message.error("Lỗi: " + err.message);
+          message.error(err.response.data.message);
         });
     }
   };

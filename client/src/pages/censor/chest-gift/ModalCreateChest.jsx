@@ -20,10 +20,6 @@ const ModalAdd = (props) => {
     setModalOpen(false);
   };
 
-  const onSaveError = (err) => {
-    message.error("Lỗi: " + err.message);
-  };
-
   const onCancel = () => {
     setModalOpen(false);
   };
