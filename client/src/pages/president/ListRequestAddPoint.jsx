@@ -66,8 +66,8 @@ export default function HistoryAddPoint() {
     },
     {
       title: "Ngày tạo",
-      dataIndex: "createdDate",
-      key: "createdDate",
+      dataIndex: "changeDate",
+      key: "changeDate",
       align: "center",
     },
     {
@@ -85,7 +85,7 @@ export default function HistoryAddPoint() {
         <div style={{ textAlign: "center" }}>
           <Button
             onClick={() =>
-              changeStatus(values.idHistory, values.status === 2 ? 3 : 2)
+              changeStatus(values.idHistory)
             }
             disabled={values.status === 1}
             type="primary"
@@ -151,7 +151,7 @@ export default function HistoryAddPoint() {
       ...data,
       key: data.id,
       status: statusHistory(data.status),
-      createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
+      changeDate: moment(data.changeDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
   });
@@ -184,20 +184,20 @@ export default function HistoryAddPoint() {
     }
   };
 
-  const changeStatus = (idHistory, status) => {
+  const changeStatus = (idHistory) => {
     Modal.confirm({
       title: "Bạn có chắc chắn muốn hủy yêu cầu không?",
       onOk: () => {
-        AddPointAPI.changeStatus(idHistory, status)
-        .then((response) => {
-          if (response.data.success) {
-            fetchData(dispatch, filter);
-            if (status === 2) message.error("Hủy yêu cầu thành công!");
-          }
-        })
-        .catch((error) => console.error(error));
-      }
-    })
+        PresidentRequestAPI.changeStatus(idHistory)
+          .then((response) => {
+            if (response.data.success) {
+              fetchData(dispatch, filter);
+              message.error("Hủy yêu cầu thành công!");
+            }
+          })
+          .catch((error) => console.error(error));
+      },
+    });
   };
 
   return (

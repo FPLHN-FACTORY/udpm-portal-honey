@@ -8,6 +8,7 @@ import com.honeyprojects.core.common.base.UdpmHoney;
 import com.honeyprojects.core.common.response.SimpleResponse;
 import com.honeyprojects.core.president.model.request.PresidentCreateNotificationDetailAddItemRequest;
 import com.honeyprojects.core.president.model.request.PresidentNotificationAddItemRequest;
+import com.honeyprojects.core.president.model.request.PresidentStatusRequest;
 import com.honeyprojects.core.president.model.response.PresidentAddItemBO;
 import com.honeyprojects.core.president.model.response.PresidentAddItemDTO;
 import com.honeyprojects.core.president.model.response.PresidentCategoryResponse;
@@ -328,6 +329,13 @@ public class PresidentAddItemToStudentServiceImpl implements PresidentAddItemToS
                     .collect(Collectors.toList());
             saveImportData(lstImportUser);
         }
+    }
+
+    @Override
+    public History changeStatus(PresidentStatusRequest request) {
+        History history = historyRepository.findById(request.getIdHistory()).get();
+        history.setStatus(HistoryStatus.DA_HUY);
+        return historyRepository.save(history);
     }
 
     private void saveImportData(List<PresidentAddItemDTO> lstImportUser) throws IOException {

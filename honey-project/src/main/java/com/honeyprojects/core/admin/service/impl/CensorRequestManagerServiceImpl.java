@@ -178,8 +178,6 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
                 notification = adNotificationService.sendNotificationRefuseToStudent(history.getStudentId());
             }
         }
-
-
         for (CensorDetailItemRequestResponse item : listHistoryItem) {
             HistoryDetail historyDetail = historyDetailRepository.findById(item.getHistoryDetailId()).orElse(null);
             ArchiveGift archiveGift = new ArchiveGift();
@@ -229,7 +227,6 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
             }
 
         }
-
         return historyRepository.save(history);
     }
 
