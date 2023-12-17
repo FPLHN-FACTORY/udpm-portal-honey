@@ -1,4 +1,4 @@
-import { Layout, Row, Avatar, Tooltip, Col } from "antd";
+import { Layout, Row, Avatar, Tooltip, Col, Button } from "antd";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import "./index.css";
@@ -17,6 +17,7 @@ import { StudenHallOfFameAPI } from "../../../apis/student/honor/honor.api";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { ArrowLeftOutlined, LeftSquareTwoTone } from "@ant-design/icons";
 
 const HonorsStudent = () => {
   const dispatch = useAppDispatch();
@@ -134,6 +135,7 @@ const HonorsStudent = () => {
             </div>
           </div> */}
           </h2>
+          <Row className="justify-center" style={{marginTop: "10px"}}><Tooltip title={"Quay lại"}><Button type="primary" style={{backgroundColor: "#eeb30d", borderRadius: "50%"}} onClick={() => window.history.back()}><ArrowLeftOutlined/></Button></Tooltip></Row>
         </Header>
         <Content className="horor__table pl-[100px] pr-[100px] min-h-screen">
           <Row className="w-full">

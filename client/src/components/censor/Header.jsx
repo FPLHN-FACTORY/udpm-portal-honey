@@ -22,6 +22,7 @@ import { NotificationAPI } from "../../apis/censor/notification/censor-notificat
 import moment from "moment";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
+  AddNotification,
   GetNotification,
   SetNotification,
 } from "../../app/reducers/notification/censor/notification-censor.reducer";
@@ -49,14 +50,18 @@ function Header({ onSlidebar, onPress, name, subName }) {
       page: current,
       size: 10,
     });
-    dispatch(SetNotification(response.data.data.data));
+    if (response.data.data.data !== 0) {
+      response.data.data.data.forEach(element => {
+        dispatch(AddNotification(element));
+      });
+    } 
     setCurrent(response.data.data.currentPage);
     if (response.data.data.totalPages - current <= 1) {
       setNotificationHasData(false);
     } else {
       setNotificationHasData(true);
     }
-    if (response.data.data.totalPages > 1) {
+    if (response.data.data.data.length > 0) {
       setHasData(true);
     } else {
       setHasData(false);
@@ -72,7 +77,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
   useEffect(() => {
     fetchNotification();
     fetchCountNotification();
-  }, []);
+  }, [current]);
   useEffect(() => {
     fetchCountNotification();
   }, [current]);
@@ -99,8 +104,14 @@ function Header({ onSlidebar, onPress, name, subName }) {
 
   const markAsRead = () => {
     NotificationAPI.markAllAsRead().then(() => {
+      setIsOpen(!isOpen);
       fetchCountNotification();
-      fetchNotification();
+      NotificationAPI.fetchAll({
+        page: 0,
+        size: 10,
+      }).then((response) => {
+        dispatch(SetNotification(response.data.data.data));
+      }) 
     });
   };
 
@@ -184,7 +195,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
                   <List
                     style={{
                       width: "300px",
-                      height: "400px",
+                      height: "450px",
                       overflow: "scroll",
                     }}
                     className="header-notifications-dropdown shadow-lg"

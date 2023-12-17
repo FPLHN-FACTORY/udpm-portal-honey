@@ -85,8 +85,14 @@ function Header({ onSlidebar, onPress, name, subName }) {
 
   const markAsRead = () => {
     NotificationAPI.markAllAsRead().then(() => {
+      setIsOpen(!isOpen);
       fetchCountNotification();
-      fetchNotification();
+      NotificationAPI.fetchAll({
+        page: 0,
+        size: 10,
+      }).then((response) => {
+        dispatch(SetNotification(response.data.data.data));
+      }) 
     });
   };
 
@@ -174,7 +180,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
                   <List
                     style={{
                       width: "300px",
-                      height: "400px",
+                      height: "450px",
                       overflow: "scroll",
                     }}
                     className="header-notifications-dropdown shadow-lg"
