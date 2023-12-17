@@ -14,21 +14,17 @@ import com.honeyprojects.core.teacher.model.response.TeacherPointResponse;
 import com.honeyprojects.core.teacher.repository.TeacherCategoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHistoryRepository;
 import com.honeyprojects.core.teacher.repository.TeacherHoneyRepository;
-import com.honeyprojects.core.teacher.repository.TeacherNotificationRepository;
 import com.honeyprojects.core.teacher.service.TeacherAddPointService;
 import com.honeyprojects.core.teacher.service.TeacherNotificationDetailService;
 import com.honeyprojects.core.teacher.service.TeacherNotificationService;
-import com.honeyprojects.entity.Category;
 import com.honeyprojects.entity.History;
 import com.honeyprojects.entity.HistoryDetail;
 import com.honeyprojects.entity.Honey;
 import com.honeyprojects.entity.Notification;
 import com.honeyprojects.infrastructure.contant.CategoryStatus;
-import com.honeyprojects.infrastructure.contant.NotificationStatus;
-import com.honeyprojects.infrastructure.contant.NotificationType;
+import com.honeyprojects.infrastructure.contant.HistoryStatus;
 import com.honeyprojects.infrastructure.contant.Status;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
-import com.honeyprojects.infrastructure.contant.*;
 import com.honeyprojects.util.AddPointUtils;
 import com.honeyprojects.util.ConvertRequestApiidentity;
 import jakarta.transaction.Transactional;
@@ -39,7 +35,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TeacherAddPointServiceImpl implements TeacherAddPointService {
@@ -124,6 +119,7 @@ public class TeacherAddPointServiceImpl implements TeacherAddPointService {
         history.setNote(addPointRequest.getNote());
         history.setType(TypeHistory.CONG_DIEM);
         history.setChangeDate(dateNow);
+        history.setStudentId(addPointRequest.getStudentId());
         String enumCategoryFREE = String.valueOf(CategoryStatus.FREE.ordinal());
         if(category.getStatus().equals(enumCategoryFREE)){
             history.setStatus(HistoryStatus.TEACHER_DA_THEM);
