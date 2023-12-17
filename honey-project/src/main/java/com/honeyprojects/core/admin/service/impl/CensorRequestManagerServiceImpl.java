@@ -87,6 +87,7 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
     public History changeStatus(CensorChangeStatusRequest changeReq) {
         Long dateNow = Calendar.getInstance().getTimeInMillis();
         History history = historyRepository.findById(changeReq.getIdHistory()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
+        history.setStatus(HistoryStatus.values()[changeReq.getStatus()]);
 
         Notification notification = null;
         // gửi thông báo
@@ -117,8 +118,6 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
 //                notification = adNotificationService.sendNotificationRefuseToStudent(history.getStudentId());
 //            }
 //        }
-
-        history.setStatus(HistoryStatus.values()[changeReq.getStatus()]);
         List<HistoryDetail> listHistoryDetail = historyDetailRepository.findHistoryDetailByHistoryId(changeReq.getIdHistory());
         for (HistoryDetail historyDetail : listHistoryDetail) {
             if (changeReq.getStatus() == 1 && history.getType().equals(TypeHistory.CONG_DIEM)) {

@@ -92,8 +92,7 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
             if (gift.getStatus().equals(StatusGift.ACCEPT)) {
                 history.setStatus(HistoryStatus.CHO_PHE_DUYET);
                 history.setType(TypeHistory.MUA_VAT_PHAM);
-                // gửi thông báo cho admin
-                studentNotificationService.sendNotificationToAdmin(udpmHoney.getUserName());
+
             } else {
                 history.setStatus(HistoryStatus.DA_PHE_DUYET);
                 history.setType(TypeHistory.MUA_VAT_PHAM);
@@ -139,7 +138,8 @@ public class StudentBuyItemServiceImpl implements StudentBuyItemService {
         history.setStudentId(createRequest.getStudentId());
         history.setStudentName(udpmHoney.getUserName());
         studentCreateRequestConversionRepository.save(history);
-
+        // gửi thông báo cho admin
+        studentNotificationService.sendNotificationToAdmin(udpmHoney.getUserName(), history.getId());
         historyDetail.setGiftId(createRequest.getGiftId());
         historyDetail.setHoneyId(honey.getId());
         historyDetail.setNameGift(createRequest.getNameGift());
