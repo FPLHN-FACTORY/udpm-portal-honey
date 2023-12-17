@@ -191,7 +191,8 @@ public class CensorRequestManagerServiceImpl implements CensorRequestManagerServ
             if (history.getStatus().equals(HistoryStatus.DA_PHE_DUYET) &&
                     history.getType().equals(TypeHistory.DOI_QUA) ||
                     history.getType().equals(TypeHistory.MAT_ONG_VA_VAT_PHAM) ||
-                    history.getType().equals(TypeHistory.CONG_VAT_PHAM)
+                    history.getType().equals(TypeHistory.CONG_VAT_PHAM) ||
+                    history.getType().equals(TypeHistory.MUA_VAT_PHAM)
             ) {
                 if (historyDetail.getHoneyId() != null) {
                     Honey honey = honeyRepository.findById(historyDetail.getHoneyId()).orElseThrow(() -> new RestApiException(Message.HISTORY_NOT_EXIST));
