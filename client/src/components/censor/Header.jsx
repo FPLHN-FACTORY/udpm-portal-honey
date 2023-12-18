@@ -61,16 +61,17 @@ function Header({ onSlidebar, onPress, name, subName }) {
     } else {
       setNotificationHasData(true);
     }
-    if (response.data.data.data.length > 0) {
-      setHasData(true);
-    } else {
-      setHasData(false);
-    }
+    
   };
 
   const fetchCountNotification = () => {
     return NotificationAPI.fetchCountNotification().then((response) => {
       dispatch(SetCountNotification(response.data));
+      if (response.data > 0) {
+        setHasData(true);
+      } else {
+        setHasData(false);
+      }
     });
   };
 
