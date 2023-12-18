@@ -107,7 +107,6 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
           setQuantity(1);
           if (
             selectedConversion &&
-            selectedConversion.status === 0 &&
             selectedConversion.quantity !== null
           ) {
             setSelectedConversion({
@@ -115,9 +114,7 @@ const Items = memo(({ filteredItem, fillPoint, updatePoints }) => {
               quantity: initialQuantity - quantity,
             });
           }
-          if (selectedConversion.status === 0) {
-            updatePoints(fillPoint.point - selectedConversion.honey * quantity);
-          }
+          updatePoints(fillPoint.point - selectedConversion.honey * quantity);
         } else {
           message.error("Số lượng mật ong không đủ!");
         }

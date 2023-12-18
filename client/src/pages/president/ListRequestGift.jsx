@@ -14,9 +14,7 @@ import React, { useEffect, useState } from "react";
 import "./index.css";
 import { useAppDispatch } from "../../app/hooks";
 import { AddPointAPI } from "../../apis/teacher/add-point/add-point.api";
-import {
-  SetCategory,
-} from "../../app/reducers/category/category.reducer";
+import { SetCategory } from "../../app/reducers/category/category.reducer";
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { PresidentRequestAPI } from "../../apis/president/request/request.api";
@@ -59,8 +57,8 @@ export default function RequestGift() {
     },
     {
       title: "Ngày tạo",
-      dataIndex: "createdDate",
-      key: "createdDate",
+      dataIndex: "changeDate",
+      key: "changeDate",
       align: "center",
     },
     {
@@ -145,7 +143,7 @@ export default function RequestGift() {
       ...data,
       key: data.id,
       status: statusHistory(data.status),
-      createdDate: moment(data.createdDate).format("DD-MM-YYYY"),
+      changeDate: moment(data.changeDate).format("DD-MM-YYYY HH:mm:ss"),
       acction: { idHistory: data.id, status: data.status },
     };
   });
@@ -181,15 +179,15 @@ export default function RequestGift() {
       title: "Bạn có chắc chắn muốn hủy yêu cầu không?",
       onOk: () => {
         AddPointAPI.changeStatus(idHistory, status)
-        .then((response) => {
-          if (response.data.success) {
-            fetchData(dispatch, filter);
-            if (status === 2) message.error("Hủy yêu cầu thành công!");
-          }
-        })
-        .catch((error) => console.error(error));
-      }
-    })
+          .then((response) => {
+            if (response.data.success) {
+              fetchData(dispatch, filter);
+              if (status === 2) message.error("Hủy yêu cầu thành công!");
+            }
+          })
+          .catch((error) => console.error(error));
+      },
+    });
   };
 
   return (

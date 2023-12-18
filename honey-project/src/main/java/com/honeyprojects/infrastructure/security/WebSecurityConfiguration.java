@@ -1,6 +1,7 @@
 package com.honeyprojects.infrastructure.security;
 
 import com.honeyprojects.infrastructure.apiconstants.ActorConstants;
+import com.honeyprojects.infrastructure.configution.CorsConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,14 +22,14 @@ public class WebSecurityConfiguration {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    private CorsConfig corsConfigurationSource;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         JwtTokenFilter jwtTokenFilter = new JwtTokenFilter(jwtTokenProvider);
         http
-                .cors()
-                .and()
-                .csrf()
-                .disable()
+                .cors().configurationSource(corsConfigurationSource).and().csrf().disable()
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .requestMatchers("/", "/api/authentication/**", "/api/add-point-student/**").permitAll()

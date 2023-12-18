@@ -4,11 +4,13 @@ import com.honeyprojects.core.common.base.PageableObject;
 import com.honeyprojects.core.common.base.ResponseObject;
 import com.honeyprojects.core.president.model.request.PresidentFindGiftHistoryRequest;
 import com.honeyprojects.core.president.model.request.PresidentFindHoneyHistoryRequest;
+import com.honeyprojects.core.president.model.request.PresidentStatusRequest;
 import com.honeyprojects.core.president.model.response.PresidentAddItemDTO;
 import com.honeyprojects.core.president.model.response.PresidentGiftHistoryResponse;
 import com.honeyprojects.core.president.model.response.PresidentHoneyHistoryResponse;
 import com.honeyprojects.core.president.service.PresidentAddItemToStudentService;
 import com.honeyprojects.core.president.service.PresidentHistoryService;
+import com.honeyprojects.core.teacher.model.request.TeacherChangeStatusRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -81,5 +84,10 @@ public class PresidentAddItemToStudentController {
     @GetMapping("/list-request-gift")
     public PageableObject<PresidentGiftHistoryResponse> getGiftRequest(PresidentFindGiftHistoryRequest request) {
         return presidentHistoryService.getGiftRequest(request);
+    }
+
+    @PutMapping("/change-status")
+    public ResponseObject changeStatus(@RequestBody PresidentStatusRequest request) {
+        return new ResponseObject(presidentAddItemToStudentService.changeStatus(request));
     }
 }
