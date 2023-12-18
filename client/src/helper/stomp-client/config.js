@@ -10,6 +10,7 @@ export const connectStompClient = () => {
   stompClient = Stomp.over(socket, {
     heartbeatIncoming: 10000,
     heartbeatOutgoing: 10000,
+    debug: (str) => {},
   });
   stompClient.activate();
 };

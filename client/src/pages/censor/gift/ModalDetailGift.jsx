@@ -30,7 +30,6 @@ const ModalDetailGift = (props) => {
   const { TextArea } = Input;
   const { Option } = Select;
   const { visible, onCancel, onUpdate, gift, fetchData } = props;
-  console.log(gift);
   const [form] = Form.useForm();
   const [image, setImage] = useState([]);
   const [isLimitedQuantity, setIsLimitedQuantity] = useState(true);
@@ -594,7 +593,6 @@ const ModalDetailGift = (props) => {
                   maxTagCount={3}
                   showSearch
                   filterOption={(input, option) =>
-                    // console.log(option)
                     option.children.indexOf(input) >= 0
                   }
                 >

@@ -11,15 +11,8 @@ export const DemoLine = () => {
 
   const asyncFetch = () => {
     AuctionChartAPI.fetchLine().then((response) => {
-      console.log(response.data.data);
       setData(response.data.data);
     });
-    // fetch('https://gw.alipayobjects.com/os/bmw-prod/e00d52f4-2fa6-47ee-a0d7-105dd95bde20.json')
-    //   .then((response) => response.json())
-    //   .then((json) => )
-    //   .catch((error) => {
-    //     console.log('fetch data failed', error);
-    //   });
   };
   const config = {
     data,

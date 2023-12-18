@@ -82,7 +82,6 @@ export default function RequestItemDetail() {
       setGiftId(response.data.data.giftId);
       setStudentId(response.data.data.studentId);
       setQuantity(response.data.data.quantityGift);
-      console.log(response.data.data);
     });
     await RequestManagerAPI.getUserAPiById(idStudent)
       .then((response) => {
