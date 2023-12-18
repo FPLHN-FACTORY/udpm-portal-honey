@@ -23,6 +23,7 @@ public interface StudentUserRepository extends HoneyRepository {
             FROM honey h
             JOIN category c ON h.honey_category_id = c.id
             WHERE h.student_id = :userId AND h.status = 0
+            and h.honey_point > 0
              """, nativeQuery = true)
     List<StudentMyHoneyResponse> getHoney(String userId);
 
@@ -36,6 +37,7 @@ public interface StudentUserRepository extends HoneyRepository {
              WHERE h.status = 0
              AND ( :search is null OR h.student_id = :search)
              GROUP BY h.student_id
+             having SUM(h.honey_point) > 0
              ORDER BY SUM(h.honey_point) DESC;
              """, countQuery = """
                 SELECT ROW_NUMBER() OVER(ORDER BY SUM(h.honey_point) DESC) AS stt,
@@ -46,6 +48,7 @@ public interface StudentUserRepository extends HoneyRepository {
                      WHERE h.status = 0
                      AND ( :search is null OR h.student_id = :search)
                      GROUP BY h.student_id
+                     having SUM(h.honey_point) > 0
                      ORDER BY SUM(h.honey_point) DESC;
             """, nativeQuery = true)
     Page<StudentPageStudentResponse> getPageHallOfFame(Pageable pageable,
@@ -62,6 +65,7 @@ public interface StudentUserRepository extends HoneyRepository {
              JOIN category c ON h.honey_category_id = c.id
              WHERE h.status = 0
              GROUP BY h.student_id
+             having SUM(h.honey_point) > 0
              ORDER BY SUM(h.honey_point) DESC LIMIT 3;
              """,  nativeQuery = true)
     List<StudentPageStudentResponse> getTop3Student();

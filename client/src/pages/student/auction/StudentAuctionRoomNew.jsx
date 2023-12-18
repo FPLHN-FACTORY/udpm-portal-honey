@@ -232,6 +232,9 @@ export default function StudentAuctionRoomNew() {
         "/portal-honey/update-last-price-auction",
         (mes) => {
           let data = JSON.parse(mes.body);
+          console.log('====================================');
+          console.log(data);
+          console.log('====================================');
           dispatch(UpdateAuction(data.data));
           form.resetFields();
           message.success("Đấu giá thành công.");

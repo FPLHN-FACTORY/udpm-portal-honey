@@ -182,6 +182,7 @@ public class StudentTransactionServiceImpl implements StudentTransactionService 
                     archiveGiftRepository.save(archiveGiftGui);
                 }
                 honeyRepository.saveAll(honeyUpdates);
+
                 return true;
             }catch (Exception e) {
                 e.printStackTrace();

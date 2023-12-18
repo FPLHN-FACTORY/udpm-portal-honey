@@ -19,11 +19,11 @@ import com.honeyprojects.entity.Honey;
 import com.honeyprojects.infrastructure.contant.HistoryStatus;
 import com.honeyprojects.infrastructure.contant.TypeHistory;
 import com.honeyprojects.util.ConvertRequestApiidentity;
+import com.honeyprojects.util.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -63,7 +63,10 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
         List<StudentHistoryResponse> listResponse = list.getContent().stream().map(
                 history -> {
                     StudentHistoryResponse response = new StudentHistoryResponse();
-                    if (history.getType() == TypeHistory.CONG_DIEM) {
+                    if (history.getType() == TypeHistory.CONG_DIEM
+                            && DataUtils.isNullObject(history.getPresidentId())
+                            && DataUtils.isNullObject(history.getTeacherId())
+                    ) {
                         StudentHistoryDetailResponse historyDetail = historyDetailRepository
                                 .getHistoryDetail(history.getStudentId(), history.getId());
                         response.setChangeDate(historyDetail.getChangeDate());
@@ -194,8 +197,8 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
     @Override
     public Map<String, Object> getListRequest(Integer type, Integer page) {
         Page<History> list;
-        Sort sort = Sort.by(Sort.Direction.DESC, "lastModifiedDate");
-        Pageable pageable = PageRequest.of(page, 5, sort);
+//        Sort sort = Sort.by(Sort.Direction.DESC, "last_modified_date");
+        Pageable pageable = PageRequest.of(page, 5);
         try {
             list = historyRepository.getListRequest(udpmHoney.getIdUser(), TypeHistory.values()[type], pageable);
         } catch (Exception e) {
@@ -204,10 +207,12 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
         List<StudentHistoryResponse> listResponse = list.getContent().stream().map(
                 history -> {
                     StudentHistoryResponse response = new StudentHistoryResponse();
-                    if (history.getType() == TypeHistory.DOI_QUA) {
+                    if (history.getType() == TypeHistory.MUA_VAT_PHAM) {
                         HistoryDetail historyDetail = historyDetailRepository
                                 .findByHistoryId(history.getId());
+                        History historyStudent = historyRepository.findById(historyDetail.getHistoryId()).orElse(null);
                         Gift gift = giftRepository.findById(historyDetail.getGiftId()).orElse(null);
+                        response.setChangeDate(historyStudent.getChangeDate());
                         if (gift != null) {
                             Honey honey = honeyRepository.findById(historyDetail.getHoneyId()).orElse(null);
                             if (honey != null) {
@@ -217,26 +222,23 @@ public class StudentHistoryServiceImpl implements StudentHistoryService {
                             }
                             if (history.getStatus() == HistoryStatus.CHO_PHE_DUYET) {
                                 response.setPointGet("[Chờ phê duyệt]");
-                            } else {
-                                response.setPoint("[Bị từ chối]");
-                            }
-                        }
-                    } else if (history.getType() == TypeHistory.PHE_DUYET_QUA) {
-                        HistoryDetail historyDetail = historyDetailRepository
-                                .findByHistoryId(history.getId());
-                        Gift gift = giftRepository.findById(historyDetail.getGiftId()).orElse(null);
-
-                        if (gift != null) {
-                            response.setContent("Mở x" + historyDetail.getQuantityGift() + " gói quà " + " " + gift.getName() +
-                                    "[ " + history.getSubject() + " - " + history.getClassName() + " - " +
-                                    apiidentity.handleCallApiGetUserById(history.getTeacherId()).getUserName() + " ]");
-                            if (history.getStatus() == HistoryStatus.CHO_PHE_DUYET) {
-                                response.setPointGet("[Chờ phê duyệt]");
-                            } else {
-                                response.setPoint("[Bị từ chối]");
                             }
                         }
                     }
+//                    else if (history.getType() == TypeHistory.PHE_DUYET_QUA) {
+//                        HistoryDetail historyDetail = historyDetailRepository
+//                                .findByHistoryId(history.getId());
+//                        Gift gift = giftRepository.findById(historyDetail.getGiftId()).orElse(null);
+//
+//                        if (gift != null) {
+//                            response.setContent("Mở x" + historyDetail.getQuantityGift() + " gói quà " + " " + gift.getName() +
+//                                    "[ " + history.getSubject() + " - " + history.getClassName() + " - " +
+//                                    apiidentity.handleCallApiGetUserById(history.getTeacherId()).getUserName() + " ]");
+//                            if (history.getStatus() == HistoryStatus.CHO_PHE_DUYET) {
+//                                response.setPointGet("[Chờ phê duyệt]");
+//                            }
+//                        }
+//                    }
                     return response;
                 }
         ).toList();
