@@ -107,7 +107,12 @@ function Header({ onSlidebar, onPress, name, subName }) {
   const handleItemClick = (item) => {
     navigate(`/president/history-honey`);
     NotificationAPI.readOne(item.id).then(() => {
-      fetchNotification();
+      NotificationAPI.fetchAll({
+        page: 0,
+        size: 10,
+      }).then((response) => {
+        dispatch(SetNotification(response.data.data.data));
+      }) 
       fetchCountNotification();
       setIsOpen(!isOpen);
     });

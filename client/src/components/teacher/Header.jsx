@@ -91,7 +91,12 @@ function Header({ onSlidebar, onPress, name, subName }) {
   const markAsRead = () => {
     NotificationAPI.markAllAsRead().then(() => {
       fetchCountNotification();
-      fetchNotification();
+      NotificationAPI.fetchAll({
+        page: 0,
+        size: 10,
+      }).then((response) => {
+        dispatch(SetNotification(response.data.data.data));
+      }) 
     });
   };
 
@@ -106,7 +111,12 @@ function Header({ onSlidebar, onPress, name, subName }) {
   const handleItemClick = (item) => {
     navigate(`/teacher/add-point/history`);
     NotificationAPI.readOne(item.id).then(() => {
-      fetchNotification();
+      NotificationAPI.fetchAll({
+        page: 0,
+        size: 10,
+      }).then((response) => {
+        dispatch(SetNotification(response.data.data.data));
+      }) 
       fetchCountNotification();
       setIsOpen(!isOpen);
     });
