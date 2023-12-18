@@ -9,10 +9,10 @@ const type = (status) => {
   switch (status) {
     case 0:
       return <Tag color="yellow-inverse">Cộng điểm</Tag>; // Màu xanh dương
-    case 1:
-      return <Tag color="lime-inverse">Giao dịch</Tag>; // Màu xanh lá cây
     case 2:
       return <Tag color="magenta-inverse">Mua quà</Tag>; // Màu xanh dương nhạt
+    case 4:
+      return <Tag color="lime-inverse">Tặng vật phẩm</Tag>; // Màu xanh lá cây
     case 6:
       return <Tag color="magenta-inverse">Mua quà</Tag>; // Màu xanh dương nhạt
     case 7:
