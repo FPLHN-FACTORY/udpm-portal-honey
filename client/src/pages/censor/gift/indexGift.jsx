@@ -14,7 +14,6 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { GiftAPI } from "../../../apis/censor/gift/gift.api";
-import { PlusOutlined } from "@ant-design/icons";
 import ModalDetailGift from "./ModalDetailGift";
 import ModalAma from "./ModalAddGift";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -24,6 +23,8 @@ import {
   faPenToSquare,
   faTrash,
   faFilter,
+  faPlus,
+  faRectangleList,
 } from "@fortawesome/free-solid-svg-icons";
 import { Option } from "antd/es/mentions";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
@@ -252,8 +253,7 @@ export default function IndexGift() {
           }}
         />
       )}
-      {
-        confirmDelete && 
+      {confirmDelete && (
         <Modal
           title="Xác nhận xóa"
           visible={confirmDelete}
@@ -268,8 +268,8 @@ export default function IndexGift() {
         >
           Bạn có chắc chắn muốn xóa vật phẩm này?
         </Modal>
-      }
-      <Card style={{ borderTop: "5px solid #FFCC00", marginBottom: 30 }}>
+      )}
+      <Card style={{ borderTop: "5px solid #FFCC00" }}>
         <div className="filter__auction">
           <FontAwesomeIcon
             icon={faFilter}
@@ -348,29 +348,47 @@ export default function IndexGift() {
         </Space>
       </Card>
 
-      <Card>
-        <div>
-          <div className="flex flex-row-reverse">
-            <div>
-              <span>
-                <Tooltip title="Thêm vật phẩm">
-                  <button
-                    className="add-button1"
-                    onClick={() => {
-                      setShowModal(true);
-                      setDetailGift(null);
-                    }}
-                    style={{ marginBottom: "20px" }}
-                  >
-                    <PlusOutlined className="mr-1" />
-                    Thêm vật phẩm
-                  </button>
-                </Tooltip>
-              </span>
-            </div>
+      <Card style={{ marginTop: "16px", borderTop: "5px solid #FFCC00" }}>
+        <Space
+          style={{
+            justifyContent: "space-between",
+            display: "flex",
+            marginBottom: "16px",
+          }}
+        >
+          <div>
+            <span style={{ fontSize: "18px" }}>
+              <FontAwesomeIcon icon={faRectangleList} size="xl" />
+              <b style={{ marginLeft: "5px", fontWeight: "500" }}>
+                Danh sách vật phẩm
+              </b>
+            </span>
           </div>
-        </div>
-
+          <div>
+            <Button
+              style={{
+                color: "white",
+                backgroundColor: "rgb(55, 137, 220)",
+                textAlign: "center",
+              }}
+              // onClick={buttonCreate}
+              onClick={() => {
+                setShowModal(true);
+                setDetailGift(null);
+              }}
+            >
+              <FontAwesomeIcon
+                icon={faPlus}
+                size="1x"
+                style={{
+                  backgroundColor: "rgb(55, 137, 220)",
+                  marginRight: "5px",
+                }}
+              />
+              Thêm vật phẩm
+            </Button>
+          </div>
+        </Space>
         <div className="mt-5">
           <Table
             columns={columns}
