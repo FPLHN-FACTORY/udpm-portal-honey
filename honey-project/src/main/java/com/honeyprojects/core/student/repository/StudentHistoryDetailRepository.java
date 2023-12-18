@@ -22,7 +22,7 @@ public interface StudentHistoryDetailRepository extends HistoryDetailRepository 
             LEFT JOIN honey ho ON hd.honey_id = ho.id
             JOIN category c ON c.id = ho.honey_category_id
             WHERE h.status IN (1,3,4,5,6,7) 
-            AND h.type = 0 AND hd.history_id = :history_id 
+            AND h.type in (0, 2) AND hd.history_id = :history_id 
             AND hd.student_id = :student_id 
             GROUP BY hd.history_id
             ORDER BY h.last_modified_date DESC

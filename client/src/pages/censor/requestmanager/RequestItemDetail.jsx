@@ -128,7 +128,7 @@ export default function RequestItemDetail() {
               <Space size={"middle"}>
                 <Button
                   onClick={() => {
-                    changeStatusConversion(2);
+                    changeStatusConversion(1);
                   }}
                   type="primary"
                   style={{ backgroundColor: "#EEB30D" }}
