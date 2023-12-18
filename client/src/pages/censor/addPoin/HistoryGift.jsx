@@ -75,8 +75,6 @@ export default function HistoryGift() {
     }
   };
 
-  console.log(data);
-
   return (
     <div className="add-point">
       <Card className="mb-2 py-1">

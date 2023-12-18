@@ -10,9 +10,10 @@ import {
   Tooltip,
   Popconfirm,
   message,
+  Row,
+  Col,
 } from "antd";
 import {
-  PlusOutlined,
   EditOutlined,
   EyeOutlined,
   PlusCircleOutlined,
@@ -25,8 +26,7 @@ import ModalAdd from "./ModalCreateChest";
 import ModalAddGiftToChest from "./ModalAddGiftsToChest";
 import ModalDetail from "./ModalDetailChestGift";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter, faRectangleList } from "@fortawesome/free-solid-svg-icons";
-import { ChestGiftAPI } from "../../../apis/censor/chest-gift/chest-gift.api";
+import { faFilter, faRectangleList, faPlus } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 
 export default function ChestGift() {
@@ -189,14 +189,26 @@ export default function ChestGift() {
           style={{ fontSize: "26px" }}
         />{" "}
         <span style={{ fontSize: "18px", fontWeight: "500" }}>Bộ lọc</span>
-        <div class="relative w-full mr-6">
+        {/* <div class="relative w-full mr-6">
           <Input
             style={{ borderRadius: "30px", marginTop: "20px" }}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Nhập tên..."
           />
-        </div>
+        </div> */}
+        <Row gutter={24} style={{ marginBottom: "15px", paddingTop: "20px" }}>
+          <Col span={24}>
+            <span>Tên rương:</span>
+            {""}
+            <Input
+              style={{ width: "100%", height: "30px" }}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              // placeholder="Nhập tên..."
+            />
+          </Col>
+        </Row>
         <Space
           style={{
             justifyContent: "center",
@@ -204,6 +216,17 @@ export default function ChestGift() {
             marginTop: "20px",
           }}
         >
+          <Button
+            type="button"
+            style={{
+              marginRight: "8px",
+              backgroundColor: "rgb(55, 137, 220)",
+              color: "white",
+            }}
+            onClick={() => handleSearch()}
+          >
+            Tìm kiếm
+          </Button>
           <Button
             type="button"
             style={{
@@ -218,17 +241,6 @@ export default function ChestGift() {
             }}
           >
             Làm mới
-          </Button>
-          <Button
-            type="button"
-            style={{
-              marginRight: "8px",
-              backgroundColor: "rgb(55, 137, 220)",
-              color: "white",
-            }}
-            onClick={() => handleSearch()}
-          >
-            Tìm kiếm
           </Button>
         </Space>
       </Card>
@@ -251,7 +263,7 @@ export default function ChestGift() {
           </div>
           <div className="flex flex-row-reverse">
             <div>
-              <span>
+              {/* <span>
                 <Tooltip title="Tạo rương">
                   <button
                     className="add-button1"
@@ -264,7 +276,28 @@ export default function ChestGift() {
                     Tạo rương
                   </button>
                 </Tooltip>
-              </span>
+              </span> */}
+              <Button
+                style={{
+                  color: "white",
+                  backgroundColor: "rgb(55, 137, 220)",
+                  textAlign: "center",
+                }}
+                onClick={() => {
+                  setShowModal(true);
+                  setDetailChest(null);
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  size="1x"
+                  style={{
+                    backgroundColor: "rgb(55, 137, 220)",
+                    marginRight: "5px",
+                  }}
+                />
+                Tạo rương
+              </Button>
             </div>
           </div>
         </Space>

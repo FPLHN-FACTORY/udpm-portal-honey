@@ -14,11 +14,7 @@ import {
   Col,
   Select,
 } from "antd";
-import {
-  PlusOutlined,
-  CheckOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { CategoryAPI } from "../../../apis/censor/category/category.api";
 import {
@@ -34,6 +30,7 @@ import {
   faRectangleList,
   faTrash,
   faPenToSquare,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { Option } from "antd/es/mentions";
 import React from "react";
@@ -247,20 +244,22 @@ export default function Index() {
           }}
         />
       )}
-      {confirmDelete && <Modal
-        title="Xác nhận xóa"
-        visible={confirmDelete}
-        onOk={() => {
-          if (detailCategory) {
-            deletect(detailCategory.id);
-          }
-        }}
-        onCancel={() => setConfirmDelete(false)}
-        okText="Xóa"
-        cancelText="Hủy"
-      >
-        Bạn có chắc chắn muốn xóa quà này?
-      </Modal>}
+      {confirmDelete && (
+        <Modal
+          title="Xác nhận xóa"
+          visible={confirmDelete}
+          onOk={() => {
+            if (detailCategory) {
+              deletect(detailCategory.id);
+            }
+          }}
+          onCancel={() => setConfirmDelete(false)}
+          okText="Xóa"
+          cancelText="Hủy"
+        >
+          Bạn có chắc chắn muốn xóa quà này?
+        </Modal>
+      )}
 
       <Card style={{ borderTop: "5px solid #FFCC00" }}>
         <div className="filter__auction">
@@ -418,7 +417,7 @@ export default function Index() {
           </div>
           <div className="flex flex-row-reverse">
             <div>
-              <span>
+              {/* <span>
                 <button
                   className="add-button1"
                   onClick={() => {
@@ -429,7 +428,29 @@ export default function Index() {
                   <PlusOutlined className="mr-1" />
                   Thêm thể loại
                 </button>
-              </span>
+              </span> */}
+              <Button
+                style={{
+                  color: "white",
+                  backgroundColor: "rgb(55, 137, 220)",
+                  textAlign: "center",
+                }}
+                // onClick={buttonCreate}
+                onClick={() => {
+                  setShowModal(true);
+                  setDetailCategory(null);
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  size="1x"
+                  style={{
+                    backgroundColor: "rgb(55, 137, 220)",
+                    marginRight: "5px",
+                  }}
+                />
+                Thêm thể loại
+              </Button>
             </div>
           </div>
         </Space>

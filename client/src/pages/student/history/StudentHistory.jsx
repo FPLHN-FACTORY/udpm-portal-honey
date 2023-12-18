@@ -18,7 +18,6 @@ export default function StudentHistory() {
   function fetchData(type, page) {
     setIsFetching(true);
     HistoryApi.getAllHistory({ type: type, page: page }).then((result) => {
-      console.log(result.data.data.data);
       setData((prevData) => [...prevData, ...result.data.data.data]);
       setTotal(result.data.data.totalPages);
       setIsFetching(false);

@@ -53,16 +53,16 @@ function Header({ onSlidebar, onPress, name, subName }) {
     } else {
       setNotificationHasData(true);
     }
-    if (response.data.data.totalPages > 1) {
-      setHasData(true);
-    } else {
-      setHasData(false);
-    }
   };
 
   const fetchCountNotification = () => {
     return NotificationAPI.fetchCountNotification().then((response) => {
       dispatch(SetCountNotification(response.data));
+      if (response.data > 0) {
+        setHasData(true);
+      } else {
+        setHasData(false);
+      }
     });
   };
 
@@ -92,7 +92,7 @@ function Header({ onSlidebar, onPress, name, subName }) {
         size: 10,
       }).then((response) => {
         dispatch(SetNotification(response.data.data.data));
-      }) 
+      });
     });
   };
 
@@ -107,7 +107,12 @@ function Header({ onSlidebar, onPress, name, subName }) {
   const handleItemClick = (item) => {
     navigate(`/president/history-honey`);
     NotificationAPI.readOne(item.id).then(() => {
-      fetchNotification();
+      NotificationAPI.fetchAll({
+        page: 0,
+        size: 10,
+      }).then((response) => {
+        dispatch(SetNotification(response.data.data.data));
+      });
       fetchCountNotification();
       setIsOpen(!isOpen);
     });

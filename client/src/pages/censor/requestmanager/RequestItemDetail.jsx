@@ -9,10 +9,10 @@ const type = (status) => {
   switch (status) {
     case 0:
       return <Tag color="yellow-inverse">Cộng điểm</Tag>; // Màu xanh dương
-    case 1:
-      return <Tag color="lime-inverse">Giao dịch</Tag>; // Màu xanh lá cây
     case 2:
       return <Tag color="magenta-inverse">Mua quà</Tag>; // Màu xanh dương nhạt
+    case 4:
+      return <Tag color="lime-inverse">Tặng vật phẩm</Tag>; // Màu xanh lá cây
     case 6:
       return <Tag color="magenta-inverse">Mua quà</Tag>; // Màu xanh dương nhạt
     case 7:
@@ -82,7 +82,6 @@ export default function RequestItemDetail() {
       setGiftId(response.data.data.giftId);
       setStudentId(response.data.data.studentId);
       setQuantity(response.data.data.quantityGift);
-      console.log(response.data.data);
     });
     await RequestManagerAPI.getUserAPiById(idStudent)
       .then((response) => {
@@ -129,7 +128,7 @@ export default function RequestItemDetail() {
               <Space size={"middle"}>
                 <Button
                   onClick={() => {
-                    changeStatusConversion(2);
+                    changeStatusConversion(1);
                   }}
                   type="primary"
                   style={{ backgroundColor: "#EEB30D" }}

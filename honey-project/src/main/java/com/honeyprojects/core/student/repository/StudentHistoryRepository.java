@@ -20,9 +20,11 @@ public interface StudentHistoryRepository extends HistoryRepository {
             """, nativeQuery = true)
     Page<History> getListHistory(String studentId, Integer type, Pageable pageable);
 
-    @Query("""
-            select h from History h where h.studentId = :studentId and
-            h.status <> 1 and h.type <> 0 and (:type is null or h.type = :type)
-            """)
+    @Query(value = """
+            select * from history h where h.student_id = :studentId and
+            h.status = 0 and h.type = 7 and (:type is null or h.type = :type)
+            ORDER BY h.last_modified_date DESC
+            """, nativeQuery = true)
     Page<History> getListRequest(String studentId, TypeHistory type, Pageable pageable);
+
 }

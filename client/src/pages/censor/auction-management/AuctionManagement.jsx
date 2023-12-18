@@ -74,7 +74,7 @@ export default function AuctionMangement() {
     return () => {
       dispatch(SetAuction([]));
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current, searchParams]);
 
   useEffect(() => {
@@ -90,7 +90,7 @@ export default function AuctionMangement() {
     const data = {
       ...searchParams,
       page: current,
-      size: 5
+      size: 5,
     };
     AuctionAPI.fetchAll(data).then((response) => {
       dispatch(SetAuction(response.data.data.data));
@@ -256,8 +256,8 @@ export default function AuctionMangement() {
             message.error("Đóng thất bại!");
           }
         );
-      }
-    })
+      },
+    });
   };
 
   return (
@@ -278,6 +278,8 @@ export default function AuctionMangement() {
               }}
             >
               <Col span={6}>
+                <span>Tên vật phẩm:</span>
+                {""}
                 <Form.Item name="nameGift">
                   <Input
                     onKeyPress={(e) => {
@@ -286,18 +288,16 @@ export default function AuctionMangement() {
                       }
                     }}
                     style={{ height: "30px" }}
-                    placeholder="Tên vật phẩm"
+                    // placeholder="Tên vật phẩm"
                   />
                 </Form.Item>
               </Col>
               <Col span={6}>
+                <span>Loại mật:</span>
+                {""}
                 <Form.Item name="category">
-                  <Select
-                    placeholder="Chọn loại mật"
-                  >
-                  <Select.Option value={""}>
-                    Chọn tất cả
-                  </Select.Option>
+                  <Select placeholder="Chọn loại mật">
+                    <Select.Option value={""}>Chọn tất cả</Select.Option>
                     {listCategorySearch?.map((item) => {
                       return (
                         <Select.Option value={item.id}>
@@ -309,13 +309,11 @@ export default function AuctionMangement() {
                 </Form.Item>
               </Col>
               <Col span={6}>
+                <span>Loại vật phẩm:</span>
+                {""}
                 <Form.Item name="type">
-                  <Select
-                    placeholder="Chọn loại vật phẩm"
-                  >
-                  <Select.Option value={""}>
-                    Chọn tất cả
-                  </Select.Option>
+                  <Select placeholder="Chọn loại vật phẩm">
+                    <Select.Option value={""}>Chọn tất cả</Select.Option>
                     {listType?.map((item) => {
                       return (
                         <Select.Option value={item.value}>
@@ -327,6 +325,8 @@ export default function AuctionMangement() {
                 </Form.Item>
               </Col>
               <Col span={6}>
+                <span>Giá bắt đầu:</span>
+                {""}
                 <Form.Item name="startingPrice">
                   <Input
                     type="number"
@@ -334,7 +334,7 @@ export default function AuctionMangement() {
                       height: "30px",
                       width: "100%",
                     }}
-                    placeholder="Giá bắt đầu"
+                    // placeholder="Giá bắt đầu"
                   />
                 </Form.Item>
               </Col>
@@ -431,8 +431,7 @@ export default function AuctionMangement() {
             pagination={false}
           />
           <br></br>
-          {
-            total > 1 && 
+          {total > 1 && (
             <div className="pagination__box">
               <Pagination
                 simple
@@ -443,26 +442,24 @@ export default function AuctionMangement() {
                 total={total * 10}
               />
             </div>
-          }
+          )}
         </div>
       </Card>
-      {
-        modalCreate && 
-          <ModalCreateAuction
-            visible={modalCreate}
-            onCancel={buttonCreateCancel}
-            fetchAllData={fetchData}
-          />
-      }
-      {
-        modalUpdate && 
-          <ModalUpdateAuction
-            visible={modalUpdate}
-            onCancel={buttonUpdateCancel}
-            auction={auction}
-            fetchAllData={fetchData}
-          />
-      }
+      {modalCreate && (
+        <ModalCreateAuction
+          visible={modalCreate}
+          onCancel={buttonCreateCancel}
+          fetchAllData={fetchData}
+        />
+      )}
+      {modalUpdate && (
+        <ModalUpdateAuction
+          visible={modalUpdate}
+          onCancel={buttonUpdateCancel}
+          auction={auction}
+          fetchAllData={fetchData}
+        />
+      )}
     </div>
   );
 }

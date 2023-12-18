@@ -100,7 +100,6 @@ public class StudentAuctionServiceImpl implements StudentAuctionService {
             auction.setStatus(Status.HOAT_DONG);
             auction.setQuantity(request.getQuantity());
             auction.setAuctioneerCreateUserName(request.getMail());
-            auction.setAuctioneerId(request.getIdUser());
             return studentAuctionRepository.save(auction);
         }
     }

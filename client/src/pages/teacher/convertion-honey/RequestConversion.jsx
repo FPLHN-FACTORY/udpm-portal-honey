@@ -140,7 +140,6 @@ export default function RequestConversion() {
       //     }
       //   })
       // );
-      console.log(response);
       dispatch(SetHistory(response.data.data.data));
       setTotalPage(response.data.data.totalPages);
     } catch (error) {

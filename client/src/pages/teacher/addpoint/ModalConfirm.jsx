@@ -22,8 +22,6 @@ export default function ModalConfirm(props) {
     connectStompClient();
   }, []);
 
-  console.log(props.dataPreview);
-
   let stompClient = getStompClient();
 
   const connect = () => {

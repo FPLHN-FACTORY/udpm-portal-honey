@@ -19,7 +19,6 @@ public class AdminAddPointRequest {
     @NumberFormat
     private Integer honeyPoint;
 
-    @NotBlank
     @Length(max = 100)
     private String note;
 

@@ -9,7 +9,6 @@ const AuctionManagementChart = () => {
     const [statistic, setStatistic] = useState({});
     useEffect(() => {
         AuctionChartAPI.fetchStatistic().then((response) => {
-            console.log(response.data.data);
             setStatistic(response.data.data)
         })
     }, [])

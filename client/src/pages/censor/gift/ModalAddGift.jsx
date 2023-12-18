@@ -473,7 +473,6 @@ const ModalThem = (props) => {
                   onChange={handleCategoryChange}
                   showSearch
                   filterOption={(input, option) =>
-                    // console.log(option)
                     option.children.indexOf(input) >= 0
                   }
                 >

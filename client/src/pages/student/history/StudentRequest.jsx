@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import "./index.css";
-import { Col, Image, Row, Select } from "antd";
+import { Col, Row, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import { HistoryApi } from "../../../apis/student/history/historyApi.api";
+import moment from "moment";
 
 export default function StudentRequest() {
   const [data, setData] = useState([]);
@@ -67,10 +68,10 @@ export default function StudentRequest() {
                 value: 2,
                 label: "Mua Quà",
               },
-              {
-                value: 3,
-                label: "Mở Quà",
-              },
+              // {
+              //   value: 3,
+              //   label: "Mở Quà",
+              // },
             ]}
           />
         </div>
@@ -112,8 +113,10 @@ export default function StudentRequest() {
               return (
                 <div className={`content red`} key={index}>
                   <Row>
-                    <Col span={10}>
-                      <img className="size_img" src={e.image} alt="" />
+                    <Col span={4}>
+                      <div className="student__history__text">
+                        {moment(e.changeDate).format("DD-MM-YYYY HH:mm:ss")}
+                      </div>
                     </Col>
                     <Col span={10}>
                       <div className="student__history__text">{e.content}</div>

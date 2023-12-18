@@ -48,26 +48,26 @@ function Header({ onSlidebar, onPress, name, subName }) {
       size: 10,
     });
     if (response.data.data.data !== 0) {
-      response.data.data.data.forEach(element => {
+      response.data.data.data.forEach((element) => {
         dispatch(AddNotification(element));
       });
-    } 
+    }
     setCurrent(response.data.data.currentPage);
     if (response.data.data.totalPages - current <= 1) {
       setNotificationHasData(false);
     } else {
       setNotificationHasData(true);
     }
-    if (response.data.data.totalPages > 1) {
-      setHasData(true);
-    } else {
-      setHasData(false);
-    }
   };
 
   const fetchCountNotification = () => {
     return NotificationAPI.fetchCountNotification().then((response) => {
       dispatch(SetCountNotification(response.data));
+      if (response.data > 0) {
+        setHasData(true);
+      } else {
+        setHasData(false);
+      }
     });
   };
 
@@ -91,7 +91,12 @@ function Header({ onSlidebar, onPress, name, subName }) {
   const markAsRead = () => {
     NotificationAPI.markAllAsRead().then(() => {
       fetchCountNotification();
-      fetchNotification();
+      NotificationAPI.fetchAll({
+        page: 0,
+        size: 10,
+      }).then((response) => {
+        dispatch(SetNotification(response.data.data.data));
+      });
     });
   };
 
@@ -106,7 +111,12 @@ function Header({ onSlidebar, onPress, name, subName }) {
   const handleItemClick = (item) => {
     navigate(`/teacher/add-point/history`);
     NotificationAPI.readOne(item.id).then(() => {
-      fetchNotification();
+      NotificationAPI.fetchAll({
+        page: 0,
+        size: 10,
+      }).then((response) => {
+        dispatch(SetNotification(response.data.data.data));
+      });
       fetchCountNotification();
       setIsOpen(!isOpen);
     });
