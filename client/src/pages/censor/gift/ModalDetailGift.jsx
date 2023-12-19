@@ -33,7 +33,7 @@ const ModalDetailGift = (props) => {
   const [form] = Form.useForm();
   const [image, setImage] = useState([]);
   const [isLimitedQuantity, setIsLimitedQuantity] = useState(true);
-  const [isLimitedQuantity2, setIsLimitedQuantity2] = useState(true);
+  const [isLimitedQuantity2, setIsLimitedQuantity2] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
   const [listCategory, setListCategory] = useState([]);
   const [errorImage, setErrorImage] = useState("");
