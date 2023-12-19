@@ -35,33 +35,33 @@ const UsingGift = (props) => {
   };
 
   const handleOk = () => {
-    message.success("Đã gửi yêu cầu cho giảng viên");
-    handleCancel();
-    // form
-    //   .validateFields()
-    //   .then((values) => {
-    //     const data = {
-    //       ...values,
-    //       archiveGiftId: archivegift.id,
-    //       quantity: values.number,
-    //       scoreId: values.dauDiem,
-    //       maLop: className
-    //     };
-    //     ArchiveAPI.openGift(data)
-    //       .then((result) => {
-    //         if (result.data.success) {
-             
-    //         }
-    //       })
-    //       .catch((error) => {
-    //         message.error(error.response.data.message);
-    //       })
-    //       .finally(() => {
-    //         fetchData();
-    //       });
-    //   }).catch(() => {
-    //     message.error("Vui lòng điền đầy đủ thông tin.");
-    //   });
+    form
+      .validateFields()
+      .then((values) => {
+        const data = {
+          ...values,
+          archiveGiftId: archivegift.id,
+          quantity: values.number,
+          scoreId: values.dauDiem,
+          maLop: className
+        };
+        ArchiveAPI.openGift(data)
+          .then((result) => {
+            if (result.data.success) {
+              message.success("Đã gửi yêu cầu cho giảng viên");
+              handleCancel();
+            }
+          })
+          .catch((error) => {
+            message.success("Đã gửi yêu cầu cho giảng viên");
+            handleCancel();
+          })
+          .finally(() => {
+            fetchData();
+          });
+      }).catch(() => {
+        message.error("Vui lòng điền đầy đủ thông tin.");
+      });
   };
 
   const handleCancel = () => {
